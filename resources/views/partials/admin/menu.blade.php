@@ -643,7 +643,7 @@ $lang= Auth::user()->lang;
 
                             @can('manage university')
                             <li class="dash-item {{ (Request::route()->getName() == 'university.list' || Request::route()->getName() == 'university.index' || Request::route()->getName() == 'university.show') ? ' active' : '' }}">
-                                <a class="dash-link" href="{{ route('university.index') }}">{{__('Universities')}}</a>
+                                <a class="dash-link" href="{{ route('university.index') }}">{{__('Institutes')}}</a>
                             </li>
                             @endcan
 
@@ -759,7 +759,7 @@ $lang= Auth::user()->lang;
 
                     @if(\Auth::user()->type!='super admin' && ( Gate::check('manage user') || Gate::check('manage role') || Gate::check('manage client')))
                     <li class="dash-item dash-hasmenu">
-                        <a href="#!" class="dash-link {{ (Request::segment(1) == 'users' || Request::segment(1) == 'roles' || Request::segment(1) == 'clients')?' active dash-trigger':''}}"><span class="dash-micon"><i class="ti ti-users"></i></span><span class="dash-mtext">{{__('Agency')}}</span><span class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
+                        <a href="#!" class="dash-link {{ (Request::segment(1) == 'users' || Request::segment(1) == 'roles' || Request::segment(1) == 'clients')?' active dash-trigger':''}}"><span class="dash-micon"><i class="ti ti-users"></i></span><span class="dash-mtext">{{__('Companies')}}</span><span class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                         <ul class="dash-submenu">
                             @can('manage user')
                             <li class="dash-item {{ (Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit') ? ' active' : '' }}">
@@ -980,11 +980,11 @@ $lang= Auth::user()->lang;
 
                 @if((\Auth::user()->type == 'super admin'))
                 <ul class="dash-navbar">
-                    <li class="dash-item dash-hasmenu {{ (Request::segment(1) == 'dashboard') ? ' active' : '' }}">
+                    <!-- <li class="dash-item dash-hasmenu {{ (Request::segment(1) == 'dashboard') ? ' active' : '' }}">
                         <a href="{{ route('crm.dashboard') }}" class="dash-link">
                             <span class="dash-micon"><i class="ti ti-home"></i></span><span class="dash-mtext">{{__('Dashboard')}}</span>
                         </a>
-                    </li>
+                    </li> -->
 
 
                     <li class="dash-item dash-hasmenu">
@@ -996,7 +996,7 @@ $lang= Auth::user()->lang;
                            </li>
 
                             <li class="dash-item {{ (Request::route()->getName() == 'university.list' || Request::route()->getName() == 'university.index' || Request::route()->getName() == 'university.show') ? ' active' : '' }}">
-                                <a class="dash-link" href="{{ route('university.index') }}">University</a>
+                                <a class="dash-link" href="{{ route('university.index') }}">Institutes</a>
                             </li>
 
 
@@ -1045,13 +1045,21 @@ $lang= Auth::user()->lang;
 
                     @if(\Auth::user()->type =='super admin')
                     <li class="dash-item dash-hasmenu">
-                        <a href="#!" class="dash-link {{ (Request::segment(1) == 'users' || Request::segment(1) == 'roles' || Request::segment(1) == 'clients')?' active dash-trigger':''}}"><span class="dash-micon"><i class="ti ti-users"></i></span><span class="dash-mtext">{{__('Agency')}}</span><span class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
+                        <a href="#!" class="dash-link {{ (Request::segment(1) == 'users' || Request::segment(1) == 'roles' || Request::segment(1) == 'clients')?' active dash-trigger':''}}"><span class="dash-micon"><i class="ti ti-users"></i></span><span class="dash-mtext">{{__('Companies')}}</span><span class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                         <ul class="dash-submenu">
                             @can('manage user')
                             <li class="dash-item {{ (Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit') ? ' active' : '' }}">
                                 <a class="dash-link" href="{{ route('users.index') }}">Brands</a>
                             </li>
                             @endcan
+
+                            @can('manage user')
+                            <li class="dash-item {{ (Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit') ? ' active' : '' }}">
+                                <a class="dash-link" href="{{ route('user.employees') }}">Employees</a>
+                            </li>
+                            @endcan
+
+
                             @can('manage role')
                             <li class="dash-item {{ (Request::route()->getName() == 'roles.index' || Request::route()->getName() == 'roles.create' || Request::route()->getName() == 'roles.edit') ? ' active' : '' }} ">
                                 <a class="dash-link" href="{{route('roles.index')}}">{{__('Role')}}</a>

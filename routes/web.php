@@ -209,6 +209,14 @@ Route::get('profile', [UserController::class, 'profile'])->name('profile')->midd
 Route::any('edit-profile', [UserController::class, 'editprofile'])->name('update.account')->middleware(['auth', 'XSS', 'revalidate']);
 
 Route::resource('users', UserController::class)->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/user/employees', [UserController::class, 'employees'])->name('user.employees')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/user/employee/create', [UserController::class, 'employeeCreate'])->name('user.employee.create')->middleware(['auth', 'XSS', 'revalidate']);
+Route::post('/user/employee/store', [UserController::class, 'employeeStore'])->name('user.employee.store')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/user/employee/edit/{id}', [UserController::class, 'employeeEdit'])->name('user.employee.edit')->middleware(['auth', 'XSS', 'revalidate']);
+Route::post('/user/employee/update', [UserController::class, 'employeeUpdate'])->name('user.employee.update')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/user/employee/{id}/show', [UserController::class, 'employeeShow'])->name('user.employee.show')->middleware(['auth', 'XSS', 'revalidate']);
+
+
 
 Route::post('change-password', [UserController::class, 'updatePassword'])->name('update.password');
 

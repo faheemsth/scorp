@@ -113,7 +113,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             data-target="730000">{{ isset($total_leads_by_status['opened lead']) ? $total_leads_by_status['opened lead'] : 0}}</span>
                                     </h2>
                                     
-                                    <h4>Opened Leads</h4>
+                                    <h4>Open Leads</h4>
                                 </div>
                             </div>
                         </div><!-- end card body -->
@@ -139,7 +139,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             data-target="730000">{{ isset($total_leads_by_status['closed lead']) ? $total_leads_by_status['closed lead'] : 0}}</span>
                                     </h2>
                                     
-                                    <h4>Closed Leads</h4>
+                                    <h4>Close Leads</h4>
                                 </div>
                             </div>
                         </div><!-- end card body -->
