@@ -35,7 +35,7 @@ if (isset($lead->is_active) && $lead->is_active) {
     @endif
 @endsection
 @section('page-title')
-    {{ isset( $lead->name ) ?  $lead->name  : ''}}
+    {{ isset($lead->name) ? $lead->name : '' }}
 @endsection
 
 
@@ -72,16 +72,16 @@ if (isset($lead->is_active) && $lead->is_active) {
 @php
     $products = isset($lead) ? $lead->products() : '';
     $sources = isset($lead) ? $lead->sources() : '';
-    $calls = isset($lead) ?  $lead->calls : '';
-    $emails = isset($lead) ? $lead->emails: '';
+    $calls = isset($lead) ? $lead->calls : '';
+    $emails = isset($lead) ? $lead->emails : '';
 @endphp
 
 {{-- comment  --}}
 @push('script-page')
     <script>
         $('.filter-btn-show').click(function() {
-                $("#filter-show").toggle();
-            });
+            $("#filter-show").toggle();
+        });
     </script>
 @endpush
 
@@ -91,9 +91,68 @@ if (isset($lead->is_active) && $lead->is_active) {
 @section('content')
     @if ($pipeline)
         <div class="row">
+
+            <div class="row">
+                <div class="col-md-3">
+                    <!-- card -->
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1 overflow-hidden">
+                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                                        <i class="fa fa-regular fa-check fa-2x" style="color: #b5282f"></i>
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0">
+
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-end justify-content-between mt-4">
+                                <div>
+                                    <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"> <span class="counter-value"
+                                            data-target="730000">{{ isset($total_leads_by_status['opened lead']) ? $total_leads_by_status['opened lead'] : 0}}</span>
+                                    </h2>
+                                    
+                                    <h4>Opened Leads</h4>
+                                </div>
+                            </div>
+                        </div><!-- end card body -->
+                    </div><!-- end card -->
+                </div>
+                <div class="col-md-3">
+                    <!-- card -->
+                    <div class="card card-animate">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-grow-1 overflow-hidden">
+                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                                        <i class="fa fa-regular fa-window-close fa-2x" style="color: #b5282f"></i>
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0">
+
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-end justify-content-between mt-4">
+                                <div>
+                                    <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"> <span class="counter-value"
+                                            data-target="730000">{{ isset($total_leads_by_status['closed lead']) ? $total_leads_by_status['closed lead'] : 0}}</span>
+                                    </h2>
+                                    
+                                    <h4>Closed Leads</h4>
+                                </div>
+                            </div>
+                        </div><!-- end card body -->
+                    </div><!-- end card -->
+                </div>
+            </div>
+
+
             <div class="col-xl-12">
                 <div class="card" style="max-width: 98%;border-radius:0px; min-height: 250px !important;">
                     <div class="card-body table-border-style" style="padding: 25px 3px;">
+                                            
+                        
                         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                             <div class="col-2">
                                 <p class="mb-0 pb-0">LEADS</p>
@@ -146,118 +205,126 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 </button>
 
                                 @can('create lead')
-                                <a href="#" data-size="lg" data-url="{{ route('leads.create') }}"
-                                    data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}"
-                                    class="btn p-2" style="background-color: #b5282f; color:white;">
-                                    <i class="ti ti-plus"></i>
-                                </a>
+                                    <a href="#" data-size="lg" data-url="{{ route('leads.create') }}"
+                                        data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}"
+                                        class="btn p-2" style="background-color: #b5282f; color:white;">
+                                        <i class="ti ti-plus"></i>
+                                    </a>
                                 @endcan
 
-                                <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}" class="btn btn-sm btn-primary"
-                                    id="import_csv_modal_btn" data-bs-toggle="modal" data-bs-target="#import_csv">
+                                <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}"
+                                    class="btn btn-sm btn-primary" id="import_csv_modal_btn" data-bs-toggle="modal"
+                                    data-bs-target="#import_csv">
                                     <i class="fa fa-file-csv"></i>
                                 </button>
                             </div>
                         </div>
-                        
 
-                        <div class="modal fade" style="z-index: 9999999;" id="import_csv" tabindex="-1" aria-labelledby="import_csv Label" aria-hidden="true">
+
+                        <div class="modal fade" style="z-index: 9999999;" id="import_csv" tabindex="-1"
+                            aria-labelledby="import_csv Label" aria-hidden="true">
                             <div class="modal-dialog  modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="import_csvLabel">Leads import</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
                                     </div>
-                        
-                                    <form action="{{ url('leads/import-csv') }}" method="POST" enctype="multipart/form-data">
+
+                                    <form action="{{ url('leads/import-csv') }}" method="POST"
+                                        enctype="multipart/form-data">
                                         @csrf
                                         <div class="modal-body">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-groups mt-2">
-                                                        <label for="lead-file" class="form-label">{{ __('Column') }}</label>
-                                                        <input type="file" name="leads_file" id="lead-file" class="form-control"
-                                                            accept=".csv" />
+                                                        <label for="lead-file"
+                                                            class="form-label">{{ __('Column') }}</label>
+                                                        <input type="file" name="leads_file" id="lead-file"
+                                                            class="form-control" accept=".csv" />
                                                     </div>
                                                 </div>
                                             </div>
-                        
+
                                             <div class="col-md-12">
                                                 <div class="mt-2 columns-matching">
                                                     <!-- Put any additional form elements here, if needed -->
                                                 </div>
                                             </div>
                                         </div>
-                        
+
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
-                                            <button type="submit" class="btn btn-primary submit_btn">{{ __('Create') }}</button>
+                                            <button type="button" class="btn btn-light"
+                                                data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                                            <button type="submit"
+                                                class="btn btn-primary submit_btn">{{ __('Create') }}</button>
                                         </div>
                                     </form>
-                        
-                        
+
+
                                 </div>
                             </div>
                         </div>
 
 
-                    
 
-                        <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+
+                        <div class="filter-data px-3" id="filter-show"
+                            <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                             <form action="/leads/list" method="GET" class="">
                                 <div class="row my-3">
-                                        <div class="col-md-4">                                              <label for="">Name</label>
-                                            <select class="form form-control select2" id="choices-multiple110" name="name[]" multiple
-                                                style="width: 95%;">
-                                                <option value="">Select name</option>
-                                                @foreach ($leads as $lead)
-                                                    <option value="{{ $lead->name }}"
-                                                        <?= isset($_GET['name']) && in_array($lead->name, $_GET['name']) ? 'selected' : '' ?>
-                                                        class="">{{ $lead->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                            
+                                    <div class="col-md-4"> <label for="">Name</label>
+                                        <select class="form form-control select2" id="choices-multiple110" name="name[]"
+                                            multiple style="width: 95%;">
+                                            <option value="">Select name</option>
+                                            @foreach ($leads as $lead)
+                                                <option value="{{ $lead->name }}"
+                                                    <?= isset($_GET['name']) && in_array($lead->name, $_GET['name']) ? 'selected' : '' ?>
+                                                    class="">{{ $lead->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
-                                  
-                                        <div class="col-md-4">                                              <label for="">Assigned To</label>
-                                            <select name="users[]" id="choices-multiple333"  class="form form-control select2" multiple
-                                                style="width: 95%;">
-                                                <option value="">Select user</option>
-                                                @foreach ($companies as $key => $company)
-                                                    <option value="{{ $key }}"
-                                                        <?= isset($_GET['users']) && in_array($key, $_GET['users']) ? 'selected' : '' ?>
-                                                        class="">{{ $company }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                   
 
-                                    
-                                        <div class="col-md-4">                                              <label for="">Stage</label>
-                                            <select class="form form-control select2" id="choices-multiple444" name="stages[]" multiple
-                                                style="width: 95%;">
-                                                <option value="">Select Stage</option>
-                                                @foreach ($stages as $stage)
-                                                    <option value="{{ $stage->id }}"
-                                                        <?= isset($_GET['stages']) && in_array($stage->id, $_GET['stages']) ? 'selected' : '' ?>
-                                                        class="">{{ $stage->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
 
-                                        <div class="col-md-4">                                              <label for="">Created By</label>
-                                            <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple
-                                                style="width: 95%;">
-                                                <option value="">Select Brand</option>
-                                                @foreach ($brands as $brand)
-                                                    <option value="{{ $brand->id }}"
-                                                        <?= isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' ?>
-                                                        class="">{{ $brand->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    
+                                    <div class="col-md-4"> <label for="">Assigned To</label>
+                                        <select name="users[]" id="choices-multiple333" class="form form-control select2"
+                                            multiple style="width: 95%;">
+                                            <option value="">Select user</option>
+                                            @foreach ($companies as $key => $company)
+                                                <option value="{{ $key }}"
+                                                    <?= isset($_GET['users']) && in_array($key, $_GET['users']) ? 'selected' : '' ?>
+                                                    class="">{{ $company }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+
+
+                                    <div class="col-md-4"> <label for="">Stage</label>
+                                        <select class="form form-control select2" id="choices-multiple444"
+                                            name="stages[]" multiple style="width: 95%;">
+                                            <option value="">Select Stage</option>
+                                            @foreach ($stages as $stage)
+                                                <option value="{{ $stage->id }}"
+                                                    <?= isset($_GET['stages']) && in_array($stage->id, $_GET['stages']) ? 'selected' : '' ?>
+                                                    class="">{{ $stage->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4"> <label for="">Created By</label>
+                                        <select class="form form-control select2" id="choices-multiple555"
+                                            name="created_by[]" multiple style="width: 95%;">
+                                            <option value="">Select Brand</option>
+                                            @foreach ($brands as $brand)
+                                                <option value="{{ $brand->id }}"
+                                                    <?= isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' ?>
+                                                    class="">{{ $brand->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
 
 
                                     <div class="col-md-4 mt-2">
@@ -266,7 +333,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             value="<?= isset($_GET['created_at']) ? $_GET['created_at'] : '' ?>"
                                             style="width: 95%; border-color:#aaa">
                                     </div>
-    
+
                                     <div class="col-md-4 mt-2">
                                         <br>
                                         <input type="submit" class="btn form-btn me-2"
@@ -352,14 +419,15 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                 <td class="py-1">{{ $lead->phone }}</td>
                                                 <td>{{ !empty($lead->stage) ? $lead->stage->name : '-' }}</td>
                                                 <td class="py-1">
-                                                    @php 
+                                                    @php
                                                         $assigned_to = isset($lead->user_id) && isset($users[$lead->user_id]) ? $users[$lead->user_id] : 0;
-                                                    @endphp 
-                                                
-                                                    @if($assigned_to !=  0)
-                                                    <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{$lead->user_id}}+'/user_detail')" >
-                                                        {{ $assigned_to }}
-                                                    </span>
+                                                    @endphp
+
+                                                    @if ($assigned_to != 0)
+                                                        <span style="cursor:pointer" class="hyper-link"
+                                                            onclick="openSidebar('/users/'+{{ $lead->user_id }}+'/user_detail')">
+                                                            {{ $assigned_to }}
+                                                        </span>
                                                     @endif
                                                 </td>
                                                 @if (\Auth::user()->type == 'super admin')
@@ -482,8 +550,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 @push('script-page')
     <script>
-
-$(document).on("click", "#import_csv_modal_btn", function() {
+        $(document).on("click", "#import_csv_modal_btn", function() {
             $("#import_csv").modal('show');
         })
 
@@ -575,7 +642,7 @@ $(document).on("click", "#import_csv_modal_btn", function() {
                         $('#commonModal').modal('hide');
                         $('.leads-list-tbody').prepend(data.html);
                         openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
-                       // openNav(data.lead.id);
+                        // openNav(data.lead.id);
                         return false;
                     } else {
                         show_toastr('Error', data.message, 'error');
@@ -605,10 +672,10 @@ $(document).on("click", "#import_csv_modal_btn", function() {
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
                         // openNav(id);
-                         $("#commonModal").modal('hide');
+                        $("#commonModal").modal('hide');
                         openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
                         //window.location.href = '/leads/list';
-                         return false;
+                        return false;
                     } else {
                         show_toastr('Error', data.message, 'error');
                         $(".new-lead-btn").val('Create');
@@ -640,12 +707,12 @@ $(document).on("click", "#import_csv_modal_btn", function() {
                         // $('.lead_stage').removeClass('current');
                         // currentBtn.addClass('current');
                         // window.location.href = '/leads/list';
-                    }else{
+                    } else {
                         show_toastr('Error', data.message, 'error');
                     }
                 }
             });
-            });
+        });
 
         /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
         function openNav(lead_id) {

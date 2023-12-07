@@ -83,6 +83,7 @@ class LeadController extends Controller
                 $total_records = Lead::whereIn('leads.created_by', $lead_created_by)->count();
             }
 
+            
             return view('leads.index', compact('pipelines', 'pipeline', 'total_records'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
@@ -280,7 +281,21 @@ class LeadController extends Controller
             $brands = User::where('type', 'company')->get();
             $sourcess = Source::get()->pluck('name', 'id');
             
-            return view('leads.list', compact('pipelines', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands'));
+            $total_leads_by_status_records = Lead::select([
+                'lead_stages.type',
+                DB::raw('count(leads.id) as total_leads')
+            ])
+            ->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')
+            ->groupBy('lead_stages.type')
+            ->get();
+            
+            $total_leads_by_status = [];
+
+            foreach($total_leads_by_status_records as $status){
+                $total_leads_by_status[$status->type] = $status->total_leads;
+            }
+
+            return view('leads.list', compact('pipelines', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }

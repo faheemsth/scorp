@@ -71,8 +71,12 @@
                                 <div class="tab-pane fade show @if($i==0) active @endif" id="tab{{$key}}" role="tabpanel" aria-labelledby="pills-user-tab-1">
                                     <ul class="list-group sortable">
                                         @foreach ($pipeline['lead_stages'] as $lead_stages)
-                                            <li class="list-group-item" data-id="{{$lead_stages->id}}">
-                                                <span class="text-xs text-dark">{{$lead_stages->name}}</span>
+                                            <li class="list-group-item d-flex justify-content-between" data-id="{{$lead_stages->id}}">
+
+                                                <span class="text-xs text-dark" style="width: 100px;">{{$lead_stages->name}}</span>
+                                                
+                                                <span class="text-xs text-dark">{{$lead_stages->type}}</span>
+
                                                 <span class="float-end">
 
                                                 @can('edit lead stage')

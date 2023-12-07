@@ -5,6 +5,12 @@
             {{ Form::label('name', __('Stage Name'),['class'=>'form-label']) }}
             {{ Form::text('name', null, array('class' => 'form-control','required'=>'required')) }}
         </div>
+
+        <div class="form-group col-12">
+            {{ Form::label('lead_stage_type', __('Type'), ['class' => 'form-label']) }}
+            {{ Form::select('lead_stage_type', ['opened lead' => 'Open Lead', 'closed lead' => 'Close Lead'], $leadStage->type, ['class' => 'form-control select2', 'required' => 'required']) }}
+        </div>
+
         <div class="form-group col-12">
             {{ Form::label('pipeline_id', __('Pipeline'),['class'=>'form-label']) }}
             {{ Form::select('pipeline_id', $pipelines,null, array('class' => 'form-control select2','required'=>'required')) }}

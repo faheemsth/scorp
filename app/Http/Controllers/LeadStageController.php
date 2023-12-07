@@ -95,6 +95,7 @@ class LeadStageController extends Controller
             }
             $lead_stage              = new LeadStage();
             $lead_stage->name        = $request->name;
+            $lead_stage->type         = $request->lead_stage_type;
             $lead_stage->pipeline_id = $request->pipeline_id;
             $lead_stage->created_by  = \Auth::user()->ownerId();
             $lead_stage->save();
@@ -179,6 +180,7 @@ class LeadStageController extends Controller
 
                 $leadStage->name        = $request->name;
                 $leadStage->pipeline_id = $request->pipeline_id;
+                $leadStage->type        = $request->lead_stage_type;
                 $leadStage->save();
 
                 return redirect()->route('lead_stages.index')->with('success', __('Lead Stage successfully updated!'));
