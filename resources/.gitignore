@@ -1,0 +1,8 @@
+# Ignore log files
+*.log
+
+# Ignore build directories
+/storage/framework
+
+# Ignore node_modules directory (common for JavaScript projects)
+/node_modules/
