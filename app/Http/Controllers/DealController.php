@@ -254,7 +254,7 @@ class DealController extends Controller
         $filters = $this->dealFilters();
 
         if ($usr->can('manage deal') || \Auth::user()->type == 'super admin') {
-          
+
             //whole query
             $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
             foreach ($filters as $column => $value) {
@@ -294,7 +294,7 @@ class DealController extends Controller
             }
 
 
-            //if list global search 
+            //if list global search
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
                 $deals_query->Where('deals.name', 'like', '%' . $g_search . '%');
@@ -312,7 +312,7 @@ class DealController extends Controller
             $brands = User::where('type', 'company')->get();
             $users = User::select(['id', 'name'])->get()->pluck('name', 'id')->toArray();
             $sources = Source::get()->pluck('name', 'id')->toArray();
-            
+
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('deals.deals_list_ajax', compact('deals', 'organizations', 'stages', 'users', 'total_records', 'sources'))->render();
 
@@ -321,9 +321,9 @@ class DealController extends Controller
                     'html' => $html
                 ]);
             }
-            
-            
-            
+
+
+
             return view('deals.list', compact('deals', 'organizations', 'stages', 'users', 'total_records', 'sources', 'brands'));
         }
 
@@ -373,7 +373,7 @@ class DealController extends Controller
                     $id_deals = $usr->deals->pluck('id');
                 }
 
-                //check filters 
+                //check filters
                 $filters = [];
                 if (isset($_GET['name']) && !empty($_GET['name'])) {
                     $filters['name'] = $_GET['name'];
@@ -490,7 +490,7 @@ class DealController extends Controller
                 $total_records = count($deals_query->groupBy('deals.id')->get());
 
                 $deals = $deals_query->groupBy('deals.id')->orderBy('deals.order')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
-            } //end check role 
+            } //end check role
 
             $users = User::get()->pluck('name', 'id');
             $stages = Stage::get();
@@ -2578,7 +2578,7 @@ class DealController extends Controller
             }
 
 
-            
+
             $tasks_for_filter = $tasks->get();
             $total_records = $tasks->count();
 
@@ -2729,7 +2729,7 @@ class DealController extends Controller
 
 
 
-        //$value    
+        //$value
         $data['value'] = $value;
 
         $html = view('deals.task_field_fetch', $data)->render();
@@ -2751,26 +2751,13 @@ class DealController extends Controller
 
     public function taskDiscussionStore($id, Request $request)
     {
-
-        $usr        = \Auth::user();
-
-        // DealTask::where('id', $id)
-        //          ->update([
-        //             'comment' => $request->input('comment')
-        //          ]);
-
-
-
-        // $org_id = User::where('id', $id)->first();
-
-        //if ($lead->created_by == $usr->creatorId()) {
-        $discussion             = new TaskDiscussion();
-        $discussion->comment    = $request->comment;
-        $discussion->task_id    = $id;
-        $discussion->created_by = $usr->id;
-        $discussion->save();
-
-        // $discussions = TaskDiscussion::join()->where(['task_id' => $id])->orderBy('created_at', 'DESC')->get()->toArray();
+        $usr= \Auth::user();
+        $discussion = !empty($request->id) ? TaskDiscussion::find($request->id) : new TaskDiscussion();
+        $discussion->fill([
+            'comment'    => $request->comment,
+            'task_id'    => $id,
+            'created_by' => \Auth::id(),
+        ])->save();
 
         $discussions = TaskDiscussion::select('task_discussions.id', 'task_discussions.comment', 'task_discussions.created_at', 'users.name', 'users.avatar')
             ->join('users', 'task_discussions.created_by', 'users.id')
@@ -2778,20 +2765,29 @@ class DealController extends Controller
             ->orderBy('task_discussions.created_at', 'DESC')
             ->get()
             ->toArray();
-
-
-        $html = view('deals.getDiscussions', compact('discussions'))->render();
-
+        $html = view('deals.getDiscussions', compact('discussions','id'))->render();
         return json_encode([
             'status' => 'success',
             'html' => $html,
             'message' => __('Message successfully added!')
         ]);
+    }
 
-        // return redirect()->back()->with('success', __('Message successfully added!'))->with('status', 'discussion');
-        // } else {
-        //     return redirect()->back()->with('error', __('Permission Denied.'))->with('status', 'discussion');
-        // }
+    public function taskDiscussionDelete($id,$taskID){
+        TaskDiscussion::find($id)->delete();
+
+        $discussions = TaskDiscussion::select('task_discussions.id', 'task_discussions.comment', 'task_discussions.created_at', 'users.name', 'users.avatar')
+            ->join('users', 'task_discussions.created_by', 'users.id')
+            ->where(['task_discussions.task_id' => $taskID])
+            ->orderBy('task_discussions.created_at', 'DESC')
+            ->get()
+            ->toArray();
+        $html = view('deals.getDiscussions', compact('discussions','id'))->render();
+        return json_encode([
+            'status' => 'success',
+            'html' => $html,
+            'message' => __('Message successfully added!')
+        ]);
     }
 
 

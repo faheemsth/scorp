@@ -463,6 +463,30 @@
 
         });
 
+        function DeleteComment(id,taskID){
+            $('#dellhover').show();
+            $.ajax({
+                type: "GET",
+                url: "{{ url('delete/task/comment') }}"+'/'+id+'/'+taskID,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    console.log(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('#commonModal').modal('hide');
+                        $('.list-group-flush').html(data.html);
+                        // openNav(data.lead.id);
+                        // return false;
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                        $(".create-discussion-btn").val('Create');
+                        $('.create-discussion-btn').removeAttr('disabled');
+                    }
+                }
+            });
+        }
 
         $(document).on("submit", "#taskDiscussion", function(e) {
             e.preventDefault();

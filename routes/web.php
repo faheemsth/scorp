@@ -845,6 +845,7 @@ Route::get('/tasks/get-field/{id}', 'DealController@fetchOrgField')->middleware(
 Route::get('/tasks/{id}/update-data', [DealController::class, 'updateTaskData'])->name('tasks.update.data')->middleware(['auth', 'XSS']);;
 Route::get('/tasks/{id}/discussions', [DealController::class, 'taskDiscussionCreate'])->name('tasks.discussions.create')->middleware(['auth', 'XSS']);
 Route::post('/tasks/{id}/discussions', [DealController::class, 'taskDiscussionStore'])->name('tasks.discussion.store')->middleware(['auth', 'XSS']);
+Route::get('/delete/task/comment/{id}/{taskID}', [DealController::class, 'taskDiscussionDelete'])->name('tasks.discussion.delete')->middleware(['auth', 'XSS']);
 
 
 

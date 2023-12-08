@@ -546,25 +546,18 @@
                                                 <div class="">
                                                     <div class="col-12">
                                                         <div class="card">
-                                                            <div class="card-header px-0 pt-0"
-                                                                style="padding-bottom: 18px;">
-                                                                <div class="d-flex justify-content-end">
-                                                                    <div class="float-end">
-                                                                        <a title="{{ __('Add Message') }}"
-                                                                            class="btn btn-sm text-white px-md-3 textareaClass"
-                                                                            style="background-color: #b5282f;">
-                                                                            <i class="ti ti-plus"></i>
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            <textarea name="" id="" cols="95" class="form-control textareaClass" readonly
+                                                                style="cursor: pointer"></textarea>
                                                             <span id="textareaID" style="display: none;">
                                                                 <div class="card-header px-0 pt-0"
                                                                     style="padding-bottom: 18px;">
                                                                     {{ Form::model($task, ['route' => ['tasks.discussion.store', $task->id], 'method' => 'POST', 'id' => 'taskDiscussion']) }}
                                                                     {{ Form::textarea('comment', null, ['class' => 'form-control']) }}
+                                                                    <input type="hidden" id="id"
+                                                                        name="id">
                                                                     <div class="d-flex justify-content-end mt-2">
-                                                                        <button type="submit" class="btn btn-secondary btn-sm">Save</button>
+                                                                        <button type="submit"
+                                                                            class="btn btn-secondary btn-sm">Save</button>
                                                                     </div>
                                                                     {{ Form::close() }}
                                                                 </div>
@@ -573,7 +566,8 @@
                                                                 <ul class="list-group list-group-flush mt-2">
 
                                                                     @foreach ($discussions as $discussion)
-                                                                        <li class="list-group-item px-3">
+                                                                        <li class="list-group-item px-3"
+                                                                            id="lihover">
                                                                             <div
                                                                                 class="d-block d-sm-flex align-items-start">
                                                                                 <img src="@if ($discussion['avatar'] && $discussion['avatar'] != '') {{ asset('/storage/uploads/avatar/' . $discussion['avatar']) }} @else {{ asset('/storage/uploads/avatar/avatar.png') }} @endif"
@@ -590,11 +584,32 @@
                                                                                                 class="text-muted text-sm">{{ $discussion['name'] }}</span>
                                                                                         </div>
                                                                                         <div
-                                                                                            class=" form-switch form-switch-right mb-4">
+                                                                                            class=" form-switch form-switch-right ">
                                                                                             {{ $discussion['created_at'] }}
                                                                                         </div>
-                                                                                        <i class="ti ti-pencil"></i>
-                                                                                        <i class="ti ti-trash"></i>
+
+                                                                                        <style>
+                                                                                            #editable {
+                                                                                                display: none;
+                                                                                            }
+
+                                                                                            #lihover:hover #editable {
+                                                                                                display: flex;
+                                                                                            }
+                                                                                        </style>
+                                                                                        <div class="d-flex gap-3"
+                                                                                            id="dellhover">
+                                                                                            <i class="ti ti-pencil textareaClassedit"
+                                                                                                data-comment="{{ $discussion['comment'] }}"
+                                                                                                data-id="{{ $discussion['id'] }}"
+                                                                                                id="editable"
+                                                                                                style="font-size: 20px;"></i>
+                                                                                            <script></script>
+                                                                                            <i class="ti ti-trash"
+                                                                                                id="editable"
+                                                                                                style="font-size: 20px;"
+                                                                                                onclick="DeleteComment('{{ $discussion['id'] }}','{{ $task->id }}')"></i>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -713,8 +728,28 @@
     </div>
     <script>
         $(document).ready(function() {
-$('.textareaClass').click(function() {
-$('#textareaID').toggle("slide");
-});
-});
+            $('textarea[name="comment"]').val('');
+            $('#id').val('');
+            $('.textareaClass').click(function() {
+                $('#textareaID, .textareaClass').toggle("slide");
+            });
+
+
+            $('.textareaClassedit').click(function() {
+                var dataId = $(this).data('id');
+                var dataComment = $(this).data('comment');
+                $('textarea[name="comment"]').val(dataComment);
+                $('#id').val(dataId);
+                $('#textareaID, #dellhover, .textareaClass').show();
+                $('.textareaClass').toggle("slide");
+
+            });
+
+
+            $('#taskDiscussion').submit(function(event) {
+                event.preventDefault(); // Prevents the default form submission
+                $('#textareaID, .textareaClass').toggle("slide");
+            });
+
+        });
     </script>
