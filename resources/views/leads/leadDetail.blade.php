@@ -93,7 +93,7 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @can('edit lead')
-                    
+
                     @if (!empty($deal))
                             <a href="@can('View Deal') @if ($deal->is_active) {{ '/get-deal-detail?deal_id='.$deal->id }} @else # @endif @else # @endcan"
                                 data-size="lg" data-bs-toggle="tooltip"
@@ -109,7 +109,7 @@
                                 <i class="ti ti-exchange"></i>
                             </a>
                         @endif
-                    
+
                         @endcan
 
                     <a href="#" data-url="{{ URL::to('leads/' . $lead->id . '/labels') }}" data-ajax-popup="true"
@@ -177,7 +177,7 @@
                         if ($lead->stage->name == $stage->name) {
                             $done = false;
                         }
-                        
+
                         ?>
 
                         <a type="button" data-lead-id="{{ $lead->id }}" data-stage-id="{{ $stage->id }}"
@@ -299,7 +299,7 @@
                                                                     {{ isset($branches[ $lead->branch_id] ) ? $branches[ $lead->branch_id] : '' }}
                                                                 </td>
                                                             </tr>
-                                                            
+
                                                             <tr>
                                                                 <td class=""
                                                                     style="width: 100px; text-align: right; font-size: 14px;">
@@ -364,8 +364,10 @@
                                                                     @endphp
 
                                                                     <div class="d-flex edit-input-field-div">
-                                                                        <div class="input-group border-0 sources">
-                                                                            {{ $sources }}
+                                                                        <div class="input-group border-0 sources" style="width: 316px;">
+                                                                            <span style="width: 300px; word-wrap: break-word; font-size: 12px; color: blue; text-decoration: underline;">
+                                                                                {{ substr($sources, 0, 60) }}{{ strlen($sources) > 70 ? '...' : '' }}
+                                                                            </span>
                                                                         </div>
                                                                         <div class="edit-btn-div">
                                                                             <button
@@ -415,11 +417,14 @@
                                                                     style="padding-left: 10px; font-size: 14px; width:300px">
 
                                                                     <div class="d-flex edit-input-field-div">
-                                                                        <div class="input-group border-0 drive_link">
-                                                                            
-                                                                            <a href="{{ $lead->drive_link }}" style="font-size: 12px; color:blue;text-decoration: underline;" target="_blank">
-                                                                                {{ $lead->drive_link }}
+                                                                        <div class="input-group border-0 drive_link" style="width: 316px;">
+
+                                                                            <a href="{{ $lead->drive_link }}" style="width: 300px; word-wrap: break-word; font-size: 12px; color: blue; text-decoration: underline;" target="_blank">
+                                                                                <span style="width: 300px; word-wrap: break-word; font-size: 12px; color: blue; text-decoration: underline;">
+                                                                                    {{ substr($lead->drive_link, 0, 60) }}{{ strlen($lead->drive_link) > 70 ? '...' : '' }}
+                                                                                </span>
                                                                             </a>
+
                                                                         </div>
                                                                         <div class="edit-btn-div">
                                                                             <button
@@ -589,18 +594,12 @@
                                                                     style="padding-left: 10px; font-size: 14px;">
 
 
-                                                                    <div
-                                                                        class="d-flex align-items-baseline edit-input-field-div">
-
-                                                                        <input type="checkbox" name=""
-                                                                            id="" value=""
-                                                                            class="mx-3 my-1">
-
-
-                                                                        <button
-                                                                            class="btn btn-sm btn-secondary edit-btn-data rounded-0 btn-effect-none"
+                                                                    <div class="d-flex align-items-baseline edit-input-field-div">
+                                                                        <input type="checkbox" name="" id="" value="" class="mx-3 my-1">
+                                                                        <button class="btn btn-sm btn-secondary edit-btn-data rounded-0 btn-effect-none"
                                                                             style="padding: 3px 6px;"><i
-                                                                                class="ti ti-pencil"></i></button>
+                                                                                class="ti ti-pencil"></i>
+                                                                        </button>
 
                                                                     </div>
                                                                 </td>
@@ -1025,7 +1024,7 @@
                                                                                     <th scope="col">Added By
                                                                                     </th>
                                                                                    <th scope="col">Action</th>
-                                                                                   
+
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody class="notes-tbody">
