@@ -111,4 +111,20 @@ class ApplicationsController extends Controller
             return redirect()->back()->with('error', __('Permission Denied.'));
          }
     }
+
+    public function getDealApplication(){
+        $id = $_GET['id'];
+        $applications = \App\Models\DealApplication::where('deal_id', $id)->pluck('application_key', 'id');
+        
+        $html = '<option value=""> Select Application</option>';
+
+        foreach($applications as $key => $app){
+            $html .= '<option value="'.$key.'">'.$app.'</option>';
+        }
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
+    }
 }

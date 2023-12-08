@@ -17,12 +17,46 @@
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body table-border-style">
-            <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
+
+                <div class="row">
+                    @forelse($statuses as $key => $status)
+                    <div class="col-md-2">
+                        <!-- card -->
+                        <div class="card card-animate">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center">
+                                    <div class="flex-grow-1 overflow-hidden">
+                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                                            <i class="fa fa-regular fa-window-close fa-2x" style="color: #b5282f"></i>
+                                        </p>
+                                    </div>
+                                    <div class="flex-shrink-0">
+
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-end justify-content-between mt-4">
+                                    <div>
+                                        <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"> <span class="counter-value" data-target="730000">{{ $status }}</span>
+                                        </h2>
+
+                                        <h4>{{ $key }}</h4>
+                                    </div>
+                                </div>
+                            </div><!-- end card body -->
+                        </div><!-- end card -->
+                    </div>
+                    @empty
+
+                    @endforelse
+                </div>
+
+
+                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                     <div class="col-2">
-                        <p class="mb-0 pb-0">Universities</p>
+                        <p class="mb-0 pb-0">Institutes</p>
                         <div class="dropdown">
                             <button class="All-leads" type="button">
-                                ALL Universities
+                                ALL Institutes
                             </button>
                         </div>
                     </div>
@@ -38,7 +72,7 @@
                         </div>
 
                         @can('create university')
-                        <a href="#" data-size="md" data-url="{{ route('university.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create University')}}" class="btn btn-sm btn-primary pt-2">
+                        <a href="#" data-size="md" data-url="{{ route('university.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-size="lg" title="{{__('Create University')}}" class="btn btn-sm btn-primary pt-2">
                             <i class="ti ti-plus"></i>
                         </a>
                         @endcan
@@ -80,11 +114,11 @@
                                     {{ $key+1 }}
                                 </td>
                                 <td>
-                                @if(!empty($university->name))
-                                    <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/university/'+{{$university->id}}+'/university_detail')" >
+                                    @if(!empty($university->name))
+                                    <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/university/'+{{$university->id}}+'/university_detail')">
                                         {{ !empty($university->name)?$university->name:'' }}
-                                    </span> 
-                                @endif
+                                    </span>
+                                    @endif
 
                                 </td>
                                 <td>{{ !empty($university->country)?$university->country:'' }}</td>

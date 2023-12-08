@@ -20,14 +20,27 @@ class UniversityController extends Controller
      */
     public function index()
     {
-      //dd(\Auth::user()->can('manage university'));
-        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('manage university')) { 
+        //dd(\Auth::user()->can('manage university'));
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('manage university')) {
 
-             $universities = University::get();
-
+            $universities = University::get();
             $users = User::get()->pluck('name', 'id');
 
-            return view('university.index')->with(['universities'=> $universities, 'users' => $users]);
+            $universityStatsByCountries = University::selectRaw('count(id) as total_universities, country')
+                ->groupBy('country')
+                ->get();
+            $statuses = [];
+            foreach ($universityStatsByCountries as $university) {
+                $statuses[$university->country] = $university->total_universities;
+            }
+
+            $data = [
+                'universities' => $universities,
+                'users' => $users,
+                'statuses' => $statuses
+            ];
+
+            return view('university.index', $data);
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -42,7 +55,23 @@ class UniversityController extends Controller
     {
         //
         if (\Auth::user()->can('create university')) {
-            return view('university.create');
+
+            //getting countries
+            $countries = countries();
+
+            //months
+            $months = months();
+
+            //getting companies
+            $companies = companies();
+
+            $data = [
+                'countries' => $countries,
+                'companies' => $companies,
+                'months'  => $months
+            ];
+
+            return view('university.create', $data);
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
         }
@@ -56,6 +85,9 @@ class UniversityController extends Controller
      */
     public function store(Request $request)
     {
+        // echo "<pre>";
+        // print_r($request->input());
+        // die();
         //
         if (\Auth::user()->can('create university')) {
 
@@ -80,9 +112,15 @@ class UniversityController extends Controller
             $university->name        = $request->name;
             $university->country        = $request->country;
             $university->city        = $request->city;
+            $university->campuses        = $request->city;
             $university->phone        = $request->phone;
             $university->note        = $request->note;
             $university->created_by = \Auth::user()->id;
+            $university->intake_months = implode(',', $request->months);
+            $university->territory = implode(',', $request->territory);
+            $university->company_id = $request->company_id;
+            $university->resource_drive_link = $request->resource_drive_link;
+            $university->application_method_drive_link = $request->application_method_drive_link;
             $university->save();
 
             return redirect()->route('university.index')->with('success', __('University successfully created!'));
@@ -116,7 +154,23 @@ class UniversityController extends Controller
         if (\Auth::user()->can('edit university')) {
             $university = University::find($id);
 
-            return view('university.edit', compact('university'));
+            //getting countries
+            $countries = countries();
+
+            //months
+            $months = months();
+
+            //getting companies
+            $companies = companies();
+
+            $data = [
+                'countries' => $countries,
+                'companies' => $companies,
+                'months'  => $months,
+                'university' => $university
+            ];
+
+            return view('university.edit', $data);
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
         }
@@ -154,8 +208,14 @@ class UniversityController extends Controller
             $university->name        = $request->name;
             $university->country        = $request->country;
             $university->city        = $request->city;
+            $university->campuses        = $request->city;
             $university->phone        = $request->phone;
             $university->note        = $request->note;
+            $university->intake_months = implode(',', $request->months);
+            $university->territory = implode(',', $request->territory);
+            $university->company_id = $request->company_id;
+            $university->resource_drive_link = $request->resource_drive_link;
+            $university->application_method_drive_link = $request->application_method_drive_link;
             $university->save();
 
             return redirect()->route('university.index')->with('success', __('University successfully updated!'));
@@ -173,24 +233,22 @@ class UniversityController extends Controller
     public function destroy($id)
     {
         //
-        if(\Auth::user()->can('delete university'))
-        {
+        if (\Auth::user()->can('delete university')) {
             University::find($id)->delete();
 
             return redirect()->route('university.index')->with('success', __('University successfully deleted!'));
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
 
-    public function universityDetail($id){
+    public function universityDetail($id)
+    {
         $university = University::findOrFail($id);
 
         //related applications
         $applications = DealApplication::where('university_id', $id)->get();
-        
+
         //related admissions
         $deals = Deal::where('university_id', $id)->get();
 
@@ -201,6 +259,35 @@ class UniversityController extends Controller
         $users = User::get()->pluck('name', 'id')->toArray();
 
         $html = view('university.universityDetail', compact('university', 'applications', 'deals', 'users', 'dealArr', 'stages', 'organizations'))->render();
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
+    }
+
+    public function getIntakeMonths()
+    {
+        $id = $_GET['id'];
+        $university = University::findOrFail($id);
+        $html = '<option value=""> Select month </option>';
+
+      
+
+        if ($university) {
+
+            $intake_months = $university->intake_months;
+            $uni_months = explode(',', $intake_months);
+            $months = months();
+
+
+            foreach ($months as $key => $month) {
+                if (in_array($key, $uni_months)) {
+                    $html .= '<option value="' . $key . '"> ' . $month . ' </option>';
+                }
+            }
+           // $html .= '</select>';
+        }
 
         return json_encode([
             'status' => 'success',

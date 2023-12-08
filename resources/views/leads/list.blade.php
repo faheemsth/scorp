@@ -692,6 +692,8 @@ if (isset($lead->is_active) && $lead->is_active) {
             var stage_id = $(this).attr('data-stage-id');
             var currentBtn = $(this);
 
+
+
             $.ajax({
                 type: 'GET',
                 url: "{{ route('update-lead-stage') }}",

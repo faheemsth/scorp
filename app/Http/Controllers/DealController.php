@@ -2347,34 +2347,42 @@ class DealController extends Controller
 
     public function storeApplication(Request $request)
     {
+      
 
         if (\Auth::user()->can('create application')) {
-
+           
             $validator = \Validator::make(
                 $request->all(),
                 [
                     'university' => 'required',
                     'course' => 'required',
                     'status' => 'required',
-                    'intake' => 'required'
+                    'intake_month' => 'required'
                 ]
             );
+
+         
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
                 return redirect()->back()->with('error', $messages->first());
             }
+
+           
 
             //check application exist or not
             $passport_number = $request->passport_number;
             $university_name = University::select('name')->where(['id' => (int)$request->university])->first()->name;
             $university_name = str_replace(' ', '-', $university_name);
 
+            
 
             $is_exist = DealApplication::where(['application_key' => $passport_number . '-' . $university_name])->first();
+          
+           
             if ($passport_number && $is_exist) {
                 return json_encode([
                     'status' => 'error',
-                    'message' => __('Application already exist')
+                    'message' => __('Application already created by '.allUsers()[$is_exist->created_by].' for '.allUniversities()[$is_exist->university_id])
                 ]);
             }
 
@@ -2387,8 +2395,9 @@ class DealController extends Controller
                 'course' => $request->course,
                 'stage_id' => $request->status,
                 'external_app_id' => $request->application_key,
-                'intake' => date('Y-m-d', strtotime($request->intake)),
-                'name' => $deal->name . '-' . $request->course . '-' . $university_name . '-' . $request->application_key
+                'intake' =>$request->intake_month,
+                'name' => $deal->name . '-' . $request->course . '-' . $university_name . '-' . $request->application_key,
+                'created_by' => \Auth::user()->id
             ]);
 
             return json_encode([
@@ -3148,11 +3157,21 @@ class DealController extends Controller
     {
         $deal_id = $_GET['deal_id'];
         $stage_id = $_GET['stage_id'];
+        if(isset($_GET['application_id'])){
+            $application_id = $_GET['application_id'];
+            DealApplication::where('id', '!=', $application_id)->update(['status' => 0]);
+        }
+        
+
         Deal::where('id', $deal_id)->update(['stage_id' => $stage_id]);
         return json_encode([
             'status' => 'success',
             'message' => 'Deal stage successfully udpated!!!'
         ]);
+    }
+
+    public function getDealApplications(){
+        
     }
 
     ////////////////////////////////////////////////////////////

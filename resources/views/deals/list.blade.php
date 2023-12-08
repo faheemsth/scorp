@@ -1,22 +1,22 @@
 @extends('layouts.admin')
 @section('page-title')
-    {{ __('Manage Deals') }}
+{{ __('Manage Deals') }}
 @endsection
 
 @push('css-page')
-    <link rel="stylesheet" href="{{ asset('css/summernote/summernote-bs4.css') }}">
+<link rel="stylesheet" href="{{ asset('css/summernote/summernote-bs4.css') }}">
 @endpush
 @push('script-page')
-    <script src="{{ asset('css/summernote/summernote-bs4.js') }}"></script>
-    <script>
-        $(document).on("change", ".change-pipeline select[name=default_pipeline_id]", function() {
-            $('#change-pipeline').submit();
-        });
+<script src="{{ asset('css/summernote/summernote-bs4.js') }}"></script>
+<script>
+    $(document).on("change", ".change-pipeline select[name=default_pipeline_id]", function() {
+        $('#change-pipeline').submit();
+    });
 
-        $(".add-filter").on("click", function() {
-            $(".filter-data").toggle();
-        })
-    </script>
+    $(".add-filter").on("click", function() {
+        $(".filter-data").toggle();
+    })
+</script>
 @endpush
 
 <style>
@@ -186,13 +186,16 @@
     #tfont {
         font-size: 13px;
     }
-    table tr td{
+
+    table tr td {
         font-size: 13px !important;
     }
-    table th:last-child{
+
+    table th:last-child {
         text-align: end;
     }
-    table td:last-child{
+
+    table td:last-child {
         text-align: end;
     }
 
@@ -216,178 +219,168 @@
 </style>
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
-    <li class="breadcrumb-item">{{ __('Lead') }}</li>
+<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
+<li class="breadcrumb-item">{{ __('Lead') }}</li>
 @endsection
 
 @section('content')
-    {{-- @if ($pipeline) --}}
-    @if (\Auth::user()->type != 'super admin')
-        <div class="row d-none">
-            <div class="col-sm-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col-auto mb-3 mb-sm-0">
-                                <small class="text-muted">{{ __('Total Deals') }}</small>
-                                <h3 class="m-0">{{ count($deals) }}</h3>
-                            </div>
-                            <div class="col-auto">
-                                <div class="theme-avtar bg-info">
-                                    <i class="ti ti-layers-difference"></i>
-                                </div>
-                            </div>
-                        </div>
+{{-- @if ($pipeline) --}}
+@if (\Auth::user()->type != 'super admin')
+<div class="row d-none">
+    <div class="col-sm-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-auto mb-3 mb-sm-0">
+                        <small class="text-muted">{{ __('Total Deals') }}</small>
+                        <h3 class="m-0">{{ count($deals) }}</h3>
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col-auto mb-3 mb-sm-0">
-                                <small class="text-muted">{{ __('This Month Total Deals') }}</small>
-                                <h3 class="m-0">{{ 0 }}</h3>
-                            </div>
-                            <div class="col-auto">
-                                <div class="theme-avtar bg-primary">
-                                    <i class="ti ti-layers-difference"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col-auto mb-3 mb-sm-0">
-                                <small class="text-muted">{{ __('This Week Total Deals') }}</small>
-                                <h3 class="m-0">{{ 0 }}</h3>
-                            </div>
-                            <div class="col-auto">
-                                <div class="theme-avtar bg-warning">
-                                    <i class="ti ti-layers-difference"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col-auto mb-3 mb-sm-0">
-                                <small class="text-muted">{{ __('Last 30 Days Total Deals') }}</small>
-                                <h3 class="m-0">{{ 0 }}</h3>
-                            </div>
-                            <div class="col-auto">
-                                <div class="theme-avtar bg-danger">
-                                    <i class="ti ti-layers-difference"></i>
-                                </div>
-                            </div>
+                    <div class="col-auto">
+                        <div class="theme-avtar bg-info">
+                            <i class="ti ti-layers-difference"></i>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    @endif
-
-    <style>
-        .form-controls,
-        .form-btn {
-            padding: 4px 1rem !important;
-        }
-
-        /* Set custom width for specific table cells */
-        .action-btn {
-            display: inline-grid !important;
-        }
-
-        .dataTable-bottom,
-        .dataTable-top {
-            display: none;
-        }
-    </style>
-
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card">
-                <div class="card-body table-border-style">
-
-                    {{-- topbar --}}
-                    <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                        <div class="col-2">
-                            <p class="mb-0 pb-0">ADMISSIONS</p>
-                            <div class="dropdown">
-                                <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    ALL ADMISSIONS
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                </ul>
-                            </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-auto mb-3 mb-sm-0">
+                        <small class="text-muted">{{ __('This Month Total Deals') }}</small>
+                        <h3 class="m-0">{{ 0 }}</h3>
+                    </div>
+                    <div class="col-auto">
+                        <div class="theme-avtar bg-primary">
+                            <i class="ti ti-layers-difference"></i>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-auto mb-3 mb-sm-0">
+                        <small class="text-muted">{{ __('This Week Total Deals') }}</small>
+                        <h3 class="m-0">{{ 0 }}</h3>
+                    </div>
+                    <div class="col-auto">
+                        <div class="theme-avtar bg-warning">
+                            <i class="ti ti-layers-difference"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card">
+            <div class="card-body">
+                <div class="row align-items-center justify-content-between">
+                    <div class="col-auto mb-3 mb-sm-0">
+                        <small class="text-muted">{{ __('Last 30 Days Total Deals') }}</small>
+                        <h3 class="m-0">{{ 0 }}</h3>
+                    </div>
+                    <div class="col-auto">
+                        <div class="theme-avtar bg-danger">
+                            <i class="ti ti-layers-difference"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 
+<style>
+    .form-controls,
+    .form-btn {
+        padding: 4px 1rem !important;
+    }
 
-                        <div class="col-10 d-flex justify-content-end gap-2">
-                            <div class="input-group w-25">
-                                <button class="btn btn-sm list-global-search-btn">
-                                    <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
-                                        <i class="ti ti-search" style="font-size: 18px"></i>
-                                    </span>
-                                </button>
-                                <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search"
-                                    placeholder="Search this list...">
-                            </div>
+    /* Set custom width for specific table cells */
+    .action-btn {
+        display: inline-grid !important;
+    }
 
+    .dataTable-bottom,
+    .dataTable-top {
+        display: none;
+    }
+</style>
 
-                            <div>
-                                <button class="btn px-2 pb-2 pt-2 refresh-list"
-                                    style="background-color: #b5282f; color:white;"><i class="ti ti-refresh"
-                                        style="font-size: 18px"></i></button>
-                            </div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body table-border-style">
 
-
-                            <button class="btn filter-btn-show p-2" style="background-color: #b5282f; color:white;"
-                                type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="ti ti-filter" style="font-size:18px"></i>
+                {{-- topbar --}}
+                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
+                    <div class="col-2">
+                        <p class="mb-0 pb-0">ADMISSIONS</p>
+                        <div class="dropdown">
+                            <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                ALL ADMISSIONS
                             </button>
-
-                            <a href="#" data-size="lg" data-url="{{ route('deals.create') }}"
-                                data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}"
-                                class="btn p-2" style="background-color: #b5282f; color:white;">
-                                <i class="ti ti-plus"></i>
-                            </a>
-
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="#">Action</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            </ul>
                         </div>
                     </div>
 
-                    
+
+                    <div class="col-10 d-flex justify-content-end gap-2">
+                        <div class="input-group w-25">
+                            <button class="btn btn-sm list-global-search-btn">
+                                <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                                    <i class="ti ti-search" style="font-size: 18px"></i>
+                                </span>
+                            </button>
+                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list...">
+                        </div>
+
+
+                        <div>
+                            <button class="btn px-2 pb-2 pt-2 refresh-list" style="background-color: #b5282f; color:white;"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                        </div>
+
+
+                        <button class="btn filter-btn-show p-2" style="background-color: #b5282f; color:white;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="ti ti-filter" style="font-size:18px"></i>
+                        </button>
+
+                        <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}" class="btn p-2" style="background-color: #b5282f; color:white;">
+                            <i class="ti ti-plus"></i>
+                        </a>
+
+                    </div>
+                </div>
 
 
 
-                    <div class="table-responsive card mt-2">
 
-                        {{-- Filters --}}
+
+                <div class="table-responsive card mt-2">
+
+                    {{-- Filters --}}
                     <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                         <form action="/deals/list" method="GET" class="">
 
                             <div class="row my-3">
                                 <div class="col-md-4">
                                     <label for="">Name</label>
-                                    <select name="name[]" id="deals" class="form form-control select2" multiple
-                                        style="width: 95%;">
+                                    <select name="name[]" id="deals" class="form form-control select2" multiple style="width: 95%;">
                                         <option value="">Select name</option>
                                         @foreach ($deals as $deal)
-                                            <option value="{{ $deal->name }}"
-                                                <?= isset($_GET['name']) && in_array($deal->name, $_GET['name']) ? 'selected' : '' ?>
-                                                class="">{{ $deal->name }}</option>
+                                        <option value="{{ $deal->name }}" <?= isset($_GET['name']) && in_array($deal->name, $_GET['name']) ? 'selected' : '' ?> class="">{{ $deal->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -395,25 +388,19 @@
 
                                 <div class="col-md-4">
                                     <label for="">Stages</label>
-                                    <select name="stages[]" id="stages" class="form form-control select2" multiple
-                                        style="width: 95%;">
+                                    <select name="stages[]" id="stages" class="form form-control select2" multiple style="width: 95%;">
                                         <option value="">Select Pipeline</option>
                                         @foreach ($stages as $key => $stage)
-                                            <option value="{{ $key }}"
-                                                <?= isset($_GET['stages']) && in_array($key, $_GET['stages']) ? 'selected' : '' ?>
-                                                class="">{{ $stage }}</option>
+                                        <option value="{{ $key }}" <?= isset($_GET['stages']) && in_array($key, $_GET['stages']) ? 'selected' : '' ?> class="">{{ $stage }}</option>
                                         @endforeach
                                     </select>
                                 </div>
 
-                                <div class="col-md-4">                                              <label for="">Created By</label>
-                                    <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple
-                                        style="width: 95%;">
+                                <div class="col-md-4"> <label for="">Created By</label>
+                                    <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple style="width: 95%;">
                                         <option value="">Select Brand</option>
                                         @foreach ($brands as $brand)
-                                            <option value="{{ $brand->id }}"
-                                                <?= isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' ?>
-                                                class="">{{ $brand->name }}</option>
+                                        <option value="{{ $brand->id }}" <?= isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' ?> class="">{{ $brand->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -421,17 +408,13 @@
 
                                 <div class="col-md-4 mt-2">
                                     <label for="">Created at</label>
-                                    <input type="date" class="form form-control" name="created_at"
-                                        value="<?= isset($_GET['created_at']) ? $_GET['created_at'] : '' ?>"
-                                        style="width: 95%; border-color:#aaa">
+                                    <input type="date" class="form form-control" name="created_at" value="<?= isset($_GET['created_at']) ? $_GET['created_at'] : '' ?>" style="width: 95%; border-color:#aaa">
                                 </div>
 
                                 <div class="col-md-4 mt-2">
                                     <br>
-                                    <input type="submit" class="btn me-2"
-                                        style="background-color: #b5282f; color:white;">
-                                    <a href="/deals/list" class="btn"
-                                        style="background-color: #b5282f;color:white;">Reset</a>
+                                    <input type="submit" class="btn me-2" style="background-color: #b5282f; color:white;">
+                                    <a href="/deals/list" class="btn" style="background-color: #b5282f;color:white;">Reset</a>
                                 </div>
                             </div>
 
@@ -444,25 +427,13 @@
                                         unset($all_params['num_results_on_page']);
                                     }
                                     ?>
-                                    <input type="hidden" value="<?= http_build_query($all_params) ?>"
-                                        class="url_params">
-                                    <select name="" id="" class="enteries_per_page form form-control"
-                                        style="width: 100px; margin-right: 1rem;">
-                                        <option
-                                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 25 ? 'selected' : '' ?>
-                                            value="25">25</option>
-                                        <option
-                                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 100 ? 'selected' : '' ?>
-                                            value="100">100</option>
-                                        <option
-                                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 300 ? 'selected' : '' ?>
-                                            value="300">300</option>
-                                        <option
-                                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 1000 ? 'selected' : '' ?>
-                                            value="1000">1000</option>
-                                        <option
-                                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == $total_records ? 'selected' : '' ?>
-                                            value="{{ $total_records }}">all</option>
+                                    <input type="hidden" value="<?= http_build_query($all_params) ?>" class="url_params">
+                                    <select name="" id="" class="enteries_per_page form form-control" style="width: 100px; margin-right: 1rem;">
+                                        <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 25 ? 'selected' : '' ?> value="25">25</option>
+                                        <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 100 ? 'selected' : '' ?> value="100">100</option>
+                                        <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 300 ? 'selected' : '' ?> value="300">300</option>
+                                        <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 1000 ? 'selected' : '' ?> value="1000">1000</option>
+                                        <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == $total_records ? 'selected' : '' ?> value="{{ $total_records }}">all</option>
                                     </select>
 
                                     <span style="margin-top: 5px;">entries per page</span>
@@ -471,471 +442,543 @@
                         </form>
                     </div>
 
-                        <div class="mx-4 card-body table-responsive leads-list-div">
-                            <table class="table" data-resizable-columns-id="lead-table">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" name="">
-                                        </th>
-                                        <th>{{ __('Stage') }}</th>
+                    <div class="mx-4 card-body table-responsive leads-list-div">
+                        <table class="table" data-resizable-columns-id="lead-table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" name="">
+                                    </th>
+                                    <th>{{ __('Stage') }}</th>
 
 
-                                        <th style="width: 100px !important;">{{ __('Admission Name') }}</th>
+                                    <th style="width: 100px !important;">{{ __('Admission Name') }}</th>
 
-                                        <th>{{ __('Lead Source') }}</th>
+                                    <th>{{ __('Lead Source') }}</th>
 
-                                        <th>{{ __('Intake') }}</th>
-
-                                        
-                                        <th class="">{{ __('Assigned to') }}</th>
-                                        <th width="300px" class="d-none">{{ __('Action') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="deals_tbody">
-                                    @if (count($deals) > 0)
-                                        @foreach ($deals as $deal)
-                                            <tr>
-                                                <td> <input type="checkbox" name=""></td>
-                                                
-                                                <td>{{ $deal->stage->name }}</td>
+                                    <th>{{ __('Intake') }}</th>
 
 
-                                                <td style="width: 100px !important; ">
-                                                    <span style="cursor:pointer" class="deal-name hyper-link"
-                                                        onclick="openNav(<?= $deal->id ?>)"
-                                                        data-deal-id="{{ $deal->id }}">
+                                    <th class="">{{ __('Assigned to') }}</th>
+                                    <th width="300px" class="d-none">{{ __('Action') }}</th>
+                                </tr>
+                            </thead>
+                            <tbody id="deals_tbody">
+                                @if (count($deals) > 0)
+                                @foreach ($deals as $deal)
+                                <tr>
+                                    <td> <input type="checkbox" name=""></td>
 
-                                                        @if (strlen($deal->name) > 40)
-                                                            {{ substr($deal->name, 0, 40) }}...
-                                                        @else
-                                                            {{ $deal->name }}
-                                                        @endif
-                                                    </span>
-                                                </td>
-
-                                                <td>
-                                                    @php 
-                                                        $lead = \App\Models\Lead::join('client_deals', 'client_deals.client_id', 'leads.is_converted')->where('client_deals.deal_id', $deal->id)->first();
-                                                        $source = isset($lead->sources) && isset($sources[$lead->sources]) ? $sources[$lead->sources] : '';
-                                                    @endphp 
-
-                                                    {{ $source }}
-                                                </td>
-                                                
-                                                <td>
-                                                    @php 
-                                                        $month = !empty($deal->intake_month) ? $deal->intake_month : 'January';
-                                                        $year = !empty($deal->intake_year) ? $deal->intake_year : '2023';
-                                                    @endphp 
-                                                    {{ $month.' 1 ,'.$year }}
-                                                </td>
+                                    <td>{{ $deal->stage->name }}</td>
 
 
-                                                
-                                                <td class="">
-                                                    @php 
-                                                        $assigned_to = isset($deal->assigned_to) && isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : 0;
-                                                    @endphp 
-                                                
-                                                    @if($assigned_to !=  0)
-                                                    <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{$deal->assigned_to}}+'/user_detail')" >
-                                                        {{ $assigned_to }}
-                                                    </span>
-                                                    @endif
-                                                
-                                                </td>
+                                    <td style="width: 100px !important; ">
+                                        <span style="cursor:pointer" class="deal-name hyper-link" onclick="openNav(<?= $deal->id ?>)" data-deal-id="{{ $deal->id }}">
+
+                                            @if (strlen($deal->name) > 40)
+                                            {{ substr($deal->name, 0, 40) }}...
+                                            @else
+                                            {{ $deal->name }}
+                                            @endif
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        @php
+                                        $lead = \App\Models\Lead::join('client_deals', 'client_deals.client_id', 'leads.is_converted')->where('client_deals.deal_id', $deal->id)->first();
+                                        $source = isset($lead->sources) && isset($sources[$lead->sources]) ? $sources[$lead->sources] : '';
+                                        @endphp
+
+                                        {{ $source }}
+                                    </td>
+
+                                    <td>
+                                        @php
+                                        $month = !empty($deal->intake_month) ? $deal->intake_month : 'January';
+                                        $year = !empty($deal->intake_year) ? $deal->intake_year : '2023';
+                                        @endphp
+                                        {{ $month.' 1 ,'.$year }}
+                                    </td>
 
 
-                                                @if (\Auth::user()->type != 'Client')
-                                                    <td class="Action d-none">
-                                                        <div class="dropdown">
-                                                            <button class="btn bg-transparents" type="button"
-                                                                id="dropdownMenuButton1" data-bs-toggle="dropdown"
-                                                                aria-expanded="false">
-                                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                                    viewBox="0 0 24 24" width="18" height="18">
-                                                                    <path
-                                                                        d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z">
-                                                                    </path>
-                                                                </svg>
-                                                            </button>
-                                                            <ul class="dropdown-menu"
-                                                                aria-labelledby="dropdownMenuButton1">
-                                                                <li><a class="dropdown-item" href="#">Change</a>
-                                                                </li>
-                                                                <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                                <li><a class="dropdown-item" href="#">Delete</a>
-                                                                </li>
-                                                            </ul>
 
-                                                    </td>
-                                                @endif
+                                    <td class="">
+                                        @php
+                                        $assigned_to = isset($deal->assigned_to) && isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : 0;
+                                        @endphp
+
+                                        @if($assigned_to != 0)
+                                        <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{$deal->assigned_to}}+'/user_detail')">
+                                            {{ $assigned_to }}
+                                        </span>
+                                        @endif
+
+                                    </td>
 
 
-                                            </tr>
-                                        @endforeach
-                                    @else
-                                        <tr class="font-style">
-                                            <td colspan="6" class="text-center">
-                                                {{ __('No data available in table') }}</td>
-                                        </tr>
+                                    @if (\Auth::user()->type != 'Client')
+                                    <td class="Action d-none">
+                                        <div class="dropdown">
+                                            <button class="btn bg-transparents" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
+                                                    <path d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z">
+                                                    </path>
+                                                </svg>
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="#">Change</a>
+                                                </li>
+                                                <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                <li><a class="dropdown-item" href="#">Delete</a>
+                                                </li>
+                                            </ul>
+
+                                    </td>
                                     @endif
 
-                                </tbody>
-                            </table>
 
-                            @if ($total_records > 0)
-                                @include('layouts.pagination', [
-                                    'total_pages' => $total_records,
-                                    'num_results_on_page' => 50,
-                                ])
-                            @endif
-                        </div>
+                                </tr>
+                                @endforeach
+                                @else
+                                <tr class="font-style">
+                                    <td colspan="6" class="text-center">
+                                        {{ __('No data available in table') }}
+                                    </td>
+                                </tr>
+                                @endif
+
+                            </tbody>
+                        </table>
+
+                        @if ($total_records > 0)
+                        @include('layouts.pagination', [
+                        'total_pages' => $total_records,
+                        'num_results_on_page' => 50,
+                        ])
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
-        <div id="mySidenav" style="z-index: 1065; padding-left:5px; box-shadow: -5px 0px 30px 0px #aaa;"
-            class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>"
-            style="padding-left: 5px">
+    </div>
 
 
+    <div class="modal" tabindex="-1" role="dialog" id="deal_applications">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Admission Applications</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <select class="form form-control" id="admission-application" >
+                        
+                    </select>
+
+                    <input type="hidden" id="stage_id" value="">
+                    <input type="hidden" id="deal_id" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="save-changes-application-status">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
+    </div>
 
 
-        {{-- @endif --}}
+    <div id="mySidenav" style="z-index: 1065; padding-left:5px; box-shadow: -5px 0px 30px 0px #aaa;" class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>" style="padding-left: 5px">
+
+
+    </div>
+
+
+    {{-- @endif --}}
     @endsection
 
 
     @push('script-page')
-        <script>
-             $('.filter-btn-show').click(function() {
-                $("#filter-show").toggle();
-            });
+    <script>
+        $('.filter-btn-show').click(function() {
+            $("#filter-show").toggle();
+        });
 
-            // new lead form submitting...
-            $(document).on("submit", "#deal-creating-form", function(e) {
+        // new lead form submitting...
+        $(document).on("submit", "#deal-creating-form", function(e) {
 
-                e.preventDefault();
-                var formData = $(this).serialize();
+            e.preventDefault();
+            var formData = $(this).serialize();
 
-                $(".new-lead-btn").val('Processing...');
-                $('.new-lead-btn').attr('disabled', 'disabled');
+            $(".new-lead-btn").val('Processing...');
+            $('.new-lead-btn').attr('disabled', 'disabled');
 
-                $.ajax({
-                    type: "POST",
-                    url: "{{ route('deals.store') }}",
-                    data: formData,
-                    success: function(data) {
-                        data = JSON.parse(data);
+            $.ajax({
+                type: "POST",
+                url: "{{ route('deals.store') }}",
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
 
-                        if (data.status == 'success') {
-                            show_toastr('Success', data.message, 'success');
-                            $('#commonModal').modal('hide');
-                            $('.leads-list-tbody').prepend(data.html);
-                            openNav(data.deal.id);
-                            return false;
-                        } else {
-                            show_toastr('Error', data.message, 'error');
-                            $(".new-lead-btn").val('Create');
-                            $('.new-lead-btn').removeAttr('disabled');
-                        }
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('#commonModal').modal('hide');
+                        $('.leads-list-tbody').prepend(data.html);
+                        openNav(data.deal.id);
+                        return false;
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                        $(".new-lead-btn").val('Create');
+                        $('.new-lead-btn').removeAttr('disabled');
                     }
-                });
-            });
-
-            // new lead form submitting...
-            $(document).on("submit", "#deal-updating-form", function(e) {
-                e.preventDefault();
-                var formData = $(this).serialize();
-                var id = $(".deal-id").val();
-
-                $(".update-lead-btn").val('Processing...');
-                $('.update-lead-btn').attr('disabled', 'disabled');
-
-                $.ajax({
-                    type: "POST",
-                    url: "/deals/update/" + id,
-                    data: formData,
-                    success: function(data) {
-                        data = JSON.parse(data);
-
-                        if (data.status == 'success') {
-                            show_toastr('Success', data.message, 'success');
-                            $('#commonModal').modal('hide');
-                            openNav(data.deal.id);
-                            return false;
-                        } else {
-                            show_toastr('Error', data.message, 'error');
-                            $(".new-lead-btn").val('Create');
-                            $('.new-lead-btn').removeAttr('disabled');
-                        }
-                    }
-                });
-            });
-
-
-            $(document).on("click", ".edit-lead-remove", function() {
-                var id = $(".deal-id").val();
-                openNav(id);    
-            });
-
-
-            $(document).on('click', '.deal_stage', function() {
-
-                var deal_id = $('.deal-id').val();
-                var stage_id = $(this).attr('data-stage-id');
-                var currentBtn = $(this);
-
-                $.ajax({
-                    type: 'GET',
-                    url: "{{ route('update-deal-stage') }}",
-                    data: {
-                        deal_id: deal_id,
-                        stage_id: stage_id
-                    },
-                    success: function(data) {
-                        data = JSON.parse(data);
-                        if (data.status == 'success') {
-                            show_toastr('Success', data.message, 'success');
-                            openNav(deal_id);
-
-                        }else{
-                            show_toastr('Error', data.message, 'error');
-                        }
-                    }
-                });
-                });
-            
-            
-                /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
-            function openNav(deal_id) {
-                var ww = $(window).width()
-
-                $.ajax({
-                    type: 'GET',
-                    url: "{{ route('get-deal-detail') }}",
-                    data: {
-                        deal_id: deal_id
-                    },
-                    success: function(data) {
-                        data = JSON.parse(data);
-                        if (data.status == 'success') {
-                            $("#mySidenav").html(data.html);
-                            $(".block-screen").css('display', 'none');
-                        }
-                    }
-                });
-
-
-                if (ww < 500) {
-                    $("#mySidenav").css('width', ww + 'px');
-                    $("#main").css('margin-right', ww + 'px');
-                } else {
-                    $("#mySidenav").css('width', '890px');
-                    $("#main").css('margin-right', "890px");
                 }
-
-                $("#modal-discussion-add").attr('data-lead-id', deal_id);
-                $('.modal-discussion-add-span').removeClass('ti-minus');
-                $('.modal-discussion-add-span').addClass('ti-plus');
-                $(".add-discussion-div").addClass('d-none');
-                $(".block-screen").css('display', 'block');
-                $("#body").css('overflow', 'hidden');
-            }
-
-            /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
-            function closeNav() {
-                $("#mySidenav").css("width", '0');
-                $("#main").css("margin-right", '0');
-                $("#modal-discussion-add").removeAttr('data-deal-id');
-                $('.modal-discussion-add-span').removeClass('ti-minus');
-                $('.modal-discussion-add-span').addClass('ti-plus');
-                $(".add-discussion-div").addClass('d-none');
-                $(".block-screen").css('display', 'none');
-                $("#body").css('overflow', 'visible');
-            }
-
-
-            $(document).on("click", ".edit-input", function() {
-                var value = $(this).val();
-                var name = $(this).attr('name');
-                var id = $(".deal-id").val();
-
-                $.ajax({
-                    type: 'GET',
-                    url: "/deals/get-field/" + id,
-                    data: {
-                        name,
-                        id
-                    },
-                    success: function(data) {
-                        data = JSON.parse(data);
-                        if (data.status == 'success') {
-                            $('.' + name + '-td').html(data.html);
-                        }
-                    }
-                });
-
             });
+        });
 
-            $(document).on("click", ".edit-btn-data", function() {
-                var name = $(this).attr('data-name');
-                var value = $(this).parent().siblings('.input-group').children('.' + name).val();
-                var id = $(".deal-id").val();
+        // new lead form submitting...
+        $(document).on("submit", "#deal-updating-form", function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            var id = $(".deal-id").val();
 
+            $(".update-lead-btn").val('Processing...');
+            $('.update-lead-btn').attr('disabled', 'disabled');
 
-                $.ajax({
-                    type: 'GET',
-                    url: "/deals/" + id + "/update-data",
-                    data: {
-                        value: value,
-                        name: name,
-                        id: id
-                    },
-                    success: function(data) {
-                        data = JSON.parse(data);
+            $.ajax({
+                type: "POST",
+                url: "/deals/update/" + id,
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
 
-                        if (data.status == 'success') {
-                            show_toastr('Success', data.message, 'msg');
-                            // $('.' + name + '-td').html(data.html);
-                            openNav(id);
-                        }
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('#commonModal').modal('hide');
+                        openNav(data.deal.id);
+                        return false;
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                        $(".new-lead-btn").val('Create');
+                        $('.new-lead-btn').removeAttr('disabled');
                     }
-                });
-
+                }
             });
+        });
 
+
+        $(document).on("click", ".edit-lead-remove", function() {
+            var id = $(".deal-id").val();
+            openNav(id);
+        });
+
+
+        $(document).on('click', '.deal_stage', function() {
+
+            var deal_id = $('.deal-id').val();
+            var stage_id = $(this).attr('data-stage-id');
+            var currentBtn = $(this);
             
 
-            //saving discussion
-            $(document).on("submit", "#create-discussion", function(e) {
-                e.preventDefault();
-                var formData = $(this).serialize();
-                var id = $('.deal-id').val();
-
-                $(".create-discussion-btn").val('Processing...');
-                $('.create-discussion-btn').attr('disabled', 'disabled');
-
+            if(stage_id == 6){
                 $.ajax({
-                    type: "POST",
-                    url: "/deals/" + id + "/discussions",
-                    data: formData,
-                    success: function(data) {
-                        data = JSON.parse(data);
-
-                        if (data.status == 'success') {
-                            show_toastr('Success', data.message, 'success');
-                            $('#commonModal').modal('hide');
-                            $('.list-group-flush').html(data.html);
-                            $(".discussion_count").text(data.total_discussions);
-                            // openNav(data.lead.id);
-                            return false;
-                        } else {
-                            show_toastr('Error', data.message, 'error');
-                            $(".create-discussion-btn").val('Create');
-                            $('.create-discussion-btn').removeAttr('disabled');
-                        }
-                    }
-                });
-            })
-
-
-
-            //saving notes
-            $(document).on("submit", "#create-notes", function(e) {
-                e.preventDefault();
-                var formData = $(this).serialize();
-                var id = $('.deal-id').val();
-
-                $(".create-notes-btn").val('Processing...');
-                $('.create-notes-btn').attr('disabled', 'disabled');
-
-                $.ajax({
-                    type: "POST",
-                    url: "/deals/" + id + "/notes",
-                    data: formData,
-                    success: function(data) {
-                        data = JSON.parse(data);
-
-                        if (data.status == 'success') {
-                            show_toastr('Success', data.message, 'success');
-                            $('#commonModal').modal('hide');
-                            $('.notes-tbody').html(data.html);
-                            // openNav(data.lead.id);
-                            // return false;
-                        } else {
-                            show_toastr('Error', data.message, 'error');
-                            $(".create-notes-btn").val('Create');
-                            $('.create-notes-btn').removeAttr('disabled');
-                        }
-                    }
-                });
-            })
-
-
-            $(document).on("submit", "#update-notes", function(e) {
-                e.preventDefault();
-                var formData = $(this).serialize();
-                var id = $('.deal-id').val();
-
-                $(".update-notes-btn").val('Processing...');
-                $('.update-notes-btn').attr('disabled', 'disabled');
-
-                $.ajax({
-                    type: "POST",
-                    url: "/deals/" + id + "/notes-update",
-                    data: formData,
-                    success: function(data) {
-                        data = JSON.parse(data);
-
-                        if (data.status == 'success') {
-                            show_toastr('Success', data.message, 'success');
-                            $('#commonModal').modal('hide');
-                            $('.notes-tbody').html(data.html);
-                            // openNav(data.lead.id);
-                            // return false;
-                        } else {
-                            show_toastr('Error', data.message, 'error');
-                            $(".update-notes-btn").val('Update');
-                            $('.update-notes-btn').removeAttr('disabled');
-                        }
-                    }
-                });
-            })
-
-
-            //delete-notes
-            $(document).on("click", '.delete-notes', function(e) {
-                e.preventDefault();
-
-                var id = $(this).attr('data-note-id');
-                var deal_id = $('.deal-id').val();
-                var currentBtn = '';
-
-                $.ajax({
-                    type: "GET",
-                    url: "/deals/" + id + "/notes-delete",
+                    method: 'GET',
+                    url: '{{ route('get_deal_applications') }}',
                     data: {
-                        id,
-                        deal_id
+                        id: deal_id
                     },
-                    success: function(data) {
+                    success: function(data){
                         data = JSON.parse(data);
 
-                        if (data.status == 'success') {
-                            show_toastr('Success', data.message, 'success');
-                            $('.notes-tbody').html(data.html);
-                            // openNav(data.lead.id);
-                            // return false;
-                        } else {
-                            show_toastr('Error', data.message, 'error');
+                        if(data.status == 'success'){
+                            $("#deal_id").val(deal_id);
+                            $("#stage_id").val(stage_id);
+                            $("#admission-application").html(data.html);
+                            $("#deal_applications").modal('show');
+
+                            
                         }
                     }
                 });
+                return false;
+            }
 
-            })
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('update-deal-stage') }}",
+                data: {
+                    deal_id: deal_id,
+                    stage_id: stage_id
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        openNav(deal_id);
+
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                    }
+                }
+            });
+        });
+
+
+        $(document).on('click', '#save-changes-application-status', function(){
+            var deal_id = $('#deal_id').val();
+            var stage_id = $('#stage_id').val();
+            var application_id = $("#admission-application").val();
+          
+
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('update-deal-stage') }}",
+                data: {
+                    deal_id: deal_id,
+                    stage_id: stage_id,
+                    application_id: application_id
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if (data.status == 'success') {
+                        $("#deal_applications").modal('hide');
+                        show_toastr('Success', data.message, 'success');
+                        openNav(deal_id);
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                    }
+                }
+            });
+
+        })
+
+        /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
+        function openNav(deal_id) {
+            var ww = $(window).width()
+
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('get-deal-detail') }}",
+                data: {
+                    deal_id: deal_id
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if (data.status == 'success') {
+                        $("#mySidenav").html(data.html);
+                        $(".block-screen").css('display', 'none');
+                    }
+                }
+            });
+
+
+            if (ww < 500) {
+                $("#mySidenav").css('width', ww + 'px');
+                $("#main").css('margin-right', ww + 'px');
+            } else {
+                $("#mySidenav").css('width', '890px');
+                $("#main").css('margin-right', "890px");
+            }
+
+            $("#modal-discussion-add").attr('data-lead-id', deal_id);
+            $('.modal-discussion-add-span').removeClass('ti-minus');
+            $('.modal-discussion-add-span').addClass('ti-plus');
+            $(".add-discussion-div").addClass('d-none');
+            $(".block-screen").css('display', 'block');
+            $("#body").css('overflow', 'hidden');
+        }
+
+        /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
+        function closeNav() {
+            $("#mySidenav").css("width", '0');
+            $("#main").css("margin-right", '0');
+            $("#modal-discussion-add").removeAttr('data-deal-id');
+            $('.modal-discussion-add-span').removeClass('ti-minus');
+            $('.modal-discussion-add-span').addClass('ti-plus');
+            $(".add-discussion-div").addClass('d-none');
+            $(".block-screen").css('display', 'none');
+            $("#body").css('overflow', 'visible');
+        }
+
+
+        $(document).on("click", ".edit-input", function() {
+            var value = $(this).val();
+            var name = $(this).attr('name');
+            var id = $(".deal-id").val();
+
+            $.ajax({
+                type: 'GET',
+                url: "/deals/get-field/" + id,
+                data: {
+                    name,
+                    id
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if (data.status == 'success') {
+                        $('.' + name + '-td').html(data.html);
+                    }
+                }
+            });
+
+        });
+
+        $(document).on("click", ".edit-btn-data", function() {
+            var name = $(this).attr('data-name');
+            var value = $(this).parent().siblings('.input-group').children('.' + name).val();
+            var id = $(".deal-id").val();
+
+
+            $.ajax({
+                type: 'GET',
+                url: "/deals/" + id + "/update-data",
+                data: {
+                    value: value,
+                    name: name,
+                    id: id
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'msg');
+                        // $('.' + name + '-td').html(data.html);
+                        openNav(id);
+                    }
+                }
+            });
+
+        });
+
+
+
+        //saving discussion
+        $(document).on("submit", "#create-discussion", function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            var id = $('.deal-id').val();
+
+            $(".create-discussion-btn").val('Processing...');
+            $('.create-discussion-btn').attr('disabled', 'disabled');
+
+            $.ajax({
+                type: "POST",
+                url: "/deals/" + id + "/discussions",
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('#commonModal').modal('hide');
+                        $('.list-group-flush').html(data.html);
+                        $(".discussion_count").text(data.total_discussions);
+                        // openNav(data.lead.id);
+                        return false;
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                        $(".create-discussion-btn").val('Create');
+                        $('.create-discussion-btn').removeAttr('disabled');
+                    }
+                }
+            });
+        })
+
+
+
+        //saving notes
+        $(document).on("submit", "#create-notes", function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            var id = $('.deal-id').val();
+
+            $(".create-notes-btn").val('Processing...');
+            $('.create-notes-btn').attr('disabled', 'disabled');
+
+            $.ajax({
+                type: "POST",
+                url: "/deals/" + id + "/notes",
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('#commonModal').modal('hide');
+                        $('.notes-tbody').html(data.html);
+                        // openNav(data.lead.id);
+                        // return false;
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                        $(".create-notes-btn").val('Create');
+                        $('.create-notes-btn').removeAttr('disabled');
+                    }
+                }
+            });
+        })
+
+
+        $(document).on("submit", "#update-notes", function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            var id = $('.deal-id').val();
+
+            $(".update-notes-btn").val('Processing...');
+            $('.update-notes-btn').attr('disabled', 'disabled');
+
+            $.ajax({
+                type: "POST",
+                url: "/deals/" + id + "/notes-update",
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('#commonModal').modal('hide');
+                        $('.notes-tbody').html(data.html);
+                        // openNav(data.lead.id);
+                        // return false;
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                        $(".update-notes-btn").val('Update');
+                        $('.update-notes-btn').removeAttr('disabled');
+                    }
+                }
+            });
+        })
+
+
+        //delete-notes
+        $(document).on("click", '.delete-notes', function(e) {
+            e.preventDefault();
+
+            var id = $(this).attr('data-note-id');
+            var deal_id = $('.deal-id').val();
+            var currentBtn = '';
+
+            $.ajax({
+                type: "GET",
+                url: "/deals/" + id + "/notes-delete",
+                data: {
+                    id,
+                    deal_id
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('.notes-tbody').html(data.html);
+                        // openNav(data.lead.id);
+                        // return false;
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                    }
+                }
+            });
+
+        })
 
 
         $(document).on("click", ".list-global-search-btn", function() {
@@ -979,5 +1022,5 @@
                 }
             });
         })
-        </script>
+    </script>
     @endpush

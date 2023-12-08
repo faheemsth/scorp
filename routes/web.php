@@ -1719,3 +1719,8 @@ Route::get('/organization/{id}/task-delete', [OrganizationController::class, 'ta
 
 Route::get('applications/', [ApplicationsController::class, 'index'])->name('applications.index')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/taskDeleted', [OrganizationController::class, 'taskDeleted'])->middleware(['auth', 'XSS']);
+
+
+Route::get('/save-countries', [SystemController::class, 'saveCountries']);
+Route::get('/get-university-intake', [UniversityController::class, 'getIntakeMonths'])->name('get_university_intake');
+Route::get('/get-deal-applications', [ApplicationsController::class, 'getDealApplication'])->name('get_deal_applications');

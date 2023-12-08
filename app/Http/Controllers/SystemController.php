@@ -9,6 +9,7 @@ use App\Models\NOC;
 use App\Models\Stage;
 use App\Mail\TestMail;
 use App\Mail\EmailTest;
+use App\Models\Country;
 use App\Models\Utility;
 use App\Models\LeadStage;
 use App\Models\IpRestrict;
@@ -1561,6 +1562,50 @@ class SystemController extends Controller
 
         return redirect()->back()->with('success', 'Deal Stage setting successfully updated.');
 
+    }
+
+
+    public function saveCountries(){
+        $url = "https://restcountries.com/v3.1/all";
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+        if ($response !== false) {
+            $countries = json_decode($response, true);
+
+            if ($countries !== null) {
+                // $countries_arr = array_map(function ($country) {
+                //     return $country['name']['common'];
+                // }, $countries);
+
+                $countries_arr = [];
+
+                foreach($countries as $country){
+                    $countries_arr[] = [
+                        'name' => $country['name']['common'],
+                        'code' => $country['cca2']
+                    ];
+                }
+
+
+            } else {
+                echo "Error decoding JSON.";
+            }
+        } else {
+            echo "Error fetching data from API.";
+        }
+
+
+        foreach($countries_arr as $country){
+            Country::create([
+                'name' => $country['name'],
+                'country_code' => $country['code']
+            ]);
+        }
+
+        echo 'Countries Saved successfully';
     }
 
 
