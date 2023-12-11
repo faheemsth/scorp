@@ -1718,6 +1718,7 @@ Route::get('/organization/{id}/task-delete', [OrganizationController::class, 'ta
 
 
 Route::get('applications/', [ApplicationsController::class, 'index'])->name('applications.index')->middleware(['auth', 'XSS']);
+Route::get('/update-application-stage', [ApplicationsController::class, 'updateApplicationStage'])->name('update-application-stage')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/taskDeleted', [OrganizationController::class, 'taskDeleted'])->middleware(['auth', 'XSS']);
 
 

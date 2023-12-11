@@ -127,4 +127,13 @@ class ApplicationsController extends Controller
             'html' => $html
         ]);
     }
+
+    public function updateApplicationStage(){
+        $application_id = $_GET['application_id'];
+        $stage_id = $_GET['stage_id'];
+        DealApplication::where('id', $application_id)->update(['stage_id' => $stage_id]);
+        return json_encode([
+            'status' => 'success'
+        ]);
+    }
 }
