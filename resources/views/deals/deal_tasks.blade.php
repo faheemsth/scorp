@@ -104,9 +104,9 @@
                                             @endforeach
                                         </select>
                                     </div>
-                        
 
-                              
+
+
                                     <div class="col-md-4">                                              <label for="">Assigned To</label>
                                         <select name="assigned_to[]" id="choices-multiple333"  class="form form-control select2" multiple
                                             style="width: 95%;">
@@ -118,9 +118,9 @@
                                             @endforeach
                                         </select>
                                     </div>
-                               
 
-                                
+
+
                                     <div class="col-md-4">                                              <label for="">Company/Brand</label>
                                         <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple
                                             style="width: 95%;">
@@ -132,7 +132,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                
+
 
                                 <div class="col-md-4 mt-4">
                                     <input type="submit" class="btn form-btn me-2"
@@ -194,20 +194,21 @@
                             <tbody class="tasks_tbody">
                                 @forelse($tasks as $key => $task)
                                     @php
-                                        
+
                                         $due_date = strtotime($task->due_date);
                                         $current_date = strtotime(date('Y-m-d'));
-                                        
-                                        if ($due_date == $current_date) {
-                                            $color_code = 'bg-warning-scorp';
-                                        } elseif ($due_date < $current_date && strtolower($task->status) == 'on going') {
+
+                                        if ($due_date < $current_date && strtolower($task->status) == 0) {
                                             $color_code = 'bg-danger-scorp';
-                                        } elseif ($due_date < $current_date && strtolower($task->status) == 'completed') {
-                                            $color_code = 'bg-danger-scorp';
-                                        } else {
-                                            $color_code = 'bg-success-scorp';
-                                        }
-                                        
+                                        }elseif (strtolower($task->status) == 1) {
+                                             $color_code = 'bg-success-scorp';
+                                         }
+                                         elseif ($due_date == $current_date && strtolower($task->status) == 0) {
+                                             $color_code = 'bg-warning-scorp';
+                                         }else {
+                                            $color_code = 'bg-secondary-scorp';
+                                         }
+
                                     @endphp
                                     <tr>
                                         <td>
@@ -253,9 +254,9 @@
 
                                         <td>
                                             @if ($task->status == 1)
-                                                <span class="badge bg-info text-white">{{ __('Completed') }}</span>
+                                                <span class="badge {{ $color_code }} text-white">{{ __('Completed') }}</span>
                                             @else
-                                                <span class="badge bg-success-scorp text-white">{{ __('On Going') }}</span>
+                                                <span class="badge {{ $color_code }} text-white">{{ __('On Going') }}</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -462,6 +463,30 @@
 
         });
 
+        function DeleteComment(id,taskID){
+            $('#dellhover').show();
+            $.ajax({
+                type: "GET",
+                url: "{{ url('delete/task/comment') }}"+'/'+id+'/'+taskID,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    console.log(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('#commonModal').modal('hide');
+                        $('.list-group-flush').html(data.html);
+                        // openNav(data.lead.id);
+                        // return false;
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                        $(".create-discussion-btn").val('Create');
+                        $('.create-discussion-btn').removeAttr('disabled');
+                    }
+                }
+            });
+        }
 
         $(document).on("submit", "#taskDiscussion", function(e) {
             e.preventDefault();
@@ -507,5 +532,6 @@
                 $(".assigned_to_type").addClass('d-none');
             }
         });
+
     </script>
 @endpush
