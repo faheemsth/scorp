@@ -1,0 +1,4 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH="/home/scorpcor (scorp.co)/public_html/test.scorp.co"  # Set deployment path
+    - /bin/cp * $DEPLOYPATH  # Copy images to deployment path
