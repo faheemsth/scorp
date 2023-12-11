@@ -10,13 +10,18 @@ $languages=\App\Models\Utility::languages();
 $lang = isset($users->lang)?$users->lang:'en';
 $setting = \App\Models\Utility::colorset();
 $mode_setting = \App\Models\Utility::mode_layout();
-$currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+if(Session::get('is_company_login') == true){
+    $currentUserCompany = \App\Models\User::where('type', 'company')->find(Session::get('auth_type_created_by'));
+}else {
+    $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+}
+// dd(Session::get('auth_type_created_by'));
 $com_permissions = array();
 if($currentUserCompany != null){
     $com_permissions = \App\Models\CompanyPermission::where('company_id',$currentUserCompany->id)->get();
 }
 
-$all_companies = companies();
+$all_companies = App\Models\User::where('type', 'company')->pluck('name', 'id')->toArray();
 
 
 $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('seen', 0)->count();
@@ -45,7 +50,7 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
 
         <input type="hidden" class="" name="global_search" value="all">
     </form>
-    
+
     @if(\Auth::user()->type == 'super admin')
         <select name="company" id="company" class="form form-select" style="width:15% !important" onChange="loginWithCompany();">
             <option value="">Select Companies</option>
@@ -53,7 +58,7 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
             <option value="{{$key}}">{{ $comp }}</option>
             @endforeach
         </select>
-    @elseif(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
+    @elseif(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' )
         @if($currentUserCompany != null)
         <select name="company" id="company" class="form form-select" style="width:15% !important" onChange="loginWithCompany();">
             <option value="">Select Companies</option>
@@ -68,6 +73,14 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
                 @endforeach
             @endforeach
         </select>
+        @endif
+    @else
+        @if(Session::get('is_company_login') == true && Session::get('auth_type') == 'super admin' )
+        <button class="btn btn-success" onclick="LoginBack({{ Session::get('auth_type_id') }})">Login Back</button>
+        @elseif (Session::get('is_company_login') == true && Session::get('auth_type') == 'Project Director' || Session::get('auth_type') == 'Project Manager')
+        @if($currentUserCompany != null)
+        <button class="btn btn-success" onclick="LoginBack({{ Session::get('auth_type_id') }})">Login Back</button>
+        @endif
         @endif
     @endif
     <!-- Topbar Navbar -->
@@ -182,6 +195,10 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
     function loginWithCompany(){
         let value = $('#company').val();
         window.location.href = "{{ url('logged_in_as_company')}}/"+value;
+    }
+
+    function LoginBack(value){
+        window.location.href = "{{ url('logged_in_as_user')}}/"+value;
     }
 </script>
 @endpush

@@ -1,6 +1,12 @@
 @extends('layouts.admin')
 
+@if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' )
+ @php $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by); @endphp
+@else
+@php $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id); @endphp
+@endif
 <?php
+$com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->get();
 
 $lead = \App\Models\Lead::first();
 if (isset($lead->is_active) && $lead->is_active) {
@@ -112,7 +118,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"> <span class="counter-value"
                                             data-target="730000">{{ isset($total_leads_by_status['opened lead']) ? $total_leads_by_status['opened lead'] : 0}}</span>
                                     </h2>
-                                    
+
                                     <h4>Open Leads</h4>
                                 </div>
                             </div>
@@ -138,7 +144,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"> <span class="counter-value"
                                             data-target="730000">{{ isset($total_leads_by_status['closed lead']) ? $total_leads_by_status['closed lead'] : 0}}</span>
                                     </h2>
-                                    
+
                                     <h4>Close Leads</h4>
                                 </div>
                             </div>
@@ -151,8 +157,8 @@ if (isset($lead->is_active) && $lead->is_active) {
             <div class="col-xl-12">
                 <div class="card" style="max-width: 98%;border-radius:0px; min-height: 250px !important;">
                     <div class="card-body table-border-style" style="padding: 25px 3px;">
-                                            
-                        
+
+
                         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                             <div class="col-2">
                                 <p class="mb-0 pb-0">LEADS</p>
@@ -314,15 +320,21 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             @endforeach
                                         </select>
                                     </div>
-
                                     <div class="col-md-4"> <label for="">Created By</label>
                                         <select class="form form-control select2" id="choices-multiple555"
                                             name="created_by[]" multiple style="width: 95%;">
                                             <option value="">Select Brand</option>
                                             @foreach ($brands as $brand)
-                                                <option value="{{ $brand->id }}"
-                                                    <?= isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' ?>
-                                                    class="">{{ $brand->name }}</option>
+                                            @if ($brand->id == $currentUserCompany->id)
+                                            <option value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
+                                            @endif
+                                                @foreach ($com_permissions as $permissions)
+                                                        @if ($permissions->permitted_company_id == $brand->id)
+                                                        <option value="{{ $permissions->permitted_company_id }}" class="">{{ $brand->name }}</option>
+                                                        @endif
+                                                @endforeach
+
+
                                             @endforeach
                                         </select>
                                     </div>
@@ -565,7 +577,7 @@ if (isset($lead->is_active) && $lead->is_active) {
             var selectedIds = $('.sub-check:checked').map(function() {
                 return this.value;
             }).get();
-            
+
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",
