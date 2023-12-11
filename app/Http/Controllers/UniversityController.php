@@ -6,6 +6,7 @@ use App\Models\CourseDuration;
 use App\Models\CourseLevel;
 use App\Models\Deal;
 use App\Models\DealApplication;
+use App\Models\InstituteCategory;
 use App\Models\Stage;
 use App\Models\University;
 use App\Models\User;
@@ -65,10 +66,14 @@ class UniversityController extends Controller
             //getting companies
             $companies = companies();
 
+            $categories = InstituteCategory::pluck('name', 'id');
+            $categories->prepend('', 'Select Category');
+
             $data = [
                 'countries' => $countries,
                 'companies' => $companies,
-                'months'  => $months
+                'months'  => $months,
+                'categories' => $categories
             ];
 
             return view('university.create', $data);
@@ -121,7 +126,22 @@ class UniversityController extends Controller
             $university->company_id = $request->company_id;
             $university->resource_drive_link = $request->resource_drive_link;
             $university->application_method_drive_link = $request->application_method_drive_link;
+            $university->institute_category_id = $request->category_id;
             $university->save();
+
+
+            $data = [
+                'type' => 'info',
+                'note' => json_encode([
+                                'title' => 'University Created',
+                                'message' => 'University Created successfully'
+                            ]),
+                'module_id' => 2,
+                'module_type' => 'university',
+            ];
+            addLogActivity($data);
+
+
 
             return redirect()->route('university.index')->with('success', __('University successfully created!'));
         } else {
@@ -163,11 +183,15 @@ class UniversityController extends Controller
             //getting companies
             $companies = companies();
 
+            $categories = InstituteCategory::pluck('name', 'id');
+            $categories->prepend('', 'Select Category');
+
             $data = [
                 'countries' => $countries,
                 'companies' => $companies,
                 'months'  => $months,
-                'university' => $university
+                'university' => $university,
+                'categories' => $categories
             ];
 
             return view('university.edit', $data);
@@ -216,7 +240,19 @@ class UniversityController extends Controller
             $university->company_id = $request->company_id;
             $university->resource_drive_link = $request->resource_drive_link;
             $university->application_method_drive_link = $request->application_method_drive_link;
+            $university->institute_category_id = $request->category_id;
             $university->save();
+
+            $data = [
+                'type' => 'info',
+                'note' => json_encode([
+                                'title' => 'University Updated',
+                                'message' => 'University updated successfully'
+                            ]),
+                'module_id' => 2,
+                'module_type' => 'university',
+            ];
+            addLogActivity($data);
 
             return redirect()->route('university.index')->with('success', __('University successfully updated!'));
         } else {
@@ -235,6 +271,17 @@ class UniversityController extends Controller
         //
         if (\Auth::user()->can('delete university')) {
             University::find($id)->delete();
+
+            $data = [
+                'type' => 'info',
+                'note' => json_encode([
+                                'title' => 'University Deleted',
+                                'message' => 'University deleted successfully'
+                            ]),
+                'module_id' => 2,
+                'module_type' => 'university',
+            ];
+            addLogActivity($data);
 
             return redirect()->route('university.index')->with('success', __('University successfully deleted!'));
         } else {

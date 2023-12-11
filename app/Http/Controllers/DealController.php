@@ -662,6 +662,18 @@ class DealController extends Controller
                 ];
                 $resp = Utility::sendEmailTemplate('deal_assigned',  $clients, $dealAssignArr);
 
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                                    'title' => 'Deal Created',
+                                    'message' => 'Deal created successfully.'
+                                ]),
+                    'module_id' => $deal->id,
+                    'module_type' => 'lead',
+                ];
+                addLogActivity($data);
+
+
                 return json_encode([
                     'status' => 'success',
                     'deal' => $deal,
@@ -869,6 +881,18 @@ class DealController extends Controller
                     );
                 }
 
+
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                                    'title' => 'Deal Updated',
+                                    'message' => 'Deal updated successfully.'
+                                ]),
+                    'module_id' => $deal->id,
+                    'module_type' => 'lead',
+                ];
+                addLogActivity($data);
+
                 return json_encode([
                     'status' => 'success',
                     'deal' => $deal,
@@ -906,6 +930,7 @@ class DealController extends Controller
                 DealTask::where('deal_id', '=', $deal->id)->delete();
                 ActivityLog::where('deal_id', '=', $deal->id)->delete();
                 //                ClientPermission::where('deal_id', '=', $deal->id)->delete();
+                \App\Models\LogActivity::where('module_id', $deal->id)->delete();
 
                 $deal->delete();
 
@@ -1512,6 +1537,17 @@ class DealController extends Controller
                 $deal->notes = $request->notes;
                 $deal->save();
 
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                                    'title' => 'Deal Notes Created',
+                                    'message' => 'Deal notes created successfully'
+                                ]),
+                    'module_id' => $deal->id,
+                    'module_type' => 'deal',
+                ];
+                addLogActivity($data);
+
                 return response()->json(
                     [
                         'is_success' => true,
@@ -1594,6 +1630,8 @@ class DealController extends Controller
                     return redirect()->back()->with('error', $messages->first());
                 }
 
+                
+
                 $dealTask = DealTask::create(
                     [
                         'deal_id' => $deal->id,
@@ -1634,6 +1672,20 @@ class DealController extends Controller
                 // Send Email
                 Utility::sendEmailTemplate('Create Task', $usrs, $tArr);
 
+               
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                                    'title' => 'Task Created',
+                                    'message' => 'Task created successfully'
+                                ]),
+                    'module_id' => $deal->id,
+                    'module_type' => 'deal',
+                ];
+                addLogActivity($data);
+
+
+                
                 return redirect()->back()->with('success', __('Task successfully created!'))->with('status', 'tasks');
             } else {
                 return redirect()->back()->with('error', __('Permission Denied.'))->with('status', 'tasks');
@@ -1777,6 +1829,17 @@ class DealController extends Controller
                     $task->status = 1;
                 }
                 $task->save();
+
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                                    'title' => 'Task Updated',
+                                    'message' => 'Task updated successfully'
+                                ]),
+                    'module_id' => $id,
+                    'module_type' => 'deal',
+                ];
+                addLogActivity($data);
 
                 return response()->json(
                     [
@@ -2825,9 +2888,9 @@ class DealController extends Controller
 
             $applications = DealApplication::where('deal_id', $deal->id)->get();
             $tasks = DealTask::where(['related_to' => $deal->id, 'related_type' => 'deal'])->get();
+            $log_activities = getLogActivity($deal->id);
 
-
-            $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks'))->render();
+            $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities'))->render();
 
             return json_encode([
                 'status' => 'success',
@@ -3160,6 +3223,17 @@ class DealController extends Controller
         
 
         Deal::where('id', $deal_id)->update(['stage_id' => $stage_id]);
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Deal Stage Updated',
+                            'message' => 'Deal stage updated'
+                        ]),
+            'module_id' => $deal_id,
+            'module_type' => 'deal',
+        ];
+        addLogActivity($data);
+
         return json_encode([
             'status' => 'success',
             'message' => 'Deal stage successfully udpated!!!'
@@ -3171,9 +3245,6 @@ class DealController extends Controller
     }
 
     ////////////////////////////////////////////////////////////
-
-
-
     public function detailApplication($id)
     {
         $application = DealApplication::where('id', $id)->first();
@@ -3186,5 +3257,38 @@ class DealController extends Controller
             'app_id' => $application->id,
             'html' => $html
         ]);
+    }
+
+    public function updateBulkTaskStatus(Request $request){
+
+     
+
+        $ids = explode(',', $request->task_ids);
+        $status = $request->status;
+
+        DealTask::whereIn('id', $ids)->update(['status' => $status]);
+      
+
+        foreach($ids as $id){
+           
+            $task = DealTask::findOrFail($id);
+                  
+            $data = [
+                'type' => 'info',
+                'note' => json_encode([
+                                'title' => 'Task Updated',
+                                'message' => 'Task status updated'
+                            ]),
+                'module_id' => $task->deal_id,
+                'module_type' => 'deal',
+            ];
+            addLogActivity($data);
+        }
+        return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks status updated successfully');
+    }
+
+    public function deleteBulkTasks(Request $request){
+        DealTask::whereIn('id', explode(',', $request->ids))->delete();
+        return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks deleted successfully');
     }
 }

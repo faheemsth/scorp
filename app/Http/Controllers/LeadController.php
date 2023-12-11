@@ -480,6 +480,18 @@ class LeadController extends Controller
                 }
 
 
+                //Log
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                                    'title' => 'Lead Created',
+                                    'message' => 'Lead created successfully'
+                                ]),
+                    'module_id' => $lead->id,
+                    'module_type' => 'lead',
+                ];
+                addLogActivity($data);
+
                 return json_encode([
                     'status' => 'success',
                     'html' => $new_record_html,
@@ -724,6 +736,18 @@ class LeadController extends Controller
                 $lead->date        = date('Y-m-d');
                 $lead->save();
 
+                //Log
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                                    'title' => 'Lead Updated',
+                                    'message' => 'Lead updated successfully'
+                                ]),
+                    'module_id' => $lead->id,
+                    'module_type' => 'lead',
+                ];
+                addLogActivity($data);
+
 
                 return json_encode([
                     'status' => 'success',
@@ -761,7 +785,23 @@ class LeadController extends Controller
                 LeadFile::where('lead_id', '=', $lead->id)->delete();
                 UserLead::where('lead_id', '=', $lead->id)->delete();
                 LeadActivityLog::where('lead_id', '=', $lead->id)->delete();
+
+                //Log
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                                    'title' => 'Lead Deleted',
+                                    'message' => 'Lead deleted successfully'
+                                ]),
+                    'module_id' => $lead->id,
+                    'module_type' => 'lead',
+                ];
+                addLogActivity($data);
+
+
                 $lead->delete();
+
+                
 
                 return redirect()->back()->with('success', __('Lead successfully deleted!'));
             } else {
@@ -788,9 +828,9 @@ class LeadController extends Controller
                     'created_at' => \Carbon\Carbon::parse($discussion['created_at'])->diffForHumans()
                 ];
             }
+
+            
             $returnHTML = view('leads.getDiscussions')->with('discussions', $diss)->render();
-
-
             return json_encode([
                 'status' => true,
                 'content' => $returnHTML
@@ -819,6 +859,19 @@ class LeadController extends Controller
                 'created_at' => \Carbon\Carbon::parse(date('Y-m-d H:i:s'))->diffForHumans()
             ];
             $returnHTML = view('leads.getDiscussions')->with('discussions', $diss)->render();
+
+
+            //Log
+            $data = [
+                'type' => 'info',
+                'note' => json_encode([
+                                'title' => 'Discussion created',
+                                'message' => 'Discussion created successfully'
+                            ]),
+                'module_id' => $_POST['lead_id'],
+                'module_type' => 'lead',
+            ];
+            addLogActivity($data);
 
             return json_encode([
                 'status' => true,
@@ -1429,6 +1482,17 @@ class LeadController extends Controller
                 $lead->notes = $request->notes;
                 $lead->save();
 
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                                    'title' => 'Notes created',
+                                    'message' => 'Notes created successfully'
+                                ]),
+                    'module_id' => $id,
+                    'module_type' => 'lead',
+                ];
+                addLogActivity($data);
+
                 return response()->json(
                     [
                         'is_success' => true,
@@ -1877,6 +1941,18 @@ class LeadController extends Controller
     public function driveStore(Request $request)
     {
         Lead::where('id', $request->id)->update(['drive_link' => $request->input('drive_link')]);
+
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Drive link added',
+                            'message' => 'Drive link added successfully'
+                        ]),
+            'module_id' => $request->id,
+            'module_type' => 'lead',
+        ];
+        addLogActivity($data);
+
         return redirect()->back()->with('success', __('Drive Link added successfully'));
     }
 
@@ -1923,6 +1999,19 @@ class LeadController extends Controller
         $note->lead_id = $id;
         $note->save();
 
+
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Notes created',
+                            'message' => 'Noted created successfully'
+                        ]),
+            'module_id' => $id,
+            'module_type' => 'lead',
+        ];
+        addLogActivity($data);
+
+
         $notes = LeadNote::where('lead_id', $id)->orderBy('created_at', 'DESC')->get();
         $html = view('leads.getNotes', compact('notes'))->render();
 
@@ -1966,6 +2055,18 @@ class LeadController extends Controller
         $note->description = $request->input('description');
         $note->update();
 
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Lead Notes Updated',
+                            'message' => 'Lead notes updated successfully'
+                        ]),
+            'module_id' => $request->id,
+            'module_type' => 'lead',
+        ];
+        addLogActivity($data);
+
+
         $notes = LeadNote::where('lead_id', $id)->orderBy('created_at', 'DESC')->get();
         $html = view('leads.getNotes', compact('notes'))->render();
 
@@ -1985,6 +2086,19 @@ class LeadController extends Controller
 
         $notes = LeadNote::where('lead_id', $request->lead_id)->orderBy('created_at', 'DESC')->get();
         $html = view('leads.getNotes', compact('notes'))->render();
+
+
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Lead Notes Deleted',
+                            'message' => 'Lead notes deleted successfully'
+                        ]),
+            'module_id' => $request->lead_id,
+            'module_type' => 'lead',
+        ];
+        addLogActivity($data);
+
 
         return json_encode([
             'status' => 'success',
@@ -2324,6 +2438,17 @@ class LeadController extends Controller
         $lead->is_converted = $deal->id;
         $lead->save();
 
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Lead Converted',
+                            'message' => 'Lead converted successfully.'
+                        ]),
+            'module_id' => $lead->id,
+            'module_type' => 'lead',
+        ];
+        addLogActivity($data);
+
         //Slack Notification
         $setting  = Utility::settings(\Auth::user()->creatorId());
         $leadUsers = Lead::where('id', '=', $lead->id)->first();
@@ -2651,9 +2776,10 @@ class LeadController extends Controller
             $tasks = \App\Models\DealTask::where(['related_to' => $lead->id, 'related_type' => 'lead'])->get();
             $branches = Branch::get()->pluck('name', 'id');
             $users = User::get()->pluck('name', 'id');
+            $log_activities = getLogActivity($lead->id);
             
 
-            $html = view('leads.leadDetail', compact('lead', 'deal', 'stageCnt', 'lead_stages', 'precentage', 'tasks', 'branches', 'users'))->render();
+            $html = view('leads.leadDetail', compact('lead', 'deal', 'stageCnt', 'lead_stages', 'precentage', 'tasks', 'branches', 'users', 'log_activities'))->render();
 
             return json_encode([
                 'status' => 'success',
@@ -3078,6 +3204,17 @@ class LeadController extends Controller
             $msg = __("Deal converted through lead") . '' . $leadUsers->name . '.';
             Utility::send_telegram_msg($msg);
         }
+
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Lead Converted',
+                            'message' => 'Lead converted successfully.'
+                        ]),
+            'module_id' => $lead->id,
+            'module_type' => 'lead',
+        ];
+        addLogActivity($data);
 
         return json_encode([
             'status' => 'success',

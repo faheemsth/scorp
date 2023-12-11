@@ -1,6 +1,11 @@
 {{ Form::model($university, array('route' => array('university.update', $university->id), 'method' => 'PUT')) }}
 <div class="modal-body">
     <div class="row">
+        <div class="form-group col-12 py-0">
+            {{ Form::label('name', __('Institute Category'),['class'=>'form-label']) }}
+            {{ Form::select('category_id', $categories, $university->institute_category_id, ['class' => 'form-control select2', 'id' => 'categories' ,'required' => 'required']) }}
+        </div>
+
         <div class="form-group col-md-6 py-0">
             {{ Form::label('name', __('Name'),['class'=>'form-label']) }}
             {{ Form::text('name', $university->name, array('class' => 'form-control','required'=>'required')) }}

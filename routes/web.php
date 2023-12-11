@@ -130,6 +130,7 @@ use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OrganizationTypeController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\ApplicationsController;
+use App\Http\Controllers\InstituteCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -1726,3 +1727,11 @@ Route::get('/organization/{id}/taskDeleted', [OrganizationController::class, 'ta
 Route::get('/save-countries', [SystemController::class, 'saveCountries']);
 Route::get('/get-university-intake', [UniversityController::class, 'getIntakeMonths'])->name('get_university_intake');
 Route::get('/get-deal-applications', [ApplicationsController::class, 'getDealApplication'])->name('get_deal_applications');
+
+////////////////////////INSTITUTE CATEGORY
+Route::resource('/institute-category', InstituteCategoryController::class);
+
+Route::post("/update-bulk-task-status", [DealController::class, 'updateBulkTaskStatus'])->name('update-bulk-task-status');
+
+Route::get("/delete-bulk-tasks", [DealController::class, 'deleteBulkTasks'])->name('delete-bulk-tasks');
+

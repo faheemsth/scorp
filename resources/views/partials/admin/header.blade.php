@@ -1,124 +1,101 @@
-
 @push('css-page')
-    <link rel="stylesheet" href="assets/css/customizer.css">
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="assets/css/customizer.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endpush
 @php
-    $users=\Auth::user();
-    //$profile=asset(Storage::url('uploads/avatar/'));
-    $profile=\App\Models\Utility::get_file('uploads/avatar/');
-    $languages=\App\Models\Utility::languages();
-    $lang = isset($users->lang)?$users->lang:'en';
-    $setting = \App\Models\Utility::colorset();
-    $mode_setting = \App\Models\Utility::mode_layout();
+$users=\Auth::user();
+//$profile=asset(Storage::url('uploads/avatar/'));
+$profile=\App\Models\Utility::get_file('uploads/avatar/');
+$languages=\App\Models\Utility::languages();
+$lang = isset($users->lang)?$users->lang:'en';
+$setting = \App\Models\Utility::colorset();
+$mode_setting = \App\Models\Utility::mode_layout();
 
 
-    $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('seen', 0)->count();
+$unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('seen', 0)->count();
 @endphp
-@if (isset($setting['cust_theme_bg']) && $setting['cust_theme_bg'] == 'on')
-    <header class="dash-header transprent-bg">
-@else
-    <header class="dash-header">
-@endif
-    <div class="header-wrapper">
-        <div class="me-auto dash-mob-drp">
-            <ul class="list-unstyled">
-                <li class="dash-h-item mob-hamburger">
-                    <a href="#!" class="dash-head-link" id="mobile-collapse">
-                        <div class="hamburger hamburger--arrowturn">
-                            <div class="hamburger-box">
-                                <div class="hamburger-inner"></div>
-                            </div>
-                        </div>
-                    </a>
-                </li>
 
-                <li class="dropdown dash-h-item drp-company">
-                    <a
-                        class="dash-head-link dropdown-toggle arrow-none me-0"
-                        data-bs-toggle="dropdown"
-                        href="#"
-                        role="button"
-                        aria-haspopup="false"
-                        aria-expanded="false"
-                    >
-                        <span class="theme-avtar">
-                             <img src="{{ !empty(\Auth::user()->avatar) ? $profile . \Auth::user()->avatar :  $profile.'avatar.png'}}" class="img-fluid rounded-circle">
-                        </span>
-                        <span class="hide-mob ms-2">{{__('Hi, ')}}{{\Auth::user()->name }}!</span>
-                        <i class="ti ti-chevron-down drp-arrow nocolor hide-mob"></i>
-                    </a>
-                    <div class="dropdown-menu dash-h-dropdown">
-
-                        <!-- <a href="{{ route('change.mode') }}" class="dropdown-item">
-                            <i class="ti ti-circle-plus"></i>
-                            <span>{{(Auth::user()->mode == 'light') ? __('Dark Mode') : __('Light Mode')}}</span>
-                        </a> -->
-
-                        <a href="{{route('profile')}}" class="dropdown-item">
-                            <i class="ti ti-user"></i>
-                            <span>{{__('Profile')}}</span>
-                        </a>
-
-                        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('frm-logout').submit();" class="dropdown-item">
-                            <i class="ti ti-power"></i>
-                            <span>{{__('Logout')}}</span>
-                        </a>
-                        <form id="frm-logout" action="{{ route('logout') }}" method="POST" class="d-none">
-                            {{ csrf_field() }}
-                        </form>
-
-                    </div>
-                </li>
-
-            </ul>
-        </div>
-        <div class="ms-auto">
-            <ul class="list-unstyled">
-                @if( \Auth::user()->type !='client' && \Auth::user()->type !='super admin' )
-                    <li class="dropdown dash-h-item drp-notification">
-                        <a class="dash-head-link arrow-none me-0" href="{{ url('chats') }}" aria-haspopup="false"
-                           aria-expanded="false">
-                            <i class="ti ti-brand-hipchat"></i>
-                            <span class="bg-danger dash-h-badge message-toggle-msg  message-counter custom_messanger_counter beep"> {{ $unseenCounter }}<span
-                                    class="sr-only"></span>
-                            </span>
-                        </a>
-                    </li>
-                @endif
-
-
-
-
-                <li class="dropdown dash-h-item drp-language">
-                    <a
-                        class="dash-head-link dropdown-toggle arrow-none me-0"
-                        data-bs-toggle="dropdown"
-                        href="#"
-                        role="button"
-                        aria-haspopup="false"
-                        aria-expanded="false"
-                    >
-                        <i class="ti ti-world nocolor"></i>
-                        <span class="drp-text hide-mob">{{Str::upper(isset($lang)?$lang:'en')}}</span>
-                        <i class="ti ti-chevron-down drp-arrow nocolor"></i>
-                    </a>
-                    <div class="dropdown-menu dash-h-dropdown dropdown-menu-end">
-
-                        @foreach($languages as $language)
-                            <a href="{{route('change.language',$language)}}" class="dropdown-item @if($language == $lang) text-danger @endif">
-                                <span>{{Str::upper($language)}}</span>
-                            </a>
-                        @endforeach
-                        <h></h>
-                            @if(\Auth::user()->type=='super admin')
-
-                                <a class="dropdown-item text-primary" href="{{route('manage.language',[isset($lang)?$lang:'en'])}}">{{ __('Manage Language ') }}</a>
-                            @endif
-                    </div>
-                </li>
-            </ul>
-        </div>
+<nav class="navbar navbar-expand navbar-light topbar  static-top shadow" style="background-color: #B3CDE1;">
+    <button id="sidebarToggleTop" class="btn d-md-none ">
+        <i class="fa fa-bars"></i>
+    </button>
+    <div class="logo ms-md-2">
+        <a href="#"><img src="{{ asset('cs-theme/assets/images/scorp-logo.png') }}" alt=""></a>
     </div>
-    </header>
- <input type="hidden" value="<?= isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : 25 ?>" class="num_results_on_page">
+    <!-- Sidebar Toggle (Topbar) -->
+
+
+    <!-- Topbar Search -->
+    <!-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 d-none  navbar-search me-0" style="margin:auto !important  ; ">
+        <div class="input-group m-auto">
+            <input type="text" class="form-control bg-light border border-dark  " placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+
+        </div>
+    </form> -->
+
+    <!-- Topbar Navbar -->
+    <ul class="navbar-nav ml-auto">
+
+        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+        <li class="nav-item dropdown no-arrow d-sm-none">
+            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+            </a>
+            <!-- Dropdown - Messages -->
+            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in d-none" aria-labelledby="searchDropdown">
+                <form class="form-inline mr-auto w-100 navbar-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </li>
+
+        <!-- Nav Item - Alerts -->
+        <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa-solid fa-bell" style="font-size: 19px; color: #000;"></i>
+                <!-- Counter - Alerts -->
+                <span class="badge badge-danger badge-counter"></span>
+            </a>
+
+            <!-- Nav Item - Messages -->
+        <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa-regular fa-circle-question" style="font-size: 19px; color: #000;"></i>
+                <!-- Counter - Messages -->
+                <span class="badge badge-danger badge-counter"></span>
+            </a>
+            <!-- Dropdown - Messages -->
+            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+
+
+                <!-- Nav Item - User Information -->
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <!-- <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span> -->
+                <img class="img-profile " src="{{ asset('cs-theme/assets/images/Mask group.png') }}">
+            </a>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{{route('profile')}}">
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Profile
+                </a>
+
+                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    {{__('Logout')}}
+                </a>
+                <form id="frm-logout" action="{{ route('logout') }}" method="POST" class="d-none">
+                    {{ csrf_field() }}
+                </form>
+            </div>
+        </li>
+    </ul>
+</nav>

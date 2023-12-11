@@ -107,7 +107,7 @@
         text-align: left;
     }
 
-    .btn-sm{
+    .btn-sm {
         width: 30px;
         height: 30px;
     }
@@ -130,9 +130,9 @@
                         <p class="pb-0 mb-0 fw-normal">{{ __('Deal') }}</p>
                         <div class="d-flex align-items-baseline ">
                             @if (strlen($deal->name) > 40)
-                                <h4>{{ substr($deal->name, 0, 40) }}...</h4>
+                            <h4>{{ substr($deal->name, 0, 40) }}...</h4>
                             @else
-                                <h4>{{ $deal->name }}</h4>
+                            <h4>{{ $deal->name }}</h4>
                             @endif
 
                         </div>
@@ -142,27 +142,24 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @if (\Auth::user()->can('edit deal'))
-                        <a href="#" data-size="lg" data-url="{{ route('deals.edit', $deal->id) }}"
-                            data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Deal') }}"
-                            class="btn btn-sm btn-primary">
-                            <i class="ti ti-pencil"></i>
-                        </a>
+                    <a href="#" data-size="lg" data-url="{{ route('deals.edit', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Deal') }}" class="btn btn-sm btn-primary">
+                        <i class="ti ti-pencil"></i>
+                    </a>
                     @endif
 
                     @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('delete deal'))
-                        {!! Form::open([
-                            'method' => 'DELETE',
-                            'route' => ['deals.destroy', $deal->id],
-                            'id' => 'delete-form-' . $deal->id,
-                        ]) !!}
+                    {!! Form::open([
+                    'method' => 'DELETE',
+                    'route' => ['deals.destroy', $deal->id],
+                    'id' => 'delete-form-' . $deal->id,
+                    ]) !!}
 
-                        <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}"
-                            class="btn btn-sm text-white bs-pass-para" style="background-color: #b5282f;">
-                            <i class="ti ti-trash"></i>
-                        </a>
+                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn btn-sm text-white bs-pass-para" style="background-color: #b5282f;">
+                        <i class="ti ti-trash"></i>
+                    </a>
 
 
-                        {!! Form::close() !!}
+                    {!! Form::close() !!}
                     @endif
 
                 </div>
@@ -213,1108 +210,940 @@
             {{-- Stages --}}
             {{-- <div class="stages my-2 ">
                 <h2 class="mb-3">Deal STATUS: <span class="d-inline-block fw-light">{{ 'List' }}</span>
-                </h2>
-                 <div class="wizard mb-2">
-                   <?php $done = true; ?>
-                     @forelse ()
-                    <?php
-                    if ($lead->stage->name == $stage->name) {
-                        $done = false;
-                    }
-                    
-                    ?>
+            </h2>
+            <div class="wizard mb-2">
+                <?php $done = true; ?>
+                @forelse ()
+                <?php
+                if ($lead->stage->name == $stage->name) {
+                    $done = false;
+                }
 
-                    <a type="button" data-lead-id="{{ $lead->id }}" data-stage-id="{{ $stage->id }}" class="lead_stage {{ $lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '') }} " style="font-size:13px">{{ $stage->name }}</a>
-                    @empty
-                    @endforelse
-                    </div>
-                </div> --}}
-            <div class="stages my-2 ">
-                <h2 class="mb-3">Deal STATUS: <span class="d-inline-block fw-light">{{ 'List' }}</span>
-                </h2>
-                <div class="wizard mb-2">
+                ?>
 
-
-                    <?php $done = true; ?>
-                    @foreach ($stages as $key => $stage)
-                        <?php
-                        if ($deal->stage->name == $stage) {
-                            $done = false;
-                        }
-                        
-                        ?>
-                        <a type="button" data-lead-id="{{ $deal->id }}" data-stage-id="{{ $key }}"
-                            class="lead_stage deal_stage {{ $deal->stage->name == $stage ? 'current' : ($done == true ? 'done' : '') }}"
-                            style="font-size:12px">{{ $stage }}</a>
-                    @endforeach
-
-                </div>
+                <a type="button" data-lead-id="{{ $lead->id }}" data-stage-id="{{ $stage->id }}" class="lead_stage {{ $lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '') }} " style="font-size:13px">{{ $stage->name }}</a>
+                @empty
+                @endforelse
             </div>
+        </div> --}}
+        <div class="stages my-2 ">
+            <h2 class="mb-3">Deal STATUS: <span class="d-inline-block fw-light">{{ 'List' }}</span>
+            </h2>
+            <div class="wizard mb-2">
 
 
-            <div class="lead-content my-2">
+                <?php $done = true; ?>
+                @foreach ($stages as $key => $stage)
+                <?php
+                if ($deal->stage->name == $stage) {
+                    $done = false;
+                }
 
-                <div class="card">
-                    <div class="card-header p-1">
-                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link active" id="pills-details-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-details" type="button" role="tab"
-                                    aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
+                ?>
+                <a type="button" data-lead-id="{{ $deal->id }}" data-stage-id="{{ $key }}" class="lead_stage deal_stage {{ $deal->stage->name == $stage ? 'current' : ($done == true ? 'done' : '') }}" style="font-size:12px">{{ $stage }}</a>
+                @endforeach
+
+            </div>
+        </div>
+
+
+        <div class="lead-content my-2">
+
+            <div class="card">
+                <div class="card-header p-1">
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link pills-link active" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab" aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link pills-link" id="pills-related-tab" data-bs-toggle="pill" data-bs-target="#pills-related" type="button" role="tab" aria-controls="pills-related" aria-selected="false">{{ __('Related') }}</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                                <button class="nav-link pills-link" id="pills-activity-tab" data-bs-toggle="pill" data-bs-target="#pills-activity" type="button" role="tab" aria-controls="pills-activity" aria-selected="false">{{ __('Timeline') }}</button>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link" id="pills-related-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-related" type="button" role="tab"
-                                    aria-controls="pills-related" aria-selected="false">{{ __('Related') }}</button>
-                            </li>
-                        </ul>
-                    </div>
+                    </ul>
+                </div>
 
-                    <div class="card-body px-2">
+                <div class="card-body px-2">
 
-                        <div class="tab-content" id="pills-tabContent">
-                            {{-- Details Pill Start --}}
-                            <div class="tab-pane fade show active" id="pills-details" role="tabpanel"
-                                aria-labelledby="pills-details-tab">
+                    <div class="tab-content" id="pills-tabContent">
+                        {{-- Details Pill Start --}}
+                        <div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab">
 
-                                <div class="accordion accordion-flush" id="accordionFlushExample">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
-                                            <button class="accordion-button p-2" type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#panelsStayOpen-collapsekeyone">
-                                                {{ __('Details') }}
-                                            </button>
-                                        </h2>
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekeyone">
+                                            {{ __('Details') }}
+                                        </button>
+                                    </h2>
 
-                                        <div id="panelsStayOpen-collapsekeyone" class="accordion-collapse collapse show"
-                                            aria-labelledby="panelsStayOpen-headingkeyone">
-                                            <div class="accordion-body">
+                                    <div id="panelsStayOpen-collapsekeyone" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkeyone">
+                                        <div class="accordion-body">
 
-                                                <div class="table-responsive mt-1" style="margin-left: 10px;">
+                                            <div class="table-responsive mt-1" style="margin-left: 10px;">
 
-                                                    <table>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Record ID') }}
-                                                                </td>
-                                                                <td class=""
-                                                                    style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $deal->id }}
-                                                                </td>
-                                                            </tr>
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                                {{ __('Record ID') }}
+                                                            </td>
+                                                            <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                {{ $deal->id }}
+                                                            </td>
+                                                        </tr>
 
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Admission Name') }}
-                                                                </td>
-                                                                <td class="name-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                        <tr>
+                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                                {{ __('Admission Name') }}
+                                                            </td>
+                                                            <td class="name-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                    <div
-                                                                        class="d-flex align-items-center edit-input-field-div">
-                                                                        <div
-                                                                            class="input-group border-0 name d-flex align-items-center">
-                                                                            {{ $deal->name }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="name"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
+                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                    <div class="input-group border-0 name d-flex align-items-center">
+                                                                        {{ $deal->name }}
                                                                     </div>
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Intake Month') }}
-                                                                </td>
-                                                                <td class="intake_month-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-
-                                                                    <div
-                                                                        class="d-flex align-items-center edit-input-field-div">
-                                                                        <div
-                                                                            class="input-group border-0 intake_month d-flex align-items-center">
-                                                                            {{ $deal->intake_month }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="intake_month"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
+                                                                    <div class="edit-btn-div">
+                                                                        <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="name"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </td>
-                                                            </tr>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
 
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Intake Year') }}
-                                                                </td>
-                                                                <td class="intake_year-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                        <tr>
+                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                                {{ __('Intake Month') }}
+                                                            </td>
+                                                            <td class="intake_month-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                    <div
-                                                                        class="d-flex align-items-center edit-input-field-div">
-                                                                        <div
-                                                                            class="input-group border-0 intake_year d-flex align-items-center">
-                                                                            {{ $deal->intake_year }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="intake_year"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
+                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                    <div class="input-group border-0 intake_month d-flex align-items-center">
+                                                                        {{ $deal->intake_month }}
                                                                     </div>
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Contact') }}
-                                                                </td>
-                                                                <td class="type-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ isset($users[$clientDeal->client_id]) ? $users[$clientDeal->client_id] : '' }}
-                                                                </td>
-                                                            </tr>
-
-
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Current Status') }}
-                                                                </td>
-                                                                <td class="stage_id-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-
-                                                                    <div
-                                                                        class="d-flex align-items-center edit-input-field-div">
-                                                                        <div
-                                                                            class="input-group border-0 stage_id d-flex align-items-center">
-                                                                            {{ $stages[$deal->stage_id] }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="stage_id"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
+                                                                    <div class="edit-btn-div">
+                                                                        <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="intake_month"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </td>
-                                                            </tr>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
 
+                                                        <tr>
+                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                                {{ __('Intake Year') }}
+                                                            </td>
+                                                            <td class="intake_year-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
-                                                                    {{ __('User Responsible') }}
-                                                                </td>
-                                                                <td class="assigned_to-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-
-                                                                    <div
-                                                                        class="d-flex align-items-center edit-input-field-div">
-                                                                        <div
-                                                                            class="input-group border-0 assigned_to d-flex align-items-center">
-                                                                            {{ isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : '' }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="assigned_to"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
+                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                    <div class="input-group border-0 intake_year d-flex align-items-center">
+                                                                        {{ $deal->intake_year }}
                                                                     </div>
-                                                                </td>
-                                                            </tr>
-
-
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Drive Link') }}
-                                                                </td>
-                                                                <td class="drive_link-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-
-                                                                    <div
-                                                                        class="d-flex align-items-center edit-input-field-div">
-                                                                        <div
-                                                                            class="input-group border-0 drive_link d-flex align-items-center">
-                                                                            @if (isset($deal->drive_link) && !empty($deal->drive_link))
-                                                                                <a href="{{ $deal->drive_link }}"
-                                                                                    target="blank"
-                                                                                    style="font-size: 14px; color: rgb(46, 134, 249);">
-                                                                                    {{ $deal->drive_link }} </a>
-                                                                            @else
-                                                                                {{ isset($deal->drive_link) ? $deal->drive_link : '' }}
-                                                                            @endif
-
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="drive_link"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
+                                                                    <div class="edit-btn-div">
+                                                                        <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="intake_year"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                                {{ __('Contact') }}
+                                                            </td>
+                                                            <td class="type-td" style="padding-left: 10px; font-size: 14px;">
+                                                                {{ isset($users[$clientDeal->client_id]) ? $users[$clientDeal->client_id] : '' }}
+                                                            </td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                                {{ __('Current Status') }}
+                                                            </td>
+                                                            <td class="stage_id-td" style="padding-left: 10px; font-size: 14px;">
+
+                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                    <div class="input-group border-0 stage_id d-flex align-items-center">
+                                                                        {{ $stages[$deal->stage_id] }}
+                                                                    </div>
+                                                                    <div class="edit-btn-div">
+                                                                        <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="stage_id"><i class="ti ti-pencil"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                                {{ __('User Responsible') }}
+                                                            </td>
+                                                            <td class="assigned_to-td" style="padding-left: 10px; font-size: 14px;">
+
+                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                    <div class="input-group border-0 assigned_to d-flex align-items-center">
+                                                                        {{ isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : '' }}
+                                                                    </div>
+                                                                    <div class="edit-btn-div">
+                                                                        <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="assigned_to"><i class="ti ti-pencil"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                                {{ __('Drive Link') }}
+                                                            </td>
+                                                            <td class="drive_link-td" style="padding-left: 10px; font-size: 14px;">
+
+                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                    <div class="input-group border-0 drive_link d-flex align-items-center">
+                                                                        @if (isset($deal->drive_link) && !empty($deal->drive_link))
+                                                                        <a href="{{ $deal->drive_link }}" target="blank" style="font-size: 14px; color: rgb(46, 134, 249);">
+                                                                            {{ $deal->drive_link }} </a>
+                                                                        @else
+                                                                        {{ isset($deal->drive_link) ? $deal->drive_link : '' }}
+                                                                        @endif
+
+                                                                    </div>
+                                                                    <div class="edit-btn-div">
+                                                                        <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="drive_link"><i class="ti ti-pencil"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingkeytwo">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekeytwo">
+                                            {{ __('ADDITIONAL INFORMATION') }}
+                                        </button>
+                                    </h2>
+                                    <div id="panelsStayOpen-collapsekeytwo" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkeytwo">
+                                        <div class="accordion-body">
+
+                                            <div class="table-responsive mt-1" style="margin-left: 10px;">
+
+                                                <table>
+                                                    <tbody>
+
+                                                        <tr>
+                                                            <td class="" style="width: 152px; text-align: right; font-size: 14px;">
+                                                                {{ __('Institute') }}
+                                                            </td>
+                                                            <td class="email-td" style="padding-left: 10px; font-size: 14px;">
+                                                                {{ isset($application->university_id) && $universities[$application->university_id] ? $universities[$application->university_id] : '' }}
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                {{ __('Institution Link') }}
+                                                            </td>
+                                                            <td class="website-td" style="padding-left: 10px; font-size: 14px;">
+
+                                                            </td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                {{ __('Agency') }}
+                                                            </td>
+                                                            <td class="organization_id-td" style="padding-left: 10px; font-size: 14px;">
+
+                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                    <div class="input-group border-0 organization_id d-flex align-items-center">
+                                                                        {{ !empty($deal->organization_id) && isset($organizations[$deal->organization_id]) ? $organizations[$deal->organization_id] : '' }}
+                                                                    </div>
+                                                                    <div class="edit-btn-div">
+                                                                        <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="organization_id"><i class="ti ti-pencil"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+
+                                                        <tr>
+                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                {{ __('Agency Link') }}
+                                                            </td>
+                                                            <td class="linkedin-td" style="padding-left: 10px; font-size: 12px;">
+
+                                                                @if (!empty($deal->organization_id) && isset($organizations[$deal->organization_id]))
+                                                                @php
+                                                                $link = \App\Models\Organization::where('user_id', $deal->organization_id)->first()->website;
+                                                                @endphp
+
+                                                                <a href="{{ $link }}" class="text-primary" style="font-size: 12px;">{{ $link }}</a>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                {{ __('Office Responsible') }}
+                                                            </td>
+                                                            <td class="branch_id-td" style="padding-left: 10px; font-size: 14px;">
+                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                    <div class="input-group border-0 branch_id d-flex align-items-center">
+                                                                        {{ !empty($deal->branch_id) && isset($branches[$deal->branch_id]) ? $branches[$deal->branch_id] : '' }}
+                                                                    </div>
+                                                                    <div class="edit-btn-div">
+                                                                        <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="branch_id"><i class="ti ti-pencil"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                {{ __('Admission Created') }}
+                                                            </td>
+                                                            <td class="twitter-td" style="padding-left: 10px; font-size: 14px;">
+                                                                {{ $deal->created_at }}
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                {{ __('Date of Next Activity') }}
+                                                            </td>
+                                                            <td class="twitter-td" style="padding-left: 10px; font-size: 14px;">
+
+
+                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                    <div class="input-group border-0 twitter d-flex align-items-center">
+
+                                                                    </div>
+                                                                    <div class="edit-btn-div">
+                                                                        <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="twitter"><i class="ti ti-pencil"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                {{ __('Date of Last Activity') }}
+                                                            </td>
+                                                            <td class="twitter-td" style="padding-left: 10px; font-size: 14px;">
+
+
+                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                    <div class="input-group border-0 twitter d-flex align-items-center">
+
+                                                                    </div>
+                                                                    <div class="edit-btn-div">
+                                                                        <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="twitter"><i class="ti ti-pencil"></i></button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingkeydesc">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekeydesc">
+                                            {{ __('DESCRIPTION INFORMATION') }}
+                                        </button>
+                                    </h2>
+                                    <div id="panelsStayOpen-collapsekeydesc" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkeydesc">
+                                        <div class="accordion-body">
+
+                                            <div class="table-responsive mt-1" style="margin-left: 10px;">
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                {{ __('Description') }}
+                                                            </td>
+                                                            <td class="description-td" style="min-height: 50px; padding-left:15px; width: 550px; text-align: justify; font-size: 14px;">
+
+                                                                <div class="d-flex align-items-center edit-input-field-div" style="min-height:30px; max-height: 200px; overflow-y: scroll; width: 100%;">
+                                                                    <div class="input-group border-0 d-flex align-items-center p-2">
+                                                                        {{ $deal->description }}
+                                                                    </div>
+                                                                    <div class="edit-btn-div">
+                                                                        <button class="btn btn-sm btn-secondary edit-input rounded-0 btn-effect-none" name="description">
+                                                                            <i class="ti ti-pencil"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingkeydesc">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekeydesc">
+                                            {{ __('APPLICATIONS') }}
+                                        </button>
+                                    </h2>
+                                    <div id="panelsStayOpen-collapsekeydesc" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkeydesc">
+                                        <div class="accordion-body">
+                                            <div class="d-flex justify-content-end align-items-center p-2 pb-0">
+                                                <div class="float-end">
+                                                    @if (\Auth::user()->can('create application'))
+                                                    <a data-size="lg" data-url="{{ route('deals.application.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Application') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
+                                                        <i class="ti ti-plus"></i>
+                                                    </a>
+                                                    @endif
                                                 </div>
+                                            </div>
+
+                                            <div class="mt-1" style="margin-left: 10px;">
+                                                <table class="table">
+                                                    <thead class="" style="background-color:rgba(0, 0, 0, .08); font-weight: bold;">
+                                                        <tr>
+
+                                                            <td>
+                                                                {{ __('Name') }}
+                                                            </td>
+
+
+                                                            <td>
+                                                                {{ __('Application Key') }}
+                                                            </td>
+
+                                                            <td>
+                                                                {{ __('University') }}
+                                                            </td>
+
+                                                            <td>
+                                                                {{ __('Intake') }}
+                                                            </td>
+
+                                                            <td>
+                                                                {{ __('Status') }}
+                                                            </td>
+
+                                                            <td>
+                                                                {{ __('Action') }}
+                                                            </td>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @forelse($applications as $app)
+                                                        <tr>
+                                                            <td>
+                                                                <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')">
+                                                                    {{ $app->name }}
+                                                                </span>
+                                                            </td>
+                                                            <td>{{ $app->application_key }}</td>
+                                                            <td>{{ $universities[$app->university_id] }}</td>
+
+                                                            <td>
+                                                                {{ $app->intake }}
+                                                            </td>
+                                                            <td>
+                                                                {{ $stages[$app->stage_id] }}
+                                                            </td>
+                                                            <td>
+
+
+                                                                @can('edit application')
+                                                                <div class="action-btn ms-2">
+
+                                                                    <a data-size="lg" title="{{ __('Edit Application') }}" href="#" class="btn btn-sm btn-primary mx-1" data-url="{{ route('deals.application.edit', $app->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Application') }}" data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
+                                                                        <i class="ti ti-edit"></i>
+                                                                    </a>
+
+                                                                </div>
+                                                                @endcan
+
+                                                                @can('delete application')
+                                                                <div class="action-btn ms-2">
+                                                                    {!! Form::open([
+                                                                    'method' => 'DELETE',
+                                                                    'route' => ['deals.application.destroy', $app->id],
+                                                                    'id' => 'delete-form-' . $app->id,
+                                                                    ]) !!}
+                                                                    <a href="#" class="mx-3 btn btn-sm bg-danger  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i class="ti ti-trash text-white"></i></a>
+
+                                                                    {!! Form::close() !!}
+                                                                </div>
+                                                                @endcan
+                                                            </td>
+                                                        </tr>
+                                                        @empty
+                                                        @endforelse
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="panelsStayOpen-headingkeytwo">
-                                            <button class="accordion-button p-2" type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#panelsStayOpen-collapsekeytwo">
-                                                {{ __('ADDITIONAL INFORMATION') }}
-                                            </button>
-                                        </h2>
-                                        <div id="panelsStayOpen-collapsekeytwo"
-                                            class="accordion-collapse collapse show"
-                                            aria-labelledby="panelsStayOpen-headingkeytwo">
-                                            <div class="accordion-body">
-
-                                                <div class="table-responsive mt-1" style="margin-left: 10px;">
-
-                                                    <table>
-                                                        <tbody>
-
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 152px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Institute') }}
-                                                                </td>
-                                                                <td class="email-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ isset($application->university_id) && $universities[$application->university_id] ? $universities[$application->university_id] : '' }}
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Institution Link') }}
-                                                                </td>
-                                                                <td class="website-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-
-                                                                </td>
-                                                            </tr>
+                                </div>
+                            </div>
+                        </div>
 
 
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Agency') }}
-                                                                </td>
-                                                                <td class="organization_id-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-
-                                                                    <div
-                                                                        class="d-flex align-items-center edit-input-field-div">
-                                                                        <div
-                                                                            class="input-group border-0 organization_id d-flex align-items-center">
-                                                                            {{ !empty($deal->organization_id) && isset($organizations[$deal->organization_id]) ? $organizations[$deal->organization_id] : '' }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="organization_id"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Agency Link') }}
-                                                                </td>
-                                                                <td class="linkedin-td"
-                                                                    style="padding-left: 10px; font-size: 12px;">
-
-                                                                    @if (!empty($deal->organization_id) && isset($organizations[$deal->organization_id]))
-                                                                        @php
-                                                                            $link = \App\Models\Organization::where('user_id', $deal->organization_id)->first()->website;
-                                                                        @endphp
-
-                                                                        <a href="{{ $link }}"
-                                                                            class="text-primary"
-                                                                            style="font-size: 12px;">{{ $link }}</a>
-                                                                    @endif
-                                                                </td>
-                                                            </tr>
-
-
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Office Responsible') }}
-                                                                </td>
-                                                                <td class="branch_id-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-                                                                    <div
-                                                                        class="d-flex align-items-center edit-input-field-div">
-                                                                        <div
-                                                                            class="input-group border-0 branch_id d-flex align-items-center">
-                                                                            {{ !empty($deal->branch_id) && isset($branches[$deal->branch_id]) ? $branches[$deal->branch_id] : '' }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="branch_id"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Admission Created') }}
-                                                                </td>
-                                                                <td class="twitter-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $deal->created_at }}
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Date of Next Activity') }}
-                                                                </td>
-                                                                <td class="twitter-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-
-
-                                                                    <div
-                                                                        class="d-flex align-items-center edit-input-field-div">
-                                                                        <div
-                                                                            class="input-group border-0 twitter d-flex align-items-center">
-
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="twitter"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Date of Last Activity') }}
-                                                                </td>
-                                                                <td class="twitter-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-
-
-                                                                    <div
-                                                                        class="d-flex align-items-center edit-input-field-div">
-                                                                        <div
-                                                                            class="input-group border-0 twitter d-flex align-items-center">
-
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="twitter"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-
-
-                                            </div>
-                                        </div>
+                        {{-- Details Pill End --}}
+                        <div class="tab-pane fade" id="pills-related" role="tabpanel" aria-labelledby="pills-related-tab">
+                            <div class="block-items">
+                                <div class="block-item large-block" id="con-stats" title="1 Linked Contacts" data-bs-target="#contacts-grid-container">
+                                    <div class="top-label">Contacts</div>
+                                    <div class="block-item-count">{{ 1 }}</div>
+                                    <div class="fp-product-count-holder">
+                                        <div class="fp-product-count-total"></div>
+                                        <div class="fp-product-count-percent" style="width: 0px;"></div>
                                     </div>
+                                </div>
 
-
-
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="panelsStayOpen-headingkeydesc">
-                                            <button class="accordion-button p-2" type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#panelsStayOpen-collapsekeydesc">
-                                                {{ __('DESCRIPTION INFORMATION') }}
-                                            </button>
-                                        </h2>
-                                        <div id="panelsStayOpen-collapsekeydesc"
-                                            class="accordion-collapse collapse show"
-                                            aria-labelledby="panelsStayOpen-headingkeydesc">
-                                            <div class="accordion-body">
-
-                                                <div class="table-responsive mt-1" style="margin-left: 10px;">
-                                                    <table>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Description') }}
-                                                                </td>
-                                                                <td class="description-td"
-                                                                    style="min-height: 50px; padding-left:15px; width: 550px; text-align: justify; font-size: 14px;">
-
-                                                                    <div class="d-flex align-items-center edit-input-field-div"
-                                                                        style="min-height:30px; max-height: 200px; overflow-y: scroll; width: 100%;">
-                                                                        <div
-                                                                            class="input-group border-0 d-flex align-items-center p-2">
-                                                                            {{ $deal->description }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary edit-input rounded-0 btn-effect-none"
-                                                                                name="description">
-                                                                                <i class="ti ti-pencil"></i>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="block-item large-block d-none" id="con-stats" title="1 Linked Contacts" data-bs-target="#contacts-grid-container">
+                                    <div class="top-label">Discussion</div>
+                                    <div class="block-item-count discussion_count">{{ count($discussions) }}</div>
+                                    <div class="fp-product-count-holder">
+                                        <div class="fp-product-count-total"></div>
+                                        <div class="fp-product-count-percent" style="width: 0px;"></div>
                                     </div>
+                                </div>
+
+                                <div class="block-item large-block" id="con-stats" title="1 Linked Contacts" data-bs-target="#contacts-grid-container">
+                                    <div class="top-label">Notes</div>
+                                    <div class="block-item-count">{{ count($notes) }}</div>
+                                    <div class="fp-product-count-holder">
+                                        <div class="fp-product-count-total"></div>
+                                        <div class="fp-product-count-percent" style="width: 0px;"></div>
+                                    </div>
+                                </div>
 
 
-
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="panelsStayOpen-headingkeydesc">
-                                            <button class="accordion-button p-2" type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#panelsStayOpen-collapsekeydesc">
-                                                {{ __('APPLICATIONS') }}
-                                            </button>
-                                        </h2>
-                                        <div id="panelsStayOpen-collapsekeydesc"
-                                            class="accordion-collapse collapse show"
-                                            aria-labelledby="panelsStayOpen-headingkeydesc">
-                                            <div class="accordion-body">
-                                                <div class="d-flex justify-content-end align-items-center p-2 pb-0">
-                                                    <div class="float-end">
-                                                        @if (\Auth::user()->can('create application'))
-                                                            <a data-size="lg"
-                                                                data-url="{{ route('deals.application.create', $deal->id) }}"
-                                                                data-ajax-popup="true" data-bs-toggle="tooltip"
-                                                                title="{{ __('Create Application') }}"
-                                                                class="btn btn-sm text-white"
-                                                                style="background-color: #b5282f;">
-                                                                <i class="ti ti-plus"></i>
-                                                            </a>
-                                                        @endif
-                                                    </div>
-                                                </div>
-
-                                                <div class="mt-1" style="margin-left: 10px;">
-                                                    <table class="table">
-                                                        <thead class=""
-                                                            style="background-color:rgba(0, 0, 0, .08); font-weight: bold;">
-                                                            <tr>
-
-                                                                <td>
-                                                                    {{ __('Name') }}
-                                                                </td>
-
-
-                                                                <td>
-                                                                    {{ __('Application Key') }}
-                                                                </td>
-
-                                                                <td>
-                                                                    {{ __('University') }}
-                                                                </td>
-
-                                                                <td>
-                                                                    {{ __('Intake') }}
-                                                                </td>
-
-                                                                <td>
-                                                                    {{ __('Status') }}
-                                                                </td>
-
-                                                                <td>
-                                                                    {{ __('Action') }}
-                                                                </td>
-
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                            @forelse($applications as $app)
-                                                                <tr>
-                                                                    <td>
-                                                                        <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')" >
-                                                                            {{ $app->name }}
-                                                                        </span>
-                                                                    </td>
-                                                                    <td>{{ $app->application_key }}</td>
-                                                                    <td>{{ $universities[$app->university_id] }}</td>
-
-                                                                    <td>
-                                                                        {{ $app->intake }}
-                                                                    </td>
-                                                                    <td>
-                                                                        {{ $stages[$app->stage_id] }}
-                                                                    </td>
-                                                                    <td>
-
-
-                                                                        @can('edit application')
-                                                                            <div class="action-btn ms-2">
-
-                                                                                <a data-size="lg"
-                                                                                    title="{{ __('Edit Application') }}"
-                                                                                    href="#"
-                                                                                    class="btn btn-sm btn-primary mx-1"
-                                                                                    data-url="{{ route('deals.application.edit', $app->id) }}"
-                                                                                    data-ajax-popup="true"
-                                                                                    data-title="{{ __('Edit Application') }}"
-                                                                                    data-toggle="tooltip"
-                                                                                    data-original-title="{{ __('Edit') }}">
-                                                                                    <i class="ti ti-edit"></i>
-                                                                                </a>
-
-                                                                            </div>
-                                                                        @endcan
-
-                                                                        @can('delete application')
-                                                                            <div class="action-btn ms-2">
-                                                                                {!! Form::open([
-                                                                                    'method' => 'DELETE',
-                                                                                    'route' => ['deals.application.destroy', $app->id],
-                                                                                    'id' => 'delete-form-' . $app->id,
-                                                                                ]) !!}
-                                                                                <a href="#"
-                                                                                    class="mx-3 btn btn-sm bg-danger  align-items-center bs-pass-para"
-                                                                                    data-bs-toggle="tooltip"
-                                                                                    title="{{ __('Delete') }}"><i
-                                                                                        class="ti ti-trash text-white"></i></a>
-
-                                                                                {!! Form::close() !!}
-                                                                            </div>
-                                                                        @endcan
-                                                                    </td>
-                                                                </tr>
-                                                            @empty
-                                                            @endforelse
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-
+                                <div class="block-item large-block" id="con-stats" title="1 Linked Contacts" data-bs-target="#contacts-grid-container">
+                                    <div class="top-label">Organization</div>
+                                    <div class="block-item-count">{{ !empty($deal->organization_id) ? 1 : 0 }}
+                                    </div>
+                                    <div class="fp-product-count-holder">
+                                        <div class="fp-product-count-total"></div>
+                                        <div class="fp-product-count-percent" style="width: 0px;"></div>
                                     </div>
                                 </div>
                             </div>
 
+                            <div class="row">
 
-                            {{-- Details Pill End --}}
-                            <div class="tab-pane fade" id="pills-related" role="tabpanel"
-                                aria-labelledby="pills-related-tab">
-                                <div class="block-items">
-                                    <div class="block-item large-block" id="con-stats" title="1 Linked Contacts"
-                                        data-bs-target="#contacts-grid-container">
-                                        <div class="top-label">Contacts</div>
-                                        <div class="block-item-count">{{ 1 }}</div>
-                                        <div class="fp-product-count-holder">
-                                            <div class="fp-product-count-total"></div>
-                                            <div class="fp-product-count-percent" style="width: 0px;"></div>
-                                        </div>
-                                    </div>
+                                <div id="discussion_note">
+                                    <div class="row">
 
-                                    <div class="block-item large-block d-none" id="con-stats" title="1 Linked Contacts"
-                                        data-bs-target="#contacts-grid-container">
-                                        <div class="top-label">Discussion</div>
-                                        <div class="block-item-count discussion_count">{{ count($discussions) }}</div>
-                                        <div class="fp-product-count-holder">
-                                            <div class="fp-product-count-total"></div>
-                                            <div class="fp-product-count-percent" style="width: 0px;"></div>
-                                        </div>
-                                    </div>
+                                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            <!-- Open Accordion Item -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="panelsStayOpen-headingcontact">
+                                                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsecontact">
+                                                        {{ __('Contacts') }}
+                                                    </button>
+                                                </h2>
 
-                                    <div class="block-item large-block" id="con-stats" title="1 Linked Contacts"
-                                        data-bs-target="#contacts-grid-container">
-                                        <div class="top-label">Notes</div>
-                                        <div class="block-item-count">{{ count($notes) }}</div>
-                                        <div class="fp-product-count-holder">
-                                            <div class="fp-product-count-total"></div>
-                                            <div class="fp-product-count-percent" style="width: 0px;"></div>
-                                        </div>
-                                    </div>
+                                                <div id="panelsStayOpen-collapsecontact" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingcontact">
+                                                    <div class="accordion-body">
+                                                        <div class="">
 
+                                                            <div class="col-12">
+                                                                <div class="card" style="box-shadow: none;">
+                                                                    <div class="card-body px-0" style="max-height: 300px; overflow-y: scroll;">
+                                                                        <table class="table">
+                                                                            <thead class="table-bordered">
+                                                                                <tr>
+                                                                                    <th>Contact Name</th>
+                                                                                    <th>Email</th>
+                                                                                    <th>Created at</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @php
+                                                                                $contact = \App\Models\User::where('id', $clientDeal->client_id)->first();
+                                                                                @endphp
 
-                                    <div class="block-item large-block" id="con-stats" title="1 Linked Contacts"
-                                        data-bs-target="#contacts-grid-container">
-                                        <div class="top-label">Organization</div>
-                                        <div class="block-item-count">{{ !empty($deal->organization_id) ? 1 : 0 }}
-                                        </div>
-                                        <div class="fp-product-count-holder">
-                                            <div class="fp-product-count-total"></div>
-                                            <div class="fp-product-count-percent" style="width: 0px;"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                                                                                <tr>
+                                                                                    <td>{{ $contact->name }}</td>
+                                                                                    <td>{{ $contact->email }}</td>
+                                                                                    <td>{{ $contact->created_at }}
+                                                                                    </td>
 
-                                <div class="row">
-
-                                    <div id="discussion_note">
-                                        <div class="row">
-
-                                            <div class="accordion" id="accordionPanelsStayOpenExample">
-                                                <!-- Open Accordion Item -->
-                                                <div class="accordion-item">
-                                                    <h2 class="accordion-header" id="panelsStayOpen-headingcontact">
-                                                        <button class="accordion-button p-2" type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#panelsStayOpen-collapsecontact">
-                                                            {{ __('Contacts') }}
-                                                        </button>
-                                                    </h2>
-
-                                                    <div id="panelsStayOpen-collapsecontact"
-                                                        class="accordion-collapse collapse show"
-                                                        aria-labelledby="panelsStayOpen-headingcontact">
-                                                        <div class="accordion-body">
-                                                            <div class="">
-
-                                                                <div class="col-12">
-                                                                    <div class="card" style="box-shadow: none;">
-                                                                        <div class="card-body px-0"
-                                                                            style="max-height: 300px; overflow-y: scroll;">
-                                                                            <table class="table">
-                                                                                <thead class="table-bordered">
-                                                                                    <tr>
-                                                                                        <th>Contact Name</th>
-                                                                                        <th>Email</th>
-                                                                                        <th>Created at</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    @php
-                                                                                        $contact = \App\Models\User::where('id', $clientDeal->client_id)->first();
-                                                                                   @endphp
-
-                                                                                    <tr>
-                                                                                        <td>{{ $contact->name }}</td>
-                                                                                        <td>{{ $contact->email }}</td>
-                                                                                        <td>{{ $contact->created_at }}
-                                                                                        </td>
-
-                                                                                    </tr>
+                                                                                </tr>
 
 
 
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
+                                                                            </tbody>
+                                                                        </table>
                                                                     </div>
                                                                 </div>
                                                             </div>
-
                                                         </div>
+
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
 
-                                            <div class="accordion d-none" id="accordionPanelsStayOpenExample">
-                                                <!-- Open Accordion Item -->
-                                                <div class="accordion-item">
-                                                    <h2 class="accordion-header" id="panelsStayOpen-headingdisc">
-                                                        <button class="accordion-button p-2" type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#panelsStayOpen-collapsedisc">
-                                                            {{ __('Discussion') }}
-                                                        </button>
-                                                    </h2>
+                                        <div class="accordion d-none" id="accordionPanelsStayOpenExample">
+                                            <!-- Open Accordion Item -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="panelsStayOpen-headingdisc">
+                                                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsedisc">
+                                                        {{ __('Discussion') }}
+                                                    </button>
+                                                </h2>
 
-                                                    <div id="panelsStayOpen-collapsedisc"
-                                                        class="accordion-collapse collapse show"
-                                                        aria-labelledby="panelsStayOpen-headingdisc">
-                                                        <div class="accordion-body">
-                                                            <div class="">
-                                                                <div class="col-12">
-                                                                    <div class="card">
-                                                                        <div class="card-header px-0 pt-1 pb-3">
-                                                                            <div
-                                                                                class="d-flex justify-content-end align-items-center p-2 pb-0">
-                                                                                <div class="float-end">
-                                                                                    <a data-size="lg"
-                                                                                        data-url="{{ route('deals.discussions.create', $deal->id) }}"
-                                                                                        data-ajax-popup="true"
-                                                                                        data-bs-toggle="tooltip"
-                                                                                        title="{{ __('Add Discussion') }}"
-                                                                                        class="btn btn-sm text-white"
-                                                                                        style="background-color: #b5282f;">
-                                                                                        <i class="ti ti-plus"></i>
-                                                                                    </a>
-                                                                                </div>
+                                                <div id="panelsStayOpen-collapsedisc" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingdisc">
+                                                    <div class="accordion-body">
+                                                        <div class="">
+                                                            <div class="col-12">
+                                                                <div class="card">
+                                                                    <div class="card-header px-0 pt-1 pb-3">
+                                                                        <div class="d-flex justify-content-end align-items-center p-2 pb-0">
+                                                                            <div class="float-end">
+                                                                                <a data-size="lg" data-url="{{ route('deals.discussions.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Discussion') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
+                                                                                    <i class="ti ti-plus"></i>
+                                                                                </a>
                                                                             </div>
                                                                         </div>
+                                                                    </div>
 
 
-                                                                        <div class="card-body px-0"
-                                                                            style="max-height: 300px; overflow-y: scroll;">
-                                                                            <ul
-                                                                                class="list-group list-group-flush mt-2">
-                                                                                @foreach ($discussions as $discussion)
-                                                                                    <li class="list-group-item px-3">
-                                                                                        <div
-                                                                                            class="d-block d-sm-flex align-items-start">
-                                                                                            <img src="@if ($discussion['avatar'] && $discussion['avatar'] != '') {{ asset('/storage/uploads/avatar/' . $discussion['avatar']) }} @else {{ asset('/storage/uploads/avatar/avatar.png') }} @endif"
-                                                                                                class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
-                                                                                                alt="image">
-                                                                                            <div class="w-100">
-                                                                                                <div
-                                                                                                    class="d-flex align-items-center justify-content-between">
-                                                                                                    <div
-                                                                                                        class="mb-3 mb-sm-0">
-                                                                                                        <h5
-                                                                                                            class="mb-0">
-                                                                                                            {{ $discussion['comment'] }}
-                                                                                                        </h5>
-                                                                                                        <span
-                                                                                                            class="text-muted text-sm">{{ $discussion['name'] }}</span>
-                                                                                                    </div>
-                                                                                                    <div
-                                                                                                        class=" form-switch form-switch-right mb-4">
-                                                                                                        {{ $discussion['created_at'] }}
-                                                                                                    </div>
-                                                                                                </div>
+                                                                    <div class="card-body px-0" style="max-height: 300px; overflow-y: scroll;">
+                                                                        <ul class="list-group list-group-flush mt-2">
+                                                                            @foreach ($discussions as $discussion)
+                                                                            <li class="list-group-item px-3">
+                                                                                <div class="d-block d-sm-flex align-items-start">
+                                                                                    <img src="@if ($discussion['avatar'] && $discussion['avatar'] != '') {{ asset('/storage/uploads/avatar/' . $discussion['avatar']) }} @else {{ asset('/storage/uploads/avatar/avatar.png') }} @endif" class="img-fluid wid-40 me-3 mb-2 mb-sm-0" alt="image">
+                                                                                    <div class="w-100">
+                                                                                        <div class="d-flex align-items-center justify-content-between">
+                                                                                            <div class="mb-3 mb-sm-0">
+                                                                                                <h5 class="mb-0">
+                                                                                                    {{ $discussion['comment'] }}
+                                                                                                </h5>
+                                                                                                <span class="text-muted text-sm">{{ $discussion['name'] }}</span>
+                                                                                            </div>
+                                                                                            <div class=" form-switch form-switch-right mb-4">
+                                                                                                {{ $discussion['created_at'] }}
                                                                                             </div>
                                                                                         </div>
-                                                                                    </li>
-                                                                                @endforeach
-                                                                            </ul>
-                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                            @endforeach
+                                                                        </ul>
                                                                     </div>
                                                                 </div>
-
                                                             </div>
+
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
 
 
-                                            @can('manage notes')
-                                            <div class="accordion" id="accordionPanelsStayOpenExample">
-                                                <!-- Open Accordion Item -->
-                                                <div class="accordion-item">
-                                                    <h2 class="accordion-header" id="panelsStayOpen-headingnote">
-                                                        <button class="accordion-button p-2" type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#panelsStayOpen-collapsenote">
-                                                            {{ __('Notes') }}
-                                                        </button>
-                                                    </h2>
+                                        @can('manage notes')
+                                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            <!-- Open Accordion Item -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="panelsStayOpen-headingnote">
+                                                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsenote">
+                                                        {{ __('Notes') }}
+                                                    </button>
+                                                </h2>
 
-                                                    <div id="panelsStayOpen-collapsenote"
-                                                        class="accordion-collapse collapse show"
-                                                        aria-labelledby="panelsStayOpen-headingnote">
-                                                        <div class="accordion-body">
+                                                <div id="panelsStayOpen-collapsenote" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingnote">
+                                                    <div class="accordion-body">
 
 
-                                                            <div class="">
+                                                        <div class="">
 
-                                                                <div class="col-12">
-                                                                    <div class="card">
+                                                            <div class="col-12">
+                                                                <div class="card">
 
-                                                                        <div class="card-header px-0 pt-1 pb-3">
-                                                                            <div
-                                                                                class="d-flex justify-content-end align-items-center p-2 pb-0">
-                                                                                <div class="float-end">
-                                                                                    @can('create notes')
-                                                                                    <a data-size="lg"
-                                                                                        data-url="{{ route('deals.notes.create', $deal->id) }}"
-                                                                                        data-ajax-popup="true"
-                                                                                        data-bs-toggle="tooltip"
-                                                                                        title="{{ __('Create notes') }}"
-                                                                                        class="btn btn-sm text-white"
-                                                                                        style="background-color: #b5282f;">
-                                                                                        <i class="ti ti-plus"></i>
-                                                                                    </a>
-                                                                                    @endcan
-                                                                                </div>
+                                                                    <div class="card-header px-0 pt-1 pb-3">
+                                                                        <div class="d-flex justify-content-end align-items-center p-2 pb-0">
+                                                                            <div class="float-end">
+                                                                                @can('create notes')
+                                                                                <a data-size="lg" data-url="{{ route('deals.notes.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create notes') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
+                                                                                    <i class="ti ti-plus"></i>
+                                                                                </a>
+                                                                                @endcan
                                                                             </div>
                                                                         </div>
-                                                                        <div class="card-body px-0">
-                                                                            <table class="table">
-                                                                                <thead class="table-bordered">
-                                                                                    <tr>
-                                                                                        <th scope="col">Title</th>
-                                                                                        <th scope="col">Description
-                                                                                        </th>
-                                                                                        <th scope="col">Date Added
-                                                                                        </th>
-                                                                                        <th scope="col">Added By
-                                                                                        </th>
-                                                                                        <th scope="col">Action</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody class="notes-tbody">
+                                                                    </div>
+                                                                    <div class="card-body px-0">
+                                                                        <table class="table">
+                                                                            <thead class="table-bordered">
+                                                                                <tr>
+                                                                                    <th scope="col">Title</th>
+                                                                                    <th scope="col">Description
+                                                                                    </th>
+                                                                                    <th scope="col">Date Added
+                                                                                    </th>
+                                                                                    <th scope="col">Added By
+                                                                                    </th>
+                                                                                    <th scope="col">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody class="notes-tbody">
 
-                                                                                    @forelse($notes as $note)
-                                                                                        <tr>
-                                                                                            <td>{{ $note->title }}
-                                                                                            </td>
-                                                                                            <td>{{ $note->description }}
-                                                                                            </td>
-                                                                                            <td>{{ $note->created_at }}
-                                                                                            </td>
-                                                                                            <td>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
-                                                                                            </td>
-                                                                                            <td class="d-flex">
-                                                                                                @can('edit notes')
-                                                                                                <a data-url="{{ route('deals.notes.edit', $note->id) }}"
-                                                                                                    data-ajax-popup="true"
-                                                                                                    data-bs-toggle="tooltip"
-                                                                                                    title="{{ __('Notes Edit') }}"
-                                                                                                    class="btn btn-sm text-white mx-2"
-                                                                                                    style="background-color: #b5282f;">
-                                                                                                    <i
-                                                                                                        class="ti ti-pencil "></i>
-                                                                                                </a>
-                                                                                                @endcan
+                                                                                @forelse($notes as $note)
+                                                                                <tr>
+                                                                                    <td>{{ $note->title }}
+                                                                                    </td>
+                                                                                    <td>{{ $note->description }}
+                                                                                    </td>
+                                                                                    <td>{{ $note->created_at }}
+                                                                                    </td>
+                                                                                    <td>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
+                                                                                    </td>
+                                                                                    <td class="d-flex">
+                                                                                        @can('edit notes')
+                                                                                        <a data-url="{{ route('deals.notes.edit', $note->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Notes Edit') }}" class="btn btn-sm text-white mx-2" style="background-color: #b5282f;">
+                                                                                            <i class="ti ti-pencil "></i>
+                                                                                        </a>
+                                                                                        @endcan
 
-                                                                                                @can('delete notes')
-                                                                                                <a href="javascript:void(0)"
-                                                                                                    class="btn btn-sm text-white delete-notes"
-                                                                                                    data-note-id="{{ $note->id }}"
-                                                                                                    style="background-color: #b5282f;">
-                                                                                                    <i
-                                                                                                        class="ti ti-trash "></i>
-                                                                                                </a>
-                                                                                                @endcan
-                                                                                            </td>
+                                                                                        @can('delete notes')
+                                                                                        <a href="javascript:void(0)" class="btn btn-sm text-white delete-notes" data-note-id="{{ $note->id }}" style="background-color: #b5282f;">
+                                                                                            <i class="ti ti-trash "></i>
+                                                                                        </a>
+                                                                                        @endcan
+                                                                                    </td>
 
-                                                                                        </tr>
-                                                                                    @empty
-                                                                                    @endforelse
+                                                                                </tr>
+                                                                                @empty
+                                                                                @endforelse
 
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
+                                                                            </tbody>
+                                                                        </table>
                                                                     </div>
                                                                 </div>
                                                             </div>
-
                                                         </div>
+
                                                     </div>
                                                 </div>
                                             </div>
-                                            @endcan
+                                        </div>
+                                        @endcan
 
 
-                                            <div class="accordion" id="accordionPanelsStayOpenExample">
-                                                <!-- Open Accordion Item -->
-                                                <div class="accordion-item">
-                                                    <h2 class="accordion-header" id="panelsStayOpen-headingnote">
-                                                        <button class="accordion-button p-2" type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#panelsStayOpen-collapsenote">
-                                                            {{ __('Organization') }}
-                                                        </button>
-                                                    </h2>
+                                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            <!-- Open Accordion Item -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="panelsStayOpen-headingnote">
+                                                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsenote">
+                                                        {{ __('Organization') }}
+                                                    </button>
+                                                </h2>
 
-                                                    <div id="panelsStayOpen-collapsenote"
-                                                        class="accordion-collapse collapse show"
-                                                        aria-labelledby="panelsStayOpen-headingnote">
-                                                        <div class="accordion-body">
+                                                <div id="panelsStayOpen-collapsenote" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingnote">
+                                                    <div class="accordion-body">
 
 
-                                                            <div class="">
+                                                        <div class="">
 
-                                                                <div class="col-12">
-                                                                    <div class="card">
-                                                                        <div class="card-body px-0">
-                                                                            <table class="table">
-                                                                                <thead class="table-bordered">
-                                                                                    <tr>
-                                                                                        <th scope="col">Name</th>
-                                                                                        <th scope="col">Phone
-                                                                                        </th>
-                                                                                        <th scope="col">Website Link
-                                                                                        </th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    @php
-                                                                                        $organization = \App\Models\User::where('id', $deal->organization_id)->first();
-                                                                                    @endphp
+                                                            <div class="col-12">
+                                                                <div class="card">
+                                                                    <div class="card-body px-0">
+                                                                        <table class="table">
+                                                                            <thead class="table-bordered">
+                                                                                <tr>
+                                                                                    <th scope="col">Name</th>
+                                                                                    <th scope="col">Phone
+                                                                                    </th>
+                                                                                    <th scope="col">Website Link
+                                                                                    </th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @php
+                                                                                $organization = \App\Models\User::where('id', $deal->organization_id)->first();
+                                                                                @endphp
 
-                                                                                    @if ($organization)
-                                                                                        <tr>
-                                                                                            <td>{{ $organization->name }}
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                {{ $organization->phone }}
-                                                                                            </td>
-                                                                                            <td><a href="{{ $organization->website }}"
-                                                                                                    class="">{{ $organization->website }}</a>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    @endif
+                                                                                @if ($organization)
+                                                                                <tr>
+                                                                                    <td>{{ $organization->name }}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        {{ $organization->phone }}
+                                                                                    </td>
+                                                                                    <td><a href="{{ $organization->website }}" class="">{{ $organization->website }}</a>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                @endif
 
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
+                                                                            </tbody>
+                                                                        </table>
                                                                     </div>
                                                                 </div>
                                                             </div>
-
                                                         </div>
+
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
 
 
-                                            @can('manage task')
-                                            <div class="accordion" id="accordionPanelsStayOpenExample">
-                                                <!-- Open Accordion Item -->
-                                                <div class="accordion-item">
-                                                    <h2 class="accordion-header" id="panelsStayOpen-headingnote">
-                                                        <button class="accordion-button p-2" type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#panelsStayOpen-collapsetasks">
-                                                            {{ __('Tasks') }}
-                                                        </button>
-                                                    </h2>
+                                        @can('manage task')
+                                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            <!-- Open Accordion Item -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="panelsStayOpen-headingnote">
+                                                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsetasks">
+                                                        {{ __('Tasks') }}
+                                                    </button>
+                                                </h2>
 
-                                                    <div id="panelsStayOpen-collapsetasks"
-                                                        class="accordion-collapse collapse show"
-                                                        aria-labelledby="panelsStayOpen-headingnote">
-                                                        <div class="accordion-body">
+                                                <div id="panelsStayOpen-collapsetasks" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingnote">
+                                                    <div class="accordion-body">
 
 
-                                                            <div class="">
-                                                                <div class="col-12">
-                                                                    <div class="card">
-                                                                        <div class="card-header px-0 pt-0"
-                                                                            style="padding-bottom: 18px;">
-                                                                            <div class="d-flex justify-content-end">
-                                                                                <div class="float-end">
-                                                                                     @can('create task')
-                                                                                    <a data-size="lg"
-                                                                                        data-url="/organiation/1/task?type=deal&typeid={{ $deal->id }}"
-                                                                                        data-ajax-popup="true"
-                                                                                        data-bs-toggle="tooltip"
-                                                                                        title="{{ __('Add Task') }}"
-                                                                                        class="btn btn-sm text-white"
-                                                                                        style="background-color: #b5282f;">
-                                                                                        <i class="ti ti-plus"></i>
-                                                                                    </a>
-                                                                                     @endcan
-                                                                                </div>
+                                                        <div class="">
+                                                            <div class="col-12">
+                                                                <div class="card">
+                                                                    <div class="card-header px-0 pt-0" style="padding-bottom: 18px;">
+                                                                        <div class="d-flex justify-content-end">
+                                                                            <div class="float-end">
+                                                                                @can('create task')
+                                                                                <a data-size="lg" data-url="/organiation/1/task?type=deal&typeid={{ $deal->id }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Task') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
+                                                                                    <i class="ti ti-plus"></i>
+                                                                                </a>
+                                                                                @endcan
                                                                             </div>
                                                                         </div>
-                                                                        <div class="card-body px-0">
-                                                                            <table class="table">
-                                                                                <thead class="table-bordered">
-                                                                                    <tr>
-                                                                                        <th scope="col">Name</th>
-                                                                                        <th scope="col">Description
-                                                                                        </th>
-                                                                                        <th scope="col">Visibility
-                                                                                        </th>
-                                                                                        <th scope="col">Status
-                                                                                        </th>
-                                                                                        <th scope="col">Action</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody class="notes-tbody">
+                                                                    </div>
+                                                                    <div class="card-body px-0">
+                                                                        <table class="table">
+                                                                            <thead class="table-bordered">
+                                                                                <tr>
+                                                                                    <th scope="col">Name</th>
+                                                                                    <th scope="col">Description
+                                                                                    </th>
+                                                                                    <th scope="col">Visibility
+                                                                                    </th>
+                                                                                    <th scope="col">Status
+                                                                                    </th>
+                                                                                    <th scope="col">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody class="notes-tbody">
 
-                                                                                    @forelse($tasks as $task)
-                                                                                        <tr>
-                                                                                            <td>
-                                                                                                <span
-                                                                                                style="cursor:pointer"
-                                                                                                class="task-name hyper-link"
-                                                                                                onclick="openSidebar('/get-task-detail?task_id='+{{ $task->id }})"
-                                                                                                data-task-id="{{ $task->id }}">{{ $task->name }}</span>
-                                                                                            </td>
-                                                                                            <td>{{ $task->description }}
-                                                                                            </td>
-                                                                                            <td>{{ $task->visibility }}
-                                                                                            </td>
-                                                                                            <td>
-                                                                                                <span
-                                                                                                    class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }}">
-                                                                                                    {{ $task->status == 1 ? 'Completed' : 'On Going' }}</span>
-                                                                                            </td>
-                                                                                            <td>
+                                                                                @forelse($tasks as $task)
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <span style="cursor:pointer" class="task-name hyper-link" onclick="openSidebar('/get-task-detail?task_id='+{{ $task->id }})" data-task-id="{{ $task->id }}">{{ $task->name }}</span>
+                                                                                    </td>
+                                                                                    <td>{{ $task->description }}
+                                                                                    </td>
+                                                                                    <td>{{ $task->visibility }}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <span class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }}">
+                                                                                            {{ $task->status == 1 ? 'Completed' : 'On Going' }}</span>
+                                                                                    </td>
+                                                                                    <td>
 
-                                                                                                <div class="d-flex">
-                                                                                                    @can('edit task')
-                                                                                                    <a data-size="lg"
-                                                                                                        data-url="{{ route('organiation.tasks.edit', $task->id) }}"
-                                                                                                        data-ajax-popup="true"
-                                                                                                        data-bs-toggle="tooltip"
-                                                                                                        title="{{ __('Update Task') }}"
-                                                                                                        class="btn btn-sm text-white mx-2"
-                                                                                                        style="background-color: #b5282f;">
-                                                                                                        <i
-                                                                                                            class="ti ti-pencil"></i>
-                                                                                                    </a>
-                                                                                                    @endcan
+                                                                                        <div class="d-flex">
+                                                                                            @can('edit task')
+                                                                                            <a data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update Task') }}" class="btn btn-sm text-white mx-2" style="background-color: #b5282f;">
+                                                                                                <i class="ti ti-pencil"></i>
+                                                                                            </a>
+                                                                                            @endcan
 
-                                                                                                    @can('delete task')
-                                                                                                    <a href="javascript:void(0)"
-                                                                                                        class="btn btn-sm text-white"
-                                                                                                        style="background-color: #b5282f;"
-                                                                                                        onclick="deleteTask({{ $task->id }}, {{ $deal->id }}, 'deal');">
-                                                                                                        <i
-                                                                                                            class="ti ti-trash "></i>
-                                                                                                    </a>
-                                                                                                    @endcan
-                                                                                                </div>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    @empty
-                                                                                    @endforelse
+                                                                                            @can('delete task')
+                                                                                            <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #b5282f;" onclick="deleteTask({{ $task->id }}, {{ $deal->id }}, 'deal');">
+                                                                                                <i class="ti ti-trash "></i>
+                                                                                            </a>
+                                                                                            @endcan
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                @empty
+                                                                                @endforelse
 
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
+                                                                            </tbody>
+                                                                        </table>
                                                                     </div>
                                                                 </div>
                                                             </div>
-
                                                         </div>
+
                                                     </div>
                                                 </div>
                                             </div>
-                                            @endcan
+                                        </div>
+                                        @endcan
 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="tab-pane fade" id="pills-activity" role="tabpanel" aria-labelledby="pills-activity-tab">
+
+                            <div class="accordion" id="accordionPanelsStayOpenExample">
+                                <!-- Open Accordion Item -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingactive">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseactive">
+                                            {{ __('Timeline') }}
+                                        </button>
+                                    </h2>
+
+                                    <div id="panelsStayOpen-collapseactive" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingactive">
+                                        <div class="accordion-body">
+                                            <!-- Accordion Content -->
+                                            <div class="mt-1">
+                                                <div id="activity" class=" px-0">
+                                                    @foreach($log_activities as $activity)
+                                                    @php
+                                                    $remark = json_decode($activity->note);
+                                                    @endphp
+                                                    <div class="card">
+                                                        <div class="card-body">
+                                                            <div class="log">
+                                                                <h5>{{$remark->title }}</h5>
+                                                                <p class="">{{$remark->message }}</p>
+
+                                                                <span>{{ $activity->created_at }}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    @endforeach
+
+                                                </div>
+                                            </div>
+                                            <!-- End of Accordion Content -->
                                         </div>
                                     </div>
                                 </div>
+                                <!-- End of Open Accordion Item -->
+
+                                <!-- Add More Accordion Items Here -->
+
                             </div>
 
                         </div>
@@ -1323,3 +1152,4 @@
             </div>
         </div>
     </div>
+</div>

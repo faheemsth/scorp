@@ -771,7 +771,6 @@ class OrganizationController extends Controller
     public function taskStore($id, Request $request)
     {
 
-
         $usr = \Auth::user();
 
         if (\Auth::user()->can('create task')) {
@@ -832,6 +831,21 @@ class OrganizationController extends Controller
                     'remark' => json_encode(['title' => $dealTask->name]),
                 ]
             );
+
+            //store Activity Log
+            $remarks = [
+                'title' => 'Task Created',
+                'message' => 'Task Created successfully'
+            ];
+    
+            //store Log
+            $data = [
+                'type' => 'info',
+                'note' => json_encode($remarks),
+                'module_id' => 1,
+                'module_type' => 'task',
+            ];
+            addLogActivity($data);
 
             return json_encode([
                 'status' => 'success',
@@ -920,9 +934,15 @@ class OrganizationController extends Controller
             }
 
 
-
+            
 
             $dealTask = DealTask::where('id', $id)->first();
+
+            $is_status_change = false;
+            if($dealTask->status != $request->status){
+                $is_status_change = true;
+            }
+
             // $dealTask->deal_id = $request->related_to;
             //$dealTask->related_to = $request->related_to;
             //$dealTask->related_type = $request->related_type;
@@ -958,6 +978,39 @@ class OrganizationController extends Controller
                 ]
             );
 
+            //store Activity Log
+            $remarks = [
+                'title' => 'Task Update',
+                'message' => 'Task updated successfully'
+            ];
+    
+            //store Log
+            $data = [
+                'type' => 'info',
+                'note' => json_encode($remarks),
+                'module_id' => 1,
+                'module_type' => 'task',
+            ];
+            addLogActivity($data);
+
+
+            if($is_status_change){
+                //store Activity Log
+                $remarks = [
+                    'title' => 'Task Update',
+                    'message' => 'Task status updated'
+                ];
+        
+                //store Log
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode($remarks),
+                    'module_id' => 1,
+                    'module_type' => 'task',
+                ];
+                addLogActivity($data);
+            }
+
 
             return json_encode([
                 'status' => 'success',
@@ -982,6 +1035,21 @@ class OrganizationController extends Controller
             $task->delete();
             //$tasks = DealTask::where('organization_id', $request->organization_id)->get();
             // $html = view('organizations.all_tasks', compact('tasks'))->render();
+
+            //store Activity Log
+          
+    
+            //store Log
+            $data = [
+                'type' => 'info',
+                'note' => json_encode([
+                    'title' => 'Task Deleted',
+                    'message' => 'Task deleted successfully'
+                ]),
+                'module_id' => 1,
+                'module_type' => 'task',
+            ];
+            addLogActivity($data);
 
             return json_encode([
                 'status' => 'success',

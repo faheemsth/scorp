@@ -1,7 +1,3 @@
-@push('css-page')
-    <link rel="stylesheet" href="assets/css/customizer.css">
-@endpush
-
 @php
 use App\Models\Utility;
 // $logo=asset(Storage::url('uploads/logo/'));
@@ -16,13 +12,40 @@ $lang= Auth::user()->lang;
 
 @endphp
 
-@if (isset($setting['cust_theme_bg']) && $setting['cust_theme_bg'] == 'on')
-<nav class="dash-sidebar light-sidebar transprent-bg">
-    @else
-    <nav class="dash-sidebar light-sidebar">
-        @endif
-        <div class="navbar-wrapper">
-            <div class="m-header main-logo">
+<style>
+    .dash-link{
+        color: white !important;
+        display: flex;
+        justify-content: space-between;
+        padding: 7px 0;
+    }
+
+    .dash-micon, .dash-arrow{
+        display: none;
+    }
+
+    .dash-trigger::marker{
+        content: '';
+    }
+
+    .dash-mtext{
+        font-size: 12px;
+    }
+
+    .navbar-content{
+        padding-top: 7px;
+    }
+
+    .dash-submenu{
+        padding-left: 24px; 
+    }
+</style>
+
+    <!-- Sidebar -->
+<ul class="navbar-nav  sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #313949;">
+
+<div class="navbar-wrapper">
+            <!-- <div class="m-header main-logo">
                 <a href="#" class="b-brand">
                     {{-- <img src="{{ asset(Storage::url('uploads/logo/'.$logo)) }}" alt="{{ env('APP_NAME') }}" class="logo logo-lg" />--}}
 
@@ -33,10 +56,12 @@ $lang= Auth::user()->lang;
                     @endif
 
                 </a>
-            </div>
+            </div> -->
             <div class="navbar-content">
                 @if(\Auth::user()->type != 'client')
                 <ul class="dash-navbar">
+
+
                     <!--------------------- Start Dashboard ----------------------------------->
                     @if( Auth::user()->type == 'company' || Auth::user()->type == 'team' || Gate::check('show hrm dashboard') || Gate::check('show project dashboard') || Gate::check('show account dashboard'))
                     <li class="dash-item dash-hasmenu
@@ -50,7 +75,7 @@ $lang= Auth::user()->lang;
                         <ul class="dash-submenu">
 
                              @if(Gate::check('show crm dashboard') || Auth::user()->type == 'team' || Auth::user()->type == 'company')
-                             <li class="dash-item {{ (Request::route()->getName() == 'crm.dashboard') ? ' active' : '' }}">
+                             <li class="collapse-item {{ (Request::route()->getName() == 'crm.dashboard') ? ' active' : '' }}">
                                 <a class="dash-link" href="{{route('crm.dashboard')}}">CRM Dashboard</a>
                             </li>
                             @endif
@@ -643,7 +668,7 @@ $lang= Auth::user()->lang;
 
                             @can('manage university')
                             <li class="dash-item {{ (Request::route()->getName() == 'university.list' || Request::route()->getName() == 'university.index' || Request::route()->getName() == 'university.show') ? ' active' : '' }}">
-                                <a class="dash-link" href="{{ route('university.index') }}">{{__('Institutes')}}</a>
+                                <a class="dash-link" href="{{ route('university.index') }}">{{__('Toolkit')}}</a>
                             </li>
                             @endcan
 
@@ -759,7 +784,7 @@ $lang= Auth::user()->lang;
 
                     @if(\Auth::user()->type!='super admin' && ( Gate::check('manage user') || Gate::check('manage role') || Gate::check('manage client')))
                     <li class="dash-item dash-hasmenu">
-                        <a href="#!" class="dash-link {{ (Request::segment(1) == 'users' || Request::segment(1) == 'roles' || Request::segment(1) == 'clients')?' active dash-trigger':''}}"><span class="dash-micon"><i class="ti ti-users"></i></span><span class="dash-mtext">{{__('Companies')}}</span><span class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
+                        <a href="#!" class="dash-link {{ (Request::segment(1) == 'users' || Request::segment(1) == 'roles' || Request::segment(1) == 'clients')?' active dash-trigger':''}}"><span class="dash-micon"><i class="ti ti-users"></i></span><span class="dash-mtext">{{__('Users')}}</span><span class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                         <ul class="dash-submenu">
                             @can('manage user')
                             <li class="dash-item {{ (Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit') ? ' active' : '' }}">
@@ -899,6 +924,7 @@ $lang= Auth::user()->lang;
                     <!--------------------- End System Setup ----------------------------------->
                 </ul>
                 @endif
+                
                 @if((\Auth::user()->type == 'client'))
                 <ul class="dash-navbar">
                     @if(Gate::check('manage client dashboard'))
@@ -996,7 +1022,7 @@ $lang= Auth::user()->lang;
                            </li>
 
                             <li class="dash-item {{ (Request::route()->getName() == 'university.list' || Request::route()->getName() == 'university.index' || Request::route()->getName() == 'university.show') ? ' active' : '' }}">
-                                <a class="dash-link" href="{{ route('university.index') }}">Institutes</a>
+                                <a class="dash-link" href="{{ route('university.index') }}">Toolkit</a>
                             </li>
 
 
@@ -1045,7 +1071,7 @@ $lang= Auth::user()->lang;
 
                     @if(\Auth::user()->type =='super admin')
                     <li class="dash-item dash-hasmenu">
-                        <a href="#!" class="dash-link {{ (Request::segment(1) == 'users' || Request::segment(1) == 'roles' || Request::segment(1) == 'clients')?' active dash-trigger':''}}"><span class="dash-micon"><i class="ti ti-users"></i></span><span class="dash-mtext">{{__('Companies')}}</span><span class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
+                        <a href="#!" class="dash-link {{ (Request::segment(1) == 'users' || Request::segment(1) == 'roles' || Request::segment(1) == 'clients')?' active dash-trigger':''}}"><span class="dash-micon"><i class="ti ti-users"></i></span><span class="dash-mtext">{{__('Users')}}</span><span class="dash-arrow"><i data-feather="chevron-right"></i></span></a>
                         <ul class="dash-submenu">
                             @can('manage user')
                             <li class="dash-item {{ (Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit') ? ' active' : '' }}">
@@ -1122,4 +1148,5 @@ $lang= Auth::user()->lang;
                 @endif
             </div>
         </div>
-    </nav>
+
+</ul>
