@@ -12,6 +12,9 @@ $setting = \App\Models\Utility::colorset();
 $mode_setting = \App\Models\Utility::mode_layout();
 
 
+$all_companies = companies();
+
+
 $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('seen', 0)->count();
 @endphp
 
@@ -26,12 +29,25 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
 
 
     <!-- Topbar Search -->
-    <!-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 d-none  navbar-search me-0" style="margin:auto !important  ; ">
-        <div class="input-group m-auto">
-            <input type="text" class="form-control bg-light border border-dark  " placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-
+    <form action="{{ route('global-search') }}" method="GET" id="globalSearchForm" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 d-none navbar-search me-0" style="margin:auto !important;">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control bg-light border border-dark" placeholder="Search for..." value="{{ isset($_GET['search']) ? $_GET['search'] : ''}}">
+            <div class="input-group-append">
+                <span class="input-group-text bg-light border-0" id="global-search-btn">
+                    <i class="fa fa-search"></i> <!-- Add your search icon here -->
+                </span>
+            </div>
         </div>
-    </form> -->
+
+        <input type="hidden" class="" name="global_search" value="all">
+    </form>
+
+    <!-- <select name="" id="" class="form form-select">
+        <option value="">Select Companies</option>
+        @foreach($all_companies as $key => $comp)
+        <option value="{{$key}}">{{ $comp }}</option>
+        @endforeach
+    </select> -->
 
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
@@ -98,4 +114,30 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
             </div>
         </li>
     </ul>
+
+
+
+
 </nav>
+
+@push('script-page')
+<script>
+    $(document).ready(function() {
+
+        $("#global-search-btn").on("click", function() {
+            $("#globalSearchForm").submit();
+        });
+
+        $('#global-search-bt').keydown(function(event) {
+            if (event.keyCode === 13) {
+                $('#globalSearchForm').submit();
+            }
+        });
+
+
+        // $("#globalSearchDropdown").on("change", function() {
+        //     $("#globalSearchForm").submit();
+        // })
+    })
+</script>
+@endpush

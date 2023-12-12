@@ -131,6 +131,7 @@ use App\Http\Controllers\OrganizationTypeController;
 use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\ApplicationsController;
 use App\Http\Controllers\InstituteCategoryController;
+use App\Http\Controllers\GlobalSearchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -1735,3 +1736,5 @@ Route::post("/update-bulk-task-status", [DealController::class, 'updateBulkTaskS
 
 Route::get("/delete-bulk-tasks", [DealController::class, 'deleteBulkTasks'])->name('delete-bulk-tasks');
 
+//////////////////////////Global Search
+Route::get('/global-search', [GlobalSearchController::class, 'index'])->name('global-search');

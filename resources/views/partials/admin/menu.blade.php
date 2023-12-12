@@ -42,7 +42,7 @@ $lang= Auth::user()->lang;
 </style>
 
     <!-- Sidebar -->
-<ul class="navbar-nav  sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #313949;">
+<ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #313949;">
 
 <div class="navbar-wrapper">
             <!-- <div class="m-header main-logo">

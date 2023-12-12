@@ -28,6 +28,14 @@
     <div class="col-9">
         <div class="card">
             <div class="card-body table-border-style">
+                <div class="float-end">
+                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->can('create organization_type'))
+                    <a href="#" data-size="md" data-url="{{ route('organization-type.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create Organization type')}}" class="btn btn-sm btn-primary">
+                        <i class="ti ti-plus"></i>
+                    </a>
+                    @endif
+                </div>
+
                 <div class="table-responsive w-100">
                     <table class="table datatable">
                         <thead>

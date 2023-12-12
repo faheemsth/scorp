@@ -306,6 +306,32 @@ $lang=Utility::getValByName('default_language');
         }
     </style>
 
+
+    <style>
+        .right-sidebar {
+            width: 0;
+            background-color: #f4f4f4;
+            padding: 0px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            overflow-y: auto;
+            transition: width 0.3s;
+        }
+
+        .right-sidebar.open {
+            width: 300px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body class="{{ $color }}" id="body">
@@ -394,15 +420,12 @@ $lang=Utility::getValByName('default_language');
                 <div class="container-fluid">
                     <div class="my-3 ">
                         <h4 style="color: #000;"><strong>@yield('page-title')</strong></h4>
-
                         <ul class="breadcrumb">
                             @yield('breadcrumb')
                         </ul>
                     </div>
-
-
-
                     @yield('content')
+
                 </div>
             </div>
         </div>
