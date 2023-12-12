@@ -90,6 +90,7 @@
                                 <li><a class="dropdown-item" href="#">Action</a></li>
                                 <li><a class="dropdown-item" href="#">Another action</a></li>
                                 <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <li><a class="dropdown-item delete-bulk-organizations" href="javascript:void(0)">Delete</a></li>
                             </ul>
                         </div>
                     </div>
@@ -195,6 +196,9 @@
                     <table class="table">
                         <thead style="background: #ddd; color:rgb(0, 0, 0); font-size: 14px; font-weight: bold;">
                             <tr>
+                                <th style="width: 50px !important;">
+                                    <input type="checkbox" class="main-check">
+                                </th>
                                 <!-- <td style="border-left: 1px solid #fff;"></td> -->
                                 <td style="border-left: 1px solid #fff;">Organization Name</td>
                                 <td style="border-left: 1px solid #fff;">Phone</td>
@@ -218,6 +222,9 @@
                                 <!-- <td class="py-1">
                                     <input type="checkbox" class="form">
                                 </td> -->
+                                <td>
+                                    <input type="checkbox" name="organizations[]" value="{{$org->id}}" class="sub-check">
+                                </td>
                                 <td class="py-1">
                                     <span style="cursor:pointer" class="org-name hyper-link" onclick="openNav(<?= $org->id ?>)" data-org-id="{{ $org->id }}">{{$org->name}}</span>
                                 </td>
@@ -516,7 +523,9 @@
 $('.filter-btn-show').click(function() {
     $("#filter-show").toggle();
  });
-
+    $(document).on('change', '.main-check', function() {
+        $(".sub-check").prop('checked', $(this).prop('checked'));
+    });
 
     $(document).on("submit", "#organization-creating-form", function(e) {
 
@@ -1102,6 +1111,26 @@ $('.filter-btn-show').click(function() {
         }else{
             $(".assigned_to_type").addClass('d-none');
         }
+    })
+    $(document).on("click", '.delete-bulk-organizations', function() {
+        var task_ids = $(".sub-check:checked");
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-bulk-organizations?ids='+selectedIds.join(',');
+            }
+        });
     })
 </script>
 @endpush

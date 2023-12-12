@@ -1738,5 +1738,6 @@ Route::get("/delete-bulk-tasks", [DealController::class, 'deleteBulkTasks'])->na
 Route::get("/delete-bulk-deals", [DealController::class, 'deleteBulkDeals'])->name('delete-bulk-deals');
 Route::get("/delete-bulk-leads", [LeadController::class, 'deleteBulkLeads'])->name('delete-bulk-leads');
 Route::get("/delete-bulk-applications", [ApplicationsController::class, 'deleteBulkApplications'])->name('delete-bulk-applications');
+Route::get("/delete-bulk-organizations", [OrganizationController::class, 'deleteBulkOrganizations'])->name('delete-bulk-organizations');
 
 
