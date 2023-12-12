@@ -43,28 +43,24 @@
                                 $countryFound = false;
                             @endphp
 
-                            @foreach (App\Models\University::all() as $university)
-                                @if ($university->country == $key && !$countryFound)
-                                    @if ($i <= 4)
-                                        <?php $i++; ?>
-                                        <div class="col-xl-2 col-md-6 mb-4">
-                                            <div class="card shadow py-2"
-                                                style="width: 90%; height: 90%;border-radius: 22px;">
-                                                <div class="card-body">
-                                                    <span class="red-cross"><i class="fa-solid fa-circle-xmark"></i></span>
-                                                    <img src="{{ asset(optional(App\Models\University::where('country', $university->country)->whereNotNull('image')->first())->image) }}"
-                                                        alt="{{ $key }}" width="80" height="60"
-                                                        class="boximg">
-                                                    <div class="row no-gutters text-center">
-                                                        <div class="col mr-2">
-                                                            <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row no-gutters text-center">
-                                                        <div class="col mt-2 mr-2">
-                                                            <div class="h5 mb-0 text-gray-800">{{ $status }}</div>
-                                                        </div>
-                                                    </div>
+                        @foreach (App\Models\University::all() as $university)
+                            @if($university->country == $key && !$countryFound)
+                            @if($i <= 4)
+                            <?php $i++;?>
+                                <div class="col-xl-2 col-md-6 mb-4">
+                                    <div class="card shadow py-2" style="width: 90%; height: 90%;border-radius: 22px;">
+                                        <div class="card-body">
+                                            <span class="red-cross"><i class="fa-solid fa-circle-xmark"></i></span>
+                                            <img src="{{ asset('assets/svg/country-'.$university->country_code.'.svg') }}" alt="{{ $key }}" width="80" height="60" class="boximg">
+
+                                            <div class="row no-gutters text-center">
+                                                <div class="col mr-2">
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row no-gutters text-center">
+                                                <div class="col mt-2 mr-2">
+                                                    <div class="h5 mb-0 text-gray-800">{{ $status }}</div>
                                                 </div>
                                             </div>
                                         </div>

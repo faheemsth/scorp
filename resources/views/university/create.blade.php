@@ -10,10 +10,10 @@
             {{ Form::label('name', __('Name'),['class'=>'form-label']) }}
             {{ Form::text('name', '', array('class' => 'form-control','required'=>'required')) }}
         </div>
-        <div class="form-group col-md-6 py-0">
+        <!-- <div class="form-group col-md-6 py-0">
             {{ Form::label('name', __('Image'),['class'=>'form-label']) }}
             {{ Form::file('image', ['class' => 'form-control', 'required' => 'required']) }}
-        </div>
+        </div> -->
 
         <div class="form-group col-md-6 py-0">
             {{ Form::label('name', __('Country'),['class'=>'form-label']) }}
