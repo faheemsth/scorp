@@ -41,6 +41,7 @@ class UserController extends Controller
                 $users = User::where('created_by', '=', $user->creatorId())->where('type', '!=', 'client')->get();
             }
 
+            // return view('user.index-Old')->with('users', $users);
             return view('user.index')->with('users', $users);
         } else {
             return redirect()->back();
@@ -762,7 +763,7 @@ class UserController extends Controller
     }
 
     public function employeeEdit($id){
-       
+
         $user  = \Auth::user();
         if (\Auth::user()->type == 'super admin') {
             $branches = \App\Models\Branch::get()->pluck('name', 'id');

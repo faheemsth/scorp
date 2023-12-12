@@ -99,7 +99,7 @@
 </script> -->
 @stack('script-page')
 </body>
-<div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" style="z-index: 2000;"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
