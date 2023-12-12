@@ -637,10 +637,10 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td class=""
+                                                                {{-- <td class=""
                                                                     style="width: 130px; font-size: 14px;">
                                                                     {{ __('Email Opted Out') }}
-                                                                </td>
+                                                                </td> --}}
                                                                 {{-- <td class=""
                                                                     style="padding-left: 10px; font-size: 14px;">
 

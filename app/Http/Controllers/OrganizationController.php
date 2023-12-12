@@ -141,10 +141,10 @@ class OrganizationController extends Controller
                 $org_query->where('organizations.billing_state', 'LIKE', '%' . $value . '%');
             } elseif ($column === 'country') {
                 $org_query->whereIn('organizations.billing_country', $value);
-            } 
+            }
         }
 
-        //if list global search 
+        //if list global search
         if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
             $g_search = $_GET['search'];
             $org_query->Where('users.name', 'like', '%' . $g_search . '%');
@@ -170,7 +170,7 @@ class OrganizationController extends Controller
         } else {
             return view('organizations.index', compact('organizations', 'org_types', 'countries', 'user_type'));
         }
-        
+
     }
 
     /**
@@ -837,7 +837,7 @@ class OrganizationController extends Controller
                 'title' => 'Task Created',
                 'message' => 'Task Created successfully'
             ];
-    
+
             //store Log
             $data = [
                 'type' => 'info',
@@ -934,7 +934,7 @@ class OrganizationController extends Controller
             }
 
 
-            
+
 
             $dealTask = DealTask::where('id', $id)->first();
 
@@ -983,7 +983,7 @@ class OrganizationController extends Controller
                 'title' => 'Task Update',
                 'message' => 'Task updated successfully'
             ];
-    
+
             //store Log
             $data = [
                 'type' => 'info',
@@ -1000,7 +1000,7 @@ class OrganizationController extends Controller
                     'title' => 'Task Update',
                     'message' => 'Task status updated'
                 ];
-        
+
                 //store Log
                 $data = [
                     'type' => 'info',
@@ -1037,8 +1037,8 @@ class OrganizationController extends Controller
             // $html = view('organizations.all_tasks', compact('tasks'))->render();
 
             //store Activity Log
-          
-    
+
+
             //store Log
             $data = [
                 'type' => 'info',
@@ -1069,11 +1069,20 @@ class OrganizationController extends Controller
     {
         $type = $request->type;
         if ($type == 'company') {
-            $users = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
-        } else {
+            if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director'){
+                $users = User::where('type', 'company')->where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+            }elseif(\Auth::user()->type == 'super admin'){
+                $users = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+            }
+        } elseif('individual'){
+            if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director'){
             $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
                 ->where('created_by', \Auth::user()->id)
                 ->pluck('name', 'id');
+            }elseif(\Auth::user()->type == 'super admin'){
+                $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+                ->pluck('name', 'id');
+            }
         }
 
         $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
