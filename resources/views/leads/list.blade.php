@@ -298,7 +298,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             @endforeach
                                         </select>
                                     </div>
-
+                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                                     <div class="col-md-4 mt-1"> <label for="">Created By</label>
                                         <select class="form form-control select2" id="choices-multiple555"
                                             name="created_by[]" multiple style="width: 95%;">
@@ -317,7 +317,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             @endforeach
                                         </select>
                                     </div>
-
+                                    @endif
 
 
                                     <div class="col-md-4 mt-2">
