@@ -132,7 +132,7 @@
                             @if (strlen($deal->name) > 40)
                             <h4>{{ substr($deal->name, 0, 40) }}...</h4>
                             @else
-                            <h4>{{ $deal->name }}</h4>
+                            <h5 class="fw-bold">{{ $deal->name }}</h5>
                             @endif
 
                         </div>
@@ -142,7 +142,10 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @if (\Auth::user()->can('edit deal'))
-                    <a href="#" data-size="lg" data-url="{{ route('deals.edit', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Deal') }}" class="btn btn-sm btn-primary">
+
+                    <a href="#" data-size="lg" data-url="{{ route('deals.edit', $deal->id) }}"
+                        data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Deal') }}"
+                        class="btn px-2 text-white" style="background-color: #313949;">
                         <i class="ti ti-pencil"></i>
                     </a>
                     @endif
@@ -152,9 +155,10 @@
                     'method' => 'DELETE',
                     'route' => ['deals.destroy', $deal->id],
                     'id' => 'delete-form-' . $deal->id,
+                    'class'=>'mb-0',
                     ]) !!}
 
-                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn btn-sm text-white bs-pass-para" style="background-color: #b5282f;">
+                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn px-2 btn-danger text-white bs-pass-para" >
                         <i class="ti ti-trash"></i>
                     </a>
 
@@ -226,7 +230,7 @@
                 @endforelse
             </div>
         </div> --}}
-        <div class="stages my-2 ">
+        <div class="stages my-2  bg-white">
             <h2 class="mb-3">Deal STATUS: <span class="d-inline-block fw-light">{{ 'List' }}</span>
             </h2>
             <div class="wizard mb-2">
@@ -250,7 +254,7 @@
         <div class="lead-content my-2">
 
             <div class="card">
-                <div class="card-header p-1">
+                <div class="card-header p-1 bg-white">
                     <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link pills-link active" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab" aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
@@ -264,13 +268,13 @@
                     </ul>
                 </div>
 
-                <div class="card-body px-2">
+                <div class="card-body px-2 bg-white">
 
                     <div class="tab-content" id="pills-tabContent">
                         {{-- Details Pill Start --}}
                         <div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab">
 
-                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <div class="accordion accordion-flush bg-white" id="accordionFlushExample">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                         <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekeyone">
@@ -286,7 +290,7 @@
                                                 <table>
                                                     <tbody>
                                                         <tr>
-                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Record ID') }}
                                                             </td>
                                                             <td class="" style="padding-left: 10px; font-size: 14px;">
@@ -295,58 +299,61 @@
                                                         </tr>
 
                                                         <tr>
-                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Admission Name') }}
                                                             </td>
                                                             <td class="name-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                {{-- <div class="d-flex align-items-center edit-input-field-div">
                                                                     <div class="input-group border-0 name d-flex align-items-center">
                                                                         {{ $deal->name }}
                                                                     </div>
                                                                     <div class="edit-btn-div">
                                                                         <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="name"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
+                                                                {{ $deal->name }}
                                                             </td>
                                                         </tr>
 
                                                         <tr>
-                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Intake Month') }}
                                                             </td>
                                                             <td class="intake_month-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                {{-- <div class="d-flex align-items-center edit-input-field-div">
                                                                     <div class="input-group border-0 intake_month d-flex align-items-center">
                                                                         {{ $deal->intake_month }}
                                                                     </div>
                                                                     <div class="edit-btn-div">
                                                                         <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="intake_month"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
+                                                                {{ $deal->intake_month }}
                                                             </td>
                                                         </tr>
 
                                                         <tr>
-                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Intake Year') }}
                                                             </td>
                                                             <td class="intake_year-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                {{-- <div class="d-flex align-items-center edit-input-field-div">
                                                                     <div class="input-group border-0 intake_year d-flex align-items-center">
                                                                         {{ $deal->intake_year }}
                                                                     </div>
                                                                     <div class="edit-btn-div">
                                                                         <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="intake_year"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
+                                                                {{ $deal->intake_year }}
                                                             </td>
                                                         </tr>
 
                                                         <tr>
-                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Contact') }}
                                                             </td>
                                                             <td class="type-td" style="padding-left: 10px; font-size: 14px;">
@@ -356,48 +363,51 @@
 
 
                                                         <tr>
-                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Current Status') }}
                                                             </td>
                                                             <td class="stage_id-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                {{-- <div class="d-flex align-items-center edit-input-field-div">
                                                                     <div class="input-group border-0 stage_id d-flex align-items-center">
                                                                         {{ $stages[$deal->stage_id] }}
                                                                     </div>
                                                                     <div class="edit-btn-div">
                                                                         <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="stage_id"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
+                                                                {{ $stages[$deal->stage_id] }}
                                                             </td>
                                                         </tr>
 
 
                                                         <tr>
-                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('User Responsible') }}
                                                             </td>
                                                             <td class="assigned_to-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                {{-- <div class="d-flex align-items-center edit-input-field-div">
                                                                     <div class="input-group border-0 assigned_to d-flex align-items-center">
                                                                         {{ isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : '' }}
                                                                     </div>
                                                                     <div class="edit-btn-div">
                                                                         <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="assigned_to"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
+                                                                {{ isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : '' }}
+
                                                             </td>
                                                         </tr>
 
 
                                                         <tr>
-                                                            <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Drive Link') }}
                                                             </td>
                                                             <td class="drive_link-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                {{-- <div class="d-flex align-items-center edit-input-field-div">
                                                                     <div class="input-group border-0 drive_link d-flex align-items-center">
                                                                         @if (isset($deal->drive_link) && !empty($deal->drive_link))
                                                                         <a href="{{ $deal->drive_link }}" target="blank" style="font-size: 14px; color: rgb(46, 134, 249);">
@@ -410,7 +420,13 @@
                                                                     <div class="edit-btn-div">
                                                                         <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="drive_link"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
+                                                                @if (isset($deal->drive_link) && !empty($deal->drive_link))
+                                                                <a href="{{ $deal->drive_link }}" target="blank" style="font-size: 14px; color: rgb(46, 134, 249);">
+                                                                    {{ $deal->drive_link }} </a>
+                                                                @else
+                                                                {{ isset($deal->drive_link) ? $deal->drive_link : '' }}
+                                                                @endif
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -435,7 +451,7 @@
                                                     <tbody>
 
                                                         <tr>
-                                                            <td class="" style="width: 152px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 102px; font-size: 14px;">
                                                                 {{ __('Institute') }}
                                                             </td>
                                                             <td class="email-td" style="padding-left: 10px; font-size: 14px;">
@@ -444,7 +460,7 @@
                                                         </tr>
 
                                                         <tr>
-                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Institution Link') }}
                                                             </td>
                                                             <td class="website-td" style="padding-left: 10px; font-size: 14px;">
@@ -454,23 +470,25 @@
 
 
                                                         <tr>
-                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Agency') }}
                                                             </td>
                                                             <td class="organization_id-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                {{-- <div class="d-flex align-items-center edit-input-field-div">
                                                                     <div class="input-group border-0 organization_id d-flex align-items-center">
                                                                         {{ !empty($deal->organization_id) && isset($organizations[$deal->organization_id]) ? $organizations[$deal->organization_id] : '' }}
                                                                     </div>
                                                                     <div class="edit-btn-div">
                                                                         <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="organization_id"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
+                                                                {{ !empty($deal->organization_id) && isset($organizations[$deal->organization_id]) ? $organizations[$deal->organization_id] : '' }}
+
                                                             </td>
 
                                                         <tr>
-                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Agency Link') }}
                                                             </td>
                                                             <td class="linkedin-td" style="padding-left: 10px; font-size: 12px;">
@@ -487,22 +505,24 @@
 
 
                                                         <tr>
-                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Office Responsible') }}
                                                             </td>
                                                             <td class="branch_id-td" style="padding-left: 10px; font-size: 14px;">
-                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                {{-- <div class="d-flex align-items-center edit-input-field-div">
                                                                     <div class="input-group border-0 branch_id d-flex align-items-center">
                                                                         {{ !empty($deal->branch_id) && isset($branches[$deal->branch_id]) ? $branches[$deal->branch_id] : '' }}
                                                                     </div>
                                                                     <div class="edit-btn-div">
                                                                         <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="branch_id"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
+                                                                {{ !empty($deal->branch_id) && isset($branches[$deal->branch_id]) ? $branches[$deal->branch_id] : '' }}
+
                                                             </td>
                                                         </tr>
                                                         <tr>
-                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Admission Created') }}
                                                             </td>
                                                             <td class="twitter-td" style="padding-left: 10px; font-size: 14px;">
@@ -511,38 +531,38 @@
                                                         </tr>
 
                                                         <tr>
-                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Date of Next Activity') }}
                                                             </td>
                                                             <td class="twitter-td" style="padding-left: 10px; font-size: 14px;">
 
 
-                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                {{-- <div class="d-flex align-items-center edit-input-field-div">
                                                                     <div class="input-group border-0 twitter d-flex align-items-center">
 
                                                                     </div>
                                                                     <div class="edit-btn-div">
                                                                         <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="twitter"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
                                                             </td>
                                                         </tr>
 
                                                         <tr>
-                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Date of Last Activity') }}
                                                             </td>
                                                             <td class="twitter-td" style="padding-left: 10px; font-size: 14px;">
 
 
-                                                                <div class="d-flex align-items-center edit-input-field-div">
+                                                                {{-- <div class="d-flex align-items-center edit-input-field-div">
                                                                     <div class="input-group border-0 twitter d-flex align-items-center">
 
                                                                     </div>
                                                                     <div class="edit-btn-div">
                                                                         <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="twitter"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -569,12 +589,12 @@
                                                 <table>
                                                     <tbody>
                                                         <tr>
-                                                            <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                            <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Description') }}
                                                             </td>
                                                             <td class="description-td" style="min-height: 50px; padding-left:15px; width: 550px; text-align: justify; font-size: 14px;">
 
-                                                                <div class="d-flex align-items-center edit-input-field-div" style="min-height:30px; max-height: 200px; overflow-y: scroll; width: 100%;">
+                                                                {{-- <div class="d-flex align-items-center edit-input-field-div" style="min-height:30px; max-height: 200px; overflow-y: scroll; width: 100%;">
                                                                     <div class="input-group border-0 d-flex align-items-center p-2">
                                                                         {{ $deal->description }}
                                                                     </div>
@@ -583,7 +603,8 @@
                                                                             <i class="ti ti-pencil"></i>
                                                                         </button>
                                                                     </div>
-                                                                </div>
+                                                                </div> --}}
+                                                                {{ $deal->description }}
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -606,7 +627,7 @@
                                             <div class="d-flex justify-content-end align-items-center p-2 pb-0">
                                                 <div class="float-end">
                                                     @if (\Auth::user()->can('create application'))
-                                                    <a data-size="lg" data-url="{{ route('deals.application.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Application') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
+                                                    <a data-size="lg" data-url="{{ route('deals.application.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Application') }}" class="btn btn-sm text-white" >
                                                         <i class="ti ti-plus"></i>
                                                     </a>
                                                     @endif
@@ -669,7 +690,7 @@
                                                                 @can('edit application')
                                                                 <div class="action-btn ms-2">
 
-                                                                    <a data-size="lg" title="{{ __('Edit Application') }}" href="#" class="btn btn-sm btn-primary mx-1" data-url="{{ route('deals.application.edit', $app->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Application') }}" data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
+                                                                    <a data-size="lg" title="{{ __('Edit Application') }}" href="#" class="btn px-2 btn-dark text-white mx-1" data-url="{{ route('deals.application.edit', $app->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Application') }}" data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
                                                                         <i class="ti ti-edit"></i>
                                                                     </a>
 
@@ -818,7 +839,7 @@
                                                                     <div class="card-header px-0 pt-1 pb-3">
                                                                         <div class="d-flex justify-content-end align-items-center p-2 pb-0">
                                                                             <div class="float-end">
-                                                                                <a data-size="lg" data-url="{{ route('deals.discussions.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Discussion') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
+                                                                                <a data-size="lg" data-url="{{ route('deals.discussions.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Discussion') }}" class="btn btn-sm text-white" >
                                                                                     <i class="ti ti-plus"></i>
                                                                                 </a>
                                                                             </div>
@@ -883,7 +904,7 @@
                                                                         <div class="d-flex justify-content-end align-items-center p-2 pb-0">
                                                                             <div class="float-end">
                                                                                 @can('create notes')
-                                                                                <a data-size="lg" data-url="{{ route('deals.notes.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create notes') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
+                                                                                <a data-size="lg" data-url="{{ route('deals.notes.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create notes') }}" class="btn px-2 btn-dark text-white" >
                                                                                     <i class="ti ti-plus"></i>
                                                                                 </a>
                                                                                 @endcan
@@ -918,13 +939,13 @@
                                                                                     </td>
                                                                                     <td class="d-flex">
                                                                                         @can('edit notes')
-                                                                                        <a data-url="{{ route('deals.notes.edit', $note->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Notes Edit') }}" class="btn btn-sm text-white mx-2" style="background-color: #b5282f;">
+                                                                                        <a data-url="{{ route('deals.notes.edit', $note->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Notes Edit') }}" class="btn px-2 btn-dark text-white mx-2" >
                                                                                             <i class="ti ti-pencil "></i>
                                                                                         </a>
                                                                                         @endcan
 
                                                                                         @can('delete notes')
-                                                                                        <a href="javascript:void(0)" class="btn btn-sm text-white delete-notes" data-note-id="{{ $note->id }}" style="background-color: #b5282f;">
+                                                                                        <a href="javascript:void(0)" class="btn btn-danger px-2 text-white delete-notes" data-note-id="{{ $note->id }}" >
                                                                                             <i class="ti ti-trash "></i>
                                                                                         </a>
                                                                                         @endcan
@@ -1023,11 +1044,11 @@
                                                         <div class="">
                                                             <div class="col-12">
                                                                 <div class="card">
-                                                                    <div class="card-header px-0 pt-0" style="padding-bottom: 18px;">
+                                                                    <div class="card-header" style="padding-bottom: 18px;">
                                                                         <div class="d-flex justify-content-end">
                                                                             <div class="float-end">
                                                                                 @can('create task')
-                                                                                <a data-size="lg" data-url="/organiation/1/task?type=deal&typeid={{ $deal->id }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Task') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
+                                                                                <a data-size="lg" data-url="/organiation/1/task?type=deal&typeid={{ $deal->id }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Task') }}" class="btn px-2 btn-dark text-white" >
                                                                                     <i class="ti ti-plus"></i>
                                                                                 </a>
                                                                                 @endcan
@@ -1067,13 +1088,13 @@
 
                                                                                         <div class="d-flex">
                                                                                             @can('edit task')
-                                                                                            <a data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update Task') }}" class="btn btn-sm text-white mx-2" style="background-color: #b5282f;">
+                                                                                            <a data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update Task') }}" class="btn px-2 text-white mx-2 btn-dark" >
                                                                                                 <i class="ti ti-pencil"></i>
                                                                                             </a>
                                                                                             @endcan
 
                                                                                             @can('delete task')
-                                                                                            <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #b5282f;" onclick="deleteTask({{ $task->id }}, {{ $deal->id }}, 'deal');">
+                                                                                            <a href="javascript:void(0)" class="btn px-2 text-white btn-danger"  onclick="deleteTask({{ $task->id }}, {{ $deal->id }}, 'deal');">
                                                                                                 <i class="ti ti-trash "></i>
                                                                                             </a>
                                                                                             @endcan

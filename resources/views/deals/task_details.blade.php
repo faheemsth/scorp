@@ -151,7 +151,8 @@
             <div class="lead-info d-flex justify-content-between p-3 text-center">
                 <div class="">
                     <small>{{ __('Date Due') }}</small>
-                    <span class="px-3 rounded bg-primary">
+                    <span class="px-3 text-white " style="border-radius: 6px;
+                    background: #22A9E3;">
                         @php
                             $due_date = strtotime($task->due_date);
                             $current_date = strtotime(date('Y-m-d'));
@@ -203,7 +204,7 @@
                     <div class="card-header p-1 bg-white">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link fw-bold" style="background-color: #313949;" id="pills-details-tab" data-bs-toggle="pill"
+                                <button class="nav-link pills-link fw-bold active" id="text" id="pills-details-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-details" type="button" role="tab"
                                     aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
                             </li>
