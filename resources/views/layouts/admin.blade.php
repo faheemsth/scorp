@@ -72,9 +72,18 @@ $lang=Utility::getValByName('default_language');
 
     <link rel="stylesheet" href="{{ asset('css/customsidebar.css') }}">
 
-    <link href="{{ asset('cs-theme/css/sb-admin-2.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/cs-theme/css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <link href="{{ asset('assets/cs-theme/css/custom.css') }}" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+
 
     <style>
+        body{
+            font-family: 'Outfit', sans-serif;
+        }
+
         .All-leads {
             border: 0px;
             background-color: transparent;
@@ -414,18 +423,27 @@ $lang=Utility::getValByName('default_language');
         <!-- [ Header ] end -->
 
         <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content-wrapper" class="d-flex flex-column" style="background:  #ECEBEB !important;">
             <!-- Main Content -->
-            <div id="content">
-                <div class="container-fluid">
-                    <div class="my-3 ">
-                        <h4 style="color: #000;"><strong>@yield('page-title')</strong></h4>
-                        <ul class="breadcrumb">
+            <div id="content" style="background:  #ECEBEB !important;">
+                <div class="container-fluid" style="padding: 0">
+
+                    <div class="my-3">
+                        <h4 class="pl-4" style="color: #000;"><strong>@yield('page-title')</strong></h4>
+                        <ul class="breadcrumb bg-dark text-white pl-4" style="border-radius: 0;">
                             @yield('breadcrumb')
                         </ul>
                     </div>
-                    @yield('action-btn')
-                    @yield('content')
+
+                    <div class="">
+                        @yield('action-btn')
+                    </div>
+
+                    <div class="pl-4">
+                      @yield('content')
+                    </div>
+                    <!-- Content Wrapper -->
+                    
 
                 </div>
             </div>
@@ -474,14 +492,14 @@ $lang=Utility::getValByName('default_language');
 
     <!-- CS Theme -->
     <!-- Bootstrap core JavaScript-->
-    <script src="{{ asset('cs-theme/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('cs-theme/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/cs-theme/vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/cs-theme/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="{{ asset('cs-theme/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+    <script src="{{ asset('assets/cs-theme/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="{{ asset('cs-theme/js/sb-admin-2.min.js') }}"></script>
+    <script src="{{ asset('assets/cs-theme/js/sb-admin-2.min.js') }}"></script>
 </body>
 <div class="block-screen"></div>
 

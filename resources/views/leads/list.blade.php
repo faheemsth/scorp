@@ -44,7 +44,10 @@ if (isset($lead->is_active) && $lead->is_active) {
     {{ isset($lead->name) ? $lead->name : '' }}
 @endsection
 
-
+@section('breadcrumb')
+<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
+<li class="breadcrumb-item">{{ __('Leads') }}</li>
+@endsection
 
 <style>
     /* .form-controls,
@@ -98,27 +101,24 @@ if (isset($lead->is_active) && $lead->is_active) {
     @if ($pipeline)
         <div class="row">
 
-            <div class="row">
+            <div class="row justify-content-center">
                 <div class="col-md-3">
                     <!-- card -->
-                    <div class="card card-animate">
+                    <div class="card my-card">
                         <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 overflow-hidden">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
-                                        <i class="fa fa-regular fa-check fa-2x" style="color: #b5282f"></i>
-                                    </p>
-                                </div>
-                                <div class="flex-shrink-0">
-
-                                </div>
+                            <div class="" style="position: relative;">
+                                <img src="{{ asset('assets/images/tick_mark.png') }}" alt="" style="width: 30px; position: absolute; right: 0px;">
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
+<<<<<<< HEAD
                                     <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"> <span class="counter-value"
                                             data-target="730000">{{ isset($total_leads_by_status['opened lead']) ? $total_leads_by_status['opened lead'] : 0}}</span>
                                     </h2>
 
+=======
+                                    <h1> {{ isset($total_leads_by_status['opened lead']) ? $total_leads_by_status['opened lead'] : 0}} </h1>
+>>>>>>> f75a0255ae923bb0d919a4bb7ea4180f58cff11b
                                     <h4>Open Leads</h4>
                                 </div>
                             </div>
@@ -127,18 +127,12 @@ if (isset($lead->is_active) && $lead->is_active) {
                 </div>
                 <div class="col-md-3">
                     <!-- card -->
-                    <div class="card card-animate">
+                    <div class="card my-card">
                         <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <div class="flex-grow-1 overflow-hidden">
-                                    <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
-                                        <i class="fa fa-regular fa-window-close fa-2x" style="color: #b5282f"></i>
-                                    </p>
-                                </div>
-                                <div class="flex-shrink-0">
-
-                                </div>
+                            <div class="" style="position: relative;">
+                                <img src="{{ asset('assets/images/cross_mark.png') }}" alt="" style="width: 30px; position: absolute; right: 0px;">
                             </div>
+<<<<<<< HEAD
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
                                     <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"> <span class="counter-value"
@@ -147,6 +141,11 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                     <h4>Close Leads</h4>
                                 </div>
+=======
+                            <div class="mt-4">
+                                <h1>{{ isset($total_leads_by_status['closed lead']) ? $total_leads_by_status['closed lead'] : 0}}</h1>
+                                <h4>Close Leads</h4>
+>>>>>>> f75a0255ae923bb0d919a4bb7ea4180f58cff11b
                             </div>
                         </div><!-- end card body -->
                     </div><!-- end card -->
@@ -155,7 +154,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 
             <div class="col-xl-12">
-                <div class="card" style="max-width: 98%;border-radius:0px; min-height: 250px !important;">
+                <div class="card my-card" style="max-width: 98%;border-radius:0px; min-height: 250px !important;">
                     <div class="card-body table-border-style" style="padding: 25px 3px;">
 
 
@@ -189,13 +188,11 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         aria-describedby="basic-addon1">
                                 </div>
                                 <div>
-                                    <button class="btn px-2 pb-2 pt-2 refresh-lead-list"
-                                        style="background-color: #b5282f; color:white;"><i class="ti ti-refresh"
+                                    <button class="btn px-2 pb-2 pt-2 refresh-lead-list btn-dark"><i class="ti ti-refresh"
                                             style="font-size: 18px"></i></button>
                                 </div>
                                 <div class="dropdown">
-                                    <button class="btn dropdown-toggle px-2 pb-1 pt-2"
-                                        style="background-color: #b5282f; color:white;" type="button"
+                                    <button class="btn dropdown-toggle px-2 pb-1 pt-2 btn-dark" type="button"
                                         id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                         <i class="ti ti-settings" style="font-size:18px"></i>
                                     </button>
@@ -207,7 +204,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 </div>
 
 
-                                <button class="btn filter-btn-show p-2" style="background-color: #b5282f; color:white;"
+                                <button class="btn filter-btn-show p-2 btn-dark"
                                     type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                 </button>
@@ -215,13 +212,13 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 @can('create lead')
                                     <a href="#" data-size="lg" data-url="{{ route('leads.create') }}"
                                         data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}"
-                                        class="btn p-2" style="background-color: #b5282f; color:white;">
+                                        class="btn p-2 btn-dark">
                                         <i class="ti ti-plus"></i>
                                     </a>
                                 @endcan
 
                                 <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}"
-                                    class="btn btn-sm btn-primary" id="import_csv_modal_btn" data-bs-toggle="modal"
+                                    class="btn btn-sm btn-dark" id="import_csv_modal_btn" data-bs-toggle="modal"
                                     data-bs-target="#import_csv">
                                     <i class="fa fa-file-csv"></i>
                                 </button>

@@ -14,7 +14,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
 @endsection
 @section('content')
 <div class="row">
-    <div class="card py-3">
+    <div class="card py-3 my-card">
         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
             <div class="col-2">
                 <p class="mb-0 pb-0">APPLICATIONS</p>
@@ -42,10 +42,10 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                 </div>
 
                 <div>
-                    <button class="btn px-2 pb-2 pt-2 refresh-list" style="background-color: #b5282f; color:white;"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                    <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
                 </div>
 
-                <button class="btn filter-btn-show p-2" style="background-color: #b5282f; color:white;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="ti ti-filter" style="font-size:18px"></i>
                 </button>
             </div>
@@ -100,8 +100,8 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
 
                     <div class="col-md-4 mt-2">
                         <br>
-                        <input type="submit" class="btn form-btn me-2" style="background-color: #b5282f; color:white;">
-                        <a href="/applications/" class="btn form-btn" style="background-color: #b5282f;color:white;">Reset</a>
+                        <input type="submit" class="btn form-btn me-2 btn-dark">
+                        <a href="/applications/" class="btn form-btn btn-danger">Reset</a>
                     </div>
                 </div>
                 <div class="row my-4">

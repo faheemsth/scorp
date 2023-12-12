@@ -105,18 +105,18 @@
                             <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
 
-                        <button class="btn px-2 pb-2 pt-2 refresh-list"
-                            style="background-color: #b5282f; color:white;"><i class="ti ti-refresh"
+                        <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark"
+                            ><i class="ti ti-refresh"
                                 style="font-size: 18px"></i></button>
 
-                        <button class="btn filter-btn-show p-2" style="background-color: #b5282f; color:white;"
+                        <button class="btn filter-btn-show p-2 btn-dark" 
                             type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
 
                         @if(\Auth::user()->type=='super admin' || \Auth::user()->can('create organization'))
-                            <button data-url="{{ route('leads.create') }}" class="btn btn-sm p-2 btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <button data-url="{{ route('leads.create') }}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 <i class="ti ti-plus" style="font-size:18px"></i>
                             </button>
                         @endif
@@ -183,8 +183,8 @@
 
                             <div class="col-md-4 mt-2">
                                 <br>
-                                <input type="submit" class="btn form-btn me-2"
-                                    style="background-color: #b5282f; color:white;">
+                                <input type="submit" class="btn form-btn btn-dark me-2"
+                                    >
                                 <a href="/organization/" class="btn form-btn"
                                     style="background-color: #b5282f;color:white;">Reset</a>
                             </div>

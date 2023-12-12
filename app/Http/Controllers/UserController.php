@@ -56,7 +56,7 @@ class UserController extends Controller
             $branches = \App\Models\Branch::get()->pluck('name', 'id');
             $roles = Role::where('name', 'company')->orwhere('name', 'team')->get()->pluck('name', 'name');
         } else {
-            $branches = \App\Models\Branch::where(['created_by' => $user->id])->get()->pluck('name', 'id');
+            $branches = \App\Models\Branch::get()->pluck('name', 'id');
             $branches = [0 => 'Select Branches'] + $branches->toArray();
             $roles = Role::whereNotIn('name', ['client', 'super admin', 'company', 'team'])->get()->pluck('name', 'id');
         }
@@ -73,7 +73,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-
+       // dd($request->input());
         if (\Auth::user()->can('create user')) {
             $default_language = DB::table('settings')->select('value')->where('name', 'default_language')->first();
             if (\Auth::user()->type == 'super admin') {
@@ -98,7 +98,7 @@ class UserController extends Controller
                 $psw                = $request->password;
                 $user['password']   = Hash::make($request->password);
                 $user['type']       =  $request->role;
-                //  $user['branch_id'] = $request->branch_id;
+                $user['branch_id'] = $request->branch_id;
                 $user['default_pipeline'] = 1;
                 $user['plan'] = 1;
                 $user['lang']       = !empty($default_language) ? $default_language->value : '';
@@ -207,7 +207,7 @@ class UserController extends Controller
             $branches = \App\Models\Branch::get()->pluck('name', 'id');
             $roles = Role::where('name', 'company')->orwhere('name', 'team')->get()->pluck('name', 'name');
         } else {
-            $branches = \App\Models\Branch::where(['created_by' => $user->id])->get()->pluck('name', 'id');
+            $branches = \App\Models\Branch::get()->pluck('name', 'id');
             $branches = [0 => 'Select Branches'] + $branches->toArray();
             $roles = Role::whereNotIn('name', ['client', 'super admin', 'company', 'team'])->get()->pluck('name', 'id');
         }

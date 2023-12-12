@@ -55,20 +55,20 @@
 <script>
     var labels = [];
     var totals = [];
-    <?php foreach($area_chart as $data){ ?>
-        labels.push('<?= $data->name?>');
-        totals.push(<?= $data->total?>);
+    <?php foreach ($area_chart as $data) { ?>
+        labels.push('<?= $data->name ?>');
+        totals.push(<?= $data->total ?>);
     <?php } ?>
 
     var data = {
         labels: labels,
         datasets: [{
             // Remove or set label to null if you want to hide the legend label
-       
+
             backgroundColor: ["rgba(255,99,132)", "rgba(54, 162, 235)", "rgba(255, 206, 86)"],
             //borderColor: ["rgba(255,99,132,1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
-           // borderWidth: 2,
-           // hoverBackgroundColor: ["rgba(255,99,132,0.4)", "rgba(54, 162, 235, 0.4)", "rgba(255, 206, 86, 0.4)"],
+            // borderWidth: 2,
+            // hoverBackgroundColor: ["rgba(255,99,132,0.4)", "rgba(54, 162, 235, 0.4)", "rgba(255, 206, 86, 0.4)"],
             //hoverBorderColor: ["rgba(255,99,132,1)", "rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
             data: totals,
         }]
@@ -108,7 +108,7 @@
 
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
-<li class="breadcrumb-item">{{ __('Account') }}</li>
+<li class="breadcrumb-item">{{ __('CRM Dashboard') }}</li>
 @endsection
 
 <style>
@@ -134,60 +134,53 @@
 
 
 @section('content')
+
+
+
 <div class="row">
     <div class="col-xl-3 col-md-6">
         <!-- card -->
-        <div class="card card-animate">
-            <div class="card-body">
+        <div class="card card-animate my-card" style="min-height: 202px;">
+            <div class="card-body pl-3">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1 overflow-hidden">
                         <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
-                            <i class="fa fa-regular fa-user-check fa-2x" style="color: #b5282f"></i>
+                            <img src="{{ asset('assets/images/user.png') }}" alt="" style="width: 52px;">
                         </p>
                     </div>
                     <div class="flex-shrink-0">
 
                     </div>
                 </div>
-                <div class="d-flex align-items-end justify-content-between mt-4">
+                <div class="d-flex align-items-end justify-content-between mt-1">
                     <div>
-                        <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"> <span class="counter-value" data-target="730000">{{ $total_admissions }}</span>
-                        </h2>
+                        <h1 class=""> <span class="counter-value" data-target="730000">{{ $total_admissions }}</span>
+                        </h1>
                         <a href="" class="text-decoration-none text-muted">Total Number of Admissions</a>
                     </div>
-                    {{-- <div class="avatar-sm flex-shrink-0">
-                            <span class="avatar-title bg-success-subtle rounded fs-3">
-                                <i class="bx bx-dollar-circle text-success" style="color: #b5282f"></i>
-                            </span>
-                        </div> --}}
                 </div>
             </div><!-- end card body -->
         </div><!-- end card -->
     </div><!-- end col -->
     <div class="col-xl-3 col-md-6">
         <!-- card -->
-        <div class="card card-animate">
+        <div class="card card-animate my-card" style="min-height: 202px; ">
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1 overflow-hidden">
                         <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
-                            <i class="fa-regular fa-file-lines fa-2x" style="color: #b5282f"></i>
+                            <img src="{{ asset('assets/images/applications.png') }}" alt="" style="width: 52px;">
                         </p>
                     </div>
                     <div class="flex-shrink-0">
 
                     </div>
                 </div>
-                <div class="d-flex align-items-end justify-content-between mt-4">
+                <div class="d-flex align-items-end justify-content-between mt-1">
                     <div>
-                        <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"><span class="counter-value" data-target="0">{{ $total_app }}</span></h2>
+                        <h1><span class="counter-value" data-target="0">{{ $total_app }}</span></h1>
                         <a href="" class="text-decoration-none text-muted">Total Number of Applications</a>
                     </div>
-                    {{-- <div class="avatar-sm flex-shrink-0">
-                            <span class="avatar-title bg-info-subtle rounded fs-3">
-                                <i class="fa-solid fa-people-group"></i>
-                            </span>
-                        </div> --}}
                 </div>
             </div><!-- end card body -->
         </div><!-- end card -->
@@ -195,29 +188,19 @@
 
     <div class="col-xl-3 col-md-6">
         <!-- card -->
-        <div class="card card-animate">
+        <div class="card card-animate my-card" style="min-height: 202px; ">
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1 overflow-hidden">
                         <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
-                            <i class="fa-solid fa-sack-dollar fa-2x" style="color: #b5282f"></i>
+                            <img src="{{ asset('assets/images/deposite.png') }}" alt="" style="width: 52px;">
                         </p>
                     </div>
-                    <div class="flex-shrink-0">
-
-                    </div>
                 </div>
-                <div class="d-flex align-items-end justify-content-between mt-4">
-                    <div>
-                        <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"><span class="counter-value" data-target="1">{{ $total_deposits   }}</span>
-                        </h2>
+                <div class="mt-1">
+                        <h1><span class="counter-value" data-target="1">{{ $total_deposits   }}</span>
+                        </h1>
                         <a href="" class="text-decoration-none text-muted">Total Number of Deposits</a>
-                    </div>
-                    {{-- <div class="avatar-sm flex-shrink-0">
-                            <span class="avatar-title bg-warning-subtle rounded fs-3">
-                                <i class="bx bx-user-circle text-warning"></i>
-                            </span>
-                        </div> --}}
                 </div>
             </div><!-- end card body -->
         </div><!-- end card -->
@@ -225,107 +208,87 @@
 
     <div class="col-xl-3 col-md-6">
         <!-- card -->
-        <div class="card card-animate">
+        <div class="card card-animate my-card" style="min-height: 202px; ">
             <div class="card-body">
                 <div class="d-flex align-items-center">
                     <div class="flex-grow-1 overflow-hidden">
                         <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
-                            <i class="fa-light fa-passport fa fa-2x" style="color: #b5282f"></i>
+                        <img src="{{ asset('assets/images/visa.png') }}" alt="" style="width: 52px;">
                         </p>
                     </div>
-                    <div class="flex-shrink-0">
-
-                    </div>
                 </div>
-                <div class="d-flex align-items-end justify-content-between mt-4">
-                    <div>
-                        <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"><span class="counter-value" data-target="0">{{ $total_visas }}</span>
+                <div class="mt-1">
+                    <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"><span class="counter-value" data-target="0">{{ $total_visas }}</span>
                         </h2>
                         <a href="" class="text-decoration-none text-muted">Total Number of Visas</a>
-                    </div>
-                    {{-- <div class="avatar-sm flex-shrink-0">
-                            <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                <i class="bx bx-user-circle text-warning"></i>
-                            </span>
-                        </div> --}}
+                    
                 </div>
             </div><!-- end card body -->
         </div><!-- end card -->
     </div><!-- end col -->
 </div>
-<div class="row justify-content-between px-3">
-    <div class="col-9 bg-white">
-       <div class="card card-body m-3">
-       <div class="d-flex justify-content-between mt-3 mb-2 align-items-center">
-            <p class="fs-6 fw-bold col-md-7 mb-0">
-             
-                @php 
-                $title = '';
-                
-                if(isset($_GET['status']) && $_GET['status'] == 'Admission-Application'){
-                   $title = 'Admission - Application Chart';
-                }else if(isset($_GET['status']) && $_GET['status'] == 'Application-Deposit'){
-                    $title = '>Application - Deposit Chart';
-                }else if(isset($_GET['status']) && $_GET['status'] == 'Admission-Deposit'){
-                     $title = 'Admission - Deposit Chart';
-                }else if(isset($_GET['status']) && $_GET['status'] == 'Deposit-visas'){
-                    $title = 'Deposit - Visas Chart';
-                }else{
-                   $title = 'Admission - Application Chart';
-                }
-        
-                echo $title;
-                @endphp
-            </p>
-            <form action="" class="" id="status_form">
-                <select class="form-select me-4 form-select-sm" id="status" name="status">
-                    <option selected>Select</option>
-                    <option value="Admission-Application" <?= isset($_GET['status']) && $_GET['status'] == 'Admission-Application' ? 'selected' : '' ?>>Admission - Application</option>
-                    <option value="Application-Deposit" <?= isset($_GET['status']) && $_GET['status'] == 'Application-Deposit' ? 'selected' : '' ?>>Application - Deposit</option>
-                    <option value="Admission-Deposit" <?= isset($_GET['status']) && $_GET['status'] == 'Admission-Deposit' ? 'selected' : '' ?>>Admission - Deposit</option>
-                    <option value="Deposit-visas" <?= isset($_GET['status']) && $_GET['status'] == 'Deposit-visas' ? 'selected' : '' ?>>Deposit - Visas</option>
-                </select>
-            </form>
-            <div style="background-color: rgb(107, 182, 107,0.5);height: fit-content;
-                padding: 3px;
-                border-radius: 4px;">
-                <i class="fa-regular fa-credit-card fa-2x"></i>
+
+<div class="row justify-content-between">
+    <div class="col-9">
+        <div class="card my-card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="fs-6 fw-bold mb-0" style="color: #000000; ">
+
+                        @php
+                        $title = '';
+
+                        if(isset($_GET['status']) && $_GET['status'] == 'Admission-Application'){
+                        $title = 'Admission - Application Chart';
+                        }else if(isset($_GET['status']) && $_GET['status'] == 'Application-Deposit'){
+                        $title = '>Application - Deposit Chart';
+                        }else if(isset($_GET['status']) && $_GET['status'] == 'Admission-Deposit'){
+                        $title = 'Admission - Deposit Chart';
+                        }else if(isset($_GET['status']) && $_GET['status'] == 'Deposit-visas'){
+                        $title = 'Deposit - Visas Chart';
+                        }else{
+                        $title = 'Admission - Application Chart';
+                        }
+
+                        echo $title;
+                        @endphp
+                    </p>
+                    <form action="" class="" id="status_form">
+                        <select class="form-select form-select-sm" id="status" name="status">
+                            <option selected>Select</option>
+                            <option value="Admission-Application" <?= isset($_GET['status']) && $_GET['status'] == 'Admission-Application' ? 'selected' : '' ?>>Admission - Application</option>
+                            <option value="Application-Deposit" <?= isset($_GET['status']) && $_GET['status'] == 'Application-Deposit' ? 'selected' : '' ?>>Application - Deposit</option>
+                            <option value="Admission-Deposit" <?= isset($_GET['status']) && $_GET['status'] == 'Admission-Deposit' ? 'selected' : '' ?>>Admission - Deposit</option>
+                            <option value="Deposit-visas" <?= isset($_GET['status']) && $_GET['status'] == 'Deposit-visas' ? 'selected' : '' ?>>Deposit - Visas</option>
+                        </select>
+                    </form>
+                </div>
+                <div id="areachart"></div>
             </div>
         </div>
-        <div id="areachart"></div>
-       </div>
     </div>
-    <div class="col-3 bg-white">
-         <div class=" m-3">
-         <div class="d-flex justify-content-between mt-3 mb-2 align-items-center">
-            <p class="fs-6 fw-bold mb-0">Top 3 Brands of SCORP</p>
-            <div style="background-color: rgb(107, 182, 107,0.5);height: fit-content;
-                    padding: 3px;
-                    border-radius: 4px;">
-                <i class="fa-solid fa-chart-pie fa-2x"></i>
+    
+    <div class="col-3">
+        <div class="card my-card" style="min-height: 95% !important;">
+            <div class="card-body">
+                <div class="d-flex justify-content-between mt-3 mb-2 align-items-center">
+                    <p class="fs-6 fw-bold text-dark" style="color: #000000; ">Top 3 Brands of SCORP</p>
+                </div>
+                <div>
+                    <form action="" id="top_brands_form">
+                        <select class="form-select me-4 form-select-sm" name="top_brand_filter" id="top_brands">
+                            <option value="">Select</option>
+                            <option value="admissions" <?= isset($_GET['top_brand_filter']) && $_GET['top_brand_filter'] == 'admissions' ? 'selected' : '' ?>>Admission</option>
+                            <option value="deposits" <?= isset($_GET['top_brand_filter']) && $_GET['top_brand_filter'] == 'deposits' ? 'selected' : '' ?>>Deposit</option>
+                            <option value="visas" <?= isset($_GET['top_brand_filter']) && $_GET['top_brand_filter'] == 'visas' ? 'selected' : '' ?>>Visas</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="chart-container">
+                    <canvas id="chart"></canvas>
+                </div>
             </div>
         </div>
-        <div>
-            <form action="" id="top_brands_form">
-            <select class="form-select me-4 form-select-sm" name="top_brand_filter" id="top_brands">
-                <option value="">Select</option>
-                <option value="admissions" <?= isset($_GET['top_brand_filter']) && $_GET['top_brand_filter'] == 'admissions' ? 'selected' : '' ?>>Admission</option>
-                <option value="deposits" <?= isset($_GET['top_brand_filter']) && $_GET['top_brand_filter'] == 'deposits' ? 'selected' : '' ?>>Deposit</option>
-                <option value="visas" <?= isset($_GET['top_brand_filter']) && $_GET['top_brand_filter'] == 'visas' ? 'selected' : '' ?> >Visas</option>
-            </select>
-            </form>
-        </div>
-        <div class="chart-container">
-            <canvas id="chart"></canvas>
-        </div>
-         </div>
-        <!-- <div class="mt-1">
-            <ol>
-                @foreach ($top_brands as $top_brand)
-                <li>{{ $top_brand->name }}</li>
-                @endforeach
-            </ol>
-        </div> -->
     </div>
 </div>
 

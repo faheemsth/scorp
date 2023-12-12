@@ -1199,6 +1199,12 @@ class DashboardController extends Controller
             $auth_id = auth()->user()->id;
             Session::put('auth_type', auth()->user()->type);
             Session::put('is_company_login', true);
+            if(auth()->user()->type == 'super admin'){
+                Session::put('onlyadmin', auth()->user()->type);
+            }
+            // if(auth()->user()->type == 'Project Manager' || auth()->user()->type == 'Project Director'){
+            //     Session::put('ProjectController', auth()->user()->type);
+            // }
             Session::put('auth_type_id', $auth_id);
             Session::put('auth_type_created_by', auth()->user()->created_by);
             $user = User::where('id',$id)->first();
