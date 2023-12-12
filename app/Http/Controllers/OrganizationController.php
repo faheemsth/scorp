@@ -1124,4 +1124,13 @@ class OrganizationController extends Controller
         $task->delete();
         return redirect()->route('deals.get.user.tasks')->with('success', __('Organization successfully deleted!'));
     }
+
+    public function deleteBulkOrganizations(Request $request){
+        if($request->ids != null){
+            User::whereIn('id', explode(',', $request->ids))->where('type', '=', 'organization')->delete();
+            return redirect()->route('organization.index')->with('success', 'Organization deleted successfully');
+        }else{
+            return redirect()->route('organization.index')->with('error', 'Atleast select 1 organization.');
+        }
+    }
 }

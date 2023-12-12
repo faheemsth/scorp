@@ -22,11 +22,12 @@
                         <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             ALL CONTACTS
                         </button>
-                        {{-- <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <!-- <li><a class="dropdown-item" href="#">Action</a></li>
                             <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul> --}}
+                            <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+                            <li><a class="dropdown-item delete-bulk-contacts" href="javascript:void(0)">Delete</a></li>
+                        </ul> 
                     </div>
                 </div>
     
@@ -55,7 +56,9 @@
                     <thead style="background: #ddd; color:rgb(0, 0, 0); font-size: 14px; font-weight: bold;">
                         <tr>
                             <!-- <td style="border-left: 1px solid #fff;"></td> -->
-                            <th style="border-left: 1px solid #fff;"><input type="checkbox"></th>
+                            <th style="width: 50px !important;">
+                                <input type="checkbox" class="main-check">
+                            </th>
                             <th style="border-left: 1px solid #fff;">Name</th>
                             <th style="border-left: 1px solid #fff;">Email</th>
                             <th style="border-left: 1px solid #fff;">Admissions</th>
@@ -68,7 +71,7 @@
                         @forelse($clients as $client)
                             <tr>
                                 <td>
-                                    <input type="checkbox">
+                                    <input type="checkbox" name="contacts[]" value="{{$client->id}}" class="sub-check">
                                 </td>
                                 <td><span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/clients/'+{{$client->id}}+'/client_detail')" >
                                         {{ $client->name }}
@@ -131,4 +134,36 @@
             @endif
         </div>
     </div>
+@push('script-page')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<script>
+    $(document).on('change', '.main-check', function() {
+        $(".sub-check").prop('checked', $(this).prop('checked'));
+    });
+    $(document).on("click", '.delete-bulk-contacts', function() {
+        var task_ids = $(".sub-check:checked");
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-bulk-contacts?ids='+selectedIds.join(',');
+            }
+        });
+    })
+</script>
+
+@endpush   
+
 @endsection
+

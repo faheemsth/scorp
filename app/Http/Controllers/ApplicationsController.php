@@ -136,4 +136,13 @@ class ApplicationsController extends Controller
             'status' => 'success'
         ]);
     }
+
+    public function deleteBulkApplications(Request $request){
+        if($request->ids != null){
+            DealApplication::whereIn('id', explode(',', $request->ids))->delete();
+            return redirect()->route('applications.index')->with('success', 'Application deleted successfully');
+        }else{
+            return redirect()->route('applications.index')->with('error', 'Atleast select 1 application.');
+        }
+    }
 }

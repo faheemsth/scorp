@@ -3221,4 +3221,15 @@ class LeadController extends Controller
             'message' => __('Lead successfully converted')
         ]);
     }
+
+    public function deleteBulkLeads(Request $request){
+        
+        if($request->ids != null){
+            Lead::whereIn('id', explode(',', $request->ids))->delete();
+            return redirect()->route('leads.list')->with('success', 'Leads deleted successfully');
+        }else{
+            return redirect()->route('leads.list')->with('error', 'Atleast select 1 lead.');
+        }
+        
+    }
 }

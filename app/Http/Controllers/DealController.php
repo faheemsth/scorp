@@ -3291,4 +3291,13 @@ class DealController extends Controller
         DealTask::whereIn('id', explode(',', $request->ids))->delete();
         return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks deleted successfully');
     }
+
+    public function deleteBulkDeals(Request $request){
+        if($request->ids != null){
+            Deal::whereIn('id', explode(',', $request->ids))->delete();
+            return redirect()->route('deals.list')->with('success', 'Deals deleted successfully');
+        }else{
+            return redirect()->route('deals.list')->with('error', 'Atleast select 1 deal.');
+        }
+    }
 }

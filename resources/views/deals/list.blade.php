@@ -332,6 +332,8 @@
                                 <li><a class="dropdown-item" href="#">Action</a></li>
                                 <li><a class="dropdown-item" href="#">Another action</a></li>
                                 <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
+
                             </ul>
                         </div>
                     </div>
@@ -446,8 +448,8 @@
                         <table class="table" data-resizable-columns-id="lead-table">
                             <thead>
                                 <tr>
-                                    <th>
-                                        <input type="checkbox" name="">
+                                    <th style="width: 50px !important;">
+                                        <input type="checkbox" class="main-check">
                                     </th>
                                     <th>{{ __('Stage') }}</th>
 
@@ -467,8 +469,9 @@
                                 @if (count($deals) > 0)
                                 @foreach ($deals as $deal)
                                 <tr>
-                                    <td> <input type="checkbox" name=""></td>
-
+                                    <td>
+                                        <input type="checkbox" name="deals[]" value="{{$deal->id}}" class="sub-check">
+                                    </td>
                                     <td>{{ $deal->stage->name }}</td>
 
 
@@ -603,6 +606,10 @@
     <script>
         $('.filter-btn-show').click(function() {
             $("#filter-show").toggle();
+        });
+
+        $(document).on('change', '.main-check', function() {
+            $(".sub-check").prop('checked', $(this).prop('checked'));
         });
 
         // new lead form submitting...
@@ -1019,6 +1026,26 @@
                         console.log(data.html);
                         $("#deals_tbody").html(data.html);
                     }
+                }
+            });
+        })
+        $(document).on("click", '.delete-bulk-deals', function() {
+            var task_ids = $(".sub-check:checked");
+            var selectedIds = $('.sub-check:checked').map(function() {
+                return this.value;
+            }).get();
+
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/delete-bulk-deals?ids='+selectedIds.join(',');
                 }
             });
         })

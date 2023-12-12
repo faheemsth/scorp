@@ -164,8 +164,8 @@ class ClientController extends Controller
                     $total_client = User::where('type','client')->count();
                     // dd($total_client);
                     $plan           = Plan::find($creator->plan);
-                    if($total_client < $plan->max_clients || $plan->max_clients == -1)
-                    {
+                    // if($total_client < $plan->max_clients || $plan->max_clients == -1)
+                    // {
                         $role = Role::findByName('client');
                         $client = User::create(
                             [
@@ -199,13 +199,13 @@ class ClientController extends Controller
 
                         return redirect()->route('clients.index')->with('success', __('Client successfully added.') . ((!empty($resp) && $resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
 
-                    }
+                    // }
 
 
-                    else
-                    {
-                        return redirect()->back()->with('error', __('Your user limit is over, Please upgrade plan.'));
-                    }
+                    // else
+                    // {
+                    //     return redirect()->back()->with('error', __('Your user limit is over, Please upgrade plan.'));
+                    // }
 
                 }
         else
@@ -426,5 +426,16 @@ class ClientController extends Controller
             'status' => 'success',
             'html' => $html
         ]);
+    }
+
+    public function deleteBulkContacts(Request $request){
+        
+        if($request->ids != null){
+            User::whereIn('id', explode(',', $request->ids))->where('type', '=', 'client')->delete();
+            return redirect()->route('clients.index')->with('success', 'Clients deleted successfully');
+        }else{
+            return redirect()->route('clients.index')->with('error', 'Atleast select 1 client.');
+        }
+        
     }
 }
