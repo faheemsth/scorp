@@ -22,11 +22,12 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         ALL APPLICATIONS
                     </button>
-                    {{-- <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li><a class="dropdown-item" href="#">Action</a></li>
                             <li><a class="dropdown-item" href="#">Another action</a></li>
                             <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        </ul> --}}
+                            <li><a class="dropdown-item delete-bulk-applciations" href="javascript:void(0)">Delete</a></li>
+                        </ul> 
                 </div>
             </div>
 
@@ -134,7 +135,9 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
             <table class="table">
                 <thead class="" style="background-color:rgba(0, 0, 0, .08); font-weight: bold;">
                     <tr>
-
+                        <th style="width: 50px !important;">
+                            <input type="checkbox" class="main-check">
+                        </th>
                         <td>
                             {{ __('Name') }}
                         </td>
@@ -166,6 +169,9 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
 
                     @forelse($applications as $app)
                     <tr>
+                        <td>
+                            <input type="checkbox" name="applications[]" value="{{$app->id}}" class="sub-check">
+                        </td>
                         <td>
                             <span style="cursor:pointer" class="hyper-link" @can('view application') onclick="openSidebar('deals/'+{{ $app->id }}+'/detail-application')" @endcan>
                                 {{ $shortened_name = substr($app->name, 0, 10) }}
@@ -238,6 +244,9 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
         $("#filter-show").toggle();
     })
 
+    $(document).on('change', '.main-check', function() {
+        $(".sub-check").prop('checked', $(this).prop('checked'));
+    });
 
     $(document).on("click", ".list-global-search-btn", function() {
         var search = $(".list-global-search").val();
@@ -312,5 +321,25 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
             }
         });
     });
+    $(document).on("click", '.delete-bulk-applciations', function() {
+        var task_ids = $(".sub-check:checked");
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-bulk-applications?ids='+selectedIds.join(',');
+            }
+        });
+    })
 </script>
 @endpush

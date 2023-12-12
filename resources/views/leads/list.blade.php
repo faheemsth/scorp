@@ -165,6 +165,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         <li><a class="dropdown-item" href="#">Action</a></li>
                                         <li><a class="dropdown-item" href="#">Another action</a></li>
                                         <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        <li><a class="dropdown-item delete-bulk-leads" href="javascript:void(0)">Delete</a></li>
+
                                     </ul>
                                 </div>
                             </div>
@@ -382,8 +384,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                             <table class="table " data-resizable-columns-id="lead-table" id="tfont">
                                 <thead>
                                     <tr>
-                                        <th data-resizable-columns-id="name">
-                                            <input type="checkbox" class="">
+                                        <th style="width: 50px !important;">
+                                            <input type="checkbox" class="main-check">
                                         </th>
 
 
@@ -406,7 +408,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     @if (count($leads) > 0)
                                         @foreach ($leads as $lead)
                                             <tr>
-                                                <td><input type="checkbox" class=""></td>
+                                                <td><input type="checkbox" name="leads[]" value="{{$lead->id}}" class="sub-check"></td>
 
 
                                                 <td class="py-1">
@@ -552,6 +554,31 @@ if (isset($lead->is_active) && $lead->is_active) {
     <script>
         $(document).on("click", "#import_csv_modal_btn", function() {
             $("#import_csv").modal('show');
+        })
+
+        $(document).on('change', '.main-check', function() {
+            $(".sub-check").prop('checked', $(this).prop('checked'));
+        });
+
+        $(document).on("click", '.delete-bulk-leads', function() {
+            var task_ids = $(".sub-check:checked");
+            var selectedIds = $('.sub-check:checked').map(function() {
+                return this.value;
+            }).get();
+            
+            Swal.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/delete-bulk-leads?ids='+selectedIds.join(',');
+                }
+            });
         })
 
         $(document).on("change", "#lead-file", function() {
