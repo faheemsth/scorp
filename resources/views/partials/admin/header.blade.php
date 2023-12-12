@@ -3,26 +3,6 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endpush
 @php
-<<<<<<< HEAD
-
-$users = \Auth::user();
-//$profile=asset(Storage::url('uploads/avatar/'));
-$profile = \App\Models\Utility::get_file('uploads/avatar/');
-$languages = \App\Models\Utility::languages();
-$lang = isset($users->lang) ? $users->lang : 'en';
-$setting = \App\Models\Utility::colorset();
-$mode_setting = \App\Models\Utility::mode_layout();
-$adminOption = \App\Models\User::where('type', Session::get('onlyadmin'))->first();
-if (Session::get('is_company_login') == true) {
-    $currentUserCompany = \App\Models\User::where('type', 'company')->find(Session::get('auth_type_created_by'));
-} else {
-    $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
-}
-$com_permissions = [];
-if ($currentUserCompany != null) {
-    $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->get();
-}
-=======
     $users = \Auth::user();
     //$profile=asset(Storage::url('uploads/avatar/'));
     $profile = \App\Models\Utility::get_file('uploads/avatar/');
@@ -41,7 +21,6 @@ if ($currentUserCompany != null) {
     if ($currentUserCompany != null) {
         $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->get();
     }
->>>>>>> 9cab51fba2c9c2705e108d9bc4b239c4382a949b
 
     $all_companies = App\Models\User::where('type', 'company')
         ->pluck('name', 'id')
@@ -124,9 +103,9 @@ if ($currentUserCompany != null) {
             <select name="company" id="company" class="form form-select" style="width:15% !important"
                 onChange="loginWithCompany();">
                 <option value="">Select Companies</option>
-                
+
                 <option value="{{ Session::get('auth_type_id') }}">{{Session::get('auth_type')}}</option>
-                
+
                 @foreach ($all_companies as $key => $comp)
                     @foreach ($com_permissions as $com_per)
                         @if ($com_per->permitted_company_id == $key)
@@ -137,8 +116,8 @@ if ($currentUserCompany != null) {
                     @endforeach
                 @endforeach
             </select>
-        @endif 
-    @endif    
+        @endif
+    @endif
 
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
