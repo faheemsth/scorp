@@ -603,21 +603,33 @@ class UserController extends Controller
     {
 
         $user = \Auth::user();
+        $num_results_on_page = 10;
+
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = ($page - 1) * $num_results_on_page;
+        } else {
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = 0;
+        }
 
         if (\Auth::user()->can('manage employees')) {
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
             if (\Auth::user()->type == 'super admin') {
-                $users = User::whereNotIn('type', $excludedTypes)->get();
+                $users = User::whereNotIn('type', $excludedTypes)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             } else {
-                $users = User::where('created_by', '=', $user->creatorId())->whereNotIn('type', $excludedTypes)->get();
+                $users = User::where('created_by', '=', $user->creatorId())->whereNotIn('type', $excludedTypes)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }
 
-
-            return view('user.employee')->with('users', $users);
+            $total_records = $users->total();
+            return view('user.employee',compact('total_records'))->with('users', $users);
         } else {
             return redirect()->back();
         }
     }
+
+
 
     public function employeeCreate()
     {
