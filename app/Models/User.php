@@ -31,6 +31,7 @@ class User extends Authenticatable
         'password',
         'type',
         'avatar',
+        'branch_id',
         'lang',
         'mode',
         'delete_status',
