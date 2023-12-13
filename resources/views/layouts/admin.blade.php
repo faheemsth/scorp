@@ -74,7 +74,18 @@ $lang=Utility::getValByName('default_language');
 
     <link href="{{ asset('cs-theme/css/sb-admin-2.min.css') }}" rel="stylesheet">
 
+        {{-- outfit font  --}}
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+
+
     <style>
+        body, html{
+            /* font-family: 'Oswald', sans-serif; */
+font-family: 'Outfit', sans-serif !important;
+        }
         .All-leads {
             border: 0px;
             background-color: transparent;
@@ -88,7 +99,10 @@ $lang=Utility::getValByName('default_language');
         }
 
         .input-group {
-            border: 1px solid rgb(102, 102, 102)
+            /* border: 1px solid rgb(102, 102, 102); */
+        }
+        .form-control:focus{
+            border-color:transparent !important;
         }
 
         input:focus {

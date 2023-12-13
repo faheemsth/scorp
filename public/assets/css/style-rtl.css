@@ -16828,7 +16828,7 @@ body:not(.minimenu) .dash-sidebar .dash-submenu .dash-submenu .dash-submenu > .d
     color: #fff;
 }
 
-.minimenu .dash-sidebar .dash-item:hover > .dash-link .dash-mtext {
+.minimenu .dash-sidebar .dash-item:hover > .dash-link {
     display: inline-block;
 }
 
