@@ -51,6 +51,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ProductServiceCategory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use App\Providers\RouteServiceProvider;
 
 class DashboardController extends Controller
 {
@@ -1189,5 +1190,24 @@ class DashboardController extends Controller
         }
 
         return Utility::error_res('Tracker not found.');
+    }
+
+    public function loggedInAsCustomer($id){
+       
+        try{
+            $auth_id = auth()->user()->id;
+            $user = User::where('id',$id)->first();
+            if($user){
+                // session()->put('action_clicked_admin',$user->email);
+                \Auth::loginUsingId($user->id);
+                session()->put('auth_id_staff',$auth_id);
+                return redirect()->intended(RouteServiceProvider::HOME);
+            }else{
+                return redirect()->back()->with('error','User Not Found');
+            }
+        }catch(Exception $e){
+
+            return redirect()->back()->with('error',$e->getMessage());
+        }
     }
 }

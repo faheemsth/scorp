@@ -438,6 +438,7 @@ font-family: 'Outfit', sans-serif !important;
                             @yield('breadcrumb')
                         </ul>
                     </div>
+                    @yield('action-btn')
                     @yield('content')
 
                 </div>

@@ -1741,6 +1741,9 @@ Route::get("/delete-bulk-leads", [LeadController::class, 'deleteBulkLeads'])->na
 Route::get("/delete-bulk-applications", [ApplicationsController::class, 'deleteBulkApplications'])->name('delete-bulk-applications');
 Route::get("/delete-bulk-organizations", [OrganizationController::class, 'deleteBulkOrganizations'])->name('delete-bulk-organizations');
 
+/////////////////////////// Login as company
+Route::get('/logged_in_as_company/{id}','DashboardController@loggedInAsCustomer');
+
 
 //////////////////////////Global Search
 Route::get('/global-search', [GlobalSearchController::class, 'index'])->name('global-search');
