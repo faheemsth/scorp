@@ -26,7 +26,7 @@
 @section('content')
 <div class="row">
     <div class="col-12">
-        <div class="card">
+        <div class="card my-card">
 
 
             <div class="card-body">
@@ -57,21 +57,17 @@
                             <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
 
-                        <button class="btn px-2 pb-2 pt-2 refresh-list" style="background-color: #b5282f; color:white;"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                        <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
-                        <button class="btn filter-btn-show p-2" style="background-color: #b5282f; color:white;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn filter-btn-show p-2 btn-dark"  type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
                         @can('create task')
-                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn btn-sm p-2 btn-primary">
+                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn btn-sm p-2 btn-dark">
                             <i class="ti ti-plus" style="font-size:18px"></i>
                         </button>
                         @endcan
-
-                        {{-- <a data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" class="btn btn-sm text-white" style="background-color: #b5282f">
-                        <i class="ti ti-plus"></i>
-                        </a> --}}
                     </div>
                 </div>
 
@@ -118,7 +114,7 @@
 
 
                             <div class="col-md-4 mt-4">
-                                <input type="submit" class="btn form-btn me-2" style="background-color: #b5282f; color:white;">
+                                <input type="submit" class="btn form-btn me-2 btn-dark" >
                                 <a href="/deals/get-user-tasks" class="btn form-btn" style="background-color: #b5282f;color:white;">Reset</a>
                             </div>
                         </div>

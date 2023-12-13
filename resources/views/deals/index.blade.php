@@ -173,15 +173,15 @@
 
 
         <a href="{{ route('deals.list') }}" data-size="lg" data-bs-toggle="tooltip" title="{{ __('List View') }}"
-            class="btn btn-sm btn-primary">
+            class="btn btn-sm btn-dark">
             <i class="ti ti-list"></i>
         </a>
         <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true"
-            data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn btn-sm btn-primary">
+            data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn btn-sm btn-dark">
             <i class="ti ti-plus"></i>
         </a>
 
-        <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}" class="btn btn-sm btn-primary"
+        <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}" class="btn btn-sm btn-dark"
             style="display: none;" id="import_csv_modal_btn" data-bs-toggle="modal" data-bs-target="#import_csv">
             <i class="fa fa-file-csv"></i>
         </button>
@@ -219,7 +219,7 @@
         </div>
 
         <div class="form form-group">
-            <input type="button" value="Submit" class="btn btn-primary btn-icon btn_submit">
+            <input type="button" value="Submit" class="btn btn-dark btn-icon btn_submit">
         </div>
     </div>
 </div>
@@ -351,7 +351,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="float-end">
-                                    <span class="btn btn-sm btn-primary btn-icon count" style="font-size: 10px;">
+                                    <span class="btn btn-sm btn-dark btn-icon count" style="font-size: 10px;">
                                         {{ $stage->deals_count() }}
                                     </span>
                                 </div>

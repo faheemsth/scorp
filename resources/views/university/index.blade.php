@@ -72,7 +72,7 @@
                         </div>
 
                         @can('create university')
-                        <a href="#" data-size="md" data-url="{{ route('university.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-size="lg" title="{{__('Create University')}}" class="btn btn-sm btn-primary pt-2">
+                        <a href="#" data-size="lg" data-url="{{ route('university.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-size="lg" title="{{__('Create University')}}" class="btn btn-sm btn-dark pt-2">
                             <i class="ti ti-plus"></i>
                         </a>
                         @endcan

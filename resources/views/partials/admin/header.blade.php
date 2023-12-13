@@ -23,7 +23,7 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
         <i class="fa fa-bars"></i>
     </button>
     <div class="logo ms-md-2">
-        <a href="#"><img src="{{ asset('cs-theme/assets/images/scorp-logo.png') }}" alt=""></a>
+        <a href="#"><img src="{{ asset('assets/cs-theme/assets/images/scorp-logo.png') }}" alt=""></a>
     </div>
     <!-- Sidebar Toggle (Topbar) -->
 
@@ -95,7 +95,7 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <!-- <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span> -->
-                <img class="img-profile " src="{{ asset('cs-theme/assets/images/Mask group.png') }}">
+                <img class="img-profile " src="{{ asset('assets/cs-theme/assets/images/Mask group.png') }}">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

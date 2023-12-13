@@ -32,8 +32,8 @@
 
                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingOne">
-                    <div class="accordion-body">
-
+                    <div class="accordion-body ">
+                        
                         <div class="form-group row ">
                             <label for="organization-name" class="col-sm-3 col-form-label">
                                 Task Name
@@ -119,7 +119,8 @@
                                 <input type="date" class="form form-control" value="" name="due_date">
                             </div>
                         </div>
-                    </div>
+                        </div>
+                   
                 </div>
             </div>
 
