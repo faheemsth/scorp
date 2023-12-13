@@ -10,7 +10,11 @@ $languages=\App\Models\Utility::languages();
 $lang = isset($users->lang)?$users->lang:'en';
 $setting = \App\Models\Utility::colorset();
 $mode_setting = \App\Models\Utility::mode_layout();
-
+$currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+$com_permissions = array();
+if($currentUserCompany != null){
+    $com_permissions = \App\Models\CompanyPermission::where('company_id',$currentUserCompany->id)->get();
+}
 
 $all_companies = companies();
 
@@ -41,14 +45,31 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
 
         <input type="hidden" class="" name="global_search" value="all">
     </form>
-
-    <!-- <select name="" id="" class="form form-select">
-        <option value="">Select Companies</option>
-        @foreach($all_companies as $key => $comp)
-        <option value="{{$key}}">{{ $comp }}</option>
-        @endforeach
-    </select> -->
-
+    
+    @if(\Auth::user()->type == 'super admin')
+        <select name="company" id="company" class="form form-select" style="width:15% !important" onChange="loginWithCompany();">
+            <option value="">Select Companies</option>
+            @foreach($all_companies as $key => $comp)
+            <option value="{{$key}}">{{ $comp }}</option>
+            @endforeach
+        </select>
+    @elseif(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
+        @if($currentUserCompany != null)
+        <select name="company" id="company" class="form form-select" style="width:15% !important" onChange="loginWithCompany();">
+            <option value="">Select Companies</option>
+            @foreach($all_companies as $key => $comp)
+                @if($key == $currentUserCompany->id)
+                    <option value="{{$key}}"><a href="{{ url('logged_in_as_customer').'/'.$key }}">{{ $comp }}</a></option>
+                @endif
+                @foreach($com_permissions as $com_per)
+                    @if($com_per->permitted_company_id == $key)
+                    <option value="{{$key}}"><a href="{{ url('logged_in_as_customer').'/'.$key }}">{{ $comp }}</a></option>
+                    @endif
+                @endforeach
+            @endforeach
+        </select>
+        @endif
+    @endif
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 
@@ -71,7 +92,25 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
                 </form>
             </div>
         </li>
-
+        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+        <li class="nav-item dropdown no-arrow d-sm-none">
+            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-search fa-fw"></i>
+            </a>
+            <!-- Dropdown - Messages -->
+            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in d-none" aria-labelledby="searchDropdown">
+                <form class="form-inline mr-auto w-100 navbar-search">
+                    <div class="input-group">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </li>
         <!-- Nav Item - Alerts -->
         <li class="nav-item dropdown no-arrow mx-1">
             <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -139,5 +178,10 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
         //     $("#globalSearchForm").submit();
         // })
     })
+
+    function loginWithCompany(){
+        let value = $('#company').val();
+        window.location.href = "{{ url('logged_in_as_company')}}/"+value;
+    }
 </script>
 @endpush

@@ -424,6 +424,7 @@ $lang=Utility::getValByName('default_language');
                             @yield('breadcrumb')
                         </ul>
                     </div>
+                    @yield('action-btn')
                     @yield('content')
 
                 </div>
