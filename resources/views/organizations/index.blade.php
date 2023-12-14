@@ -63,6 +63,9 @@
     label {
         font-weight: normal !important;
     }
+    .form-control:focus{
+        border:1px solid gray !important;
+    }
 </style>
 
 
@@ -96,7 +99,7 @@
                     </div>
 
                     <div class="col-10 d-flex justify-content-end gap-2">
-                        <div class="input-group w-25">
+                        <div class="input-group w-25 rounded-1" style="border:1px solid rgb(102, 102, 102);">
                             <button class="btn btn-sm list-global-search-btn">
                                 <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
@@ -105,17 +108,18 @@
                             <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
 
-                        <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark"
-                            ><i class="ti ti-refresh"
+                        <button class="btn px-2 pb-2 pt-2 refresh-list bg-dark"
+                            style=" color:white;"><i class="ti ti-refresh"
                                 style="font-size: 18px"></i></button>
 
-                        <button class="btn filter-btn-show p-2 btn-dark" 
+                        <button class="btn filter-btn-show p-2" style="background-color: #b5282f; color:white;"
                             type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
 
                         @if(\Auth::user()->type=='super admin' || \Auth::user()->can('create organization'))
+                            <button data-url="{{ route('leads.create') }}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             <button data-url="{{ route('leads.create') }}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 <i class="ti ti-plus" style="font-size:18px"></i>
                             </button>
@@ -168,7 +172,7 @@
                                         value="<?= isset($_GET['state']) ? $_GET['state'] : '' ?>"
                                         style="width: 95%; border-color:#aaa">
                                 </div>
-                          
+
                                 <div class="col-md-4">                                              <label for="">County</label>
                                     <select name="country[]" id="choices-multiple333"  class="form form-control select2" multiple
                                         style="width: 95%;">
@@ -183,8 +187,8 @@
 
                             <div class="col-md-4 mt-2">
                                 <br>
-                                <input type="submit" class="btn form-btn btn-dark me-2"
-                                    >
+                                <input type="submit" class="btn form-btn me-2"
+                                    style="background-color: #b5282f; color:white;">
                                 <a href="/organization/" class="btn form-btn"
                                     style="background-color: #b5282f;color:white;">Reset</a>
                             </div>
@@ -252,11 +256,11 @@
 
                                             <li>
                                                 @if(\Auth::user()->type == 'super admin' ||\Auth::user()->can('delete organization'))
-                                                
+
                                                 <a href="{{ route('organization.delete', $org->id) }}" class="dropdown-item">
                                                     Delete this Organization
                                                 </a>
-                                                
+
                                                 @endif
                                             </li>
                                              @can('create task')
@@ -507,7 +511,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary new-organization-btn">Create</button>
+                    <button type="submit" class="btn btn-dark new-organization-btn">Create</button>
                 </div>
             </form>
         </div>
@@ -920,7 +924,7 @@ $('.filter-btn-show').click(function() {
 
 
 
-    //setting update description 
+    //setting update description
     //edit-btn-description
     //Org Discussion
     $(document).on("submit", "#create-discussion", function(e) {
@@ -1105,7 +1109,7 @@ $('.filter-btn-show').click(function() {
 
         var val = $(this).val();
         var userType = <?= json_encode($user_type) ?>;
-       
+
         if(userType[val] == 'company' || userType[val] == 'team'){
             $(".assigned_to_type").removeClass('d-none');
         }else{

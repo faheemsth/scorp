@@ -69,14 +69,23 @@
         width: 30px;
         height: 30px;
     }
+    .lead-topbar{
+        border-radius: 8px;
+background: #FFF !important;
+
+box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) !important;
+    }
+    form{
+        margin: 0px !important;
+    }
 </style>
 <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
-<div class="container-fluid px-1 mx-0">
+<div class="container-fluid ps-2 mx-0 pe-0">
     <div class="row">
         <div class="col-sm-12">
 
             {{-- topbar --}}
-            <div class="lead-topbar d-flex flex-wrape justify-content-between align-items-center p-2">
+            <div class="lead-topbar d-flex flex-wrape justify-content-between align-items-center py-1 px-2">
                 <div class="d-flex align-items-center">
                     <div class="lead-avator">
                         <img src="{{ asset('assets/images/placeholder-lead.png') }}" alt="" class="">
@@ -85,7 +94,7 @@
                     <div class="lead-basic-info">
                         <p class="pb-0 mb-0 fw-normal">{{ __('LEAD') }}</p>
                         <div class="d-flex align-items-baseline">
-                            <h4 class="">{{ $lead->name }}</h4>
+                            <h4 class="fw-bold">{{ $lead->name }}</h4>
                         </div>
                     </div>
 
@@ -95,21 +104,21 @@
                     @can('edit lead')
 
                     @if (!empty($deal))
-                    <a href="@can('View Deal') @if ($deal->is_active) {{ '/get-deal-detail?deal_id='.$deal->id }} @else # @endif @else # @endcan" data-size="lg" data-bs-toggle="tooltip" data-bs-title=" {{ __('Already Converted To Deal') }}" class="btn btn-sm text-white" style="background-color: #b5282f">
+                    <a href="@can('View Deal') @if ($deal->is_active) {{ '/get-deal-detail?deal_id='.$deal->id }} @else # @endif @else # @endcan" data-size="lg" data-bs-toggle="tooltip" data-bs-title=" {{ __('Already Converted To Deal') }}" class="btn  text-white" style="background-color: #313949">
                         <i class="ti ti-exchange"></i>
                     </a>
                     @else
-                    <a href="#" data-size="lg" data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] To Deal') }}" class="btn btn-sm btn-primary">
+                    <a href="#" data-size="lg" data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] To Deal') }}" class="btn  btn-primary">
                         <i class="ti ti-exchange"></i>
                     </a>
                     @endif
 
                     @endcan
 
-                    <a href="#" data-url="{{ URL::to('leads/' . $lead->id . '/labels') }}" data-ajax-popup="true" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Label') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
+                    <a href="#" data-url="{{ URL::to('leads/' . $lead->id . '/labels') }}" data-ajax-popup="true" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Label') }}" class="btn  text-white" style="background-color: #313949;">
                         <i class="ti ti-bookmark"></i>
                     </a>
-                    <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Edit') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
+                    <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Edit') }}" class="btn  text-white" style="background-color: #313949;">
                         <i class="ti ti-pencil"></i>
                     </a>
 
@@ -120,7 +129,7 @@
                     'id' => 'delete-form-' . $lead->id,
                     ]) !!}
 
-                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn btn-sm text-white bs-pass-para" style="background-color: #b5282f;">
+                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn  text-white bs-pass-para bg-dangers" >
                         <i class="ti ti-trash"></i>
                     </a>
 
@@ -133,25 +142,26 @@
 
 
             <div class="lead-info d-flex justify-content-between p-3 text-center">
-                <div class="">
+                {{-- <div class="">
                     <small>{{ __('Stage') }}</small>
                     <span class="font-weight-bolder">{{ $lead->stage->name }}</span>
+                </div> --}}
+                <div>
+                    <small>{{ __('Phone') }}</small>
+                    <span style="color: #313949;">{{ !empty($lead->phone) ? $lead->phone : '' }}</span>
                 </div>
                 <div class="">
                     <small>{{ __('Email') }}</small>
-                    <span>{{ !empty($lead->email) ? $lead->email : '' }}</span>
+                    <span style="color: #313949;">{{ !empty($lead->email) ? $lead->email : '' }}</span>
                 </div>
-                <div>
-                    <small>{{ __('Phone') }}</small>
-                    <span>{{ !empty($lead->phone) ? $lead->phone : '' }}</span>
-                </div>
-                <div>
+
+                {{-- <div>
                     <small> {{ __('Pipeline') }} </small>
                     <span>{{ $lead->pipeline->name }}</span>
-                </div>
+                </div> --}}
                 <div class="">
                     <small>{{ __('Created') }}</small>
-                    <span>{{ \Auth::user()->dateFormat($lead->created_at) }}</span>
+                    <span style="color: #313949;">{{ \Auth::user()->dateFormat($lead->created_at) }}</span>
                 </div>
             </div>
 
@@ -672,7 +682,7 @@
                                                                     <div class="d-flex justify-content-end">
                                                                         <div class="float-end">
                                                                             @can('create task')
-                                                                            <a data-size="lg" data-url="/organiation/1/task?type=lead&typeid={{ $lead->id }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Task') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
+                                                                            <a data-size="lg" data-url="/organiation/1/task?type=lead&typeid={{ $lead->id }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Task') }}" class="btn btn-sm text-white" style="background-color: #313949;">
                                                                                 <i class="ti ti-plus"></i>
                                                                             </a>
                                                                             @endcan
@@ -710,12 +720,12 @@
                                                                                 <td>
 
                                                                                     <div class="d-flex">
-                                                                                        <a data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update Task') }}" class="btn btn-sm text-white mx-2" style="background-color: #b5282f;">
+                                                                                        <a data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update Task') }}" class="btn btn-sm text-white mx-2" style="background-color: #313949;">
                                                                                             <i class="ti ti-pencil"></i>
                                                                                         </a>
 
 
-                                                                                        <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #b5282f;" onclick="deleteTask({{ $task->id }}, {{ $lead->id }}, 'lead');">
+                                                                                        <a href="javascript:void(0)" class="btn btn-sm text-white" style="background-color: #313949;" onclick="deleteTask({{ $task->id }}, {{ $lead->id }}, 'lead');">
                                                                                             <i class="ti ti-trash "></i>
                                                                                         </a>
                                                                                     </div>
@@ -759,7 +769,7 @@
                                                                 <div class="card-header px-0 pt-0" style="padding-bottom: 18px;">
                                                                     <div class="d-flex justify-content-end">
                                                                         <div class="float-end">
-                                                                            <a data-size="lg" data-url="{{ route('leads.discussions.create', $lead->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Message') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
+                                                                            <a data-size="lg" data-url="{{ route('leads.discussions.create', $lead->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Message') }}" class="btn btn-sm text-white" style="background-color: #313949;">
                                                                                 <i class="ti ti-plus"></i>
                                                                             </a>
                                                                         </div>
@@ -827,7 +837,7 @@
                                                                     <div class="d-flex justify-content-end">
                                                                         <div class="float-end">
                                                                             @can('create notes')
-                                                                            <a data-size="lg" data-url="{{ route('leads.notes.create', $lead->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Message') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
+                                                                            <a data-size="lg" data-url="{{ route('leads.notes.create', $lead->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Message') }}" class="btn btn-sm text-white" style="background-color: #313949;">
                                                                                 <i class="ti ti-plus"></i>
                                                                             </a>
                                                                             @endcan
@@ -870,12 +880,12 @@
                                                                                 </td>
                                                                                 <td style="text-align: -webkit-center;">
                                                                                     @can('edit notes')
-                                                                                    <a data-url="{{ route('leads.notes.edit', $note->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Drive Link') }}" class="btn btn-sm text-white mx-2" style="background-color: #b5282f;">
+                                                                                    <a data-url="{{ route('leads.notes.edit', $note->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Drive Link') }}" class="btn btn-sm text-white mx-2" style="background-color: #313949;">
                                                                                         <i class="ti ti-pencil "></i>
                                                                                     </a>
                                                                                     @endcan
                                                                                     @can('delete notes')
-                                                                                    <a href="javascript:void(0)" class="btn btn-sm text-white delete-notes" data-note-id="{{ $note->id }}" style="background-color: #b5282f;">
+                                                                                    <a href="javascript:void(0)" class="btn btn-sm text-white delete-notes" data-note-id="{{ $note->id }}" style="background-color: #313949;">
                                                                                         <i class="ti ti-trash "></i>
                                                                                     </a>
                                                                                     @endcan

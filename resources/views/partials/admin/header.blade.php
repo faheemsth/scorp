@@ -35,9 +35,9 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
     <!-- Topbar Search -->
     <form action="{{ route('global-search') }}" method="GET" id="globalSearchForm" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 d-none navbar-search me-0" style="margin:auto !important;">
         <div class="input-group">
-            <input type="text" name="search" class="form-control bg-light border border-dark" placeholder="Search for..." value="{{ isset($_GET['search']) ? $_GET['search'] : ''}}">
-            <div class="input-group-append">
-                <span class="input-group-text bg-light border-0" id="global-search-btn">
+            <input type="text" name="search" class="form-control bg-light" style="border-radius: 0px;" placeholder="Search for..." value="{{ isset($_GET['search']) ? $_GET['search'] : ''}}">
+            <div class="input-group-append " style="padding: 1px;">
+                <span class="input-group-text bg-light border-0" style="border-radius:0px; " id="global-search-btn">
                     <i class="fa fa-search"></i> <!-- Add your search icon here -->
                 </span>
             </div>
@@ -134,7 +134,7 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <!-- <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span> -->
-                <img class="img-profile " style="border-radius: 100%;" src="{{ asset('assets/cs-theme/assets/images/Mask group.png') }}">
+                <img class="img-profile rounded-circle" src="{{ asset('assets/images/user/default.jpg') }}">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

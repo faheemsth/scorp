@@ -74,16 +74,14 @@ $lang=Utility::getValByName('default_language');
 
     <link href="{{ asset('assets/cs-theme/css/sb-admin-2.min.css') }}" rel="stylesheet">
 
-    <link href="{{ asset('assets/cs-theme/css/custom.css') }}" rel="stylesheet">
+        {{-- outfit font  --}}
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
-
+<link href="{{ asset('assets/cs-theme/css/custom.css') }}" rel="stylesheet">
 
     <style>
-        body{
-            font-family: 'Outfit', sans-serif;
-        }
-
         .All-leads {
             border: 0px;
             background-color: transparent;
@@ -97,7 +95,10 @@ $lang=Utility::getValByName('default_language');
         }
 
         .input-group {
-            border: 1px solid rgb(102, 102, 102)
+            /* border: 1px solid rgb(102, 102, 102); */
+        }
+        .form-control:focus{
+            border-color:transparent !important;
         }
 
         input:focus {
@@ -213,7 +214,7 @@ $lang=Utility::getValByName('default_language');
 
         .lead-topbar {
             border-bottom: 1px solid rgb(230, 230, 230);
-            background-color: #e9ecef;
+            background-color: white;
         }
 
         .lead-avator img {
@@ -443,7 +444,7 @@ $lang=Utility::getValByName('default_language');
                       @yield('content')
                     </div>
                     <!-- Content Wrapper -->
-                    
+
 
                 </div>
             </div>

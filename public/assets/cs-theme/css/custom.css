@@ -40,3 +40,11 @@
 .nav-pills .nav-link.active{
     background: #313949 !important;
 }
+
+.breadcrumb-item a{
+    color: white !important;
+}
+
+.input-group{
+    border: 1px solid rgb(102, 102, 102) !important;
+}
