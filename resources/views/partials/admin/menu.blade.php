@@ -1495,7 +1495,7 @@
     @endif
 
     @if (\Auth::user()->type == 'client')
-        <ul class="navbar-nav  sidebar sidebar-dark accordion" id="accordionSidebar"
+        <ul
             style="background-color: #313949;">
             @if (Gate::check('manage client dashboard'))
                 <li class="nav-item  {{ Request::segment(1) == 'dashboard' ? ' active' : '' }}">
@@ -1594,65 +1594,65 @@
                             <div class="  collapse-inner rounded">
                                 <ul>
                     <li class="nav-item{{ Request::route()->getName() == 'deals.get.user.tasks' ? ' active' : '' }}">
-                        <a class="nav-link" href="{{ route('deals.get.user.tasks') }}">{{ __('Tasks') }}</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('deals.get.user.tasks') }}">{{ __('Tasks') }}</a>
                     </li>
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'university.list' || Request::route()->getName() == 'university.index' || Request::route()->getName() == 'university.show' ? ' active' : '' }}">
-                        <a class="nav-link" href="{{ route('university.index') }}">Toolkit</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('university.index') }}">Toolkit</a>
                     </li>
 
 
                     <li
                         class="nav-itemd-none {{ Request::route()->getName() == 'course.list' || Request::route()->getName() == 'course.index' || Request::route()->getName() == 'course.show' ? ' active' : '' }}">
-                        <a class="nav-link" href="{{ route('course.index') }}">{{ __('Courses') }}</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('course.index') }}">{{ __('Courses') }}</a>
                     </li>
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'leads.list' || Request::route()->getName() == 'leads.index' || Request::route()->getName() == 'leads.show' ? ' active' : '' }}">
-                        <a class="nav-link" href="{{ route('leads.list') }}">{{ __('Leads') }}</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('leads.list') }}">{{ __('Leads') }}</a>
                     </li>
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'clients.index' || Request::segment(1) == 'clients' || Request::route()->getName() == 'clients.edit' ? ' active' : '' }}">
-                        <a class="nav-link" href="{{ route('clients.index') }}">{{ __('Contacts') }}</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('clients.index') }}">{{ __('Contacts') }}</a>
                     </li>
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'deals.list' || Request::route()->getName() == 'deals.index' || Request::route()->getName() == 'deals.show' ? ' active' : '' }}">
-                        <a class="nav-link" href="{{ route('deals.list') }}">Admissions</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('deals.list') }}">Admissions</a>
                     </li>
 
                     <li class="nav-item{{ Request::route()->getName() == 'applications.index' ? ' active' : '' }}">
-                        <a class="nav-link" href="{{ route('applications.index') }}">Applications</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('applications.index') }}">Applications</a>
                     </li>
 
                     <li
                         class="nav-itemd-none {{ Request::route()->getName() == 'contract.index' || Request::route()->getName() == 'contract.show' ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('contract.index') }}">{{ __('Contract') }}</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('contract.index') }}">{{ __('Contract') }}</a>
                     </li>
 
                     <li style=""
                         class="nav-item {{ Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
-                        <a class="nav-link"
+                        <a class="collapse-item"   style="color:white; font-size: 13px;"
                             href="{{ route('pipelines.index') }}   ">{{ __('CRM System Setup') }}</a>
                     </li>
 
                     <li style=""
                         class="nav-item {{ Request::segment(1) == 'finance-dashboard' ? 'active dash-trigger' : '' }}">
-                        <a class="nav-link"
+                        <a class="collapse-item"   style="color:white; font-size: 13px;"
                             href="{{ route('company-permission') }}   ">{{ __('Company Permission') }}</a>
                     </li>
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'branch.index' || Request::route()->getName() == 'branch.edit' || Request::route()->getName() == 'branch.show' ? ' active' : '' }}">
-                        <a class="nav-link" href="{{ route('branch.index') }}">{{ __('Branches') }}</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('branch.index') }}">{{ __('Branches') }}</a>
                     </li>
 
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
-                        <a class="nav-link" href="{{ route('organization.index') }}">{{ __('Organizations') }}</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('organization.index') }}">{{ __('Organizations') }}</a>
                     </li>
                 </ul>
                             </div>
@@ -1673,14 +1673,14 @@
                         @can('manage user')
                             <li
                                 class="nav-item{{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
-                                <a class="nav-link" href="{{ route('users.index') }}">Brands</a>
+                                <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('users.index') }}">Brands</a>
                             </li>
                         @endcan
 
                         @can('manage user')
                             <li
                                 class="nav-item{{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
-                                <a class="nav-link" href="{{ route('user.employees') }}">Employees</a>
+                                <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('user.employees') }}">Employees</a>
                             </li>
                         @endcan
 
@@ -1688,7 +1688,7 @@
                         @can('manage role')
                             <li
                                 class="nav-item{{ Request::route()->getName() == 'roles.index' || Request::route()->getName() == 'roles.create' || Request::route()->getName() == 'roles.edit' ? ' active' : '' }} ">
-                                <a class="nav-link" href="{{ route('roles.index') }}">{{ __('Role') }}</a>
+                                <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('roles.index') }}">{{ __('Role') }}</a>
                             </li>
                         @endcan
                     </ul>
@@ -1716,33 +1716,33 @@
                         @if (Gate::check('manage system settings'))
                             <li class="nav-item {{ Request::segment(1) == 'settings' ? 'active' : '' }}">
                                 <a href="{{ route('systems.index') }}"
-                                    class="nav-link">{{ __('General Settings') }}</a>
+                                    class="collapse-item"   style="color:white; font-size: 13px;">{{ __('General Settings') }}</a>
                             </li>
                         @endif
                         @if (Gate::check('manage plan'))
                             <li class="nav-item {{ Request::segment(1) == 'plans' ? 'active' : '' }}">
-                                <a href="{{ route('plans.index') }}" class="nav-link">{{ __('Plan') }}</a>
+                                <a href="{{ route('plans.index') }}" class="collapse-item"   style="color:white; font-size: 13px;">{{ __('Plan') }}</a>
                             </li>
                         @endif
                         @if (\Auth::user()->type == 'super admin')
                             <li class="nav-item {{ request()->is('plan_request*') ? 'active' : '' }}">
                                 <a href="{{ route('plan_request.index') }}"
-                                    class="nav-link">{{ __('Plan Request') }}</a>
+                                    class="collapse-item"   style="color:white; font-size: 13px;">{{ __('Plan Request') }}</a>
                             </li>
                         @endif
                         @if (Gate::check('manage coupon'))
                             <li class="nav-item {{ Request::segment(1) == 'coupons' ? 'active' : '' }}">
-                                <a href="{{ route('coupons.index') }}" class="nav-link">{{ __('Coupon') }}</a>
+                                <a href="{{ route('coupons.index') }}" class="collapse-item"   style="color:white; font-size: 13px;">{{ __('Coupon') }}</a>
                             </li>
                         @endif
                         @if (Gate::check('manage order'))
                             <li class="nav-item {{ Request::segment(1) == 'orders' ? 'active' : '' }}">
-                                <a href="{{ route('order.index') }}" class="nav-link">{{ __('Order') }}</a>
+                                <a href="{{ route('order.index') }}" class="collapse-item"   style="color:white; font-size: 13px;">{{ __('Order') }}</a>
                             </li>
                         @endif
                         <li class="nav-item {{ Request::segment(1) == 'email_template' ? 'active' : '' }}">
                             <a href="{{ route('manage.email.language', [$emailTemplate->id, \Auth::user()->lang]) }}"
-                                class="nav-link">{{ __('Email Template') }}</a>
+                                class="collapse-item"   style="color:white; font-size: 13px;">{{ __('Email Template') }}</a>
                         </li>
                 </ul>
                     </div>
