@@ -27,7 +27,7 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
         <i class="fa fa-bars"></i>
     </button>
     <div class="logo ms-md-2">
-        <a href="#"><img src="{{ asset('cs-theme/assets/images/scorp-logo.png') }}" alt=""></a>
+        <a href="#"><img src="{{ asset('assets/cs-theme/assets/images/scorp-logo.png') }}" alt=""></a>
     </div>
     <!-- Sidebar Toggle (Topbar) -->
 
@@ -45,7 +45,7 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
 
         <input type="hidden" class="" name="global_search" value="all">
     </form>
-    
+
     @if(\Auth::user()->type == 'super admin')
         <select name="company" id="company" class="form form-select" style="width:15% !important" onChange="loginWithCompany();">
             <option value="">Select Companies</option>
@@ -134,7 +134,7 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <!-- <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span> -->
-                <img class="img-profile rounded-circle" src="{{ asset('assets/images/user/1000_F_410437733_hdq4Q3QOH9uwh0mcqAhRFzOKfrCR24Ta.jpg') }}">
+                <img class="img-profile rounded-circle" src="{{ asset('assets/assets/images/user/1000_F_410437733_hdq4Q3QOH9uwh0mcqAhRFzOKfrCR24Ta.jpg') }}">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

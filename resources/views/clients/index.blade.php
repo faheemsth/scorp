@@ -41,7 +41,7 @@
                         <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                     </div>
     
-                    <button data-url="{{ route('clients.create') }}" data-ajax-popup="true"  data-bs-toggle="tooltip" title="{{__('Create')}}" class="btn btn-sm p-2 btn-primary" data-bs-toggle="modal">
+                    <button data-url="{{ route('clients.create') }}" data-ajax-popup="true"  data-bs-toggle="tooltip" title="{{__('Create')}}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal">
                         <i class="ti ti-plus" style="font-size:18px"></i>
                     </button>
                   

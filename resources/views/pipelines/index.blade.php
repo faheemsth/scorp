@@ -8,23 +8,18 @@
     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item">{{__('Pipelines')}}</li>
 @endsection
-@section('action-btn')
-    <div class="float-end">
-        <a href="#" data-size="md" data-url="{{ route('pipelines.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Pipeline')}}" class="btn btn-sm btn-primary">
-            <i class="ti ti-plus"></i>
-        </a>
-    </div>
-@endsection
 
 @section('content')
     <div class="row">
-        <div class="col-3">
+        <div class="col-3 p-0">
             @include('layouts.crm_setup')
         </div>
         <div class="col-9">
             <div class="card">
                 <div class="card-body table-border-style">
                     <div class="table-responsive">
+                        
+                        
                         <table class="table datatable">
                             <thead>
                             <tr>

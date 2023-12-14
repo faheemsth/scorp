@@ -1,5 +1,5 @@
 {{ Form::open(['route' => ['projects.tasks.create',$project_id,$stage_id],'id' => 'create_task']) }}
-<div class="row">
+<div class="row ">
     <div class="col-8">
         <div class="form-group">
             {{ Form::label('name', __('Task name'),['class' => 'form-label']) }}

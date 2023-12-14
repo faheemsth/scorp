@@ -253,7 +253,7 @@
                         <h3 class="m-0">{{ 0 }}</h3>
                     </div>
                     <div class="col-auto">
-                        <div class="theme-avtar bg-primary">
+                        <div class="theme-avtar bg-dark">
                             <i class="ti ti-layers-difference"></i>
                         </div>
                     </div>
@@ -270,7 +270,7 @@
                         <h3 class="m-0">{{ 0 }}</h3>
                     </div>
                     <div class="col-auto">
-                        <div class="theme-avtar bg-warning">
+                        <div class="theme-avtar bg-dark">
                             <i class="ti ti-layers-difference"></i>
                         </div>
                     </div>
@@ -287,7 +287,7 @@
                         <h3 class="m-0">{{ 0 }}</h3>
                     </div>
                     <div class="col-auto">
-                        <div class="theme-avtar bg-danger">
+                        <div class="theme-avtar bg-dark">
                             <i class="ti ti-layers-difference"></i>
                         </div>
                     </div>
@@ -317,7 +317,7 @@
 
 <div class="row">
     <div class="col-xl-12">
-        <div class="card">
+        <div class="card my-card">
             <div class="card-body table-border-style">
 
                 {{-- topbar --}}
@@ -351,15 +351,15 @@
 
 
                         <div>
-                            <button class="btn px-2 pb-2 pt-2 refresh-list" style="background-color: #b5282f; color:white;"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                            <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
                         </div>
 
 
-                        <button class="btn filter-btn-show p-2" style="background-color: #b5282f; color:white;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
-                        <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}" class="btn p-2" style="background-color: #b5282f; color:white;">
+                        <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}" class="btn p-2 btn-dark">
                             <i class="ti ti-plus"></i>
                         </a>
 
