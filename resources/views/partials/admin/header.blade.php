@@ -13,7 +13,7 @@ $mode_setting = \App\Models\Utility::mode_layout();
 $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
 $com_permissions = array();
 if($currentUserCompany != null){
-    $com_permissions = \App\Models\CompanyPermission::where('company_id',$currentUserCompany->id)->get();
+$com_permissions = \App\Models\CompanyPermission::where('company_id',$currentUserCompany->id)->get();
 }
 
 $all_companies = companies();
@@ -47,28 +47,28 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
     </form>
 
     @if(\Auth::user()->type == 'super admin')
-        <select name="company" id="company" class="form form-select" style="width:15% !important" onChange="loginWithCompany();">
-            <option value="">Select Companies</option>
-            @foreach($all_companies as $key => $comp)
-            <option value="{{$key}}">{{ $comp }}</option>
-            @endforeach
-        </select>
+    <select name="company" id="company" class="form form-select" style="width:15% !important" onChange="loginWithCompany();">
+        <option value="">Select Companies</option>
+        @foreach($all_companies as $key => $comp)
+        <option value="{{$key}}">{{ $comp }}</option>
+        @endforeach
+    </select>
     @elseif(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
-        @if($currentUserCompany != null)
-        <select name="company" id="company" class="form form-select" style="width:15% !important" onChange="loginWithCompany();">
-            <option value="">Select Companies</option>
-            @foreach($all_companies as $key => $comp)
-                @if($key == $currentUserCompany->id)
-                    <option value="{{$key}}"><a href="{{ url('logged_in_as_customer').'/'.$key }}">{{ $comp }}</a></option>
-                @endif
-                @foreach($com_permissions as $com_per)
-                    @if($com_per->permitted_company_id == $key)
-                    <option value="{{$key}}"><a href="{{ url('logged_in_as_customer').'/'.$key }}">{{ $comp }}</a></option>
-                    @endif
-                @endforeach
-            @endforeach
-        </select>
+    @if($currentUserCompany != null)
+    <select name="company" id="company" class="form form-select" style="width:15% !important" onChange="loginWithCompany();">
+        <option value="">Select Companies</option>
+        @foreach($all_companies as $key => $comp)
+        @if($key == $currentUserCompany->id)
+        <option value="{{$key}}"><a href="{{ url('logged_in_as_customer').'/'.$key }}">{{ $comp }}</a></option>
         @endif
+        @foreach($com_permissions as $com_per)
+        @if($com_per->permitted_company_id == $key)
+        <option value="{{$key}}"><a href="{{ url('logged_in_as_customer').'/'.$key }}">{{ $comp }}</a></option>
+        @endif
+        @endforeach
+        @endforeach
+    </select>
+    @endif
     @endif
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
@@ -134,7 +134,11 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <!-- <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span> -->
+<<<<<<< HEAD
                 <img class="img-profile rounded-circle" src="{{ asset('assets/assets/images/user/1000_F_410437733_hdq4Q3QOH9uwh0mcqAhRFzOKfrCR24Ta.jpg') }}">
+=======
+                <img class="img-profile " style="border-radius: 100%;" src="{{ asset('assets/cs-theme/assets/images/Mask group.png') }}">
+>>>>>>> de8c417f21a9c30132226145c8240b7383c083fb
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -179,9 +183,9 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
         // })
     })
 
-    function loginWithCompany(){
+    function loginWithCompany() {
         let value = $('#company').val();
-        window.location.href = "{{ url('logged_in_as_company')}}/"+value;
+        window.location.href = "{{ url('logged_in_as_company')}}/" + value;
     }
 </script>
 @endpush

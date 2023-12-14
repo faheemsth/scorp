@@ -10,16 +10,6 @@
 
 
 
-@section('action-btn')
-@can('create course duration')
-<div class="float-end">
-    <a href="#" data-size="md" data-url="{{ route('courseduration.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create Course Level')}}" class="btn btn-sm btn-primary">
-        <i class="ti ti-plus"></i>
-    </a>
-</div>
-@endcan
-@endsection
-
 @section('content')
 <div class="row">
     <div class="col-3">
@@ -27,15 +17,32 @@
     </div>
     <div class="col-9">
         <div class="card">
+
+            <div class="card-header" style="display: flex; justify-content: space-between;">
+                <h3>Course Duration</h3>
+
+                @can('create course duration')
+                <div class="float-end">
+                    <a href="#" data-size="md" data-url="{{ route('courseduration.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create Course Level')}}" class="btn btn-sm btn-dark">
+                        <i class="ti ti-plus"></i>
+                    </a>
+                </div>
+                @endcan
+            </div>
+
             <div class="card-body table-border-style">
                 <div class="table-responsive">
                     <table class="table datatable">
                         <thead>
                             <tr>
                                 <th>{{__('Name')}}</th>
-                                @if(\Auth::user()->type=='company')
-                                <th class="text-end ">{{__('Action')}}</th>
+                                @php
+                                    $canEdit = auth()->user()->can('edit course duration');
+                                    $canDelete = auth()->user()->can('delete course duration');
+                                @endphp
 
+                                @if($canEdit || $canDelete)
+                                    <th class="text-center">{{ __('Action') }}</th>
                                 @endif
                             </tr>
                         </thead>
@@ -46,17 +53,23 @@
                                 <td>{{ $c_duration->duration }}</td>
 
 
-                                <td class="action text-end">
-                                    <div class="action-btn bg-info ms-2">
-                                        <a href="#" class="mx-3 btn btn-sm d-inline-flex align-items-center" data-url="{{ route('courseduration.edit',$c_duration->id) }}" data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-title="{{__('Edit Course Level')}}">
+                                <td class="action">
+                                    
+                                    <span class="d-flex justify-content-center">
+                                        
+                                        @can('edit course duration')
+                                        <a href="#" class="btn btn-sm btn-dark d-inline-flex align-items-center" data-url="{{ route('courseduration.edit',$c_duration->id) }}" data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-title="{{__('Edit Course Level')}}">
                                             <i class="ti ti-pencil text-white"></i>
                                         </a>
-                                    </div>
-                                    <div class="action-btn bg-danger ms-2">
+                                        @endcan
+
+                                        @can('delete course duration')
                                         {!! Form::open(['method' => 'DELETE', 'route' => ['courseduration.destroy', $c_duration->id]]) !!}
-                                        <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}"><i class="ti ti-trash text-white"></i></a>
+                                        <a href="#" class="mx-1 btn btn-sm btn-danger align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}"><i class="ti ti-trash text-white"></i></a>
                                         {!! Form::close() !!}
-                                    </div>
+                                        @endcan
+
+                                    </span>
                                 </td>
 
                             </tr>

@@ -7,7 +7,7 @@
 .modal-content {
     width: 100%;
     background: #EFF3F7;
-    border-radius: 38px
+    border-radius: 20px
 }
 
 .modal-row {
@@ -35,5 +35,8 @@
 }
 
 .list-group-item.active{
+    background: #313949 !important;
+}
+.nav-pills .nav-link.active{
     background: #313949 !important;
 }

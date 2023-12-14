@@ -264,7 +264,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Record ID') }}
                                                                 </td>
                                                                 <td class=""
@@ -275,7 +275,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Name') }}
                                                                 </td>
                                                                 <td class=""
@@ -286,7 +286,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Lead Stage') }}
                                                                 </td>
                                                                 <td style="padding-left: 10px; font-size: 14px;">
@@ -301,7 +301,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Pipeline') }}
                                                                 </td>
                                                                 <td class=""
@@ -311,7 +311,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Location') }}
                                                                 </td>
                                                                 <td class=""
@@ -322,7 +322,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('User Responsible') }}
                                                                 </td>
                                                                 <td class=""
@@ -344,7 +344,7 @@
                                                             @endphp
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Agency') }}
                                                                 </td>
                                                                 <td class="organization_id-td"
@@ -368,7 +368,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Lead Source') }}
                                                                 </td>
                                                                 <td class="sources-td"
@@ -419,7 +419,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Lead Owner') }}
                                                                 </td>
                                                                 <td class=""
@@ -432,7 +432,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Drive Link') }}
                                                                 </td>
                                                                 <td class="drive_link-td"
@@ -467,7 +467,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Lead Created') }}
                                                                 </td>
                                                                 <td class=""
@@ -477,7 +477,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Date of Last Activity') }}
                                                                 </td>
                                                                 <td class=""
@@ -487,7 +487,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Date of Next Activity') }}
                                                                 </td>
                                                                 <td class=""
@@ -520,7 +520,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Email Address') }}
                                                                 </td>
                                                                 <td class="email-td"
@@ -567,7 +567,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Mobile Phone') }}
                                                                 </td>
                                                                 <td class="mobile_phone-td"
@@ -590,7 +590,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
+                                                                    style="width: 50px; font-size: 14px;">
                                                                     {{ __('Phone') }}
                                                                 </td>
                                                                 <td class="phone-td"

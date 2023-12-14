@@ -4,27 +4,26 @@
 @endsection
 @push('script-page')
 @endpush
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
-    <li class="breadcrumb-item">{{__('Sources')}}</li>
-@endsection
-@section('action-btn')
-    <div class="float-end">
-
-        <a href="#" data-size="md" data-url="{{ route('sources.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn btn-sm btn-primary">
-            <i class="ti ti-plus"></i>
-        </a>
-    </div>
-@endsection
-
 @section('content')
     <div class="row">
-        <div class="col-3">
+        <div class="col-3 p-0">
             @include('layouts.crm_setup')
         </div>
         <div class="col-9">
             <div class="card">
-                <div class="card-body table-border-style">
+            <div class="card-header" style="display: flex; justify-content: space-between;">
+                        <h3>Sources</h3>
+
+                        @can('create source')
+                        <div class="float-end">
+                            <a href="#" data-size="md" data-url="{{ route('sources.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn btn-sm btn-dark">
+                                <i class="ti ti-plus"></i>
+                            </a>
+                        </div>
+                        @endcan
+                    </div>
+                    
+                <div class="card-body">
                     <div class="table-responsive">
                         <table class="table datatable">
                             <thead>

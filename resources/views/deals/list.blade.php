@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('page-title')
-{{ __('Manage Deals') }}
+{{ __('Manage Admissions') }}
 @endsection
 
 @push('css-page')
@@ -219,13 +219,13 @@
 </style>
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
-<li class="breadcrumb-item">{{ __('Lead') }}</li>
+<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('CRM Dashboard') }}</a></li>
+<li class="breadcrumb-item">{{ __('Admissions') }}</li>
 @endsection
 
 @section('content')
 {{-- @if ($pipeline) --}}
-@if (\Auth::user()->type != 'super admin')
+@if (\Auth::user()->type == 'super admin')
 <div class="row d-none">
     <div class="col-sm-3">
         <div class="card">
@@ -329,12 +329,8 @@
                                 ALL ADMISSIONS
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
                                 <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
-
-                            </ul>
+                          </ul>
                         </div>
                     </div>
 
@@ -350,10 +346,10 @@
                         </div>
 
 
-                        <div>
-                            <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
-                        </div>
-
+                       
+                            
+                       
+                            <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
                         <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="ti ti-filter" style="font-size:18px"></i>
@@ -370,7 +366,7 @@
 
 
 
-                <div class="table-responsive card mt-2">
+                <div class="table-responsive mt-2">
 
                     {{-- Filters --}}
                     <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
@@ -444,7 +440,7 @@
                         </form>
                     </div>
 
-                    <div class="mx-4 card-body table-responsive leads-list-div">
+                    <div class="card-body table-responsive leads-list-div">
                         <table class="table" data-resizable-columns-id="lead-table">
                             <thead>
                                 <tr>
