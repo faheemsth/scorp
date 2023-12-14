@@ -110,7 +110,7 @@
             .btn-check:checked + .btn-outline-primary, .btn-check:active + .btn-outline-primary,
             .btn-outline-primary:active, .btn-outline-primary.active, .btn-outline-primary.dropdown-toggle.show {
                 color: #ffffff;
-                background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, rgba(255, 58, 110, 0.6) 99.86%), #51459d !important;
+                background: #313949;
                 border-color: #51459d !important;
             }
 
@@ -118,7 +118,7 @@
             body.theme-1 .btn-outline-primary:hover
             {
                 color: #ffffff;
-                background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, rgba(255, 58, 110, 0.6) 99.86%), #51459d !important;
+                background: #313949;
                 border-color: #51459d !important;
             }
         </style>
@@ -531,7 +531,7 @@
                                 </div>
                                 <div class="card-footer text-end">
                                     <div class="form-group">
-                                        <input class="btn btn-print-invoice btn-primary m-r-10" type="submit" value="{{__('Save Changes')}}">
+                                        <input class="btn btn-print-invoice btn-dark m-r-10" type="submit" value="{{__('Save Changes')}}">
                                     </div>
                                 </div>
                                 {{ Form::close() }}
@@ -648,14 +648,14 @@
                                 <div class="card-footer d-flex justify-content-end">
                                     <div class="form-group me-2">
                                         <a href="#" data-url="{{ route('test.mail') }}"
-                                           data-title="{{ __('Send Test Mail') }}" class="btn btn-primary send_email ">
+                                           data-title="{{ __('Send Test Mail') }}" class="btn btn-dark send_email ">
                                             {{ __('Send Test Mail') }}
                                         </a>
                                     </div>
 
 
                                     <div class="form-group">
-                                        <input class="btn btn-primary" type="submit" value="{{__('Save Changes')}}">
+                                        <input class="btn btn-dark" type="submit" value="{{__('Save Changes')}}">
                                     </div>
                                 </div>
                             </div>
@@ -1269,7 +1269,7 @@
                             </div>
                             <div class="card-footer text-end">
                                 <div class="form-group">
-                                    <input class="btn btn-print-invoice  btn-primary m-r-10" type="submit" value="{{__('Save Changes')}}">
+                                    <input class="btn btn-print-invoice  btn-dark m-r-10" type="submit" value="{{__('Save Changes')}}">
                                 </div>
                             </div>
                             </form>
@@ -1335,7 +1335,7 @@
                             </div>
                             <div class="card-footer text-end">
                                 <div class="form-group">
-                                    <input class="btn btn-print-invoice  btn-primary m-r-10" type="submit" value="{{__('Save Changes')}}">
+                                    <input class="btn btn-print-invoice  btn-dark m-r-10" type="submit" value="{{__('Save Changes')}}">
                                 </div>
                             </div>
 
@@ -1384,7 +1384,7 @@
                                 </div>
                                 <div class="card-footer text-end">
                                     <div class="form-group">
-                                        <input class="btn btn-print-invoice  btn-primary m-r-10" type="submit" value="{{__('Save Changes')}}">
+                                        <input class="btn btn-print-invoice  btn-dark m-r-10" type="submit" value="{{__('Save Changes')}}">
                                     </div>
                                 </div>
                             </div>
@@ -1547,7 +1547,7 @@
                                 </div>
                             </div>
                             <div class="card-footer text-end">
-                                <input class="btn btn-print-invoice  btn-primary m-r-10" type="submit" value="{{ __('Save Changes') }}">
+                                <input class="btn btn-print-invoice  btn-dark m-r-10" type="submit" value="{{ __('Save Changes') }}">
                             </div>
                             {{Form::close()}}
                         </div>
@@ -1574,9 +1574,9 @@
                                             @endforeach
                                         </select>
                                     </div>
-                               
+
                                 <div class="card-footer text-end">
-                                    <input class="btn btn-print-invoice  btn-primary m-r-10" type="submit" value="{{ __('Save Changes') }}">
+                                    <input class="btn btn-print-invoice  btn-dark m-r-10" type="submit" value="{{ __('Save Changes') }}">
                                 </div>
                             </div>
                             {{Form::close()}}

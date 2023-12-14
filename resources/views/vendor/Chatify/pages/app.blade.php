@@ -167,17 +167,17 @@
 @if($color == "theme-1")
     <style type="text/css">
         .m-list-active, .m-list-active:hover, .m-list-active:focus {
-            background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, rgba(255, 58, 110, 0.6) 99.86%), #51459d !important;
+            background: #313949;
         }
         .mc-sender p {
-            background: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, rgba(255, 58, 110, 0.6) 99.86%), #51459d !important;
+            background: #313949;
         }
 
         .messenger-favorites div.avatar {
             box-shadow: 0px 0px 0px 2px #51459d !important;
         }
         .messenger-listView-tabs a, .messenger-listView-tabs a:hover, .messenger-listView-tabs a:focus {
-            color: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, rgba(255, 58, 110, 0.6) 99.86%), #51459d !important;
+            color: #313949;
         }
         .m-header svg {
             color: #51459d !important;
@@ -187,7 +187,7 @@
         }
         .messenger-infoView nav a {
 
-            color: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, rgba(255, 58, 110, 0.6) 99.86%), #51459d !important;
+            color: #313949;
         }
         .lastMessageIndicator {
             color: #51459d !important;
@@ -195,7 +195,7 @@
 
         .messenger-list-item td span .lastMessageIndicator {
 
-            color: linear-gradient(141.55deg, rgba(81, 69, 157, 0) 3.46%, rgba(255, 58, 110, 0.6) 99.86%), #51459d !important;
+            color: #313949;
             font-weight: bold;
         }
         .messenger-sendCard button svg {
