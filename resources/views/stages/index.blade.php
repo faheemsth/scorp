@@ -35,13 +35,6 @@
     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item">{{__('Deal Stage')}}</li>
 @endsection
-@section('action-btn')
-    <div class="float-end">
-        <a href="#" data-size="md" data-url="{{ route('stages.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create Deal Stage')}}" class="btn btn-sm btn-primary">
-            <i class="ti ti-plus"></i>
-        </a>
-    </div>
-@endsection
 @section('content')
 
     <div class="row">
@@ -64,6 +57,19 @@
                     </ul>
                 </div>
                 <div class="card">
+                    <div class="card-header" style="display: flex; justify-content: space-between;">
+                        <h3>Admission Stages</h3>
+
+                        @can('create deal stage')
+                        <div class="float-end">
+
+                                <a href="#" data-size="md" data-url="{{ route('stages.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create Deal Stage')}}" class="btn btn-sm btn-dark">
+                                    <i class="ti ti-plus"></i>
+                                </a>
+                        </div>
+                        @endcan
+                    </div>
+
                     <div class="card-body">
                         <div class="tab-content" id="pills-tabContent">
                             @php($i=0)
@@ -73,22 +79,18 @@
                                         @foreach ($pipeline['stages'] as $stage)
                                             <li class="list-group-item" data-id="{{$stage->id}}">
                                                 <span class="text-xs text-dark">{{$stage->name}}</span>
-                                                <span class="float-end">
+                                                <span class="float-end d-flex justify-content-center">
 
                                                 @can('edit lead stage')
-                                                        <div class="action-btn bg-info ms-2">
-                                                        <a href="#" class="mx-3 btn btn-sm d-inline-flex align-items-center" data-url="{{ URL::to('stages/'.$stage->id.'/edit') }}" data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-title="{{__('Edit Lead Stages')}}">
+                                                        <a href="#" class="mx-1 btn btn-sm btn-dark d-inline-flex align-items-center" data-url="{{ URL::to('stages/'.$stage->id.'/edit') }}" data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-title="{{__('Edit Lead Stages')}}">
                                                             <i class="ti ti-pencil text-white"></i>
                                                         </a>
-                                                    </div>
                                                     @endcan
                                                     @if(count($pipeline['stages']))
                                                         @can('delete lead stage')
-                                                            <div class="action-btn bg-danger ms-2">
-                                                                {!! Form::open(['method' => 'DELETE', 'route' => ['stages.destroy', $stage->id]]) !!}
-                                                                <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}"><i class="ti ti-trash text-white"></i></a>
+                                                        {!! Form::open(['method' => 'DELETE', 'route' => ['stages.destroy', $stage->id]]) !!}
+                                                                <a href="#" class="btn btn-sm btn-danger align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}"><i class="ti ti-trash text-white"></i></a>
                                                                 {!! Form::close() !!}
-                                                            </div>
                                                         @endcan
                                                     @endif
                                             </span>
