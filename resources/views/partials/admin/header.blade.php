@@ -135,10 +135,14 @@ $unseenCounter=App\Models\ChMessage::where('to_id', Auth::user()->id)->where('se
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <!-- <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span> -->
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <img class="img-profile rounded-circle" src="{{ asset('assets/assets/images/user/1000_F_410437733_hdq4Q3QOH9uwh0mcqAhRFzOKfrCR24Ta.jpg') }}">
 =======
                 <img class="img-profile " style="border-radius: 100%;" src="{{ asset('assets/cs-theme/assets/images/Mask group.png') }}">
 >>>>>>> de8c417f21a9c30132226145c8240b7383c083fb
+=======
+                <img class="img-profile rounded-circle" src="{{ asset('assets/images/user/default.jpg') }}">
+>>>>>>> 1975da3fc4ae5dcb38d773a6aad42321ca02e12f
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
