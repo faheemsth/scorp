@@ -132,8 +132,8 @@ if (isset($lead->is_active) && $lead->is_active) {
             <div class="col-xl-12">
                 <div class="card my-card" style="max-width: 98%;border-radius:0px; min-height: 250px !important;">
                     <div class="card-body table-border-style" style="padding: 25px 3px;">
-                                            
-                        
+
+
                         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                             <div class="col-2">
                                 <p class="mb-0 pb-0">LEADS</p>
@@ -143,14 +143,15 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         ALL LEAD
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item" href="#">Action</a></li>
-                                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
                                         <li><a class="dropdown-item delete-bulk-leads" href="javascript:void(0)">Delete</a></li>
 
                                     </ul>
                                 </div>
                             </div>
+                            {{-- /// --}}
+
+                            {{-- /// --}}
+
                             <div class="col-10 d-flex justify-content-end gap-2">
                                 <div class="input-group w-25">
                                     <button class="btn btn-sm list-global-search-btn">
@@ -163,38 +164,20 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         placeholder="Search this list..." aria-label="Username"
                                         aria-describedby="basic-addon1">
                                 </div>
-                                <div>
-                                    <button class="btn px-2 pb-2 pt-2 refresh-lead-list btn-dark"><i class="ti ti-refresh"
-                                            style="font-size: 18px"></i></button>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle px-2 pb-1 pt-2 btn-dark" type="button"
-                                        id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="ti ti-settings" style="font-size:18px"></i>
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item" href="#">Action</a></li>
-                                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                    </ul>
-                                </div>
 
+                                <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
-                                <button class="btn filter-btn-show p-2 btn-dark"
-                                    type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn filter-btn-show p-2 btn-dark"  type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                 </button>
 
                                 @can('create lead')
-                                    <a href="#" data-size="lg" data-url="{{ route('leads.create') }}"
-                                        data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}"
-                                        class="btn p-2 btn-dark">
-                                        <i class="ti ti-plus"></i>
-                                    </a>
+                                <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn btn-sm p-2 btn-dark">
+                                    <i class="ti ti-plus" style="font-size:18px"></i>
+                                </button>
                                 @endcan
-
                                 <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}"
-                                    class="btn btn-sm btn-dark" id="import_csv_modal_btn" data-bs-toggle="modal"
+                                    class="btn px-2 btn-dark" id="import_csv_modal_btn" data-bs-toggle="modal"
                                     data-bs-target="#import_csv">
                                     <i class="fa fa-file-csv"></i>
                                 </button>
@@ -294,7 +277,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         </select>
                                     </div>
 
-                                    <div class="col-md-4"> <label for="">Created By</label>
+                                    <div class="col-md-4 mt-1"> <label for="">Created By</label>
                                         <select class="form form-control select2" id="choices-multiple555"
                                             name="created_by[]" multiple style="width: 95%;">
                                             <option value="">Select Brand</option>
@@ -315,12 +298,12 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             style="width: 95%; border-color:#aaa">
                                     </div>
 
-                                    <div class="col-md-4 mt-2">
+                                    <div class="col-md-4 mt-3">
                                         <br>
-                                        <input type="submit" class="btn form-btn me-2"
-                                            style="background-color: #b5282f; color:white;">
-                                        <a href="/leads/list" class="btn form-btn"
-                                            style="background-color: #b5282f;color:white;">Reset</a>
+                                        <input type="submit" class="btn form-btn me-2 bg-dark"
+                                            style=" color:white;">
+                                        <a href="/leads/list" class="btn form-btn bg-dark"
+                                            style="color:white;">Reset</a>
                                     </div>
                                 </div>
                                 <div class="row my-4">
@@ -544,7 +527,7 @@ if (isset($lead->is_active) && $lead->is_active) {
             var selectedIds = $('.sub-check:checked').map(function() {
                 return this.value;
             }).get();
-            
+
             Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",

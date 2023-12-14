@@ -214,7 +214,7 @@ $lang=Utility::getValByName('default_language');
 
         .lead-topbar {
             border-bottom: 1px solid rgb(230, 230, 230);
-            background-color: #e9ecef;
+            background-color: white;
         }
 
         .lead-avator img {

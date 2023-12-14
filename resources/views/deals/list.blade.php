@@ -112,7 +112,7 @@
 
     .lead-topbar {
         border-bottom: 1px solid rgb(230, 230, 230);
-        background-color: #e9ecef;
+        background-color: white !important;
     }
 
     .lead-avator img {
@@ -577,7 +577,7 @@
                 </div>
                 <div class="modal-body">
                     <select class="form form-control" id="admission-application" >
-                        
+
                     </select>
 
                     <input type="hidden" id="stage_id" value="">
@@ -592,7 +592,7 @@
     </div>
 
 
-    <div id="mySidenav" style="z-index: 1065; padding-left:5px; box-shadow: -5px 0px 30px 0px #aaa;" class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>" style="padding-left: 5px">
+    <div id="mySidenav" style="z-index: 1065; padding-left:5px; box-shadow:0px 4px 4px 0px rgba(0, 0, 0, 0.25);background-color: #EFF3F7;" class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>">
 
 
     </div>
@@ -685,7 +685,7 @@
             var deal_id = $('.deal-id').val();
             var stage_id = $(this).attr('data-stage-id');
             var currentBtn = $(this);
-            
+
 
             if(stage_id == 6){
                 $.ajax({
@@ -703,7 +703,7 @@
                             $("#admission-application").html(data.html);
                             $("#deal_applications").modal('show');
 
-                            
+
                         }
                     }
                 });
@@ -735,7 +735,7 @@
             var deal_id = $('#deal_id').val();
             var stage_id = $('#stage_id').val();
             var application_id = $("#admission-application").val();
-          
+
 
             $.ajax({
                 type: 'GET',
