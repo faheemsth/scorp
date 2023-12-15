@@ -27,7 +27,7 @@
                 <a data-size="lg"
                     title="{{ __('Edit Application') }}"
                     href="#"
-                    class="btn btn-sm btn-primary mx-1"
+                    class="btn px-2 btn-dark text-white mx-1"
                     data-url="{{ route('deals.application.edit', $app->id) }}"
                     data-ajax-popup="true"
                     data-title="{{ __('Edit Application') }}"

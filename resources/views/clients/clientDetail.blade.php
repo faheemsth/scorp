@@ -68,9 +68,9 @@
                         <p class="pb-0 mb-0 fw-normal">{{ __('Contact') }}</p>
                         <div class="d-flex align-items-baseline ">
                             @if (strlen($client->name) > 40)
-                                <h4>{{ substr($client->name, 0, 40) }}...</h4>
+                                <h5 class="fw-bold">{{ substr($client->name, 0, 40) }}...</h5>
                             @else
-                                <h4>{{ $client->name }}</h4>
+                                <h5 class="fw-bold">{{ $client->name }}</h5>
                             @endif
 
                         </div>
@@ -82,8 +82,8 @@
                     <div class="d-flex justify-content-end gap-1 me-3">
                         <a href="#" data-size="lg" data-url="{{ route('clients.edit', $client->id) }}"
                             data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Client') }}"
-                            class="btn btn-sm btn-primary">
-                            <i class="ti ti-pencil"></i>
+                            class="btn px-2 btn-dark text-white">
+                            <i class="ti ti-pencil "></i>
                         </a>
                     </div>
                 @endif
@@ -161,7 +161,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Record ID') }}
                                                                 </td>
                                                                 <td class=""
@@ -172,7 +172,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Name') }}
                                                                 </td>
                                                                 <td class="name-td"
@@ -184,7 +184,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Organizaiton') }}
                                                                 </td>
                                                                 <td class="university_id-td"
@@ -195,7 +195,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Contact Type') }}
                                                                 </td>
                                                                 <td class="status-td"
@@ -234,7 +234,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Email') }}
                                                                 </td>
                                                                 <td class=""
@@ -245,7 +245,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Phone') }}
                                                                 </td>
                                                                 <td class="name-td"
@@ -281,7 +281,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Mailing Address') }}
                                                                 </td>
                                                                 <td class=""
@@ -316,7 +316,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Contact Owner') }}
                                                                 </td>
                                                                 <td class=""
@@ -327,7 +327,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Contact Created') }}
                                                                 </td>
                                                                 <td class=""
@@ -339,7 +339,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Contact Updated') }}
                                                                 </td>
                                                                 <td class=""
@@ -378,7 +378,7 @@
                                                         <div class="fp-product-count-percent" style="width: 0px;"></div>
                                                     </div>
                                                 </div>
-                
+
                                                 <div class="block-item large-block text-center" id="con-stats" title="1 Linked Contacts"
                                                     data-bs-target="#contacts-grid-container">
                                                     <div class="top-label">Applications</div>
@@ -389,7 +389,7 @@
                                                     </div>
                                                 </div>
 
-                                                
+
                                             </div>
 
 
@@ -482,8 +482,8 @@
                                                                         data-ajax-popup="true"
                                                                         data-bs-toggle="tooltip"
                                                                         title="{{ __('Create Application') }}"
-                                                                        class="btn btn-sm text-white"
-                                                                        style="background-color: #b5282f;">
+                                                                        class="btn px-2 btn-dark text-white"
+                                                                        >
                                                                         <i class="ti ti-plus"></i>
                                                                     </a>
                                                                 @endif
@@ -533,7 +533,7 @@
                                                                                         <a data-size="lg"
                                                                                             title="{{ __('Edit Application') }}"
                                                                                             href="#"
-                                                                                            class="btn btn-sm btn-primary mx-1"
+                                                                                            class="btn px-2 btn-dark mx-1"
                                                                                             data-url="{{ route('deals.application.edit', $app->id) }}"
                                                                                             data-ajax-popup="true"
                                                                                             data-title="{{ __('Edit Application') }}"
@@ -553,14 +553,14 @@
                                                                                             'id' => 'delete-form-' . $app->id,
                                                                                         ]) !!}
                                                                                         <a href="#"
-                                                                                            class="btn btn-sm btn-danger"
+                                                                                            class="btn px-2 btn-danger"
                                                                                             data-bs-toggle="tooltip"
                                                                                             title="{{ __('Delete') }}"
                                                                                             data-original-title="{{ __('Delete') }}"
                                                                                             data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
                                                                                             data-confirm-yes="document.getElementById('delete-form-{{ $app->id }}').submit();">
                                                                                             <i
-                                                                                                class="ti ti-trash text-white text-white"></i>
+                                                                                                class="ti ti-trash text-whit"></i>
                                                                                         </a>
                                                                                         {!! Form::close() !!}
                                                                                     </div>

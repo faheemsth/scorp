@@ -23,11 +23,8 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         ALL APPLICATIONS
                     </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
                             <li><a class="dropdown-item delete-bulk-applciations" href="javascript:void(0)">Delete</a></li>
-                        </ul> 
+                        </ul>
                 </div>
             </div>
 
@@ -196,7 +193,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                             @can('edit application')
                             <div class="action-btn ms-2">
 
-                                <a data-size="lg" title="{{ __('Edit Application') }}" href="#" class="btn btn-sm btn-primary mx-1" data-url="{{ route('deals.application.edit', $app->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Application') }}" data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
+                                <a data-size="lg" title="{{ __('Edit Application') }}" href="#" class="btn px-2 btn-dark mx-1" data-url="{{ route('deals.application.edit', $app->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Application') }}" data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
                                     <i class="ti ti-edit"></i>
                                 </a>
 

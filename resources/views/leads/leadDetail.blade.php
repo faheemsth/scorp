@@ -218,7 +218,7 @@
                     <div class="card-header p-1 bg-white">
                         <ul class="nav nav-pills mb-1" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link active text-dark fw-bold" id="pills-details-tab" data-bs-toggle="pill"
+                                <button class="nav-link pills-link active fw-bold" id="pills-details-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-details" type="button" role="tab"
                                     aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
                             </li>
