@@ -51,6 +51,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ProductServiceCategory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Session;
 use App\Providers\RouteServiceProvider;
 use Session;
 
@@ -641,7 +642,7 @@ class DashboardController extends Controller
             $admission_counts[$month] = $admission_query->count();
         }
 
-      
+
 
         $monthlyDepositApplications = [];
         foreach ($months as $month) {
@@ -688,7 +689,7 @@ class DashboardController extends Controller
         // Fill in 0 for months with no records
         $application_counts = array_merge(array_fill_keys($months, 0), $application_counts);
 
-      
+
 
         $monthlyDepositApplications = [];
         foreach ($months as $month) {
@@ -718,12 +719,12 @@ class DashboardController extends Controller
     }
 
     private function DepositVisas(){
-    
+
         $months = [
             'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
         ];
 
-    
+
         $monthlyDepositApplications = [];
         foreach ($months as $month) {
             $monthNumber = Carbon::parse("first day of $month")->format('m'); // Get the month number

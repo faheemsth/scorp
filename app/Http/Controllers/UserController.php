@@ -404,7 +404,7 @@ class UserController extends Controller
         $user->save();
         CustomField::saveData($user, $request->customField);
 
-        return redirect()->route('dashboard')->with(
+        return redirect()->route('crm.dashboard')->with(
             'success',
             'Profile successfully updated.'
         );

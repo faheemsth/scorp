@@ -19,12 +19,22 @@ class UniversityController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+        public function index()
     {
-        //dd(\Auth::user()->can('manage university'));
+        $num_results_on_page = 50;
+
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = ($page - 1) * $num_results_on_page;
+        } else {
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = 0;
+        }
+
         if (\Auth::user()->type == 'super admin' || \Auth::user()->can('manage university')) {
 
-            $universities = University::get();
+            $universities = University::skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             $users = User::get()->pluck('name', 'id');
 
             $universityStatsByCountries = University::selectRaw('count(id) as total_universities, country')
@@ -34,11 +44,11 @@ class UniversityController extends Controller
             foreach ($universityStatsByCountries as $university) {
                 $statuses[$university->country] = $university->total_universities;
             }
-
             $data = [
                 'universities' => $universities,
                 'users' => $users,
-                'statuses' => $statuses
+                'statuses' => $statuses,
+                'total_records' => $universities->total(), // Use total() for total record count
             ];
 
             return view('university.index', $data);
@@ -46,6 +56,8 @@ class UniversityController extends Controller
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -127,6 +139,10 @@ class UniversityController extends Controller
             $university->resource_drive_link = $request->resource_drive_link;
             $university->application_method_drive_link = $request->application_method_drive_link;
             $university->institute_category_id = $request->category_id;
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('images'), $imageName);
+            $university->image = 'images/' . $imageName;
             $university->save();
 
 
@@ -319,7 +335,7 @@ class UniversityController extends Controller
         $university = University::findOrFail($id);
         $html = '<option value=""> Select month </option>';
 
-      
+
 
         if ($university) {
 
