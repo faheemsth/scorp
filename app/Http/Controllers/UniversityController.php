@@ -140,10 +140,10 @@ class UniversityController extends Controller
             $university->resource_drive_link = $request->resource_drive_link;
             $university->application_method_drive_link = $request->application_method_drive_link;
             $university->institute_category_id = $request->category_id;
-            $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('images'), $imageName);
-            $university->image = 'images/' . $imageName;
+            // $image = $request->file('image');
+            // $imageName = time() . '_' . $image->getClientOriginalName();
+            // $image->move(public_path('images'), $imageName);
+            // $university->image = 'images/' . $imageName;
             $university->save();
 
 
