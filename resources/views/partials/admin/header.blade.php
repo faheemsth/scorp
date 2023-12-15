@@ -103,9 +103,9 @@
             <select name="company" id="company" class="form form-select" style="width:15% !important"
                 onChange="loginWithCompany();">
                 <option value="">Select Companies</option>
-                @if (!empty($adminOption))
-                    <option value="{{ $adminOption->id }}">{{ $adminOption->name }}</option>
-                @endif
+
+                <option value="{{ Session::get('auth_type_id') }}">{{Session::get('auth_type')}}</option>
+
                 @foreach ($all_companies as $key => $comp)
                     @foreach ($com_permissions as $com_per)
                         @if ($com_per->permitted_company_id == $key)
@@ -117,13 +117,8 @@
                 @endforeach
             </select>
         @endif
-        @foreach($com_permissions as $com_per)
-        @if($com_per->permitted_company_id == $key)
-        <option value="{{$key}}"><a href="{{ url('logged_in_as_customer').'/'.$key }}">{{ $comp }}</a></option>
-        @endif
-        @endforeach
-    </select>
     @endif
+
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 
@@ -198,7 +193,11 @@
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <!-- <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span> -->
+                @if(\Auth::user()->avatar == null || \Auth::user()->avatar == '')
                 <img class="img-profile rounded-circle" src="{{ asset('assets/images/user/default.jpg') }}">
+                @else
+                <img class="img-profile rounded-circle" src="{{ asset('storage/uploads/avatar').'/'.Auth::user()->avatar }}">
+                @endif
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

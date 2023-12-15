@@ -26,7 +26,6 @@ use Session;
 use Spatie\Permission\Models\Role;
 
 
-
 class UserController extends Controller
 {
 
@@ -34,15 +33,26 @@ class UserController extends Controller
     {
         $user = \Auth::user();
 
+        $num_results_on_page = 10;
+
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = ($page - 1) * $num_results_on_page;
+        } else {
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = 0;
+        }
+
         if (\Auth::user()->can('manage user')) {
             if (\Auth::user()->type == 'super admin') {
-                $users = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'company')->orwhere('type', '=', 'team')->get();
+                $users = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'company')->orwhere('type', '=', 'team')->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             } else {
-                $users = User::where('created_by', '=', $user->creatorId())->where('type', '!=', 'client')->get();
+                $users = User::where('created_by', '=', $user->creatorId())->where('type', '!=', 'client')->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }
-
+            $total_records = $users->total();
             // return view('user.index-Old')->with('users', $users);
-            return view('user.index')->with('users', $users);
+            return view('user.index',compact('total_records'))->with('users', $users);
         } else {
             return redirect()->back();
         }
@@ -377,6 +387,7 @@ class UserController extends Controller
 
             $url = '';
             $path = Utility::upload_file($request, 'profile', $fileNameToStore, $dir, []);
+
             if ($path['flag'] == 1) {
                 $url = $path['url'];
             } else {
@@ -407,7 +418,7 @@ class UserController extends Controller
         $user->save();
         CustomField::saveData($user, $request->customField);
 
-        return redirect()->route('dashboard')->with(
+        return redirect()->route('crm.dashboard')->with(
             'success',
             'Profile successfully updated.'
         );
