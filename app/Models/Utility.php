@@ -2810,7 +2810,7 @@ class Utility extends Model
                     if($settings['storage_setting']=='local')
                     {
 //                    dd(\Storage::disk(),$path);
-                        $path = 'storage/uploads/avatar/' ;
+                        $path = 'storage/'.$path ;
                         if (!File::isDirectory($path)) {
                             mkdir($path, 0777, true);
                         }
