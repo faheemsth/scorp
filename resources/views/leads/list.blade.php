@@ -1,16 +1,16 @@
 @extends('layouts.admin')
 
 @if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' )
-    @php 
-        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by); 
+    @php
+        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
     @endphp
 @elseif(\Auth::user()->type == 'super admin')
     @php
-        $currentUserCompany = \App\Models\User::where('type', 'company')->first(); 
+        $currentUserCompany = \App\Models\User::where('type', 'company')->first();
     @endphp
 @else
     @php
-        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id); 
+        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
     @endphp
 @endif
 <?php
@@ -119,11 +119,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"> <span class="counter-value"
-                                            data-target="730000">{{ isset($total_leads_by_status['opened lead']) ? $total_leads_by_status['opened lead'] : 0}}</span>
-                                    </h2>
-
-                                    <h4>Open Leads</h4>
+                                    <h1> {{ isset($total_leads_by_status['opened lead']) ? $total_leads_by_status['opened lead'] : 0}} </h1>
+                                    <h5>Open Leads</h5>
                                 </div>
                             </div>
                         </div><!-- end card body -->
@@ -136,14 +133,9 @@ if (isset($lead->is_active) && $lead->is_active) {
                             <div class="" style="position: relative;">
                                 <img src="{{ asset('assets/images/cross_mark.png') }}" alt="" style="width: 30px; position: absolute; right: 0px;">
                             </div>
-                            <div class="d-flex align-items-end justify-content-between mt-4">
-                                <div>
-                                    <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"> <span class="counter-value"
-                                            data-target="730000">{{ isset($total_leads_by_status['closed lead']) ? $total_leads_by_status['closed lead'] : 0}}</span>
-                                    </h2>
-
-                                    <h4>Close Leads</h4>
-                                </div>
+                            <div class="mt-4">
+                                <h1>{{ isset($total_leads_by_status['closed lead']) ? $total_leads_by_status['closed lead'] : 0}}</h1>
+                                <h5>Close Leads</h5>
                             </div>
                         </div><!-- end card body -->
                     </div><!-- end card -->
@@ -402,16 +394,16 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                 <td><input type="checkbox" name="leads[]" value="{{$lead->id}}" class="sub-check"></td>
 
 
-                                                <td class="py-1">
+                                                <td >
                                                     <span style="cursor:pointer" class="lead-name hyper-link"
                                                         onclick="openNav(<?= $lead->id ?>)"
                                                         data-lead-id="{{ $lead->id }}">{{ $lead->name }}</span>
                                                 </td>
 
-                                                <td class="py-1">{{ $lead->email }}</td>
-                                                <td class="py-1">{{ $lead->phone }}</td>
+                                                <td >{{ $lead->email }}</td>
+                                                <td >{{ $lead->phone }}</td>
                                                 <td>{{ !empty($lead->stage) ? $lead->stage->name : '-' }}</td>
-                                                <td class="py-1">
+                                                <td >
                                                     @php
                                                         $assigned_to = isset($lead->user_id) && isset($users[$lead->user_id]) ? $users[$lead->user_id] : 0;
                                                     @endphp

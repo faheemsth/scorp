@@ -184,11 +184,11 @@
     }
 
     #tfont {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     table tr td {
-        font-size: 13px !important;
+        font-size: 14px !important;
     }
 
     table th:last-child {
@@ -346,9 +346,9 @@
                         </div>
 
 
-                       
-                            
-                       
+
+
+
                             <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
                         <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
