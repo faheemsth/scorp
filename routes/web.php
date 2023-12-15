@@ -190,10 +190,13 @@ Route::get('/', [DashboardController::class, 'crm_dashboard_index'])->name('crm.
 
 Route::get('/crm-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('crm.dashboard')->middleware(['XSS', 'revalidate',]);
 
-Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+//Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/account-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+
 
 //new dashboard
-Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+//Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/account-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
 
 // Route::get('/', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['XSS', 'revalidate',]);
 
