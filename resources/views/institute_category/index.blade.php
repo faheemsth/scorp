@@ -6,13 +6,17 @@
 @endpush
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
-<li class="breadcrumb-item">{{__('University')}}</li>
+<li class="breadcrumb-item">{{__('Institute Category')}}</li>
 @endsection
 
 
 @section('content')
 <div class="row">
-    <div class="col-12">
+
+    <div class="col-3">
+      @include('layouts.crm_setup')
+    </div>
+    <div class="col-9">
         <div class="card">
             <div class="card-body table-border-style">
 
