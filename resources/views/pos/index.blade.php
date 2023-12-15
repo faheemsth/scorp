@@ -254,7 +254,7 @@
 </div>
 
 
-<div class="modal fade" id="commonModal" tabindex="-1" role="dialog"
+<div class="modal fade" id="commonModal" tabindex="-1" role="dialog" style="z-index: 2000;"
      aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

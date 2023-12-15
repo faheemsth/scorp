@@ -1743,6 +1743,7 @@ Route::get("/delete-bulk-organizations", [OrganizationController::class, 'delete
 
 /////////////////////////// Login as company
 Route::get('/logged_in_as_company/{id}','DashboardController@loggedInAsCustomer');
+Route::get('/logged_in_as_user/{id}','DashboardController@loggedInAsUser');
 
 
 //////////////////////////Global Search

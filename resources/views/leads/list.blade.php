@@ -1,6 +1,20 @@
 @extends('layouts.admin')
 
+@if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' )
+    @php
+        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+    @endphp
+@elseif(\Auth::user()->type == 'super admin')
+    @php
+        $currentUserCompany = \App\Models\User::where('type', 'company')->first();
+    @endphp
+@else
+    @php
+        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
+    @endphp
+@endif
 <?php
+$com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->get();
 
 $lead = \App\Models\Lead::first();
 if (isset($lead->is_active) && $lead->is_active) {
@@ -276,19 +290,26 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             @endforeach
                                         </select>
                                     </div>
-
+                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                                     <div class="col-md-4 mt-1"> <label for="">Created By</label>
                                         <select class="form form-control select2" id="choices-multiple555"
                                             name="created_by[]" multiple style="width: 95%;">
                                             <option value="">Select Brand</option>
                                             @foreach ($brands as $brand)
-                                                <option value="{{ $brand->id }}"
-                                                    <?= isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' ?>
-                                                    class="">{{ $brand->name }}</option>
+                                            @if ($brand->id == $currentUserCompany->id)
+                                            <option value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
+                                            @endif
+                                                @foreach ($com_permissions as $permissions)
+                                                        @if ($permissions->permitted_company_id == $brand->id)
+                                                        <option value="{{ $permissions->permitted_company_id }}" class="">{{ $brand->name }}</option>
+                                                        @endif
+                                                @endforeach
+
+
                                             @endforeach
                                         </select>
                                     </div>
-
+                                    @endif
 
 
                                     <div class="col-md-4 mt-2">

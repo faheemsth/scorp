@@ -393,7 +393,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-
+                                @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                                 <div class="col-md-4"> <label for="">Created By</label>
                                     <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple style="width: 95%;">
                                         <option value="">Select Brand</option>
@@ -402,7 +402,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-
+                                @endif
 
                                 <div class="col-md-4 mt-2">
                                     <label for="">Created at</label>

@@ -463,7 +463,7 @@ color: white !important;
     </div>
 
 
-    <div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2000;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
