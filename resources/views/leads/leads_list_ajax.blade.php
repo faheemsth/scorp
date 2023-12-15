@@ -16,21 +16,21 @@
         @if (count($leads) > 0)
             @foreach ($leads as $lead)
                 <tr>
-                    <td><input type="checkbox" class=""></td>
-                    <td class="py-1">
+                    <td><input type="checkbox" ></td>
+                    <td >
                         <span style="cursor:pointer" class="lead-name"
                             onclick="openNav(<?= $lead->id ?>)"
                             data-lead-id="{{ $lead->id }}">{{ $lead->name }}</span>
                     </td>
 
-                    <td class="py-1">{{ $lead->email }}</td>
-                    <td class="py-1">{{ $lead->phone }}</td>
+                    <td >{{ $lead->email }}</td>
+                    <td >{{ $lead->phone }}</td>
                     <td>{{ !empty($lead->stage) ? $lead->stage->name : '-' }}</td>
-                    <td class="py-1">
-                                                    @php 
+                    <td >
+                                                    @php
                                                         $assigned_to = isset($lead->user_id) && isset($users[$lead->user_id]) ? $users[$lead->user_id] : 0;
-                                                    @endphp 
-                                                
+                                                    @endphp
+
                                                     @if($assigned_to !=  0)
                                                     <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{$lead->user_id}}+'/user_detail')" >
                                                         {{ $assigned_to }}
@@ -123,3 +123,4 @@
         'total_pages' => $total_records
     ])
 @endif
+

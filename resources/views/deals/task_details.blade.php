@@ -125,7 +125,7 @@
                     <div class="lead-basic-info">
                         <p class="pb-0 mb-0 fw-normal">{{ __('Tasks') }}</p>
                         <div class="d-flex align-items-baseline ">
-                            <h4>{{ $task->name }}</h4>
+                            <h5 class="fw-bold">{{ $task->name }}</h5>
                         </div>
                     </div>
 
@@ -135,12 +135,12 @@
                 <div class="d-flex justify-content-end gap-1 me-3">
                     <a href="#" data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}"
                         data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"
-                        class="btn btn-sm btn-primary">
+                        class="btn px-2 btn-dark text-white">
                         <i class="ti ti-pencil"></i>
                     </a>
 
-                    <a href="/organization/{{ $task->id }}/taskDeleted" class="btn btn-sm text-white"
-                        style="background-color: #b5282f;">
+                    <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-dark text-white"
+                       >
                         <i class="ti ti-trash "></i>
                     </a>
                 </div>
@@ -151,7 +151,7 @@
             <div class="lead-info d-flex justify-content-between p-3 text-center">
                 <div class="">
                     <small>{{ __('Date Due') }}</small>
-                    <span class="font-weight-bolder">
+                    <span class="px-3 rounded bg-primary">
                         @php
                             $due_date = strtotime($task->due_date);
                             $current_date = strtotime(date('Y-m-d'));
@@ -171,10 +171,10 @@
                             }
                         @endphp
 
-                        <b
-                            class="@if ($remaining_days == 0) text-success @elseif($remaining_days < 0) text-danger @else text-warning @endif">
+                        <span
+                            class="@if ($remaining_days == 0) text-white @elseif($remaining_days < 0) text-danger @else text-warning @endif">
                             {{ $message }}
-                        </b>
+                        </span>
 
                     </span>
                 </div>
@@ -199,11 +199,11 @@
 
             <div class="lead-content my-2">
 
-                <div class="card me-3">
-                    <div class="card-header p-1">
+                <div class="card ">
+                    <div class="card-header p-1 bg-white">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link fw-bold" id="pills-details-tab" data-bs-toggle="pill"
+                                <button class="nav-link pills-link fw-bold" style="background-color: #313949;" id="pills-details-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-details" type="button" role="tab"
                                     aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
                             </li>
@@ -240,23 +240,23 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px;  font-size: 14px;">
                                                                     {{ __('Record ID') }}
                                                                 </td>
                                                                 <td class=""
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
                                                                     {{ $task->id }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px;  font-size: 14px;">
                                                                     {{ __('Task Name') }}
                                                                 </td>
                                                                 <td class="name-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-
+                                                                    style="padding-left: 20px; font-size: 14px;">
+{{--
                                                                     <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 name">
@@ -268,18 +268,19 @@
                                                                                 name="name"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $task->name }}
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px;  font-size: 14px;">
                                                                     {{ __('Office') }}
                                                                 </td>
                                                                 <td class="branch_id-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 branch_id">
                                                                             {{ isset($task->branch_id) && isset($branches[$task->branch_id]) ? $branches[$task->branch_id] : '' }}
@@ -290,20 +291,21 @@
                                                                                 name="branch_id"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ isset($task->branch_id) && isset($branches[$task->branch_id]) ? $branches[$task->branch_id] : '' }}
                                                                 </td>
                                                             </tr>
 
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px;  font-size: 14px;">
                                                                     {{ __('Agency') }}
                                                                 </td>
                                                                 <td class="organization_id-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div
                                                                             class="input-group border-0 organization_id">
@@ -315,26 +317,27 @@
                                                                                 name="organization_id"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ isset($users[$task->organization_id]) ? $users[$task->organization_id] : '' }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px;  font-size: 14px;">
                                                                     {{ __('Assigned To') }}
                                                                 </td>
                                                                 <td class="td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
                                                                     {{ $users[$task->assigned_to] }}
                                                                 </td>
                                                             </tr>
 
                                                             {{-- <tr>
-                                                                <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                                <td class="" style="  font-size: 14px;">
                                                                     {{ __('Category') }}
                                                                 </td>
-                                                                <td class="type-td" style="padding-left: 10px; font-size: 14px;">
+                                                                <td class="type-td" style="padding-left: 20px; font-size: 14px;">
 
                                                                     <span class="badge bg-success text-white"> {{ isset($stages[$task->deal_stage_id]) ? $stages[$task->deal_stage_id] : '' }}</span>
                                                                 </td>
@@ -342,13 +345,13 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Date Due') }}
                                                                 </td>
                                                                 <td class="due_date-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 due_date">
                                                                             {{ $task->due_date }}
@@ -359,7 +362,8 @@
                                                                                 name="due_date"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $task->due_date }}
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -389,22 +393,22 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Start Date') }}
                                                                 </td>
                                                                 <td class="phone-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
                                                                     {{ $task->start_date }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Remainder Date') }}
                                                                 </td>
                                                                 <td class="email-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
 
                                                                     {{ $task->remainder }}
                                                                 </td>
@@ -412,22 +416,22 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Last Updated at') }}
                                                                 </td>
                                                                 <td class="website-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
                                                                     {{ $task->updated_at }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Created at') }}
                                                                 </td>
                                                                 <td class="website-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
                                                                     {{ $task->created_at }}
                                                                 </td>
                                                             </tr>
@@ -460,22 +464,22 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Related Type') }}
                                                                 </td>
                                                                 <td class="td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
                                                                     {{ $task->related_type == 'deal' ? 'Admission' : $task->related_type }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Related To') }}
                                                                 </td>
                                                                 <td class="td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
 
                                                                     @php
 
@@ -514,7 +518,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Description') }}
                                                                 </td>
                                                                 <td class="description-td"
@@ -645,10 +649,10 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px;  font-size: 14px;">
                                                                     {{ __('PERMISSIONS') }}
                                                                 </td>
-                                                                <td class="" style="padding-left: 10px;">
+                                                                <td class="" style="padding-left: 20px;">
                                                                     {{ $task->visibility }}
                                                                 </td>
                                                             </tr>

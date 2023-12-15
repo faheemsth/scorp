@@ -286,7 +286,7 @@ $lang=Utility::getValByName('default_language');
         }
 
         #tfont {
-            font-size: 12px;
+            font-size: 14px;
         }
 
         .links:hover {
@@ -341,6 +341,17 @@ $lang=Utility::getValByName('default_language');
             right: 10px;
             cursor: pointer;
         }
+        .lead-topbar {
+    border-radius: 8px;
+    background: #FFF !important;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) !important;
+}
+#text{
+color: black !important;
+}
+#text:active{
+color: white !important;
+}
     </style>
 </head>
 
