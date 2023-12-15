@@ -26,7 +26,6 @@ use Session;
 use Spatie\Permission\Models\Role;
 
 
-
 class UserController extends Controller
 {
 
@@ -374,6 +373,7 @@ class UserController extends Controller
 
             $url = '';
             $path = Utility::upload_file($request, 'profile', $fileNameToStore, $dir, []);
+         
             if ($path['flag'] == 1) {
                 $url = $path['url'];
             } else {

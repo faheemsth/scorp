@@ -52,6 +52,7 @@ use App\Models\ProductServiceCategory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use App\Providers\RouteServiceProvider;
+use Session;
 
 class DashboardController extends Controller
 {
@@ -1193,14 +1194,57 @@ class DashboardController extends Controller
     }
 
     public function loggedInAsCustomer($id){
-       
         try{
+            $sess_check = Session::get('auth_type_id');
             $auth_id = auth()->user()->id;
+
+            if($sess_check != null && $sess_check != ''){
+                $auth_id = $sess_check;
+            }else{
+                Session::put('auth_type_id', $auth_id);
+                Session::put('auth_type_created_by', auth()->user()->created_by);
+                Session::put('auth_type', auth()->user()->type);
+                Session::put('is_company_login', true);
+                if(auth()->user()->type == 'super admin'){
+                    Session::put('onlyadmin', auth()->user()->type);
+                }
+            }
+
+            
+            // if(auth()->user()->type == 'Project Manager' || auth()->user()->type == 'Project Director'){
+            //     Session::put('ProjectController', auth()->user()->type);
+            // }
             $user = User::where('id',$id)->first();
             if($user){
                 // session()->put('action_clicked_admin',$user->email);
                 \Auth::loginUsingId($user->id);
-                session()->put('auth_id_staff',$auth_id);
+                return redirect()->intended(RouteServiceProvider::HOME);
+            }else{
+                return redirect()->back()->with('error','User Not Found');
+            }
+        }catch(Exception $e){
+
+            return redirect()->back()->with('error',$e->getMessage());
+        }
+    }
+
+    public function loggedInAsUser($id){
+
+        try{
+            $auth_id = auth()->user()->id;
+
+            if(Session::get('auth_type_id') == $id){
+                $user = User::where('id',$id)->first();
+
+                Session::flush('auth_type');
+                Session::flush('is_company_login');
+                Session::flush('auth_type_id');
+                Session::flush('auth_type_created_by');
+
+            }
+            if($user){
+                // session()->put('action_clicked_admin',$user->email);
+                \Auth::loginUsingId($user->id);
                 return redirect()->intended(RouteServiceProvider::HOME);
             }else{
                 return redirect()->back()->with('error','User Not Found');

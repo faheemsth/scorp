@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Twilio\Rest\Client;
+use Illuminate\Support\Facades\{ File};
 
 class Utility extends Model
 {
@@ -1809,6 +1810,7 @@ class Utility extends Model
                 'name' => $user->name,
                 'email' => $user->email,
                 'password' => $user->password,
+                'branch_id' => $user->branch_id,
                 'employee_id' => Utility::employeeNumber($created_by),
                 'created_by' => $created_by,
             ]
@@ -2808,7 +2810,11 @@ class Utility extends Model
                     if($settings['storage_setting']=='local')
                     {
 //                    dd(\Storage::disk(),$path);
-                        $request->$key_name->move(storage_path($path), $name);
+                        $path = 'storage/uploads/avatar/' ;
+                        if (!File::isDirectory($path)) {
+                            mkdir($path, 0777, true);
+                        }
+                        $request->$key_name->move($path, $name);
                         $path = $path.$name;
                     }
                     else if($settings['storage_setting'] == 'wasabi'){
