@@ -64,8 +64,9 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        @php
+                                    </div>
+                                </div>
+                                @php
                                             if ($i < 5) {
                                                 echo '<div class="mt-5" style="border-left: 3px solid black; height: 80px; width: 1%;"></div>';
                                             }
