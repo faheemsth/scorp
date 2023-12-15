@@ -44,7 +44,7 @@
 
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseone"
                         aria-expanded="true" aria-controls="collapseone">
-
+                        <i class="fa-solid fa-chart-line" style="color: #ffffff;"></i>
 
                         <span>{{ __('Dashboard') }}</span>
                     </a>
@@ -54,7 +54,9 @@
                                 @if (Gate::check('show crm dashboard') || Auth::user()->type == 'team' || Auth::user()->type == 'company')
                                     <li class="{{ Request::route()->getName() == 'crm.dashboard' ? ' active' : '' }}">
                                         <a class="collapse-item" href="{{ route('crm.dashboard') }}"
-                                            style="color:white; font-size: 13px;">CRM Dashboard</a>
+                                            style="color:white; font-size: 13px;">
+                                            <i class="fa-solid fa-chart-line me-1" style="color: #ffffff;"></i>
+                                            CRM Dashboard</a>
                                     </li>
                                 @endif
                                 {{-- //// --}}
@@ -1316,6 +1318,7 @@
                         {{ Request::segment(1) == 'users' || Request::segment(1) == 'roles' || Request::segment(1) == 'clients' ? ' active dash-trigger' : '' }}">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseseven"
                         aria-expanded="true" aria-controls="collapseseven">
+                        <i class="fa-solid fa-user" style="color: #ffffff;"></i>
                         <span>{{ __('Users') }}</span>
                     </a>
                     <div id="collapseseven" class="collapse" aria-labelledby="headingUtilities"
@@ -1326,7 +1329,8 @@
                                     <li
                                         class=" {{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
                                         <a class="collapse-item" style="color: white; font-size: 13px;"
-                                            href="{{ route('users.index') }}">Employees</a>
+                                            href="{{ route('users.index') }}">
+                                            Employees</a>
                                     </li>
                                 @endcan
                             </ul>
@@ -1500,6 +1504,7 @@
             @if (Gate::check('manage client dashboard'))
                 <li class="nav-item  {{ Request::segment(1) == 'dashboard' ? ' active' : '' }}">
                     <a href="{{ route('client.dashboard.view') }}" class="nav-link">
+                        <i class="fa-solid fa-chart-line" style="color: #ffffff;"></i>
                         <span>{{ __('Dashboard') }}</span>
                     </a>
                 </li>
@@ -1586,7 +1591,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                             data-target="#collapsesuper" aria-expanded="true" aria-controls="collapsesuper">
-
+                            <i class="fa-solid fa-gear" style="color: #ffffff;"></i>
                             <span>{{ __('CRM System') }}</span>
                         </a>
                         <div id="collapsesuper" class="collapse" aria-labelledby="headingTwo"
@@ -1603,10 +1608,10 @@
                     </li>
 
 
-                    <li
+                    {{-- <li
                         class="nav-itemd-none {{ Request::route()->getName() == 'course.list' || Request::route()->getName() == 'course.index' || Request::route()->getName() == 'course.show' ? ' active' : '' }}">
                         <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('course.index') }}">{{ __('Courses') }}</a>
-                    </li>
+                    </li> --}}
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'leads.list' || Request::route()->getName() == 'leads.index' || Request::route()->getName() == 'leads.show' ? ' active' : '' }}">
@@ -1627,10 +1632,10 @@
                         <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('applications.index') }}">Applications</a>
                     </li>
 
-                    <li
+                    {{-- <li
                         class="nav-itemd-none {{ Request::route()->getName() == 'contract.index' || Request::route()->getName() == 'contract.show' ? 'active' : '' }}">
                         <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('contract.index') }}">{{ __('Contract') }}</a>
-                    </li>
+                    </li> --}}
 
                     <li style=""
                         class="nav-item {{ Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
@@ -1663,7 +1668,7 @@
                 <li class="nav-item {{ Request::segment(1) == 'users' || Request::segment(1) == 'roles' || Request::segment(1) == 'clients' ? ' active dash-trigger' : '' }}">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse"
                         data-target="#collapsesu" aria-expanded="true" aria-controls="collapsesu">
-
+                        <i class="fa-solid fa-user" style="color: #ffffff;"></i>
                         <span>{{ __('Users') }}</span>
                     </a>
                     <div id="collapsesu" class="collapse" aria-labelledby="headingTwo"

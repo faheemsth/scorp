@@ -63,13 +63,13 @@
                     <div class="card-header p-1 bg-white">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link active" id="text"  id="pills-details-tab" data-bs-toggle="pill"
+                                <button class="nav-link pills-link active"  id="pills-details-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-details" type="button" role="tab"
                                     aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
                             </li>
 
-                            <li class="nav-item" role="presentation"  style="color: #313949 ">
-                                <button class="nav-link pills-link text-dark" id="text" style="color: #313949; " id="pills-related-tab" data-bs-toggle="pill" data-bs-target="#pills-related" type="button" role="tab" aria-controls="pills-related" aria-selected="false">{{ __('Related') }}</button>
+                            <li class="nav-item" role="presentation"  >
+                                <button class="nav-link pills-link "  id="pills-related-tab" data-bs-toggle="pill" data-bs-target="#pills-related" type="button" role="tab" aria-controls="pills-related" aria-selected="false">{{ __('Related') }}</button>
                             </li>
                         </ul>
                     </div>
@@ -303,7 +303,7 @@
 
 
 
-                                    <div class="accordion-item">
+                                    {{-- <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                             <button class="accordion-button p-2" type="button"
                                                 data-bs-toggle="collapse"
@@ -357,7 +357,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                 </div>
                             </div>

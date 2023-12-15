@@ -346,11 +346,22 @@ $lang=Utility::getValByName('default_language');
     background: #FFF !important;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) !important;
 }
-#text{
-color: black !important;
+.card-header .nav-item .nav-link {
+    color: #313949 !important;
 }
-#text:active{
-color: white !important;
+.card-header .nav-item .nav-link:active{
+    background-color: #313949;
+    color: white;
+}
+.card-header .nav-item .nav-link:focus{
+    background-color: #313949;
+    color: white;
+}
+table td:last-child{
+    text-align: start !important;
+}
+*ul{
+    list-style: none !important;
 }
     </style>
 </head>
