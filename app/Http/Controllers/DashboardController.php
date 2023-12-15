@@ -53,7 +53,6 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Session;
 use App\Providers\RouteServiceProvider;
-use Session;
 
 class DashboardController extends Controller
 {
