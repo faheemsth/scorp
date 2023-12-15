@@ -3,6 +3,26 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endpush
 @php
+<<<<<<< HEAD
+
+$users = \Auth::user();
+//$profile=asset(Storage::url('uploads/avatar/'));
+$profile = \App\Models\Utility::get_file('uploads/avatar/');
+$languages = \App\Models\Utility::languages();
+$lang = isset($users->lang) ? $users->lang : 'en';
+$setting = \App\Models\Utility::colorset();
+$mode_setting = \App\Models\Utility::mode_layout();
+$adminOption = \App\Models\User::where('type', Session::get('onlyadmin'))->first();
+if (Session::get('is_company_login') == true) {
+    $currentUserCompany = \App\Models\User::where('type', 'company')->find(Session::get('auth_type_created_by'));
+} else {
+    $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+}
+$com_permissions = [];
+if ($currentUserCompany != null) {
+    $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->get();
+}
+=======
     $users = \Auth::user();
     //$profile=asset(Storage::url('uploads/avatar/'));
     $profile = \App\Models\Utility::get_file('uploads/avatar/');
@@ -21,6 +41,7 @@
     if ($currentUserCompany != null) {
         $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->get();
     }
+>>>>>>> 9cab51fba2c9c2705e108d9bc4b239c4382a949b
 
     $all_companies = App\Models\User::where('type', 'company')
         ->pluck('name', 'id')
@@ -103,9 +124,9 @@
             <select name="company" id="company" class="form form-select" style="width:15% !important"
                 onChange="loginWithCompany();">
                 <option value="">Select Companies</option>
-                @if (!empty($adminOption))
-                    <option value="{{ $adminOption->id }}">{{ $adminOption->name }}</option>
-                @endif
+                
+                <option value="{{ Session::get('auth_type_id') }}">{{Session::get('auth_type')}}</option>
+                
                 @foreach ($all_companies as $key => $comp)
                     @foreach ($com_permissions as $com_per)
                         @if ($com_per->permitted_company_id == $key)
@@ -116,14 +137,9 @@
                     @endforeach
                 @endforeach
             </select>
-        @endif
-        @foreach($com_permissions as $com_per)
-        @if($com_per->permitted_company_id == $key)
-        <option value="{{$key}}"><a href="{{ url('logged_in_as_customer').'/'.$key }}">{{ $comp }}</a></option>
-        @endif
-        @endforeach
-    </select>
-    @endif
+        @endif 
+    @endif    
+
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 
@@ -198,7 +214,11 @@
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <!-- <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span> -->
+                @if(\Auth::user()->avatar == null || \Auth::user()->avatar == '')
                 <img class="img-profile rounded-circle" src="{{ asset('assets/images/user/default.jpg') }}">
+                @else
+                <img class="img-profile rounded-circle" src="{{ asset('storage/uploads/avatar').'/'.Auth::user()->avatar }}">
+                @endif
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
