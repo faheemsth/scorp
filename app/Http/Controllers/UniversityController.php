@@ -44,6 +44,7 @@ class UniversityController extends Controller
             foreach ($universityStatsByCountries as $university) {
                 $statuses[$university->country] = $university->total_universities;
             }
+            
             $data = [
                 'universities' => $universities,
                 'users' => $users,

@@ -51,7 +51,8 @@
                                     <div class="card shadow py-2" style="width: 90%; height: 90%;border-radius: 22px;">
                                         <div class="card-body">
                                             <span class="red-cross"><i class="fa-solid fa-circle-xmark"></i></span>
-                                            <img src="{{ asset(optional(App\Models\University::where('country', $university->country)->whereNotNull('image')->first())->image) }}" alt="{{ $key }}" width="80" height="60" class="boximg">
+                                            <img src="{{ asset('assets/svg/country-'.$university->country_code.'.svg') }}" alt="{{ $key }}" width="80" height="60" class="boximg">
+                                         
                                             <div class="row no-gutters text-center">
                                                 <div class="col mr-2">
                                                     <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
