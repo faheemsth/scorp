@@ -1,6 +1,20 @@
 @extends('layouts.admin')
 
+@if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' )
+    @php 
+        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by); 
+    @endphp
+@elseif(\Auth::user()->type == 'super admin')
+    @php
+        $currentUserCompany = \App\Models\User::where('type', 'company')->first(); 
+    @endphp
+@else
+    @php
+        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id); 
+    @endphp
+@endif
 <?php
+$com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->get();
 
 $lead = \App\Models\Lead::first();
 if (isset($lead->is_active) && $lead->is_active) {
@@ -105,7 +119,10 @@ if (isset($lead->is_active) && $lead->is_active) {
                             </div>
                             <div class="d-flex align-items-end justify-content-between mt-4">
                                 <div>
-                                    <h1> {{ isset($total_leads_by_status['opened lead']) ? $total_leads_by_status['opened lead'] : 0}} </h1>
+                                    <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"> <span class="counter-value"
+                                            data-target="730000">{{ isset($total_leads_by_status['opened lead']) ? $total_leads_by_status['opened lead'] : 0}}</span>
+                                    </h2>
+
                                     <h4>Open Leads</h4>
                                 </div>
                             </div>
@@ -119,9 +136,14 @@ if (isset($lead->is_active) && $lead->is_active) {
                             <div class="" style="position: relative;">
                                 <img src="{{ asset('assets/images/cross_mark.png') }}" alt="" style="width: 30px; position: absolute; right: 0px;">
                             </div>
-                            <div class="mt-4">
-                                <h1>{{ isset($total_leads_by_status['closed lead']) ? $total_leads_by_status['closed lead'] : 0}}</h1>
-                                <h4>Close Leads</h4>
+                            <div class="d-flex align-items-end justify-content-between mt-4">
+                                <div>
+                                    <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"> <span class="counter-value"
+                                            data-target="730000">{{ isset($total_leads_by_status['closed lead']) ? $total_leads_by_status['closed lead'] : 0}}</span>
+                                    </h2>
+
+                                    <h4>Close Leads</h4>
+                                </div>
                             </div>
                         </div><!-- end card body -->
                     </div><!-- end card -->
@@ -282,9 +304,16 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             name="created_by[]" multiple style="width: 95%;">
                                             <option value="">Select Brand</option>
                                             @foreach ($brands as $brand)
-                                                <option value="{{ $brand->id }}"
-                                                    <?= isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' ?>
-                                                    class="">{{ $brand->name }}</option>
+                                            @if ($brand->id == $currentUserCompany->id)
+                                            <option value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
+                                            @endif
+                                                @foreach ($com_permissions as $permissions)
+                                                        @if ($permissions->permitted_company_id == $brand->id)
+                                                        <option value="{{ $permissions->permitted_company_id }}" class="">{{ $brand->name }}</option>
+                                                        @endif
+                                                @endforeach
+
+
                                             @endforeach
                                         </select>
                                     </div>

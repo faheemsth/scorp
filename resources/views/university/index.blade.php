@@ -10,45 +10,77 @@
 @endsection
 
 @section('content')
+<style>
+       .red-cross {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      color: red;
+    }
 
+    .text-dark{
+        color: #000;
+        font-weight: 950;
+        border: none !important;
+        margin-top: 4%;
+
+    }
+
+    .boximg{
+        margin-left: 22px;
+    }
+</style>
 
 
 <div class="row">
     <div class="col-xl-12">
         <div class="card">
             <div class="card-body table-border-style">
-
-                <div class="row">
+               <?php $i = 0?>
+                <div class="row justify-evenly">
                     @forelse($statuses as $key => $status)
-                    <div class="col-md-2">
-                        <!-- card -->
-                        <div class="card card-animate">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <div class="flex-grow-1 overflow-hidden">
-                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
-                                            <i class="fa fa-regular fa-window-close fa-2x" style="color: #b5282f"></i>
-                                        </p>
-                                    </div>
-                                    <div class="flex-shrink-0">
+                        @php
+                            $countryFound = false;
+                        @endphp
 
+                        @foreach (App\Models\University::all() as $university)
+                            @if($university->country == $key && !$countryFound)
+                            @if($i <= 4)
+                            <?php $i++;?>
+                                <div class="col-xl-2 col-md-6 mb-4">
+                                    <div class="card shadow py-2" style="width: 90%; height: 90%;border-radius: 22px;">
+                                        <div class="card-body">
+                                            <span class="red-cross"><i class="fa-solid fa-circle-xmark"></i></span>
+                                            <img src="{{ asset(optional(App\Models\University::where('country', $university->country)->whereNotNull('image')->first())->image) }}" alt="{{ $key }}" width="80" height="60" class="boximg">
+                                            <div class="row no-gutters text-center">
+                                                <div class="col mr-2">
+                                                    <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                                </div>
+                                            </div>
+                                            <div class="row no-gutters text-center">
+                                                <div class="col mt-2 mr-2">
+                                                    <div class="h5 mb-0 text-gray-800">{{ $status }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                    <div>
-                                        <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"> <span class="counter-value" data-target="730000">{{ $status }}</span>
-                                        </h2>
 
-                                        <h4>{{ $key }}</h4>
-                                    </div>
-                                </div>
-                            </div><!-- end card body -->
-                        </div><!-- end card -->
-                    </div>
+                                @php
+                                    if($i < 5){
+                                        echo '<div class="mt-5" style="border-left: 3px solid black; height: 80px; width: 1%;"></div>';
+                                    }
+                                    $countryFound = true;
+                                @endphp
+                            @endif
+                            @endif
+                        @endforeach
+
                     @empty
 
                     @endforelse
                 </div>
+
 
 
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
@@ -153,9 +185,16 @@
 
                         </tbody>
                     </table>
+                    @if ($total_records > 0)
+                    @include('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' => 10,
+                    ])
+                    @endif
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
