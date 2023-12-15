@@ -66,7 +66,7 @@
                                                 <th>Designation</th>
                                                 <th>Phone</th>
                                                 <th>Last Login</th>
-                                                <th>Action</th>
+                                                {{-- <th>Action</th> --}}
                                             </tr>
                                         </thead>
 
@@ -86,7 +86,7 @@
                                                     <td>{{ $user->phone }}</td>
                                                     <td>{{ !empty($user->last_login_at) ? $user->last_login_at : '' }}
                                                     </td>
-                                                    <td>
+                                                    {{-- <td>
                                                         @if (Gate::check('edit user') || Gate::check('delete user'))
                                                             <div class="card-header-right" style="top: 0px; right:2px;">
                                                                 <div class="btn-group card-option">
@@ -149,7 +149,7 @@
                                                             </div>
                                                         @endif
 
-                                                    </td>
+                                                    </td> --}}
                                                     <!-- Add more cells as needed with corresponding data -->
                                                 </tr>
                                             @empty
@@ -161,11 +161,11 @@
 
                                     </table>
                                     @if ($total_records > 0)
-                            @include('layouts.pagination', [
-                                'total_pages' => $total_records,
-                                'num_results_on_page' => 10,
-                            ])
-                        @endif
+                                        @include('layouts.pagination', [
+                                            'total_pages' => $total_records,
+                                            'num_results_on_page' => 10,
+                                        ])
+                                    @endif
                                 </div>
                             </div>
                         </div>

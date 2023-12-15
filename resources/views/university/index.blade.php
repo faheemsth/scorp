@@ -52,7 +52,7 @@
                                         <div class="card-body">
                                             <span class="red-cross"><i class="fa-solid fa-circle-xmark"></i></span>
                                             <img src="{{ asset('assets/svg/country-'.$university->country_code.'.svg') }}" alt="{{ $key }}" width="80" height="60" class="boximg">
-                                         
+
                                             <div class="row no-gutters text-center">
                                                 <div class="col mr-2">
                                                     <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
