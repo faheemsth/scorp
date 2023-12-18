@@ -519,7 +519,7 @@ class DashboardController extends Controller
         $total_deposits = 0;
         $total_visas = 0;
         $total_app = 0;
-        if(Auth::user()->type = 'super admin'){
+        if(Auth::user()->type == 'super admin'){
 
             $total_admissions = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
             ->whereIn('deals.stage_id', [1, 2, 3])
@@ -536,25 +536,32 @@ class DashboardController extends Controller
 
             $total_app = DealApplication::count();
 
-        }else if(Auth::user()->type = 'company'){
+        }else if(Auth::user()->type == 'company'){
 
             $id = Auth::user()->id;
-            $users = User::where('created_by', $id)->pluck('id')->toArray();
-
+          
             $total_admissions = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
             ->whereIn('deals.stage_id', [1, 2, 3])
             ->where('s.id', '<', 4)
+            ->where('deals.created_at', $id)
+
             ->count();
             $total_deposits = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
                 ->whereIn('deals.stage_id', [4, 5, 6])
                 ->where('s.id', '<', 7)
+            ->where('deals.created_at', $id)
+
                 ->count();
             $total_visas = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
                 ->whereIn('deals.stage_id', [7, 8, 9])
                 ->where('s.id', '<', 10)
+            ->where('deals.created_at', $id)
+
                 ->count();
 
-            $total_app = DealApplication::count();
+            $total_app = DealApplication::join('deals as d', 'd.id', '=', 'deal_applications.deal_id')
+            ->where('d.created_by', $id)
+            ->count();
 
         }
         
