@@ -130,7 +130,7 @@
                     <div class="lead-basic-info">
                         <p class="pb-0 mb-0 fw-normal">{{ __('ORGANIZATION') }}</p>
                         <div class="d-flex align-items-baseline ">
-                            <h4>{{ $org->name }}</h4>
+                            <h5 class="fw-bold">{{ $org->name }}</h5>
 
                         </div>
                     </div>
@@ -140,7 +140,7 @@
                 <div class="d-flex justify-content-end gap-1 me-3">
                     <a href="#" data-size="lg" data-url="{{ route('organization.edit', $org->id) }}"
                         data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"
-                        class="btn btn-sm btn-primary">
+                        class="btn px-2 btn-dark">
                         <i class="ti ti-pencil"></i>
                     </a>
 
@@ -149,17 +149,18 @@
                         'route' => ['organization.destroy', $org->id],
                         'id' => 'delete-form-' . $org->id,
                     ]) !!}
+
                     <a href="#"
                         class="btn btn-sm bg-danger  align-items-center bs-pass-para"
                         data-bs-toggle="tooltip"
                         title="{{ __('Delete') }}"><i
                             class="ti ti-trash text-white"></i></a>
-    
+
                     {!! Form::close() !!}
                 </div>
 
 
-                
+
             </div>
 
 
@@ -236,7 +237,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 150px; font-size: 14px;">
                                                                     {{ __('Record ID') }}
                                                                 </td>
                                                                 <td class=""
@@ -247,13 +248,13 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 150px; font-size: 14px;">
                                                                     {{ __('Organization Name') }}
                                                                 </td>
                                                                 <td class="name-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 name">
                                                                             {{ $org->name }}
@@ -264,18 +265,20 @@
                                                                                 name="name"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $org->name }}
+
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 150px; font-size: 14px;">
                                                                     {{ __('Type of Organization') }}
                                                                 </td>
                                                                 <td class="type-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 type">
                                                                             {{ $org_detail->type }}
@@ -286,7 +289,8 @@
                                                                                 name="type"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $org_detail->type }}
                                                                 </td>
                                                             </tr>
 
@@ -317,13 +321,13 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Phone') }}
                                                                 </td>
                                                                 <td class="phone-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 phone">
                                                                             {{ $org_detail->phone }}
@@ -334,19 +338,20 @@
                                                                                 name="phone"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $org_detail->phone }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Email') }}
                                                                 </td>
                                                                 <td class="email-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 email">
                                                                             {{ $org->email }}
@@ -357,18 +362,19 @@
                                                                                 name="email"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $org->email }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Website') }}
                                                                 </td>
                                                                 <td class="website-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 website">
                                                                             {{ $org_detail->website }}
@@ -379,19 +385,20 @@
                                                                                 name="website"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $org_detail->website }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('LinkedIn') }}
                                                                 </td>
                                                                 <td class="linkedin-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 linkedin">
                                                                             {{ $org_detail->linkedin }}
@@ -402,17 +409,18 @@
                                                                                 name="linkedin"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $org_detail->linkedin }}
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Facebook') }}
                                                                 </td>
                                                                 <td class="facebook-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 facebook">
                                                                             {{ $org_detail->facebook }}
@@ -423,19 +431,20 @@
                                                                                 name="facebook"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $org_detail->facebook }}
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Twitter') }}
                                                                 </td>
                                                                 <td class="twitter-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
 
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 twitter">
                                                                             {{ $org_detail->twitter }}
@@ -446,21 +455,22 @@
                                                                                 name="twitter"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $org_detail->twitter }}
                                                                 </td>
                                                             </tr>
 
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Drive Link') }}
                                                                 </td>
                                                                 <td class="drive_link-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
 
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 drive_link">
                                                                             {{ $org_detail->drive_link }}
@@ -471,7 +481,8 @@
                                                                                 name="drive_link"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $org_detail->drive_link }}
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -503,13 +514,13 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 115PX; text-align: right; font-size: 14px;">
+                                                                    style="width: 115PX; font-size: 14px;">
                                                                     {{ __('Billing Address') }}
                                                                 </td>
                                                                 <td class="address-td"
-                                                                    style="width: 80%; text-align: right; font-size: 13px;">
+                                                                    style="width: 80%; font-size: 13px;">
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div
                                                                             class="input-group border-0 d-flex align-items-baseline">
@@ -520,7 +531,9 @@
                                                                                 class="btn btn-sm btn-secondary edit-btn-address rounded-0 btn-effect-none"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $org_detail->billing_street . ' ' . $org_detail->billing_city . ' ' . $org_detail->billing_state . ' ' . $org_detail->billing_postal_code . ' ' . $org_detail->billing_country }}
+
 
                                                                 </td>
                                                             </tr>
@@ -551,7 +564,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 145px; text-align: right; font-size: 14px;">
+                                                                    style="width: 145px; font-size: 14px;">
                                                                     {{ __('Dates to remember') }}
                                                                 </td>
                                                                 <td class=""
@@ -564,7 +577,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 145px; text-align: right; font-size: 14px;">
+                                                                    style="width: 145px; font-size: 14px;">
                                                                     {{ __('Organization Created') }}
                                                                 </td>
                                                                 <td class=""
@@ -575,7 +588,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 145px; text-align: right; font-size: 14px;">
+                                                                    style="width: 145px; font-size: 14px;">
                                                                     {{ __('Date of Next Activity') }}
                                                                 </td>
                                                                 <td class=""
@@ -586,7 +599,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 145px; text-align: right; font-size: 14px;">
+                                                                    style="width: 145px; font-size: 14px;">
                                                                     {{ __('Date of Last Activity') }}
                                                                 </td>
                                                                 <td class=""
@@ -621,13 +634,13 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Description') }}
                                                                 </td>
                                                                 <td class="description-td"
                                                                     style="padding-left:15px; width: 550px; text-align: justify; font-size: 14px;">
 
-                                                                    <div class="d-flex align-items-baseline edit-input-field-div"
+                                                                    {{-- <div class="d-flex align-items-baseline edit-input-field-div"
                                                                         @if (!empty($org_detail->description)) style="min-height: 150px;" @endif>
                                                                         <div
                                                                             class="input-group border-0 d-flex align-items-baseline">
@@ -640,7 +653,8 @@
                                                                                 <i class="ti ti-pencil"></i>
                                                                             </button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $org_detail->description }}
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -669,7 +683,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 100px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Tag List') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px;">
@@ -697,7 +711,7 @@
 
                             @php
                                 $notes = \App\Models\OrganizationNote::where('organization_id', $org->id)->get();
-                                
+
                             @endphp
 
                             {{-- Details Pill End --}}
