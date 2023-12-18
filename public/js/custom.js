@@ -56,15 +56,15 @@ function show_toastr(type, message) {
 }
 
 $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true"], div[data-ajax-popup="true"]', function () {
-
+  
     var data = {};
     var title1 = $(this).attr("title");
 
-    var title2 = $(this).attr("bs-original-title");
+    var title2 = $(this).attr("data-original-title");
     var title3 = $(this).attr("original-title");
-    var title = (title1 != undefined) ? title1 : title2;
+    var title = (title1 != undefined && title1 != '') ? title1 : title2;
     var title=(title != undefined) ? title : title3;
-
+    console.log(title)
     var size = ($(this).data('size') == '') ? 'md' : $(this).data('size');
     var url = $(this).data('url');
     
