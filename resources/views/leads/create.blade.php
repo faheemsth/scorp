@@ -219,14 +219,14 @@
                                         </tr>
 
 
-                                        <tr>
+                                        {{-- <tr>
                                             <td class="" style="width: 130px; text-align: right; font-size: 13px;">
                                                 {{ __('Email Opted Out') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="checkbox" name="" id="" class="ms-2">
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                     </tbody>
                                 </table>
                             </div>
@@ -346,7 +346,7 @@
 </div>
 
 <div class="modal-footer">
-    
+
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-danger" data-bs-dismiss="modal">
     <input type="submit" value="{{__('Create')}}" class="btn  btn-dark new-lead-btn">
 

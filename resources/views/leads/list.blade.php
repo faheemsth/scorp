@@ -109,7 +109,7 @@ if (isset($lead->is_active) && $lead->is_active) {
     @if ($pipeline)
         <div class="row">
 
-            <div class="row justify-content-center">
+            {{-- <div class="row justify-content-center">
                 <div class="col-md-3">
                     <!-- card -->
                     <div class="card my-card">
@@ -140,7 +140,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                         </div><!-- end card body -->
                     </div><!-- end card -->
                 </div>
-            </div>
+            </div> --}}
 
 
             <div class="col-xl-12">
@@ -297,15 +297,17 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             <option value="">Select Brand</option>
                                             @foreach ($brands as $brand)
                                             @if ($brand->id == $currentUserCompany->id)
-                                            <option value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
+                                            <option
+                                            <?= isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' ?>
+                                             value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
                                             @endif
                                                 @foreach ($com_permissions as $permissions)
                                                         @if ($permissions->permitted_company_id == $brand->id)
-                                                        <option value="{{ $permissions->permitted_company_id }}" class="">{{ $brand->name }}</option>
+                                                        <option
+                                                        <?= isset($_GET['created_by']) && in_array($permissions->permitted_company_id, $_GET['created_by']) ? 'selected' : '' ?>
+                                                         value="{{ $permissions->permitted_company_id }}" class="">{{ $brand->name }}</option>
                                                         @endif
                                                 @endforeach
-
-
                                             @endforeach
                                         </select>
                                     </div>
