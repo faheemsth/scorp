@@ -243,13 +243,13 @@
                                                                         <li
                                                                             class="{{ request()->is('reports-payroll') ? 'active' : '' }}">
                                                                             <a class="collapse-item"
-                                                                                href="{{ route('reports-payroll') }}"
+                                                                                href="{{ route('report.payroll') }}"
                                                                                 style="color:white; font-size: 13px;">{{ __(' Payroll') }}</a>
                                                                         </li>
                                                                         <li
                                                                             class="{{ request()->is('reports-leave') ? 'active' : '' }}">
                                                                             <a class="collapse-item"
-                                                                                href="{{ route('reports-leave') }}"
+                                                                                href="{{ route('report.leave') }}"
                                                                                 style="color:white; font-size: 13px;">{{ __(' Leave') }}</a>
                                                                         </li>
                                                                         <li
