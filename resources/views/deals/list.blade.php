@@ -94,20 +94,21 @@
     }
 
     .wizard .current {
-        background: #b5282f;
+        background: #1F2735;
         color: #fff;
     }
 
     .wizard .current:after {
-        border-left-color: #b5282f;
+        border-left-color: #1F2735;
     }
 
     .wizard .done {
-        background: #0BB325 !important;
+        background: #B3CDE1 !important;
+        color: #1F2735;
     }
 
     .wizard .done:after {
-        border-left-color: #0BB325 !important;
+        border-left-color: #B3CDE1 !important;
     }
 
     .lead-topbar {

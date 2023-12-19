@@ -3,21 +3,25 @@
 $org_data = $org->organization($org->id);
 
 @endphp
-
+<style>
+    tr td{
+        font-size: 14px !important;
+    }
+</style>
 <tr>
     <!-- <td class="py-1">
         <input type="checkbox" class="form">
     </td> -->
-    <td class="py-1">
+    <td >
         <span style="cursor:pointer" class="org-name hyper-link" onclick="openNav(<?= $org->id ?>)" data-org-id="{{ $org->id }}">{{$org->name}}</span>
     </td>
-    <td class="py-1">{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
-    <td class="py-1">{{ isset($org_data->billing_street) ? $org_data->billing_street : '' }}</td>
-    <td class="py-1">{{ isset($org_data->billing_city) ? $org_data->billing_city : ''  }}</td>
-    <td class="py-1">{{ isset($org_data->billing_state) ? $org_data->billing_state : ''  }}</td>
-    <td class="py-1">{{ isset($org_data->billing_country) ? $org_data->billing_country : ''  }}</td>
-    <td class="py-1"></td>
-    <td class="py-1">
+    <td >{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
+    <td >{{ isset($org_data->billing_street) ? $org_data->billing_street : '' }}</td>
+    <td >{{ isset($org_data->billing_city) ? $org_data->billing_city : ''  }}</td>
+    <td >{{ isset($org_data->billing_state) ? $org_data->billing_state : ''  }}</td>
+    <td >{{ isset($org_data->billing_country) ? $org_data->billing_country : ''  }}</td>
+    <td ></td>
+    <td >
         <div class="dropdown">
             <button class="btn bg-transparents" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
@@ -35,11 +39,11 @@ $org_data = $org->organization($org->id);
 
                 <li>
                     @if(\Auth::user()->type == 'super admin' ||\Auth::user()->can('delete organization'))
-                    
+
                     <a href="{{ route('organization.delete', $org->id) }}" class="dropdown-item">
                         Delete this Organization
                     </a>
-                    
+
                     @endif
                 </li>
                  @can('create task')

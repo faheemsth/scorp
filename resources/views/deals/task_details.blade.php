@@ -2,15 +2,19 @@
     .editable:hover {
         border: 1px solid rgb(136, 136, 136);
     }
-
-    .task-details table tr td {
-        padding-top: 3px !important;
-        padding-bottom: 3px !important;
-        font-size: 12px;
+    #dellhover{
+        opacity: 0;
+    }
+    #lihover:hover #dellhover{
+        opacity: 1;
     }
 
     .task-details table tr td {
-        font-size: 12px;
+        font-size: 14px;
+    }
+
+    .task-details table tr td {
+        font-size: 14px;
     }
 
     .card-body {
@@ -592,16 +596,6 @@
                                                                                             class=" form-switch form-switch-right ">
                                                                                             {{ $discussion['created_at'] }}
                                                                                         </div>
-
-                                                                                        <style>
-                                                                                            #editable {
-                                                                                                display: none;
-                                                                                            }
-
-                                                                                            #lihover:hover #editable {
-                                                                                                display: flex;
-                                                                                            }
-                                                                                        </style>
                                                                                         <div class="d-flex gap-3"
                                                                                             id="dellhover">
                                                                                             <i class="ti ti-pencil textareaClassedit"

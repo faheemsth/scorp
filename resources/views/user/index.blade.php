@@ -36,7 +36,7 @@
                             </div>
                             <div class="col-10 d-flex justify-content-end gap-2">
                                 <div class="input-group w-25">
-                                    <button class="btn btn-sm list-global-search-btn">
+                                    <button class="btn list-global-search-btn">
                                         <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
                                             <i class="ti ti-search" style="font-size: 18px"></i>
                                         </span>
@@ -49,8 +49,8 @@
 
                                 <a href="#" data-size="lg" data-url="{{ route('users.create') }}"
                                     data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create') }}"
-                                    class="btn btn-dark">
-                                    <i class="ti ti-plus py-5"></i>
+                                    class="btn btn-dark px-2 py-2">
+                                    <i class="ti ti-plus "></i>
                                 </a>
                             </div>
                         </div>

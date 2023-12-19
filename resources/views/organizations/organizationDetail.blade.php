@@ -4,13 +4,12 @@
     }
 
     table tr td {
-        padding-top: 3px !important;
-        padding-bottom: 3px !important;
-        font-size: 12px;
+
+        font-size: 14px;
     }
 
     table tr {
-        font-size: 12px
+        font-size: 14px;
     }
 
     .card-body {
@@ -140,7 +139,7 @@
                 <div class="d-flex justify-content-end gap-1 me-3">
                     <a href="#" data-size="lg" data-url="{{ route('organization.edit', $org->id) }}"
                         data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"
-                        class="btn px-2 btn-dark">
+                        class="btn px-2 btn-dark text-white">
                         <i class="ti ti-pencil"></i>
                     </a>
 
@@ -148,10 +147,11 @@
                         'method' => 'DELETE',
                         'route' => ['organization.destroy', $org->id],
                         'id' => 'delete-form-' . $org->id,
+                        'class'=>'mb-0',
                     ]) !!}
 
                     <a href="#"
-                        class="btn btn-sm bg-danger  align-items-center bs-pass-para"
+                        class="btn px-2 bg-danger  align-items-center bs-pass-para"
                         data-bs-toggle="tooltip"
                         title="{{ __('Delete') }}"><i
                             class="ti ti-trash text-white"></i></a>
@@ -185,7 +185,7 @@
             <div class="lead-content my-2">
 
                 <div class="card me-3">
-                    <div class="card-header p-1">
+                    <div class="card-header p-1 bg-white">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link pills-link active" id="pills-details-tab" data-bs-toggle="pill"
@@ -692,7 +692,7 @@
                                                                         data-ajax-popup="true"
                                                                         data-bs-toggle="tooltip"
                                                                         title="{{ __('Update Tags') }}"
-                                                                        class="btn btn-sm btn-primary"
+                                                                        class="btn btn-dark px-2 text-white"
                                                                         style="font-size: 14px;">
                                                                         {{ __('Change') }}
                                                                     </a>
@@ -866,7 +866,7 @@
                                                             <div class="">
                                                                 <div class="col-12">
                                                                     <div class="card">
-                                                                        <div class="card-header px-0 pt-0"
+                                                                        <div class="card-header"
                                                                             style="padding-bottom: 18px;">
                                                                             <div class="d-flex justify-content-end">
                                                                                 <div class="float-end">
@@ -875,8 +875,8 @@
                                                                                         data-ajax-popup="true"
                                                                                         data-bs-toggle="tooltip"
                                                                                         title="{{ __('Add Message') }}"
-                                                                                        class="btn btn-sm text-white"
-                                                                                        style="background-color: #b5282f;">
+                                                                                        class="btn px-2 btn-dark text-white"
+                                                                                        >
                                                                                         <i class="ti ti-plus"></i>
                                                                                     </a>
                                                                                 </div>
@@ -950,7 +950,7 @@
                                                                 <div class="col-12">
                                                                     <div class="card">
 
-                                                                        <div class="card-header px-0 pt-0"
+                                                                        <div class="card-header "
                                                                             style="padding-bottom: 18px;">
                                                                             <div class="d-flex justify-content-end">
                                                                                 <div class="float-end">
@@ -959,8 +959,8 @@
                                                                                         data-ajax-popup="true"
                                                                                         data-bs-toggle="tooltip"
                                                                                         title="{{ __('Add Message') }}"
-                                                                                        class="btn btn-sm text-white"
-                                                                                        style="background-color: #b5282f;">
+                                                                                        class="btn px-2 btn-dark text-white"
+                                                                                        >
                                                                                         <i class="ti ti-plus"></i>
                                                                                     </a>
                                                                                 </div>
@@ -999,16 +999,16 @@
                                                                                                     data-ajax-popup="true"
                                                                                                     data-bs-toggle="tooltip"
                                                                                                     title="{{ __('Drive Link') }}"
-                                                                                                    class="btn btn-sm text-white mx-2"
-                                                                                                    style="background-color: #b5282f;">
+                                                                                                    class="btn px-2 btn-dark text-white mx-2"
+                                                                                                   >
                                                                                                     <i
                                                                                                         class="ti ti-pencil "></i>
                                                                                                 </a>
 
                                                                                                 <a href="javascript:void(0)"
-                                                                                                    class="btn btn-sm text-white delete-notes"
+                                                                                                    class="btn px-2 btn-dark text-white delete-notes"
                                                                                                     data-note-id="{{ $note->id }}"
-                                                                                                    style="background-color: #b5282f;">
+                                                                                                    >
                                                                                                     <i
                                                                                                         class="ti ti-trash "></i>
                                                                                                 </a>
@@ -1064,8 +1064,8 @@
                                                                         data-ajax-popup="true"
                                                                         data-bs-toggle="tooltip"
                                                                         title="{{ __('Add Message') }}"
-                                                                        class="btn btn-sm text-white"
-                                                                        style="background-color: #b5282f">
+                                                                        class="btn px-2 btn-dark text-white"
+                                                                       >
                                                                         <i class="ti ti-plus"></i>
                                                                     </a>
                                                                 </div>
@@ -1102,14 +1102,14 @@
                                                                                 data-ajax-popup="true"
                                                                                 data-bs-toggle="tooltip"
                                                                                 title="{{ __('Drive Link') }}"
-                                                                                class="btn btn-sm text-white mx-2"
-                                                                                style="background-color: #b5282f;">
+                                                                                class="btn px-2 btn-dark text-white mx-2"
+                                                                               >
                                                                                 <i class="ti ti-pencil "></i>
                                                                             </a>
 
                                                                             <a href="javascript:void(0)"
-                                                                                class="btn btn-sm text-white"
-                                                                                style="background-color: #b5282f;"
+                                                                                class="btn px-2 btn-danger text-white"
+
                                                                                 onclick="deleteTask({{ $task->id }}, {{ $org->id }}, 'organization');">
                                                                                 <i class="ti ti-trash "></i>
                                                                             </a>
@@ -1154,8 +1154,8 @@
                                                                         data-ajax-popup="true"
                                                                         data-bs-toggle="tooltip"
                                                                         title="{{ __('Add Message') }}"
-                                                                        class="btn btn-sm text-white"
-                                                                        style="background-color: #b5282f">
+                                                                        class="btn px-2 btn-dark text-white"
+                                                                        >
                                                                         <i class="ti ti-plus"></i>
                                                                     </a>
                                                                 </div>

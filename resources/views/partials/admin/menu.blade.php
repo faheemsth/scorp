@@ -34,7 +34,7 @@
 
             @if (Auth::user()->type == 'company' ||
                     Auth::user()->type == 'team' ||
-                    Gate::check('show hrm dashboard') ||
+                    // Gate::check('show hrm dashboard') ||
                     Gate::check('show project dashboard') ||
                     Gate::check('show account dashboard'))
                 <li
@@ -44,7 +44,7 @@
 
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseone"
                         aria-expanded="true" aria-controls="collapseone">
-                        <i class="fa-solid fa-chart-line" style="color: #ffffff;"></i>
+                        <img src="{{ asset('assets/cs-theme/icons/Group 138.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
 
                         <span>{{ __('Dashboard') }}</span>
                     </a>
@@ -202,7 +202,7 @@
                                 @endif
                                 @if (\Auth::user()->show_hrm() == 1)
                                     <li
-                                        class="nav-item  {{ Request::segment(1) == 'hrm-dashboard' || Request::segment(1) == 'reports-payroll' ? ' active dash-trigger' : '' }}">
+                                        class="nav-item d-none {{ Request::segment(1) == 'hrm-dashboard' || Request::segment(1) == 'reports-payroll' ? ' active dash-trigger' : '' }}">
                                         <a class="nav-link collapsed" href="#" data-toggle="collapse"
                                             data-target="#collapsesys" aria-expanded="true"
                                             aria-controls="collapsesys">
@@ -289,7 +289,7 @@
 
                 @if (Gate::check('manage employee') || Gate::check('manage setsalary'))
                     <li
-                        class="nav-item {{ Request::segment(1) == 'holiday-calender' ||
+                        class="nav-item d-none {{ Request::segment(1) == 'holiday-calender' ||
                         Request::segment(1) == 'leavetype' ||
                         Request::segment(1) == 'leave' ||
                         Request::segment(1) == 'attendanceemployee' ||
@@ -1074,6 +1074,7 @@
                                              : '' }}">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse"
                             data-target="#collapsefour" aria-expanded="true" aria-controls="collapsefour">
+                            <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
                             <span>{{ __('CRM System') }}</span>
                         </a>
                         <div id="collapsefour" class="collapse" aria-labelledby="headingUtilities"
@@ -1099,7 +1100,9 @@
                                         <li
                                             class=" {{ Request::route()->getName() == 'deals.get.user.tasks' ? ' active' : '' }}">
                                             <a class="collapse-item" style="color: white; font-size: 13px;"
-                                                href="{{ route('deals.get.user.tasks') }}">{{ __('Tasks') }}</a>
+                                                href="{{ route('deals.get.user.tasks') }}">
+                                                <img src="{{ asset('assets/cs-theme/icons/to-do-list-13177 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+                                                {{ __('Tasks') }}</a>
                                         </li>
                                     @endcan
 
@@ -1107,7 +1110,10 @@
                                         <li
                                             class=" {{ Request::route()->getName() == 'leads.list' || Request::route()->getName() == 'leads.index' || Request::route()->getName() == 'leads.show' ? ' active' : '' }}">
                                             <a class="collapse-item" style="color: white; font-size: 13px;"
-                                                href="{{ route('leads.list') }}">{{ __('Leads') }}</a>
+                                                href="{{ route('leads.list') }}">
+                                            <img src="{{ asset('assets/cs-theme/icons/Layer_1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
+                                                {{ __('Leads') }}</a>
                                         </li>
                                     @endcan
 
@@ -1115,7 +1121,10 @@
                                         <li
                                             class=" {{ Request::route()->getName() == 'clients.index' || Request::segment(1) == 'clients' || Request::route()->getName() == 'clients.edit' ? ' active' : '' }}">
                                             <a class="collapse-item" style="color: white; font-size: 13px;"
-                                                href="{{ route('clients.index') }}">{{ __('Contacts') }}</a>
+                                                href="{{ route('clients.index') }}">
+                                            <img src="{{ asset('assets/cs-theme/icons/Layer_1 (1).png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
+                                                {{ __('Contacts') }}</a>
                                         </li>
                                     @endcan
 
@@ -1123,7 +1132,9 @@
                                         <li
                                             class=" {{ Request::route()->getName() == 'deals.list' || Request::route()->getName() == 'deals.index' || Request::route()->getName() == 'deals.show' ? ' active' : '' }}">
                                             <a class="collapse-item" style="color: white; font-size: 13px;"
-                                                href="{{ route('deals.list') }}">Admissions</a>
+                                                href="{{ route('deals.list') }}">
+                                                <img src="{{ asset('assets/cs-theme/icons/edit-icon 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+                                                Admissions</a>
                                         </li>
                                     @endcan
 
@@ -1132,7 +1143,10 @@
                                         <li
                                             class=" {{ Request::route()->getName() == 'applications.index' ? ' active' : '' }}">
                                             <a class="collapse-item" style="color: white; font-size: 13px;"
-                                                href="{{ route('applications.index') }}">Applications</a>
+                                                href="{{ route('applications.index') }}">
+                                            <img src="{{ asset('assets/cs-theme/icons/result-pass-icon 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
+                                                Applications</a>
                                         </li>
                                     @endcan
 
@@ -1149,7 +1163,10 @@
                                         <li
                                             class=" {{ Request::route()->getName() == 'university.list' || Request::route()->getName() == 'university.index' || Request::route()->getName() == 'university.show' ? ' active' : '' }}">
                                             <a class="collapse-item" style="color: white; font-size: 13px;"
-                                                href="{{ route('university.index') }}">{{ __('Toolkit') }}</a>
+                                                href="{{ route('university.index') }}">
+                                                <img src="{{ asset('assets/cs-theme/icons/Vector.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
+                                                {{ __('Institutes') }}</a>
                                         </li>
                                     @endcan
 
@@ -1163,7 +1180,9 @@
                                         <li
                                             class=" {{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
                                             <a class="collapse-item" style="color: white; font-size: 13px;"
-                                                href="{{ route('organization.index') }}">{{ __('Organizations') }}</a>
+                                                href="{{ route('organization.index') }}">
+
+                                                {{ __('Organizations') }}</a>
                                         </li>
                                     @endcan
 
@@ -1171,7 +1190,10 @@
                                         <li
                                             class=" {{ Request::route()->getName() == 'branch.index' || Request::route()->getName() == 'branch.edit' || Request::route()->getName() == 'branch.show' ? ' active' : '' }}">
                                             <a class="collapse-item" style="color: white; font-size: 13px;"
-                                                href="{{ route('branch.index') }}">{{ __('Branches') }}</a>
+                                                href="{{ route('branch.index') }}">
+                            <img src="{{ asset('assets/cs-theme/icons/Layer_1 (3).png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
+                                                {{ __('Branches') }}</a>
                                         </li>
                                     @endcan
 
@@ -1233,7 +1255,9 @@
                                     @can('manage project task')
                                         <li class=" {{ request()->is('taskboard*') ? 'active' : '' }}">
                                             <a class="collapse-item" style="color: white; font-size: 13px;"
-                                                href="{{ route('taskBoard.view', 'list') }}">{{ __('Tasks') }}</a>
+                                                href="{{ route('taskBoard.view', 'list') }}">
+                                                <img src="{{ asset('assets/cs-theme/icons/to-do-list-13177 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+                                                {{ __('Tasks') }}</a>
                                         </li>
                                     @endcan
                                     @can('manage timesheet')
@@ -1440,6 +1464,8 @@
             @if (\Auth::user()->type != 'super admin')
                 <li class="nav-item {{ Request::segment(1) == 'support' ? 'active' : '' }}">
                     <a href="{{ route('support.index') }}" class="nav-link">
+                        <img src="{{ asset('assets/cs-theme/icons/Layer_1 (4).png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
                         <span>{{ __('Support') }}</span>
                     </a>
 
@@ -1463,6 +1489,8 @@
                     <li class="nav-item">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse"
                             data-target="#collapseten" aria-expanded="true" aria-controls="collapseten">
+                    <img src="{{ asset('assets/cs-theme/icons/settings-3110 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
                             <span>{{ __('Settings') }}</span>
                         </a>
                         <div id="collapseten" class="collapse" aria-labelledby="headingUtilities"
@@ -1543,6 +1571,8 @@
             @if (Gate::check('manage project task'))
                 <li class="nav-item  {{ Request::segment(1) == 'taskboard' ? ' active' : '' }}">
                     <a href="{{ route('taskBoard.view', 'list') }}" class="nav-link">
+                        <img src="{{ asset('assets/cs-theme/icons/to-do-list-13177 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
                         <span>{{ __('Tasks') }}</span>
                     </a>
                 </li>
@@ -1575,6 +1605,8 @@
             <li class="nav-item">
                 <a href="{{ route('support.index') }}"
                     class="nav-link {{ Request::segment(1) == 'support' ? 'active' : '' }}">
+                    <img src="{{ asset('assets/cs-theme/icons/Layer_1 (4).png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
                     <span>{{ __('Support') }}</span>
                 </a>
             </li>
@@ -1591,7 +1623,7 @@
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse"
                             data-target="#collapsesuper" aria-expanded="true" aria-controls="collapsesuper">
-                            <i class="fa-solid fa-gear" style="color: #ffffff;"></i>
+                            <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
                             <span>{{ __('CRM System') }}</span>
                         </a>
                         <div id="collapsesuper" class="collapse" aria-labelledby="headingTwo"
@@ -1599,12 +1631,17 @@
                             <div class="  collapse-inner rounded">
                                 <ul>
                     <li class="nav-item{{ Request::route()->getName() == 'deals.get.user.tasks' ? ' active' : '' }}">
-                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('deals.get.user.tasks') }}">{{ __('Tasks') }}</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('deals.get.user.tasks') }}">
+                             <img src="{{ asset('assets/cs-theme/icons/to-do-list-13177 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+                            {{ __('Tasks') }}</a>
                     </li>
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'university.list' || Request::route()->getName() == 'university.index' || Request::route()->getName() == 'university.show' ? ' active' : '' }}">
-                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('university.index') }}">Toolkit</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('university.index') }}">
+                            <img src="{{ asset('assets/cs-theme/icons/Vector.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
+                            Institutes</a>
                     </li>
 
 
@@ -1615,21 +1652,32 @@
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'leads.list' || Request::route()->getName() == 'leads.index' || Request::route()->getName() == 'leads.show' ? ' active' : '' }}">
-                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('leads.list') }}">{{ __('Leads') }}</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('leads.list') }}">
+                        <img src="{{ asset('assets/cs-theme/icons/Layer_1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
+                            {{ __('Leads') }}</a>
                     </li>
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'clients.index' || Request::segment(1) == 'clients' || Request::route()->getName() == 'clients.edit' ? ' active' : '' }}">
-                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('clients.index') }}">{{ __('Contacts') }}</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('clients.index') }}">
+                        <img src="{{ asset('assets/cs-theme/icons/Layer_1 (1).png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
+                            {{ __('Contacts') }}</a>
                     </li>
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'deals.list' || Request::route()->getName() == 'deals.index' || Request::route()->getName() == 'deals.show' ? ' active' : '' }}">
-                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('deals.list') }}">Admissions</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('deals.list') }}">
+                            <img src="{{ asset('assets/cs-theme/icons/edit-icon 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+                            Admissions</a>
                     </li>
 
                     <li class="nav-item{{ Request::route()->getName() == 'applications.index' ? ' active' : '' }}">
-                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('applications.index') }}">Applications</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('applications.index') }}">
+                            <img src="{{ asset('assets/cs-theme/icons/result-pass-icon 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
+                            Applications</a>
                     </li>
 
                     {{-- <li
@@ -1639,25 +1687,37 @@
 
                     <li style=""
                         class="nav-item {{ Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
+
                         <a class="collapse-item"   style="color:white; font-size: 13px;"
-                            href="{{ route('pipelines.index') }}   ">{{ __('CRM System Setup') }}</a>
+                            href="{{ route('pipelines.index') }}   ">
+                            <img src="{{ asset('assets/cs-theme/icons/administrator-developer-icon 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
+                            {{ __('CRM System Setup') }}</a>
                     </li>
 
                     <li style=""
                         class="nav-item {{ Request::segment(1) == 'finance-dashboard' ? 'active dash-trigger' : '' }}">
                         <a class="collapse-item"   style="color:white; font-size: 13px;"
-                            href="{{ route('company-permission') }}   ">{{ __('Company Permission') }}</a>
+                            href="{{ route('company-permission') }}   ">
+                            <img src="{{ asset('assets/cs-theme/icons/Layer_1 (2).png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
+                            {{ __('Company Permission') }}</a>
                     </li>
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'branch.index' || Request::route()->getName() == 'branch.edit' || Request::route()->getName() == 'branch.show' ? ' active' : '' }}">
-                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('branch.index') }}">{{ __('Branches') }}</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('branch.index') }}">
+                            <img src="{{ asset('assets/cs-theme/icons/Layer_1 (3).png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
+                            {{ __('Branches') }}</a>
                     </li>
 
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
-                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('organization.index') }}">{{ __('Organizations') }}</a>
+                        <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('organization.index') }}">
+
+                            {{ __('Organizations') }}</a>
                     </li>
                 </ul>
                             </div>
@@ -1712,6 +1772,8 @@
                 <li class="nav-item d-none {{ Request::route()->getName() == 'systems.index' ? ' active' : '' }}">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse"
                     data-target="#collapsesu" aria-expanded="true" aria-controls="collapsesu">
+                    <img src="{{ asset('assets/cs-theme/icons/settings-3110 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
                     <span>{{ __('Settings') }}</span>
                 </a>
                 <div id="collapsesu" class="collapse" aria-labelledby="headingTwo"
