@@ -48,3 +48,17 @@
     </div>
 </li>
 @endforeach
+<script>
+    $(document).ready(function() {
+
+        $('.textareaClassedit').click(function() {
+            var dataId = $(this).data('id');
+            var dataComment = $(this).data('comment');
+            $('textarea[name="comment"]').val(dataComment);
+            $('#id').val(dataId);
+            $('#textareaID, #dellhover, .textareaClass').show();
+            $('.textareaClass').toggle("slide");
+        });
+
+    });
+</script>

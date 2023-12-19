@@ -772,12 +772,6 @@
 
         });
 
-        $('#taskDiscussionInput').keyup(function(event) {
-            $('#SaveDiscussion').removeClass("d-none");
-        });
-
-
-
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
         function ChangeTaskStatus(id) {
@@ -817,4 +811,17 @@
                 }
             });
         }
+    </script>
+    <script>
+$(document).ready(function() {
+    $('#taskDiscussionInput').keyup(function(event) {
+        var commentText = $('textarea[name="comment"]').val();
+        if (commentText.length > 0) {
+            $('#SaveDiscussion').removeClass("d-none");
+        } else {
+            $('#SaveDiscussion').addClass("d-none");
+        }
+    });
+});
+
     </script>
