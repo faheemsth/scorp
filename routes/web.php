@@ -1734,6 +1734,7 @@ Route::get('/get-deal-applications', [ApplicationsController::class, 'getDealApp
 Route::resource('/institute-category', InstituteCategoryController::class);
 
 Route::post("/update-bulk-task-status", [DealController::class, 'updateBulkTaskStatus'])->name('update-bulk-task-status');
+Route::post("/update-bulk-task", [DealController::class, 'updateBulkTask'])->name('update-bulk-task');
 
 Route::get("/delete-bulk-tasks", [DealController::class, 'deleteBulkTasks'])->name('delete-bulk-tasks');
 Route::get("/delete-bulk-deals", [DealController::class, 'deleteBulkDeals'])->name('delete-bulk-deals');

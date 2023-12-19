@@ -46,8 +46,22 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="col-2">
+                        <!-- <p class="mb-0 pb-0">Tasks</p> -->
+                        <div class="dropdown" id="actions_div" style="display:none">
+                            <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+                                <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
+                                <li><a class="dropdown-item" href="#">Brand Change</a></li>
+                                <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
+                            </ul>
+                        </div>
+                    </div>
 
-                    <div class="col-10 d-flex justify-content-end gap-2">
+                    <div class="col-8 d-flex justify-content-end gap-2">
                         <div class="input-group w-25">
                             <button class="btn btn-sm list-global-search-btn">
                                 <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
@@ -273,11 +287,57 @@
     </div>
 </div>
 
+<div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mass Update</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('update-bulk-task') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select name="bulk_field" id="bulk_field" class="form form-control">
+                                <option value="">Select Field</option>
+                                <option value="tm">Task Name</option>
+                                <option value="ofc">Office</option>
+                                <option value="ast">Assign Type</option>
+                                <option value="asto">Assigned To</option>
+                                <option value="ts">Task Status</option>
+                                <option value="dd">Due Date</option>
+                                <option value="sd">Start Date</option>
+                                <option value="rd">Reminder Date</option>
+                                <!-- <option value="rt">Related Type</option>
+                                <option value="rto">Related To</option> -->
+                                <option value="des">Description</option>
+                                <option value="per">Permissions</option>
+                            </select>
+                        </div>
+                        <input name='tasks_ids' id="tasks_ids" hidden>
+                        <div class="col-md-6" id="field_to_update">
+                            
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" value="Update">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @push('script-page')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 <script>
+    let selectedArr = [];
     $(document).ready(function() {
         $('.filter-btn-show').click(function() {
             $("#filter-show").toggle();
@@ -520,9 +580,114 @@
         }
     });
 
+    $('#bulk_field').on('change', function() {
+
+        if(this.value != ''){
+            $('#field_to_update').html('');
+
+            if(this.value == 'tm'){
+
+                let field = '<input type="text" class="form-control" id="task-name" value="" placeholder="Task Name" name="task_name" required>';
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'ofc'){
+
+                var branches = <?= json_encode($branches) ?>;
+                console.log(branches)
+                let options = '';
+                for(let i = 0; i < branches.length; i++){
+                    options += '<option value="'+branches[i].id+'">'+branches[i].name+'</option>';
+                }
+                  
+                let field = `<select class="form form-control select2" id="choices-multiple1" name="branch_id" required>
+                                <option value="">Select Office</option>
+                                `+options+`
+                            </select>`;
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'ast'){
+
+            }else if(this.value == 'asto'){
+
+            }else if(this.value == 'ts'){
+
+                let field = `<select class="form form-control select2" id="choices-multiple5" name="status" required>
+                                <option value="">Select Status</option>
+                                <option value="0">On Going</option>
+                                <option value="1">Completed</option>
+                            </select>`;
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'dd'){
+
+                let field = `<input type="date" class="form form-control" 
+                                    name="due_date" required>`;
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'sd'){
+
+                let field = `<input type="date" class="form form-control"
+                                    name="start_date" required>`;
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'rd'){
+
+                let field = `<div class="col-sm-6 d-flex"><input type="date" class="form form-control"
+                                    name="remainder_date" required>
+                                <input type="time" class="form form-control"
+                                    name="remainder_time" required></div>`;
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'des'){
+
+                let field =  `<textarea name="description" id="" cols="30" rows="3" class="form form-control" required></textarea>`;
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'per'){
+
+                let field = `<select class="form form-control select2" id="choices-multiple8" name="visibility" required>
+                                <option value="">Select Visibility</option>
+                                <option value="public" >public</option>
+                                <option value="private">private</option>
+                            </select>`;
+                $('#field_to_update').html(field);
+
+            }
+        }
+
+    });
+
     $(document).on('change', '.main-check', function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));
     });
+    $(document).on('change', '.sub-check', function() {
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        console.log(selectedIds.length)
+
+        if(selectedIds.length > 0){
+            selectedArr = selectedIds;
+            $("#actions_div").css('display', 'block');
+        }else{
+            selectedArr = selectedIds;
+
+            $("#actions_div").css('display', 'none');
+        }
+        let commaSeperated = selectedArr.join(",");
+        console.log(commaSeperated)
+        $("#tasks_ids").val(commaSeperated);
+
+    });
+
+    function massUpdate(){
+        if(selectedArr.length > 0){
+            $('#mass-update-modal').modal('show')
+        }else{
+            alert('Please choose Tasks!')
+        }
+    }
 
     $(document).on("click", ".update-status-modal", function() {
         // Get an array of selected checkbox IDs
