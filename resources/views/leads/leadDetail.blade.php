@@ -1230,65 +1230,6 @@
                             <!-- End of Open Accordion Item -->
 
                             <!-- Add More Accordion Items Here -->
-
-                            <style>
-                                .bold{
-                                    font-weight:bold;
-                                }
-                                .time{
-                                    position:absolute; left:-110px;
-                                }
-                                .timeline-wrapper {
-                                padding-left:80px;
-                                min-width: 400px;
-                                font-family: 'Helvetica';
-                                font-size: 14px;
-                                }
-                                .StepProgress {
-                                    position: relative;
-                                    padding-left: 45px;
-                                    list-style: none;
-                                }
-                                .StepProgress::before {
-                                    display: inline-block;
-                                    content: '';
-                                    position: absolute;
-                                    top: 0;
-                                    left: 100px;
-                                    width: 10px;
-                                    height: 100%;
-                                    border-left: 2px solid #CCC;
-                                }
-                                .StepProgress-item {
-                                    position: relative;
-                                    counter-increment: list;
-                                }
-                                .StepProgress-item:not(:last-child) {
-                                  padding-bottom: 20px;
-                                }
-                                .StepProgress-item::before {
-                                display: inline-block;
-                                content: '';
-                                position: absolute;
-                                left: 100px;
-                                height: 100%;
-                                width: 10px;
-                                }
-                                .StepProgress-item::after {
-                                    content: '';
-                                    display: inline-block;
-                                    position: absolute;
-                                    top: 0;
-                                    left: 50px;
-                                    width: 12px;
-                                    height: 12px;
-                                    border: 2px solid #CCC;
-                                    border-radius: 50%;
-                                    background-color: #FFF;
-                                }
-                               
-                            </style>
-
                             <div class="tab-pane fade" id="pills-activity" role="tabpanel"
                                 aria-labelledby="pills-activity-tab">
 

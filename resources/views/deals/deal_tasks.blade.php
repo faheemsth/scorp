@@ -263,9 +263,9 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
 
                                     <td>
                                         @if ($task->status == 0)
-                                        {{-- <span class="badge text-white" >{{ __('Completed') }}</span> --}}
-                                        {{-- @else--}}
-                                        <span class="badge  text-white" style="background-color:#B3CDE1">{{ __('On Going') }}</span>
+                                            <span class="badge  text-white" style="background-color:#B3CDE1">{{ __('On Going') }}</span>
+                                        @else
+                                            <span class="badge text-white" style="background: green; " >{{ __('Completed') }}</span>
                                         @endif
                                     </td>
                                 </tr>

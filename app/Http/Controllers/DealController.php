@@ -2629,6 +2629,8 @@ class DealController extends Controller
             }
 
 
+             
+
             ///////Add filter
             $filters = $this->TasksFilter();
 
@@ -2644,6 +2646,10 @@ class DealController extends Controller
                 }elseif ($column == 'status') {
                     $tasks->where('status',$value);
                 }
+            }
+
+            if(!isset($_GET['status'])){
+                $tasks->where('status',0);
             }
 
 
