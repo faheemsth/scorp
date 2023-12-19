@@ -801,11 +801,11 @@
                             'X-CSRF-TOKEN': csrfToken
                         },
                         success: function(response) {
-                            console.log(response);
-                            if (response && response.status === 'success') {
-                                toastr.success('Success', response.message);
-                                location.reload();
-                            }
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'The task status has been changed successfully.',
+                            });
                         },
 
                         error: function(jqXHR, textStatus, errorThrown) {
