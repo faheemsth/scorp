@@ -112,15 +112,14 @@
                             style=" color:white;"><i class="ti ti-refresh"
                                 style="font-size: 18px"></i></button>
 
-                        <button class="btn filter-btn-show p-2" style="background-color: #b5282f; color:white;"
+                        <button class="btn filter-btn-show px-2 btn-dark" style="color:white;"
                             type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
 
                         @if(\Auth::user()->type=='super admin' || \Auth::user()->can('create organization'))
-                            <button data-url="{{ route('leads.create') }}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            <button data-url="{{ route('leads.create') }}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <button data-url="{{ route('leads.create') }}" class="btn  px-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 <i class="ti ti-plus" style="font-size:18px"></i>
                             </button>
                         @endif
@@ -214,7 +213,7 @@
                                 <td style="border-left: 1px solid #fff;">Action</td>
                             </tr>
                         </thead>
-                        <tbody class="organization_tbody" style="color:rgb(0, 0, 0); font-size: 12px;" class="new-organization-list-tbody">
+                        <tbody class="organization_tbody" style="color:rgb(0, 0, 0); font-size: 14px;" class="new-organization-list-tbody">
 
                             @forelse($organizations as $org)
                             @php
@@ -229,16 +228,16 @@
                                 <td>
                                     <input type="checkbox" name="organizations[]" value="{{$org->id}}" class="sub-check">
                                 </td>
-                                <td class="py-1">
+                                <td>
                                     <span style="cursor:pointer" class="org-name hyper-link" onclick="openNav(<?= $org->id ?>)" data-org-id="{{ $org->id }}">{{$org->name}}</span>
                                 </td>
-                                <td class="py-1">{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
-                                <td class="py-1">{{ isset($org_data->billing_street) ? $org_data->billing_street : '' }}</td>
-                                <td class="py-1">{{ isset($org_data->billing_city) ? $org_data->billing_city : ''  }}</td>
-                                <td class="py-1">{{ isset($org_data->billing_state) ? $org_data->billing_state : ''  }}</td>
-                                <td class="py-1">{{ isset($org_data->billing_country) ? $org_data->billing_country : ''  }}</td>
-                                <td class="py-1"></td>
-                                <td class="py-1">
+                                <td >{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
+                                <td >{{ isset($org_data->billing_street) ? $org_data->billing_street : '' }}</td>
+                                <td >{{ isset($org_data->billing_city) ? $org_data->billing_city : ''  }}</td>
+                                <td >{{ isset($org_data->billing_state) ? $org_data->billing_state : ''  }}</td>
+                                <td >{{ isset($org_data->billing_country) ? $org_data->billing_country : ''  }}</td>
+                                <td ></td>
+                                <td >
                                     <div class="dropdown">
                                         <button class="btn bg-transparents" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">

@@ -2,15 +2,19 @@
     .editable:hover {
         border: 1px solid rgb(136, 136, 136);
     }
-
-    .task-details table tr td {
-        padding-top: 3px !important;
-        padding-bottom: 3px !important;
-        font-size: 12px;
+    #dellhover{
+        opacity: 0;
+    }
+    #lihover:hover #dellhover{
+        opacity: 1;
     }
 
     .task-details table tr td {
-        font-size: 12px;
+        font-size: 14px;
+    }
+
+    .task-details table tr td {
+        font-size: 14px;
     }
 
     .card-body {
@@ -150,9 +154,9 @@
 
             <div class="lead-info d-flex justify-content-between p-3 text-center">
                 <div class="">
-                    <small>{{ __('Date Due') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Date Due') }}</small>
                     <span class="px-3 text-white " style="border-radius: 6px;
-                    background: #22A9E3;">
+                    background: #22A9E3; padding-top: 2px; padding-bottom: 4px">
                         @php
                             $due_date = strtotime($task->due_date);
                             $current_date = strtotime(date('Y-m-d'));
@@ -180,19 +184,19 @@
                     </span>
                 </div>
                 <div class="">
-                    <small>{{ __('Priority') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Priority') }}</small>
                     <span>{{ __('Medium') }}</span>
                 </div>
                 <div class="">
-                    <small>{{ __('Status') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Status') }}</small>
                     <span>{{ $task->status == 1 ? 'Completed' : 'On Going' }}</span>
                 </div>
                 <div class="">
-                    <small>{{ __('Progress') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Progress') }}</small>
                     <span>{{ strtolower($task->status) == '0' ? '0' : '100' }}</span>
                 </div>
                 <div class="">
-                    <small>{{ __('Assigned To') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Assigned To') }}</small>
                     <span class="text-info">{{ \App\Models\User::findOrFail($task->assigned_to)->name }}</span>
                 </div>
             </div>
@@ -592,16 +596,6 @@
                                                                                             class=" form-switch form-switch-right ">
                                                                                             {{ $discussion['created_at'] }}
                                                                                         </div>
-
-                                                                                        <style>
-                                                                                            #editable {
-                                                                                                display: none;
-                                                                                            }
-
-                                                                                            #lihover:hover #editable {
-                                                                                                display: flex;
-                                                                                            }
-                                                                                        </style>
                                                                                         <div class="d-flex gap-3"
                                                                                             id="dellhover">
                                                                                             <i class="ti ti-pencil textareaClassedit"

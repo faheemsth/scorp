@@ -112,9 +112,21 @@ $lang=Utility::getValByName('default_language');
 
 
         .hover-text-color {
-            color: blue;
+            color: #1F2735 !important;
         }
-    </style>
+        td .card-header-right button{
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+        }
+        .wizard a{
+            text-decoration: none;
+        }
+        .wizard a:first-child {
+    -webkit-border-radius: 0px !important;
+    -moz-border-radius: 0px !important;
+    border-radius: 0px !important;
+        }
+        </style>
 
 
 
@@ -194,21 +206,21 @@ $lang=Utility::getValByName('default_language');
         }
 
         .wizard .current {
-            background: #b5282f;
+            background: #1F2735;
             color: #fff;
         }
 
         .wizard .current:after {
-            border-left-color: #b5282f;
+            border-left-color: #1F2735;
         }
 
         .wizard .done {
-            background: #4fee0e;
-            color: #fff;
+            background: #B3CDE1;
+            color: #1F2735;
         }
 
         .wizard .done:after {
-            border-left-color: #4fee0e;
+            border-left-color: #B3CDE1;
         }
 
 

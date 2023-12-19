@@ -1781,7 +1781,7 @@ pre code {
 
 .table td,
 .table th {
-    padding: .75rem;
+    padding: .5rem;
     vertical-align: top;
     border-top: 1px solid #e3e6f0
 }
@@ -2305,11 +2305,11 @@ textarea.form-control {
     padding-left: 1.25rem
 }
 
-.form-check-input {
+/* .form-check-input {
     position: absolute;
     margin-top: .3rem;
     margin-left: -1.25rem
-}
+} */
 
 .form-check-input:disabled~.form-check-label,
 .form-check-input[disabled]~.form-check-label {
@@ -4036,7 +4036,7 @@ input[type=submit].btn-block {
     vertical-align: top
 }
 
-.custom-control-label::before {
+/* .custom-control-label::before {
     position: absolute;
     top: .25rem;
     left: -1.5rem;
@@ -4047,9 +4047,9 @@ input[type=submit].btn-block {
     content: "";
     background-color: #fff;
     border: #b7b9cc solid 1px
-}
+} */
 
-.custom-control-label::after {
+/* .custom-control-label::after {
     position: absolute;
     top: .25rem;
     left: -1.5rem;
@@ -4058,7 +4058,7 @@ input[type=submit].btn-block {
     height: 1rem;
     content: "";
     background: 50%/50% 50% no-repeat
-}
+} */
 
 .custom-checkbox .custom-control-label::before {
     border-radius: .35rem
@@ -11610,9 +11610,8 @@ a:focus {
 
 .sidebar .nav-item .collapse .collapse-inner .collapse-item:hover,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-item:hover {
-    background-color: #dddfeb;
-    color: black !important;
-    padding-left: 10px;
+    color: #B3CDE1  !important;
+    padding-left: 5px;
 }
 
 .sidebar .nav-item .collapse .collapse-inner .collapse-item:active,
@@ -11751,7 +11750,8 @@ a:focus {
 
     .sidebar .nav-item .collapse,
     .sidebar .nav-item .collapsing {
-        margin: 0 1rem
+        padding: 5px 1.2rem;
+        background-color: #1F2735;
     }
 
     .sidebar .nav-item .nav-link {

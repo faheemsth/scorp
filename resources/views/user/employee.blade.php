@@ -46,12 +46,12 @@
                                         placeholder="Search this list..." aria-label="Username"
                                         aria-describedby="basic-addon1">
                                 </div>
-                                <div>
-                                    <button class="btn btn-dark  p-2"><i class="ti ti-refresh"
-                                            style="font-size: 18px"></i></button>
-                                </div>
 
-                                <button class="btn btn-dark  p-2" type="button" id="dropdownMenuButton1"
+                                    <button class="btn btn-dark  px-2 py-2"><i class="ti ti-refresh"
+                                            style="font-size: 18px"></i></button>
+
+
+                                <button class="btn btn-dark  px-2" type="button" id="dropdownMenuButton1"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                 </button>
@@ -59,7 +59,7 @@
 
                                 <a href="#" data-size="lg" data-url="{{ route('user.employee.create') }}"
                                     data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Employee') }}"
-                                    class="btn btn-dark  p-2">
+                                    class="btn btn-dark  px-2">
                                     <i class="ti ti-plus"></i>
                                 </a>
                             </div>
