@@ -1,6 +1,27 @@
 @extends('layouts.admin')
-<?php $setting = \App\Models\Utility::colorset(); ?>
-{{-- <link rel="stylesheet" href="{{ asset('css/customsidebar.css') }}"> --}}
+@if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' )
+    @php
+        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+    @endphp
+@elseif(\Auth::user()->type == 'super admin')
+    @php
+        $currentUserCompany = \App\Models\User::where('type', 'company')->first();
+    @endphp
+@else
+    @php
+        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
+    @endphp
+@endif
+
+<?php
+
+$setting = \App\Models\Utility::colorset();
+$com_permissions = \App\Models\CompanyPermission::where('company_id', optional($currentUserCompany)->id)->where('active','true')->get();
+
+?>
+
+
+
 
 
 @section('page-title')
@@ -107,11 +128,28 @@
                                 <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
                                     <option value="">Select Brand</option>
                                     @foreach ($brands as $key => $brand)
-                                    <option value="{{ $key }}" <?= isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' ?> class="">{{ $brand }}</option>
-                                    @endforeach
+
+                                            @if ($key == optional($currentUserCompany)->id)
+                                            <option value="{{ $key }}" class="" <?= isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' ?>>{{ $brand }}</option>
+                                            @endif
+                                                @foreach ($com_permissions as $permissions)
+                                                        @if ($permissions->permitted_company_id == $key)
+                                                        <option value="{{ $permissions->permitted_company_id }}" class="" <?= isset($_GET['brands']) && in_array($permissions->permitted_company_id, $_GET['brands']) ? 'selected' : '' ?>>{{ $brand }}</option>
+                                                        @endif
+                                                @endforeach
+
+                                            @endforeach
                                 </select>
                             </div>
 
+                            <div class="col-md-4">
+                                <label for="">Status</label>
+                                <select class="form form-control select2" id="status444" name="status" multiple style="width: 95%;">
+                                    <option value="">Select Brand</option>
+                                    <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Completed</option>
+                                    <option value="0" <?= isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : '' ?>>On Going</option>
+                                </select>
+                            </div>
 
                             <div class="col-md-4 mt-4">
                                 <input type="submit" class="btn form-btn me-2 btn-dark" >
@@ -163,23 +201,35 @@
                             $due_date = strtotime($task->due_date);
                             $current_date = strtotime(date('Y-m-d'));
 
-                            if ($due_date < $current_date && strtolower($task->status) == 0) {
-                                $color_code = 'bg-danger-scorp';
-                                }elseif (strtolower($task->status) == 1) {
-                                $color_code = 'bg-success-scorp';
-                                }
-                                elseif ($due_date == $current_date && strtolower($task->status) == 0) {
-                                $color_code = 'bg-warning-scorp';
-                                }else {
-                                $color_code = 'bg-secondary-scorp';
-                                }
+                            // Assuming $due_date, $current_date, and $task->status are defined before this code
+
+                            $status = strtolower($task->status); // Store the lowercase status for better readability
+                            $color_code = ''; // Initialize $color_code
+
+                            if ($due_date > $current_date && $status === '0') {
+                                // Ongoing feture time
+                                $color_code = '#B3CDE1;';
+                            } elseif ($due_date === $current_date && $status === '0') {
+                                // Today date time
+                                $color_code = '#E89D25';
+                            } elseif ($due_date < $current_date && $status === '0') {
+                                // Past date time
+                                $color_code = 'blue';
+                            } elseif ($status === '1') {
+                                // Completed task
+                                $color_code = 'green';
+                            }
+
+                            // Use $color_code as needed in the rest of your code
+
+
 
                                 @endphp
                                 <tr>
                                     <td>
                                         <input type="checkbox" name="tasks[]" value="{{$task->id}}" class="sub-check">
                                     </td>
-                                    <td> <span class="badge {{ $color_code }} text-white">{{ $task->due_date }}</span>
+                                    <td> <span class="badge text-white" style="background-color:{{$color_code }}">{{ $task->due_date  }}</span>
                                     </td>
                                     <td>
                                         <span style="cursor:pointer" class="task-name hyper-link" @can('view task') onclick="openNav(<?= $task->id ?>)" @endcan data-task-id="{{ $task->id }}">{{ $task->name }}</span>
@@ -213,9 +263,9 @@
 
                                     <td>
                                         @if ($task->status == 1)
-                                        <span class="badge {{ $color_code }} text-white">{{ __('Completed') }}</span>
-                                        @else
-                                        <span class="badge {{ $color_code }} text-white">{{ __('On Going') }}</span>
+                                        <span class="badge badge-success text-white">{{ __('Completed') }}</span>
+                                        {{-- @else
+                                        <span class="badge {{ $color_code }} text-white">{{ __('On Going') }}</span> --}}
                                         @endif
                                     </td>
                                 </tr>
