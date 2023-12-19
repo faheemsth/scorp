@@ -2,15 +2,19 @@
     .editable:hover {
         border: 1px solid rgb(136, 136, 136);
     }
-
-    .task-details table tr td {
-        padding-top: 3px !important;
-        padding-bottom: 3px !important;
-        font-size: 12px;
+    #dellhover{
+        opacity: 0;
+    }
+    #lihover:hover #dellhover{
+        opacity: 1;
     }
 
     .task-details table tr td {
-        font-size: 12px;
+        font-size: 14px;
+    }
+
+    .task-details table tr td {
+        font-size: 14px;
     }
 
     .card-body {
@@ -155,10 +159,10 @@
 
             <div class="lead-info d-flex justify-content-between p-3 text-center">
                 <div class="">
-                    <small>{{ __('Date Due') }}</small>
-                    <span class="px-3 text-white " style="border-radius: 6px;
-                    background: #22A9E3;">
-                        @php
+                    <small style="margin-bottom: 4px;">{{ __('Date Due') }}</small>
+                    <!-- <span class="px-3 text-white " style="border-radius: 6px;
+                    background: #22A9E3; padding-top: 2px; padding-bottom: 4px"> -->
+                    @php
                             $due_date = strtotime($task->due_date);
                             $current_date = strtotime(date('Y-m-d'));
 
@@ -176,28 +180,29 @@
                                 $message = $remaining_days . ' days remaining';
                             }
                         @endphp
-
+                    <span class="px-3 text-white @if ($remaining_days == 0) bg-warning @elseif($remaining_days < 0) bg-primary @else bg-success @endif" style="border-radius: 6px;
+                            padding-top: 4px; padding-bottom: 8px">
                         <span
-                            class="@if ($remaining_days == 0) text-white @elseif($remaining_days < 0) text-danger @else text-warning @endif">
+                            class="">
                             {{ $message }}
                         </span>
 
                     </span>
                 </div>
                 <div class="">
-                    <small>{{ __('Priority') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Priority') }}</small>
                     <span>{{ __('Medium') }}</span>
                 </div>
                 <div class="">
-                    <small>{{ __('Status') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Status') }}</small>
                     <span>{{ $task->status == 1 ? 'Completed' : 'On Going' }}</span>
                 </div>
                 <div class="">
-                    <small>{{ __('Progress') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Progress') }}</small>
                     <span>{{ strtolower($task->status) == '0' ? '0' : '100' }}</span>
                 </div>
                 <div class="">
-                    <small>{{ __('Assigned To') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Assigned To') }}</small>
                     <span class="text-info">{{ \App\Models\User::findOrFail($task->assigned_to)->name }}</span>
                 </div>
             </div>
@@ -423,7 +428,7 @@
                                                             <tr>
                                                                 <td class=""
                                                                     style=" width: 100px; font-size: 14px;">
-                                                                    {{ __('Last Updated at') }}
+                                                                    {{ __('Updated at') }}
                                                                 </td>
                                                                 <td class="website-td"
                                                                     style="padding-left: 20px; font-size: 14px;">
@@ -581,7 +586,7 @@
                                                                             id="lihover">
                                                                             <div
                                                                                 class="d-block d-sm-flex align-items-start">
-                                                                                <img src="@if ($discussion['avatar'] && $discussion['avatar'] != '') {{ asset('/storage/uploads/avatar/' . $discussion['avatar']) }} @else {{ asset('/storage/uploads/avatar/avatar.png') }} @endif"
+                                                                                <img src="{{ asset('assets/images/user/avatar.png') }}"
                                                                                     class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
                                                                                     alt="image">
                                                                                 <div class="w-100">
@@ -598,16 +603,6 @@
                                                                                             class=" form-switch form-switch-right ">
                                                                                             {{ $discussion['created_at'] }}
                                                                                         </div>
-
-                                                                                        <style>
-                                                                                            #editable {
-                                                                                                display: none;
-                                                                                            }
-
-                                                                                            #lihover:hover #editable {
-                                                                                                display: flex;
-                                                                                            }
-                                                                                        </style>
                                                                                         <div class="d-flex gap-3"
                                                                                             id="dellhover">
                                                                                             <i class="ti ti-pencil textareaClassedit"
