@@ -1181,6 +1181,7 @@
                                             class=" {{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
                                             <a class="collapse-item" style="color: white; font-size: 13px;"
                                                 href="{{ route('organization.index') }}">
+                                                <img src="{{ asset('assets/cs-theme/icons/organization-01-1 1.png') }}" width="19px" height="19px" style="margin-top:-10px" alt="" srcset="">
 
                                                 {{ __('Organizations') }}</a>
                                         </li>
@@ -1342,8 +1343,11 @@
                         {{ Request::segment(1) == 'users' || Request::segment(1) == 'roles' || Request::segment(1) == 'clients' ? ' active dash-trigger' : '' }}">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseseven"
                         aria-expanded="true" aria-controls="collapseseven">
-                        <i class="fa-solid fa-user" style="color: #ffffff;"></i>
-                        <span>{{ __('Users') }}</span>
+                         <span>
+                            <img src="{{ asset('assets/cs-theme/icons/user-154 1.png') }}" width="25px" height="25px" style="margin-top:-8px" alt="" srcset="">
+
+
+                            {{ __('Users') }}</span>
                     </a>
                     <div id="collapseseven" class="collapse" aria-labelledby="headingUtilities"
                         data-parent="#accordionSidebar">
@@ -1354,6 +1358,8 @@
                                         class=" {{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
                                         <a class="collapse-item" style="color: white; font-size: 13px;"
                                             href="{{ route('users.index') }}">
+                                            <img src="{{ asset('assets/cs-theme/icons/user-154 1.png') }}" width="25px" height="25px" style="margin-top:-8px" alt="" srcset="">
+
                                             Employees</a>
                                     </li>
                                 @endcan
@@ -1716,6 +1722,7 @@
                     <li
                         class="nav-item{{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
                         <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('organization.index') }}">
+                            <img src="{{ asset('assets/cs-theme/icons/organization-01-1 1.png') }}" width="19px" height="19px" style="margin-top:-10px" alt="" srcset="">
 
                             {{ __('Organizations') }}</a>
                     </li>
@@ -1728,7 +1735,8 @@
                 <li class="nav-item {{ Request::segment(1) == 'users' || Request::segment(1) == 'roles' || Request::segment(1) == 'clients' ? ' active dash-trigger' : '' }}">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse"
                         data-target="#collapsesu" aria-expanded="true" aria-controls="collapsesu">
-                        <i class="fa-solid fa-user" style="color: #ffffff;"></i>
+                        <img src="{{ asset('assets/cs-theme/icons/user-154 1.png') }}" width="25px" height="25px" style="margin-top:-8px" alt="" srcset="">
+
                         <span>{{ __('Users') }}</span>
                     </a>
                     <div id="collapsesu" class="collapse" aria-labelledby="headingTwo"
@@ -1738,14 +1746,20 @@
                         @can('manage user')
                             <li
                                 class="nav-item{{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
-                                <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('users.index') }}">Brands</a>
+                                <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('users.index') }}">
+                            <img src="{{ asset('assets/cs-theme/icons/Layer_1 (5).png') }}" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+
+                                    Brands</a>
                             </li>
                         @endcan
 
                         @can('manage user')
                             <li
                                 class="nav-item{{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
-                                <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('user.employees') }}">Employees</a>
+                                <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('user.employees') }}">
+                            <img src="{{ asset('assets/cs-theme/icons/Vector (1).png') }}" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+
+                                    Employees</a>
                             </li>
                         @endcan
 
@@ -1753,7 +1767,10 @@
                         @can('manage role')
                             <li
                                 class="nav-item{{ Request::route()->getName() == 'roles.index' || Request::route()->getName() == 'roles.create' || Request::route()->getName() == 'roles.edit' ? ' active' : '' }} ">
-                                <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('roles.index') }}">{{ __('Role') }}</a>
+                                <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('roles.index') }}">
+                            <img src="{{ asset('assets/cs-theme/icons/Layer_1 (6).png') }}" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+
+                                    {{ __('Role') }}</a>
                             </li>
                         @endcan
                     </ul>

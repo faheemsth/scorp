@@ -892,7 +892,7 @@
                                                                                     </div>
                                                                                 </div>
                                                                             </div> -->
-                                                                            <div class="card-body px-0">
+                                                                            <div class="card-body px-0 py-0">
                                                                             @php
                                                                                 $notes = \App\Models\LeadNote::where('lead_id', $lead->id)
                                                                                     ->orderBy('created_at', 'DESC')
@@ -901,22 +901,38 @@
                                                                                 <ul class="list-group list-group-flush mt-2 notes-tbody">
 
                                                                                 @foreach ($notes as $note)
-                                                                                    <li class="list-group-item px-3"
+
+                                                                                    <div class="ps-3 py-2 d-flex gap-2 align-items-baseline" style="border-bottom: 1px solid rgb(192, 192, 192);">
+                                                                                        <i class="fa-regular fa-square-check" style="color: #000000;"></i>
+                                                                                        <h6 class="fw-bold">
+                                                                                            Open Activity
+                                                                                        </h6>
+                                                                                    </div>
+                                                                                    <li class="list-group-item px-3 pb-0"
                                                                                         id="lihover">
+
                                                                                         <div class="d-block d-sm-flex align-items-start">
                                                                                             <div class="w-100">
                                                                                                 <div
-                                                                                                    class="d-flex align-items-center justify-content-between">
-                                                                                                    <div class="mb-3 mb-sm-0">
-                                                                                                        <h5 class="mb-0">
+                                                                                                    class="d-flex align-items-center justify-content-between w-100">
+                                                                                                    <div class="mb-3 mb-sm-0 w-50">
+                                                                                                        <p class="mb-0" style="color: blue;">
                                                                                                             {{ $note->description }}
-                                                                                                        </h5>
+                                                                                                        </p>
                                                                                                         <span
                                                                                                             class="text-muted text-sm">{{ $note->created_at }}
                                                                                                         </span><br>
                                                                                                         <span
-                                                                                                            class="text-muted text-sm"><i class="step__icon fa fa-user" aria-hidden="true"></i>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
+                                                                                                            class="text-muted text-sm"><i class="step__icon fa fa-user me-2" aria-hidden="true"></i>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
                                                                                                         </span>
+                                                                                                        <div class="row">
+                                                                                                            <div class="col-4">
+                                                                                                                <p>Status</p>
+                                                                                                            </div>
+                                                                                                            <div class="col-6">
+                                                                                                                <p>:Not Started</p>
+                                                                                                            </div>
+                                                                                                        </div>
                                                                                                     </div>
 
                                                                                                     <style>
@@ -963,7 +979,7 @@
                                                                                         </tr>
                                                                                     </thead>
                                                                                     <tbody class="notes-tbody">
-                                                                                        
+
 
                                                                                         @forelse($notes as $note)
                                                                                             <tr>
@@ -1221,7 +1237,7 @@
                                                 </div>
                                             </div>
 
-                                            
+
 
                                         </div>
                                     </div>
@@ -1295,12 +1311,12 @@
             $('.textareaClass').click(function() {
                 $('#textareaID, .textareaClass').toggle("slide");
             });
-        
+
             $('#create-notes').submit(function(event) {
                 event.preventDefault(); // Prevents the default form submission
                 $('#textareaID, .textareaClass').toggle("slide");
             });
-            
+
             $('#cancelNote').click(function() {
                 $('textarea[name="description"]').val('');
                 $('#note_id').val('');
