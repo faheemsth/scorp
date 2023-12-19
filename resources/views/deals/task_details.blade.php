@@ -2,15 +2,19 @@
     .editable:hover {
         border: 1px solid rgb(136, 136, 136);
     }
-
-    .task-details table tr td {
-        padding-top: 3px !important;
-        padding-bottom: 3px !important;
-        font-size: 12px;
+    #dellhover{
+        opacity: 0;
+    }
+    #lihover:hover #dellhover{
+        opacity: 1;
     }
 
     .task-details table tr td {
-        font-size: 12px;
+        font-size: 14px;
+    }
+
+    .task-details table tr td {
+        font-size: 14px;
     }
 
     .card-body {
@@ -133,14 +137,19 @@
 
                 {{-- @if (\Auth::user()->type == 'super admin') --}}
                 <div class="d-flex justify-content-end gap-1 me-3">
+                    @if ($task->status == 0)
+                    <a href="javascript:void(0)" onclick="ChangeTaskStatus({{ $task->id }})"
+                        title="{{ __('Edit Status') }}" class="btn px-2 btn-dark text-white">
+                        <i class="fa fa-plus-circle"></i>
+                    </a>
+                    @endif
                     <a href="#" data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}"
                         data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"
                         class="btn px-2 btn-dark text-white">
                         <i class="ti ti-pencil"></i>
                     </a>
 
-                    <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-dark text-white"
-                       >
+                    <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-dark text-white">
                         <i class="ti ti-trash "></i>
                     </a>
                 </div>
@@ -150,10 +159,10 @@
 
             <div class="lead-info d-flex justify-content-between p-3 text-center">
                 <div class="">
-                    <small>{{ __('Date Due') }}</small>
-                    <span class="px-3 text-white " style="border-radius: 6px;
-                    background: #22A9E3;">
-                        @php
+                    <small style="margin-bottom: 4px;">{{ __('Date Due') }}</small>
+                    <!-- <span class="px-3 text-white " style="border-radius: 6px;
+                    background: #22A9E3; padding-top: 2px; padding-bottom: 4px"> -->
+                    @php
                             $due_date = strtotime($task->due_date);
                             $current_date = strtotime(date('Y-m-d'));
 
@@ -171,28 +180,29 @@
                                 $message = $remaining_days . ' days remaining';
                             }
                         @endphp
-
+                    <span class="px-3 text-white @if ($remaining_days == 0) bg-warning @elseif($remaining_days < 0) bg-primary @else bg-success @endif" style="border-radius: 6px;
+                            padding-top: 4px; padding-bottom: 8px">
                         <span
-                            class="@if ($remaining_days == 0) text-white @elseif($remaining_days < 0) text-danger @else text-warning @endif">
+                            class="">
                             {{ $message }}
                         </span>
 
                     </span>
                 </div>
                 <div class="">
-                    <small>{{ __('Priority') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Priority') }}</small>
                     <span>{{ __('Medium') }}</span>
                 </div>
                 <div class="">
-                    <small>{{ __('Status') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Status') }}</small>
                     <span>{{ $task->status == 1 ? 'Completed' : 'On Going' }}</span>
                 </div>
                 <div class="">
-                    <small>{{ __('Progress') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Progress') }}</small>
                     <span>{{ strtolower($task->status) == '0' ? '0' : '100' }}</span>
                 </div>
                 <div class="">
-                    <small>{{ __('Assigned To') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Assigned To') }}</small>
                     <span class="text-info">{{ \App\Models\User::findOrFail($task->assigned_to)->name }}</span>
                 </div>
             </div>
@@ -204,8 +214,8 @@
                     <div class="card-header p-1 bg-white">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link fw-bold active" id="text" id="pills-details-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-details" type="button" role="tab"
+                                <button class="nav-link pills-link fw-bold active" id="text" id="pills-details-tab"
+                                    data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab"
                                     aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
                             </li>
                             <!-- <li class="nav-item" role="presentation">
@@ -257,7 +267,7 @@
                                                                 </td>
                                                                 <td class="name-td"
                                                                     style="padding-left: 20px; font-size: 14px;">
-{{--
+                                                                    {{--
                                                                     <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 name">
@@ -418,7 +428,7 @@
                                                             <tr>
                                                                 <td class=""
                                                                     style=" width: 100px; font-size: 14px;">
-                                                                    {{ __('Last Updated at') }}
+                                                                    {{ __('Updated at') }}
                                                                 </td>
                                                                 <td class="website-td"
                                                                     style="padding-left: 20px; font-size: 14px;">
@@ -557,12 +567,13 @@
                                                                 <div class="card-header px-0 pt-0"
                                                                     style="padding-bottom: 18px;">
                                                                     {{ Form::model($task, ['route' => ['tasks.discussion.store', $task->id], 'method' => 'POST', 'id' => 'taskDiscussion']) }}
-                                                                    {{ Form::textarea('comment', null, ['class' => 'form-control']) }}
+                                                                    {{ Form::textarea('comment', null, ['class' => 'form-control', 'style' => 'height: 120px', 'id' => 'taskDiscussionInput']) }}
                                                                     <input type="hidden" id="id"
                                                                         name="id">
                                                                     <div class="d-flex justify-content-end mt-2">
-                                                                        <button type="submit"
-                                                                            class="btn btn-secondary btn-sm">Save</button>
+
+                                                                        <button type="submit" class="btn btn-secondary btn-sm mx-1" id="cancelDiscussion">Cancel</button>
+                                                                        <button type="submit" class="btn btn-secondary btn-sm d-none" id="SaveDiscussion">Save</button>
                                                                     </div>
                                                                     {{ Form::close() }}
                                                                 </div>
@@ -575,7 +586,7 @@
                                                                             id="lihover">
                                                                             <div
                                                                                 class="d-block d-sm-flex align-items-start">
-                                                                                <img src="@if ($discussion['avatar'] && $discussion['avatar'] != '') {{ asset('/storage/uploads/avatar/' . $discussion['avatar']) }} @else {{ asset('/storage/uploads/avatar/avatar.png') }} @endif"
+                                                                                <img src="{{ asset('assets/images/user/avatar.png') }}"
                                                                                     class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
                                                                                     alt="image">
                                                                                 <div class="w-100">
@@ -592,16 +603,6 @@
                                                                                             class=" form-switch form-switch-right ">
                                                                                             {{ $discussion['created_at'] }}
                                                                                         </div>
-
-                                                                                        <style>
-                                                                                            #editable {
-                                                                                                display: none;
-                                                                                            }
-
-                                                                                            #lihover:hover #editable {
-                                                                                                display: flex;
-                                                                                            }
-                                                                                        </style>
                                                                                         <div class="d-flex gap-3"
                                                                                             id="dellhover">
                                                                                             <i class="ti ti-pencil textareaClassedit"
@@ -733,9 +734,10 @@
     </div>
     <script>
         $(document).ready(function() {
-            $('textarea[name="comment"]').val('');
-            $('#id').val('');
+
             $('.textareaClass').click(function() {
+                $('textarea[name="comment"]').val('');
+                $('#id').val('');
                 $('#textareaID, .textareaClass').toggle("slide");
             });
 
@@ -756,5 +758,65 @@
                 $('#textareaID, .textareaClass').toggle("slide");
             });
 
+            $('#cancelDiscussion').click(function(event) {
+                event.preventDefault(); // Prevents the default form submission
+                $('textarea[name="comment"]').val('');
+                $('#id').val('');
+                $('#textareaID, .textareaClass').toggle("slide");
+            });
+
         });
+
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        function ChangeTaskStatus(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to update the task status.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, update it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('task.status.change') }}",
+                        method: 'POST',
+                        data: {
+                            id: id
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'The task status has been changed successfully.',
+                            });
+                        },
+
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
+                } else {
+                    console.log("Task status update canceled.");
+                }
+            });
+        }
+    </script>
+    <script>
+$(document).ready(function() {
+    $('#taskDiscussionInput').keyup(function(event) {
+        var commentText = $('textarea[name="comment"]').val();
+        if (commentText.length > 0) {
+            $('#SaveDiscussion').removeClass("d-none");
+        } else {
+            $('#SaveDiscussion').addClass("d-none");
+        }
+    });
+});
+
     </script>

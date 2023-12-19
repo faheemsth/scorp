@@ -1068,29 +1068,51 @@ class OrganizationController extends Controller
     public function getTaskUsers(Request $request)
     {
         $type = $request->type;
+
+        if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' ){
+
+                $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+
+        }else if(\Auth::user()->type == 'super admin'){
+                $currentUserCompany = \App\Models\User::where('type', 'company')->first();
+        }else{
+                $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
+        }
+
+       $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->where('active','true')->get();
+
+
+       $html='';
         if ($type == 'company') {
-            if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director'){
-                $users = User::where('type', 'company')->where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
-            }elseif(\Auth::user()->type == 'super admin'){
-                $users = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+            $users = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+            $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
+
+        foreach ($users as $key => $user) {
+            if($key == $currentUserCompany->id){
+                $html .= '<option value="' . $key . '">' . $user . '</option> ';
             }
-        } elseif('individual'){
-            if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director'){
+
+            foreach($com_permissions as $com_permission){
+                if($key == $com_permission->permitted_company_id){
+                    $html .= '<option value="' . $key . '">' . $user . '</option> ';
+            }
+           }
+         }
+        $html .= '</select>';
+
+        } else {
             $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
                 ->where('created_by', \Auth::user()->id)
                 ->pluck('name', 'id');
-            }elseif(\Auth::user()->type == 'super admin'){
-                $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
-                ->pluck('name', 'id');
-            }
+                $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
+                foreach ($users as $key => $user) {
+                        $html .= '<option value="' . $key . '">' . $user . '</option> ';
+                 }
+                $html .= '</select>';
+
         }
 
-        $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
 
-        foreach ($users as $key => $user) {
-            $html .= '<option value="' . $key . '">' . $user . '</option> ';
-        }
-        $html .= '</select>';
 
         return json_encode([
             'status' => 'success',

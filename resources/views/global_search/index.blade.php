@@ -198,14 +198,14 @@
                             <tr>
 
 
-                                <td class="py-1">
+                                <td class="">
                                     <span style="cursor:pointer" class="lead-name hyper-link" onclick="openSidebar('/get-lead-detail?lead_id='+{{$lead->id}})" data-lead-id="{{ $lead->id }}">{{ $lead->name }}</span>
                                 </td>
 
-                                <td class="py-1">{{ $lead->email }}</td>
-                                <td class="py-1">{{ $lead->phone }}</td>
+                                <td class="">{{ $lead->email }}</td>
+                                <td class="">{{ $lead->phone }}</td>
                                 <td>{{ !empty($lead->stage) ? $lead->stage->name : '-' }}</td>
-                                <td class="py-1">
+                                <td class="">
                                     @php
                                     $assigned_to = isset($lead->user_id) && isset($users[$lead->user_id]) ? $users[$lead->user_id] : 0;
                                     @endphp
@@ -249,7 +249,7 @@
                                 <th style="border-left: 1px solid #fff;">Applications</th>
                             </tr>
                         </thead>
-                        <tbody class="leads-list-div" style="color:rgb(0, 0, 0); font-size: 12px;" class="new-organization-list-tbody">
+                        <tbody class="leads-list-div" style="color:rgb(0, 0, 0); font-size: 14px;" class="new-organization-list-tbody">
 
                             @forelse($clients as $client)
                             <tr>
@@ -423,7 +423,7 @@
 
                 <div class=" mt-3">
                     <table class="table">
-                        <thead style="background: #ddd; color:rgb(0, 0, 0); font-size: 14px; font-weight: bold;">
+                        <thead style="background: #ddd; color:rgb(0, 0, 0); font-size: 14px;">
                             <tr>
                                 <td style="border-left: 1px solid #fff;">Organization Name</td>
                                 <td style="border-left: 1px solid #fff;">Phone</td>
@@ -433,7 +433,7 @@
                                 <td style="border-left: 1px solid #fff;">Billing Country</td>
                             </tr>
                         </thead>
-                        <tbody class="organization_tbody" style="color:rgb(0, 0, 0); font-size: 12px;" class="new-organization-list-tbody">
+                        <tbody class="organization_tbody" style="color:rgb(0, 0, 0); font-size: 14px;" class="new-organization-list-tbody">
 
                             @forelse($organizations as $org)
                             @php
@@ -442,18 +442,18 @@
                             @endphp
 
                             <tr>
-                                <td class="py-1">
+                                <td class="">
                                     <span style="cursor:pointer" class="org-name hyper-link" onclick="openSidebar('/get-organization-detail?org_id='+{{$org->id}})" data-org-id="{{ $org->id }}">{{$org->name}}</span>
                                 </td>
-                                <td class="py-1">{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
-                                <td class="py-1">{{ isset($org_data->billing_street) ? $org_data->billing_street : '' }}</td>
-                                <td class="py-1">{{ isset($org_data->billing_city) ? $org_data->billing_city : ''  }}</td>
-                                <td class="py-1">{{ isset($org_data->billing_state) ? $org_data->billing_state : ''  }}</td>
-                                <td class="py-1">{{ isset($org_data->billing_country) ? $org_data->billing_country : ''  }}</td>
+                                <td class="">{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
+                                <td class="">{{ isset($org_data->billing_street) ? $org_data->billing_street : '' }}</td>
+                                <td class="">{{ isset($org_data->billing_city) ? $org_data->billing_city : ''  }}</td>
+                                <td class="">{{ isset($org_data->billing_state) ? $org_data->billing_state : ''  }}</td>
+                                <td class="">{{ isset($org_data->billing_country) ? $org_data->billing_country : ''  }}</td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="9" class="py-1">
+                                <td colspan="9" class="">
                                     No Organizations found
                                 </td>
                             </tr>

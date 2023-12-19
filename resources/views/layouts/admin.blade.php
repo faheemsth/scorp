@@ -74,12 +74,12 @@ $lang=Utility::getValByName('default_language');
 
     <link href="{{ asset('assets/cs-theme/css/sb-admin-2.min.css') }}" rel="stylesheet">
 
-        {{-- outfit font  --}}
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    {{-- outfit font  --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<link href="{{ asset('assets/cs-theme/css/custom.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/cs-theme/css/custom.css') }}" rel="stylesheet">
 
     <style>
         .All-leads {
@@ -97,8 +97,9 @@ $lang=Utility::getValByName('default_language');
         .input-group {
             /* border: 1px solid rgb(102, 102, 102); */
         }
-        .form-control:focus{
-            border-color:transparent !important;
+
+        .form-control:focus {
+            border-color: transparent !important;
         }
 
         input:focus {
@@ -112,7 +113,22 @@ $lang=Utility::getValByName('default_language');
 
 
         .hover-text-color {
-            color: blue;
+            color: #1F2735 !important;
+        }
+
+        td .card-header-right button {
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+        }
+
+        .wizard a {
+            text-decoration: none;
+        }
+
+        .wizard a:first-child {
+            -webkit-border-radius: 0px !important;
+            -moz-border-radius: 0px !important;
+            border-radius: 0px !important;
         }
     </style>
 
@@ -194,21 +210,21 @@ $lang=Utility::getValByName('default_language');
         }
 
         .wizard .current {
-            background: #b5282f;
+            background: #1F2735;
             color: #fff;
         }
 
         .wizard .current:after {
-            border-left-color: #b5282f;
+            border-left-color: #1F2735;
         }
 
         .wizard .done {
-            background: #4fee0e;
-            color: #fff;
+            background: #B3CDE1;
+            color: #1F2735;
         }
 
         .wizard .done:after {
-            border-left-color: #4fee0e;
+            border-left-color: #B3CDE1;
         }
 
 
@@ -341,28 +357,102 @@ $lang=Utility::getValByName('default_language');
             right: 10px;
             cursor: pointer;
         }
+
         .lead-topbar {
-    border-radius: 8px;
-    background: #FFF !important;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) !important;
-}
-.card-header .nav-item .nav-link {
-    color: #313949 !important;
-}
-.card-header .nav-item .nav-link:active{
-    background-color: #313949;
-    color: white;
-}
-.card-header .nav-item .nav-link:focus{
-    background-color: #313949;
-    color: white;
-}
-table td:last-child{
-    text-align: start !important;
-}
-*ul{
-    list-style: none !important;
-}
+            border-radius: 8px;
+            background: #FFF !important;
+            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) !important;
+        }
+
+        .card-header .nav-item .nav-link {
+            color: #313949 !important;
+        }
+
+        .card-header .nav-item .nav-link:active {
+            background-color: #313949;
+            color: white;
+        }
+
+        .card-header .nav-item .nav-link:focus {
+            background-color: #313949;
+            color: white;
+        }
+
+        table td:last-child {
+            text-align: start !important;
+        }
+
+        *ul {
+            list-style: none !important;
+        }
+    </style>
+
+
+
+    <style>
+        .bold {
+            font-weight: bold;
+        }
+
+        .time {
+            position: absolute;
+            left: -110px;
+        }
+
+        .timeline-wrapper {
+            padding-left: 80px;
+            min-width: 400px;
+            font-family: 'Helvetica';
+            font-size: 14px;
+        }
+
+        .StepProgress {
+            position: relative;
+            padding-left: 45px;
+            list-style: none;
+        }
+
+        .StepProgress::before {
+            display: inline-block;
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 100px;
+            width: 10px;
+            height: 100%;
+            border-left: 2px solid #CCC;
+        }
+
+        .StepProgress-item {
+            position: relative;
+            counter-increment: list;
+        }
+
+        .StepProgress-item:not(:last-child) {
+            padding-bottom: 20px;
+        }
+
+        .StepProgress-item::before {
+            display: inline-block;
+            content: '';
+            position: absolute;
+            left: 100px;
+            height: 100%;
+            width: 10px;
+        }
+
+        .StepProgress-item::after {
+            content: '';
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            left: 50px;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #CCC;
+            border-radius: 50%;
+            background-color: #FFF;
+        }
     </style>
 </head>
 
@@ -463,7 +553,7 @@ table td:last-child{
                     </div>
 
                     <div class="pl-4">
-                      @yield('content')
+                        @yield('content')
                     </div>
                     <!-- Content Wrapper -->
 

@@ -85,7 +85,7 @@
                     <div class="lead-basic-info">
                         <p class="pb-0 mb-0 fw-normal">{{ __('USER') }}</p>
                         <div class="d-flex align-items-baseline">
-                            <h4 class="">{{ $employee->name }}</h4>
+                            <h5 class="fw-bold">{{ $employee->name }}</h5>
                         </div>
                     </div>
 
@@ -93,15 +93,15 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @can('edit user')
-                    
-                    <a href="#!" data-size="lg" data-url="{{ route('user.employee.edit', $employee->id) }}" data-ajax-popup="true" class="btn btn-sm btn-danger text-white" data-bs-original-title="{{__('Edit Employee')}}" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
+
+                    <a href="#!" data-size="lg" data-url="{{ route('user.employee.edit', $employee->id) }}" data-ajax-popup="true" class="btn px-2 py-2 btn-dark text-white" data-bs-original-title="{{__('Edit Employee')}}" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
                     <i class="ti ti-pencil"></i>
                       </a>
                     @endcan
 
                     @can('delete user')
-                    {!! Form::open(['method' => 'DELETE', 'route' => ['users.destroy', $employee['id']],'id'=>'delete-form-'.$employee['id']]) !!}
-                    <a href="#!" class="btn btn-sm btn-danger text-white bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
+                    {!! Form::open(['method' => 'DELETE','class'=>'mb-0' , 'route' => ['users.destroy', $employee['id']],'id'=>'delete-form-'.$employee['id']]) !!}
+                    <a href="#!" class="btn px-2 py-2 btn-danger text-white bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
                         <i class="ti ti-archive"></i>
                         <!-- <span> @if($employee->delete_status!=0){{__('Delete')}} @else {{__('Restore')}}@endif</span> -->
                     </a>
@@ -109,7 +109,7 @@
                     {!! Form::close() !!}
                     @endcan
 
-                    <a href="#!" data-url="{{route('users.reset',\Crypt::encrypt($employee->id))}}" data-ajax-popup="true" data-size="md" class="btn btn-sm btn-info text-white" data-bs-original-title="{{__('Reset Password')}}" data-bs-toggle="tooltip" title="{{ __('Password Reset') }}">
+                    <a href="#!" data-url="{{route('users.reset',\Crypt::encrypt($employee->id))}}" data-ajax-popup="true" data-size="md" class="btn px-2 btn-dark py-2 text-white" data-bs-original-title="{{__('Reset Password')}}" data-bs-toggle="tooltip" title="{{ __('Password Reset') }}">
                         <i class="ti ti-adjustments"></i>
                     </a>
 
@@ -123,7 +123,7 @@
             <div class="lead-content my-2">
 
                 <div class="card me-3">
-                    <div class="card-header p-1">
+                    <div class="card-header p-1 bg-white">
                         <ul class="nav nav-pills mb-1" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link pills-link active" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab" aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
@@ -176,7 +176,7 @@
                                                                     {{ __('Designation') }}
                                                                 </td>
                                                                 <td style="padding-left: 10px; font-size: 14px;">
-                                                                    <div class="bg-danger text-white">
+                                                                    <div class="bg-danger text-white ps-1">
                                                                     {{ $employee->type }}
                                                                     </div>
                                                                 </td>

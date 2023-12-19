@@ -1,6 +1,6 @@
 <style>
     table tr td{
-        font-size: 12px
+        font-size: 14px;
     }
     .form-select{
         height: 30px;
@@ -63,7 +63,7 @@
                                                         <span class="text-danger">*</span>
                                                     </td>
 
-                                                    @php 
+                                                    @php
                                                         $name = explode(' ', $lead->name);
                                                     @endphp
                                                     <td class="d-flex gap-1 mb-1"
@@ -283,7 +283,7 @@
                                                                     @foreach($countries as $con)
                                                                     <option value="{{$con}}" <?= $con == $lead->country ? 'selected' : '' ?> >{{$con}}</option>
                                                                     @endforeach
-                                                                   
+
                                                                   </select>
                                                             </div>
                                                         </div>

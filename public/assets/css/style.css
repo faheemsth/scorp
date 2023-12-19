@@ -181,7 +181,7 @@ address {
 
 ol,
 ul {
-    padding-left: 0.4rem;
+    padding-left: 0px;
 }
 .nav-item ul{
     /* padding-left: 0px !important; */
@@ -15586,7 +15586,7 @@ body.theme-1 .page-item.active .page-link {
 }
 
 body.theme-1 .nav-link {
-    color: white !important;
+    color: white;
 }
 
 body.theme-1 .nav-link:hover, body.theme-1 .nav-link:focus {
@@ -20473,7 +20473,7 @@ body:not(.minimenu) .dash-sidebar .dash-submenu .dash-submenu .dash-submenu > .d
 }
 
 body .table thead th {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .table-hover tbody tr:hover {

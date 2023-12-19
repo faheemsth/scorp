@@ -81,6 +81,9 @@ if (isset($lead->is_active) && $lead->is_active) {
     .card {
         box-shadow: none !important;
     }
+    .hover-text-color{
+        color: #1F2735 !important;
+    }
 </style>
 {{-- comment --}}
 
@@ -186,7 +189,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 </button>
 
                                 @can('create lead')
-                                <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn btn-sm p-2 btn-dark">
+                                <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark">
                                     <i class="ti ti-plus" style="font-size:18px"></i>
                                 </button>
                                 @endcan

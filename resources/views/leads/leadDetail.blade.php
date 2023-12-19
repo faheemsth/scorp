@@ -1230,9 +1230,6 @@
                             <!-- End of Open Accordion Item -->
 
                             <!-- Add More Accordion Items Here -->
-
-
-
                             <div class="tab-pane fade" id="pills-activity" role="tabpanel"
                                 aria-labelledby="pills-activity-tab">
 
@@ -1252,24 +1249,26 @@
                                             aria-labelledby="panelsStayOpen-headingactive">
                                             <div class="accordion-body">
                                                 <!-- Accordion Content -->
+
+                                                
                                                 <div class="mt-1">
-                                                    <div id="activity" class=" px-0">
-                                                        @foreach ($log_activities as $activity)
-                                                            @php
-                                                                $remark = json_decode($activity->note);
-                                                            @endphp
-                                                            <div class="card">
-                                                                <div class="card-body">
-                                                                    <div class="log">
-                                                                        <h5>{{ $remark->title }}</h5>
-                                                                        <p class="">{{ $remark->message }}</p>
-
-                                                                        <span>{{ $activity->created_at }}</span>
+                                                    <div class="timeline-wrapper"> 
+                                                        <ul class="StepProgress">
+                                                            @foreach ($log_activities as $activity)
+                                                                @php
+                                                                    $remark = json_decode($activity->note);
+                                                                @endphp
+                                                                
+                                                                <li class="StepProgress-item is-done">
+                                                                    <div class="bold time">{{ $activity->created_at }}</div> 
+                                                                    <div class="bold" style="text-align: left; margin-left: 80px;">
+                                                                          <p class="bold" style="margin-bottom: 0rem; color: #000000;">{{ $remark->title }}</p>
+                                                                          <p class="mt-0">{{ $remark->message }}</p>
                                                                     </div>
-                                                                </div>
-                                                            </div>
-                                                        @endforeach
+                                                                </li>
 
+                                                            @endforeach
+                                                        </ul>
                                                     </div>
                                                 </div>
                                                 <!-- End of Accordion Content -->

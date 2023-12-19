@@ -1710,6 +1710,8 @@ Route::get('users/{id}/user_detail', [UserController::class, 'userDetail'])->nam
 Route::get('university/{id}/university_detail', [UniversityController::class, 'universityDetail'])->name('university-detail')->middleware(['auth', 'XSS']);
 
 Route::get('/get-task-detail', [DealController::class, 'getTaskDetails'])->name('get-task-detail');
+Route::post('task-status-change', [DealController::class, 'TaskStatusChange'])->name('task.status.change');
+
 Route::get('/get-organization-detail', [OrganizationController::class, 'getOrganizationDetails'])->name('get-organization-detail');
 
 

@@ -46,12 +46,12 @@
     }
 
     .pagination .currentpage a {
-        background-color: #e2e6e6;
+        background-color: #313949;
         color: #fff;
     }
 
     .pagination .currentpage a:hover {
-        background-color: #e2e6e6;
+        background-color: #313949;
     }
     .desc{
         position: relative;
