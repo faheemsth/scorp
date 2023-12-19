@@ -214,7 +214,7 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
                                 $color_code = '#E89D25';
                             } elseif ($due_date < $current_date && $status === '0') {
                                 // Past date time
-                                $color_code = 'blue';
+                                $color_code = '#4e73df';
                             } elseif ($status === '1') {
                                 // Completed task
                                 $color_code = 'green';

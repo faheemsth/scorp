@@ -1080,7 +1080,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
                         $('#commonModal').modal('hide');
-                        $('.notes-tbody').html(data.html);
+                        $('.note-tbody').html(data.html);
                         $('#note_id').val('');
                         $('#description').val('');
 
@@ -1114,7 +1114,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
                         $('#commonModal').modal('hide');
-                        $('.notes-tbody').html(data.html);
+                        $('.note-tbody').html(data.html);
                         // openNav(data.lead.id);
                         // return false;
                     } else {
@@ -1147,7 +1147,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
-                        $('.notes-tbody').html(data.html);
+                        $('.note-tbody').html(data.html);
                         // openNav(data.lead.id);
                         // return false;
                     } else {
