@@ -3136,7 +3136,7 @@ class DealController extends Controller
         $validator = \Validator::make(
             $request->all(),
             [
-                'title' => 'required',
+                // 'title' => 'required',
                 'description' => 'required'
             ]
         );
@@ -3151,6 +3151,21 @@ class DealController extends Controller
 
 
         $id = $request->id;
+        if($request->note_id != null && $request->note_id != ''){
+            $note = DealNote::where('id', $request->note_id)->first();
+            $note->title = $request->input('title');
+            $note->description = $request->input('description');
+            $note->update();
+    
+            $notes = DealNote::where('deal_id', $id)->orderBy('created_at', 'DESC')->get();
+            $html = view('deals.getNotes', compact('notes'))->render();
+    
+            return json_encode([
+                'status' => 'success',
+                'html' => $html,
+                'message' =>  __('Notes updated successfully')
+            ]);
+        }
         $note = new DealNote();
         $note->title = $request->input('title');
         $note->description = $request->input('description');
