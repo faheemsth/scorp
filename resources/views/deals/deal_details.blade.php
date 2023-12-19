@@ -770,7 +770,244 @@
 
                                 <div id="discussion_note">
                                     <div class="row">
+                                        @can('manage notes')
+                                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            <!-- Open Accordion Item -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="panelsStayOpen-headingnote">
+                                                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsenote">
+                                                        {{ __('Notes') }}
+                                                    </button>
+                                                </h2>
 
+                                                <div id="panelsStayOpen-collapsenote" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingnote">
+                                                    <div class="accordion-body">
+
+
+                                                        <div class="">
+
+                                                            <div class="col-12">
+                                                                <div class="card">
+                                                                    <textarea name="" id="" cols="95" class="form-control textareaClass" readonly style="cursor: pointer"></textarea>
+                                                                    <span id="textareaID" style="display: none;">
+                                                                        <div class="card-header px-0 pt-0"
+                                                                            style="padding-bottom: 18px;">
+                                                                            {{ Form::model($deal, array('route' => array('deals.notes.store', $deal->id), 'method' => 'POST', 'id' => 'create-notes' ,'style' => 'z-index: 9999999 !important;')) }}
+                                                                            <textarea name="description" id="description" class="form form-control" cols="10" rows="10"></textarea>
+                                                                            <input type="hidden" id="note_id" name="note_id">
+                                                                            <div class="d-flex justify-content-end mt-2">
+                                                                                <button type="button" id="cancelNote" class="btn btn-secondary mx-2">Cancel</button>
+                                                                                <button type="submit" class="btn btn-secondary">Save</button>
+                                                                            </div>
+                                                                            {{ Form::close() }}
+                                                                        </div>
+                                                                    </span>
+                                                                    <!-- <div class="card-header px-0 pt-1 pb-3">
+                                                                        <div class="d-flex justify-content-end align-items-center p-2 pb-0">
+                                                                            <div class="float-end">
+                                                                                @can('create notes')
+                                                                                <a data-size="lg" data-url="{{ route('deals.notes.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create notes') }}" class="btn px-2 btn-dark text-white" >
+                                                                                    <i class="ti ti-plus"></i>
+                                                                                </a>
+                                                                                @endcan
+                                                                            </div>
+                                                                        </div>
+                                                                    </div> -->
+                                                                    <div class="card-body px-0">
+                                                                    <ul class="list-group list-group-flush mt-2 note-body">
+
+                                                                        @foreach ($notes as $note)
+                                                                            <li class="list-group-item px-3"
+                                                                                id="lihover">
+                                                                                <div class="d-block d-sm-flex align-items-start">
+                                                                                    <div class="w-100">
+                                                                                        <div
+                                                                                            class="d-flex align-items-center justify-content-between">
+                                                                                            <div class="mb-3 mb-sm-0">
+                                                                                                <h5 class="mb-0">
+                                                                                                    {{ $note->description }}
+                                                                                                </h5>
+                                                                                                <span
+                                                                                                    class="text-muted text-sm">{{ $note->created_at }}
+                                                                                                </span><br>
+                                                                                                <span
+                                                                                                    class="text-muted text-sm"><i class="step__icon fa fa-user" aria-hidden="true"></i>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
+                                                                                                </span>
+                                                                                            </div>
+
+                                                                                            <style>
+                                                                                                #editable {
+                                                                                                    display: none;
+                                                                                                }
+
+                                                                                                #lihover:hover #editable {
+                                                                                                    display: flex;
+                                                                                                }
+                                                                                            </style>
+                                                                                            <div class="d-flex gap-3"
+                                                                                                id="dellhover">
+                                                                                                <i class="ti ti-pencil textareaClassedit"
+                                                                                                    data-note="{{ $note->description }}"
+                                                                                                    data-note-id="{{ $note->id }}"
+                                                                                                    id="editable"
+                                                                                                    style="font-size: 20px;cursor:pointer;"></i>
+                                                                                                <script></script>
+                                                                                                <i class="ti ti-trash delete-notes"
+                                                                                                    id="editable"
+                                                                                                    data-note-id="{{ $note->id }}"
+                                                                                                    style="font-size: 20px;cursor:pointer;"></i>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                        @endforeach
+
+                                                                        </ul>
+                                                                       {{-- <table class="table">
+                                                                            <thead class="table-bordered">
+                                                                                <tr>
+                                                                                    <th scope="col">Title</th>
+                                                                                    <th scope="col">Description
+                                                                                    </th>
+                                                                                    <th scope="col">Date Added
+                                                                                    </th>
+                                                                                    <th scope="col">Added By
+                                                                                    </th>
+                                                                                    <th scope="col">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody class="notes-tbody">
+
+                                                                                @forelse($notes as $note)
+                                                                                <tr>
+                                                                                    <td>{{ $note->title }}
+                                                                                    </td>
+                                                                                    <td>{{ $note->description }}
+                                                                                    </td>
+                                                                                    <td>{{ $note->created_at }}
+                                                                                    </td>
+                                                                                    <td>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
+                                                                                    </td>
+                                                                                    <td class="d-flex">
+                                                                                        @can('edit notes')
+                                                                                        <a data-url="{{ route('deals.notes.edit', $note->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Notes Edit') }}" class="btn px-2 btn-dark text-white mx-2" >
+                                                                                            <i class="ti ti-pencil "></i>
+                                                                                        </a>
+                                                                                        @endcan
+
+                                                                                        @can('delete notes')
+                                                                                        <a href="javascript:void(0)" class="btn btn-danger px-2 text-white delete-notes" data-note-id="{{ $note->id }}" >
+                                                                                            <i class="ti ti-trash "></i>
+                                                                                        </a>
+                                                                                        @endcan
+                                                                                    </td>
+
+                                                                                </tr>
+                                                                                @empty
+                                                                                @endforelse
+
+                                                                            </tbody>
+                                                                        </table> --}}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endcan
+                                        @can('manage task')
+                                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            <!-- Open Accordion Item -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="panelsStayOpen-headingnote">
+                                                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsetasks">
+                                                        {{ __('Tasks') }}
+                                                    </button>
+                                                </h2>
+
+                                                <div id="panelsStayOpen-collapsetasks" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingnote">
+                                                    <div class="accordion-body">
+
+
+                                                        <div class="">
+                                                            <div class="col-12">
+                                                                <div class="card">
+                                                                    <div class="card-header" style="padding-bottom: 18px;">
+                                                                        <div class="d-flex justify-content-end">
+                                                                            <div class="float-end">
+                                                                                @can('create task')
+                                                                                <a data-size="lg" data-url="/organiation/1/task?type=deal&typeid={{ $deal->id }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Task') }}" class="btn px-2 btn-dark text-white" >
+                                                                                    <i class="ti ti-plus"></i>
+                                                                                </a>
+                                                                                @endcan
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="card-body px-0">
+                                                                        <table class="table">
+                                                                            <thead class="table-bordered">
+                                                                                <tr>
+                                                                                    <th scope="col">Name</th>
+                                                                                    <th scope="col">Description
+                                                                                    </th>
+                                                                                    <th scope="col">Visibility
+                                                                                    </th>
+                                                                                    <th scope="col">Status
+                                                                                    </th>
+                                                                                    <th scope="col">Action</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody class="notes-tbody">
+
+                                                                                @forelse($tasks as $task)
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <span style="cursor:pointer" class="task-name hyper-link" onclick="openSidebar('/get-task-detail?task_id='+{{ $task->id }})" data-task-id="{{ $task->id }}">{{ $task->name }}</span>
+                                                                                    </td>
+                                                                                    <td>{{ $task->description }}
+                                                                                    </td>
+                                                                                    <td>{{ $task->visibility }}
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <span class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }}">
+                                                                                            {{ $task->status == 1 ? 'Completed' : 'On Going' }}</span>
+                                                                                    </td>
+                                                                                    <td>
+
+                                                                                        <div class="d-flex">
+                                                                                            @can('edit task')
+                                                                                            <a data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update Task') }}" class="btn px-2 text-white mx-2 btn-dark" >
+                                                                                                <i class="ti ti-pencil"></i>
+                                                                                            </a>
+                                                                                            @endcan
+
+                                                                                            @can('delete task')
+                                                                                            <a href="javascript:void(0)" class="btn px-2 text-white btn-danger"  onclick="deleteTask({{ $task->id }}, {{ $deal->id }}, 'deal');">
+                                                                                                <i class="ti ti-trash "></i>
+                                                                                            </a>
+                                                                                            @endcan
+                                                                                        </div>
+                                                                                    </td>
+                                                                                </tr>
+                                                                                @empty
+                                                                                @endforelse
+
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endcan
                                         <div class="accordion" id="accordionPanelsStayOpenExample">
                                             <!-- Open Accordion Item -->
                                             <div class="accordion-item">
@@ -880,95 +1117,6 @@
                                             </div>
                                         </div>
 
-
-                                        @can('manage notes')
-                                        <div class="accordion" id="accordionPanelsStayOpenExample">
-                                            <!-- Open Accordion Item -->
-                                            <div class="accordion-item">
-                                                <h2 class="accordion-header" id="panelsStayOpen-headingnote">
-                                                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsenote">
-                                                        {{ __('Notes') }}
-                                                    </button>
-                                                </h2>
-
-                                                <div id="panelsStayOpen-collapsenote" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingnote">
-                                                    <div class="accordion-body">
-
-
-                                                        <div class="">
-
-                                                            <div class="col-12">
-                                                                <div class="card">
-
-                                                                    <div class="card-header px-0 pt-1 pb-3">
-                                                                        <div class="d-flex justify-content-end align-items-center p-2 pb-0">
-                                                                            <div class="float-end">
-                                                                                @can('create notes')
-                                                                                <a data-size="lg" data-url="{{ route('deals.notes.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create notes') }}" class="btn px-2 btn-dark text-white" >
-                                                                                    <i class="ti ti-plus"></i>
-                                                                                </a>
-                                                                                @endcan
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="card-body px-0">
-                                                                        <table class="table">
-                                                                            <thead class="table-bordered">
-                                                                                <tr>
-                                                                                    <th scope="col">Title</th>
-                                                                                    <th scope="col">Description
-                                                                                    </th>
-                                                                                    <th scope="col">Date Added
-                                                                                    </th>
-                                                                                    <th scope="col">Added By
-                                                                                    </th>
-                                                                                    <th scope="col">Action</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody class="notes-tbody">
-
-                                                                                @forelse($notes as $note)
-                                                                                <tr>
-                                                                                    <td>{{ $note->title }}
-                                                                                    </td>
-                                                                                    <td>{{ $note->description }}
-                                                                                    </td>
-                                                                                    <td>{{ $note->created_at }}
-                                                                                    </td>
-                                                                                    <td>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
-                                                                                    </td>
-                                                                                    <td class="d-flex">
-                                                                                        @can('edit notes')
-                                                                                        <a data-url="{{ route('deals.notes.edit', $note->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Notes Edit') }}" class="btn px-2 btn-dark text-white mx-2" >
-                                                                                            <i class="ti ti-pencil "></i>
-                                                                                        </a>
-                                                                                        @endcan
-
-                                                                                        @can('delete notes')
-                                                                                        <a href="javascript:void(0)" class="btn btn-danger px-2 text-white delete-notes" data-note-id="{{ $note->id }}" >
-                                                                                            <i class="ti ti-trash "></i>
-                                                                                        </a>
-                                                                                        @endcan
-                                                                                    </td>
-
-                                                                                </tr>
-                                                                                @empty
-                                                                                @endforelse
-
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @endcan
-
-
                                         <div class="accordion" id="accordionPanelsStayOpenExample">
                                             <!-- Open Accordion Item -->
                                             <div class="accordion-item">
@@ -1025,97 +1173,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
-                                        @can('manage task')
-                                        <div class="accordion" id="accordionPanelsStayOpenExample">
-                                            <!-- Open Accordion Item -->
-                                            <div class="accordion-item">
-                                                <h2 class="accordion-header" id="panelsStayOpen-headingnote">
-                                                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsetasks">
-                                                        {{ __('Tasks') }}
-                                                    </button>
-                                                </h2>
-
-                                                <div id="panelsStayOpen-collapsetasks" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingnote">
-                                                    <div class="accordion-body">
-
-
-                                                        <div class="">
-                                                            <div class="col-12">
-                                                                <div class="card">
-                                                                    <div class="card-header" style="padding-bottom: 18px;">
-                                                                        <div class="d-flex justify-content-end">
-                                                                            <div class="float-end">
-                                                                                @can('create task')
-                                                                                <a data-size="lg" data-url="/organiation/1/task?type=deal&typeid={{ $deal->id }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Task') }}" class="btn px-2 btn-dark text-white" >
-                                                                                    <i class="ti ti-plus"></i>
-                                                                                </a>
-                                                                                @endcan
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="card-body px-0">
-                                                                        <table class="table">
-                                                                            <thead class="table-bordered">
-                                                                                <tr>
-                                                                                    <th scope="col">Name</th>
-                                                                                    <th scope="col">Description
-                                                                                    </th>
-                                                                                    <th scope="col">Visibility
-                                                                                    </th>
-                                                                                    <th scope="col">Status
-                                                                                    </th>
-                                                                                    <th scope="col">Action</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody class="notes-tbody">
-
-                                                                                @forelse($tasks as $task)
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <span style="cursor:pointer" class="task-name hyper-link" onclick="openSidebar('/get-task-detail?task_id='+{{ $task->id }})" data-task-id="{{ $task->id }}">{{ $task->name }}</span>
-                                                                                    </td>
-                                                                                    <td>{{ $task->description }}
-                                                                                    </td>
-                                                                                    <td>{{ $task->visibility }}
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <span class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }}">
-                                                                                            {{ $task->status == 1 ? 'Completed' : 'On Going' }}</span>
-                                                                                    </td>
-                                                                                    <td>
-
-                                                                                        <div class="d-flex">
-                                                                                            @can('edit task')
-                                                                                            <a data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update Task') }}" class="btn px-2 text-white mx-2 btn-dark" >
-                                                                                                <i class="ti ti-pencil"></i>
-                                                                                            </a>
-                                                                                            @endcan
-
-                                                                                            @can('delete task')
-                                                                                            <a href="javascript:void(0)" class="btn px-2 text-white btn-danger"  onclick="deleteTask({{ $task->id }}, {{ $deal->id }}, 'deal');">
-                                                                                                <i class="ti ti-trash "></i>
-                                                                                            </a>
-                                                                                            @endcan
-                                                                                        </div>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                @empty
-                                                                                @endforelse
-
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        @endcan
 
                                     </div>
                                 </div>
@@ -1174,3 +1231,28 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $('.textareaClass').click(function() {
+            $('#textareaID, .textareaClass').toggle("slide");
+        });
+    
+        $('#create-notes').submit(function(event) {
+            event.preventDefault(); // Prevents the default form submission
+            $('#textareaID, .textareaClass').toggle("slide");
+        });
+        $('#cancelNote').click(function() {
+            $('textarea[name="description"]').val('');
+            $('#note_id').val('');
+            $('#textareaID, .textareaClass').toggle("slide");
+        });
+        $('.textareaClassedit').click(function() {
+            var dataId = $(this).data('note-id');
+            var dataNote = $(this).data('note');
+            $('textarea[name="description"]').val(dataNote);
+            $('#note_id').val(dataId);
+            $('#textareaID, #dellhover, .textareaClass').show();
+            $('.textareaClass').toggle("slide");
+        });
+    });
+</script>
