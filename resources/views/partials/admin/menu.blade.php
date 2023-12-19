@@ -1166,7 +1166,7 @@
                                                 href="{{ route('university.index') }}">
                                                 <img src="{{ asset('assets/cs-theme/icons/Vector.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
 
-                                                {{ __('Institutes') }}</a>
+                                                {{ __('Toolkit') }}</a>
                                         </li>
                                     @endcan
 
