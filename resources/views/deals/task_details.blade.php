@@ -767,12 +767,6 @@
 
         });
 
-        $('#taskDiscussionInput').keyup(function(event) {
-            $('#SaveDiscussion').removeClass("d-none");
-        });
-
-
-
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
         function ChangeTaskStatus(id) {
@@ -796,11 +790,11 @@
                             'X-CSRF-TOKEN': csrfToken
                         },
                         success: function(response) {
-                            console.log(response);
-                            if (response && response.status === 'success') {
-                                toastr.success('Success', response.message);
-                                location.reload();
-                            }
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'The task status has been changed successfully.',
+                            });
                         },
 
                         error: function(jqXHR, textStatus, errorThrown) {
@@ -812,4 +806,17 @@
                 }
             });
         }
+    </script>
+    <script>
+$(document).ready(function() {
+    $('#taskDiscussionInput').keyup(function(event) {
+        var commentText = $('textarea[name="comment"]').val();
+        if (commentText.length > 0) {
+            $('#SaveDiscussion').removeClass("d-none");
+        } else {
+            $('#SaveDiscussion').addClass("d-none");
+        }
+    });
+});
+
     </script>
