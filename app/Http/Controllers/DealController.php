@@ -1630,7 +1630,7 @@ class DealController extends Controller
                     return redirect()->back()->with('error', $messages->first());
                 }
 
-                
+
 
                 $dealTask = DealTask::create(
                     [
@@ -1672,7 +1672,7 @@ class DealController extends Controller
                 // Send Email
                 Utility::sendEmailTemplate('Create Task', $usrs, $tArr);
 
-               
+
                 $data = [
                     'type' => 'info',
                     'note' => json_encode([
@@ -1685,7 +1685,7 @@ class DealController extends Controller
                 addLogActivity($data);
 
 
-                
+
                 return redirect()->back()->with('success', __('Task successfully created!'))->with('status', 'tasks');
             } else {
                 return redirect()->back()->with('error', __('Permission Denied.'))->with('status', 'tasks');
@@ -2410,10 +2410,10 @@ class DealController extends Controller
 
     public function storeApplication(Request $request)
     {
-      
+
 
         if (\Auth::user()->can('create application')) {
-           
+
             $validator = \Validator::make(
                 $request->all(),
                 [
@@ -2424,24 +2424,24 @@ class DealController extends Controller
                 ]
             );
 
-         
+
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
                 return redirect()->back()->with('error', $messages->first());
             }
 
-           
+
 
             //check application exist or not
             $passport_number = $request->passport_number;
             $university_name = University::select('name')->where(['id' => (int)$request->university])->first()->name;
             $university_name = str_replace(' ', '-', $university_name);
 
-            
+
 
             $is_exist = DealApplication::where(['application_key' => $passport_number . '-' . $university_name])->first();
-          
-           
+
+
             if ($passport_number && $is_exist) {
                 return json_encode([
                     'status' => 'error',
@@ -2589,6 +2589,9 @@ class DealController extends Controller
         if (isset($_GET['due_date']) && !empty($_GET['due_date'])) {
             $filters['due_date'] = $_GET['due_date'];
         }
+        if (isset($_GET['status']) && !empty($_GET['status'])) {
+            $filters['status'] = $_GET['status'];
+        }
 
         return $filters;
     }
@@ -2638,6 +2641,8 @@ class DealController extends Controller
                     $tasks->whereIn('created_by', $value);
                 } elseif ($column == 'due_date') {
                     $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                }elseif ($column == 'status') {
+                    $tasks->where('status',$value);
                 }
             }
 
@@ -2722,6 +2727,17 @@ class DealController extends Controller
             'status' => 'success',
             'html' => $html
         ]);
+    }
+
+    public function TaskStatusChange(Request $request)
+    {
+       if(!empty($request->input('id'))){
+        DealTask::findorfail($request->input('id'))->update(['status'=>'1']);
+        return json_encode([
+            'status' => 'success',
+            'message' => 'Update User Tasks Successfully '
+        ]);
+       }
     }
 
     public function fetchOrgField(Request $request)
@@ -3220,7 +3236,7 @@ class DealController extends Controller
             $application_id = $_GET['application_id'];
             DealApplication::where('id', '!=', $application_id)->update(['status' => 0]);
         }
-        
+
 
         Deal::where('id', $deal_id)->update(['stage_id' => $stage_id]);
         $data = [
@@ -3241,7 +3257,7 @@ class DealController extends Controller
     }
 
     public function getDealApplications(){
-        
+
     }
 
     ////////////////////////////////////////////////////////////
@@ -3261,18 +3277,18 @@ class DealController extends Controller
 
     public function updateBulkTaskStatus(Request $request){
 
-     
+
 
         $ids = explode(',', $request->task_ids);
         $status = $request->status;
 
         DealTask::whereIn('id', $ids)->update(['status' => $status]);
-      
+
 
         foreach($ids as $id){
-           
+
             $task = DealTask::findOrFail($id);
-                  
+
             $data = [
                 'type' => 'info',
                 'note' => json_encode([
