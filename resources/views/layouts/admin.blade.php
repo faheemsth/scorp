@@ -536,7 +536,7 @@ $lang=Utility::getValByName('default_language');
         <!-- [ Header ] end -->
 
         <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column" style="background:  #ECEBEB !important;">
+        <div id="content-wrapper" class="d-flex flex-column" style="background:  #ECEBEB !important;position: relative;">
             <!-- Main Content -->
             <div id="content" style="background:  #ECEBEB !important;">
                 <div class="container-fluid" style="padding: 0">
@@ -557,11 +557,36 @@ $lang=Utility::getValByName('default_language');
                     </div>
                     <!-- Content Wrapper -->
 
-
                 </div>
+                {{-- <button  class="bg-dark" onclick="myFunction()"
+    style="width: 7%;
+    height: 7%;
+    border-radius: 50%;
+    margin-left: 125px;"
+    >
+        <i class="fa-regular fa-bookmark" style="color: #ffffff;"></i>
+    </button> --}}
             </div>
+
+            {{-- <div id="myDIV" style="position: absolute;width: 15%;height: 100vh;background-color: wheat;">
+                This.
+            </div> --}}
+
         </div>
+
     </div>
+
+
+  {{-- <script>
+      function myFunction() {
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+          x.style.display = "block";
+        } else {
+          x.style.display = "none";
+        }
+      }
+  </script> --}}
 
 
     <div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2000;">

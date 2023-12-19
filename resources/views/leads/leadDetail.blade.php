@@ -290,7 +290,7 @@
                                                                     {{ __('Lead Stage') }}
                                                                 </td>
                                                                 <td style="padding-left: 10px; font-size: 14px;">
-                                                                    <div class="bg-danger text-white w-50">
+                                                                    <div class="text-white w-50" style="background-color:#B3CDE1;">
                                                                         <p class="mb-0"
                                                                             style="padding-left: 10px; font-size: 14px;">
                                                                             {{ $lead->stage->name }}
