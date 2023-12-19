@@ -1081,6 +1081,9 @@ if (isset($lead->is_active) && $lead->is_active) {
                         show_toastr('Success', data.message, 'success');
                         $('#commonModal').modal('hide');
                         $('.notes-tbody').html(data.html);
+                        $('#note_id').val('');
+                        $('#description').val('');
+
                         // openNav(data.lead.id);
                         // return false;
                     } else {

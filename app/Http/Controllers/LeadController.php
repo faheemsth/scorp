@@ -1977,7 +1977,7 @@ class LeadController extends Controller
         $validator = \Validator::make(
             $request->all(),
             [
-                'title' => 'required',
+                // 'title' => 'required',
                 'description' => 'required'
             ]
         );
@@ -1989,11 +1989,37 @@ class LeadController extends Controller
                 'message' =>  $messages->first()
             ]);
         }
-
-
         $id = $request->id;
+
+        if($request->note_id != null && $request->note_id != ''){
+            $note = LeadNote::where('id', $request->note_id)->first();
+            // $note->title = $request->input('title');
+            $note->description = $request->input('description');
+            $note->update();
+    
+            $data = [
+                'type' => 'info',
+                'note' => json_encode([
+                                'title' => 'Lead Notes Updated',
+                                'message' => 'Lead notes updated successfully'
+                            ]),
+                'module_id' => $request->id,
+                'module_type' => 'lead',
+            ];
+            addLogActivity($data);
+    
+    
+            $notes = LeadNote::where('lead_id', $id)->orderBy('created_at', 'DESC')->get();
+            $html = view('leads.getNotes', compact('notes'))->render();
+    
+            return json_encode([
+                'status' => 'success',
+                'html' => $html,
+                'message' =>  __('Notes updated successfully')
+            ]);
+        }
         $note = new LeadNote;
-        $note->title = $request->input('title');
+        // $note->title = $request->input('title');
         $note->description = $request->input('description');
         $note->created_by = \Auth::user()->id;
         $note->lead_id = $id;
@@ -2037,7 +2063,7 @@ class LeadController extends Controller
         $validator = \Validator::make(
             $request->all(),
             [
-                'title' => 'required',
+                // 'title' => 'required',
                 'description' => 'required'
             ]
         );

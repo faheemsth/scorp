@@ -908,7 +908,10 @@
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
                         $('#commonModal').modal('hide');
-                        $('.notes-tbody').html(data.html);
+                        $('.note-body').html(data.html);
+                        $('textarea[name="description"]').val('');
+                        $('#note_id').val('');
+
                         // openNav(data.lead.id);
                         // return false;
                     } else {
@@ -939,7 +942,11 @@
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
                         $('#commonModal').modal('hide');
-                        $('.notes-tbody').html(data.html);
+                        $('.note-body').html(data.html);
+                        $('textarea[name="description"]').val('');
+
+                        $('#note_id').val('');
+
                         // openNav(data.lead.id);
                         // return false;
                     } else {
@@ -972,7 +979,10 @@
 
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
-                        $('.notes-tbody').html(data.html);
+                        $('.note-body').html(data.html);
+                        $('textarea[name="description"]').val('');
+                        $('#note_id').val('');
+
                         // openNav(data.lead.id);
                         // return false;
                     } else {
