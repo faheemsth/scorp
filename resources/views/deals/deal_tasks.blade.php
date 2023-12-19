@@ -290,9 +290,6 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
         </div>
     </div>
 </div>
-@endsection
-
-
 
 <div class="modal" id="update-status-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -322,6 +319,11 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
         </div>
     </div>
 </div>
+@endsection
+
+
+
+
 
 
 @push('script-page')
