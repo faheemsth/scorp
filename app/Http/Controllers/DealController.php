@@ -2629,6 +2629,8 @@ class DealController extends Controller
             }
 
 
+             
+
             ///////Add filter
             $filters = $this->TasksFilter();
 
@@ -2644,6 +2646,10 @@ class DealController extends Controller
                 }elseif ($column == 'status') {
                     $tasks->where('status',$value);
                 }
+            }
+
+            if(!isset($_GET['status'])){
+                $tasks->where('status',0);
             }
 
 
@@ -2664,10 +2670,15 @@ class DealController extends Controller
             $user_type = User::get()->pluck('type', 'id')->toArray();
             $users = User::get()->pluck('name', 'id')->toArray();
             $brands = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+            $branches = array();
 
-
+            if (\Auth::user()->type == 'super admin') {
+                $branches = Branch::get();
+            } else {
+                $branches = Branch::where('created_by', \Auth::user()->id)->get();
+            }
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-                $html = view('deals.tasks_list_ajax',compact('tasks', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'))->render();
+                $html = view('deals.tasks_list_ajax',compact('tasks','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'))->render();
 
                 return json_encode([
                     'status' => 'success',
@@ -2676,7 +2687,7 @@ class DealController extends Controller
             }
 
 
-            return view('deals.deal_tasks', compact('tasks', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'));
+            return view('deals.deal_tasks', compact('tasks','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -3316,6 +3327,53 @@ class DealController extends Controller
             addLogActivity($data);
         }
         return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks status updated successfully');
+    }
+
+    public function updateBulkTask(Request $request){
+        
+        $ids = explode(',',$request->tasks_ids);
+
+        if(isset($request->task_name)){
+
+            DealTask::whereIn('id',$ids)->update(['name' => $request->task_name]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+            
+        }elseif(isset($request->branch_id)){
+
+            DealTask::whereIn('id',$ids)->update(['branch_id' => $request->branch_id]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+            
+        }elseif(isset($request->status)){
+
+            DealTask::whereIn('id',$ids)->update(['status' => $request->status]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->due_date)){
+
+            DealTask::whereIn('id',$ids)->update(['due_date' => $request->due_date]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->start_date)){
+
+            DealTask::whereIn('id',$ids)->update(['start_date' => $request->start_date]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->remainder_date) && isset($request->remainder_time)){
+
+            DealTask::whereIn('id',$ids)->update(['remainder_date' => $request->remainder_date]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->description)){
+
+            DealTask::whereIn('id',$ids)->update(['description' => $request->description]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->visibility)){
+
+            DealTask::whereIn('id',$ids)->update(['visibility' => $request->visibility]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }
     }
 
     public function deleteBulkTasks(Request $request){
