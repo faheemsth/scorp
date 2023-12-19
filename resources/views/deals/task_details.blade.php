@@ -140,7 +140,7 @@
                     @if ($task->status == 0)
                     <a href="javascript:void(0)" onclick="ChangeTaskStatus({{ $task->id }})"
                         title="{{ __('Edit Status') }}" class="btn px-2 btn-dark text-white">
-                        <i class="fa fa-plus-circle"></i>
+                        <i class="fa-solid fa-check" style="color: #ffffff;"></i>
                     </a>
                     @endif
                     <a href="#" data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}"
@@ -149,7 +149,7 @@
                         <i class="ti ti-pencil"></i>
                     </a>
 
-                    <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-dark text-white">
+                    <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-danger text-white">
                         <i class="ti ti-trash "></i>
                     </a>
                 </div>

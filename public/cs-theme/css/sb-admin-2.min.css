@@ -11564,7 +11564,7 @@ ul li::marker{
 }
 
 .sidebar .nav-item.active .nav-link {
-    font-weight: 700
+    /* font-weight: 700 */
 }
 
 .sidebar .nav-item .collapse {
