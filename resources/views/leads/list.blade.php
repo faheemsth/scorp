@@ -553,7 +553,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
     </div>
 
-    <div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
+<div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
