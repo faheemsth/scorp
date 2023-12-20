@@ -22,6 +22,9 @@
 </style>
 
 @section('content')
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <div class="row">
         <div class="col-xxl-12">
             <div class="row w-100 m-0">
@@ -50,16 +53,9 @@
                                         aria-describedby="basic-addon1">
                                 </div>
 
-                                    {{-- <button class="btn btn-dark  px-2 py-2"><i class="ti ti-refresh"
-                                            style="font-size: 18px"></i></button>
-
-
-                                <button class="btn btn-dark  px-2" type="button" id="dropdownMenuButton1"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
-                                </button> --}}
-
-
+                                  </button>
                                 <a href="#" data-size="lg" data-url="{{ route('user.employee.create') }}"
                                     data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Employee') }}"
                                     class="btn btn-dark py-2 px-2">
@@ -67,15 +63,17 @@
                                 </a>
                             </div>
                         </div>
-
-
+                        <script>
+                            $(document).ready(function() {
+                              $("#dropdownMenuButton3").click(function() {
+                                $("#filterToggle").toggle();
+                              });
+                            });
+                          </script>
                         <div class="row mt-5">
-
-
-
                                {{-- Filters --}}
-                               <div class="filter-data px-3" id="filter-show"
-                               <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: non;"' ?>>
+                               <div class="filter-data px-3" id="filterToggle"
+                               <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                                <form action="/user/employees" method="GET" class="">
                                    <div class="row my-3">
                                        <div class="col-md-4 mt-2">
