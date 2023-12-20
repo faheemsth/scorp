@@ -99,7 +99,7 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
                         </button>
 
                         @can('create task')
-                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn btn-sm p-2 btn-dark">
+                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark">
                             <i class="ti ti-plus" style="font-size:18px"></i>
                         </button>
                         @endcan

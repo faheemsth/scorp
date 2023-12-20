@@ -2629,7 +2629,7 @@ class DealController extends Controller
             }
 
 
-             
+
 
             ///////Add filter
             $filters = $this->TasksFilter();
@@ -3179,10 +3179,10 @@ class DealController extends Controller
             $note->title = $request->input('title');
             $note->description = $request->input('description');
             $note->update();
-    
+
             $notes = DealNote::where('deal_id', $id)->orderBy('created_at', 'DESC')->get();
             $html = view('deals.getNotes', compact('notes'))->render();
-    
+
             return json_encode([
                 'status' => 'success',
                 'html' => $html,
@@ -3342,19 +3342,19 @@ class DealController extends Controller
     }
 
     public function updateBulkTask(Request $request){
-        
+
         $ids = explode(',',$request->tasks_ids);
         
         if(isset($request->task_name)){
 
             DealTask::whereIn('id',$ids)->update(['name' => $request->task_name]);
             return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
-            
+
         }elseif(isset($request->branch_id)){
 
             DealTask::whereIn('id',$ids)->update(['branch_id' => $request->branch_id]);
             return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
-            
+
         }elseif(isset($request->status)){
 
             DealTask::whereIn('id',$ids)->update(['status' => $request->status]);
