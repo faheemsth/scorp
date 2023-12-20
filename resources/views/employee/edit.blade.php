@@ -174,7 +174,7 @@
 
 
 {{--                                        @if(!empty($employeedoc[$document->id]))--}}
-{{--                                            <br> <span class="text-xs"><a href="{{ (!empty($employeedoc[$document->id])?asset(Storage::url('uploads/document')).'/'.$employeedoc[$document->id]:'') }}" target="_blank">{{ (!empty($employeedoc[$document->id])?$employeedoc[$document->id]:'') }}</a>--}}
+{{--                                            <br> <span class=""><a href="{{ (!empty($employeedoc[$document->id])?asset(Storage::url('uploads/document')).'/'.$employeedoc[$document->id]:'') }}" target="_blank">{{ (!empty($employeedoc[$document->id])?$employeedoc[$document->id]:'') }}</a>--}}
 {{--                                                    </span>--}}
 {{--                                        @endif--}}
                                     </div>

@@ -38,6 +38,11 @@
     <li class="breadcrumb-item">{{ __('Lead Stage') }}</li>
 @endsection
 @section('content')
+<style>
+    span{
+        font-size:14px !important;
+    }
+    </style>
     <div class="row">
         <div class="col-3">
             @include('layouts.crm_setup')
@@ -85,10 +90,10 @@
                                             <li class="list-group-item d-flex justify-content-between"
                                                 data-id="{{ $lead_stages->id }}">
 
-                                                <span class="text-xs text-dark"
+                                                <span class=" text-dark"
                                                     style="width: 100px;">{{ $lead_stages->name }}</span>
 
-                                                <span class="text-xs text-dark">{{ $lead_stages->type }}</span>
+                                                <span class=" text-dark">{{ $lead_stages->type }}</span>
 
                                                 <span class="d-flex justify-content-center">
 

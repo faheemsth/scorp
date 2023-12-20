@@ -68,7 +68,7 @@
                             "                    <div class='media-body'>" +
                             "                    <div class='d-flex justify-content-between align-items-end'><div>" +
                             "                        <h5 class='mt-0'>" + name + "</h5>" +
-                            "                        <p class='mb-0 text-xs'>" + data.comment + "</p></div>" +
+                            "                        <p class='mb-0 '>" + data.comment + "</p></div>" +
                             "                           <div class='comment-trash' style=\"float: right\">" +
                             "                               <a href='#' class='btn btn-outline btn-sm text-danger delete-comment' data-url='" + data.deleteUrl + "' >" +
                             "                                   <i class='fa fa-trash'></i>" +
@@ -139,7 +139,7 @@
 
                     var html = '<div class="col-8 mb-2 file-' + data.id + '">' +
                         '                                    <h5 class="mt-0 mb-1 font-weight-bold text-sm"> ' + data.name + '</h5>' +
-                        '                                    <p class="m-0 text-xs">' + data.file_size + '</p>' +
+                        '                                    <p class="m-0 ">' + data.file_size + '</p>' +
                         '                                </div>' +
                         '                                <div class="col-4 mb-2 file-' + data.id + '">' +
                         '                                    <div class="comment-trash" style="float: right">' +
@@ -246,7 +246,7 @@
                                                 </div>
                                                 <div class="mb-3 d-flex align-items-center justify-content-between">
                                                     <p class="mb-0">
-                                                        <span class="text-nowrap mb-2 d-inline-block text-xs">{{(!empty($bug->description)) ? $bug->description : '-'}}</span>
+                                                        <span class="text-nowrap mb-2 d-inline-block ">{{(!empty($bug->description)) ? $bug->description : '-'}}</span>
                                                     </p>
                                                     <p class="mb-0">
                                                         @php $users = $bug->users(); @endphp
@@ -262,11 +262,11 @@
                                                     </p>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-6 text-xs">
+                                                    <div class="col-6 ">
                                                         <i class="far fa-clock"></i>
                                                         <span>{{ \Auth::user()->dateFormat($bug->start_date) }}</span>
                                                     </div>
-                                                    <div class="col-6 text-end text-xs font-weight-bold">
+                                                    <div class="col-6 text-end  font-weight-bold">
                                                         <i class="far fa-clock"></i>
                                                         <span>{{ \Auth::user()->dateFormat($bug->due_date) }}</span>
                                                     </div>

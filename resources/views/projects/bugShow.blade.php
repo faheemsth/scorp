@@ -65,7 +65,7 @@
                                         <div class="d-flex justify-content-between align-items-end">
                                             <div>
                                                 <h5 class="mt-0">{{(!empty($comment->user)?$comment->user->name:'')}}</h5>
-                                                <p class="mb-0 text-xs">{{$comment->comment}}</p>
+                                                <p class="mb-0 ">{{$comment->comment}}</p>
                                             </div>
                                             <a href="#" class="btn btn-sm red btn-danger delete-comment" data-url="{{route('bug.comment.destroy',$comment->id)}}">
                                                 <i class="ti ti-trash"></i>
@@ -104,7 +104,7 @@
                             @foreach($bug->bugFiles as $file)
                                 <div class="col-8 mb-2 file-{{$file->id}}">
                                     <h5 class="mt-0 mb-1 font-weight-bold text-sm"> {{$file->name}}</h5>
-                                    <p class="m-0 text-xs">{{$file->file_size}}</p>
+                                    <p class="m-0 ">{{$file->file_size}}</p>
                                 </div>
                                 <div class="col-4 mb-2 file-{{$file->id}}">
                                     <div class="comment-trash" style="float: right">

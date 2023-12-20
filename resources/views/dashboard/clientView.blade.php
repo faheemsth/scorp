@@ -217,17 +217,17 @@
         @if(!empty($arrErr))
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 @if(!empty($arrErr['system']))
-                    <div class="alert alert-danger text-xs">
+                    <div class="alert alert-danger ">
                          {{ __('are required in') }} <a href="{{ route('settings') }}" class=""><u> {{ __('System Setting') }}</u></a>
                     </div>
                 @endif
                 @if(!empty($arrErr['user']))
-                    <div class="alert alert-danger text-xs">
+                    <div class="alert alert-danger ">
                          <a href="{{ route('users') }}" class=""><u>{{ __('here') }}</u></a>
                     </div>
                 @endif
                 @if(!empty($arrErr['role']))
-                    <div class="alert alert-danger text-xs">
+                    <div class="alert alert-danger ">
                          <a href="{{ route('roles.index') }}" class=""><u>{{ __('here') }}</u></a>
                     </div>
                 @endif

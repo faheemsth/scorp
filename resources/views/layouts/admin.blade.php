@@ -444,6 +444,7 @@ $lang=Utility::getValByName('default_language');
         table th{
             font-size: 14px !important;
         }
+        
     </style>
 </head>
 

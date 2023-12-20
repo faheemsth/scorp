@@ -24,6 +24,7 @@
 @endsection
 
 @section('content')
+
     <div class="row">
         <div class="col-xl-3">
             <div class="card sticky-top" style="top:30px">
@@ -48,7 +49,7 @@
                                     <label class="col-form-label text-dark">{{__('Name')}}</label>
                                     <input class="form-control @error('name') is-invalid @enderror" name="name" type="text" id="name" placeholder="{{ __('Enter Your Name') }}" value="{{ $userDetail->name }}" required autocomplete="name">
                                     @error('name')
-                                    <span class="invalid-feedback text-danger text-xs" role="alert">{{ $message }}</span>
+                                    <span class="invalid-feedback text-danger " role="alert">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
@@ -57,7 +58,7 @@
                                     <label for="email" class="col-form-label text-dark">{{__('Email')}}</label>
                                     <input class="form-control @error('email') is-invalid @enderror" name="email" type="text" id="email" placeholder="{{ __('Enter Your Email Address') }}" value="{{ $userDetail->email }}" required autocomplete="email">
                                     @error('email')
-                                    <span class="invalid-feedback text-danger text-xs" role="alert">{{ $message }}</span>
+                                    <span class="invalid-feedback text-danger " role="alert">{{ $message }}</span>
                                     @enderror
                                 </div>
                             </div>
@@ -69,9 +70,9 @@
                                             <input type="file" class="form-control file" name="profile" id="avatar" data-filename="profile_update">
                                         </label>
                                     </div>
-                                    <span class="text-xs text-muted">{{ __('Please upload a valid image file. Size of image should not be more than 2MB.')}}</span>
+                                    <span class=" text-muted">{{ __('Please upload a valid image file. Size of image should not be more than 2MB.')}}</span>
                                     @error('avatar')
-                                    <span class="invalid-feedback text-danger text-xs" role="alert">{{ $message }}</span>
+                                    <span class="invalid-feedback text-danger " role="alert">{{ $message }}</span>
                                     @enderror
 
                                 </div>
@@ -98,7 +99,7 @@
                                 <label for="old_password" class="col-form-label text-dark">{{ __('Old Password') }}</label>
                                 <input class="form-control @error('old_password') is-invalid @enderror" name="old_password" type="password" id="old_password" required autocomplete="old_password" placeholder="{{ __('Enter Old Password') }}">
                                 @error('old_password')
-                                <span class="invalid-feedback text-danger text-xs" role="alert">{{ $message }}</span>
+                                <span class="invalid-feedback text-danger " role="alert">{{ $message }}</span>
                                 @enderror
                             </div>
 
@@ -106,7 +107,7 @@
                                 <label for="password" class="col-form-label text-dark">{{ __('New Password') }}</label>
                                 <input class="form-control @error('password') is-invalid @enderror" name="password" type="password" required autocomplete="new-password" id="password" placeholder="{{ __('Enter Your Password') }}">
                                 @error('password')
-                                <span class="invalid-feedback text-danger text-xs" role="alert">{{ $message }}</span>
+                                <span class="invalid-feedback text-danger " role="alert">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="col-lg-6 col-sm-6 form-group">

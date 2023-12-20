@@ -53,7 +53,7 @@
                                         @foreach ($pipeline['labels'] as $label)
                                             <li class="list-group-item d-flex justify-content-between"
                                                 data-id="{{ $label->id }}">
-                                                <span class="text-xs text-dark"
+                                                <span class=" text-dark"
                                                     style="width: 100px;">{{ $label->name }}</span>
                                                 <span class="d-flex justify-content-center">
                                                     @can('edit label')
