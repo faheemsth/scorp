@@ -627,95 +627,70 @@
                                             <div class="d-flex justify-content-end align-items-center p-2 pb-0">
                                                 <div class="float-end">
                                                     @if (\Auth::user()->can('create application'))
-                                                    <a data-size="lg" data-url="{{ route('deals.application.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Application') }}" class="btn btn-sm text-white" >
+                                                    <a data-size="lg" data-url="{{ route('deals.application.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Application') }}" class="btn btn-dark px-2 text-white" >
                                                         <i class="ti ti-plus"></i>
                                                     </a>
                                                     @endif
                                                 </div>
                                             </div>
 
-                                            <div class="mt-1" style="margin-left: 10px;">
-                                                <table class="table">
-                                                    <thead class="" style="background-color:rgba(0, 0, 0, .08); font-weight: bold;">
-                                                        <tr>
 
-                                                            <td>
-                                                                {{ __('Name') }}
-                                                            </td>
+                                                <div style="max-height: 400px; overflow-y: auto;">
+                                                    <table class="table">
+                                                        <thead class="" style="background-color:rgba(0, 0, 0, .08); font-weight: bold;">
+                                                            <tr>
+                                                                <td>{{ __('Name') }}</td>
+                                                                <td>{{ __('Application Key') }}</td>
+                                                                <td>{{ __('University') }}</td>
+                                                                <td>{{ __('Intake') }}</td>
+                                                                <td>{{ __('Status') }}</td>
+                                                                <td>{{ __('Action') }}</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @forelse($applications as $app)
+                                                            <tr>
+                                                                <td>
+                                                                    <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')">
+                                                                        {{ $app->name }}
+                                                                    </span>
+                                                                </td>
+                                                                <td>{{ $app->application_key }}</td>
+                                                                <td>{{ $universities[$app->university_id] }}</td>
+                                                                <td>{{ $app->intake }}</td>
+                                                                <td>{{ $stages[$app->stage_id] }}</td>
+                                                                <td>
+                                                                    <div class="d-flex justify-center align-items-center">
+                                                                    @can('edit application')
 
+                                                                        <a data-size="lg" title="{{ __('Edit Application') }}" href="#" class="btn px-2 btn-dark text-white mx-1" data-url="{{ route('deals.application.edit', $app->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Application') }}" data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
+                                                                            <i class="ti ti-edit"></i>
+                                                                        </a>
 
-                                                            <td>
-                                                                {{ __('Application Key') }}
-                                                            </td>
+                                                                    @endcan
 
-                                                            <td>
-                                                                {{ __('University') }}
-                                                            </td>
+                                                                    @can('delete application')
 
-                                                            <td>
-                                                                {{ __('Intake') }}
-                                                            </td>
+                                                                        {!! Form::open([
+                                                                        'method' => 'DELETE',
+                                                                        'route' => ['deals.application.destroy', $app->id],
+                                                                        'id' => 'delete-form-' . $app->id,
+                                                                        'class'=>'mb-0',
+                                                                        ]) !!}
+                                                                        <a href="#" class=" btn px-2 bg-danger bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i class="ti ti-trash text-white"></i></a>
+                                                                        {!! Form::close() !!}
 
-                                                            <td>
-                                                                {{ __('Status') }}
-                                                            </td>
-
-                                                            <td>
-                                                                {{ __('Action') }}
-                                                            </td>
-
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-
-                                                        @forelse($applications as $app)
-                                                        <tr>
-                                                            <td>
-                                                                <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')">
-                                                                    {{ $app->name }}
-                                                                </span>
-                                                            </td>
-                                                            <td>{{ $app->application_key }}</td>
-                                                            <td>{{ $universities[$app->university_id] }}</td>
-
-                                                            <td>
-                                                                {{ $app->intake }}
-                                                            </td>
-                                                            <td>
-                                                                {{ $stages[$app->stage_id] }}
-                                                            </td>
-                                                            <td>
-
-
-                                                                @can('edit application')
-                                                                <div class="action-btn ms-2">
-
-                                                                    <a data-size="lg" title="{{ __('Edit Application') }}" href="#" class="btn px-2 btn-dark text-white mx-1" data-url="{{ route('deals.application.edit', $app->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Application') }}" data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
-                                                                        <i class="ti ti-edit"></i>
-                                                                    </a>
-
+                                                                    @endcan
                                                                 </div>
-                                                                @endcan
+                                                                </td>
+                                                            </tr>
+                                                            @empty
+                                                            @endforelse
+                                                        </tbody>
+                                                    </table>
+                                                </div>
 
-                                                                @can('delete application')
-                                                                <div class="action-btn ms-2">
-                                                                    {!! Form::open([
-                                                                    'method' => 'DELETE',
-                                                                    'route' => ['deals.application.destroy', $app->id],
-                                                                    'id' => 'delete-form-' . $app->id,
-                                                                    ]) !!}
-                                                                    <a href="#" class="mx-3 btn btn-sm bg-danger  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i class="ti ti-trash text-white"></i></a>
 
-                                                                    {!! Form::close() !!}
-                                                                </div>
-                                                                @endcan
-                                                            </td>
-                                                        </tr>
-                                                        @empty
-                                                        @endforelse
-                                                    </tbody>
-                                                </table>
-                                            </div>
                                         </div>
                                     </div>
 
