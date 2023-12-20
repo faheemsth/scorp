@@ -44,31 +44,34 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-body p-1">
-                <table class="table" width="100%">
-                    <thead>
-                        <tr>
-                            <th>Company Name</th>
+            <div class="card-body p-1" style="overflow-x: auto;">
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table class="table" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Company Name</th>
+                                @foreach($companies as $company)
+                                    <th>{{$company->name}}</th>
+                                @endforeach
+                            </tr>
+                        </thead>
+                        <tbody>
                             @foreach($companies as $company)
-                            <th >{{$company->name}}</th>
+                                <tr scope="row">
+                                    <td>{{$company->name}}</td>
+                                    @foreach($companies as $comp)
+                                        <?php  $permitted_companies = $comp->companyPermissions->pluck('permitted_company_id'); ?>
+                                        <td>
+                                            <input type="checkbox" class="company-permission-checkbox"
+                                                <?= $company->id == $comp->id ? 'checked disabled' :  (isset($permission_arr[$company->id][$comp->id]) && $permission_arr[$company->id][$comp->id] == 'true' ? 'checked' : '') ?>
+                                                id="company-permission-checkbox" data-for-company="{{$company->id}}" data-permission-company="{{$comp->id}}">
+                                        </td>
+                                    @endforeach
+                                </tr>
                             @endforeach
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($companies as $company)
-                        <tr scope="row">
-                            <td>{{$company->name}}</td>
-                            @foreach($companies as $comp)
-                             <?php  $permitted_companies = $comp->companyPermissions->pluck('permitted_company_id'); ?>
-                             <td>
-                             <input type="checkbox" class="company-permission-checkbox"
-                             <?= $company->id == $comp->id ? 'checked disabled' :  (isset($permission_arr[$company->id][$comp->id]) && $permission_arr[$company->id][$comp->id] == 'true' ? 'checked' : '') ?>
-                             id="company-permission-checkbox" data-for-company="{{$company->id}}" data-permission-company="{{$comp->id}}"></td>
-                            @endforeach
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
