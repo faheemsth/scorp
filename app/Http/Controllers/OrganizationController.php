@@ -733,10 +733,12 @@ class OrganizationController extends Controller
             $users = User::get()->pluck('name', 'id')->toArray();
 
             if (\Auth::user()->type == 'super admin') {
-                $branches = Branch::get()->pluck('name', 'id')->toArray();
+                    $branches = Branch::get()->pluck('name', 'id')->toArray();
                 }else{
-                    $branches = Branch::where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+                    $branches = Branch::get()->pluck('name', 'id')->toArray();
                 }
+
+
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
             $employees = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();

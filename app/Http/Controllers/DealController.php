@@ -2677,6 +2677,7 @@ class DealController extends Controller
             } else {
                 $branches = Branch::where('created_by', \Auth::user()->id)->get();
             }
+    
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('deals.tasks_list_ajax',compact('tasks','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'))->render();
 

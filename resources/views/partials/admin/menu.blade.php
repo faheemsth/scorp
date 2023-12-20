@@ -34,7 +34,7 @@
 
             @if (Auth::user()->type == 'company' ||
                     Auth::user()->type == 'team' ||
-                    // Gate::check('show hrm dashboard') ||
+                    Gate::check('show hrm dashboard') ||
                     Gate::check('show project dashboard') ||
                     Gate::check('show account dashboard'))
                 <li
@@ -201,13 +201,22 @@
                                     </li>
                                 @endif
                                 @if (\Auth::user()->show_hrm() == 1)
+                                        <li
+                                            class="{{ \Request::route()->getName() == 'hrm.dashboard' ? ' active' : '' }}">
+                                            <a class="collapse-item" style="color: white; font-size: 13px;"
+                                                href="{{ route('hrm.dashboard') }}">
+                                            <img src="{{ asset('assets/cs-theme/icons/Layer_1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+
+                                                {{ __('HRM Dashboard') }}</a>
+                                        </li>
+
                                     <li
                                         class="nav-item d-none {{ Request::segment(1) == 'hrm-dashboard' || Request::segment(1) == 'reports-payroll' ? ' active dash-trigger' : '' }}">
                                         <a class="nav-link collapsed" href="#" data-toggle="collapse"
                                             data-target="#collapsesys" aria-expanded="true"
                                             aria-controls="collapsesys">
 
-                                            <span>{{ __('HRM ') }}</span>
+                                            <span>{{ __('HRM') }}</span>
                                         </a>
                                         <div id="collapsesys" class="collapse" aria-labelledby="headingTwo"
                                             data-parent="#accordionSidebar">
@@ -215,7 +224,7 @@
                                                 <ul>
                                                     @can('show hrm dashboard')
                                                         <li
-                                                            class="{{ \Request::route()->getName() == 'crm.dashboard' ? ' active' : '' }}">
+                                                            class="{{ \Request::route()->getName() == 'hrm.dashboard' ? ' active' : '' }}">
                                                             <a class="collapse-item" href="{{ route('hrm.dashboard') }}"
                                                                 style="color:white; font-size: 13px;">{{ __(' Overview') }}</a>
                                                         </li>

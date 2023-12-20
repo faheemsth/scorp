@@ -8,14 +8,20 @@
     @php
         $currentUserCompany = \App\Models\User::where('type', 'company')->first();
     @endphp
-@else
+@elseif(\Auth::user()->type == 'company')
     @php
         $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
     @endphp
+@elseif(\Auth::user()->type == 'project director' || \Auth::user()->type == 'project manager')
+    @php
+        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+    @endphp
 @endif
 <?php
+$com_permissions = [];
+if(isset($currentUserCompany->id)){
 $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->get();
-
+}
 $lead = \App\Models\Lead::first();
 if (isset($lead->is_active) && $lead->is_active) {
     $calenderTasks = [];
