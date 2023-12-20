@@ -84,15 +84,12 @@
 
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                     <div class="col-2">
-                        <p class="mb-0 pb-0">ORGANIZATIONS</p>
+                        <p class="mb-0 pb-0 ps-1">ORGANIZATIONS</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL ORGANIZATION
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
                                 <li><a class="dropdown-item delete-bulk-organizations" href="javascript:void(0)">Delete</a></li>
                             </ul>
                         </div>

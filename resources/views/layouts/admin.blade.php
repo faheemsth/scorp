@@ -83,16 +83,16 @@ $lang=Utility::getValByName('default_language');
 
     <style>
         .All-leads {
-            border: 0px;
+            border: 1px solid #c3c3c363;
             background-color: transparent;
             font-size: 16px;
             padding: 4px;
             line-height: 20px;
         }
 
-        .All-leads:hover {
+        /* .All-leads:hover {
             border: 1px solid rgb(223, 220, 220);
-        }
+        } */
 
         .input-group {
             /* border: 1px solid rgb(102, 102, 102); */
@@ -444,7 +444,7 @@ $lang=Utility::getValByName('default_language');
         table th{
             font-size: 14px !important;
         }
-        
+
     </style>
 </head>
 

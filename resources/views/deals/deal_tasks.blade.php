@@ -54,7 +54,7 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
 
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                     <div class="col-2">
-                        <p class="mb-0 pb-0">Tasks</p>
+                        <p class="mb-0 pb-0 ps-1">Tasks</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL Tasks
