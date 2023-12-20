@@ -11610,9 +11610,10 @@ a:focus {
 
 .sidebar .nav-item .collapse .collapse-inner .collapse-item:hover,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-item:hover {
-    color: #B3CDE1  !important;
+    color: #2E82D0  !important;
     padding-left: 5px;
 }
+
 
 .sidebar .nav-item .collapse .collapse-inner .collapse-item:active,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-item:active {

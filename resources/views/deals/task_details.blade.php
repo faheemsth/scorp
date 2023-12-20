@@ -165,22 +165,25 @@
                     @php
                             $due_date = strtotime($task->due_date);
                             $current_date = strtotime(date('Y-m-d'));
+                            $status = strtolower($task->status);
+                            $color_code = '';
 
-                            if ($due_date > $current_date) {
-                                $remaining_days = ceil(($due_date - $current_date) / (60 * 60 * 24)); // Calculate remaining days
-                            } else {
-                                $remaining_days = 0; // Task is overdue
+                            if ($due_date > $current_date && $status === '0') {
+                                // Ongoing feture time
+                                $color_code = '#B3CDE1;';
+                            } elseif ($due_date === $current_date && $status === '0') {
+                                // Today date time
+                                $color_code = '#E89D25';
+                            } elseif ($due_date < $current_date && $status === '0') {
+                                // Past date time
+                                $color_code = 'red';
+                            } elseif ($status === '1') {
+                                // Completed task
+                                $color_code = 'green';
                             }
-
-                            if ($remaining_days == 0) {
-                                $message = 'Today';
-                            } elseif ($remaining_days < 0) {
-                                $message = abs($remaining_days) . ' days ago';
-                            } else {
-                                $message = $remaining_days . ' days remaining';
-                            }
-                        @endphp
-                    <span class="px-3 text-white @if ($remaining_days == 0) bg-warning @elseif($remaining_days < 0) bg-primary @else bg-success @endif" style="border-radius: 6px;
+                            $message=Carbon\Carbon::parse($due_date)->diffForHumans();
+                    @endphp
+                    <span class="px-3 text-white" style="border-radius: 6px;background-color:{{ $color_code }};
                             padding-top: 4px; padding-bottom: 8px">
                         <span
                             class="">

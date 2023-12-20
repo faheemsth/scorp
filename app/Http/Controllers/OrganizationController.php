@@ -170,7 +170,6 @@ class OrganizationController extends Controller
         } else {
             return view('organizations.index', compact('organizations', 'org_types', 'countries', 'user_type'));
         }
-
     }
 
     /**
@@ -733,10 +732,12 @@ class OrganizationController extends Controller
             $users = User::get()->pluck('name', 'id')->toArray();
 
             if (\Auth::user()->type == 'super admin') {
-                $branches = Branch::get()->pluck('name', 'id')->toArray();
+                    $branches = Branch::get()->pluck('name', 'id')->toArray();
                 }else{
-                    $branches = Branch::where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+                    $branches = Branch::get()->pluck('name', 'id')->toArray();
                 }
+
+
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
             $employees = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();
@@ -875,9 +876,9 @@ class OrganizationController extends Controller
 
             if (\Auth::user()->type == 'super admin') {
                 $branches = Branch::get()->pluck('name', 'id')->toArray();
-                }else{
-                    $branches = Branch::where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
-                }
+            } else {
+                $branches = Branch::where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+            }
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
 
@@ -939,7 +940,7 @@ class OrganizationController extends Controller
             $dealTask = DealTask::where('id', $id)->first();
 
             $is_status_change = false;
-            if($dealTask->status != $request->status){
+            if ($dealTask->status != $request->status) {
                 $is_status_change = true;
             }
 
@@ -994,7 +995,7 @@ class OrganizationController extends Controller
             addLogActivity($data);
 
 
-            if($is_status_change){
+            if ($is_status_change) {
                 //store Activity Log
                 $remarks = [
                     'title' => 'Task Update',
@@ -1069,48 +1070,45 @@ class OrganizationController extends Controller
     {
         $type = $request->type;
 
-        if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' ){
+        if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director') {
 
-                $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
-
-        }else if(\Auth::user()->type == 'super admin'){
-                $currentUserCompany = \App\Models\User::where('type', 'company')->first();
-        }else{
-                $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
+            $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+        } else if (\Auth::user()->type == 'super admin') {
+            $currentUserCompany = \App\Models\User::where('type', 'company')->first();
+        } else {
+            $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
         }
 
-       $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->where('active','true')->get();
+        $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->where('active', 'true')->get();
 
 
-       $html='';
-        if ($type == 'company') {
-            $users = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
-            $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
+        $html = '';
+        // if ($type == 'company') {
+        //     $users = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+        //     $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
 
-        foreach ($users as $key => $user) {
-            if($key == $currentUserCompany->id){
-                $html .= '<option value="' . $key . '">' . $user . '</option> ';
-            }
+        //     foreach ($users as $key => $user) {
+        //         if ($key == $currentUserCompany->id) {
+        //             $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        //         }
 
-            foreach($com_permissions as $com_permission){
-                if($key == $com_permission->permitted_company_id){
-                    $html .= '<option value="' . $key . '">' . $user . '</option> ';
-            }
-           }
-         }
-        $html .= '</select>';
-
-        } else {
+        //         foreach ($com_permissions as $com_permission) {
+        //             if ($key == $com_permission->permitted_company_id) {
+        //                 $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        //             }
+        //         }
+        //     }
+        //     $html .= '</select>';
+        // } else {
             $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
                 ->where('created_by', \Auth::user()->id)
                 ->pluck('name', 'id');
-                $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
-                foreach ($users as $key => $user) {
-                        $html .= '<option value="' . $key . '">' . $user . '</option> ';
-                 }
-                $html .= '</select>';
-
-        }
+            $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
+            foreach ($users as $key => $user) {
+                $html .= '<option value="' . $key . '">' . $user . '</option> ';
+            }
+            $html .= '</select>';
+        // }
 
 
 
@@ -1156,11 +1154,12 @@ class OrganizationController extends Controller
         return redirect()->route('deals.get.user.tasks')->with('success', __('Organization successfully deleted!'));
     }
 
-    public function deleteBulkOrganizations(Request $request){
-        if($request->ids != null){
+    public function deleteBulkOrganizations(Request $request)
+    {
+        if ($request->ids != null) {
             User::whereIn('id', explode(',', $request->ids))->where('type', '=', 'organization')->delete();
             return redirect()->route('organization.index')->with('success', 'Organization deleted successfully');
-        }else{
+        } else {
             return redirect()->route('organization.index')->with('error', 'Atleast select 1 organization.');
         }
     }
