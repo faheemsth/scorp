@@ -1,6 +1,6 @@
 <style>
     table tr td {
-        font-size: 12px
+        font-size: 14px
     }
 
     .form-select {
@@ -61,7 +61,7 @@
                                 <table class="w-100">
                                     <tbody>
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Name') }}
 
                                                 <span class="text-danger">*</span>
@@ -74,7 +74,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Lead Status') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -87,7 +87,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td class="" style="width: 110px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 110px; font-size: 13px;">
                                                 {{ __('User Responsible') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -101,7 +101,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Location') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -115,7 +115,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Agency') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -131,7 +131,7 @@
 
                                         {{-- <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 100px; font-size: 13px;">
                                                         {{ __('Agency Link') }}
                                         </td>
                                         <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -144,7 +144,7 @@
                                         </td>
                                         </tr> --}}
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Lead Source') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -177,7 +177,7 @@
                                 <table class="w-100">
                                     <tbody>
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Email Address') }}
 
                                                 <span class="text-danger">*</span>
@@ -188,7 +188,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td class="" style="width: 153px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 153px; font-size: 13px;">
                                                 {{ __('Email Address (Referrer)') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -197,7 +197,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Phone') }}
 
                                                 <span class="text-danger">*</span>
@@ -208,7 +208,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Mobile Phone') }}
 
                                             </td>
@@ -220,7 +220,7 @@
 
 
                                         {{-- <tr>
-                                            <td class="" style="width: 130px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 130px; font-size: 13px;">
                                                 {{ __('Email Opted Out') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -248,10 +248,10 @@
                                 <table class="w-100">
                                     <tbody>
                                         <tr>
-                                            <td class="" style="width: 115PX; text-align: right; font-size: 13px;padding-right: 20px;">
+                                            <td class="" style="width: 115PX; font-size: 13px;padding-right: 20px;">
                                                 Address
                                             </td>
-                                            <td class="" style="width: 350PX; text-align: right; font-size: 13px; bg-danger">
+                                            <td class="" style="width: 350PX; font-size: 13px; bg-danger">
                                                 <div class="form-floating">
                                                     <textarea class="form-control" placeholder="Street" id="floatingTextarea" name="lead_street"></textarea>
                                                 </div>
@@ -295,7 +295,7 @@
                                 <table class="w-100">
                                     <tbody>
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px;  font-size: 13px;">
                                                 Description
                                             </td>
                                             <td style="width: 374px; text-align: right; font-size: 13px;">
@@ -323,7 +323,7 @@
                                 <table class="w-100">
                                     <tbody>
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Tag List') }}
                                             </td>
                                             <td class="" style="padding-left: 10px;">

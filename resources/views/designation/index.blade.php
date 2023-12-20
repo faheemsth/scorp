@@ -19,6 +19,9 @@
 @endsection --}}
 
 @section('content')
+<style>
+    .table td, .table th {font-size: 14px; }
+</style>
     <div class="row">
         <div class="col-3">
             @include('layouts.hrm_setup')
@@ -26,8 +29,8 @@
         <div class="col-9">
             <div class="card">
 
-                <div class="card-header" style="display: flex; justify-content: space-between;">
-                    <h3>Manage Designation</h3>
+                <div class="card-header" style="display: flex; justify-content: space-between;align-items: baseline;">
+                    <h4>Manage Designation</h4>
                     @can('create designation')
                         <div class="float-end">
                             <a href="#" data-size="md" data-url="{{ route('designation.create') }}" data-ajax-popup="true"

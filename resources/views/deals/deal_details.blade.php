@@ -491,14 +491,14 @@
                                                             <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Agency Link') }}
                                                             </td>
-                                                            <td class="linkedin-td" style="padding-left: 10px; font-size: 12px;">
+                                                            <td class="linkedin-td" style="padding-left: 10px; font-size: 14px;">
 
                                                                 @if (!empty($deal->organization_id) && isset($organizations[$deal->organization_id]))
                                                                 @php
                                                                 $link = \App\Models\Organization::where('user_id', $deal->organization_id)->first()->website;
                                                                 @endphp
 
-                                                                <a href="{{ $link }}" class="text-primary" style="font-size: 12px;">{{ $link }}</a>
+                                                                <a href="{{ $link }}" class="text-primary" style="font-size: 14px;">{{ $link }}</a>
                                                                 @endif
                                                             </td>
                                                         </tr>
@@ -1236,7 +1236,7 @@
         $('.textareaClass').click(function() {
             $('#textareaID, .textareaClass').toggle("slide");
         });
-    
+
         $('#create-notes').submit(function(event) {
             event.preventDefault(); // Prevents the default form submission
             $('#textareaID, .textareaClass').toggle("slide");

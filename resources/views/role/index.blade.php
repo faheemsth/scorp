@@ -64,7 +64,7 @@
                             </button> --}}
 
                             @can('create Roles')
-                            <a href="#" data-size="lg" data-url="{{ route('roles.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Role')}}" class="btn btn-dark px-2">
+                            <a href="#" data-size="lg" data-url="{{ route('roles.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Role')}}" class="btn btn-dark py-2 px-2">
                                 <i class="ti ti-plus"></i>
                             </a>
                             @endcan

@@ -165,9 +165,9 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
                                 </select>
                             </div>
 
-                            <div class="col-md-4 mt-4">
-                                <input type="submit" class="btn form-btn me-2 btn-dark" >
-                                <a href="/deals/get-user-tasks" class="btn form-btn" style="background-color: #b5282f;color:white;">Reset</a>
+                            <div class="col-md-4 mt-4 pt-2">
+                                <input type="submit" class="btn form-btn me-2 btn-dark px-2 py-2" >
+                                <a href="/deals/get-user-tasks" class="btn form-btn px-2 py-2" style="background-color: #b5282f;color:white;">Reset</a>
                             </div>
                         </div>
                         <div class="row my-4">
@@ -371,7 +371,7 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
                         </div>
                         <input name='tasks_ids' id="tasks_ids" hidden>
                         <div class="col-md-6" id="field_to_update">
-                            
+
                         </div>
                     </div>
 
@@ -650,7 +650,7 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
                 for(let i = 0; i < branches.length; i++){
                     options += '<option value="'+branches[i].id+'">'+branches[i].name+'</option>';
                 }
-                  
+
                 let field = `<select class="form form-control select2" id="choices-multiple1" name="branch_id" required>
                                 <option value="">Select Office</option>
                                 `+options+`
@@ -684,7 +684,7 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
 
             }else if(this.value == 'dd'){
 
-                let field = `<input type="date" class="form form-control" 
+                let field = `<input type="date" class="form form-control"
                                     name="due_date" required>`;
                 $('#field_to_update').html(field);
 

@@ -130,13 +130,6 @@ $lang=Utility::getValByName('default_language');
             -moz-border-radius: 0px !important;
             border-radius: 0px !important;
         }
-    </style>
-
-
-
-
-
-    <style>
         .stages h2 {
             font-size: 16px;
             line-height: 14px;
@@ -330,10 +323,7 @@ $lang=Utility::getValByName('default_language');
                 left: 0 !important;
             }
         }
-    </style>
 
-
-    <style>
         .right-sidebar {
             width: 0;
             background-color: #f4f4f4;
@@ -385,11 +375,6 @@ $lang=Utility::getValByName('default_language');
         *ul {
             list-style: none !important;
         }
-    </style>
-
-
-
-    <style>
         .bold {
             font-weight: bold;
         }
@@ -452,6 +437,12 @@ $lang=Utility::getValByName('default_language');
             border: 2px solid #CCC;
             border-radius: 50%;
             background-color: #FFF;
+        }
+        table tr td{
+            font: 14px !important;
+        }
+        table th{
+            font-size: 14px !important;
         }
     </style>
 </head>

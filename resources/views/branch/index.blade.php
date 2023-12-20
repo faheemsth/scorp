@@ -20,6 +20,11 @@
 @endsection --}}
 
 @section('content')
+<style>
+    table{
+        font-size: 14px !important;
+    }
+</style>
     <div class="row">
         @if (\Auth::user()->type != 'company' && strtolower(\Auth::user()->type) != 'project manager')
             <div class="col-3">
@@ -31,8 +36,8 @@
 
         <div class=" @if (\Auth::user()->type == 'company') col-12 @else col-9 @endif">
             <div class="card">
-                <div class="card-header" style="display: flex; justify-content: space-between;">
-                    <h3>Organization Type</h3>
+                <div class="card-header" style="display: flex; justify-content: space-between;align-items: baseline;">
+                    <h4>Organization Type</h4>
                     @can('create branch')
                     <div class="float-end">
                         <a href="#" data-size="md" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn btn-sm btn-dark">

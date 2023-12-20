@@ -46,7 +46,7 @@
         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 d-none navbar-search me-0"
         style="margin:auto !important;">
         <div class="input-group " style="border: none;border-radius: 0px;">
-            <input style="border: none;border-radius: 0px;" type="text" name="search" class="form-control bg-light "
+            <input style="border: none;border-radius: 0px;" type="text" name="search" class="form-control bg-light m-0"
                 placeholder="Search for..." value="{{ isset($_GET['search']) ? $_GET['search'] : '' }}">
             <div class="input-group-append" style="border: none;border-radius: 0px;">
                 <span class="input-group-text bg-light" id="global-search-btn" style="border: none;border-radius: 0px;">

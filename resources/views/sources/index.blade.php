@@ -40,7 +40,7 @@
 
                                         @can('edit source')
                                             <div class="action-btn ms-2">
-                                                <a href="#" class="btn btn-sm btn-danger mx-1 align-items-center bs-pass-para" data-url="{{ URL::to('sources/'.$source->id.'/edit') }}" data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-title="{{__('Edit Source')}}">
+                                                <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para" data-url="{{ URL::to('sources/'.$source->id.'/edit') }}" data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-title="{{__('Edit Source')}}">
                                                     <i class="ti ti-pencil text-white"></i>
                                                 </a>
                                             </div>
@@ -48,7 +48,7 @@
                                         @can('delete source')
                                             <div class="action-btn ms-2">
                                                 {!! Form::open(['method' => 'DELETE', 'route' => ['sources.destroy', $source->id]]) !!}
-                                                <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}">
+                                                <a href="#" class="btn btn-sm btn-danger mx-1 align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}">
                                                     <i class="ti ti-trash text-white"></i>
                                                 </a>
                                                 {!! Form::close() !!}

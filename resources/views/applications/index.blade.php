@@ -125,40 +125,44 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
             </form>
         </div>
 
-
+        <style>
+            table{
+                font-size: 14px !important;
+            }
+        </style>
 
 
         <div class="table-responsive mt-3" style="width: 100%;">
             <table class="table">
-                <thead class="" style="background-color:rgba(0, 0, 0, .08); font-weight: bold;">
+                <thead style="background-color: rgb(255, 255, 255);">
                     <tr>
                         <th style="width: 50px !important;">
                             <input type="checkbox" class="main-check">
                         </th>
-                        <td>
+                        <th>
                             {{ __('Name') }}
-                        </td>
+                        </th>
 
 
-                        <td>
+                        <th>
                             {{ __('Application Key') }}
-                        </td>
+                        </th>
 
-                        <td>
+                        <th>
                             {{ __('University') }}
-                        </td>
+                        </th>
 
-                        <td>
+                        <th>
                             {{ __('Intake') }}
-                        </td>
+                        </th>
 
-                        <td>
+                        <th>
                             {{ __('Status') }}
-                        </td>
+                        </th>
 
-                        <td>
+                        <th>
                             {{ __('Action') }}
-                        </td>
+                        </th>
 
                     </tr>
                 </thead>

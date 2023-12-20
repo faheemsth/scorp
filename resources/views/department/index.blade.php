@@ -21,14 +21,19 @@
 @endsection --}}
 
 @section('content')
+<style>
+    table{
+        font-size: 14px !important;
+    }
+</style>
     <div class="row">
         <div class="col-3">
             @include('layouts.hrm_setup')
         </div>
         <div class="col-9">
             <div class="card">
-                <div class="card-header" style="display: flex; justify-content: space-between;">
-                    <h3>Manage Department</h3>
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: baseline;">
+                    <h4>Manage Department</h4>
                     @can('create department')
                     <div class="float-end">
                         <a href="#" data-size="md" data-url="{{ route('department.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Department')}}" class="btn btn-sm btn-dark">

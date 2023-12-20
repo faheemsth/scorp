@@ -18,6 +18,9 @@
     .full-card {
         min-height: 165px !important;
     }
+    table{
+        font-size: 14px;
+    }
 </style>
 @section('content')
     <div class="row">

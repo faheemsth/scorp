@@ -44,13 +44,13 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-body">
-                <table class="table">
+            <div class="card-body p-1">
+                <table class="table" width="100%">
                     <thead>
                         <tr>
-                            <th scope="col">Company Name</th>
+                            <th>Company Name</th>
                             @foreach($companies as $company)
-                            <th scope="col">{{$company->name}}</th>
+                            <th >{{$company->name}}</th>
                             @endforeach
                         </tr>
                     </thead>
@@ -69,8 +69,6 @@
                         @endforeach
                     </tbody>
                 </table>
-
-
             </div>
         </div>
     </div>

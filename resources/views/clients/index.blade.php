@@ -71,7 +71,7 @@
                             <th style="border-left: 1px solid #fff;">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="leads-list-div" style="color:rgb(0, 0, 0); font-size: 12px;" class="new-organization-list-tbody">
+                    <tbody class="leads-list-div" style="color:rgb(0, 0, 0); font-size: 14px;" class="new-organization-list-tbody">
 
                         @forelse($clients as $client)
                             <tr>

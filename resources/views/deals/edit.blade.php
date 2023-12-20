@@ -1,6 +1,6 @@
 <style>
     table tr td{
-        font-size: 12px
+        font-size: 14px
     }
     .form-select{
         height: 30px;
@@ -108,7 +108,7 @@
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
                                                         <select class="form-control select2" id="choice-3"  name="contact[]" multiple>
                                                            <option value="">Select contact</option>
-                                                           
+
                                                            @foreach($clients as $key => $client)
                                                             <option value="{{$key}}" {{ in_array($key, $contacts) ? 'selected' : '' }}>{{$client}}</option>
                                                            @endforeach
@@ -184,7 +184,7 @@
                                                         style="width: 153px; text-align: right; font-size: 13px;">
                                                         {{ __('Institute') }}
                                                     </td>
-                                                    
+
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
                                                         <select class="form-control select2" id="choice-6" name="university_id">
@@ -202,7 +202,7 @@
                                                         style="width: 153px; text-align: right; font-size: 13px;">
                                                         {{ __('Organization') }}
                                                     </td>
-                                                    
+
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
                                                         <select class="form-select select2" id="choice-7" name="organization_id">
@@ -250,7 +250,7 @@
                                         <table class="w-100">
                                             <tbody>
                                                 <tr>
-                                                  
+
                                                     <td class=""
                                                         style="width: 100px; text-align: right; font-size: 13px;">
                                                         {{ __('Pipeline') }}
@@ -270,7 +270,7 @@
 
 
                                                 <tr>
-                                                  
+
                                                     <td class=""
                                                         style="width: 100px; text-align: right; font-size: 13px;">
                                                         {{ __('Stage') }}

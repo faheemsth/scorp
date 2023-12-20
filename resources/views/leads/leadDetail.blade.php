@@ -399,7 +399,7 @@
                                                                         </div>
                                                                     </div> --}}
                                                                     <span
-                                                                    style="width: 300px; word-wrap: break-word; font-size: 12px; color: blue; text-decoration: underline;">
+                                                                    style="width: 300px; word-wrap: break-word; font-size: 14px; color: blue; text-decoration: underline;">
                                                                     {{ substr($sources, 0, 60) }}{{ strlen($sources) > 70 ? '...' : '' }}
                                                                 </span>
 
@@ -465,10 +465,10 @@
                                                                         </div>
                                                                     </div> --}}
                                                                     <a href="{{ $lead->drive_link }}"
-                                                                        style="width: 300px; word-wrap: break-word; font-size: 12px; color: blue; text-decoration: underline;"
+                                                                        style="width: 300px; word-wrap: break-word; font-size: 14px; color: blue; text-decoration: underline;"
                                                                         target="_blank">
                                                                         <span
-                                                                            style="width: 300px; word-wrap: break-word; font-size: 12px; color: blue; text-decoration: underline;">
+                                                                            style="width: 300px; word-wrap: break-word; font-size: 14px; color: blue; text-decoration: underline;">
                                                                             {{ substr($lead->drive_link, 0, 60) }}{{ strlen($lead->drive_link) > 70 ? '...' : '' }}
                                                                         </span>
                                                                     </a>

@@ -4,9 +4,7 @@
         padding-top: 0px;
     }
 
-    .col-form-label {
-        text-align: center;
-    }
+
 
     .space {
         padding: 3px 3px;
@@ -33,7 +31,7 @@
                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingOne">
                     <div class="accordion-body ">
-                        
+
                         <div class="form-group row ">
                             <label for="organization-name" class="col-sm-3 col-form-label">
                                 Task Name
@@ -120,7 +118,7 @@
                             </div>
                         </div>
                         </div>
-                   
+
                 </div>
             </div>
 
@@ -262,7 +260,7 @@
 
             {{-- Organizaiton Description --}}
             <div class="accordion-item">
-                <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                <h2 class="accordion-header" id="panelsStayOpen-headingfour">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                         data-bs-target="#panelsStayOpen-description" aria-expanded="false"
                         aria-controls="panelsStayOpen-description">
@@ -270,7 +268,7 @@
                     </button>
                 </h2>
                 <div id="panelsStayOpen-description" class="accordion-collapse collapse"
-                    aria-labelledby="panelsStayOpen-headingThree">
+                    aria-labelledby="panelsStayOpen-headingfour">
                     <div class="accordion-body">
                         <div class="form-group row">
                             <label for="website" class="col-sm-3 col-form-label">Task Visibility</label>
@@ -292,8 +290,8 @@
 
 
 <div class="modal-footer">
-    <input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="Create" class="btn  btn-primary create-task-btn">
+    <input type="button" value="{{ __('Cancel') }}" class="btn px-2 btn-light" data-bs-dismiss="modal">
+    <input type="submit" value="Create" class="btn  btn-dark px-2 create-task-btn">
 </div>
 
 {{ Form::close() }}

@@ -270,7 +270,7 @@
                                                 <input type="text" name="title" required class="form-control" placeholder="{{__('Todo Title')}}"/>
                                             </div>
                                             <div class="col-2 card-meta d-inline-flex align-items-center">
-                                                <button class="btn btn-primary btn-xs" type="submit" id="todo_submit">
+                                                <button class="btn btn-dark btn-xs" type="submit" id="todo_submit">
                                                     <i class="ti ti-plus "></i>
                                                 </button>
                                             </div>
