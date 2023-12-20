@@ -412,8 +412,8 @@
 
                                 <div class="col-md-4 mt-2">
                                     <br>
-                                    <input type="submit" class="btn me-2" style="background-color: #b5282f; color:white;">
-                                    <a href="/deals/list" class="btn" style="background-color: #b5282f;color:white;">Reset</a>
+                                    <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
+                                    <a href="/deals/list" class="btn bg-dark" style="color:white;">Reset</a>
                                 </div>
                             </div>
 

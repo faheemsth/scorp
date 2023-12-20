@@ -43,30 +43,33 @@
                                 $countryFound = false;
                             @endphp
 
-                        @foreach (App\Models\University::all() as $university)
-                            @if($university->country == $key && !$countryFound)
-                            @if($i <= 4)
-                            <?php $i++;?>
-                                <div class="col-xl-2 col-md-6 mb-4">
-                                    <div class="card shadow py-2" style="width: 90%; height: 90%;border-radius: 22px;">
-                                        <div class="card-body">
-                                            <span class="red-cross"><i class="fa-solid fa-circle-xmark"></i></span>
-                                            <img src="{{ asset('assets/svg/country-'.$university->country_code.'.svg') }}" alt="{{ $key }}" width="80" height="60" class="boximg">
+                            @foreach (App\Models\University::all() as $university)
+                                @if ($university->country == $key && !$countryFound)
+                                    @if ($i <= 4)
+                                        <?php $i++; ?>
+                                        <div class="col-xl-2 col-md-6 mb-4">
+                                            <div class="card shadow py-2"
+                                                style="width: 90%; height: 90%;border-radius: 22px;">
+                                                <div class="card-body">
+                                                    <span class="red-cross"><i class="fa-solid fa-circle-xmark"></i></span>
+                                                    <img src="{{ asset('assets/svg/country-' . $university->country_code . '.svg') }}"
+                                                        alt="{{ $key }}" width="80" height="60"
+                                                        class="boximg">
 
-                                            <div class="row no-gutters text-center">
-                                                <div class="col mr-2">
-                                                    <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                                </div>
-                                            </div>
-                                            <div class="row no-gutters text-center">
-                                                <div class="col mt-2 mr-2">
-                                                    <div class="h5 mb-0 text-gray-800">{{ $status }}</div>
+                                                    <div class="row no-gutters text-center">
+                                                        <div class="col mr-2">
+                                                            <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row no-gutters text-center">
+                                                        <div class="col mt-2 mr-2">
+                                                            <div class="h5 mb-0 text-gray-800">{{ $status }}</div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                @php
+                                        @php
                                             if ($i < 5) {
                                                 echo '<div class="mt-5" style="border-left: 3px solid black; height: 80px; width: 1%;"></div>';
                                             }
@@ -114,7 +117,100 @@
                         </div>
                     </div>
 
+                    {{-- Filters --}}
+                    <div class="filter-data px-3" id="filter-show"
+                        <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: non;"' ?>>
+                        <form action="/university" method="GET" class="">
+                            <div class="row my-3">
+                                <div class="col-md-4 mt-2">
+                                    <label for="">Name</label>
+                                    <input type="text" class="form form-control" placeholder="Search Name" name="name"
+                                        value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
+                                </div>
 
+                                <div class="col-md-4 mt-2">
+                                    <label for="">Country</label>
+                                    <input type="text" class="form form-control" placeholder="Search Country"
+                                        name="country" value="<?= isset($_GET['country']) ? $_GET['country'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
+                                </div>
+
+                                <div class="col-md-4 mt-2">
+                                    <label for="">City</label>
+                                    <input type="text" class="form form-control" placeholder="Search City" name="city"
+                                        value="<?= isset($_GET['city']) ? $_GET['city'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
+                                </div>
+
+                                <div class="col-md-4 mt-2">
+                                    <label for="">Phone</label>
+                                    <input type="text" class="form form-control" placeholder="Search Phone"
+                                        name="phone" value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
+                                </div>
+
+                                <div class="col-md-4 mt-2">
+                                    <label for="">Note</label>
+                                    <input type="text" class="form form-control" placeholder="Search Note" name="note"
+                                        value="<?= isset($_GET['note']) ? $_GET['note'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
+                                </div>
+
+                                <div class="col-md-4 mt-2">
+                                    <label for="">Note</label>
+                                    <select name="created_by" class="form form-control">
+                                        @if (!empty($users))
+                                            @foreach ($users as $key => $user)
+                                                <option value="{{ $key }}"
+                                                    <?= isset($_GET['created_by']) && $_GET['created_by'] == $key ? 'selected' : '' ?>>
+                                                    {{ $user }}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+
+                                <div class="col-md-4 mt-3">
+                                    <br>
+                                    <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
+                                    <a href="/university" class="btn bg-dark" style="color:white;">Reset</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="enries_per_page" style="max-width: 300px; display: flex;">
+
+                                    <?php
+                                    $all_params = isset($_GET) ? $_GET : '';
+                                    if (isset($all_params['num_results_on_page'])) {
+                                        unset($all_params['num_results_on_page']);
+                                    }
+                                    ?>
+                                    <input type="hidden" value="<?= http_build_query($all_params) ?>"
+                                        class="url_params">
+                                    <select name="" id="" class="enteries_per_page form form-control"
+                                        style="width: 100px; margin-right: 1rem;">
+                                        <option
+                                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 25 ? 'selected' : '' ?>
+                                            value="25">25</option>
+                                        <option
+                                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 100 ? 'selected' : '' ?>
+                                            value="100">100</option>
+                                        <option
+                                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 300 ? 'selected' : '' ?>
+                                            value="300">300</option>
+                                        <option
+                                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 1000 ? 'selected' : '' ?>
+                                            value="1000">1000</option>
+                                        <option
+                                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == $total_records ? 'selected' : '' ?>
+                                            value="{{ $total_records }}">all</option>
+                                    </select>
+
+                                    <span style="margin-top: 5px;">entries per page</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                     <div class="table-responsive mt-3">
                         <table class="table">
                             <thead>

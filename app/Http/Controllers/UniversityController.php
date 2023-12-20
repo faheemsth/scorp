@@ -34,7 +34,29 @@ class UniversityController extends Controller
 
         if (\Auth::user()->type == 'super admin' || \Auth::user()->can('manage university')) {
 
-            $universities = University::skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+            $universities = University::when(!empty($_GET['name']), function ($query) {
+                return $query->where('name', 'like', '%' . $_GET['name'] . '%');
+            })
+            ->when(!empty($_GET['country']), function ($query) {
+                return $query->where('country', 'like', '%' . $_GET['country'] . '%');
+            })
+
+            ->when(!empty($_GET['city']), function ($query) {
+                return $query->where('city', 'like', '%' . $_GET['city'] . '%');
+            })
+
+            ->when(!empty($_GET['note']), function ($query) {
+                return $query->where('note', 'like', '%' . $_GET['note'] . '%');
+            })
+
+            ->when(!empty($_GET['created_by']), function ($query) {
+                return $query->where('created_by', 'like', '%' . $_GET['created_by'] . '%');
+            })
+
+            ->skip($start)
+            ->take($num_results_on_page)
+            ->paginate($num_results_on_page);
+
             $users = User::get()->pluck('name', 'id');
 
             $universityStatsByCountries = University::selectRaw('count(id) as total_universities, country')
@@ -44,7 +66,7 @@ class UniversityController extends Controller
             foreach ($universityStatsByCountries as $university) {
                 $statuses[$university->country] = $university->total_universities;
             }
-            
+
             $data = [
                 'universities' => $universities,
                 'users' => $users,
