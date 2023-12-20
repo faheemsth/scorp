@@ -17,7 +17,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
     <div class="card py-3 my-card">
         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
             <div class="col-2">
-                <p class="mb-0 pb-0">APPLICATIONS</p>
+                <p class="mb-0 pb-0 ps-1">APPLICATIONS</p>
                 <div class="dropdown">
                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         ALL APPLICATIONS

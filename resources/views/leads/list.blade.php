@@ -159,7 +159,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                             <div class="col-2">
-                                <p class="mb-0 pb-0">LEADS</p>
+                                <p class="mb-0 pb-0 ps-1">LEADS</p>
                                 <div class="dropdown">
                                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -589,7 +589,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                         </div>
                         <input name='lead_ids' id="lead_ids" hidden>
                         <div class="col-md-6" id="field_to_update">
-                            
+
                         </div>
                     </div>
 
@@ -665,7 +665,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     for(let i = 0; i < stages.length; i++){
                         options += '<option value="'+stages[i].id+'">'+stages[i].name+'</option>';
                     }
-                    
+
                     let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_stage" required>
                                     <option value="">Select Status</option>
                                     `+options+`
@@ -680,7 +680,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     $.each(users, function(keyName, keyValue) {
                         options += '<option value="'+keyName+'">'+keyValue+'</option>';
                     });
-                    
+
                     let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_assgigned_user" required>
                                     <option value="">Select User</option>
                                     `+options+`
@@ -695,7 +695,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     $.each(branches, function(keyName, keyValue) {
                         options += '<option value="'+keyName+'">'+keyValue+'</option>';
                     });
-                    
+
                     let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_branch" required>
                                     <option value="">Select Location</option>
                                     `+options+`
@@ -710,7 +710,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     $.each(organizations, function(keyName, keyValue) {
                         options += '<option value="'+keyName+'">'+keyValue+'</option>';
                     });
-                    
+
                     let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_organization" required>
                                     <option value="">Select Agency</option>
                                     `+options+`
@@ -724,7 +724,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     $.each(sources, function(keyName, keyValue) {
                         options += '<option value="'+keyName+'">'+keyValue+'</option>';
                     });
-                    
+
                     let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_source" required>
                                     <option value="">Select Source</option>
                                     `+options+`
