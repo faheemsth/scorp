@@ -740,10 +740,31 @@ class OrganizationController extends Controller
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
-            $employees = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();
+           // $employees = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();
             $teams = User::where('type', 'team')->get()->pluck('name', 'id')->toArray();
-            $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
             $user_type = User::get()->pluck('type', 'id')->toArray();
+
+            // $test = \App\Models\CompanyPermission::where('company_id', 3179)->where('active', 'true')->pluck('permitted_company_id');
+            // $companies = User::where('type', 'company')->whereIn('id', $test)->orwhere('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+            // dd($companies);
+
+                if(\Auth::user()->type == 'super admin'){
+                    $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+                }else if(\Auth::user()->type == 'project director' || \Auth::user()->type == 'project manager'){
+                    $creator_company = \Auth::user()->created_by;
+                    $com_permissions = \App\Models\CompanyPermission::where('company_id', $creator_company->id)->where('active', 'true')->get();
+                    $companies = User::where('type', 'company')->whereIn('id', $com_permissions)->orwhere('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+                }else if(\Auth::user()->type == 'company'){
+                    $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+                }
+
+                $employees = [];
+                if(\Auth::user()->type == 'company'){
+                   $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
+                }
+
+
+
 
             $type = '';
             $typeId = '';
@@ -1163,4 +1184,5 @@ class OrganizationController extends Controller
             return redirect()->route('organization.index')->with('error', 'Atleast select 1 organization.');
         }
     }
+
 }

@@ -3406,4 +3406,22 @@ class DealController extends Controller
             return redirect()->route('deals.list')->with('error', 'Atleast select 1 deal.');
         }
     }
+
+    public function getCompanyEmployees(){
+        $id = $_GET['id'];
+
+        $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
+        
+
+        $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
+        foreach ($employees as $key => $user) {
+            $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        }
+        $html .= '</select>';
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
+    }
 }
