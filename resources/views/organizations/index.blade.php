@@ -186,10 +186,10 @@
 
                             <div class="col-md-4 mt-2">
                                 <br>
-                                <input type="submit" class="btn form-btn me-2"
-                                    style="background-color: #b5282f; color:white;">
-                                <a href="/organization/" class="btn form-btn"
-                                    style="background-color: #b5282f;color:white;">Reset</a>
+                                <input type="submit" class="btn form-btn bg-dark me-2"
+                                    style=" color:white;">
+                                <a href="/organization/" class="btn form-btn bg-dark"
+                                    style="color:white;">Reset</a>
                             </div>
                         </div>
                     </form>

@@ -947,58 +947,108 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
+
+
                                                                     <div class="card-body px-0">
-                                                                        <table class="table">
-                                                                            <thead class="table-bordered">
-                                                                                <tr>
-                                                                                    <th scope="col">Name</th>
-                                                                                    <th scope="col">Description
-                                                                                    </th>
-                                                                                    <th scope="col">Visibility
-                                                                                    </th>
-                                                                                    <th scope="col">Status
-                                                                                    </th>
-                                                                                    <th scope="col">Action</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody class="notes-tbody">
+                                                                        <ul class="list-group list-group-flush mt-2 notes-tbody">
 
-                                                                                @forelse($tasks as $task)
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <span style="cursor:pointer" class="task-name hyper-link" onclick="openSidebar('/get-task-detail?task_id='+{{ $task->id }})" data-task-id="{{ $task->id }}">{{ $task->name }}</span>
-                                                                                    </td>
-                                                                                    <td>{{ $task->description }}
-                                                                                    </td>
-                                                                                    <td>{{ $task->visibility }}
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <span class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }}">
-                                                                                            {{ $task->status == 1 ? 'Completed' : 'On Going' }}</span>
-                                                                                    </td>
-                                                                                    <td>
+                                                                            @foreach($tasks as $task)
+                                                                                <li class="list-group-item px-3"
+                                                                                    id="lihover">
+                                                                                    <div class="d-block d-sm-flex align-items-start">
+                                                                                        <div class="w-100">
+                                                                                            <div
+                                                                                                class="d-flex align-items-center justify-content-between">
+                                                                                                <div class="mb-3 mb-sm-0">
+                                                                                                    <h5 class="mb-0">
+                                                                                                        {{ $task->name }}
 
-                                                                                        <div class="d-flex">
-                                                                                            @can('edit task')
-                                                                                            <a data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update Task') }}" class="btn px-2 text-white mx-2 btn-dark" >
-                                                                                                <i class="ti ti-pencil"></i>
-                                                                                            </a>
-                                                                                            @endcan
+                                                                                                    </h5>
+                                                                                                    <span
+                                                                                                        class="text-muted text-sm">
+                                                                                                        {{ $task->created_at }}
+                                                                                                    </span><br>
+                                                                                                    <span
+                                                                                                        class="text-muted text-sm"><i class="step__icon fa fa-user" aria-hidden="true"></i>
+                                                                                                        {{ \App\Models\User::where('id', $task->assigned_to)->first()->name }}
 
-                                                                                            @can('delete task')
-                                                                                            <a href="javascript:void(0)" class="btn px-2 text-white btn-danger"  onclick="deleteTask({{ $task->id }}, {{ $deal->id }}, 'deal');">
-                                                                                                <i class="ti ti-trash "></i>
-                                                                                            </a>
-                                                                                            @endcan
+                                                                                                        <span class="d-flex">
+                                                                                                            <div>Status</div>
+                                                                                                            <div class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }} ml-5">
+                                                                                                              {{ $task->status == 1 ? 'Completed' : 'On Going' }}
+                                                                                                        </div>
+                                                                                                        </span>
+                                                                                                        {{--  --}}
+                                                                                                    </span>
+                                                                                                </div>
+
+                                                                                                <style>
+                                                                                                    #editable {
+                                                                                                        display: none;
+                                                                                                    }
+
+                                                                                                    #lihover:hover #editable {
+                                                                                                        display: flex;
+                                                                                                    }
+                                                                                                </style>
+                                                                                            <div class="d-flex gap-3" id="dellhover">
+
+                                                                                                    <a data-size="lg"
+                                                                                                    data-url="{{ route('organiation.tasks.edit', $task->id) }}"
+                                                                                                    data-ajax-popup="true"
+                                                                                                    data-bs-toggle="tooltip"
+                                                                                                    title="{{ __('Update Task') }}"
+                                                                                                    id="editable"
+                                                                                                    class="btn textareaClassedit">
+                                                                                                    <i
+                                                                                                        class="ti ti-pencil" style="font-size: 20px;margin-right: -30px;"></i>
+                                                                                                </a>
+
+
+                                                                                                <a href="javascript:void(0)"
+                                                                                                    class="btn"
+                                                                                                    id="editable"
+                                                                                                    onclick="deleteTask({{ $task->id }}, {{ $deal->id }}, 'lead');">
+                                                                                                    <i class="ti ti-trash " style="font-size: 20px;"></i>
+                                                                                                </a>
+
+                                                                                            </div>
+
+                                                                                            </div>
                                                                                         </div>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                @empty
-                                                                                @endforelse
+                                                                                    </div>
+                                                                                </li>
+                                                                            @endforeach
 
-                                                                            </tbody>
-                                                                        </table>
+                                                                            </ul>
                                                                     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -1236,7 +1286,7 @@
         $('.textareaClass').click(function() {
             $('#textareaID, .textareaClass').toggle("slide");
         });
-    
+
         $('#create-notes').submit(function(event) {
             event.preventDefault(); // Prevents the default form submission
             $('#textareaID, .textareaClass').toggle("slide");

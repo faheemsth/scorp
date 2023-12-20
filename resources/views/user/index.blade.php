@@ -46,7 +46,9 @@
                                         placeholder="Search this list..." aria-label="Username"
                                         aria-describedby="basic-addon1">
                                 </div>
-
+                                <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="ti ti-filter" style="font-size:18px"></i>
+                                </button>
                                 <a href="#" data-size="lg" data-url="{{ route('users.create') }}"
                                     data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create') }}"
                                     class="btn btn-dark px-2 py-2">
@@ -56,6 +58,75 @@
                         </div>
                         <div class="row mt-5">
                             <div class="col-12">
+                                {{-- Filters --}}
+                                <div class="filter-data px-3" id="filter-show"
+                                    <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: non;"' ?>>
+                                    <form action="/users" method="GET" class="">
+                                        <div class="row my-3">
+                                            <div class="col-md-4 mt-2">
+                                                <label for="">Name</label>
+                                                <input type="text" class="form form-control" placeholder="Search Name"
+                                                    name="name" value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>"
+                                                    style="width: 95%; border-color:#aaa">
+                                            </div>
+
+                                            <div class="col-md-4 mt-2">
+                                                <label for="">Company</label>
+                                                <input type="text" class="form form-control" placeholder="Search Company"
+                                                    name="company"
+                                                    value="<?= isset($_GET['company']) ? $_GET['company'] : '' ?>"
+                                                    style="width: 95%; border-color:#aaa">
+                                            </div>
+
+                                            <div class="col-md-4 mt-2">
+                                                <label for="">Phone</label>
+                                                <input type="text" class="form form-control" placeholder="Search Phone"
+                                                    name="phone"
+                                                    value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>"
+                                                    style="width: 95%; border-color:#aaa">
+                                            </div>
+                                            <div class="col-md-4 mt-2">
+                                                <br>
+                                                <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
+                                                <a href="/users" class="btn bg-dark" style="color:white;">Reset</a>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="enries_per_page" style="max-width: 300px; display: flex;">
+
+                                                <?php
+                                                $all_params = isset($_GET) ? $_GET : '';
+                                                if (isset($all_params['num_results_on_page'])) {
+                                                    unset($all_params['num_results_on_page']);
+                                                }
+                                                ?>
+                                                <input type="hidden" value="<?= http_build_query($all_params) ?>"
+                                                    class="url_params">
+                                                <select name="" id=""
+                                                    class="enteries_per_page form form-control"
+                                                    style="width: 100px; margin-right: 1rem;">
+                                                    <option
+                                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 25 ? 'selected' : '' ?>
+                                                        value="25">25</option>
+                                                    <option
+                                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 100 ? 'selected' : '' ?>
+                                                        value="100">100</option>
+                                                    <option
+                                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 300 ? 'selected' : '' ?>
+                                                        value="300">300</option>
+                                                    <option
+                                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 1000 ? 'selected' : '' ?>
+                                                        value="1000">1000</option>
+                                                    <option
+                                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == $total_records ? 'selected' : '' ?>
+                                                        value="{{ $total_records }}">all</option>
+                                                </select>
+
+                                                <span style="margin-top: 5px;">entries per page</span>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
@@ -174,4 +245,9 @@
             </div>
         </div>
     </div>
+    <script>
+        $('.filter-btn-show').click(function() {
+            $("#filter-show").toggle();
+        });
+    </script>
 @endsection

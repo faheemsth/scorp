@@ -70,6 +70,13 @@ class ClientController extends Controller
 
             $client_query = User::select(['users.*'])->join('client_deals', 'client_deals.client_id', 'users.id')->join('deals', 'deals.id', 'client_deals.deal_id');
 
+            if (!empty($_GET['name'])) {
+                $client_query->where('users.name', 'like', '%' . $_GET['name'] . '%');
+            }
+
+            if (!empty($_GET['email'])) {
+                $client_query->where('users.email', 'like', '%' . $_GET['email'] . '%');
+            }
 
             if (\Auth::user()->type == 'super admin') {
 
@@ -81,7 +88,7 @@ class ClientController extends Controller
                 $client_query_created_by = array_keys($users);
                 $client_query->whereIn('deals.created_by', $client_query_created_by);
 
-            }else if (strtolower(\Auth::user()->type) == 'project manager') { 
+            }else if (strtolower(\Auth::user()->type) == 'project manager') {
 
                 $users = $this->companyEmployees($user->created_by);
                 $users[$user->id] = $user->name;
@@ -415,7 +422,7 @@ class ClientController extends Controller
         $deal = \App\Models\Deal::join('client_deals', 'client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->first();
         $lead = \App\Models\Lead::join('client_deals', 'client_deals.client_id', 'leads.is_converted')->where('client_deals.client_id', $id)->first();
         $organizations = User::get()->pluck('name', 'id')->toArray();
-        
+
         $deals = \App\Models\Deal::join('client_deals', 'client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->get();
         $applications = \App\Models\Deal::select(['deal_applications.*'])->join('deal_applications', 'deal_applications.deal_id', 'deals.id')->join('client_deals','client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->get();
         $stages = \App\Models\Stage::get()->pluck('name', 'id')->toArray();
@@ -429,13 +436,13 @@ class ClientController extends Controller
     }
 
     public function deleteBulkContacts(Request $request){
-        
+
         if($request->ids != null){
             User::whereIn('id', explode(',', $request->ids))->where('type', '=', 'client')->delete();
             return redirect()->route('clients.index')->with('success', 'Clients deleted successfully');
         }else{
             return redirect()->route('clients.index')->with('error', 'Atleast select 1 client.');
         }
-        
+
     }
 }
