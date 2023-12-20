@@ -415,7 +415,7 @@
                             <h5>{{__('Tasks')}}</h5>
                             @can('create task')
                             <div class="float-end">
-                                <a href="#" data-size="lg" data-url="{{ route('deals.tasks.create',$deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Add Task')}}" class="btn btn-sm btn-primary">
+                                <a href="#" data-size="lg" data-url="{{ route('deals.tasks.create',$deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Add Task')}}" class="btn px-2 btn-dark">
                                     <i class="ti ti-plus"></i>
                                 </a>
                             </div>

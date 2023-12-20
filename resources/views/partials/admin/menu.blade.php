@@ -1358,7 +1358,8 @@
                                         class=" {{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
                                         <a class="collapse-item" style="color: white; font-size: 13px;"
                                             href="{{ route('users.index') }}">
-                                            <img src="{{ asset('assets/cs-theme/icons/user-154 1.png') }}" width="25px" height="25px" style="margin-top:-8px" alt="" srcset="">
+                                            {{-- <img src="{{ asset('assets/cs-theme/icons/user-154 1.png') }}" width="25px" height="25px" style="margin-top:-8px" alt="" srcset=""> --}}
+                                            <img src="{{ asset('assets/cs-theme/icons/employeeblue.png') }}" width="25px" height="25px" style="margin-top:-8px" alt="" srcset="">
 
                                             Employees</a>
                                     </li>
@@ -1642,7 +1643,7 @@
                             {{ __('Tasks') }}</a>
                     </li>
 
-                    
+
 
 
                     {{-- <li
@@ -1658,7 +1659,7 @@
                             {{ __('Leads') }}</a>
                     </li>
 
-                    
+
 
                     <li
                         class="nav-item{{ Request::route()->getName() == 'deals.list' || Request::route()->getName() == 'deals.index' || Request::route()->getName() == 'deals.show' ? ' active' : '' }}">
@@ -1694,11 +1695,11 @@
                         <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('contract.index') }}">{{ __('Contract') }}</a>
                     </li> --}}
 
-                   
 
-                    
 
-                    
+
+
+
 
 
                     <li
@@ -1738,7 +1739,7 @@
                 <li class="nav-item {{ Request::segment(1) == 'users' || Request::segment(1) == 'roles' || Request::segment(1) == 'clients' ? ' active dash-trigger' : '' }}">
                     <a class="nav-link collapsed" href="#" data-toggle="collapse"
                         data-target="#collapsesu" aria-expanded="true" aria-controls="collapsesu">
-                        <img src="{{ asset('assets/cs-theme/icons/user-154 1.png') }}" width="25px" height="25px" style="margin-top:-8px" alt="" srcset="">
+                        <img src="{{ asset('assets/cs-theme/icons/Vector (2).png') }}" width="14px" height="14px" style="margin-top:-8px" alt="" srcset="">
 
                         <span>{{ __('Users') }}</span>
                     </a>
@@ -1762,12 +1763,16 @@
                                     Brands</a>
                             </li>
                         @endcan
+                        <style>
+
+                        </style>
 
                         @can('manage user')
                             <li
                                 class="nav-item{{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
                                 <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('user.employees') }}">
-                            <img src="{{ asset('assets/cs-theme/icons/Vector (1).png') }}" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+                            <img src="{{ asset('assets/cs-theme/icons/Vector (1).png') }}" id="one" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+                            {{-- <img src="{{ asset('assets/cs-theme/icons/employeeblue.png') }}" id="two" width="15px" height="15px" style="margin-top:-8px" alt="" srcset=""> --}}
 
                                     Employees</a>
                             </li>
