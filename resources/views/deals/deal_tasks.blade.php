@@ -357,7 +357,7 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
                                 <option value="">Select Field</option>
                                 <option value="tm">Task Name</option>
                                 <option value="ofc">Office</option>
-                                <option value="ast">Assign Type</option>
+                                <!-- <option value="ast">Assign Type</option> -->
                                 <option value="asto">Assigned To</option>
                                 <option value="ts">Task Status</option>
                                 <option value="dd">Due Date</option>
@@ -660,6 +660,18 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
             }else if(this.value == 'ast'){
 
             }else if(this.value == 'asto'){
+                var assign_users = <?= json_encode($assign_to) ?>;
+                // console.log(branches)
+                let options = '';
+                for(let i = 0; i < assign_users.length; i++){
+                    options += '<option value="'+assign_users[i].id+'">'+assign_users[i].name+'</option>';
+                }
+
+                let field = `<select class="form form-control select2" id="choices-multiple1" name="assigned_to" required>
+                                <option value="">Select person</option>
+                                `+options+`
+                            </select>`;
+                $('#field_to_update').html(field);
 
             }else if(this.value == 'ts'){
 
