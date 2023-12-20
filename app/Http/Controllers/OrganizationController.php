@@ -764,8 +764,6 @@ class OrganizationController extends Controller
                 }
 
 
-
-
             $type = '';
             $typeId = '';
 
