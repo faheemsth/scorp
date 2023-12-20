@@ -4,6 +4,8 @@
 @endpush
 @php
     $users = \Auth::user();
+    $logo_dark = \App\Models\Utility::getValByName('company_logo_dark');
+
     //$profile=asset(Storage::url('uploads/avatar/'));
     $profile = \App\Models\Utility::get_file('uploads/avatar/');
     $languages = \App\Models\Utility::languages();
@@ -36,7 +38,11 @@
         <i class="fa fa-bars"></i>
     </button>
     <div class="logo ms-md-2">
-        <a href="#"><img src="{{ asset('assets/cs-theme/assets/images/scorp-logo.png') }}" alt=""></a>
+        <a href="#">
+            <!-- <img src="{{ asset('assets/cs-theme/assets/images/scorp-logo.png') }}" alt=""> -->
+            <img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:'assets/cs-theme/assets/images/scorp-logo.png') }}"
+                                                         class="big-logo">
+        </a>
     </div>
     <!-- Sidebar Toggle (Topbar) -->
 
