@@ -165,22 +165,25 @@
                     @php
                             $due_date = strtotime($task->due_date);
                             $current_date = strtotime(date('Y-m-d'));
+                            $status = strtolower($task->status);
+                            $color_code = '';
 
-                            if ($due_date > $current_date) {
-                                $remaining_days = ceil(($due_date - $current_date) / (60 * 60 * 24)); // Calculate remaining days
-                            } else {
-                                $remaining_days = 0; // Task is overdue
+                            if ($due_date > $current_date && $status === '0') {
+                                // Ongoing feture time
+                                $color_code = '#B3CDE1;';
+                            } elseif ($due_date === $current_date && $status === '0') {
+                                // Today date time
+                                $color_code = '#E89D25';
+                            } elseif ($due_date < $current_date && $status === '0') {
+                                // Past date time
+                                $color_code = 'red';
+                            } elseif ($status === '1') {
+                                // Completed task
+                                $color_code = 'green';
                             }
-
-                            if ($remaining_days == 0) {
-                                $message = 'Today';
-                            } elseif ($remaining_days < 0) {
-                                $message = abs($remaining_days) . ' days ago';
-                            } else {
-                                $message = $remaining_days . ' days remaining';
-                            }
-                        @endphp
-                    <span class="px-3 text-white @if ($remaining_days == 0) bg-warning @elseif($remaining_days < 0) bg-primary @else bg-success @endif" style="border-radius: 6px;
+                            $message=Carbon\Carbon::parse($due_date)->diffForHumans();
+                    @endphp
+                    <span class="px-3 text-white" style="border-radius: 6px;background-color:{{ $color_code }};
                             padding-top: 4px; padding-bottom: 8px">
                         <span
                             class="">
@@ -580,48 +583,50 @@
                                                             </span>
                                                             <div class="card-body px-0">
                                                                 <ul class="list-group list-group-flush mt-2">
-
-                                                                    @foreach ($discussions as $discussion)
-                                                                        <li class="list-group-item px-3"
-                                                                            id="lihover">
-                                                                            <div
-                                                                                class="d-block d-sm-flex align-items-start">
-                                                                                <img src="{{ asset('assets/images/user/avatar.png') }}"
-                                                                                    class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
-                                                                                    alt="image">
-                                                                                <div class="w-100">
-                                                                                    <div
-                                                                                        class="d-flex align-items-center justify-content-between">
-                                                                                        <div class="mb-3 mb-sm-0">
-                                                                                            <h5 class="mb-0">
-                                                                                                {{ $discussion['comment'] }}
-                                                                                            </h5>
-                                                                                            <span
-                                                                                                class="text-muted text-sm">{{ $discussion['name'] }}</span>
-                                                                                        </div>
+                                                                    @if($discussions != null)
+                                                                        @foreach ($discussions as $discussion)
+                                                                            <li class="list-group-item px-3"
+                                                                                id="lihover">
+                                                                                <div
+                                                                                    class="d-block d-sm-flex align-items-start">
+                                                                                    <img src="{{ asset('assets/images/user/avatar.png') }}"
+                                                                                        class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
+                                                                                        alt="image">
+                                                                                    <div class="w-100">
                                                                                         <div
-                                                                                            class=" form-switch form-switch-right ">
-                                                                                            {{ $discussion['created_at'] }}
-                                                                                        </div>
-                                                                                        <div class="d-flex gap-3"
-                                                                                            id="dellhover">
-                                                                                            <i class="ti ti-pencil textareaClassedit"
-                                                                                                data-comment="{{ $discussion['comment'] }}"
-                                                                                                data-id="{{ $discussion['id'] }}"
-                                                                                                id="editable"
-                                                                                                style="font-size: 20px;"></i>
-                                                                                            <script></script>
-                                                                                            <i class="ti ti-trash"
-                                                                                                id="editable"
-                                                                                                style="font-size: 20px;"
-                                                                                                onclick="DeleteComment('{{ $discussion['id'] }}','{{ $task->id }}')"></i>
+                                                                                            class="d-flex align-items-center justify-content-between">
+                                                                                            <div class="mb-3 mb-sm-0">
+                                                                                                <h5 class="mb-0">
+                                                                                                    {{ $discussion['comment'] }}
+                                                                                                </h5>
+                                                                                                <span
+                                                                                                    class="text-muted text-sm">{{ $discussion['name'] }}</span>
+                                                                                            </div>
+                                                                                            <div
+                                                                                                class=" form-switch form-switch-right ">
+                                                                                                {{ $discussion['created_at'] }}
+                                                                                            </div>
+                                                                                            <div class="d-flex gap-3"
+                                                                                                id="dellhover">
+                                                                                                <i class="ti ti-pencil textareaClassedit"
+                                                                                                    data-comment="{{ $discussion['comment'] }}"
+                                                                                                    data-id="{{ $discussion['id'] }}"
+                                                                                                    id="editable"
+                                                                                                    style="font-size: 20px;"></i>
+                                                                                                <script></script>
+                                                                                                <i class="ti ti-trash"
+                                                                                                    id="editable"
+                                                                                                    style="font-size: 20px;"
+                                                                                                    onclick="DeleteComment('{{ $discussion['id'] }}','{{ $task->id }}')"></i>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </li>
-                                                                    @endforeach
-
+                                                                            </li>
+                                                                        @endforeach
+                                                                    @else
+                                                                        <li class="list-group-item px-3" style="text-align:center">No comments found!</li>
+                                                                    @endif
                                                                 </ul>
                                                             </div>
                                                         </div>

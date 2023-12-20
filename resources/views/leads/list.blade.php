@@ -8,14 +8,20 @@
     @php
         $currentUserCompany = \App\Models\User::where('type', 'company')->first();
     @endphp
-@else
+@elseif(\Auth::user()->type == 'company')
     @php
         $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
     @endphp
+@elseif(\Auth::user()->type == 'project director' || \Auth::user()->type == 'project manager')
+    @php
+        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+    @endphp
 @endif
 <?php
+$com_permissions = [];
+if(isset($currentUserCompany->id)){
 $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->get();
-
+}
 $lead = \App\Models\Lead::first();
 if (isset($lead->is_active) && $lead->is_active) {
     $calenderTasks = [];
@@ -168,8 +174,21 @@ if (isset($lead->is_active) && $lead->is_active) {
                             {{-- /// --}}
 
                             {{-- /// --}}
-
-                            <div class="col-10 d-flex justify-content-end gap-2">
+                            <div class="col-2">
+                                <!-- <p class="mb-0 pb-0">Tasks</p> -->
+                                <div class="dropdown" id="actions_div" style="display:none">
+                                    <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+                                        <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
+                                        <li><a class="dropdown-item" href="#">Brand Change</a></li>
+                                        <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-8 d-flex justify-content-end gap-2">
                                 <div class="input-group w-25">
                                     <button class="btn btn-sm list-global-search-btn">
                                         <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
@@ -534,6 +553,55 @@ if (isset($lead->is_active) && $lead->is_active) {
 
     </div>
 
+    <div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mass Update</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('update-bulk-leads') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select name="bulk_field" id="bulk_field" class="form form-control">
+                                <option value="">Select Field</option>
+                                <option value="nm">Name</option>
+                                <option value="ldst">Lead Status</option>
+                                <!-- <option value="ast">Assign Type</option> -->
+                                <option value="user_res">User Reponsible</option>
+                                <option value="loc">Location</option>
+                                <option value="agy">Agency</option>
+                                <option value="ldsrc">Lead Source</option>
+                                <option value="email">Email Address</option>
+                                <option value="email_ref">Email Address (Referrer)	</option>
+                                <option value="phone">Phone</option>
+                                <option value="m_phone">Mobile Phone</option>
+                                <!-- <option value="mail_opt">Email opt out</option> -->
+                                <option value="address">Address</option>
+                                <option value="desc">Description</option>
+                                <!-- <option value="tag_list">Tag List</option> -->
+
+                            </select>
+                        </div>
+                        <input name='lead_ids' id="lead_ids" hidden>
+                        <div class="col-md-6" id="field_to_update">
+                            
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" value="Update">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 @endsection
@@ -547,6 +615,179 @@ if (isset($lead->is_active) && $lead->is_active) {
         $(document).on('change', '.main-check', function() {
             $(".sub-check").prop('checked', $(this).prop('checked'));
         });
+        $(document).on('change', '.sub-check', function() {
+            var selectedIds = $('.sub-check:checked').map(function() {
+                return this.value;
+            }).get();
+
+            console.log(selectedIds.length)
+
+            if(selectedIds.length > 0){
+                selectedArr = selectedIds;
+                $("#actions_div").css('display', 'block');
+            }else{
+                selectedArr = selectedIds;
+
+                $("#actions_div").css('display', 'none');
+            }
+            let commaSeperated = selectedArr.join(",");
+            console.log(commaSeperated)
+            $("#lead_ids").val(commaSeperated);
+
+        });
+
+        function massUpdate(){
+            if(selectedArr.length > 0){
+                $('#mass-update-modal').modal('show')
+            }else{
+                alert('Please choose Tasks!')
+            }
+        }
+
+        $('#bulk_field').on('change', function() {
+
+            if(this.value != ''){
+                $('#field_to_update').html('');
+
+                if(this.value == 'nm'){
+
+                    let field = `<div>
+                                    <input type="text" class="w-50 form-control" placeholder="First Name" name="lead_first_name" value="" required="">
+                                    <input type="text" class="w-50 form-control" placeholder="Last Name" name="lead_last_name" value="" required="">
+                               </div>`;
+                    $('#field_to_update').html(field);
+
+                }else if(this.value == 'ldst'){
+
+                    var stages = <?= json_encode($stages) ?>;
+
+                    let options = '';
+                    for(let i = 0; i < stages.length; i++){
+                        options += '<option value="'+stages[i].id+'">'+stages[i].name+'</option>';
+                    }
+                    
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_stage" required>
+                                    <option value="">Select Status</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+
+                }else if(this.value == 'user_res'){
+
+                    var users = <?= json_encode($users) ?>;
+                    let options = '';
+
+                    $.each(users, function(keyName, keyValue) {
+                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                    });
+                    
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_assgigned_user" required>
+                                    <option value="">Select User</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+
+                }else if(this.value == 'loc'){
+
+                    var branches = <?= json_encode($branches) ?>;
+                    let options = '';
+
+                    $.each(branches, function(keyName, keyValue) {
+                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                    });
+                    
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_branch" required>
+                                    <option value="">Select Location</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+
+                }else if(this.value == 'agy'){
+
+                    var organizations = <?= json_encode($organizations) ?>;
+                    let options = '';
+
+                    $.each(organizations, function(keyName, keyValue) {
+                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                    });
+                    
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_organization" required>
+                                    <option value="">Select Agency</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+
+                }else if(this.value == 'ldsrc'){
+
+                    var sources = <?= json_encode($sourcess) ?>;
+                    let options = '';
+                    $.each(sources, function(keyName, keyValue) {
+                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                    });
+                    
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_source" required>
+                                    <option value="">Select Source</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+
+                }else if(this.value == 'email'){
+
+                    let field = `<input type="email" class="form-control" name="lead_email" required>`;
+                    $('#field_to_update').html(field);
+
+                }else if(this.value == 'email_ref'){
+
+                    let field = `<input type="email" class="form-control" name="referrer_email">`;
+                    $('#field_to_update').html(field);
+
+                }else if(this.value == 'phone'){
+
+                    let field =  `<input type="text" class="form-control" name="lead_phone" value="{{$lead->phone}}" required>`;
+                    $('#field_to_update').html(field);
+
+                }else if(this.value == 'm_phone'){
+
+                    let field = `<input type="text" class="form-control" name="lead_mobile_phone" >`;
+                    $('#field_to_update').html(field);
+
+                }else if(this.value == 'address'){
+
+                    let field = `<div class="form-floating">
+                                    <textarea class="form-control" placeholder="Street" id="floatingTextarea" name="lead_street">{{ $lead->street }}</textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 col-form">
+                                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="City" name="lead_city" >
+                                    </div>
+                                    <div class="col-6 col-form">
+                                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="State/Province" name="lead_state" >
+                                    </div>
+                                    <div class="col-6 col-form">
+                                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Postel Code" name="lead_postal_code" >
+                                    </div>
+                                    <div class="col-6 col-form" style="text-align: left;">
+                                        <select class="form-control select2" id="choice-6" name="lead_country">
+                                            <option>Country...</option>
+                                        </select>
+                                    </div>
+                                </div>`;
+                    $('#field_to_update').html(field);
+
+                }else if(this.value == 'desc'){
+
+                    let field = `<textarea class="form-control" rows="4" placeholder="description" name="lead_description"></textarea>`;
+                    $('#field_to_update').html(field);
+
+                }else if(this.value == 'tag_list'){
+
+                    let field = ``;
+                    $('#field_to_update').html(field);
+
+                }
+            }
+
+            });
 
         $(document).on("click", '.delete-bulk-leads', function() {
             var task_ids = $(".sub-check:checked");

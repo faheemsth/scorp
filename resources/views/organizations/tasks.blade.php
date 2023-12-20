@@ -78,8 +78,8 @@
                             <div class="col-sm-6">
                                 <select class="form form-control select2 assign_type" id="choices-multiple3"
                                     name="assign_type">
-                                    <option value="">Select Assign type</option>
-                                    <option value="company">Company</option>
+                                    {{-- <option value="">Select Assign type</option> --}}
+                                    {{-- <option value="company">Company</option> --}}
                                     <option value="individual">individual</option>
                                 </select>
                             </div>
@@ -296,29 +296,41 @@
 
 {{ Form::close() }}
 
-
 <script>
     $(document).ready(function() {
-
-        $(".assign_type").on("change", function() {
-            var type = $(this).val();
-            var current = $(this);
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('organization.assign_to', 1) }}',
-                data: {
-                    type
-                },
-                success: function(data) {
-                    data = JSON.parse(data);
-                    if (data.status == 'success') {
-                        $("#assign_to_div").html(data.html);
-                        select2();
-                    }
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('organization.assign_to', 1) }}',
+            data: {
+                type: ''
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status == 'success') {
+                    $("#assign_to_div").html(data.html);
+                    select2();
                 }
-            })
-
+            }
         })
+        // $(".assign_type").on("change", function() {
+        //     var type = $(this).val();
+        //     var current = $(this);
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: '{{ route('organization.assign_to', 1) }}',
+        //         data: {
+        //             type
+        //         },
+        //         success: function(data) {
+        //             data = JSON.parse(data);
+        //             if (data.status == 'success') {
+        //                 $("#assign_to_div").html(data.html);
+        //                 select2();
+        //             }
+        //         }
+        //     })
+
+        // })
 
 
         $(".related_type").on('change', function() {
