@@ -2667,7 +2667,9 @@ textarea.form-control.is-invalid {
     }
 }
 .logo img{
-    width: 45%;
+    /* width: 45%; */
+    width: 200px;
+    height: 200px;
 }
 @media screen and (max-width: 768px){
     .logo img{

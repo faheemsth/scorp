@@ -222,7 +222,8 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
 
                             if ($due_date > $current_date && $status === '0') {
                                 // Ongoing feture time
-                                $color_code = '#B3CDE1;';
+                               // $color_code = '#B3CDE1';
+                               $color_code = 'green';
                             } elseif ($due_date === $current_date && $status === '0') {
                                 // Today date time
                                 $color_code = '#E89D25';

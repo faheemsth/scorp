@@ -105,7 +105,10 @@
                             <div class="col-sm-6 " id="assign_to_div">
                                 <select class="form form-control assigned_to select2" id="choices-multiple4"
                                     name="assigned_to">
-
+                                    <option value="">Select Employee</option>
+                                    @foreach($employees as $key => $emp)
+                                        <option value="{{ $key }}">{{ $emp }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>

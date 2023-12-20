@@ -535,7 +535,7 @@ $lang=Utility::getValByName('default_language');
 
                     <div class="my-3">
                         <h4 class="pl-4" style="color: #000;"><strong>@yield('page-title')</strong></h4>
-                        <ul class="breadcrumb bg-dark text-white pl-4" style="border-radius: 0;">
+                        <ul class="breadcrumb pl-4 text-dark" style="border-radius: 0; background-color: rgb(227, 230, 240) !important;">
                             @yield('breadcrumb')
                         </ul>
                     </div>

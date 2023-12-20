@@ -23,6 +23,8 @@
     }
 </style>
 @section('content')
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <div class="row">
         <div class="col-xxl-12">
             <div class="row w-100 m-0">
@@ -49,7 +51,7 @@
                                         placeholder="Search this list..." aria-label="Username"
                                         aria-describedby="basic-addon1">
                                 </div>
-                                <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                 </button>
                                 <a href="#" data-size="lg" data-url="{{ route('users.create') }}"
@@ -59,11 +61,18 @@
                                 </a>
                             </div>
                         </div>
+                        <script>
+                            $(document).ready(function() {
+                              $("#dropdownMenuButton3").click(function() {
+                                $("#filterToggle").toggle();
+                              });
+                            });
+                          </script>
                         <div class="row mt-5">
                             <div class="col-12">
                                 {{-- Filters --}}
-                                <div class="filter-data px-3" id="filter-show"
-                                    <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: non;"' ?>>
+                                <div class="filter-data px-3" id="filterToggle"
+                                    <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                                     <form action="/users" method="GET" class="">
                                         <div class="row my-3">
                                             <div class="col-md-4 mt-2">

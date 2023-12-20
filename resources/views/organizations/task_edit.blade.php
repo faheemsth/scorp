@@ -85,6 +85,20 @@
                             </div>
                         </div>
 
+                        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'project director' || \Auth::user()->type == 'project manager')
+                        <div class="form-group row ">
+                            <label for="branches" class="col-sm-3 col-form-label">Brands</label>
+                            <div class="col-sm-6">
+                                <select class="form form-control select2 brand_id" id="choices-multiple0" name="brand_id">
+                                    <option value="">Select Brands</option>
+                                    @foreach ($companies as $key => $brand)
+                                        <option value="{{ $key }}">{{ $brand }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @endif
+
                         <div class="form-group row">
                             <label for="type" class="col-sm-3 col-form-label">Assign Type  <span class="text-danger">*</span></label>
                             <div class="col-sm-6">
@@ -106,7 +120,7 @@
                             <div class="col-sm-6" id="assigned_to_div">
                                 <select class="form form-control assigned_to" id="choices-multiple4" name="assigned_to" >
                                     <option value="">Assign to</option>
-                                    @foreach ($users as $key => $user)
+                                    @foreach ($employees as $key => $user)
                                         <option value="{{ $key }}"
                                             {{ $key == $task->assigned_to ? 'selected' : '' }}>{{ $user }}
                                         </option>
