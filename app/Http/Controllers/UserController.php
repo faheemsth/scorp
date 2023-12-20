@@ -636,7 +636,21 @@ class UserController extends Controller
         if (\Auth::user()->can('manage employees')) {
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
             if (\Auth::user()->type == 'super admin') {
-                $users = User::whereNotIn('type', $excludedTypes)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $usersQuery = User::whereNotIn('type', $excludedTypes);
+
+                if (!empty($_GET['company'])) {
+                    $usersQuery->where('email', 'like', '%' . $_GET['company'] . '%');
+                }
+
+                if (!empty($_GET['name'])) {
+                    $usersQuery->where('name', 'like', '%' . $_GET['name'] . '%');
+                }
+
+                if (!empty($_GET['phone'])) {
+                    $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
+                }
+
+                $users = $usersQuery->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             } else {
                 $users = User::where('created_by', '=', $user->creatorId())->whereNotIn('type', $excludedTypes)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }
