@@ -1743,6 +1743,7 @@ Route::get("/delete-bulk-deals", [DealController::class, 'deleteBulkDeals'])->na
 Route::get("/delete-bulk-leads", [LeadController::class, 'deleteBulkLeads'])->name('delete-bulk-leads');
 Route::get("/delete-bulk-applications", [ApplicationsController::class, 'deleteBulkApplications'])->name('delete-bulk-applications');
 Route::get("/delete-bulk-organizations", [OrganizationController::class, 'deleteBulkOrganizations'])->name('delete-bulk-organizations');
+Route::post("/update-bulk-leads", [LeadController::class, 'updateBulkLead'])->name('update-bulk-leads');
 
 /////////////////////////// Login as company
 Route::get('/logged_in_as_company/{id}','DashboardController@loggedInAsCustomer');

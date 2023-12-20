@@ -2629,7 +2629,7 @@ class DealController extends Controller
             }
 
 
-             
+
 
             ///////Add filter
             $filters = $this->TasksFilter();
@@ -2677,8 +2677,20 @@ class DealController extends Controller
             } else {
                 $branches = Branch::where('created_by', \Auth::user()->id)->get();
             }
+
+            $assign_to = array();
+            if(\Auth::user()->type == 'super admin'){
+                $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+                ->get();
+            }else{
+                $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+                ->where('created_by', \Auth::user()->id)->get();
+            }
+            
+               
+
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-                $html = view('deals.tasks_list_ajax',compact('tasks','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'))->render();
+                $html = view('deals.tasks_list_ajax',compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'))->render();
 
                 return json_encode([
                     'status' => 'success',
@@ -2687,7 +2699,7 @@ class DealController extends Controller
             }
 
 
-            return view('deals.deal_tasks', compact('tasks','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'));
+            return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -3167,10 +3179,10 @@ class DealController extends Controller
             $note->title = $request->input('title');
             $note->description = $request->input('description');
             $note->update();
-    
+
             $notes = DealNote::where('deal_id', $id)->orderBy('created_at', 'DESC')->get();
             $html = view('deals.getNotes', compact('notes'))->render();
-    
+
             return json_encode([
                 'status' => 'success',
                 'html' => $html,
@@ -3330,19 +3342,19 @@ class DealController extends Controller
     }
 
     public function updateBulkTask(Request $request){
-        
-        $ids = explode(',',$request->tasks_ids);
 
+        $ids = explode(',',$request->tasks_ids);
+        
         if(isset($request->task_name)){
 
             DealTask::whereIn('id',$ids)->update(['name' => $request->task_name]);
             return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
-            
+
         }elseif(isset($request->branch_id)){
 
             DealTask::whereIn('id',$ids)->update(['branch_id' => $request->branch_id]);
             return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
-            
+
         }elseif(isset($request->status)){
 
             DealTask::whereIn('id',$ids)->update(['status' => $request->status]);
@@ -3371,6 +3383,11 @@ class DealController extends Controller
         }elseif(isset($request->visibility)){
 
             DealTask::whereIn('id',$ids)->update(['visibility' => $request->visibility]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->assigned_to)){
+
+            DealTask::whereIn('id',$ids)->update(['assigned_to' => $request->assigned_to]);
             return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
 
         }

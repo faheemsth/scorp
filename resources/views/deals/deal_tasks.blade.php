@@ -99,7 +99,7 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
                         </button>
 
                         @can('create task')
-                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn btn-sm p-2 btn-dark">
+                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark">
                             <i class="ti ti-plus" style="font-size:18px"></i>
                         </button>
                         @endcan
@@ -357,7 +357,7 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
                                 <option value="">Select Field</option>
                                 <option value="tm">Task Name</option>
                                 <option value="ofc">Office</option>
-                                <option value="ast">Assign Type</option>
+                                <!-- <option value="ast">Assign Type</option> -->
                                 <option value="asto">Assigned To</option>
                                 <option value="ts">Task Status</option>
                                 <option value="dd">Due Date</option>
@@ -660,6 +660,18 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
             }else if(this.value == 'ast'){
 
             }else if(this.value == 'asto'){
+                var assign_users = <?= json_encode($assign_to) ?>;
+                // console.log(branches)
+                let options = '';
+                for(let i = 0; i < assign_users.length; i++){
+                    options += '<option value="'+assign_users[i].id+'">'+assign_users[i].name+'</option>';
+                }
+
+                let field = `<select class="form form-control select2" id="choices-multiple1" name="assigned_to" required>
+                                <option value="">Select person</option>
+                                `+options+`
+                            </select>`;
+                $('#field_to_update').html(field);
 
             }else if(this.value == 'ts'){
 
