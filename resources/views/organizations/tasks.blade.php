@@ -55,7 +55,6 @@
                             </div>
                         </div>
 
-
                         <div class="form-group row d-none">
                             <label for="organization" class="col-sm-3 col-form-label">Agency
 
@@ -71,6 +70,20 @@
                                 </select>
                             </div>
                         </div>
+
+                        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'project director' || \Auth::user()->type == 'project manager')
+                        <div class="form-group row ">
+                            <label for="branches" class="col-sm-3 col-form-label">Brands</label>
+                            <div class="col-sm-6">
+                                <select class="form form-control select2 brand_id" id="choices-multiple0" name="brand_id">
+                                    <option value="">Select Brands</option>
+                                    @foreach ($companies as $key => $brand)
+                                        <option value="{{ $key }}">{{ $brand }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @endif
 
                         <div class="form-group row">
                             <label for="type" class="col-sm-3 col-form-label">Assign Type <span
@@ -311,7 +324,34 @@
                     select2();
                 }
             }
-        })
+        });
+
+        $(".brand_id").on("change", function(){
+            var id = $(this).val();
+                    
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('deal_companyemployees') }}',
+                data: {
+                    id: id  // Add a key for the id parameter
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $("#assign_to_div").html(data.html);
+                        select2(); // Assuming this is a function to initialize or update a select2 dropdown
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+
         // $(".assign_type").on("change", function() {
         //     var type = $(this).val();
         //     var current = $(this);

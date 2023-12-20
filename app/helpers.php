@@ -57,6 +57,13 @@ if (!function_exists('allUsers')) {
     }
 }
 
+if (!function_exists('companiesEmployees')) {
+    function companiesEmployees($company_id)
+    {
+       return User::where('created_by', $company_id)->pluck('name', 'id')->toArray();
+    }
+}
+
 
 if (!function_exists('allUniversities')) {
     function allUniversities()

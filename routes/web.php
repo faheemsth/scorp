@@ -831,6 +831,7 @@ Route::resource('organization', OrganizationController::class);
 Route::get('/organization/{id}/delete', [organizationController::class, 'destroy'])->name('organization.delete')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/notes', [organizationController::class, 'notesCreate'])->name('organization.notes.create')->middleware(['auth', 'XSS']);
 
+
 Route::get('/organization/{id}/assignto', [OrganizationController::class, 'getTaskUsers'])->name('organization.assign_to')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/relatedto', [OrganizationController::class, 'getTaskRelatedToUsers'])->name('organization.task.related_to')->middleware(['auth', 'XSS']);
 
@@ -1752,3 +1753,6 @@ Route::get('/logged_in_as_user/{id}','DashboardController@loggedInAsUser');
 
 //////////////////////////Global Search
 Route::get('/global-search', [GlobalSearchController::class, 'index'])->name('global-search');
+
+
+Route::get('/deal/companyEmployees', [DealController::class, 'getCompanyEmployees'])->name('deal_companyemployees');

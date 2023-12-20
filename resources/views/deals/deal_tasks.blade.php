@@ -333,11 +333,6 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
         </div>
     </div>
 </div>
-@endsection
-
-
-
-
 
 <div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -384,6 +379,15 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
         </div>
     </div>
 </div>
+
+
+@endsection
+
+
+
+
+
+
 
 @push('script-page')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>

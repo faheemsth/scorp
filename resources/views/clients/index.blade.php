@@ -4,13 +4,13 @@
     $profile=\App\Models\Utility::get_file('uploads/avatar/');
 @endphp
 @section('page-title')
-    {{__('Manage Client')}}
+    {{__('Manage Contacts')}}
 @endsection
 @push('script-page')
 @endpush
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
-    <li class="breadcrumb-item">{{__('Client')}}</li>
+    <li class="breadcrumb-item">{{__('Contacts')}}</li>
 @endsection
 @section('content')
 <style>
@@ -45,7 +45,9 @@
                         </button>
                         <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                     </div>
-
+                    <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="ti ti-filter" style="font-size:18px"></i>
+                    </button>
                     <button data-url="{{ route('clients.create') }}" data-ajax-popup="true"  data-bs-toggle="tooltip" title="{{__('Create')}}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal">
                         <i class="ti ti-plus" style="font-size:18px"></i>
                     </button>
@@ -53,8 +55,60 @@
                 </div>
             </div>
 
+            {{-- Filters --}}
+            <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+                <form action="/clients" method="GET" class="">
+                    <div class="row my-3">
+                        <div class="col-md-4 mt-2">
+                            <label for="">Name</label>
+                            <input type="text" class="form form-control" placeholder="Search Name" name="name" value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>" style="width: 95%; border-color:#aaa">
+                        </div>
+
+                        <div class="col-md-4 mt-2">
+                            <label for="">Email</label>
+                            <input type="text" class="form form-control" placeholder="Search Email" name="email" value="<?= isset($_GET['email']) ? $_GET['email'] : '' ?>" style="width: 95%; border-color:#aaa">
+                        </div>
+
+                        {{-- <div class="col-md-4 mt-2">
+                            <label for="">Admissions</label>
+                            <input type="text" class="form form-control" placeholder="Search Admissions" name="admissions" value="<?= isset($_GET['admissions']) ? $_GET['admissions'] : '' ?>" style="width: 95%; border-color:#aaa">
+                        </div>
+
+                        <div class="col-md-4 mt-2">
+                            <label for="">Applications</label>
+                            <input type="text" class="form form-control" placeholder="Search Applications" name="applications" value="<?= isset($_GET['applications']) ? $_GET['applications'] : '' ?>" style="width: 95%; border-color:#aaa">
+                        </div> --}}
 
 
+                        <div class="col-md-4 mt-3">
+                            <br>
+                            <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
+                            <a href="/clients" class="btn bg-dark" style="color:white;">Reset</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="enries_per_page" style="max-width: 300px; display: flex;">
+
+                            <?php
+                            $all_params = isset($_GET) ? $_GET : '';
+                            if (isset($all_params['num_results_on_page'])) {
+                                unset($all_params['num_results_on_page']);
+                            }
+                            ?>
+                            <input type="hidden" value="<?= http_build_query($all_params) ?>" class="url_params">
+                            <select name="" id="" class="enteries_per_page form form-control" style="width: 100px; margin-right: 1rem;">
+                                <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 25 ? 'selected' : '' ?> value="25">25</option>
+                                <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 100 ? 'selected' : '' ?> value="100">100</option>
+                                <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 300 ? 'selected' : '' ?> value="300">300</option>
+                                <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 1000 ? 'selected' : '' ?> value="1000">1000</option>
+                                <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == $total_records ? 'selected' : '' ?> value="{{ $total_records }}">all</option>
+                            </select>
+
+                            <span style="margin-top: 5px;">entries per page</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
 
             <div class=" mt-3">
                 <table class="table">
@@ -146,6 +200,9 @@
     $(document).on('change', '.main-check', function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));
     });
+    $('.filter-btn-show').click(function() {
+            $("#filter-show").toggle();
+        });
     $(document).on("click", '.delete-bulk-contacts', function() {
         var task_ids = $(".sub-check:checked");
         var selectedIds = $('.sub-check:checked').map(function() {
