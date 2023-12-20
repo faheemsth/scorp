@@ -627,7 +627,7 @@
                                             <div class="d-flex justify-content-end align-items-center p-2 pb-0">
                                                 <div class="float-end">
                                                     @if (\Auth::user()->can('create application'))
-                                                    <a data-size="lg" data-url="{{ route('deals.application.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Application') }}" class="btn btn-sm text-white" >
+                                                    <a data-size="lg" data-url="{{ route('deals.application.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Application') }}" class="btn btn-sm bg-dark text-white" >
                                                         <i class="ti ti-plus"></i>
                                                     </a>
                                                     @endif
