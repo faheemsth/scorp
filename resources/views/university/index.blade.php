@@ -11,12 +11,12 @@
 
 @section('content')
 <style>
-    .red-cross {
+    /* .red-cross {
         position: absolute;
         top: 5px;
         right: 5px;
         color: red;
-    }
+    } */
 
     .text-dark {
         color: #000;
@@ -27,15 +27,15 @@
     }
 
     .boximg {
-        margin-left: 22px;
+        margin: auto
     }
 </style>
 
 
 <div class="row">
     <div class="col-xl-12">
-        <div class="card my-card">
-            <div class="card-body table-border-style">
+        <div class="card my-card" >
+            <div class="card-body table-border-style" style="">
                 <?php $i = 0; ?>
                 <div class="row justify-evenly">
                     @forelse($statuses as $key => $status)
@@ -46,9 +46,12 @@
                     @foreach (App\Models\University::all() as $university)
                     @if ($university->country == $key && !$countryFound)
                     @if ($i <= 4) <?php $i++; ?> <div class="col-xl-2 col-md-6 mb-4">
-                        <div class="card shadow py-2" style="width: 90%; height: 90%;border-radius: 22px;">
-                            <div class="card-body">
-                                <span class="red-cross"><i class="fa-solid fa-circle-xmark"></i></span>
+                        <div class="card shadow py-2" style="width: 100%; height: 90%;border-radius: 22px;">
+                            <div class="card-body" style="display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;">
+                                {{-- <span class="red-cross"><i class="fa-solid fa-circle-xmark"></i></span> --}}
                                 <img src="{{ asset('assets/svg/country-' . $university->country_code . '.svg') }}" alt="{{ $key }}" width="80" height="60" class="boximg">
 
                                 <div class="row no-gutters text-center">
@@ -65,7 +68,7 @@
                         </div>
                 </div>
                 @php
-                if ($i < 5) { echo '<div class="mt-5" style="border-left: 3px solid black; height: 80px; width: 1%;"></div>' ; } $countryFound=true; @endphp @endif @endif @endforeach @empty @endforelse </div>
+                if ($i < 5) { echo '<div class="mt-5 p-0" style="border-left: 3px solid black; height: 80px; width: 10px;"></div>' ; } $countryFound=true; @endphp @endif @endif @endforeach @empty @endforelse </div>
 
 
 
