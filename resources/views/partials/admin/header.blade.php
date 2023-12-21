@@ -21,7 +21,7 @@
     // dd(Session::get('auth_type_created_by'));
     $com_permissions = [];
     if ($currentUserCompany != null) {
-        $com_permissions = \App\Models\CompanyPermission::where('user_id', $currentUserCompany->id)->get();
+        $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
     }
 
     $all_companies = App\Models\User::where('type', 'company')

@@ -421,12 +421,11 @@
                                                                                 <thead class="table-bordered">
                                                                                     <tr>
                                                                                         <th scope="col">Name</th>
-                                                                                        <th scope="col">Stage
-                                                                                        </th>
-                                                                                        <th scope="col">InTake
-                                                                                        </th>
-                                                                                        <th scope="col">Assign To
-                                                                                        </th>
+                                                                                        <th scope="col">InTake</th>
+                                                                                        <th scope="col">Brand</th>
+                                                                                        <th scope="col">Branch</th>
+                                                                                        <th scope="col">Assign To</th>
+                                                                                        <th scope="col">Stage</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody class="notes-tbody">
@@ -439,12 +438,12 @@
                                                                                                 }
                                                                                                 echo $name;
                                                                                             @endphp </td>
-                                                                                            <td>{{ $stages[$deal->stage_id] }}
-                                                                                            </td>
-                                                                                            <td>{{ '1-' . (empty($deal->intake_month) ? 'Jan' : $deal->intake_month) . '-' . (empty($deal->intakeYear) ? date('Y') : $deal->intakeYear) }}
-                                                                                            </td>
-                                                                                            <td>{{ isset($deal->assigned_to) && isset($organizations[$deal->assigned_to]) ? $organizations[$deal->assigned_to] : '' }}
-                                                                                            </td>
+                                                                                            
+                                                                                            <td>{{ '1-' . (empty($deal->intake_month) ? 'Jan' : $deal->intake_month) . '-' . (empty($deal->intakeYear) ? date('Y') : $deal->intakeYear) }}</td>
+                                                                                            <td></td>
+                                                                                            <td></td>
+                                                                                            <td>{{ isset($deal->assigned_to) && isset($organizations[$deal->assigned_to]) ? $organizations[$deal->assigned_to] : '' }}</td>
+                                                                                            <td>{{ $stages[$deal->stage_id] }}</td>
                                                                                         </tr>
                                                                                     @empty
                                                                                     @endforelse
@@ -473,106 +472,33 @@
                                                     class="accordion-collapse collapse show"
                                                     aria-labelledby="panelsStayOpen-headingkeydesc">
                                                     <div class="accordion-body">
-                                                        <div
-                                                            class="d-flex justify-content-end align-items-center p-2 pb-0">
-                                                            <div class="float-end">
-                                                                @if (\Auth::user()->can('create application'))
-                                                                    <a data-size="lg"
-                                                                        data-url="{{ route('deals.application.create', $deal->id) }}"
-                                                                        data-ajax-popup="true"
-                                                                        data-bs-toggle="tooltip"
-                                                                        title="{{ __('Create Application') }}"
-                                                                        class="btn px-2 btn-dark text-white"
-                                                                        >
-                                                                        <i class="ti ti-plus"></i>
-                                                                    </a>
-                                                                @endif
-                                                            </div>
-                                                        </div>
-
                                                         <div class="table-responsive mt-1" style="margin-left: 10px;">
                                                             <table class="table">
                                                                 <thead class=""
                                                                     style="background-color:rgba(0, 0, 0, .08); font-weight: bold;">
                                                                     <tr>
-                                                                        <td>
-                                                                            {{ __('Application Key') }}
-                                                                        </td>
-
-                                                                        <td>
-                                                                            {{ __('University') }}
-                                                                        </td>
-
-                                                                        <td>
-                                                                            {{ __('Status') }}
-                                                                        </td>
-
-                                                                        <td>
-                                                                            {{ __('Action') }}
-                                                                        </td>
-
+                                                                        <th scope="col">{{ __('University') }}</th>
+                                                                        <th scope="col">{{ __('Intake') }}</th>
+                                                                        <th scope="col">{{ __('Brand') }}</th>
+                                                                        <th scope="col">{{ __('Branch') }}</th>
+                                                                        <th scope="col">{{ __('Assigned To') }}</th>
+                                                                        <th scope="col">{{ __('Status') }}</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
 
                                                                     @forelse($applications as $app)
                                                                         <tr>
-                                                                            <td>{{ $app->application_key }}</td>
-                                                                            <td>{{ $universities[$app->university_id] }}
-                                                                            </td>
-                                                                            <td>
-
-                                                                                <span class="badge {{ $app->status != 'Approved' ? 'bg-warning-scorp' : 'bg-success-scorp' }}"> {{$app->status}}</span>
-                                                                            </td>
-                                                                            <td>
-
-
-                                                                                @can('edit application')
-                                                                                    <div class="action-btn ms-2">
-
-                                                                                        <a data-size="lg"
-                                                                                            title="{{ __('Edit Application') }}"
-                                                                                            href="#"
-                                                                                            class="btn px-2 btn-dark mx-1"
-                                                                                            data-url="{{ route('deals.application.edit', $app->id) }}"
-                                                                                            data-ajax-popup="true"
-                                                                                            data-title="{{ __('Edit Application') }}"
-                                                                                            data-toggle="tooltip"
-                                                                                            data-original-title="{{ __('Edit') }}">
-                                                                                            <i class="ti ti-edit"></i>
-                                                                                        </a>
-
-                                                                                    </div>
-                                                                                @endcan
-
-                                                                                @can('delete application')
-                                                                                    <div class="action-btn ms-2">
-                                                                                        {!! Form::open([
-                                                                                            'method' => 'DELETE',
-                                                                                            'route' => ['deals.application.destroy', $app->id],
-                                                                                            'id' => 'delete-form-' . $app->id,
-                                                                                        ]) !!}
-                                                                                        <a href="#"
-                                                                                            class="btn px-2 btn-danger"
-                                                                                            data-bs-toggle="tooltip"
-                                                                                            title="{{ __('Delete') }}"
-                                                                                            data-original-title="{{ __('Delete') }}"
-                                                                                            data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
-                                                                                            data-confirm-yes="document.getElementById('delete-form-{{ $app->id }}').submit();">
-                                                                                            <i
-                                                                                                class="ti ti-trash text-whit"></i>
-                                                                                        </a>
-                                                                                        {!! Form::close() !!}
-                                                                                    </div>
-                                                                                @endcan
-
-                                                        </div>
-
-
-                                                        </td>
-                                                        </tr>
-                                                    @empty
-                                                        @endforelse
+                                                                            <td>{{ $universities[$app->university_id] }}</td>
+                                                                            <td> </td>
+                                                                            <td> </td>
+                                                                            <td> </td>
+                                                                            <td> </td>
+                                                                            <td><span class="badge {{ $app->status != 'Approved' ? 'bg-warning-scorp' : 'bg-success-scorp' }}"> {{$app->status}}</span></td>
+                                                                            
+                                                                        </tr>
+                                                                    @empty
+                                                                @endforelse
                                                         </tbody>
                                                         </table>
                                                     </div>

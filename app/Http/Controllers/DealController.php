@@ -776,7 +776,6 @@ class DealController extends Controller
      */
     public function edit(Deal $deal)
     {
-        dd('sad');
         // if (\Auth::user()->can('edit deal') || \Auth::user()->type == 'super admin') {
         if (\Auth::user()->type == 'super admin') {
 

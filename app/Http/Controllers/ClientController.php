@@ -291,7 +291,7 @@ class ClientController extends Controller
         if(\Auth::user()->can('edit client'))
         {
             $user = \Auth::user();
-            if($client->created_by == $user->creatorId())
+            if($client->created_by == $user->creatorId() || \Auth::user()->type == 'super admin')
             {
                 $client->customField = CustomField::getData($client, 'client');
                 $customFields        = CustomField::where('module', '=', 'client')->get();

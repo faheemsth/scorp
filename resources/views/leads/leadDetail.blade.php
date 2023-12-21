@@ -411,7 +411,7 @@
 
                                                             </tr>
 
-                                                            <tr>
+                                                            <tr class="d-none">
                                                                 <td class=""
                                                                     style="width: 194px; font-size: 14px;">
                                                                     {{ __('Link Email Address') }}
