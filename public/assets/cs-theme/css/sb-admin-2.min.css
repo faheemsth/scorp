@@ -6348,9 +6348,10 @@ a.close.disabled {
 
 .modal-header {
     display: flex;
-    align-items: flex-start;
+    overflow: hidden;
+    align-items: baseline;
     justify-content: space-between;
-    padding: 1rem 1rem;
+    padding: 0.7rem 1rem;
     border-bottom: 1px solid #e3e6f0;
     border-top-left-radius: calc(.3rem - 1px);
     border-top-right-radius: calc(.3rem - 1px)

@@ -2,7 +2,7 @@
 
 
 @if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
-    @php 
+    @php
     $com_permissions = [];
     $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
     @endphp
@@ -300,7 +300,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         </select>
                                     </div>
                                     @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                  
+
                                     <div class="col-md-4 mt-1"> <label for="">Created By</label>
                                         <select class="form form-control select2" id="choices-multiple555"
                                             name="created_by[]" multiple style="width: 95%;">
@@ -542,7 +542,7 @@ if (isset($lead->is_active) && $lead->is_active) {
     </div>
 
 <div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg my-0" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Mass Update</h5>

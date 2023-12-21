@@ -447,10 +447,10 @@
                                                                 </td>
                                                                 <td class="drive_link-td"
                                                                     style="padding-left: 10px; font-size: 14px; width:300px">
-{{--
+
                                                                     <div class="d-flex edit-input-field-div">
-                                                                        <div class="input-group border-0 drive_link"
-                                                                            style="width: 316px;">
+                                                                        <div class="input-group  drive_link"
+                                                                            style="width: 316px;border: none;">
 
                                                                             <a href="{{ $lead->drive_link }}"
                                                                                 style="width: 300px; word-wrap: break-word; font-size: 12px; color: blue; text-decoration: underline;"
@@ -464,19 +464,19 @@
                                                                         </div>
                                                                         <div class="edit-btn-div">
                                                                             <button
-                                                                                class="btn btn-secondary rounded-0 btn-effect-none edit-input"
+                                                                                class="btn btn-dark text-white rounded-0 btn-effect-none edit-input"
                                                                                 name="drive_link"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div> --}}
-                                                                    <a href="{{ $lead->drive_link }}"
+                                                                    </div>
+                                                                    {{-- <a href="{{ $lead->drive_link }}"
                                                                         style="width: 300px; word-wrap: break-word; font-size: 14px; color: blue; text-decoration: underline;"
                                                                         target="_blank">
                                                                         <span
                                                                             style="width: 300px; word-wrap: break-word; font-size: 14px; color: blue; text-decoration: underline;">
                                                                             {{ substr($lead->drive_link, 0, 60) }}{{ strlen($lead->drive_link) > 70 ? '...' : '' }}
                                                                         </span>
-                                                                    </a>
+                                                                    </a> --}}
 
                                                                 </td>
                                                             </tr>
