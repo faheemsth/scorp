@@ -217,15 +217,21 @@
             </h2>
             <div class="wizard mb-2">
                 <?php $done = true; ?>
-                @forelse ()
+                @forelse($stages as $stage)
                 <?php
                 if ($lead->stage->name == $stage->name) {
                     $done = false;
                 }
 
+                $is_missed = false;
+                            
+                if (!empty($stage_histories) && !in_array($stage->id, $stage_histories) && $stage->id <= max($stage_histories)) {
+                    $is_missed = true;
+                   
+                }
                 ?>
 
-                <a type="button" data-lead-id="{{ $lead->id }}" data-stage-id="{{ $stage->id }}" class="lead_stage {{ $lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '') }} " style="font-size:13px">{{ $stage->name }}</a>
+                <a type="button" data-lead-id="{{ $lead->id }}" data-stage-id="{{ $stage->id }}" class="lead_stage {{ $lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '') }} " style="font-size:13px">{{ $stage->name }}  @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
                 @empty
                 @endforelse
             </div>
@@ -243,8 +249,15 @@
                     $done = false;
                 }
 
+                $is_missed = false;
+                            
+                if (!empty($stage_histories) && !in_array($key, $stage_histories) && $key <= max($stage_histories)) {
+                    $is_missed = true;
+                   
+                }
+
                 ?>
-                <a type="button" data-lead-id="{{ $deal->id }}" data-stage-id="{{ $key }}" class="lead_stage deal_stage {{ $deal->stage->name == $stage ? 'current' : ($done == true ? 'done' : '') }}" style="font-size:12px">{{ $stage }}</a>
+                <a type="button" data-lead-id="{{ $deal->id }}" data-stage-id="{{ $key }}" class="lead_stage deal_stage {{ $deal->stage->name == $stage ? 'current' : ($done == true ? 'done' : '') }}" style="font-size:12px">{{ $stage }}  @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif</a>
                 @endforeach
 
             </div>
@@ -1219,24 +1232,25 @@
                                     <div id="panelsStayOpen-collapseactive" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingactive">
                                         <div class="accordion-body">
                                             <!-- Accordion Content -->
+
                                             <div class="mt-1">
-                                                <div id="activity" class=" px-0">
-                                                    @foreach($log_activities as $activity)
-                                                    @php
-                                                    $remark = json_decode($activity->note);
-                                                    @endphp
-                                                    <div class="card">
-                                                        <div class="card-body">
-                                                            <div class="log">
-                                                                <h5>{{$remark->title }}</h5>
-                                                                <p class="">{{$remark->message }}</p>
+                                                <div class="timeline-wrapper">
+                                                    <ul class="StepProgress">
+                                                        @foreach ($log_activities as $activity)
+                                                            @php
+                                                                $remark = json_decode($activity->note);
+                                                            @endphp
 
-                                                                <span>{{ $activity->created_at }}</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    @endforeach
+                                                            <li class="StepProgress-item is-done">
+                                                                <div class="bold time">{{ $activity->created_at }}</div>
+                                                                <div class="bold" style="text-align: left; margin-left: 80px;">
+                                                                        <p class="bold" style="margin-bottom: 0rem; color: #000000;">{{ $remark->title }}</p>
+                                                                        <p class="mt-0">{{ $remark->message }}</p>
+                                                                </div>
+                                                            </li>
 
+                                                        @endforeach
+                                                    </ul>
                                                 </div>
                                             </div>
                                             <!-- End of Accordion Content -->

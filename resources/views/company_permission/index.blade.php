@@ -49,22 +49,22 @@
                     <table class="table" width="100%">
                         <thead>
                             <tr>
-                                <th>Company Name</th>
+                                <th>Project Manager/Branch</th>
                                 @foreach($companies as $company)
                                     <th>{{$company->name}}</th>
                                 @endforeach
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($companies as $company)
+                            @foreach($employees as $emp)
                                 <tr scope="row">
-                                    <td>{{$company->name}}</td>
+                                    <td>{{$emp->name}}</td>
                                     @foreach($companies as $comp)
                                         <?php  $permitted_companies = $comp->companyPermissions->pluck('permitted_company_id'); ?>
                                         <td>
                                             <input type="checkbox" class="company-permission-checkbox"
-                                                <?= $company->id == $comp->id ? 'checked disabled' :  (isset($permission_arr[$company->id][$comp->id]) && $permission_arr[$company->id][$comp->id] == 'true' ? 'checked' : '') ?>
-                                                id="company-permission-checkbox" data-for-company="{{$company->id}}" data-permission-company="{{$comp->id}}">
+                                                <?= $emp->id == $comp->id ? 'checked disabled' :  (isset($permission_arr[$emp->id][$comp->id]) && $permission_arr[$emp->id][$comp->id] == 'true' ? 'checked' : '') ?>
+                                                id="company-permission-checkbox" data-for-company="{{$emp->id}}" data-permission-company="{{$comp->id}}">
                                         </td>
                                     @endforeach
                                 </tr>

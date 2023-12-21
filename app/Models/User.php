@@ -58,7 +58,7 @@ class User extends Authenticatable
     {
         //return CompanyPermission::where('permitted_company_id', '=', $this->creatorId())->first();
 
-        return $this->hasMany(CompanyPermission::class, 'company_id', 'id');
+        return $this->hasMany(CompanyPermission::class, 'user_id', 'id');
     }
 
     public function organization($id)

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\ActivityLog;
+use App\Models\StageHistory;
 use App\Models\LogActivity;
 use App\Models\University;
 use App\Models\User;
@@ -88,10 +89,30 @@ if (!function_exists('addLogActivity')) {
     }
 }
 
-if (!function_exists('getLogActivity')) {
-    function getLogActivity($id)
+if (!function_exists('addLeadHistory')) {
+    function addLeadHistory($data = [])
     {
-        return LogActivity::where('module_id', $id)->get();
+        if(isset($data['stage_id'])){
+            StageHistory::where('type_id', $data['type_id'])
+                        ->where('type', $data['type'])
+                        ->where('stage_id', '>=', $data['stage_id'])
+                        ->delete();
+        }
+
+
+       $new_log = new StageHistory();
+       $new_log->type = $data['type'];
+       $new_log->type_id = $data['type_id'];
+       $new_log->stage_id = $data['stage_id'];
+       $new_log->created_by = \Auth::user()->id;
+       $new_log->save();
+    }
+}
+
+if (!function_exists('getLogActivity')) {
+    function getLogActivity($id, $type)
+    {
+        return LogActivity::where('module_id', $id)->where('module_type', $type)->get();
     }
 }
 

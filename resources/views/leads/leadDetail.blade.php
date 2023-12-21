@@ -116,7 +116,7 @@
                         @if (!empty($deal))
                             <a href="@can('View Deal') @if ($deal->is_active) {{ '/get-deal-detail?deal_id=' . $deal->id }} @else # @endif @else # @endcan"
                                 data-size="lg" data-bs-toggle="tooltip"
-                                data-bs-title=" {{ __('Already Converted To Deal') }}" class="btn  text-white"
+                                data-bs-title=" {{ __('Already Converted To Deal') }}" class="btn btn-dark text-white"
                                 style="background-color: #313949">
                                 <i class="ti ti-exchange"></i>
                             </a>
@@ -124,7 +124,7 @@
                             <a href="#" data-size="lg"
                                 data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
                                 data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] To Deal') }}"
-                                class="btn  btn-primary">
+                                class="btn  btn-dark text-white">
                                 <i class="ti ti-exchange"></i>
                             </a>
                         @endif
@@ -202,12 +202,17 @@
                             if ($lead->stage->name == $stage->name) {
                                 $done = false;
                             }
-
+                           
+                            $is_missed = false;
+                            
+                            if (!empty($stage_histories) && !in_array($stage->id, $stage_histories) && $stage->id <= max($stage_histories)) {
+                                $is_missed = true;
+                            }
                             ?>
 
                             <a type="button" data-lead-id="{{ $lead->id }}" data-stage-id="{{ $stage->id }}"
                                 class="lead_stage {{ $lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '') }} "
-                                style="font-size:13px">{{ $stage->name }}</a>
+                                style="font-size:13px"> {{ $stage->name }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
                         @empty
                         @endforelse
                     </div>
@@ -1253,66 +1258,6 @@
                                 </div>
                             </div>
                             <!-- End of Open Accordion Item -->
-
-                            <!-- Add More Accordion Items Here -->
-
-                            <style>
-                                .bold{
-                                    font-weight:bold;
-                                }
-                                .time{
-                                    position:absolute; left:-110px;
-                                }
-                                .timeline-wrapper {
-                                padding-left:80px;
-                                min-width: 400px;
-                                font-family: 'Helvetica';
-                                font-size: 14px;
-                                }
-                                .StepProgress {
-                                    position: relative;
-                                    padding-left: 45px;
-                                    list-style: none;
-                                }
-                                .StepProgress::before {
-                                    display: inline-block;
-                                    content: '';
-                                    position: absolute;
-                                    top: 0;
-                                    left: 100px;
-                                    width: 10px;
-                                    height: 100%;
-                                    border-left: 2px solid #CCC;
-                                }
-                                .StepProgress-item {
-                                    position: relative;
-                                    counter-increment: list;
-                                }
-                                .StepProgress-item:not(:last-child) {
-                                  padding-bottom: 20px;
-                                }
-                                .StepProgress-item::before {
-                                display: inline-block;
-                                content: '';
-                                position: absolute;
-                                left: 100px;
-                                height: 100%;
-                                width: 10px;
-                                }
-                                .StepProgress-item::after {
-                                    content: '';
-                                    display: inline-block;
-                                    position: absolute;
-                                    top: 0;
-                                    left: 50px;
-                                    width: 12px;
-                                    height: 12px;
-                                    border: 2px solid #CCC;
-                                    border-radius: 50%;
-                                    background-color: #FFF;
-                                }
-
-                            </style>
 
                             <div class="tab-pane fade" id="pills-activity" role="tabpanel"
                                 aria-labelledby="pills-activity-tab">

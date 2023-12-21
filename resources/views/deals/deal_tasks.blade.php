@@ -1,23 +1,14 @@
 @extends('layouts.admin')
-@if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' )
-    @php
-        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
-    @endphp
-@elseif(\Auth::user()->type == 'super admin')
-    @php
-        $currentUserCompany = \App\Models\User::where('type', 'company')->first();
-    @endphp
-@else
-    @php
-        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
+@if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
+    @php 
+    $com_permissions = [];
+    $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
     @endphp
 @endif
 
 <?php
 
 $setting = \App\Models\Utility::colorset();
-$com_permissions = \App\Models\CompanyPermission::where('company_id', optional($currentUserCompany)->id)->where('active','true')->get();
-
 ?>
 
 
@@ -141,18 +132,8 @@ $com_permissions = \App\Models\CompanyPermission::where('company_id', optional($
                             <div class="col-md-4"> <label for="">Company/Brand</label>
                                 <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
                                     <option value="">Select Brand</option>
-                                    @foreach ($brands as $key => $brand)
+                                    
 
-                                            @if ($key == optional($currentUserCompany)->id)
-                                            <option value="{{ $key }}" class="" <?= isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' ?>>{{ $brand }}</option>
-                                            @endif
-                                                @foreach ($com_permissions as $permissions)
-                                                        @if ($permissions->permitted_company_id == $key)
-                                                        <option value="{{ $permissions->permitted_company_id }}" class="" <?= isset($_GET['brands']) && in_array($permissions->permitted_company_id, $_GET['brands']) ? 'selected' : '' ?>>{{ $brand }}</option>
-                                                        @endif
-                                                @endforeach
-
-                                            @endforeach
                                 </select>
                             </div>
 

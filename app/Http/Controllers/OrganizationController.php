@@ -751,9 +751,8 @@ class OrganizationController extends Controller
                 if(\Auth::user()->type == 'super admin'){
                     $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
                 }else if(\Auth::user()->type == 'project director' || \Auth::user()->type == 'project manager'){
-                    $creator_company = \Auth::user()->created_by;
-                    $com_permissions = \App\Models\CompanyPermission::where('company_id', $creator_company->id)->where('active', 'true')->get();
-                    $companies = User::where('type', 'company')->whereIn('id', $com_permissions)->orwhere('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+                    $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('active', 'true')->get();
+                    $companies = User::where('type', 'company')->whereIn('id', $com_permissions)->orwhere('id', \Auth::user()->created_by)->get()->pluck('name', 'id')->toArray();
                 }else if(\Auth::user()->type == 'company'){
                     $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
                 }
@@ -851,6 +850,7 @@ class OrganizationController extends Controller
                     'remark' => json_encode(['title' => $dealTask->name]),
                 ]
             );
+            
 
             //store Activity Log
             $remarks = [
@@ -919,10 +919,9 @@ class OrganizationController extends Controller
 
             if(\Auth::user()->type == 'super admin'){
                 $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
-            }else if(\Auth::user()->type == 'project director' || \Auth::user()->type == 'project manager'){
-                $creator_company = \Auth::user()->created_by;
-                $com_permissions = \App\Models\CompanyPermission::where('company_id', $creator_company->id)->where('active', 'true')->get();
-                $companies = User::where('type', 'company')->whereIn('id', $com_permissions)->orwhere('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('active', 'true')->get();
+                $companies = User::where('type', 'company')->whereIn('id', $com_permissions)->orwhere('id', \Auth::user()->created_by)->get()->pluck('name', 'id')->toArray();
             }else if(\Auth::user()->type == 'company'){
                 $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             }
@@ -1107,16 +1106,16 @@ class OrganizationController extends Controller
     {
         $type = $request->type;
 
-        if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director') {
+        // if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director') {
 
-            $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
-        } else if (\Auth::user()->type == 'super admin') {
-            $currentUserCompany = \App\Models\User::where('type', 'company')->first();
-        } else {
-            $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
-        }
+        //     $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+        // } else if (\Auth::user()->type == 'super admin') {
+        //     $currentUserCompany = \App\Models\User::where('type', 'company')->first();
+        // } else {
+        //     $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
+        // }
 
-        $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->where('active', 'true')->get();
+        // $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->where('active', 'true')->get();
 
 
         $html = '';

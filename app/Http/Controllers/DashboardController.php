@@ -204,7 +204,7 @@ class DashboardController extends Controller
         if (!isset($_GET['company']) || isset($_GET['company']) && $_GET['company'] == 'all') {
 
             //fetching all permitted companies
-            $allowedCompanies = CompanyPermission::where(['active' => 'true'])->get()->pluck('name', 'id')->toArray();
+           // $allowedCompanies = CompanyPermission::where(['active' => 'true'])->get()->pluck('name', 'id')->toArray();
 
             $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
 
