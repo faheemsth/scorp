@@ -112,19 +112,13 @@
 @endsection
 
 <style>
-    ::-webkit-scrollbar {
-        width: 0px;
-    }
-
     .card-animate:hover {
         transform: translateY(calc(-1.5rem / 5));
         box-shadow: 0 5px 10px #1e20251f;
     }
-
     .card-animate {
         transition: all .4s;
     }
-
     .chart-container {
         position: relative;
         margin: auto;

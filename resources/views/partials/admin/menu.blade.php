@@ -20,6 +20,15 @@
     .emp:hover #icon2 {
     display: inline;
     }
+    .sidebar .collapse-inner ul .active a{
+        color: #2E82D0 !important;
+    }
+    .sidebar .collapse-inner ul .active #icon1{
+        display: none !important;
+    }
+    .sidebar .collapse-inner ul .active #icon2{
+        display: inline !important;
+    }
 
     .nav-item #icon2 {
     display: none;
@@ -42,7 +51,7 @@
 <ul class="navbar-nav  sidebar sidebar-dark accordion" id="accordionSidebar" style="background-color: #313949;">
     @if (\Auth::user()->type != 'client')
         <!-- Sidebar -->
-        <ul style="list-style: none">
+        <ul style="list-style: none" >
 
             @if (Auth::user()->type == 'company' ||
                     Auth::user()->type == 'team' ||
@@ -60,7 +69,8 @@
 
                         <span>{{ __('Dashboard') }}</span>
                     </a>
-                    <div id="collapseone" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div id="collapseone" class="collapse {{ (Request::segment(1) == 'crm-dashboard' || Request::segment(1) == 'hrm-dashboard')   ? 'show' : '' }}"
+                    aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="  collapse-inner rounded">
                             <ul>
                                 @if (Gate::check('show crm dashboard') || Auth::user()->type == 'team' || Auth::user()->type == 'company')
@@ -214,7 +224,7 @@
                                 @endif
                                 @if (\Auth::user()->show_hrm() == 1)
                                         <li
-                                            class="{{ \Request::route()->getName() == 'hrm.dashboard' ? ' active' : '' }}">
+                                            class="d-none {{ \Request::route()->getName() == 'hrm.dashboard' ? ' active' : '' }}">
                                             <a class="collapse-item" style="color: white; font-size: 13px;"
                                                 href="{{ route('hrm.dashboard') }}">
                                             <img src="{{ asset('assets/cs-theme/icons/Layer_1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
@@ -1098,7 +1108,9 @@
                             <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
                             <span>{{ __('CRM System') }}</span>
                         </a>
-                        <div id="collapsefour" class="collapse" aria-labelledby="headingUtilities"
+                        <div id="collapsefour" class="collapse {{ (Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' || Request::segment(1) == 'company-permission' || Request::segment(1) == 'pipelines')   ? 'show' : '' }}"
+
+                        aria-labelledby="headingUtilities"
                             data-parent="#accordionSidebar">
                             <div class="  collapse-inner rounded">
                                 <ul
@@ -1376,20 +1388,21 @@
 
                             {{ __('Users') }}</span>
                     </a>
-                    <div id="collapseseven" class="collapse" aria-labelledby="headingUtilities"
+                    <div id="collapseseven" class="collapse {{ (Request::segment(1) == 'user' && Request::segment(2) == 'employees')   ? 'show' : '' }}"
+                     aria-labelledby="headingUtilities"
                         data-parent="#accordionSidebar">
                         <div class="  collapse-inner rounded">
                             <ul>
-                                @can('manage user')
-                                <li
-                                class="emp nav-item{{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
-                                <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('user.employees') }}">
-                            <img src="{{ asset('assets/cs-theme/icons/Vector (1).png') }}" id="icon1" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
-                            <img src="{{ asset('assets/cs-theme/icons/employeeblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
 
-                                    Employees</a>
-                            </li>
-                                @endcan
+                                <li
+                                    class="emp nav-item{{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
+                                    <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('user.employees') }}">
+                                <img src="{{ asset('assets/cs-theme/icons/Vector (1).png') }}" id="icon1" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+                                <img src="{{ asset('assets/cs-theme/icons/employeeblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+
+                                        Employees</a>
+                                </li>
+
                             </ul>
                         </div>
                     </div>
@@ -1526,7 +1539,8 @@
 
                             <span>{{ __('Settings') }}</span>
                         </a>
-                        <div id="collapseten" class="collapse" aria-labelledby="headingUtilities"
+                        <div id="collapseten" class="collapse {{ (Request::segment(1) == 'settings')   ? 'show' : '' }}"
+                         aria-labelledby="headingUtilities"
                             data-parent="#accordionSidebar">
                             <div class="  collapse-inner rounded">
                                 <ul>
@@ -1659,7 +1673,8 @@
                             <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
                             <span>{{ __('CRM System') }}</span>
                         </a>
-                        <div id="collapsesuper" class="collapse" aria-labelledby="headingTwo"
+                        <div id="collapsesuper" class="collapse {{ (Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' || Request::segment(1) == 'company-permission' || Request::segment(1) == 'pipelines')   ? 'show' : '' }}"
+                         aria-labelledby="headingTwo"
                             data-parent="#accordionSidebar">
                             <div class="  collapse-inner rounded">
                                 <ul>
@@ -1675,7 +1690,7 @@
                         <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('course.index') }}">{{ __('Courses') }}</a>
                     </li> --}}
                     <li
-                        class="emp nav-item{{ Request::route()->getName() == 'leads.list' || Request::route()->getName() == 'leads.index' || Request::route()->getName() == 'leads.show' ? ' active' : '' }}">
+                        class="emp nav-item {{ Request::route()->getName() == 'leads.list' || Request::route()->getName() == 'leads.index' || Request::route()->getName() == 'leads.show' ? ' active' : '' }}">
                         <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('leads.list') }}">
                         <img src="{{ asset('assets/cs-theme/icons/Layer_1.png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
                         <img src="{{ asset('assets/cs-theme/icons/leadsblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
@@ -1683,7 +1698,7 @@
                             {{ __('Leads') }}</a>
                     </li>
                     <li
-                        class="emp nav-item{{ Request::route()->getName() == 'deals.list' || Request::route()->getName() == 'deals.index' || Request::route()->getName() == 'deals.show' ? ' active' : '' }}">
+                        class="emp nav-item {{ Request::route()->getName() == 'deals.list' || Request::route()->getName() == 'deals.index' || Request::route()->getName() == 'deals.show' ? ' active' : '' }}">
                         <a class="collapse-item"   style="color:white; font-size: 13px;" href="{{ route('deals.list') }}">
                             <img src="{{ asset('assets/cs-theme/icons/edit-icon 1.png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
                             <img src="{{ asset('assets/cs-theme/icons/admiblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
@@ -1771,7 +1786,9 @@
 
                         <span>{{ __('Users') }}</span>
                     </a>
-                    <div id="collapsesu" class="collapse" aria-labelledby="headingTwo"
+                    <div id="collapsesu" class="collapse {{ (Request::segment(1) == 'branch' || Request::segment(1) == 'users' || Request::segment(1) == 'user' && Request::segment(2) == 'employees'  || Request::segment(1) == 'roles')   ? 'show' : '' }}"
+
+                    aria-labelledby="headingTwo"
                         data-parent="#accordionSidebar">
                         <div class="  collapse-inner rounded">
                     <ul>
@@ -1850,7 +1867,8 @@
 
                     <span>{{ __('Settings') }}</span>
                 </a>
-                <div id="collapsesu" class="collapse" aria-labelledby="headingTwo"
+                <div id="collapsesu" class="collapse {{ (Request::segment(1) == 'settings')   ? 'show' : '' }}"
+                aria-labelledby="headingTwo"
                     data-parent="#accordionSidebar">
                     <div class="  collapse-inner rounded">
                 <ul>

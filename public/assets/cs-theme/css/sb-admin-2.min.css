@@ -11621,13 +11621,13 @@ a:focus {
 .sidebar .nav-item .collapse .collapse-inner .collapse-item:active,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-item:active {
     background-color: #dddfeb;
-    color: black !important;
+    color: #2E82D0 !important;
     padding-left: 10px;
 }
 
 .sidebar .nav-item .collapse .collapse-inner .collapse-item.active,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-item.active {
-    color: #4e73df;
+    color: #2E82D0;
     font-weight: 700
 }
 

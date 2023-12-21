@@ -795,11 +795,14 @@
                             'X-CSRF-TOKEN': csrfToken
                         },
                         success: function(response) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: 'The task status has been changed successfully.',
-                            });
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'The task status has been changed successfully.',
+                        }).then(function() {
+                            // Reload the page after the user closes the SweetAlert dialog
+                            window.location.href = window.location.href;
+                        });
                         },
 
                         error: function(jqXHR, textStatus, errorThrown) {

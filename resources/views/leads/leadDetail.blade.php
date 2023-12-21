@@ -269,7 +269,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Record ID') }}
                                                                 </td>
                                                                 <td class=""
@@ -280,7 +280,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Name') }}
                                                                 </td>
                                                                 <td class=""
@@ -291,7 +291,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Lead Stage') }}
                                                                 </td>
                                                                 <td style="padding-left: 10px; font-size: 14px;">
@@ -306,7 +306,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Pipeline') }}
                                                                 </td>
                                                                 <td class=""
@@ -316,7 +316,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Location') }}
                                                                 </td>
                                                                 <td class=""
@@ -327,7 +327,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('User Responsible') }}
                                                                 </td>
                                                                 <td class=""
@@ -349,7 +349,7 @@
                                                             @endphp
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Agency') }}
                                                                 </td>
                                                                 <td class="organization_id-td"
@@ -373,7 +373,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Lead Source') }}
                                                                 </td>
                                                                 <td class="sources-td"
@@ -429,7 +429,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Lead Owner') }}
                                                                 </td>
                                                                 <td class=""
@@ -442,7 +442,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Drive Link') }}
                                                                 </td>
                                                                 <td class="drive_link-td"
@@ -485,7 +485,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Lead Created') }}
                                                                 </td>
                                                                 <td class=""
@@ -495,7 +495,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Date of Last Activity') }}
                                                                 </td>
                                                                 <td class=""
@@ -505,7 +505,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Date of Next Activity') }}
                                                                 </td>
                                                                 <td class=""
@@ -538,7 +538,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 210px; font-size: 14px;">
                                                                     {{ __('Email Address') }}
                                                                 </td>
                                                                 {{-- <td class="email-td"
@@ -562,13 +562,13 @@
                                                               </td>
                                                             </tr>
 
-                                                            <tr>
+                                                            <tr class="d-none">
                                                                 <td class=""
                                                                     style="width: 200px; font-size: 14px;">
                                                                     {{ __('Email Address (Referrer)') }}
                                                                     <i class="ti ti-help"></i>
                                                                 </td>
-                                                                {{-- <td class="referrer_email-td"
+                                                                <td class="referrer_email-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
                                                                     <div class="d-flex edit-input-field-div">
                                                                         <div
@@ -583,7 +583,7 @@
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
                                                                     </div>
-                                                                </td> --}}
+                                                                </td>
                                                                 <td>
                                                                     {{ $lead->referrer_email }}
                                                                 </td>
@@ -591,7 +591,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 210px; font-size: 14px;">
                                                                     {{ __('Mobile Phone') }}
                                                                 </td>
                                                                 {{-- <td class="mobile_phone-td"
@@ -611,16 +611,16 @@
 
                                                                 </td> --}}
                                                                 <td>
-                                                                    {{ $lead->mobile_phone }}
+                                                                    {{ $lead->phone }}
                                                                 </td>
                                                             </tr>
 
-                                                            <tr>
+                                                            <tr class="d-none">
                                                                 <td class=""
-                                                                    style="width: 50px; font-size: 14px;">
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Phone') }}
                                                                 </td>
-                                                                {{-- <td class="phone-td"
+                                                                <td class="phone-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
 
                                                                     <div class="d-flex edit-input-field-div">
@@ -635,18 +635,19 @@
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
                                                                     </div>
-                                                                </td> --}}
+                                                                </td>
                                                                 <td>
                                                                     {{ $lead->phone }}
                                                                 </td>
                                                             </tr>
 
-                                                            <tr>
-                                                                {{-- <td class=""
+                                                            <tr class="d-none" >
+                                                                <td class=""
                                                                     style="width: 130px; font-size: 14px;">
                                                                     {{ __('Email Opted Out') }}
-                                                                </td> --}}
-                                                                {{-- <td class=""
+                                                                </td>
+
+                                                                <td class=""
                                                                     style="padding-left: 10px; font-size: 14px;">
 
 
@@ -662,7 +663,7 @@
                                                                         </button>
 
                                                                     </div>
-                                                                </td> --}}
+                                                                </td>
                                                                 <td>
                                                                     <div
                                                                     class="d-flex align-items-baseline edit-input-field-div">
@@ -701,7 +702,7 @@
                                                                     {{ __('Address') }}
                                                                 </td>
                                                                 {{-- <td class="address-td"
-                                                                    style="min-width: 250PX; font-size: 13px;padding-left:10px;">
+                                                                    style="min-width: 2200px; font-size: 13px;padding-left:10px;">
                                                                     <div class="d-flex edit-input-field-div">
                                                                         <div class="input-group border-0 d-flex">
                                                                             {{ $lead->street . ' ' . $lead->city . ' ' . $lead->satate . ' ' . $lead->country }}
@@ -742,11 +743,11 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 196px; font-size: 14px;">
+                                                                    style="width: 250px; font-size: 14px;">
                                                                     {{ __('Description') }}
                                                                 </td>
                                                                 <td class=""
-                                                                    style="width:550px; padding-left:15px; text-align: justify; font-size: 14px;">
+                                                                    style="width:5200px; padding-left:15px; text-align: justify; font-size: 14px;">
                                                                     {{ $lead->keynotes }}
                                                                 </td>
                                                             </tr>
@@ -774,7 +775,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="font-size: 14px;text-align:right;">
+                                                                    style="width:200px;font-size: 14px;">
                                                                     {{ __('Tag List') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px;">
@@ -789,7 +790,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="accordion-item">
+                                    <div class="accordion-item d-none">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeydetails">
                                             <button class="accordion-button p-2" type="button"
                                                 data-bs-toggle="collapse"
@@ -907,12 +908,7 @@
 
                                                                                 @foreach ($notes as $note)
 
-                                                                                    <div class="ps-3 py-2 d-flex gap-2 align-items-baseline" style="border-bottom: 1px solid rgb(192, 192, 192);">
-                                                                                        <i class="fa-regular fa-square-check" style="color: #000000;"></i>
-                                                                                        <h6 class="fw-bold">
-                                                                                            Open Activity
-                                                                                        </h6>
-                                                                                    </div>
+
                                                                                     <li class="list-group-item px-3 pb-0"
                                                                                         id="lihover">
 
@@ -1044,12 +1040,29 @@
                                                 <div class="accordion" id="accordionPanelsStayOpenExample">
                                                     <!-- Open Accordion Item -->
                                                     <div class="accordion-item">
-                                                        <h2 class="accordion-header" id="panelsStayOpen-headingnote">
+                                                        <h2 class="d-flex justify-between align-items-center accordion-header" id="panelsStayOpen-headingnote">
                                                             <button class="accordion-button p-2" type="button"
                                                                 data-bs-toggle="collapse"
                                                                 data-bs-target="#panelsStayOpen-collapsetasks">
-                                                                {{ __('Tasks') }}
+
+                                                                <div style="position: absolute;right: 27px;z-index: 9999;">
+                                                                    @can('create task')
+                                                                        <a data-size="lg"
+                                                                            data-url="/organiation/1/task?type=lead&typeid={{ $lead->id }}"
+                                                                            data-ajax-popup="true"
+                                                                            data-bs-toggle="tooltip"
+                                                                            title="{{ __('Add Task') }}"
+                                                                            class="btn px-2 text-white"
+                                                                            style="background-color: #313949;">
+                                                                            <i class="ti ti-plus"></i>
+                                                                        </a>
+                                                                    @endcan
+                                                                </div>
+                                                                <span>
+                                                                    {{ __('Tasks') }}
+                                                                </span>
                                                             </button>
+
                                                         </h2>
 
                                                         <div id="panelsStayOpen-collapsetasks"
@@ -1064,25 +1077,19 @@
                                                                             <div class="card-header "
                                                                                 >
                                                                                 <div class="d-flex justify-content-end">
-                                                                                    <div class="float-end">
-                                                                                        @can('create task')
-                                                                                            <a data-size="lg"
-                                                                                                data-url="/organiation/1/task?type=lead&typeid={{ $lead->id }}"
-                                                                                                data-ajax-popup="true"
-                                                                                                data-bs-toggle="tooltip"
-                                                                                                title="{{ __('Add Task') }}"
-                                                                                                class="btn px-2 text-white"
-                                                                                                style="background-color: #313949;">
-                                                                                                <i class="ti ti-plus"></i>
-                                                                                            </a>
-                                                                                        @endcan
-                                                                                    </div>
+
                                                                                 </div>
                                                                             </div>
                                                                             <div class="card-body px-0">
                                                                                 <ul class="list-group list-group-flush mt-2 notes-tbody">
 
                                                                                     @foreach($tasks as $task)
+                                                                                    <div class="ps-3 py-2 d-flex gap-2 align-items-baseline" style="border-bottom: 1px solid rgb(192, 192, 192);">
+                                                                                        <i class="fa-regular fa-square-check" style="color: #000000;"></i>
+                                                                                        <h6 class="fw-bold">
+                                                                                            Open Activity
+                                                                                        </h6>
+                                                                                    </div>
                                                                                         <li class="list-group-item px-3"
                                                                                             id="lihover">
                                                                                             <div class="d-block d-sm-flex align-items-start">
@@ -1104,8 +1111,10 @@
 
                                                                                                                 <span class="d-flex">
                                                                                                                     <div>Status</div>
-                                                                                                                    <div class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }} ml-5">
-                                                                                                                      {{ $task->status == 1 ? 'Completed' : 'On Going' }}
+                                                                                                                    <div class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }} ms-5 py-1">
+                                                                                                                      <span>
+                                                                                                                        {{ $task->status == 1 ? 'Completed' : 'On Going' }}
+                                                                                                                      </span>
                                                                                                                 </div>
                                                                                                                 </span>
                                                                                                                 {{--  --}}

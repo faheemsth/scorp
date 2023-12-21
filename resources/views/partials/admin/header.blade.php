@@ -67,9 +67,11 @@
     @if (\Auth::user()->type == 'super admin')
         <select name="company" id="company" class="form form-select" style="width:15% !important"
             onChange="loginWithCompany();">
-            <option value="">Select Companies</option>
+            <option value="">
+                Select
+            </option>
             @foreach ($all_companies as $key => $comp)
-                <option value="{{ $key }}">{{ $comp }}</option>
+                <option value="{{ $key }}" >{{ $comp }}</option>
             @endforeach
         </select>
     @elseif(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')

@@ -576,7 +576,7 @@
     </div>
 
 
-    <div class="modal" tabindex="-1" role="dialog" id="deal_applications">
+    <div class="modal" tabindex="-1" role="dialog" id="deal_applications" style="z-index: 1150;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -594,8 +594,8 @@
                     <input type="hidden" id="deal_id" value="">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="save-changes-application-status">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark px-2" id="save-changes-application-status">Save changes</button>
+                    <button type="button" class="btn btn-light px-2" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -643,7 +643,7 @@
                         </div>
                         <input name='lead_ids' id="lead_ids" hidden>
                         <div class="col-md-6" id="field_to_update">
-                            
+
                         </div>
                     </div>
 
