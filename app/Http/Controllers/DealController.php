@@ -2,34 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Deal;
+use App\Models\User;
+use App\Models\Label;
+use App\Models\Stage;
+use App\Models\Branch;
+use App\Models\Course;
+use App\Models\Source;
+use App\Models\Utility;
+use App\Models\DealCall;
+use App\Models\DealFile;
+use App\Models\DealNote;
+use App\Models\DealTask;
+use App\Models\Pipeline;
+use App\Models\UserDeal;
+use App\Models\DealEmail;
+use App\Models\ClientDeal;
+use App\Models\University;
 use App\Mail\SendDealEmail;
 use App\Models\ActivityLog;
-use App\Models\ClientDeal;
-use App\Models\ClientPermission;
 use App\Models\CustomField;
-use App\Models\Deal;
-use App\Models\DealApplication;
-use App\Models\DealCall;
-use App\Models\DealDiscussion;
-use App\Models\DealEmail;
-use App\Models\DealFile;
-use App\Models\DealTask;
-use App\Models\Label;
-use App\Models\Pipeline;
-use App\Models\ProductService;
-use App\Models\Source;
-use App\Models\Stage;
-use App\Models\Course;
-use App\Models\University;
-use App\Models\User;
-use App\Models\UserDeal;
-use App\Models\Utility;
-use App\Models\TaskDiscussion;
-use App\Models\Branch;
-use App\Models\DealNote;
+use App\Models\StageHistory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use App\Models\DealDiscussion;
+use App\Models\ProductService;
+use App\Models\TaskDiscussion;
+use App\Models\DealApplication;
+use App\Models\ClientPermission;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class DealController extends Controller
 {
@@ -609,9 +610,28 @@ class DealController extends Controller
             $deal->created_by  = $usr->ownerId();
             $deal->save();
 
+            //Deal Creating Log
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Deal Created',
+                            'message' => 'Deal created successfully.'
+                        ]),
+            'module_id' => $deal->id,
+            'module_type' => 'deal',
+        ];
+        addLogActivity($data);
+
+        //Add Stage History
+        $data_for_stage_history = [
+            'stage_id' => $request->input('stage_id'),
+            'type_id' => $deal->id,
+            'type' => 'deal'
+        ];
+        addLeadHistory($data_for_stage_history);
+
             //send email
             $clients = User::whereIN('id', array_filter($request->input('contact')))->get()->pluck('email', 'id')->toArray();
-
             foreach (array_keys($clients) as $client) {
                 ClientDeal::create(
                     [
@@ -2397,6 +2417,7 @@ class DealController extends Controller
             }
 
             $universities = University::get()->pluck('name', 'id');
+            $universities->prepend('Select Institute');
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
             $statuses = [
@@ -2465,6 +2486,28 @@ class DealController extends Controller
                 'name' => $deal->name . '-' . $request->course . '-' . $university_name . '-' . $request->application_key,
                 'created_by' => \Auth::user()->id
             ]);
+
+
+            //Add Stage History
+            $data_for_stage_history = [
+                'stage_id' => $request->status,
+                'type_id' => $new_app->id,
+                'type' => 'application'
+            ];
+            addLeadHistory($data_for_stage_history);
+
+
+            //Log
+            $data = [
+                'type' => 'info',
+                'note' => json_encode([
+                                'title' => 'Stage Updated',
+                                'message' => 'Application stage updated successfully.'
+                            ]),
+                'module_id' => $new_app->id,
+                'module_type' => 'application',
+            ];
+            addLogActivity($data);
 
             return json_encode([
                 'status' => 'success',
@@ -2930,9 +2973,12 @@ class DealController extends Controller
 
             $applications = DealApplication::where('deal_id', $deal->id)->get();
             $tasks = DealTask::where(['related_to' => $deal->id, 'related_type' => 'deal'])->get();
-            $log_activities = getLogActivity($deal->id);
+            $log_activities = getLogActivity($deal->id, 'deal');
 
-            $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities'))->render();
+             //Getting lead stages history
+             $stage_histories = StageHistory::where('type', 'deal')->where('type_id', $deal->id)->pluck('stage_id')->toArray();
+             
+            $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories'))->render();
 
             return json_encode([
                 'status' => 'success',
@@ -3291,6 +3337,15 @@ class DealController extends Controller
         ];
         addLogActivity($data);
 
+
+        //Add Stage History
+        $data_for_stage_history = [
+            'stage_id' => $stage_id,
+            'type_id' => $deal_id,
+            'type' => 'deal'
+        ];
+        addLeadHistory($data_for_stage_history);
+
         return json_encode([
             'status' => 'success',
             'message' => 'Deal stage successfully udpated!!!'
@@ -3308,7 +3363,11 @@ class DealController extends Controller
         $stages = Stage::get()->pluck('name', 'id')->toArray();
         $universities = University::get()->pluck('name', 'id')->toArray();
 
-        $html = view('deals.detail_application', compact('application', 'stages', 'universities'))->render();
+        //Getting lead stages history
+        $stage_histories = StageHistory::where('type', 'application')->where('type_id', $id)->pluck('stage_id')->toArray();
+
+
+        $html = view('deals.detail_application', compact('application', 'stages', 'universities', 'stage_histories'))->render();
         return json_encode([
             'status' => 'success',
             'app_id' => $application->id,

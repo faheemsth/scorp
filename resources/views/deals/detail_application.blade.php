@@ -94,9 +94,15 @@
                             $done = false;
                         }
 
+                        $is_missed = false;
+                            
+                        if (!empty($stage_histories) && !in_array($key, $stage_histories) && $key <= max($stage_histories)) {
+                            $is_missed = true;
+                        }
+
                         ?>
 
-                        <a type="button" data-application-id="{{ $application->id }}" data-stage-id="{{ $key }}" class="application_stage {{ $application->stage_id == $key ? 'current' : ($done == true ? 'done' : '') }} " style="font-size:13px">{{ $stage }}</a>
+                        <a type="button" data-application-id="{{ $application->id }}" data-stage-id="{{ $key }}" class="application_stage {{ $application->stage_id == $key ? 'current' : ($done == true ? 'done' : '') }} " style="font-size:13px">{{ $stage }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
                         @empty
                         @endforelse
                     </div>

@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 
-use Illuminate\Http\Request;
-use App\Models\DealApplication;
+use App\Models\User;
+use App\Models\Stage;
 use App\Models\ClientDeal;
 use App\Models\University;
-use App\Models\Stage;
-use App\Models\User;
+use App\Models\StageHistory;
+use Illuminate\Http\Request;
+use App\Models\DealApplication;
 
 class ApplicationsController extends Controller
 {
@@ -104,7 +105,7 @@ class ApplicationsController extends Controller
                 ]);
             }
 
-
+             
             return view('applications.index', compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands'));
 
          }else{
@@ -132,6 +133,28 @@ class ApplicationsController extends Controller
         $application_id = $_GET['application_id'];
         $stage_id = $_GET['stage_id'];
         DealApplication::where('id', $application_id)->update(['stage_id' => $stage_id]);
+
+        //Add Stage History
+        $data_for_stage_history = [
+            'stage_id' => $stage_id,
+            'type_id' => $application_id,
+            'type' => 'application'
+        ];
+        addLeadHistory($data_for_stage_history);
+
+
+        //Log
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Stage Updated',
+                            'message' => 'Application stage updated successfully.'
+                        ]),
+            'module_id' => $application_id,
+            'module_type' => 'application',
+        ];
+        addLogActivity($data);
+
         return json_encode([
             'status' => 'success'
         ]);

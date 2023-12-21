@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DealApplication;
 use Exception;
 use SplFileObject;
 use App\Models\Deal;
@@ -10,6 +9,7 @@ use App\Models\Lead;
 use App\Models\User;
 use App\Models\Label;
 use App\Models\Stage;
+use App\Models\Branch;
 use App\Models\Course;
 use App\Models\Source;
 use App\Models\Utility;
@@ -17,29 +17,30 @@ use App\Models\DealCall;
 use App\Models\DealFile;
 use App\Models\LeadCall;
 use App\Models\LeadFile;
+use App\Models\LeadNote;
 use App\Models\Pipeline;
 use App\Models\UserDeal;
 use App\Models\UserLead;
 use App\Models\DealEmail;
 use App\Models\LeadEmail;
 use App\Models\LeadStage;
+use Illuminate\View\View;
 use App\Models\ClientDeal;
+use App\Models\LeadToDeal;
 use App\Models\University;
 use App\Mail\SendLeadEmail;
+use App\Models\Organization;
+use App\Models\StageHistory;
 use Illuminate\Http\Request;
 use App\Models\DealDiscussion;
 use App\Models\LeadDiscussion;
 use App\Models\ProductService;
+use App\Models\DealApplication;
 use App\Models\LeadActivityLog;
-use App\Models\LeadNote;
-use App\Models\Branch;
-use App\Models\LeadToDeal;
-use App\Models\Organization;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\View\View;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use Illuminate\Support\Facades\DB;
 
 
 class LeadController extends Controller
@@ -350,9 +351,6 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
-
-        // dd($request->input());
-
         $usr = \Auth::user();
         if ($usr->can('create lead') ||  \Auth::user()->type == 'super admin') {
             $validator = \Validator::make(
@@ -383,7 +381,6 @@ class LeadController extends Controller
 
             // Default Field Value
             if ($usr->default_pipeline) {
-                // $pipeline = Pipeline::where('created_by', '=', $usr->creatorId())->where('id', '=', $usr->default_pipeline)->first();
                 $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
                 if (!$pipeline) {
                     $pipeline = Pipeline::first();
@@ -429,8 +426,6 @@ class LeadController extends Controller
 
 
                 $users = User::get()->pluck('name', 'id')->toArray();
-
-
                 $new_record_html = view('leads.lead_new_record', compact('lead', 'users'))->render();
 
 
@@ -440,6 +435,28 @@ class LeadController extends Controller
                         'lead_id' => $lead->id,
                     ]
                 );
+
+
+                //Add Stage History
+                $data_for_stage_history = [
+                    'stage_id' => $request->lead_stage,
+                    'type_id' => $lead->id,
+                    'type' => 'lead'
+                ];
+                addLeadHistory($data_for_stage_history);
+
+
+                //Log
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                                    'title' => 'Lead Created',
+                                    'message' => 'Lead created successfully'
+                                ]),
+                    'module_id' => $lead->id,
+                    'module_type' => 'lead',
+                ];
+                addLogActivity($data);
 
                 if (isset($request->lead_assgigned_user) && !empty($request->lead_assgigned_user)) {
                     $usrEmail = User::find($request->lead_assgigned_user);
@@ -485,18 +502,9 @@ class LeadController extends Controller
                     Utility::send_telegram_msg($msg);
                 }
 
+                
 
-                //Log
-                $data = [
-                    'type' => 'info',
-                    'note' => json_encode([
-                                    'title' => 'Lead Created',
-                                    'message' => 'Lead created successfully'
-                                ]),
-                    'module_id' => $lead->id,
-                    'module_type' => 'lead',
-                ];
-                addLogActivity($data);
+                
 
                 return json_encode([
                     'status' => 'success',
@@ -2338,14 +2346,11 @@ class LeadController extends Controller
         $deal->labels      = $lead->labels;
         $deal->status      = 'Active';
         $deal->created_by  = $lead->created_by;
-
         $deal->branch_id = $lead->branch_id;
         $deal->university_id = $request->university_id;
         $deal->assigned_to = $lead->user_id;
         $deal->organization_id = gettype($lead->organization_id) == 'string' ? 0 : $lead->organization_id; 
         $deal->organization_link = $lead->organization_link;
-
-
         $deal->save();
         // end create deal
 
@@ -2470,6 +2475,7 @@ class LeadController extends Controller
         $lead->is_converted = $deal->id;
         $lead->save();
 
+        //Lead Converting Log
         $data = [
             'type' => 'info',
             'note' => json_encode([
@@ -2480,6 +2486,28 @@ class LeadController extends Controller
             'module_type' => 'lead',
         ];
         addLogActivity($data);
+
+        //Deal Creating Log
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Deal Created',
+                            'message' => 'Deal created successfully.'
+                        ]),
+            'module_id' => $deal->id,
+            'module_type' => 'deal',
+        ];
+        addLogActivity($data);
+
+        //Add Stage History
+        $data_for_stage_history = [
+            'stage_id' => $stage->id,
+            'type_id' => $deal->id,
+            'type' => 'deal'
+        ];
+        addLeadHistory($data_for_stage_history);
+
+
 
         //Slack Notification
         $setting  = Utility::settings(\Auth::user()->creatorId());
@@ -2792,9 +2820,10 @@ class LeadController extends Controller
         if ($lead->is_active) {
             $calenderTasks = [];
             $deal =  Deal::where('id', '=', $lead->is_converted)->first();
-            $stageCnt = LeadStage::where('pipeline_id', '=', $lead->pipeline_id)->get();
 
-            $i = 0;
+            $stageCnt = LeadStage::where('pipeline_id', '=', $lead->pipeline_id)->get();
+           
+             $i = 0;
             foreach ($stageCnt as $stage) {
                 $i++;
                 if ($stage->id == $lead->stage_id) {
@@ -2802,16 +2831,19 @@ class LeadController extends Controller
                 }
             }
             $precentage = number_format(($i * 100) / count($stageCnt));
-
             $lead_stages = $stageCnt;
+
 
             $tasks = \App\Models\DealTask::where(['related_to' => $lead->id, 'related_type' => 'lead'])->get();
             $branches = Branch::get()->pluck('name', 'id');
-            $users = User::get()->pluck('name', 'id');
-            $log_activities = getLogActivity($lead->id);
-            
+            $users = allUsers();
+            $log_activities = getLogActivity($lead->id, 'lead');
 
-            $html = view('leads.leadDetail', compact('lead', 'deal', 'stageCnt', 'lead_stages', 'precentage', 'tasks', 'branches', 'users', 'log_activities'))->render();
+
+            //Getting lead stages history
+            $stage_histories = StageHistory::where('type', 'lead')->where('type_id', $lead->id)->pluck('stage_id')->toArray();
+
+            $html = view('leads.leadDetail', compact('lead', 'deal', 'stageCnt', 'lead_stages', 'precentage', 'tasks', 'branches', 'users', 'log_activities', 'stage_histories'))->render();
 
             return json_encode([
                 'status' => 'success',
@@ -2825,6 +2857,29 @@ class LeadController extends Controller
         $lead_id = $_GET['lead_id'];
         $stage_id = $_GET['stage_id'];
         Lead::where('id', $lead_id)->update(['stage_id' => $stage_id]);
+
+
+        //Add Stage History
+        $data_for_stage_history = [
+            'stage_id' => $stage_id,
+            'type_id' => $lead_id,
+            'type' => 'lead'
+        ];
+        addLeadHistory($data_for_stage_history);
+
+
+        //Log
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Stage Updated',
+                            'message' => 'Lead stage updated successfully.'
+                        ]),
+            'module_id' => $lead_id,
+            'module_type' => 'lead',
+        ];
+        addLogActivity($data);
+
         return json_encode([
             'status' => 'success'
         ]);
@@ -3069,13 +3124,13 @@ class LeadController extends Controller
         // end create deal
 
 
-        $application = new DealApplication();
-        $application->application_key =  $app_key;
-        $application->university_id = $request->input('university_id');
-        $application->deal_id = $deal->id;
-        $application->course = '';
-        $application->status = 'pending';
-        $application->save();
+        // $application = new DealApplication();
+        // $application->application_key =  $app_key;
+        // $application->university_id = $request->input('university_id');
+        // $application->deal_id = $deal->id;
+        // $application->course = '';
+        // $application->status = 'pending';
+        // $application->save();
 
 
 
@@ -3133,6 +3188,17 @@ class LeadController extends Controller
         $task->remainder_date = isset($request->remainder_date) && !empty($request->remainder_date) ? $request->remainder_date : date('Y-m-d');
         $task->visibility = 'public';
         $task->save();
+
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Task created',
+                            'message' => 'Task converted successfully.'
+                        ]),
+            'module_id' => $task->id,
+            'module_type' => 'task',
+        ];
+        addLogActivity($data);
 
 
 

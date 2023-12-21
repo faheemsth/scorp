@@ -180,8 +180,8 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                             </span>
                         </td>
                         <td>
-                            {{ $shortened_name = substr($app->application_key, 0, 10) }}
-                            {{ strlen($app->application_key) > 10 ? $shortened_name . '...' : $app->application_key}}
+                          
+                            {{ strlen($app->application_key) > 10 ? substr($app->application_key, 0, 10) . '...' : $app->application_key}}
                         </td>
                         <td>{{ isset($app->university_id) && isset($universities[$app->university_id]) ? $universities[$app->university_id] : '' }}</td>
 

@@ -1,27 +1,14 @@
 @extends('layouts.admin')
 
-@if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' )
-    @php
-        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
-    @endphp
-@elseif(\Auth::user()->type == 'super admin')
-    @php
-        $currentUserCompany = \App\Models\User::where('type', 'company')->first();
-    @endphp
-@elseif(\Auth::user()->type == 'company')
-    @php
-        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
-    @endphp
-@elseif(\Auth::user()->type == 'project director' || \Auth::user()->type == 'project manager')
-    @php
-        $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+
+@if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
+    @php 
+    $com_permissions = [];
+    $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
     @endphp
 @endif
+
 <?php
-$com_permissions = [];
-if(isset($currentUserCompany->id)){
-$com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->get();
-}
 $lead = \App\Models\Lead::first();
 if (isset($lead->is_active) && $lead->is_active) {
     $calenderTasks = [];
@@ -312,25 +299,26 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             @endforeach
                                         </select>
                                     </div>
-                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                  
                                     <div class="col-md-4 mt-1"> <label for="">Created By</label>
                                         <select class="form form-control select2" id="choices-multiple555"
                                             name="created_by[]" multiple style="width: 95%;">
                                             <option value="">Select Brand</option>
+
                                             @foreach ($brands as $brand)
-                                            @if ($brand->id == $currentUserCompany->id)
-                                            <option
-                                            <?= isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' ?>
-                                             value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
-                                            @endif
-                                                @foreach ($com_permissions as $permissions)
-                                                        @if ($permissions->permitted_company_id == $brand->id)
-                                                        <option
-                                                        <?= isset($_GET['created_by']) && in_array($permissions->permitted_company_id, $_GET['created_by']) ? 'selected' : '' ?>
-                                                         value="{{ $permissions->permitted_company_id }}" class="">{{ $brand->name }}</option>
-                                                        @endif
-                                                @endforeach
+                                                @if (\Auth::user()->type == 'super admin')
+                                                    <option value="{{ $brand->id }}" {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }}>{{ $brand->name }}</option>
+                                                @elseif (\Auth::user()->type == 'company' && $brand->id == \Auth::user()->id)
+                                                    <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
+                                                @elseif (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                                    @if(in_array($brand->id, $com_permissions))
+                                                        <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
+                                                    @endif
+                                                @endif
                                             @endforeach
+
+
                                         </select>
                                     </div>
                                     @endif
