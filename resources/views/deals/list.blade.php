@@ -608,7 +608,7 @@
     </div>
 
 <div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg my-0" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Mass Update</h5>

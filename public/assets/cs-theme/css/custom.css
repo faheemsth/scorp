@@ -6,6 +6,7 @@
 
 .modal-content {
     width: 100%;
+    height: 95vh;
     background: #EFF3F7;
     border-radius: 16px
 }

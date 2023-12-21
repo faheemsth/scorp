@@ -294,7 +294,7 @@
 
 <!-- Add Organization -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg my-0" role="document">
         <div class="modal-content">
             <form id="organization-creating-form">
                 @csrf
@@ -319,8 +319,6 @@
 
                     </div>
                 </div>
-                <div class="modal-body">
-
                     <style>
                         .form-group {
                             margin-bottom: 0px;
@@ -335,7 +333,9 @@
                             padding: 3px 3px;
                         }
                     </style>
-
+ <div class="modal-body pt-0 ">
+    <div class="lead-content my-2" style="max-height: 455px; overflow-y: scroll;">
+    <div class="card-body px-2 py-0" >
                     {{-- ACCORDION --}}
                     <div class="accordion" id="accordionPanelsStayOpenExample">
                         {{-- Organizaiton Basic Info --}}
@@ -502,9 +502,9 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
+    </div>
+ </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-dark new-organization-btn">Create</button>

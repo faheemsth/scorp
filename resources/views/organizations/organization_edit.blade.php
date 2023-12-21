@@ -25,7 +25,6 @@
 
             </div>
         </div>
-        <div class="modal-body">
             <style>
                 .form-group {
                     margin-bottom: 0px;
@@ -41,6 +40,10 @@
                 }
             </style>
             {{-- ACCORDION --}}
+            <div class="modal-body pt-0 ">
+                <div class="lead-content my-2" style="max-height: 455px; overflow-y: scroll;">
+                <div class="card-body px-2 py-0" >
+
             <div class="accordion" id="accordionPanelsStayOpenExample">
                 {{-- Organizaiton Basic Info --}}
                 <div class="accordion-item">
@@ -234,11 +237,9 @@
                     </div>
                 </div>
             </div>
-
-
-
-
         </div>
+                </div>
+            </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-dark">Save changes</button>

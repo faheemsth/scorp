@@ -12,8 +12,10 @@
 </style>
 {{ Form::model(\Auth::user(), ['route' => ['organization.tasks.store', \Auth::user()->id], 'method' => 'POST', 'id' => 'create-task', 'style' => 'z-index: 9999999 !important;']) }}
 
-<div class="modal-body">
-    <div class="row">
+
+<div class="modal-body pt-0 ">
+<div class="lead-content my-2" style="max-height: 455px; overflow-y: scroll;">
+<div class="card-body px-2 py-0" >
 
         {{-- ACCORDION --}}
         <div class="accordion" id="accordionPanelsStayOpenExample">
@@ -304,7 +306,7 @@
     </div>
 </div>
 
-
+</div>
 <div class="modal-footer">
     <input type="button" value="{{ __('Cancel') }}" class="btn px-2 btn-light" data-bs-dismiss="modal">
     <input type="submit" value="Create" class="btn  btn-dark px-2 create-task-btn">
@@ -331,7 +333,7 @@
 
         $(".brand_id").on("change", function(){
             var id = $(this).val();
-                    
+
             $.ajax({
                 type: 'GET',
                 url: '{{ route('deal_companyemployees') }}',
