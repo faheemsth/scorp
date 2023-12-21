@@ -444,6 +444,13 @@ $lang=Utility::getValByName('default_language');
         table th{
             font-size: 14px !important;
         }
+        #body::-webkit-scrollbar {
+        width: 0px;
+        display:none;
+    }
+    table{
+        overflow-x:scroll !important;
+    }
 
     </style>
 </head>
@@ -551,19 +558,17 @@ $lang=Utility::getValByName('default_language');
 
                 </div>
                 {{-- <button  class="bg-dark" onclick="myFunction()"
-    style="width: 7%;
-    height: 7%;
-    border-radius: 50%;
-    margin-left: 125px;"
-    >
-        <i class="fa-regular fa-bookmark" style="color: #ffffff;"></i>
-    </button> --}}
+                style="width: 7%;
+                height: 7%;
+                border-radius: 50%;
+                margin-left: 125px;"
+                >
+                    <i class="fa-regular fa-bookmark" style="color: #ffffff;"></i>
+                </button> --}}
             </div>
-
-            {{-- <div id="myDIV" style="position: absolute;width: 15%;height: 100vh;background-color: wheat;">
-                This.
-            </div> --}}
-
+                {{-- <div id="myDIV" style="position: absolute;width: 15%;height: 100vh;background-color: wheat;">
+                    This.
+                </div> --}}
         </div>
 
     </div>

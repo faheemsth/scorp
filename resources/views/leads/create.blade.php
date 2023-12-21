@@ -187,7 +187,7 @@
                                             </td>
                                         </tr>
 
-                                        <tr>
+                                        <tr class="d-none">
                                             <td class="" style="width: 153px; font-size: 13px;">
                                                 {{ __('Email Address (Referrer)') }}
                                             </td>
@@ -198,7 +198,7 @@
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Phone') }}
+                                                {{ __('Mobile Phone') }}
 
                                                 <span class="text-danger">*</span>
                                             </td>
@@ -207,7 +207,7 @@
                                             </td>
                                         </tr>
 
-                                        <tr>
+                                        <tr class="d-none">
                                             <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Mobile Phone') }}
 

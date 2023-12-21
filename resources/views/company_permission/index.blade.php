@@ -5,14 +5,14 @@
 @endsection
 @push('script-page')
 <script>
-   
+
 
     $(".company-permission-checkbox").on("change", function() {
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
         var company_for = $(this).attr('data-for-company');
         var company_permission = $(this).attr('data-permission-company');
         var active = $(this).prop('checked');
-      
+
 
         if (company_for != company_permission) {
             $.ajax({
@@ -44,8 +44,8 @@
 <div class="row">
     <div class="col-12">
         <div class="card">
-            <div class="card-body p-1" style="overflow-x: auto;">
-                <div style="max-height: 400px; overflow-y: auto;">
+            <div class="card-body p-1" style=" overflow-x: scroll;">
+                <div style="">
                     <table class="table" width="100%">
                         <thead>
                             <tr>
