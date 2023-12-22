@@ -54,7 +54,7 @@
     }
 
     .edit-input-field-div:hover {
-        border: 1px solid rgb(224, 224, 224);
+        /* border: 1px solid rgb(224, 224, 224); */
     }
 
     .edit-input-field-div:hover .edit-btn-div {

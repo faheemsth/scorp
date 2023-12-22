@@ -32,8 +32,8 @@
 </style>
 
 {{ Form::open(array('url' => 'deals', 'method' => 'POST', 'id' => 'deal-creating-form')) }}
-<div class="modal-body py-0">
-    <div class="lead-content my-2" style="max-height: 455px; overflow-y: scroll;">
+<div class="modal-body py-0" style="height: 72vh;">
+    <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
         <div class="card-body px-2 py-0" >
                 {{-- Details Pill Start --}}
                     <div class="accordion" id="accordionPanelsStayOpenExample">
@@ -327,7 +327,7 @@
 
 <div class="modal-footer">
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Create')}}" class="btn  btn-primary new-lead-btn">
+    <input type="submit" value="{{__('Create')}}" class="btn  btn-dark px-2 new-lead-btn">
 </div>
 
 {{Form::close()}}

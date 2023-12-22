@@ -36,10 +36,11 @@
         min-width: 70px;
         min-height: 30px;
         align-items: center !important;
+        border: none !important;
     }
 
     .edit-input-field-div .input-group input {
-        border: 0px !important;
+        border: none !important;
     }
 
     .edit-input-field {
@@ -54,7 +55,7 @@
     }
 
     .edit-input-field-div:hover {
-        border: 1px solid rgb(224, 224, 224);
+        /* border: 1px solid rgb(224, 224, 224); */
     }
 
     .edit-input-field-div:hover .edit-btn-div {
@@ -295,7 +296,7 @@
                                                                     {{ __('Lead Stage') }}
                                                                 </td>
                                                                 <td style="padding-left: 10px; font-size: 14px;">
-                                                                    <div class="text-white w-50" style="background-color:#B3CDE1;">
+                                                                    <div class="text-white" style="background-color:#B3CDE1;width: 200px;">
                                                                         <p class="mb-0"
                                                                             style="padding-left: 10px; font-size: 14px;">
                                                                             {{ $lead->stage->name }}
@@ -464,7 +465,7 @@
                                                                         </div>
                                                                         <div class="edit-btn-div">
                                                                             <button
-                                                                                class="btn btn-dark text-white rounded-0 btn-effect-none edit-input"
+                                                                                class="btn btn-dark p-1 text-white rounded-0 btn-effect-none edit-input"
                                                                                 name="drive_link"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
@@ -558,7 +559,7 @@
                                                                     </div>
                                                                 </td> --}}
                                                               <td>
-                                                                {{ $lead->email }}
+                                                                <a href="mailto:{{ $lead->email }}" style="font-size: 14px;"> {{ $lead->email }}</a>
                                                               </td>
                                                             </tr>
 

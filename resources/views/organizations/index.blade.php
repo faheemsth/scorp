@@ -333,8 +333,8 @@
                             padding: 3px 3px;
                         }
                     </style>
- <div class="modal-body pt-0 ">
-    <div class="lead-content my-2" style="max-height: 455px; overflow-y: scroll;">
+ <div class="modal-body pt-0 " style="height: 72vh;">
+    <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
     <div class="card-body px-2 py-0" >
                     {{-- ACCORDION --}}
                     <div class="accordion" id="accordionPanelsStayOpenExample">
