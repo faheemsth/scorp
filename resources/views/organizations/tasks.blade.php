@@ -59,12 +59,12 @@
                         @endif
                         <div class="form-group row ">
                             <label for="branches" class="col-sm-3 col-form-label">Office</label>
-                            <div class="col-sm-6">
-                                <select class="form form-control select2" id="choices-multiple1" name="branch_id">
+                            <div class="col-sm-6" id="branch_div">
+                                <select class="form form-control select2 branch_id" id="choices-multiple1" name="branch_id">
                                     <option value="">Select Office</option>
-                                    @foreach ($branches as $key => $branch)
+                                   {{-- @foreach ($branches as $key => $branch)
                                         <option value="{{ $key }}">{{ $branch }}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             </div>
                         </div>
@@ -90,9 +90,9 @@
                                 <select class="form form-control assigned_to select2" id="choices-multiple4"
                                     name="assigned_to">
                                     <option value="">Select Employee</option>
-                                    @foreach($employees as $key => $emp)
+                                    {{--  @foreach($employees as $key => $emp)
                                         <option value="{{ $key }}">{{ $emp }}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             </div>
                         </div>
@@ -343,7 +343,11 @@
                     data = JSON.parse(data);
 
                     if (data.status === 'success') {
-                        $("#assign_to_div").html(data.html);
+                        $("#assign_to_div").html(data.employees);
+                        select2();
+                        $("#branch_div").html(data.branches);
+                        select2(); 
+                        
                         select2(); // Assuming this is a function to initialize or update a select2 dropdown
                     } else {
                         console.error('Server returned an error:', data.message);
