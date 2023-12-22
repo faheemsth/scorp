@@ -11,7 +11,7 @@ if (!function_exists('countries')) {
     {
         $all_countries = [];
         $contries = \App\Models\Country::get();
-        
+
 
         foreach($contries as $country){
             $all_countries[$country->name] = $country->name;
@@ -113,6 +113,24 @@ if (!function_exists('getLogActivity')) {
     function getLogActivity($id, $type)
     {
         return LogActivity::where('module_id', $id)->where('module_type', $type)->get();
+    }
+}
+if (!function_exists('formatPhoneNumber')) {
+    function formatPhoneNumber($phoneNumber)
+    {
+        // Remove non-numeric characters from the phone number
+        $phoneNumber = preg_replace('/[^0-9]/', '', $phoneNumber);
+
+        // Check if the phone number starts with '92' (country code for Pakistan)
+        if (strpos($phoneNumber, '92') === 0) {
+            // Remove the leading '92' if present
+            $phoneNumber = substr($phoneNumber, 2);
+        }
+
+        // Add the country code '92' to the phone number
+        $formattedPhoneNumber = '92' . $phoneNumber;
+
+        return $formattedPhoneNumber;
     }
 }
 
