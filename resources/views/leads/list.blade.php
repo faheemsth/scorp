@@ -312,9 +312,11 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                 @elseif (\Auth::user()->type == 'company' && $brand->id == \Auth::user()->id)
                                                     <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
                                                 @elseif (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                                    @if(in_array($brand->id, $com_permissions))
-                                                        <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
-                                                    @endif
+                                                    @foreach($com_permissions as $com_permission)
+                                                        @if($brand->id == $com_permission->permitted_company_id)
+                                                            <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
+                                                        @endif
+                                                    @endforeach
                                                 @endif
                                             @endforeach
 
@@ -948,11 +950,13 @@ if (isset($lead->is_active) && $lead->is_active) {
                 success: function(data) {
                     data = JSON.parse(data);
                     if (data.status == 'success') {
-                        openNav(lead_id);
-                        return false;
-                        // $('.lead_stage').removeClass('current');
-                        // currentBtn.addClass('current');
-                        // window.location.href = '/leads/list';
+                        show_toastr('Success', 'Stage updated successfully.', 'success');
+                        if(stage_id == 6 || stage_id == 7){
+                            window.location.href = '/leads/list';
+                        }else{
+                            openNav(lead_id);
+                            return false;
+                        }                        
                     } else {
                         show_toastr('Error', data.message, 'error');
                     }

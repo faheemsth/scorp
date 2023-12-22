@@ -5,8 +5,6 @@
 @endsection
 @push('script-page')
 <script>
-
-
     $(".company-permission-checkbox").on("change", function() {
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
         var company_for = $(this).attr('data-for-company');
@@ -21,7 +19,7 @@
                 data: {
                     _token: CSRF_TOKEN,
                     company_for: company_for,
-                    company_permission : company_permission,
+                    company_permission: company_permission,
                     active: active
                 },
                 dataType: 'JSON',
@@ -45,29 +43,47 @@
     <div class="col-12">
         <div class="card">
             <div class="card-body p-1" style=" overflow-x: scroll;">
+
+                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
+                    <div class="col-3">
+                        <p class="mb-0 pb-0 ps-1">Company Permissions</p>
+                        <div class="dropdown">
+                            <button class="All-leads" type="button">
+                                ALL Permissions
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-9 d-flex justify-content-end gap-2">
+                       
+                        <button class="btn filter-btn-show px-2 btn-dark" style="color:white;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="ti ti-filter" style="font-size:18px"></i>
+                        </button>
+                    </div>
+                </div>
+
+
                 <div style="">
                     <table class="table" width="100%">
                         <thead>
                             <tr>
                                 <th>Project Manager/Branch</th>
                                 @foreach($companies as $company)
-                                    <th>{{$company->name}}</th>
+                                <th>{{$company->name}}</th>
                                 @endforeach
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($employees as $emp)
-                                <tr scope="row">
-                                    <td>{{$emp->name}}</td>
-                                    @foreach($companies as $comp)
-                                        <?php  $permitted_companies = $comp->companyPermissions->pluck('permitted_company_id'); ?>
-                                        <td>
-                                            <input type="checkbox" class="company-permission-checkbox"
-                                                <?= $emp->id == $comp->id ? 'checked disabled' :  (isset($permission_arr[$emp->id][$comp->id]) && $permission_arr[$emp->id][$comp->id] == 'true' ? 'checked' : '') ?>
-                                                id="company-permission-checkbox" data-for-company="{{$emp->id}}" data-permission-company="{{$comp->id}}">
-                                        </td>
-                                    @endforeach
-                                </tr>
+                            <tr scope="row">
+                                <td>{{$emp->name}}</td>
+                                @foreach($companies as $comp)
+                                <?php $permitted_companies = $comp->companyPermissions->pluck('permitted_company_id'); ?>
+                                <td>
+                                    <input type="checkbox" class="company-permission-checkbox" <?= $emp->id == $comp->id ? 'checked disabled' : (isset($permission_arr[$emp->id][$comp->id]) && $permission_arr[$emp->id][$comp->id] == 'true' ? 'checked' : '') ?> id="company-permission-checkbox" data-for-company="{{$emp->id}}" data-permission-company="{{$comp->id}}">
+                                </td>
+                                @endforeach
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>

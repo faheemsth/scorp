@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\CompanyPermission;
 
 class OrganizationController extends Controller
 {
@@ -747,12 +747,12 @@ class OrganizationController extends Controller
             // $test = \App\Models\CompanyPermission::where('company_id', 3179)->where('active', 'true')->pluck('permitted_company_id');
             // $companies = User::where('type', 'company')->whereIn('id', $test)->orwhere('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             // dd($companies);
-
+                $companies = array();
                 if(\Auth::user()->type == 'super admin'){
                     $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
-                }else if(\Auth::user()->type == 'project director' || \Auth::user()->type == 'project manager'){
-                    $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('active', 'true')->get();
-                    $companies = User::where('type', 'company')->whereIn('id', $com_permissions)->orwhere('id', \Auth::user()->created_by)->get()->pluck('name', 'id')->toArray();
+                }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                    $com_permissions = CompanyPermission::where(['user_id' =>  \Auth::user()->id])->pluck('permitted_company_id')->toArray();
+                    $companies = User::whereIn('id',$com_permissions)->where('type','company')->get()->pluck('name', 'id');
                 }else if(\Auth::user()->type == 'company'){
                     $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
                 }
@@ -825,6 +825,8 @@ class OrganizationController extends Controller
 
             $dealTask->name = $request->task_name;
             $dealTask->branch_id = $request->branch_id;
+            $dealTask->brand_id = $request->brand_id;
+            $dealTask->created_by = \Auth::user()->id;
 
             $dealTask->assigned_to = $request->assigned_to;
             $dealTask->assigned_type = $request->assign_type;
