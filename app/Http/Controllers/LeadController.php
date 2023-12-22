@@ -2393,12 +2393,8 @@ class LeadController extends Controller
         $deal->branch_id = $lead->branch_id;
         $deal->university_id = $request->university_id;
         $deal->assigned_to = $lead->user_id;
-<<<<<<< HEAD
         $deal->brand_id = $lead->brand_id;
         $deal->organization_id = gettype($lead->organization_id) == 'string' ? 0 : $lead->organization_id; 
-=======
-        $deal->organization_id = gettype($lead->organization_id) == 'string' ? 0 : $lead->organization_id;
->>>>>>> 69bd379881dd64d988915a079ee77e32e93a32b0
         $deal->organization_link = $lead->organization_link;
         $deal->save();
         // end create deal
