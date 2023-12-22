@@ -430,6 +430,11 @@
                                                                                 </thead>
                                                                                 <tbody class="notes-tbody">
                                                                                     @forelse($deals as $deal)
+                                                                                        @php    
+                                                                                            $users = \App\Models\User::pluck('name', 'id')->toArray();
+                                                                                            $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
+                                                                                        @endphp 
+
                                                                                         <tr>
                                                                                             <td>@php
                                                                                                 $name = $deal->name;
@@ -440,8 +445,8 @@
                                                                                             @endphp </td>
                                                                                             
                                                                                             <td>{{ '1-' . (empty($deal->intake_month) ? 'Jan' : $deal->intake_month) . '-' . (empty($deal->intakeYear) ? date('Y') : $deal->intakeYear) }}</td>
-                                                                                            <td></td>
-                                                                                            <td></td>
+                                                                                            <td>{{ !empty($deal->brand_id) ? (isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '') : '' }}</td>
+                                                                                            <td>{{ isset($branch->name) ? $branch->name : '' }}</td>
                                                                                             <td>{{ isset($deal->assigned_to) && isset($organizations[$deal->assigned_to]) ? $organizations[$deal->assigned_to] : '' }}</td>
                                                                                             <td>{{ $stages[$deal->stage_id] }}</td>
                                                                                         </tr>
@@ -488,14 +493,19 @@
                                                                 <tbody>
 
                                                                     @forelse($applications as $app)
+                                                                        @php 
+                                                                            $university = \App\Models\University::where('id', $app->university_id)->first();
+                                                                            $deal = \App\Models\Deal::where('id', $app->deal_id)->first();
+                                                                            $users = \App\Models\User::pluck('name', 'id')->toArray();
+                                                                            $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
+                                                                        @endphp 
                                                                         <tr>
                                                                             <td>{{ $universities[$app->university_id] }}</td>
-                                                                            <td> </td>
-                                                                            <td> </td>
-                                                                            <td> </td>
-                                                                            <td> </td>
-                                                                            <td><span class="badge {{ $app->status != 'Approved' ? 'bg-warning-scorp' : 'bg-success-scorp' }}"> {{$app->status}}</span></td>
-                                                                            
+                                                                            <td> {{ $app->intake }} </td>
+                                                                            <td> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }}  </td>
+                                                                            <td> {{ isset($branch->name) ? $branch->name : ''  }} </td>
+                                                                            <td> {{ $users[$deal->assigned_to] }} </td>
+                                                                            <td><span class="badge {{ $app->status != 'Approved' ? 'bg-warning-scorp' : 'bg-success-scorp' }}"> {{ $app->status }}</span></td>
                                                                         </tr>
                                                                     @empty
                                                                 @endforelse

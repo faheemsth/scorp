@@ -8,7 +8,7 @@
 
         <div class="col-12 form-group py-1">
             <label for="">Description</label>
-            <textarea name="description" class="form form-control" cols="10" rows="10"></textarea>
+            <textarea name="description" class="form form-control" cols="10" rows="1"></textarea>
         </div>
 
     </div>

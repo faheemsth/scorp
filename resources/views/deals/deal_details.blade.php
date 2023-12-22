@@ -28,10 +28,12 @@
     .edit-input-field-div .input-group {
         min-width: 70px;
         min-height: 30px;
+        border: none !important;
     }
 
     .edit-input-field-div .input-group input {
-        border: 0px !important;
+
+        border: none !important;
     }
 
     .edit-input-field {
@@ -46,7 +48,7 @@
     }
 
     .edit-input-field-div:hover {
-        border: 1px solid rgb(224, 224, 224);
+        /* border: 1px solid rgb(224, 224, 224); */
     }
 
     .edit-input-field-div:hover .edit-btn-div {
@@ -224,10 +226,10 @@
                 }
 
                 $is_missed = false;
-                            
+
                 if (!empty($stage_histories) && !in_array($stage->id, $stage_histories) && $stage->id <= max($stage_histories)) {
                     $is_missed = true;
-                   
+
                 }
                 ?>
 
@@ -250,10 +252,10 @@
                 }
 
                 $is_missed = false;
-                            
+
                 if (!empty($stage_histories) && !in_array($key, $stage_histories) && $key <= max($stage_histories)) {
                     $is_missed = true;
-                   
+
                 }
 
                 ?>
@@ -781,7 +783,7 @@
                                                                         <div class="card-header px-0 pt-0"
                                                                             style="padding-bottom: 18px;">
                                                                             {{ Form::model($deal, array('route' => array('deals.notes.store', $deal->id), 'method' => 'POST', 'id' => 'create-notes' ,'style' => 'z-index: 9999999 !important;')) }}
-                                                                            <textarea name="description" id="description" class="form form-control" cols="10" rows="10"></textarea>
+                                                                            <textarea name="description" id="description" class="form form-control" cols="10" rows="1"></textarea>
                                                                             <input type="hidden" id="note_id" name="note_id">
                                                                             <div class="d-flex justify-content-end mt-2">
                                                                                 <button type="button" id="cancelNote" class="btn btn-secondary mx-2">Cancel</button>

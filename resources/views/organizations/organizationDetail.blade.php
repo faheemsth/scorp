@@ -27,10 +27,11 @@
     .edit-input-field-div .input-group {
         min-width: 70px;
         min-height: 30px;
+        border: none !important;
     }
 
     .edit-input-field-div .input-group input {
-        border: 0px !important;
+        border: none !important;
     }
 
     .edit-input-field {
@@ -45,7 +46,7 @@
     }
 
     .edit-input-field-div:hover {
-        border: 1px solid rgb(224, 224, 224);
+        /* border: 1px solid rgb(224, 224, 224); */
     }
 
     .edit-input-field-div:hover .edit-btn-div {

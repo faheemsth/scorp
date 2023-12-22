@@ -77,7 +77,7 @@
                                     @foreach ($orgs as $key => $org)
                                         <option value="{{ $key }}"
                                             {{ $key == $task->organization_id ? 'selected' : '' }}>
-                                            
+
                                             {{ $org }}
                                         </option>
                                     @endforeach
@@ -158,13 +158,13 @@
             {{-- Organizaiton Contact Info --}}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="ture"
                         aria-controls="panelsStayOpen-collapseTwo">
                         ADDITIONAL INFORMATION
                     </button>
                 </h2>
-                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-collapseTwo show" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingTwo">
                     <div class="accordion-body">
                         <div class="form-group row ">
@@ -200,7 +200,7 @@
                         RELATED TO
                     </button>
                 </h2>
-                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse shoe"
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
 
@@ -212,7 +212,7 @@
                             </label>
                             <div class="col-sm-6">
 
-                                <select class="form form-control select2 related_type" disabled readonly id="choices-multiple6" 
+                                <select class="form form-control select2 related_type" disabled readonly id="choices-multiple6"
                                     name="related_type">
                                     <option value="">Select type</option>
                                     <option value="organization"
@@ -249,13 +249,13 @@
             {{-- Organizaiton Description --}}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#panelsStayOpen-description" aria-expanded="false"
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-description" aria-expanded="ture"
                         aria-controls="panelsStayOpen-description">
                         DESCRIPTION INFORMATION
                     </button>
                 </h2>
-                <div id="panelsStayOpen-description" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-description" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
                         <textarea name="description" id="" cols="30" rows="3" class="form form-control">{{ $task->description }}</textarea>
@@ -267,13 +267,13 @@
             {{-- Organizaiton Description --}}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#panelsStayOpen-description" aria-expanded="false"
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-description" aria-expanded="ture"
                         aria-controls="panelsStayOpen-description">
                         PERMISSIONS
                     </button>
                 </h2>
-                <div id="panelsStayOpen-description" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-description" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
                         <div class="form-group row">

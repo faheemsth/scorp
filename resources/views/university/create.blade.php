@@ -1,5 +1,8 @@
 {{ Form::open(array('url' => 'university', 'files' => true)) }}
-<div class="modal-body">
+<div class="modal-body pt-0 " style="height: 80vh;">
+    <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
+    <div class="card-body px-2 py-0" >
+
     <div class="row">
         <div class="form-group col-md-6 py-0">
             {{ Form::label('name', __('Institute Category'),['class'=>'form-label']) }}
@@ -62,6 +65,8 @@
             {{ Form::label('name', __('Note'),['class'=>'form-label']) }}
             {{ Form::textarea('note', '', array('class' => 'form-control','required'=>'required')) }}
         </div>
+    </div>
+    </div>
     </div>
 </div>
 <div class="modal-footer">
