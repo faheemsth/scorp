@@ -2731,8 +2731,8 @@ class DealController extends Controller
                 $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
                 ->where('created_by', \Auth::user()->id)->get();
             }
-            
-               
+
+
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('deals.tasks_list_ajax',compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'))->render();
@@ -2787,9 +2787,9 @@ class DealController extends Controller
             ->orderBy('task_discussions.created_at', 'DESC')
             ->get()
             ->toArray();
+            $log_activities = getLogActivity($taskId, 'task');
 
-
-        $html = view('deals.task_details', compact('task', 'branches', 'users', 'deals', 'stages', 'discussions'))->render();
+        $html = view('deals.task_details', compact('task', 'branches', 'users', 'deals', 'stages','log_activities', 'discussions'))->render();
 
         return json_encode([
             'status' => 'success',
@@ -2976,7 +2976,7 @@ class DealController extends Controller
 
              //Getting lead stages history
              $stage_histories = StageHistory::where('type', 'deal')->where('type_id', $deal->id)->pluck('stage_id')->toArray();
-             
+
             $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories'))->render();
 
             return json_encode([
@@ -3405,7 +3405,7 @@ class DealController extends Controller
     public function updateBulkTask(Request $request){
 
         $ids = explode(',',$request->tasks_ids);
-        
+
         if(isset($request->task_name)){
 
             DealTask::whereIn('id',$ids)->update(['name' => $request->task_name]);
@@ -3472,7 +3472,7 @@ class DealController extends Controller
         $id = $_GET['id'];
 
         $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
-        
+
 
         $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
         foreach ($employees as $key => $user) {
