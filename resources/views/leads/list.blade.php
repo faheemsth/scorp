@@ -312,9 +312,11 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                 @elseif (\Auth::user()->type == 'company' && $brand->id == \Auth::user()->id)
                                                     <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
                                                 @elseif (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                                    @if(in_array($brand->id, $com_permissions))
-                                                        <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
-                                                    @endif
+                                                    @foreach($com_permissions as $com_permission)
+                                                        @if($brand->id == $com_permission->permitted_company_id)
+                                                            <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
+                                                        @endif
+                                                    @endforeach
                                                 @endif
                                             @endforeach
 

@@ -1754,5 +1754,5 @@ Route::get('/logged_in_as_user/{id}','DashboardController@loggedInAsUser');
 //////////////////////////Global Search
 Route::get('/global-search', [GlobalSearchController::class, 'index'])->name('global-search');
 
-
+Route::get('/lead/companyEmployees', [LeadController::class, 'getCompanyEmployees'])->name('lead_companyemployees');
 Route::get('/deal/companyEmployees', [DealController::class, 'getCompanyEmployees'])->name('deal_companyemployees');

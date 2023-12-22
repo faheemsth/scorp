@@ -44,36 +44,7 @@
                                     placeholder="Task Name" name='task_name'>
                             </div>
                         </div>
-
-                        <div class="form-group row ">
-                            <label for="branches" class="col-sm-3 col-form-label">Offfice</label>
-                            <div class="col-sm-6">
-                                <select class="form form-control select2" id="choices-multiple1" name="branch_id">
-                                    <option value="">Select Office</option>
-                                    @foreach ($branches as $key => $branch)
-                                        <option value="{{ $key }}">{{ $branch }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group row d-none">
-                            <label for="organization" class="col-sm-3 col-form-label">Agency
-
-                                <span class="text-danger">*</span>
-                            </label>
-                            <div class="col-sm-6">
-                                <select class="form form-control select2 organization_id" id="choices-multiple2"
-                                    name="organization_id">
-                                    <option value="">Select Agency</option>
-                                    @foreach ($orgs as $key => $org)
-                                        <option value="{{ $key }}">{{ $org }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'project director' || \Auth::user()->type == 'project manager')
+                        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                         <div class="form-group row ">
                             <label for="branches" class="col-sm-3 col-form-label">Brands</label>
                             <div class="col-sm-6">
@@ -86,8 +57,19 @@
                             </div>
                         </div>
                         @endif
+                        <div class="form-group row ">
+                            <label for="branches" class="col-sm-3 col-form-label">Office</label>
+                            <div class="col-sm-6">
+                                <select class="form form-control select2" id="choices-multiple1" name="branch_id">
+                                    <option value="">Select Office</option>
+                                    @foreach ($branches as $key => $branch)
+                                        <option value="{{ $key }}">{{ $branch }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
-                        <div class="form-group row">
+                        <div class="form-group row d-none">
                             <label for="type" class="col-sm-3 col-form-label">Assign Type <span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-6">
@@ -115,6 +97,21 @@
                             </div>
                         </div>
 
+                        <div class="form-group row d-none">
+                            <label for="organization" class="col-sm-3 col-form-label">Agency
+
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-6">
+                                <select class="form form-control select2 organization_id" id="choices-multiple2"
+                                    name="organization_id">
+                                    <option value="">Select Agency</option>
+                                    @foreach ($orgs as $key => $org)
+                                        <option value="{{ $key }}">{{ $org }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="form-group row d-none">
                             <label for="organization" class="col-sm-3 col-form-label">Category</label>
