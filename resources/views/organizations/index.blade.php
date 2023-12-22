@@ -382,7 +382,7 @@
                                     ORGANIZATION CONTACT DETAILS
                                 </button>
                             </h2>
-                            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingTwo">
                                 <div class="accordion-body">
                                     <div class="form-group row">
                                         <label for="phone" class="col-sm-3 col-form-label">Phone</label>
@@ -443,7 +443,7 @@
                                     ADDRESS INFORMATION
                                 </button>
                             </h2>
-                            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingThree">
                                 <div class="accordion-body">
 
                                     <div class="form-group row">
@@ -495,7 +495,7 @@
                                     DESCRIPTION INFORMATION
                                 </button>
                             </h2>
-                            <div id="panelsStayOpen-description" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                            <div id="panelsStayOpen-description" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingThree">
                                 <div class="accordion-body">
                                     <textarea name="organization_description" id="" cols="30" rows="3" class="form form-control"></textarea>
                                 </div>

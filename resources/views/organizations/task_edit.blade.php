@@ -77,7 +77,7 @@
                                     @foreach ($orgs as $key => $org)
                                         <option value="{{ $key }}"
                                             {{ $key == $task->organization_id ? 'selected' : '' }}>
-                                            
+
                                             {{ $org }}
                                         </option>
                                     @endforeach
@@ -164,7 +164,7 @@
                         ADDITIONAL INFORMATION
                     </button>
                 </h2>
-                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-collapseTwo show" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingTwo">
                     <div class="accordion-body">
                         <div class="form-group row ">
@@ -200,7 +200,7 @@
                         RELATED TO
                     </button>
                 </h2>
-                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse shoe"
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
 
@@ -212,7 +212,7 @@
                             </label>
                             <div class="col-sm-6">
 
-                                <select class="form form-control select2 related_type" disabled readonly id="choices-multiple6" 
+                                <select class="form form-control select2 related_type" disabled readonly id="choices-multiple6"
                                     name="related_type">
                                     <option value="">Select type</option>
                                     <option value="organization"
@@ -255,7 +255,7 @@
                         DESCRIPTION INFORMATION
                     </button>
                 </h2>
-                <div id="panelsStayOpen-description" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-description" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
                         <textarea name="description" id="" cols="30" rows="3" class="form form-control">{{ $task->description }}</textarea>
@@ -273,7 +273,7 @@
                         PERMISSIONS
                     </button>
                 </h2>
-                <div id="panelsStayOpen-description" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-description" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
                         <div class="form-group row">

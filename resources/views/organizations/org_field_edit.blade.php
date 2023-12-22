@@ -22,4 +22,4 @@
         <button class="btn btn-sm btn-primary mx-2 edit-btn-data" data-name="{{$name}}" style="padding: 10px;"><i class="ti ti-pencil"></i></button>
         <button class="btn btn-sm btn-secondary edit-lead-remove" data-name="{{$name}}" style="padding: 10px;"><i class="ti ti-minus"></i></button>
     </div>
-</div> 
+</div>
