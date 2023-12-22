@@ -62,9 +62,9 @@
                             <div class="col-sm-6" id="branch_div">
                                 <select class="form form-control select2 branch_id" id="choices-multiple1" name="branch_id">
                                     <option value="">Select Office</option>
-                                    @foreach ($branches as $key => $branch)
+                                   {{-- @foreach ($branches as $key => $branch)
                                         <option value="{{ $key }}">{{ $branch }}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             </div>
                         </div>
@@ -90,9 +90,9 @@
                                 <select class="form form-control assigned_to select2" id="choices-multiple4"
                                     name="assigned_to">
                                     <option value="">Select Employee</option>
-                                    @foreach($employees as $key => $emp)
+                                    {{--  @foreach($employees as $key => $emp)
                                         <option value="{{ $key }}">{{ $emp }}</option>
-                                    @endforeach
+                                    @endforeach --}}
                                 </select>
                             </div>
                         </div>
