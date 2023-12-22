@@ -40,7 +40,7 @@
 </style>
 
 {{ Form::open(array('url' => 'leads', 'method' => 'POST', 'id' => 'lead-creating-form')) }}
-<div class="modal-body pt-0" style="height: 72vh;" >
+<div class="modal-body pt-0" style="height: 80vh;" >
     <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
         <div class="card-body px-2 py-0">
             {{-- Details Pill Start --}}
