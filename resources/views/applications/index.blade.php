@@ -180,7 +180,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                             </span>
                         </td>
                         <td>
-                          
+
                             {{ strlen($app->application_key) > 10 ? substr($app->application_key, 0, 10) . '...' : $app->application_key}}
                         </td>
                         <td>{{ isset($app->university_id) && isset($universities[$app->university_id]) ? $universities[$app->university_id] : '' }}</td>
@@ -194,28 +194,31 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         <td>
 
 
-                            @can('edit application')
-                            <div class="action-btn ms-2">
+                            <div class="d-flex justify-center align-items-center">
+                                @can('edit application')
+
 
                                 <a data-size="lg" title="{{ __('Edit Application') }}" href="#" class="btn px-2 btn-dark mx-1" data-url="{{ route('deals.application.edit', $app->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Application') }}" data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
                                     <i class="ti ti-edit"></i>
                                 </a>
 
-                            </div>
+
                             @endcan
 
                             @can('delete application')
-                            <div class="action-btn ms-2">
+
                                 {!! Form::open([
                                 'method' => 'DELETE',
                                 'route' => ['deals.application.destroy', $app->id],
                                 'id' => 'delete-form-' . $app->id,
+                                'class' => 'mb-0',
                                 ]) !!}
-                                <a href="#" class="mx-3 btn btn-sm bg-danger  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i class="ti ti-trash text-white"></i></a>
+                                <a href="#" class="mx-2 btn px-2 bg-danger  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i class="ti ti-trash text-white"></i></a>
 
                                 {!! Form::close() !!}
-                            </div>
+
                             @endcan
+                            </div>
 
 
 

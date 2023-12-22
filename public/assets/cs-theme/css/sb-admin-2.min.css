@@ -6226,7 +6226,6 @@ a.close.disabled {
 
 .modal-open .modal {
     overflow-x: hidden;
-    overflow-y: auto
 }
 
 .modal {
@@ -6244,7 +6243,7 @@ a.close.disabled {
 .modal-dialog {
     position: relative;
     width: auto;
-    margin: .5rem;
+    margin:.5rem;
     pointer-events: none
 }
 
@@ -6260,7 +6259,8 @@ a.close.disabled {
 }
 
 .modal.show .modal-dialog {
-    transform: none
+    transform: none;
+    margin: 0px auto;
 }
 
 .modal.modal-static .modal-dialog {
