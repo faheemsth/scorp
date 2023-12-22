@@ -13,6 +13,7 @@ class Lead extends Model
         'user_id',
         'pipeline_id',
         'stage_id',
+        'brand_id',
         'sources',
         'products',
         'notes',

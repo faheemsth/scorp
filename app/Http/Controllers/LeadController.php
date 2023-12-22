@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
+use App\Models\CompanyPermission;
 
 class LeadController extends Controller
 {
@@ -324,6 +324,16 @@ class LeadController extends Controller
                 $branches = Branch::where(['created_by' => \Auth::user()->id])->get()->pluck('name', 'id');
                 $users = User::where('created_by', '=', \Auth::user()->creatorId())->where('type', '!=', 'client')->where('type', '!=', 'company')->where('id', '!=', \Auth::user()->id)->get()->pluck('name', 'id');
             }
+            $companies = array();
+
+            if(\Auth::user()->type == 'super admin'){
+                $companies = User::where('type','company')->get()->pluck('name', 'id');
+            }else if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director'){
+                $company_per = CompanyPermission::where(['user_id' =>  \Auth::user()->id])->pluck('permitted_company_id')->toArray();
+                $companies = User::whereIn('id',$company_per)->where('type','company')->get()->pluck('name', 'id');
+            }else{
+
+            }
 
             // $users->prepend(__('Select User'), '');
 
@@ -336,10 +346,35 @@ class LeadController extends Controller
             $sources = Source::get()->pluck('name', 'id');
             $countries = $this->countries_list();
 
-            return view('leads.create', compact('users', 'stages', 'branches', 'organizations', 'sources', 'countries'));
+            return view('leads.create', compact('users','companies' ,'stages', 'branches', 'organizations', 'sources', 'countries'));
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
         }
+    }
+
+    public function getCompanyEmployees(){
+        $id = $_GET['id'];
+
+        $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
+        $branches = Branch::where('created_by', $id)->pluck('name', 'id')->toArray();
+        
+        $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="lead_assgigned_user" required> <option value="">Select User</option> ';
+        foreach ($employees as $key => $user) {
+            $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        }
+        $html .= '</select>';
+        
+        $html1 = ' <select class="form form-control lead_branch select2" id="choices-multiple4" name="lead_branch" required> <option value="">Select Branch</option> ';
+        foreach ($branches as $key => $branch) {
+            $html1 .= '<option value="' . $key . '">' . $branch . '</option> ';
+        }
+        $html1 .= '</select>';
+
+        return json_encode([
+            'status' => 'success',
+            'employees' => $html,
+            'branches' => $html1,
+        ]);
     }
 
     /**
@@ -351,6 +386,7 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
+        
         $usr = \Auth::user();
         if ($usr->can('create lead') ||  \Auth::user()->type == 'super admin') {
             $validator = \Validator::make(
@@ -404,7 +440,8 @@ class LeadController extends Controller
                 $lead->email       = $request->lead_email;
                 $lead->phone       = $request->lead_phone;
                 $lead->mobile_phone = $request->lead_mobile_phone;
-                $lead->branch_id      = gettype($request->lead_branch) == 'string' ? 0 : $request->lead_branch;
+                $lead->branch_id      = $request->lead_branch;
+                $lead->brand_id      = $request->brand_id;
                 $lead->organization_id = gettype($request->lead_organization) == 'string' ? 0 : $request->lead_organization;
                 $lead->organization_link = $request->lead_organization_link;
                 $lead->sources = $request->lead_sources;
