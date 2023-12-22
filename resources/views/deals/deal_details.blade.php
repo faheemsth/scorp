@@ -783,7 +783,7 @@
                                                                         <div class="card-header px-0 pt-0"
                                                                             style="padding-bottom: 18px;">
                                                                             {{ Form::model($deal, array('route' => array('deals.notes.store', $deal->id), 'method' => 'POST', 'id' => 'create-notes' ,'style' => 'z-index: 9999999 !important;')) }}
-                                                                            <textarea name="description" id="description" class="form form-control" cols="10" rows="10"></textarea>
+                                                                            <textarea name="description" id="description" class="form form-control" cols="10" rows="1"></textarea>
                                                                             <input type="hidden" id="note_id" name="note_id">
                                                                             <div class="d-flex justify-content-end mt-2">
                                                                                 <button type="button" id="cancelNote" class="btn btn-secondary mx-2">Cancel</button>

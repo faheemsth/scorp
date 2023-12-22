@@ -9,7 +9,7 @@
 
         <div class="col-12 form-group">
             <label for="">Description</label>
-            <textarea name="description" class="form form-control" cols="10" rows="10">{{$note->description}} </textarea>
+            <textarea name="description" class="form form-control" cols="10" rows="1">{{$note->description}} </textarea>
         </div>
 
     </div>

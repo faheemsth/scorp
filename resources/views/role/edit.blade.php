@@ -1,5 +1,7 @@
 {{Form::model($role,array('route' => array('roles.update', $role->id), 'method' => 'PUT')) }}
-<div class="modal-body">
+<div class="modal-body pt-0 " style="height: 72vh;">
+    <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
+    <div class="card-body px-2 py-0" >
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="form-group">
@@ -1259,6 +1261,8 @@
             </div>
         </div>
 
+    </div>
+    </div>
     </div>
 </div>
 <div class="modal-footer me-5">

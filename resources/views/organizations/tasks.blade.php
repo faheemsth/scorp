@@ -147,7 +147,7 @@
                         ADDITIONAL INFORMATION
                     </button>
                 </h2>
-                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingTwo">
                     <div class="accordion-body">
                         <div class="form-group row ">
@@ -184,7 +184,7 @@
                 </h2>
 
 
-                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
                         <div class="form-group row">
@@ -264,7 +264,7 @@
                         DESCRIPTION INFORMATION
                     </button>
                 </h2>
-                <div id="panelsStayOpen-description" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-description" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
                         <textarea name="description" id="" cols="30" rows="3" class="form form-control"></textarea>
@@ -282,7 +282,7 @@
                         PERMISSIONS
                     </button>
                 </h2>
-                <div id="panelsStayOpen-description" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-description" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingfour">
                     <div class="accordion-body">
                         <div class="form-group row">
