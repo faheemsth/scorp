@@ -175,8 +175,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         </td>
                         <td>
                             <span style="cursor:pointer" class="hyper-link" @can('view application') onclick="openSidebar('deals/'+{{ $app->id }}+'/detail-application')" @endcan>
-                                {{ $shortened_name = substr($app->name, 0, 10) }}
-                                {{ strlen($app->name) > 10 ? $shortened_name . '...' : $app->name }}
+                                {{ strlen($app->name) > 10 ? substr($app->name, 0, 10) . '...' : $app->name }}
                             </span>
                         </td>
                         <td>

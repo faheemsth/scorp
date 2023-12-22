@@ -790,8 +790,6 @@
                             $("#stage_id").val(stage_id);
                             $("#admission-application").html(data.html);
                             $("#deal_applications").modal('show');
-
-
                         }
                     }
                 });
@@ -810,6 +808,7 @@
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
                         openNav(deal_id);
+                        //window.location.href = '/deals/list';
 
                     } else {
                         show_toastr('Error', data.message, 'error');
