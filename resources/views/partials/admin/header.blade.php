@@ -70,6 +70,7 @@
             <option value="">
                 Select
             </option>
+            <option value="{{ Auth::id() }}" {{ Auth::id() == 1? 'selected':'' }}>{{ Auth::user()->name }}</option>
             @foreach ($all_companies as $key => $comp)
                 <option value="{{ $key }}" >{{ $comp }}</option>
             @endforeach
@@ -81,7 +82,7 @@
                 <option value="">Select Companies</option>
                 @foreach ($all_companies as $key => $comp)
                     @if ($key == $currentUserCompany->id)
-                        <option value="{{ $key }}"><a
+                        <option value="{{ $key }}" selected><a
                                 href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a></option>
                     @endif
                     @foreach ($com_permissions as $com_per)
@@ -102,7 +103,7 @@
                     <option value="{{ $adminOption->id }}">{{ $adminOption->name }}</option>
                 @endif
                 @foreach ($all_companies as $key => $comp)
-                    <option value="{{ $key }}">{{ $comp }}</option>
+                    <option value="{{ $key }}" {{ Auth::id() == $key? 'selected':'' }}>{{ $comp }}</option>
                 @endforeach
             </select>
         @elseif (Session::get('auth_type') == \Auth::user()->type ||
@@ -117,7 +118,7 @@
                 @foreach ($all_companies as $key => $comp)
                     @foreach ($com_permissions as $com_per)
                         @if ($com_per->permitted_company_id == $key)
-                            <option value="{{ $key }}"><a
+                            <option value="{{ $key }}" {{ Auth::id() == $key? 'selected':'' }}><a
                                     href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a>
                             </option>
                         @endif
