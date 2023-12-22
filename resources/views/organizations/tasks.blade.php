@@ -188,8 +188,9 @@
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
                         <div class="form-group row">
-                            <label for="website" class="col-sm-3 col-form-label">Related Type <span
-                                    class="text-danger">*</span></label>
+                            <label for="website" class="col-sm-3 col-form-label">Related Type 
+                                <span
+                                    class="text-danger"></span></label>
                             <div class="col-sm-6">
                                 @if (isset($type) && !empty($type))
                                     <select class="form form-control select2 related_type" disabled
@@ -217,8 +218,9 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="website" class="col-sm-3 col-form-label">Related To <span
-                                    class="text-danger">*</span></label>
+                            <label for="website" class="col-sm-3 col-form-label">Related To 
+                                <span
+                                    class="text-danger"></span></label>
                             <div class="col-sm-6" id="related_to_div">
 
                                 @if (isset($typeId) && !empty($typeId))
