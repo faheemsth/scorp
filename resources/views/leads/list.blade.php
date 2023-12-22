@@ -948,11 +948,13 @@ if (isset($lead->is_active) && $lead->is_active) {
                 success: function(data) {
                     data = JSON.parse(data);
                     if (data.status == 'success') {
-                        openNav(lead_id);
-                        return false;
-                        // $('.lead_stage').removeClass('current');
-                        // currentBtn.addClass('current');
-                        // window.location.href = '/leads/list';
+                        show_toastr('Success', 'Stage updated successfully.', 'success');
+                        if(stage_id == 6 || stage_id == 7){
+                            window.location.href = '/leads/list';
+                        }else{
+                            openNav(lead_id);
+                            return false;
+                        }                        
                     } else {
                         show_toastr('Error', data.message, 'error');
                     }

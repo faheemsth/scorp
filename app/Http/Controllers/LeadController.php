@@ -53,6 +53,7 @@ class LeadController extends Controller
     public function index()
     {
         if (\Auth::user()->can('manage lead')) {
+
             if (\Auth::user()->default_pipeline) {
                 $pipeline = Pipeline::where('id', '=', \Auth::user()->default_pipeline)->first();
 
@@ -64,7 +65,8 @@ class LeadController extends Controller
             }
 
             $pipelines = Pipeline::get()->pluck('name', 'id');
-            $total_records = Lead::count();
+            
+            //$total_records = Lead::count();
 
             if (\Auth::user()->can('view all leads')) {
                 $total_records = Lead::count();
@@ -164,7 +166,8 @@ class LeadController extends Controller
             if (\Auth::user()->type == 'super admin') {
                 $pipeline = Pipeline::get();
                 $total_records = Lead::count();
-                $leads_query = Lead::select('leads.*');
+                $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id');
+
                 foreach ($filters as $column => $value) {
                     if ($column === 'name') {
                         $leads_query->whereIn('name', $value);
@@ -187,14 +190,9 @@ class LeadController extends Controller
                     $leads_query->Where('leads.name', 'like', '%' . $g_search . '%');
                     $leads_query->orWhere('leads.email', 'like', '%' . $g_search . '%');
                     $leads_query->orWhere('leads.phone', 'like', '%' . $g_search . '%');
-                }
-
-
-
-                $total_records =  $leads_query->count();
-                $leads = $leads_query->groupBy('leads.id')->orderBy('leads.created_at', 'desc')->skip($start)->take($num_results_on_page)->get();
+                }   
                 $companies = User::get()->pluck('name', 'id');
-             } else {
+            } else {
 
                 if (\Auth::user()->default_pipeline) {
                     $pipeline = Pipeline::where('id', '=', \Auth::user()->default_pipeline)->first();
@@ -207,7 +205,7 @@ class LeadController extends Controller
                 }
 
 
-                $leads_query     = Lead::select('leads.*')->join('user_leads', 'user_leads.lead_id', '=', 'leads.id')->where('leads.pipeline_id', '=', $pipeline->id);
+                $leads_query     = Lead::select('leads.*')->join('user_leads', 'user_leads.lead_id', '=', 'leads.id')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->where('leads.pipeline_id', '=', $pipeline->id);
                 // Add the dynamic filters
                 foreach ($filters as $column => $value) {
                     if ($column === 'name') {
@@ -240,18 +238,14 @@ class LeadController extends Controller
                     $leads_query->whereIn('leads.created_by', $lead_created_by);
                 } else if (strtolower(\auth::user()->type) == 'branch manager') {
                     $leads_query->where('branch_id', \auth::user()->branch_id);
-                    $companies = User::where('id', $usr->id)->get()->pluck('name', 'id');
-                    
+                    $companies = User::where('id', $usr->id)->get()->pluck('name', 'id'); 
                 } else if(strtolower(\auth::user()->type) == 'marketing officer') {
-
                     $users = $this->companyEmployees(\auth::user()->created_by);
                     $users[$usr->id] = $usr->name;
                     $users[$usr->created_by] = $usr->created_by;
                     $companies = $users;
                     $lead_created_by = array_keys($users);
-
                     $leads_query->whereIn('leads.created_by', $lead_created_by);
-                    
                     $companies = User::where('id', $usr->id)->get()->pluck('name', 'id');
                 }else {
                     $lead_created_by[] = \auth::user()->created_by;
@@ -260,10 +254,17 @@ class LeadController extends Controller
                     $companies = User::where('id', $usr->id)->get()->pluck('name', 'id');
                 }
 
-                $leads_query->orderBy('leads.order')->orderBy('leads.id', 'DESC');
-                $total_records =  $leads_query->count();
-                $leads = $leads_query->skip($start)->take($num_results_on_page)->get();
+                //$leads_query->orderBy('leads.order')->orderBy('leads.id', 'DESC');
+               // $total_records =  $leads_query->count();
+               // $leads = $leads_query->skip($start)->take($num_results_on_page)->get();
             }
+
+            $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
+            $total_records =  $leads_query->clone()->count();
+            $leads = $leads_query->clone()->groupBy('leads.id')->orderBy('leads.created_at', 'desc')->skip($start)->take($num_results_on_page)->get();
+
+
+
 
             $users = User::get()->pluck('name', 'id');
             $stages = LeadStage::get();
@@ -289,12 +290,11 @@ class LeadController extends Controller
             ->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')
             ->groupBy('lead_stages.type')
             ->get();
-            
             $total_leads_by_status = [];
-
             foreach($total_leads_by_status_records as $status){
                 $total_leads_by_status[$status->type] = $status->total_leads;
             }
+
             $branches = array();
             if (\Auth::user()->type == 'super admin') {
                 $branches = Branch::get()->pluck('name', 'id');
