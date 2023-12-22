@@ -803,8 +803,8 @@ class OrganizationController extends Controller
                     'assign_type' => 'required',
                     'due_date' => 'required',
                     'start_date' => 'required',
-                    'related_type' => 'required',
-                    'related_to' => 'required',
+                    // 'related_type' => 'required',
+                    // 'related_to' => 'required',
                     'visibility' => 'required',
                 ]
             );
@@ -820,7 +820,7 @@ class OrganizationController extends Controller
             ///////////
             $dealTask = new  DealTask();
             $dealTask->deal_id = $request->related_to;
-            $dealTask->related_to = $request->related_to;
+            $dealTask->related_to = $request->related_to == '' ? 0 : $request->related_to;
             $dealTask->related_type = $request->related_type;
 
             $dealTask->name = $request->task_name;
@@ -847,7 +847,7 @@ class OrganizationController extends Controller
             ActivityLog::create(
                 [
                     'user_id' => $usr->id,
-                    'deal_id' => $request->related_to,
+                    'deal_id' =>  $request->related_to == '' ? 0 : $request->related_to,
                     'log_type' => 'Create Task',
                     'remark' => json_encode(['title' => $dealTask->name]),
                 ]
