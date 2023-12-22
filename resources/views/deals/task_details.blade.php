@@ -222,9 +222,12 @@
                                     data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab"
                                     aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
                             </li>
-                            <!-- <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link" id="pills-related-tab" data-bs-toggle="pill" data-bs-target="#pills-related" type="button" role="tab" aria-controls="pills-related" aria-selected="false">{{ __('Related') }}</button>
-                            </li> -->
+                             {{-- <li class="nav-item" role="presentation">
+                                <button class="nav-link pills-link" id="text" id="pills-related-tab" data-bs-toggle="pill" data-bs-target="#pills-related" type="button" role="tab" aria-controls="pills-related" aria-selected="false">{{ __('Related') }}</button>
+                            </li> --}}
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link pills-link fw-bold" id="text" id="pills-timeline-tab" data-bs-toggle="pill" data-bs-target="#pills-timeline" type="button" role="tab" aria-controls="pills-timeline" aria-selected="false">{{ __('Timeline') }}</button>
+                            </li>
                         </ul>
                     </div>
 
@@ -675,7 +678,7 @@
 
 
                             {{-- Details Pill End --}}
-                            <div class="tab-pane fade" id="pills-related" role="tabpanel"
+                            {{-- <div class="tab-pane fade show active" id="pills-related" role="tabpanel"
                                 aria-labelledby="pills-related-tab">
 
                                 <div class="block-items">
@@ -731,8 +734,63 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div> --}}
+
+                            <div class="tab-pane fade" id="pills-timeline" role="tabpanel"
+                                aria-labelledby="pills-timeline-tab">
+
+                                <div class="accordion" id="accordionPanelsStayOpenExample">
+                                    <!-- Open Accordion Item -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="panelsStayOpen-headingactive">
+                                            <button class="accordion-button p-2" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#panelsStayOpen-collapseactive">
+                                                {{ __('Timeline') }}
+                                            </button>
+                                        </h2>
+
+                                        <div id="panelsStayOpen-collapseactive"
+                                            class="accordion-collapse collapse show"
+                                            aria-labelledby="panelsStayOpen-headingactive">
+                                            <div class="accordion-body">
+                                                <!-- Accordion Content -->
+
+
+                                                <div class="mt-1">
+                                                    <div class="timeline-wrapper">
+                                                        <ul class="StepProgress">
+                                                            @foreach ($log_activities as $activity)
+                                                                @php
+                                                                    $remark = json_decode($activity->note);
+                                                                @endphp
+
+                                                                <li class="StepProgress-item is-done">
+                                                                    <div class="bold time">{{ $activity->created_at }}</div>
+                                                                    <div class="bold" style="text-align: left; margin-left: 80px;">
+                                                                            <p class="bold" style="margin-bottom: 0rem; color: #000000;">{{ $remark->title }}</p>
+                                                                            <p class="mt-0">{{ $remark->message }}</p>
+                                                                    </div>
+                                                                </li>
+
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <!-- End of Accordion Content -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End of Open Accordion Item -->
+
+                                    <!-- Add More Accordion Items Here -->
+
+                                </div>
+
                             </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>

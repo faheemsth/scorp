@@ -158,8 +158,8 @@
             {{-- Organizaiton Contact Info --}}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="ture"
                         aria-controls="panelsStayOpen-collapseTwo">
                         ADDITIONAL INFORMATION
                     </button>
@@ -249,8 +249,8 @@
             {{-- Organizaiton Description --}}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#panelsStayOpen-description" aria-expanded="false"
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-description" aria-expanded="ture"
                         aria-controls="panelsStayOpen-description">
                         DESCRIPTION INFORMATION
                     </button>
@@ -267,8 +267,8 @@
             {{-- Organizaiton Description --}}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#panelsStayOpen-description" aria-expanded="false"
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-description" aria-expanded="ture"
                         aria-controls="panelsStayOpen-description">
                         PERMISSIONS
                     </button>
