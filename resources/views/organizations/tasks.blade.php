@@ -13,7 +13,7 @@
 {{ Form::model(\Auth::user(), ['route' => ['organization.tasks.store', \Auth::user()->id], 'method' => 'POST', 'id' => 'create-task', 'style' => 'z-index: 9999999 !important;']) }}
 
 
-<div class="modal-body pt-0 " style="height: 72vh;">
+<div class="modal-body pt-0 " style="height: 80vh;">
 <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
 <div class="card-body px-2 py-0" >
 

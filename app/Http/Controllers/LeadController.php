@@ -204,14 +204,13 @@ class LeadController extends Controller
                     $pipeline = Pipeline::first();
                 }
 
-
                 $leads_query     = Lead::select('leads.*')->join('user_leads', 'user_leads.lead_id', '=', 'leads.id')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->where('leads.pipeline_id', '=', $pipeline->id);
                 // Add the dynamic filters
                 foreach ($filters as $column => $value) {
                     if ($column === 'name') {
                         $leads_query->whereIn('name', $value);
                     } elseif ($column === 'stage_id') {
-                        $leads_query->whereIn('stage_id', $value);
+                        $leads_query->whereIn('stage_ids', $value);
                     } elseif ($column === 'users') {
                         $leads_query->whereIn('leads.user_id', $value);
                     } elseif ($column == 'created_at') {
@@ -259,7 +258,15 @@ class LeadController extends Controller
                // $leads = $leads_query->skip($start)->take($num_results_on_page)->get();
             }
 
-            $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
+
+            // var_dump($_GET['stages']);
+            // die();
+
+           // if(!isset($_GET['stages']) || !in_array(6, $_GET['stages']) || !in_array(7, $_GET['stages'])){
+                 $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
+           // }
+            
+
             $total_records =  $leads_query->clone()->count();
             $leads = $leads_query->clone()->groupBy('leads.id')->orderBy('leads.created_at', 'desc')->skip($start)->take($num_results_on_page)->get();
 
@@ -356,8 +363,8 @@ class LeadController extends Controller
         $id = $_GET['id'];
 
         $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
-        $branches = Branch::where('created_by', $id)->pluck('name', 'id')->toArray();
-
+        $branches = Branch::pluck('name', 'id')->toArray();
+        
         $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="lead_assgigned_user" required> <option value="">Select User</option> ';
         foreach ($employees as $key => $user) {
             $html .= '<option value="' . $key . '">' . $user . '</option> ';
@@ -2386,7 +2393,8 @@ class LeadController extends Controller
         $deal->branch_id = $lead->branch_id;
         $deal->university_id = $request->university_id;
         $deal->assigned_to = $lead->user_id;
-        $deal->organization_id = gettype($lead->organization_id) == 'string' ? 0 : $lead->organization_id;
+        $deal->brand_id = $lead->brand_id;
+        $deal->organization_id = gettype($lead->organization_id) == 'string' ? 0 : $lead->organization_id; 
         $deal->organization_link = $lead->organization_link;
         $deal->save();
         // end create deal
