@@ -3472,11 +3472,7 @@ class DealController extends Controller
         $id = $_GET['id'];
 
         $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
-<<<<<<< HEAD
-
-=======
         $branches = Branch::where('created_by', $id)->pluck('name', 'id')->toArray();
->>>>>>> f124bbfc9359a10bd31996e6087ef30eb3e63f04
 
         $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to" required> <option value="">Assign to</option> ';
         foreach ($employees as $key => $user) {
