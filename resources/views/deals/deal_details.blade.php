@@ -438,9 +438,12 @@
                                                                 </div> --}}
                                                                 @if (isset($deal->drive_link) && !empty($deal->drive_link))
                                                                 <a href="{{ $deal->drive_link }}" target="blank" style="font-size: 14px; color: rgb(46, 134, 249);">
-                                                                    {{ $deal->drive_link }} </a>
+                                                                    {{ $deal->drive_link }}
+                                                                </a>
                                                                 @else
+                                                                <a href="{{ $deal->drive_link }}">
                                                                 {{ isset($deal->drive_link) ? $deal->drive_link : '' }}
+                                                            </a>
                                                                 @endif
                                                             </td>
                                                         </tr>

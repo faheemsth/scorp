@@ -956,7 +956,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                         }else{
                             openNav(lead_id);
                             return false;
-                        }                        
+                        }
                     } else {
                         show_toastr('Error', data.message, 'error');
                     }
@@ -1153,15 +1153,17 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 
             var html = '<div class="d-flex edit-input-field-div">' +
-                '<div class="input-group border-0 d-flex">' +
-                value +
-                '</div>' +
-                // '<div class="edit-btn-div">'+
-                //     '<button class="btn btn-secondary edit-input rounded-0 btn-effect-none" style="padding:7px;"><i class="ti ti-pencil"></i></button>'+
-                // '</div>'+
-                '</div>';
+    '  <div class="input-group border-0 d-flex">' +
+    '<a href="">' +
+    value +
+    '</a>' +
+    '</div>' +
+    '<div class="edit-btn-div">' +
+    '<button class="btn btn-secondary edit-input rounded-0 btn-effect-none" style="padding:7px;"><i class="ti ti-pencil"></i></button>' +
+    '</div>' +
+    '</div>';
 
-            $('.' + name + '-td').html(html);
+$('.' + name + '-td').html(html);
         });
 
 
@@ -1254,7 +1256,9 @@ if (isset($lead->is_active) && $lead->is_active) {
 
             var html = '<div class="d-flex edit-input-field-div">' +
                 '<div class="input-group border-0 d-flex">' +
+                '<a href="">'+
                 address +
+                '</a>'+
                 '</div>' +
                 '<div class="edit-btn-div">' +
                 '<button class="btn btn-secondary edit-btn-address rounded-0 btn-effect-none" style="padding:7px;"><i class="ti ti-pencil"></i></button>' +
