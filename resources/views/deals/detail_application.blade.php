@@ -37,6 +37,7 @@
                     @can('edit application')
                     <a href="#" data-size="lg" data-url="{{ route('deals.application.edit', $application->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Application') }}" class="btn text-white px-2 btn-dark">
                         <i class="ti ti-pencil"></i>
+                        <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
                     </a>
                     @endcan
 

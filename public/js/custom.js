@@ -80,6 +80,10 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
     if ($('#discount_hidden').length > 0) {
         data['discount'] = $('#discount_hidden').val();
     }
+    $('.spnier-updbtn').removeClass('d-none');
+    $('.ti-plus').css('display','none');
+    $('.ti-pencil').css('display','none');
+    
     $.ajax({
         url: url,
         data: data,
@@ -87,6 +91,10 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
            
             $('#commonModal .body').html(data);
             $("#commonModal").modal('show');
+            $('.spnier-updbtn').addClass('d-none');
+            $('.ti-plus').css('display','block');
+            $('.ti-pencil').css('display','block');
+
             // daterange_set();
             taskCheckbox();
             common_bind("#commonModal");
