@@ -80,7 +80,7 @@ $setting = \App\Models\Utility::colorset();
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
                             </button>
-                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
 
                         <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
@@ -133,6 +133,19 @@ $setting = \App\Models\Utility::colorset();
                                 <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
                                     <option value="">Select Brand</option>
 
+                                    @foreach ($brands as $key => $brand)
+                                        @if (\Auth::user()->type == 'super admin')
+                                            <option value="{{ $key }}" {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }}>{{ $brand }}</option>
+                                        @elseif (\Auth::user()->type == 'company' && $key == \Auth::user()->id)
+                                            <option {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }} value="{{ $key }}" class="">{{ $brand }}</option>
+                                        @elseif (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                            @foreach($com_permissions as $com_permission)
+                                                @if($key == $com_permission->permitted_company_id)
+                                                    <option {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }} value="{{ $key }}" class="">{{ $brand }}</option>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    @endforeach
 
                                 </select>
                             </div>

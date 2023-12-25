@@ -122,7 +122,7 @@
                     @can('edit lead')
 
                         @if (!empty($deal))
-                            <a href="@can('View Deal') @if ($deal->is_active) {{ '/get-deal-detail?deal_id=' . $deal->id }} @else # @endif @else # @endcan"
+                            <a href="javascript:void(0)" @can('View Deal') @if ($deal->is_active)   onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }}) @else '' @endif @else '' @endcan"
                                 data-size="lg" data-bs-toggle="tooltip"
                                 data-bs-title=" {{ __('Already Converted To Deal') }}" class="btn btn-dark text-white"
                                 style="background-color: #313949">
