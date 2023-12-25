@@ -35,7 +35,7 @@
                     data-original-title="{{ __('Edit') }}">
                     <i class="ti ti-edit"></i>
                 </a>
-
+                <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
             </div>
         @endcan
 
