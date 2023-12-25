@@ -148,6 +148,7 @@
                         data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Edit') }}"
                         class="btn  text-white" style="background-color: #313949;">
                         <i class="ti ti-pencil"></i>
+                        <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
                     </a>
 
                     @can('delete lead')

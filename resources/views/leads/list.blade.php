@@ -197,6 +197,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 @can('create lead')
                                 <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark">
                                     <i class="ti ti-plus" style="font-size:18px"></i>
+                                    <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
                                 </button>
                                 @endcan
                                 <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}"
@@ -272,21 +273,31 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         </select>
                                     </div>
 
+                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+
+                                        <div class="col-md-4 mt-1"> <label for="">Created By</label>
+                                            <select class="form form-control select2" id="choices-multiple555"
+                                                name="created_by[]" multiple style="width: 95%;">
+                                                <option value="">Select Brand</option>
+
+                                                @foreach ($brands as $brand)
+                                                    @if (\Auth::user()->type == 'super admin')
+                                                        <option value="{{ $brand->id }}" {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }}>{{ $brand->name }}</option>
+                                                    @elseif (\Auth::user()->type == 'company' && $brand->id == \Auth::user()->id)
+                                                        <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
+                                                    @elseif (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                                        @foreach($com_permissions as $com_permission)
+                                                            @if($brand->id == $com_permission->permitted_company_id)
+                                                                <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+                                                @endforeach
 
 
-                                    <div class="col-md-4"> <label for="">Assigned To</label>
-                                        <select name="users[]" id="choices-multiple333" class="form form-control select2"
-                                            multiple style="width: 95%;">
-                                            <option value="">Select user</option>
-                                            @foreach ($companies as $key => $company)
-                                                <option value="{{ $key }}"
-                                                    <?= isset($_GET['users']) && in_array($key, $_GET['users']) ? 'selected' : '' ?>
-                                                    class="">{{ $company }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-
+                                            </select>
+                                        </div>
+                                        @endif
 
                                     <div class="col-md-4"> <label for="">Stage</label>
                                         <select class="form form-control select2" id="choices-multiple444"
@@ -299,32 +310,18 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             @endforeach
                                         </select>
                                     </div>
-                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
 
-                                    <div class="col-md-4 mt-1"> <label for="">Created By</label>
-                                        <select class="form form-control select2" id="choices-multiple555"
-                                            name="created_by[]" multiple style="width: 95%;">
-                                            <option value="">Select Brand</option>
-
-                                            @foreach ($brands as $brand)
-                                                @if (\Auth::user()->type == 'super admin')
-                                                    <option value="{{ $brand->id }}" {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }}>{{ $brand->name }}</option>
-                                                @elseif (\Auth::user()->type == 'company' && $brand->id == \Auth::user()->id)
-                                                    <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
-                                                @elseif (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                                    @foreach($com_permissions as $com_permission)
-                                                        @if($brand->id == $com_permission->permitted_company_id)
-                                                            <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
-                                                        @endif
-                                                    @endforeach
-                                                @endif
+                                    <div class="col-md-4"> <label for="">Assigned To</label>
+                                        <select name="users[]" id="choices-multiple333" class="form form-control select2"
+                                            multiple style="width: 95%;">
+                                            <option value="">Select user</option>
+                                            @foreach ($companies as $key => $company)
+                                                <option value="{{ $key }}"
+                                                    <?= isset($_GET['users']) && in_array($key, $_GET['users']) ? 'selected' : '' ?>
+                                                    class="">{{ $company }}</option>
                                             @endforeach
-
-
                                         </select>
                                     </div>
-                                    @endif
-
 
                                     <div class="col-md-4 mt-2">
                                         <label for="">Created at</label>
@@ -1081,6 +1078,35 @@ if (isset($lead->is_active) && $lead->is_active) {
                 }
             })
         })
+
+        $(document).ready(function () {
+            // Attach an event listener to the input field
+            $('.list-global-search').keypress(function (e) {
+                // Check if the pressed key is Enter (key code 13)
+                if (e.which === 13) {
+                    var search = $(".list-global-search").val();
+                    var ajaxCall = 'true';
+                    $(".leads-list-div").html('Loading...');
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ route('leads.list') }}",
+                        data: {
+                            search: search,
+                            ajaxCall: ajaxCall
+                        },
+                        success: function(data) {
+                            data = JSON.parse(data);
+
+                            if (data.status == 'success') {
+                                console.log(data.html);
+                                $(".leads-list-div").html(data.html);
+                            }
+                        }
+                    })
+                }
+            });
+        });
 
         $(document).on("click", ".edit-input", function() {
             var value = $(this).val();

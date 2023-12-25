@@ -26,7 +26,7 @@ $setting = \App\Models\Utility::colorset();
 
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
+<li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
 <li class="breadcrumb-item">{{ __('Tasks') }}</li>
 @endsection
 
@@ -92,6 +92,7 @@ $setting = \App\Models\Utility::colorset();
                         @can('create task')
                         <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark">
                             <i class="ti ti-plus" style="font-size:18px"></i>
+                            <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
                         </button>
                         @endcan
                     </div>
@@ -116,20 +117,7 @@ $setting = \App\Models\Utility::colorset();
                                 </select>
                             </div>
 
-
-
-                            <div class="col-md-4"> <label for="">Assigned To</label>
-                                <select name="assigned_to[]" id="choices-multiple333" class="form form-control select2" multiple style="width: 95%;">
-                                    <option value="">Select user</option>
-                                    @foreach ($users as $key => $user)
-                                    <option value="{{ $key }}" <?= isset($_GET['assigned_to']) && in_array($key, $_GET['assigned_to']) ? 'selected' : '' ?> class="">{{ $user }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-
-
-                            <div class="col-md-4"> <label for="">Company/Brand</label>
+                            <div class="col-md-4"> <label for="">Created By</label>
                                 <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
                                     <option value="">Select Brand</option>
 
@@ -147,6 +135,15 @@ $setting = \App\Models\Utility::colorset();
                                         @endif
                                     @endforeach
 
+                                </select>
+                            </div>
+
+                            <div class="col-md-4"> <label for="">Assigned To</label>
+                                <select name="assigned_to[]" id="choices-multiple333" class="form form-control select2" multiple style="width: 95%;">
+                                    <option value="">Select user</option>
+                                    @foreach ($users as $key => $user)
+                                    <option value="{{ $key }}" <?= isset($_GET['assigned_to']) && in_array($key, $_GET['assigned_to']) ? 'selected' : '' ?> class="">{{ $user }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -417,6 +414,35 @@ $setting = \App\Models\Utility::colorset();
             }
         })
     })
+
+    $(document).ready(function () {
+        // Attach an event listener to the input field
+        $('.list-global-search').keypress(function (e) {
+            // Check if the pressed key is Enter (key code 13)
+            if (e.which === 13) {
+                var search = $(".list-global-search").val();
+                var ajaxCall = 'true';
+                $(".tasks_tbody").html('Loading...');
+
+                $.ajax({
+                    type: 'GET',
+                    url: "/deals/get-user-tasks",
+                    data: {
+                        search: search,
+                        ajaxCall: ajaxCall
+                    },
+                    success: function(data) {
+                        data = JSON.parse(data);
+
+                        if (data.status == 'success') {
+                            console.log(data.html);
+                            $(".tasks_tbody").html(data.html);
+                        }
+                    }
+                })
+            }
+        });
+    });
 
     $(".refresh-list").on("click", function() {
         var ajaxCall = 'true';

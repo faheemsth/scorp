@@ -2685,7 +2685,7 @@ class DealController extends Controller
                 } elseif ($column === 'assigned_to') {
                     $tasks->whereIn('assigned_to', $value);
                 } elseif ($column === 'created_by') {
-                    $tasks->whereIn('created_by', $value);
+                    $tasks->whereIn('brand_id', $value);
                 } elseif ($column == 'due_date') {
                     $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
                 }elseif ($column == 'status') {
@@ -3472,7 +3472,9 @@ class DealController extends Controller
         $id = $_GET['id'];
 
         $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
-        $branches = Branch::where('created_by', $id)->pluck('name', 'id')->toArray();
+
+        $branches = Branch::where('created_by',$id)->pluck('name', 'id')->toArray();
+
 
         $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to" required> <option value="">Assign to</option> ';
         foreach ($employees as $key => $user) {

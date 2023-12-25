@@ -371,6 +371,7 @@
 
                         <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}" class="btn p-2 btn-dark">
                             <i class="ti ti-plus"></i>
+                            <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
                         </a>
 
                     </div>
@@ -1105,6 +1106,33 @@
                 }
             })
         })
+
+        $(document).ready(function () {
+            // Attach an event listener to the input field
+            $('.list-global-search').keypress(function (e) {
+                // Check if the pressed key is Enter (key code 13)
+                if (e.which === 13) {
+                    var search = $(".list-global-search").val();
+                    var ajaxCall = 'true';
+                    $("#deals_tbody").html('Loading...');
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ route('deals.list') }}",
+                        data: {
+                            search: search,
+                            ajaxCall: ajaxCall
+                        },
+                        success: function(data) {
+                            data = JSON.parse(data);
+                            if (data.status == 'success') {
+                                $("#deals_tbody").html(data.html);
+                            }
+                        }
+                    })
+                }
+            });
+        });
 
         $(".refresh-list").on("click", function() {
             var ajaxCall = 'true';

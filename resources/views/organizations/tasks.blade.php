@@ -383,11 +383,14 @@
 
         $(".related_type").on('change', function() {
             var type = $(this).val();
+            var brand_id  = $('.brand_id').val();
+
             $.ajax({
                 type: 'GET',
                 url: '{{ route('organization.task.related_to', 1) }}',
                 data: {
-                    type
+                    type:type,
+                    brand_id:brand_id,
                 },
                 success: function(data) {
                     data = JSON.parse(data);
