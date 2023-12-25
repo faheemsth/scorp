@@ -149,6 +149,8 @@
                         data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Deal') }}"
                         class="btn px-2 text-white" style="background-color: #313949;">
                         <i class="ti ti-pencil"></i>
+                        <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
+
                     </a>
                     @endif
 
@@ -465,7 +467,7 @@
                                                 <table>
                                                     <tbody>
 
-                                                        <tr>
+                                                        <tr class="d-none">
                                                             <td class="" style="width: 102px; font-size: 14px;">
                                                                 {{ __('Institute') }}
                                                             </td>
@@ -474,7 +476,7 @@
                                                             </td>
                                                         </tr>
 
-                                                        <tr>
+                                                        <tr class="d-none">
                                                             <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Institution Link') }}
                                                             </td>
@@ -680,6 +682,7 @@
 
                                                                         <a data-size="lg" title="{{ __('Edit Application') }}" href="#" class="btn px-2 btn-dark text-white mx-1" data-url="{{ route('deals.application.edit', $app->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Application') }}" data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
                                                                             <i class="ti ti-edit"></i>
+                                                                            <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
                                                                         </a>
 
                                                                     @endcan
@@ -1078,7 +1081,11 @@
                                                                                 @endphp
 
                                                                                 <tr>
-                                                                                    <td>{{ $contact->name }}</td>
+                                                                                    <td>
+                                                                                        <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/clients/'+{{$contact->id}}+'/client_detail')" >
+                                                                                            {{ $contact->name }}
+                                                                                        </span>
+                                                                                    </td>
                                                                                     <td>{{ $contact->email }}</td>
                                                                                     <td>{{ $contact->created_at }}
                                                                                     </td>

@@ -129,13 +129,33 @@
                     </div>
 
 
-                    <div class="filter-data px-3" id="filter-show"
-                        <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
-                        <form action="/organization/" method="GET" class="">
-                            <div class="row my-3">
-                                <div class="col-md-4"> <label for="">Name</label>
-                                    <select class="form form-control select2" id="choices-multiple110" name="name[]"
-                                        multiple style="width: 95%;">
+                        <button class="btn px-2 pb-2 pt-2 refresh-list bg-dark"
+                            style=" color:white;"><i class="ti ti-refresh"
+                                style="font-size: 18px"></i></button>
+
+                        <button class="btn filter-btn-show px-2 btn-dark" style="color:white;"
+                            type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="ti ti-filter" style="font-size:18px"></i>
+                        </button>
+
+
+                        @if(\Auth::user()->type=='super admin' || \Auth::user()->can('create organization'))
+                            <button data-url="{{ route('leads.create') }}" class="btn  px-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <i class="ti ti-plus" style="font-size:18px"></i>
+                                <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
+                            </button>
+                        @endif
+
+                    </div>
+                </div>
+
+
+                <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+                    <form action="/organization/" method="GET" class="">
+                        <div class="row my-3">
+                                <div class="col-md-4">                                              <label for="">Name</label>
+                                    <select class="form form-control select2" id="choices-multiple110" name="name[]" multiple
+                                        style="width: 95%;">
                                         <option value="">Select name</option>
                                         @foreach ($organizations as $org)
                                             <option value="{{ $org->name }}"
@@ -927,217 +947,42 @@
 
         })
 
-        $(document).on("click", ".remove-btn-save-address", function() {
+    $(document).ready(function () {
+            // Attach an event listener to the input field
+            $('.list-global-search').keypress(function (e) {
+                // Check if the pressed key is Enter (key code 13)
+                if (e.which === 13) {
+                    var search = $(".list-global-search").val();
+                    var ajaxCall = 'true';
 
-            var id = $('.lead-id').val();
-            var street = $(".lead_street").val();
-            var city = $(".lead_city").val();
-            var state = $(".lead_state").val();
-            var postal_code = $(".lead_postal_code").val();
-            var country = $(".lead_country").val();
-
-            // Initialize an empty array
-            var dataArray = [];
-
-            // Check if each variable is non-empty before adding to the array
-            if (street !== "") {
-                dataArray.push(street);
-            }
-
-            if (city !== "") {
-                dataArray.push(city);
-            }
-
-            if (state !== "") {
-                dataArray.push(state);
-            }
-
-            if (postal_code !== "") {
-                dataArray.push(postal_code);
-            }
-
-            if (country !== "") {
-                dataArray.push(country);
-            }
-
-            var address = dataArray.join(',');
-
-            var html = '<div class="d-flex align-items-baseline edit-input-field-div">' +
-                '<div class="input-group border-0 d-flex align-items-baseline">' +
-                address +
-                '</div>' +
-                '<div class="edit-btn-div">' +
-                '<button class="btn btn-sm btn-secondary edit-btn-address rounded-0 btn-effect-none"><i class="ti ti-pencil"></i></button>' +
-                '</div>' +
-                '</div>';
-
-            $('.address-td').html(html);
-        })
+                    // if (search.trim() == '') {
+                    //     return false;
+                    // }
 
 
+                    $(".organization_tbody").html('Loading...');
 
-        //setting update description
-        //edit-btn-description
-        //Org Discussion
-        $(document).on("submit", "#create-discussion", function(e) {
-            e.preventDefault();
-            var formData = $(this).serialize();
-            var id = $('.org-id').val();
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{route('organization.index')}}",
+                        data: {
+                            search: search,
+                            ajaxCall: ajaxCall
+                        },
+                        success: function(data) {
+                            data = JSON.parse(data);
 
-            $(".create-discussion-btn").val('Processing...');
-            $('.create-discussion-btn').attr('disabled', 'disabled');
-
-            $.ajax({
-                type: "POST",
-                url: "/organization/" + id + "/discussions",
-                data: formData,
-                success: function(data) {
-                    data = JSON.parse(data);
-
-                    console.log(data);
-
-                    if (data.status == 'success') {
-                        show_toastr('Success', data.message, 'success');
-                        $('#commonModal').modal('hide');
-                        $('.list-group-flush').html(data.html);
-                        // openNav(data.lead.id);
-                        // return false;
-                    } else {
-                        show_toastr('Error', data.message, 'error');
-                        $(".create-discussion-btn").val('Create');
-                        $('.create-discussion-btn').removeAttr('disabled');
-                    }
+                            if (data.status == 'success') {
+                                console.log(data.html);
+                                $(".organization_tbody").html(data.html);
+                            }
+                        }
+                    })
                 }
             });
-        })
+        });
 
-
-        //saving notes
-        $(document).on("submit", "#create-notes", function(e) {
-            e.preventDefault();
-            var formData = $(this).serialize();
-            var id = $('.org-id').val();
-
-            $(".create-notes-btn").val('Processing...');
-            $('.create-notes-btn').attr('disabled', 'disabled');
-
-            $.ajax({
-                type: "POST",
-                url: "/organization/" + id + "/notes",
-                data: formData,
-                success: function(data) {
-                    data = JSON.parse(data);
-
-                    if (data.status == 'success') {
-                        show_toastr('Success', data.message, 'success');
-                        $('#commonModal').modal('hide');
-                        $('.notes-tbody').html(data.html);
-                        // openNav(data.lead.id);
-                        // return false;
-                    } else {
-                        show_toastr('Error', data.message, 'error');
-                        $(".create-notes-btn").val('Create');
-                        $('.create-notes-btn').removeAttr('disabled');
-                    }
-                }
-            });
-        })
-
-        $(document).on("submit", "#update-notes", function(e) {
-            e.preventDefault();
-            var formData = $(this).serialize();
-            var id = $('.org-id').val();
-
-            $(".update-notes-btn").val('Processing...');
-            $('.update-notes-btn').attr('disabled', 'disabled');
-
-            $.ajax({
-                type: "POST",
-                url: "/organization/" + id + "/notes-update",
-                data: formData,
-                success: function(data) {
-                    data = JSON.parse(data);
-
-                    if (data.status == 'success') {
-                        show_toastr('Success', data.message, 'success');
-                        $('#commonModal').modal('hide');
-                        $('.notes-tbody').html(data.html);
-                        // openNav(data.lead.id);
-                        // return false;
-                    } else {
-                        show_toastr('Error', data.message, 'error');
-                        $(".update-notes-btn").val('Update');
-                        $('.update-notes-btn').removeAttr('disabled');
-                    }
-                }
-            });
-        })
-
-
-        //delete-notes
-        $(document).on("click", '.delete-notes', function(e) {
-            e.preventDefault();
-
-            var id = $(this).attr('data-note-id');
-            var organization_id = $('.org-id').val();
-            var currentBtn = '';
-
-            $.ajax({
-                type: "GET",
-                url: "/organization/" + id + "/notes-delete",
-                data: {
-                    id,
-                    organization_id
-                },
-                success: function(data) {
-                    data = JSON.parse(data);
-
-                    if (data.status == 'success') {
-                        show_toastr('Success', data.message, 'success');
-                        $('.notes-tbody').html(data.html);
-                        // openNav(data.lead.id);
-                        // return false;
-                    } else {
-                        show_toastr('Error', data.message, 'error');
-                    }
-                }
-            });
-
-        })
-        //Submitting
-
-
-        //global search
-        $(document).on("click", ".list-global-search-btn", function() {
-            var search = $(".list-global-search").val();
-            var ajaxCall = 'true';
-
-            // if (search.trim() == '') {
-            //     return false;
-            // }
-
-
-            $(".organization_tbody").html('Loading...');
-
-            $.ajax({
-                type: 'GET',
-                url: "{{ route('organization.index') }}",
-                data: {
-                    search: search,
-                    ajaxCall: ajaxCall
-                },
-                success: function(data) {
-                    data = JSON.parse(data);
-
-                    if (data.status == 'success') {
-                        console.log(data.html);
-                        $(".organization_tbody").html(data.html);
-                    }
-                }
-            })
-        })
-
-        $(".refresh-list").on("click", function() {
+    $(".refresh-list").on("click", function() {
             var ajaxCall = 'true';
             $(".organization_tbody").html('Loading...');
 
