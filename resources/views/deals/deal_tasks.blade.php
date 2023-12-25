@@ -133,6 +133,19 @@ $setting = \App\Models\Utility::colorset();
                                 <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
                                     <option value="">Select Brand</option>
 
+                                    @foreach ($brands as $key => $brand)
+                                        @if (\Auth::user()->type == 'super admin')
+                                            <option value="{{ $key }}" {{ isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' }}>{{ $brand }}</option>
+                                        @elseif (\Auth::user()->type == 'company' && $key == \Auth::user()->id)
+                                            <option {{ isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' }} value="{{ $key }}" class="">{{ $brand }}</option>
+                                        @elseif (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                            @foreach($com_permissions as $com_permission)
+                                                @if($key == $com_permission->permitted_company_id)
+                                                    <option {{ isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' }} value="{{ $key }}" class="">{{ $brand }}</option>
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    @endforeach
 
                                 </select>
                             </div>
