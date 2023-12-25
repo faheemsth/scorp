@@ -94,20 +94,21 @@
     }
 
     .wizard .current {
-        background: #b5282f;
+        background: #1F2735;
         color: #fff;
     }
 
     .wizard .current:after {
-        border-left-color: #b5282f;
+        border-left-color: #1F2735;
     }
 
     .wizard .done {
-        background: #0BB325 !important;
+        background: #B3CDE1 !important;
+        color: #1F2735;
     }
 
     .wizard .done:after {
-        border-left-color: #0BB325 !important;
+        border-left-color: #B3CDE1 !important;
     }
 
     .lead-topbar {
@@ -184,11 +185,11 @@
     }
 
     #tfont {
-        font-size: 13px;
+        font-size: 14px;
     }
 
     table tr td {
-        font-size: 13px !important;
+        font-size: 14px !important;
     }
 
     table th:last-child {
@@ -323,7 +324,7 @@
                 {{-- topbar --}}
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                     <div class="col-2">
-                        <p class="mb-0 pb-0">ADMISSIONS</p>
+                        <p class="mb-0 pb-0 ps-1">ADMISSIONS</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL ADMISSIONS
@@ -333,9 +334,22 @@
                           </ul>
                         </div>
                     </div>
+                    <div class="col-2">
+                        <!-- <p class="mb-0 pb-0">Tasks</p> -->
+                        <div class="dropdown" id="actions_div" style="display:none">
+                            <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+                                <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
+                                <li><a class="dropdown-item" href="#">Brand Change</a></li>
+                                <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
+                            </ul>
+                        </div>
+                    </div>
 
-
-                    <div class="col-10 d-flex justify-content-end gap-2">
+                    <div class="col-8 d-flex justify-content-end gap-2">
                         <div class="input-group w-25">
                             <button class="btn btn-sm list-global-search-btn">
                                 <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
@@ -346,9 +360,9 @@
                         </div>
 
 
-                       
-                            
-                       
+
+
+
                             <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
                         <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -411,8 +425,8 @@
 
                                 <div class="col-md-4 mt-2">
                                     <br>
-                                    <input type="submit" class="btn me-2" style="background-color: #b5282f; color:white;">
-                                    <a href="/deals/list" class="btn" style="background-color: #b5282f;color:white;">Reset</a>
+                                    <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
+                                    <a href="/deals/list" class="btn bg-dark" style="color:white;">Reset</a>
                                 </div>
                             </div>
 
@@ -562,7 +576,7 @@
     </div>
 
 
-    <div class="modal" tabindex="-1" role="dialog" id="deal_applications">
+    <div class="modal" tabindex="-1" role="dialog" id="deal_applications" style="z-index: 1150;">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -580,8 +594,8 @@
                     <input type="hidden" id="deal_id" value="">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="save-changes-application-status">Save changes</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark px-2" id="save-changes-application-status">Save changes</button>
+                    <button type="button" class="btn btn-light px-2" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -593,6 +607,55 @@
 
     </div>
 
+<div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg my-0" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mass Update</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('update-bulk-leads') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select name="bulk_field" id="bulk_field" class="form form-control">
+                                <option value="">Select Field</option>
+                                <option value="nm">Name</option>
+                                <option value="ldst">Lead Status</option>
+                                <!-- <option value="ast">Assign Type</option> -->
+                                <option value="user_res">User Reponsible</option>
+                                <option value="loc">Location</option>
+                                <option value="agy">Agency</option>
+                                <option value="ldsrc">Lead Source</option>
+                                <option value="email">Email Address</option>
+                                <option value="email_ref">Email Address (Referrer)	</option>
+                                <option value="phone">Phone</option>
+                                <option value="m_phone">Mobile Phone</option>
+                                <!-- <option value="mail_opt">Email opt out</option> -->
+                                <option value="address">Address</option>
+                                <option value="desc">Description</option>
+                                <!-- <option value="tag_list">Tag List</option> -->
+
+                            </select>
+                        </div>
+                        <input name='lead_ids' id="lead_ids" hidden>
+                        <div class="col-md-6" id="field_to_update">
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-dark px-2" value="Update">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
     {{-- @endif --}}
     @endsection
@@ -607,6 +670,35 @@
         $(document).on('change', '.main-check', function() {
             $(".sub-check").prop('checked', $(this).prop('checked'));
         });
+
+        $(document).on('change', '.sub-check', function() {
+            var selectedIds = $('.sub-check:checked').map(function() {
+                return this.value;
+            }).get();
+
+            console.log(selectedIds.length)
+
+            if(selectedIds.length > 0){
+                selectedArr = selectedIds;
+                $("#actions_div").css('display', 'block');
+            }else{
+                selectedArr = selectedIds;
+
+                $("#actions_div").css('display', 'none');
+            }
+            let commaSeperated = selectedArr.join(",");
+            console.log(commaSeperated)
+            $("#lead_ids").val(commaSeperated);
+
+        });
+
+        function massUpdate(){
+            if(selectedArr.length > 0){
+                $('#mass-update-modal').modal('show')
+            }else{
+                alert('Please choose Tasks!')
+            }
+        }
 
         // new lead form submitting...
         $(document).on("submit", "#deal-creating-form", function(e) {
@@ -698,8 +790,6 @@
                             $("#stage_id").val(stage_id);
                             $("#admission-application").html(data.html);
                             $("#deal_applications").modal('show');
-
-
                         }
                     }
                 });
@@ -718,6 +808,7 @@
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
                         openNav(deal_id);
+                        //window.location.href = '/deals/list';
 
                     } else {
                         show_toastr('Error', data.message, 'error');
@@ -908,7 +999,10 @@
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
                         $('#commonModal').modal('hide');
-                        $('.notes-tbody').html(data.html);
+                        $('.note-body').html(data.html);
+                        $('textarea[name="description"]').val('');
+                        $('#note_id').val('');
+
                         // openNav(data.lead.id);
                         // return false;
                     } else {
@@ -939,7 +1033,11 @@
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
                         $('#commonModal').modal('hide');
-                        $('.notes-tbody').html(data.html);
+                        $('.note-body').html(data.html);
+                        $('textarea[name="description"]').val('');
+
+                        $('#note_id').val('');
+
                         // openNav(data.lead.id);
                         // return false;
                     } else {
@@ -972,7 +1070,10 @@
 
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
-                        $('.notes-tbody').html(data.html);
+                        $('.note-body').html(data.html);
+                        $('textarea[name="description"]').val('');
+                        $('#note_id').val('');
+
                         // openNav(data.lead.id);
                         // return false;
                     } else {

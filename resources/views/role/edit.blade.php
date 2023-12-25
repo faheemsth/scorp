@@ -1,5 +1,7 @@
 {{Form::model($role,array('route' => array('roles.update', $role->id), 'method' => 'PUT')) }}
-<div class="modal-body">
+<div class="modal-body pt-0 " style="height: 80vh;">
+    <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
+    <div class="card-body px-2 py-0" >
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="form-group">
@@ -13,22 +15,22 @@
             </div>
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="pills-staff-tab" data-bs-toggle="pill" href="#staff" role="tab" aria-controls="pills-home" aria-selected="true">{{__('Staff')}}</a>
+                    <a class="nav-link active" id="text" id="pills-staff-tab" data-bs-toggle="pill" href="#staff" role="tab" aria-controls="pills-home" aria-selected="true">{{__('Staff')}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="pills-crm-tab" data-bs-toggle="pill" href="#crm" role="tab" aria-controls="pills-profile" aria-selected="false">{{__('CRM')}}</a>
+                    <a class="nav-link" id="text" id="pills-crm-tab" data-bs-toggle="pill" href="#crm" role="tab" aria-controls="pills-profile" aria-selected="false">{{__('CRM')}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="pills-project-tab" data-bs-toggle="pill" href="#project" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('Project')}}</a>
+                    <a class="nav-link" id="text" id="pills-project-tab" data-bs-toggle="pill" href="#project" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('Project')}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="pills-hrmpermission-tab" data-bs-toggle="pill" href="#hrmpermission" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('HRM')}}</a>
+                    <a class="nav-link" id="text" id="pills-hrmpermission-tab" data-bs-toggle="pill" href="#hrmpermission" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('HRM')}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="pills-account-tab" data-bs-toggle="pill" href="#account" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('Account')}}</a>
+                    <a class="nav-link" id="text" id="pills-account-tab" data-bs-toggle="pill" href="#account" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('Account')}}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="pills-account-tab" data-bs-toggle="pill" href="#pos" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('POS')}}</a>
+                    <a class="nav-link" id="text" id="pills-account-tab" data-bs-toggle="pill" href="#pos" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('POS')}}</a>
                 </li>
 
             </ul>
@@ -1260,10 +1262,12 @@
         </div>
 
     </div>
+    </div>
+    </div>
 </div>
-<div class="modal-footer">
+<div class="modal-footer me-5">
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Update')}}" class="btn  btn-primary">
+    <input type="submit" value="{{__('Update')}}" class="btn  btn-dark px-2">
 </div>
 
 {{Form::close()}}

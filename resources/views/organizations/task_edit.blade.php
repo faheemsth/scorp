@@ -77,13 +77,27 @@
                                     @foreach ($orgs as $key => $org)
                                         <option value="{{ $key }}"
                                             {{ $key == $task->organization_id ? 'selected' : '' }}>
-                                            
+
                                             {{ $org }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
+
+                        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'project director' || \Auth::user()->type == 'project manager')
+                        <div class="form-group row ">
+                            <label for="branches" class="col-sm-3 col-form-label">Brands</label>
+                            <div class="col-sm-6">
+                                <select class="form form-control select2 brand_id" id="choices-multiple0" name="brand_id">
+                                    <option value="">Select Brands</option>
+                                    @foreach ($companies as $key => $brand)
+                                        <option value="{{ $key }}">{{ $brand }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @endif
 
                         <div class="form-group row">
                             <label for="type" class="col-sm-3 col-form-label">Assign Type  <span class="text-danger">*</span></label>
@@ -106,7 +120,7 @@
                             <div class="col-sm-6" id="assigned_to_div">
                                 <select class="form form-control assigned_to" id="choices-multiple4" name="assigned_to" >
                                     <option value="">Assign to</option>
-                                    @foreach ($users as $key => $user)
+                                    @foreach ($employees as $key => $user)
                                         <option value="{{ $key }}"
                                             {{ $key == $task->assigned_to ? 'selected' : '' }}>{{ $user }}
                                         </option>
@@ -144,13 +158,13 @@
             {{-- Organizaiton Contact Info --}}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="ture"
                         aria-controls="panelsStayOpen-collapseTwo">
                         ADDITIONAL INFORMATION
                     </button>
                 </h2>
-                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-collapseTwo show" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingTwo">
                     <div class="accordion-body">
                         <div class="form-group row ">
@@ -186,7 +200,7 @@
                         RELATED TO
                     </button>
                 </h2>
-                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse shoe"
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
 
@@ -198,7 +212,7 @@
                             </label>
                             <div class="col-sm-6">
 
-                                <select class="form form-control select2 related_type" disabled readonly id="choices-multiple6" 
+                                <select class="form form-control select2 related_type" disabled readonly id="choices-multiple6"
                                     name="related_type">
                                     <option value="">Select type</option>
                                     <option value="organization"
@@ -235,13 +249,13 @@
             {{-- Organizaiton Description --}}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#panelsStayOpen-description" aria-expanded="false"
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-description" aria-expanded="ture"
                         aria-controls="panelsStayOpen-description">
                         DESCRIPTION INFORMATION
                     </button>
                 </h2>
-                <div id="panelsStayOpen-description" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-description" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
                         <textarea name="description" id="" cols="30" rows="3" class="form form-control">{{ $task->description }}</textarea>
@@ -253,13 +267,13 @@
             {{-- Organizaiton Description --}}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#panelsStayOpen-description" aria-expanded="false"
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-description" aria-expanded="ture"
                         aria-controls="panelsStayOpen-description">
                         PERMISSIONS
                     </button>
                 </h2>
-                <div id="panelsStayOpen-description" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-description" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
                         <div class="form-group row">

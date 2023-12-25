@@ -11,9 +11,10 @@
     $lang = \App\Models\Utility::getValByName('default_language');
    // $logo=asset(Storage::url('uploads/logo/'));
        $logo=\App\Models\Utility::get_file('uploads/logo');
-
+        
     $logo_light = \App\Models\Utility::getValByName('logo_light');
     $logo_dark = \App\Models\Utility::getValByName('logo_dark');
+  
     $company_favicon = \App\Models\Utility::getValByName('company_favicon');
     $setting = \App\Models\Utility::colorset();
     $mode_setting = \App\Models\Utility::mode_layout();
@@ -310,8 +311,12 @@
                                         <div class="card-body pt-0">
                                             <div class=" setting-card">
                                                 <div class="logo-content mt-4">
-                                                    <img id="image" src="{{$logo.'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:'logo-dark.png')}}"
+                                                    
+                                                    <!-- <img id="image" src="{{$logo.'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:'logo-dark.png')}}"
+                                                         class="big-logo"> -->
+                                                    <img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:'logo-dark.png') }}"
                                                          class="big-logo">
+                                                         
                                                 </div>
                                                 <div class="choose-files mt-5">
                                                     <label for="logo_dark">
@@ -341,7 +346,9 @@
                                         <div class="card-body pt-0">
                                             <div class=" setting-card">
                                                 <div class="logo-content mt-4">
-                                                    <img id="image1" src="{{$logo.'/'.(isset($logo_light) && !empty($logo_light)?$logo_light:'logo-light.png')}}"
+                                                    <!-- <img id="image1" src="{{$logo.'/'.(isset($logo_light) && !empty($logo_light)?$logo_light:'logo-light.png')}}"
+                                                         class="big-logo img_setting"> -->
+                                                    <img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_light) && !empty($logo_light)?$logo_light:'logo-light.png') }}"
                                                          class="big-logo img_setting">
                                                 </div>
                                                 <div class="choose-files mt-5">
@@ -373,8 +380,10 @@
                                         <div class="card-body pt-0">
                                             <div class=" setting-card">
                                                 <div class="logo-content mt-4">
-                                                    <img id="image2" src="{{$logo.'/'.(isset($company_favicon) && !empty($company_favicon)?$company_favicon:'favicon.png')}}" width="50px"
-                                                         class="img_setting">
+                                                    <!-- <img id="image2" src="{{$logo.'/'.(isset($company_favicon) && !empty($company_favicon)?$company_favicon:'favicon.png')}}" width="50px"
+                                                         class="img_setting"> -->
+                                                    <img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($company_favicon) && !empty($company_favicon)?$company_favicon:'favicon.png') }}"
+                                                         class="big-logo img_setting">
                                                 </div>
                                                 <div class="choose-files mt-5">
                                                     <label for="favicon">

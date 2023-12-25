@@ -285,7 +285,9 @@
                                         <div class="card-body pt-0">
                                             <div class=" setting-card">
                                                 <div class="logo-content mt-4">
-                                                    <img id="image" src="{{$logo.'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:'logo-dark.png')}}"
+                                                    <!-- <img id="image" src="{{$logo.'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:'logo-dark.png')}}"
+                                                         class="big-logo"> -->
+                                                        <img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:'logo-dark.png') }}"
                                                          class="big-logo">
                                                 </div>
                                                 <div class="choose-files mt-5">
@@ -317,7 +319,9 @@
                                         <div class="card-body pt-0">
                                             <div class="setting-card">
                                                 <div class="logo-content mt-4">
-                                                    <img id="image1" src="{{$logo.'/'.(isset($logo_light) && !empty($logo_light)?$logo_light:'logo-light.png')}}"
+                                                    <!-- <img id="image1" src="{{$logo.'/'.(isset($logo_light) && !empty($logo_light)?$logo_light:'logo-light.png')}}"
+                                                         class="big-logo img_setting"> -->
+                                                        <img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_light) && !empty($logo_light)?$logo_light:'logo-light.png') }}"
                                                          class="big-logo img_setting">
                                                 </div>
                                                 <div class="choose-files mt-5">
@@ -349,8 +353,10 @@
                                         <div class="card-body pt-0">
                                             <div class=" setting-card">
                                                 <div class="logo-content mt-4">
-                                                    <img id="image2" src="{{(!empty($company_favicon)?$logo.'/'. $company_favicon:$logo.'/'. 'favicon.png')}}" width="50px"
-                                                         class="img_setting">
+                                                    <!-- <img id="image2" src="{{(!empty($company_favicon)?$logo.'/'. $company_favicon:$logo.'/'. 'favicon.png')}}" width="50px"
+                                                         class="img_setting"> -->
+                                                        <img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_light) && !empty($logo_light)?$logo_light:'logo-light.png') }}"
+                                                         class="big-logo img_setting">
 
 {{--                                                    <img id="image2" src="{{$logo.'/'.('favicon.png')}}" width="50px" class="img_setting">--}}
 
@@ -2155,7 +2161,7 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <div class="card">
                                         <div class="card-header card-body">
-                                            <div class="row text-xs">
+                                            <div class="row ">
                                                 <div class="row">
                                                     <p class="col-4">{{__('Applicant Name')}} : <span class="pull-end text-primary">{applicant_name}</span></p>
                                                     <p class="col-4">{{__('Company Name')}} : <span class="pull-right text-primary">{app_name}</span></p>
@@ -2227,7 +2233,7 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <div class="card">
                                         <div class="card-header card-body">
-                                            <div class="row text-xs">
+                                            <div class="row ">
                                                 <div class="row">
                                                     <p class="col-4">{{__('Applicant Name')}} : <span class="pull-end text-primary">{date}</span></p>
                                                     <p class="col-4">{{__('Company Name')}} : <span class="pull-right text-primary">{app_name}</span></p>
@@ -2295,7 +2301,7 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <div class="card">
                                         <div class="card-header card-body">
-                                            <div class="row text-xs">
+                                            <div class="row ">
                                                 <div class="row">
                                                     <p class="col-4">{{__('Company Name')}} : <span class="pull-right text-primary">{app_name}</span></p>
                                                     <p class="col-4">{{__('Employee Name')}} : <span class="pull-right text-primary">{employee_name}</span></p>
@@ -2359,7 +2365,7 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12">
                                     <div class="card">
                                         <div class="card-header card-body">
-                                            <div class="row text-xs">
+                                            <div class="row ">
                                                 <div class="row">
                                                     <p class="col-4">{{__('Date')}} : <span class="pull-end text-primary">{date}</span></p>
                                                     <p class="col-4">{{__('Company Name')}} : <span class="pull-right text-primary">{app_name}</span></p>

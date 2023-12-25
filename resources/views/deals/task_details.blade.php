@@ -2,15 +2,19 @@
     .editable:hover {
         border: 1px solid rgb(136, 136, 136);
     }
-
-    .task-details table tr td {
-        padding-top: 3px !important;
-        padding-bottom: 3px !important;
-        font-size: 12px;
+    #dellhover{
+        opacity: 0;
+    }
+    #lihover:hover #dellhover{
+        opacity: 1;
     }
 
     .task-details table tr td {
-        font-size: 12px;
+        font-size: 14px;
+    }
+
+    .task-details table tr td {
+        font-size: 14px;
     }
 
     .card-body {
@@ -28,10 +32,11 @@
     .edit-input-field-div .input-group {
         min-width: 70px;
         min-height: 30px;
+        border: none !important;
     }
 
     .edit-input-field-div .input-group input {
-        border: 0px !important;
+        border: none !important;
     }
 
     .edit-input-field {
@@ -46,7 +51,7 @@
     }
 
     .edit-input-field-div:hover {
-        border: 1px solid rgb(224, 224, 224);
+        /* border: 1px solid rgb(224, 224, 224); */
     }
 
     .edit-input-field-div:hover .edit-btn-div {
@@ -125,7 +130,7 @@
                     <div class="lead-basic-info">
                         <p class="pb-0 mb-0 fw-normal">{{ __('Tasks') }}</p>
                         <div class="d-flex align-items-baseline ">
-                            <h4>{{ $task->name }}</h4>
+                            <h5 class="fw-bold">{{ $task->name }}</h5>
                         </div>
                     </div>
 
@@ -133,14 +138,19 @@
 
                 {{-- @if (\Auth::user()->type == 'super admin') --}}
                 <div class="d-flex justify-content-end gap-1 me-3">
+                    @if ($task->status == 0)
+                    <a href="javascript:void(0)" onclick="ChangeTaskStatus({{ $task->id }})"
+                        title="{{ __('Edit Status') }}" class="btn px-2 btn-dark text-white">
+                        <i class="fa-solid fa-check" style="color: #ffffff;"></i>
+                    </a>
+                    @endif
                     <a href="#" data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}"
                         data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"
-                        class="btn btn-sm btn-primary">
+                        class="btn px-2 btn-dark text-white">
                         <i class="ti ti-pencil"></i>
                     </a>
 
-                    <a href="/organization/{{ $task->id }}/taskDeleted" class="btn btn-sm text-white"
-                        style="background-color: #b5282f;">
+                    <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-danger text-white">
                         <i class="ti ti-trash "></i>
                     </a>
                 </div>
@@ -150,48 +160,53 @@
 
             <div class="lead-info d-flex justify-content-between p-3 text-center">
                 <div class="">
-                    <small>{{ __('Date Due') }}</small>
-                    <span class="font-weight-bolder">
-                        @php
+                    <small style="margin-bottom: 4px;">{{ __('Date Due') }}</small>
+                    <!-- <span class="px-3 text-white " style="border-radius: 6px;
+                    background: #22A9E3; padding-top: 2px; padding-bottom: 4px"> -->
+                    @php
                             $due_date = strtotime($task->due_date);
                             $current_date = strtotime(date('Y-m-d'));
+                            $status = strtolower($task->status);
+                            $color_code = '';
 
-                            if ($due_date > $current_date) {
-                                $remaining_days = ceil(($due_date - $current_date) / (60 * 60 * 24)); // Calculate remaining days
-                            } else {
-                                $remaining_days = 0; // Task is overdue
+                            if ($due_date > $current_date && $status === '0') {
+                                // Ongoing feture time
+                                $color_code = '#B3CDE1;';
+                            } elseif ($due_date === $current_date && $status === '0') {
+                                // Today date time
+                                $color_code = '#E89D25';
+                            } elseif ($due_date < $current_date && $status === '0') {
+                                // Past date time
+                                $color_code = 'red';
+                            } elseif ($status === '1') {
+                                // Completed task
+                                $color_code = 'green';
                             }
-
-                            if ($remaining_days == 0) {
-                                $message = 'Today';
-                            } elseif ($remaining_days < 0) {
-                                $message = abs($remaining_days) . ' days ago';
-                            } else {
-                                $message = $remaining_days . ' days remaining';
-                            }
-                        @endphp
-
-                        <b
-                            class="@if ($remaining_days == 0) text-success @elseif($remaining_days < 0) text-danger @else text-warning @endif">
+                            $message=Carbon\Carbon::parse($due_date)->diffForHumans();
+                    @endphp
+                    <span class="px-3 text-white" style="border-radius: 6px;background-color:{{ $color_code }};
+                            padding-top: 4px; padding-bottom: 8px">
+                        <span
+                            class="">
                             {{ $message }}
-                        </b>
+                        </span>
 
                     </span>
                 </div>
                 <div class="">
-                    <small>{{ __('Priority') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Priority') }}</small>
                     <span>{{ __('Medium') }}</span>
                 </div>
                 <div class="">
-                    <small>{{ __('Status') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Status') }}</small>
                     <span>{{ $task->status == 1 ? 'Completed' : 'On Going' }}</span>
                 </div>
                 <div class="">
-                    <small>{{ __('Progress') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Progress') }}</small>
                     <span>{{ strtolower($task->status) == '0' ? '0' : '100' }}</span>
                 </div>
                 <div class="">
-                    <small>{{ __('Assigned To') }}</small>
+                    <small style="margin-bottom: 4px;">{{ __('Assigned To') }}</small>
                     <span class="text-info">{{ \App\Models\User::findOrFail($task->assigned_to)->name }}</span>
                 </div>
             </div>
@@ -199,17 +214,20 @@
 
             <div class="lead-content my-2">
 
-                <div class="card me-3">
-                    <div class="card-header p-1">
+                <div class="card ">
+                    <div class="card-header p-1 bg-white">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link fw-bold" id="pills-details-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-details" type="button" role="tab"
+                                <button class="nav-link pills-link fw-bold active" id="text" id="pills-details-tab"
+                                    data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab"
                                     aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
                             </li>
-                            <!-- <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link" id="pills-related-tab" data-bs-toggle="pill" data-bs-target="#pills-related" type="button" role="tab" aria-controls="pills-related" aria-selected="false">{{ __('Related') }}</button>
-                            </li> -->
+                             {{-- <li class="nav-item" role="presentation">
+                                <button class="nav-link pills-link" id="text" id="pills-related-tab" data-bs-toggle="pill" data-bs-target="#pills-related" type="button" role="tab" aria-controls="pills-related" aria-selected="false">{{ __('Related') }}</button>
+                            </li> --}}
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link pills-link fw-bold" id="text" id="pills-timeline-tab" data-bs-toggle="pill" data-bs-target="#pills-timeline" type="button" role="tab" aria-controls="pills-timeline" aria-selected="false">{{ __('Timeline') }}</button>
+                            </li>
                         </ul>
                     </div>
 
@@ -240,23 +258,23 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px;  font-size: 14px;">
                                                                     {{ __('Record ID') }}
                                                                 </td>
                                                                 <td class=""
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
                                                                     {{ $task->id }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px;  font-size: 14px;">
                                                                     {{ __('Task Name') }}
                                                                 </td>
                                                                 <td class="name-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-
+                                                                    style="padding-left: 20px; font-size: 14px;">
+                                                                    {{--
                                                                     <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 name">
@@ -268,18 +286,19 @@
                                                                                 name="name"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $task->name }}
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px;  font-size: 14px;">
                                                                     {{ __('Office') }}
                                                                 </td>
                                                                 <td class="branch_id-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 branch_id">
                                                                             {{ isset($task->branch_id) && isset($branches[$task->branch_id]) ? $branches[$task->branch_id] : '' }}
@@ -290,20 +309,21 @@
                                                                                 name="branch_id"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ isset($task->branch_id) && isset($branches[$task->branch_id]) ? $branches[$task->branch_id] : '' }}
                                                                 </td>
                                                             </tr>
 
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px;  font-size: 14px;">
                                                                     {{ __('Agency') }}
                                                                 </td>
                                                                 <td class="organization_id-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div
                                                                             class="input-group border-0 organization_id">
@@ -315,26 +335,27 @@
                                                                                 name="organization_id"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ isset($users[$task->organization_id]) ? $users[$task->organization_id] : '' }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px;  font-size: 14px;">
                                                                     {{ __('Assigned To') }}
                                                                 </td>
                                                                 <td class="td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
                                                                     {{ $users[$task->assigned_to] }}
                                                                 </td>
                                                             </tr>
 
                                                             {{-- <tr>
-                                                                <td class="" style="width: 150px; text-align: right; font-size: 14px;">
+                                                                <td class="" style="  font-size: 14px;">
                                                                     {{ __('Category') }}
                                                                 </td>
-                                                                <td class="type-td" style="padding-left: 10px; font-size: 14px;">
+                                                                <td class="type-td" style="padding-left: 20px; font-size: 14px;">
 
                                                                     <span class="badge bg-success text-white"> {{ isset($stages[$task->deal_stage_id]) ? $stages[$task->deal_stage_id] : '' }}</span>
                                                                 </td>
@@ -342,13 +363,13 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Date Due') }}
                                                                 </td>
                                                                 <td class="due_date-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
 
-                                                                    <div
+                                                                    {{-- <div
                                                                         class="d-flex align-items-baseline edit-input-field-div">
                                                                         <div class="input-group border-0 due_date">
                                                                             {{ $task->due_date }}
@@ -359,7 +380,8 @@
                                                                                 name="due_date"><i
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
-                                                                    </div>
+                                                                    </div> --}}
+                                                                    {{ $task->due_date }}
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -389,22 +411,22 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Start Date') }}
                                                                 </td>
                                                                 <td class="phone-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
                                                                     {{ $task->start_date }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Remainder Date') }}
                                                                 </td>
                                                                 <td class="email-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
 
                                                                     {{ $task->remainder }}
                                                                 </td>
@@ -412,22 +434,22 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Last Updated at') }}
+                                                                    style=" width: 100px; font-size: 14px;">
+                                                                    {{ __('Updated at') }}
                                                                 </td>
                                                                 <td class="website-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
                                                                     {{ $task->updated_at }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Created at') }}
                                                                 </td>
                                                                 <td class="website-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
                                                                     {{ $task->created_at }}
                                                                 </td>
                                                             </tr>
@@ -460,22 +482,22 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Related Type') }}
                                                                 </td>
                                                                 <td class="td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
                                                                     {{ $task->related_type == 'deal' ? 'Admission' : $task->related_type }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Related To') }}
                                                                 </td>
                                                                 <td class="td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 20px; font-size: 14px;">
 
                                                                     @php
 
@@ -514,7 +536,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style=" width: 100px; font-size: 14px;">
                                                                     {{ __('Description') }}
                                                                 </td>
                                                                 <td class="description-td"
@@ -552,70 +574,63 @@
                                                                 <div class="card-header px-0 pt-0"
                                                                     style="padding-bottom: 18px;">
                                                                     {{ Form::model($task, ['route' => ['tasks.discussion.store', $task->id], 'method' => 'POST', 'id' => 'taskDiscussion']) }}
-                                                                    {{ Form::textarea('comment', null, ['class' => 'form-control']) }}
+                                                                    {{ Form::textarea('comment', null, ['class' => 'form-control', 'style' => 'height: 120px', 'id' => 'taskDiscussionInput']) }}
                                                                     <input type="hidden" id="id"
                                                                         name="id">
                                                                     <div class="d-flex justify-content-end mt-2">
-                                                                        <button type="submit"
-                                                                            class="btn btn-secondary btn-sm">Save</button>
+
+                                                                        <button type="submit" class="btn btn-secondary btn-sm mx-1" id="cancelDiscussion">Cancel</button>
+                                                                        <button type="submit" class="btn btn-secondary btn-sm d-none" id="SaveDiscussion">Save</button>
                                                                     </div>
                                                                     {{ Form::close() }}
                                                                 </div>
                                                             </span>
                                                             <div class="card-body px-0">
                                                                 <ul class="list-group list-group-flush mt-2">
-
-                                                                    @foreach ($discussions as $discussion)
-                                                                        <li class="list-group-item px-3"
-                                                                            id="lihover">
-                                                                            <div
-                                                                                class="d-block d-sm-flex align-items-start">
-                                                                                <img src="@if ($discussion['avatar'] && $discussion['avatar'] != '') {{ asset('/storage/uploads/avatar/' . $discussion['avatar']) }} @else {{ asset('/storage/uploads/avatar/avatar.png') }} @endif"
-                                                                                    class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
-                                                                                    alt="image">
-                                                                                <div class="w-100">
-                                                                                    <div
-                                                                                        class="d-flex align-items-center justify-content-between">
-                                                                                        <div class="mb-3 mb-sm-0">
-                                                                                            <h5 class="mb-0">
-                                                                                                {{ $discussion['comment'] }}
-                                                                                            </h5>
-                                                                                            <span
-                                                                                                class="text-muted text-sm">{{ $discussion['name'] }}</span>
-                                                                                        </div>
+                                                                    @if($discussions != null)
+                                                                        @foreach ($discussions as $discussion)
+                                                                            <li class="list-group-item px-3"
+                                                                                id="lihover">
+                                                                                <div
+                                                                                    class="d-block d-sm-flex align-items-start">
+                                                                                    <img src="{{ asset('assets/images/user/avatar.png') }}"
+                                                                                        class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
+                                                                                        alt="image">
+                                                                                    <div class="w-100">
                                                                                         <div
-                                                                                            class=" form-switch form-switch-right ">
-                                                                                            {{ $discussion['created_at'] }}
-                                                                                        </div>
-
-                                                                                        <style>
-                                                                                            #editable {
-                                                                                                display: none;
-                                                                                            }
-
-                                                                                            #lihover:hover #editable {
-                                                                                                display: flex;
-                                                                                            }
-                                                                                        </style>
-                                                                                        <div class="d-flex gap-3"
-                                                                                            id="dellhover">
-                                                                                            <i class="ti ti-pencil textareaClassedit"
-                                                                                                data-comment="{{ $discussion['comment'] }}"
-                                                                                                data-id="{{ $discussion['id'] }}"
-                                                                                                id="editable"
-                                                                                                style="font-size: 20px;"></i>
-                                                                                            <script></script>
-                                                                                            <i class="ti ti-trash"
-                                                                                                id="editable"
-                                                                                                style="font-size: 20px;"
-                                                                                                onclick="DeleteComment('{{ $discussion['id'] }}','{{ $task->id }}')"></i>
+                                                                                            class="d-flex align-items-center justify-content-between">
+                                                                                            <div class="mb-3 mb-sm-0">
+                                                                                                <h5 class="mb-0">
+                                                                                                    {{ $discussion['comment'] }}
+                                                                                                </h5>
+                                                                                                <span
+                                                                                                    class="text-muted text-sm">{{ $discussion['name'] }}</span>
+                                                                                            </div>
+                                                                                            <div
+                                                                                                class=" form-switch form-switch-right ">
+                                                                                                {{ $discussion['created_at'] }}
+                                                                                            </div>
+                                                                                            <div class="d-flex gap-3"
+                                                                                                id="dellhover">
+                                                                                                <i class="ti ti-pencil textareaClassedit"
+                                                                                                    data-comment="{{ $discussion['comment'] }}"
+                                                                                                    data-id="{{ $discussion['id'] }}"
+                                                                                                    id="editable"
+                                                                                                    style="font-size: 20px;"></i>
+                                                                                                <script></script>
+                                                                                                <i class="ti ti-trash"
+                                                                                                    id="editable"
+                                                                                                    style="font-size: 20px;"
+                                                                                                    onclick="DeleteComment('{{ $discussion['id'] }}','{{ $task->id }}')"></i>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
-                                                                            </div>
-                                                                        </li>
-                                                                    @endforeach
-
+                                                                            </li>
+                                                                        @endforeach
+                                                                    @else
+                                                                        <li class="list-group-item px-3" style="text-align:center">No comments found!</li>
+                                                                    @endif
                                                                 </ul>
                                                             </div>
                                                         </div>
@@ -645,10 +660,10 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 120px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px;  font-size: 14px;">
                                                                     {{ __('PERMISSIONS') }}
                                                                 </td>
-                                                                <td class="" style="padding-left: 10px;">
+                                                                <td class="" style="padding-left: 20px;">
                                                                     {{ $task->visibility }}
                                                                 </td>
                                                             </tr>
@@ -663,7 +678,7 @@
 
 
                             {{-- Details Pill End --}}
-                            <div class="tab-pane fade" id="pills-related" role="tabpanel"
+                            {{-- <div class="tab-pane fade show active" id="pills-related" role="tabpanel"
                                 aria-labelledby="pills-related-tab">
 
                                 <div class="block-items">
@@ -719,8 +734,63 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div> --}}
+
+                            <div class="tab-pane fade" id="pills-timeline" role="tabpanel"
+                                aria-labelledby="pills-timeline-tab">
+
+                                <div class="accordion" id="accordionPanelsStayOpenExample">
+                                    <!-- Open Accordion Item -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="panelsStayOpen-headingactive">
+                                            <button class="accordion-button p-2" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#panelsStayOpen-collapseactive">
+                                                {{ __('Timeline') }}
+                                            </button>
+                                        </h2>
+
+                                        <div id="panelsStayOpen-collapseactive"
+                                            class="accordion-collapse collapse show"
+                                            aria-labelledby="panelsStayOpen-headingactive">
+                                            <div class="accordion-body">
+                                                <!-- Accordion Content -->
+
+
+                                                <div class="mt-1">
+                                                    <div class="timeline-wrapper">
+                                                        <ul class="StepProgress">
+                                                            @foreach ($log_activities as $activity)
+                                                                @php
+                                                                    $remark = json_decode($activity->note);
+                                                                @endphp
+
+                                                                <li class="StepProgress-item is-done">
+                                                                    <div class="bold time">{{ $activity->created_at }}</div>
+                                                                    <div class="bold" style="text-align: left; margin-left: 80px;">
+                                                                            <p class="bold" style="margin-bottom: 0rem; color: #000000;">{{ $remark->title }}</p>
+                                                                            <p class="mt-0">{{ $remark->message }}</p>
+                                                                    </div>
+                                                                </li>
+
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <!-- End of Accordion Content -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End of Open Accordion Item -->
+
+                                    <!-- Add More Accordion Items Here -->
+
+                                </div>
+
                             </div>
                         </div>
+
+
                     </div>
                 </div>
             </div>
@@ -728,9 +798,10 @@
     </div>
     <script>
         $(document).ready(function() {
-            $('textarea[name="comment"]').val('');
-            $('#id').val('');
+
             $('.textareaClass').click(function() {
+                $('textarea[name="comment"]').val('');
+                $('#id').val('');
                 $('#textareaID, .textareaClass').toggle("slide");
             });
 
@@ -751,5 +822,68 @@
                 $('#textareaID, .textareaClass').toggle("slide");
             });
 
+            $('#cancelDiscussion').click(function(event) {
+                event.preventDefault(); // Prevents the default form submission
+                $('textarea[name="comment"]').val('');
+                $('#id').val('');
+                $('#textareaID, .textareaClass').toggle("slide");
+            });
+
         });
+
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        function ChangeTaskStatus(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to update the task status.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, update it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('task.status.change') }}",
+                        method: 'POST',
+                        data: {
+                            id: id
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'The task status has been changed successfully.',
+                        }).then(function() {
+                            // Reload the page after the user closes the SweetAlert dialog
+                            window.location.href = window.location.href;
+                        });
+                        },
+
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
+                } else {
+                    console.log("Task status update canceled.");
+                }
+            });
+        }
+    </script>
+    <script>
+$(document).ready(function() {
+    $('#taskDiscussionInput').keyup(function(event) {
+        var commentText = $('textarea[name="comment"]').val();
+        if (commentText.length > 0) {
+            $('#SaveDiscussion').removeClass("d-none");
+        } else {
+            $('#SaveDiscussion').addClass("d-none");
+        }
+    });
+});
+
     </script>

@@ -160,7 +160,7 @@
                                                     <div class="progress progress-xs mb-0">
                                                         <div class="progress-bar bg-{{ $due_project->project_progress()['color'] }}" role="progressbar" style="width: {{ $due_project->project_progress()['percentage'] }};" aria-valuenow="{{ $due_project->project_progress()['percentage'] }}" aria-valuemin="0" aria-valuemax="100"></div>
                                                     </div>
-                                                    <div class="d-flex justify-content-between text-xs text-muted text-end mt-1">
+                                                    <div class="d-flex justify-content-between  text-muted text-end mt-1">
                                                         <div>
                                                             <span class="font-weight-bold text-{{ \App\Models\Project::$status_color[$due_project->status] }}">{{ \App\Models\Project::$project_status[$due_project->status] }}</span>
                                                         </div>
@@ -270,7 +270,7 @@
                                                 <input type="text" name="title" required class="form-control" placeholder="{{__('Todo Title')}}"/>
                                             </div>
                                             <div class="col-2 card-meta d-inline-flex align-items-center">
-                                                <button class="btn btn-primary btn-xs" type="submit" id="todo_submit">
+                                                <button class="btn btn-dark btn-xs" type="submit" id="todo_submit">
                                                     <i class="ti ti-plus "></i>
                                                 </button>
                                             </div>

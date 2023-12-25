@@ -18,8 +18,13 @@
     .full-card {
         min-height: 165px !important;
     }
+    table{
+        font-size: 14px;
+    }
 </style>
 @section('content')
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
     <div class="row">
         <div class="col-xxl-12">
             <div class="row w-100 m-0">
@@ -36,7 +41,7 @@
                             </div>
                             <div class="col-10 d-flex justify-content-end gap-2">
                                 <div class="input-group w-25">
-                                    <button class="btn btn-sm list-global-search-btn">
+                                    <button class="btn list-global-search-btn">
                                         <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
                                             <i class="ti ti-search" style="font-size: 18px"></i>
                                         </span>
@@ -46,16 +51,94 @@
                                         placeholder="Search this list..." aria-label="Username"
                                         aria-describedby="basic-addon1">
                                 </div>
-
+                                <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="ti ti-filter" style="font-size:18px"></i>
+                                </button>
                                 <a href="#" data-size="lg" data-url="{{ route('users.create') }}"
                                     data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create') }}"
-                                    class="btn btn-dark">
-                                    <i class="ti ti-plus py-5"></i>
+                                    class="btn btn-dark px-2 py-2">
+                                    <i class="ti ti-plus "></i>
                                 </a>
                             </div>
                         </div>
+                        <script>
+                            $(document).ready(function() {
+                              $("#dropdownMenuButton3").click(function() {
+                                $("#filterToggle").toggle();
+                              });
+                            });
+                          </script>
                         <div class="row mt-5">
                             <div class="col-12">
+                                {{-- Filters --}}
+                                <div class="filter-data px-3" id="filterToggle"
+                                    <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+                                    <form action="/users" method="GET" class="">
+                                        <div class="row my-3">
+                                            <div class="col-md-4 mt-2">
+                                                <label for="">Name</label>
+                                                <input type="text" class="form form-control" placeholder="Search Name"
+                                                    name="name" value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>"
+                                                    style="width: 95%; border-color:#aaa">
+                                            </div>
+
+                                            <div class="col-md-4 mt-2">
+                                                <label for="">Company</label>
+                                                <input type="text" class="form form-control" placeholder="Search Company"
+                                                    name="company"
+                                                    value="<?= isset($_GET['company']) ? $_GET['company'] : '' ?>"
+                                                    style="width: 95%; border-color:#aaa">
+                                            </div>
+
+                                            <div class="col-md-4 mt-2">
+                                                <label for="">Phone</label>
+                                                <input type="text" class="form form-control" placeholder="Search Phone"
+                                                    name="phone"
+                                                    value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>"
+                                                    style="width: 95%; border-color:#aaa">
+                                            </div>
+                                            <div class="col-md-4 mt-2">
+                                                <br>
+                                                <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
+                                                <a href="/users" class="btn bg-dark" style="color:white;">Reset</a>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="enries_per_page" style="max-width: 300px; display: flex;">
+
+                                                <?php
+                                                $all_params = isset($_GET) ? $_GET : '';
+                                                if (isset($all_params['num_results_on_page'])) {
+                                                    unset($all_params['num_results_on_page']);
+                                                }
+                                                ?>
+                                                <input type="hidden" value="<?= http_build_query($all_params) ?>"
+                                                    class="url_params">
+                                                <select name="" id=""
+                                                    class="enteries_per_page form form-control"
+                                                    style="width: 100px; margin-right: 1rem;">
+                                                    <option
+                                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 25 ? 'selected' : '' ?>
+                                                        value="25">25</option>
+                                                    <option
+                                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 100 ? 'selected' : '' ?>
+                                                        value="100">100</option>
+                                                    <option
+                                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 300 ? 'selected' : '' ?>
+                                                        value="300">300</option>
+                                                    <option
+                                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 1000 ? 'selected' : '' ?>
+                                                        value="1000">1000</option>
+                                                    <option
+                                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == $total_records ? 'selected' : '' ?>
+                                                        value="{{ $total_records }}">all</option>
+                                                </select>
+
+                                                <span style="margin-top: 5px;">entries per page</span>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
@@ -66,7 +149,7 @@
                                                 <th>Designation</th>
                                                 <th>Phone</th>
                                                 <th>Last Login</th>
-                                                <th>Action</th>
+                                                {{-- <th>Action</th> --}}
                                             </tr>
                                         </thead>
 
@@ -86,7 +169,7 @@
                                                     <td>{{ $user->phone }}</td>
                                                     <td>{{ !empty($user->last_login_at) ? $user->last_login_at : '' }}
                                                     </td>
-                                                    <td>
+                                                    {{-- <td>
                                                         @if (Gate::check('edit user') || Gate::check('delete user'))
                                                             <div class="card-header-right" style="top: 0px; right:2px;">
                                                                 <div class="btn-group card-option">
@@ -149,7 +232,7 @@
                                                             </div>
                                                         @endif
 
-                                                    </td>
+                                                    </td> --}}
                                                     <!-- Add more cells as needed with corresponding data -->
                                                 </tr>
                                             @empty
@@ -161,11 +244,11 @@
 
                                     </table>
                                     @if ($total_records > 0)
-                            @include('layouts.pagination', [
-                                'total_pages' => $total_records,
-                                'num_results_on_page' => 10,
-                            ])
-                        @endif
+                                        @include('layouts.pagination', [
+                                            'total_pages' => $total_records,
+                                            'num_results_on_page' => 10,
+                                        ])
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -174,4 +257,9 @@
             </div>
         </div>
     </div>
+    <script>
+        $('.filter-btn-show').click(function() {
+            $("#filter-show").toggle();
+        });
+    </script>
 @endsection

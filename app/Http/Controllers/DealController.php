@@ -2,34 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Deal;
+use App\Models\User;
+use App\Models\Label;
+use App\Models\Stage;
+use App\Models\Branch;
+use App\Models\Course;
+use App\Models\Source;
+use App\Models\Utility;
+use App\Models\DealCall;
+use App\Models\DealFile;
+use App\Models\DealNote;
+use App\Models\DealTask;
+use App\Models\Pipeline;
+use App\Models\UserDeal;
+use App\Models\DealEmail;
+use App\Models\ClientDeal;
+use App\Models\University;
 use App\Mail\SendDealEmail;
 use App\Models\ActivityLog;
-use App\Models\ClientDeal;
-use App\Models\ClientPermission;
 use App\Models\CustomField;
-use App\Models\Deal;
-use App\Models\DealApplication;
-use App\Models\DealCall;
-use App\Models\DealDiscussion;
-use App\Models\DealEmail;
-use App\Models\DealFile;
-use App\Models\DealTask;
-use App\Models\Label;
-use App\Models\Pipeline;
-use App\Models\ProductService;
-use App\Models\Source;
-use App\Models\Stage;
-use App\Models\Course;
-use App\Models\University;
-use App\Models\User;
-use App\Models\UserDeal;
-use App\Models\Utility;
-use App\Models\TaskDiscussion;
-use App\Models\Branch;
-use App\Models\DealNote;
+use App\Models\StageHistory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
+use App\Models\DealDiscussion;
+use App\Models\ProductService;
+use App\Models\TaskDiscussion;
+use App\Models\DealApplication;
+use App\Models\ClientPermission;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class DealController extends Controller
 {
@@ -609,9 +610,28 @@ class DealController extends Controller
             $deal->created_by  = $usr->ownerId();
             $deal->save();
 
+            //Deal Creating Log
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Deal Created',
+                            'message' => 'Deal created successfully.'
+                        ]),
+            'module_id' => $deal->id,
+            'module_type' => 'deal',
+        ];
+        addLogActivity($data);
+
+        //Add Stage History
+        $data_for_stage_history = [
+            'stage_id' => $request->input('stage_id'),
+            'type_id' => $deal->id,
+            'type' => 'deal'
+        ];
+        addLeadHistory($data_for_stage_history);
+
             //send email
             $clients = User::whereIN('id', array_filter($request->input('contact')))->get()->pluck('email', 'id')->toArray();
-
             foreach (array_keys($clients) as $client) {
                 ClientDeal::create(
                     [
@@ -756,7 +776,9 @@ class DealController extends Controller
      */
     public function edit(Deal $deal)
     {
-        if (\Auth::user()->can('edit deal') || \Auth::user()->type == 'super admin') {
+        // if (\Auth::user()->can('edit deal') || \Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'super admin') {
+
             if ($deal->created_by == \Auth::user()->ownerId()) {
                 $pipelines         = Pipeline::get()->pluck('name', 'id')->toArray();
                 $sources           = Source::get()->pluck('name', 'id')->toArray();
@@ -1630,7 +1652,7 @@ class DealController extends Controller
                     return redirect()->back()->with('error', $messages->first());
                 }
 
-                
+
 
                 $dealTask = DealTask::create(
                     [
@@ -1672,7 +1694,7 @@ class DealController extends Controller
                 // Send Email
                 Utility::sendEmailTemplate('Create Task', $usrs, $tArr);
 
-               
+
                 $data = [
                     'type' => 'info',
                     'note' => json_encode([
@@ -1685,7 +1707,7 @@ class DealController extends Controller
                 addLogActivity($data);
 
 
-                
+
                 return redirect()->back()->with('success', __('Task successfully created!'))->with('status', 'tasks');
             } else {
                 return redirect()->back()->with('error', __('Permission Denied.'))->with('status', 'tasks');
@@ -2394,6 +2416,7 @@ class DealController extends Controller
             }
 
             $universities = University::get()->pluck('name', 'id');
+            $universities->prepend('Select Institute');
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
             $statuses = [
@@ -2410,10 +2433,10 @@ class DealController extends Controller
 
     public function storeApplication(Request $request)
     {
-      
+
 
         if (\Auth::user()->can('create application')) {
-           
+
             $validator = \Validator::make(
                 $request->all(),
                 [
@@ -2424,24 +2447,24 @@ class DealController extends Controller
                 ]
             );
 
-         
+
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
                 return redirect()->back()->with('error', $messages->first());
             }
 
-           
+
 
             //check application exist or not
             $passport_number = $request->passport_number;
             $university_name = University::select('name')->where(['id' => (int)$request->university])->first()->name;
             $university_name = str_replace(' ', '-', $university_name);
 
-            
+
 
             $is_exist = DealApplication::where(['application_key' => $passport_number . '-' . $university_name])->first();
-          
-           
+
+
             if ($passport_number && $is_exist) {
                 return json_encode([
                     'status' => 'error',
@@ -2462,6 +2485,28 @@ class DealController extends Controller
                 'name' => $deal->name . '-' . $request->course . '-' . $university_name . '-' . $request->application_key,
                 'created_by' => \Auth::user()->id
             ]);
+
+
+            //Add Stage History
+            $data_for_stage_history = [
+                'stage_id' => $request->status,
+                'type_id' => $new_app->id,
+                'type' => 'application'
+            ];
+            addLeadHistory($data_for_stage_history);
+
+
+            //Log
+            $data = [
+                'type' => 'info',
+                'note' => json_encode([
+                                'title' => 'Stage Updated',
+                                'message' => 'Application stage updated successfully.'
+                            ]),
+                'module_id' => $new_app->id,
+                'module_type' => 'application',
+            ];
+            addLogActivity($data);
 
             return json_encode([
                 'status' => 'success',
@@ -2589,6 +2634,9 @@ class DealController extends Controller
         if (isset($_GET['due_date']) && !empty($_GET['due_date'])) {
             $filters['due_date'] = $_GET['due_date'];
         }
+        if (isset($_GET['status']) && !empty($_GET['status'])) {
+            $filters['status'] = $_GET['status'];
+        }
 
         return $filters;
     }
@@ -2626,6 +2674,8 @@ class DealController extends Controller
             }
 
 
+
+
             ///////Add filter
             $filters = $this->TasksFilter();
 
@@ -2638,7 +2688,13 @@ class DealController extends Controller
                     $tasks->whereIn('created_by', $value);
                 } elseif ($column == 'due_date') {
                     $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                }elseif ($column == 'status') {
+                    $tasks->where('status',$value);
                 }
+            }
+
+            if(!isset($_GET['status'])){
+                $tasks->where('status',0);
             }
 
 
@@ -2659,10 +2715,27 @@ class DealController extends Controller
             $user_type = User::get()->pluck('type', 'id')->toArray();
             $users = User::get()->pluck('name', 'id')->toArray();
             $brands = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+            $branches = array();
+
+            if (\Auth::user()->type == 'super admin') {
+                $branches = Branch::get();
+            } else {
+                $branches = Branch::where('created_by', \Auth::user()->id)->get();
+            }
+
+            $assign_to = array();
+            if(\Auth::user()->type == 'super admin'){
+                $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+                ->get();
+            }else{
+                $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+                ->where('created_by', \Auth::user()->id)->get();
+            }
+
 
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-                $html = view('deals.tasks_list_ajax',compact('tasks', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'))->render();
+                $html = view('deals.tasks_list_ajax',compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'))->render();
 
                 return json_encode([
                     'status' => 'success',
@@ -2671,7 +2744,7 @@ class DealController extends Controller
             }
 
 
-            return view('deals.deal_tasks', compact('tasks', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'));
+            return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -2714,14 +2787,25 @@ class DealController extends Controller
             ->orderBy('task_discussions.created_at', 'DESC')
             ->get()
             ->toArray();
+            $log_activities = getLogActivity($taskId, 'task');
 
-
-        $html = view('deals.task_details', compact('task', 'branches', 'users', 'deals', 'stages', 'discussions'))->render();
+        $html = view('deals.task_details', compact('task', 'branches', 'users', 'deals', 'stages','log_activities', 'discussions'))->render();
 
         return json_encode([
             'status' => 'success',
             'html' => $html
         ]);
+    }
+
+    public function TaskStatusChange(Request $request)
+    {
+       if(!empty($request->input('id'))){
+        DealTask::findorfail($request->input('id'))->update(['status'=>'1']);
+        return json_encode([
+            'status' => 'success',
+            'message' => 'Update User Tasks Successfully '
+        ]);
+       }
     }
 
     public function fetchOrgField(Request $request)
@@ -2888,9 +2972,12 @@ class DealController extends Controller
 
             $applications = DealApplication::where('deal_id', $deal->id)->get();
             $tasks = DealTask::where(['related_to' => $deal->id, 'related_type' => 'deal'])->get();
-            $log_activities = getLogActivity($deal->id);
+            $log_activities = getLogActivity($deal->id, 'deal');
 
-            $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities'))->render();
+             //Getting lead stages history
+             $stage_histories = StageHistory::where('type', 'deal')->where('type_id', $deal->id)->pluck('stage_id')->toArray();
+
+            $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories'))->render();
 
             return json_encode([
                 'status' => 'success',
@@ -3120,7 +3207,7 @@ class DealController extends Controller
         $validator = \Validator::make(
             $request->all(),
             [
-                'title' => 'required',
+                // 'title' => 'required',
                 'description' => 'required'
             ]
         );
@@ -3135,6 +3222,21 @@ class DealController extends Controller
 
 
         $id = $request->id;
+        if($request->note_id != null && $request->note_id != ''){
+            $note = DealNote::where('id', $request->note_id)->first();
+            $note->title = $request->input('title');
+            $note->description = $request->input('description');
+            $note->update();
+
+            $notes = DealNote::where('deal_id', $id)->orderBy('created_at', 'DESC')->get();
+            $html = view('deals.getNotes', compact('notes'))->render();
+
+            return json_encode([
+                'status' => 'success',
+                'html' => $html,
+                'message' =>  __('Notes updated successfully')
+            ]);
+        }
         $note = new DealNote();
         $note->title = $request->input('title');
         $note->description = $request->input('description');
@@ -3220,7 +3322,7 @@ class DealController extends Controller
             $application_id = $_GET['application_id'];
             DealApplication::where('id', '!=', $application_id)->update(['status' => 0]);
         }
-        
+
 
         Deal::where('id', $deal_id)->update(['stage_id' => $stage_id]);
         $data = [
@@ -3234,6 +3336,15 @@ class DealController extends Controller
         ];
         addLogActivity($data);
 
+
+        //Add Stage History
+        $data_for_stage_history = [
+            'stage_id' => $stage_id,
+            'type_id' => $deal_id,
+            'type' => 'deal'
+        ];
+        addLeadHistory($data_for_stage_history);
+
         return json_encode([
             'status' => 'success',
             'message' => 'Deal stage successfully udpated!!!'
@@ -3241,7 +3352,7 @@ class DealController extends Controller
     }
 
     public function getDealApplications(){
-        
+
     }
 
     ////////////////////////////////////////////////////////////
@@ -3251,7 +3362,11 @@ class DealController extends Controller
         $stages = Stage::get()->pluck('name', 'id')->toArray();
         $universities = University::get()->pluck('name', 'id')->toArray();
 
-        $html = view('deals.detail_application', compact('application', 'stages', 'universities'))->render();
+        //Getting lead stages history
+        $stage_histories = StageHistory::where('type', 'application')->where('type_id', $id)->pluck('stage_id')->toArray();
+
+
+        $html = view('deals.detail_application', compact('application', 'stages', 'universities', 'stage_histories'))->render();
         return json_encode([
             'status' => 'success',
             'app_id' => $application->id,
@@ -3261,18 +3376,18 @@ class DealController extends Controller
 
     public function updateBulkTaskStatus(Request $request){
 
-     
+
 
         $ids = explode(',', $request->task_ids);
         $status = $request->status;
 
         DealTask::whereIn('id', $ids)->update(['status' => $status]);
-      
+
 
         foreach($ids as $id){
-           
+
             $task = DealTask::findOrFail($id);
-                  
+
             $data = [
                 'type' => 'info',
                 'note' => json_encode([
@@ -3287,6 +3402,58 @@ class DealController extends Controller
         return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks status updated successfully');
     }
 
+    public function updateBulkTask(Request $request){
+
+        $ids = explode(',',$request->tasks_ids);
+
+        if(isset($request->task_name)){
+
+            DealTask::whereIn('id',$ids)->update(['name' => $request->task_name]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->branch_id)){
+
+            DealTask::whereIn('id',$ids)->update(['branch_id' => $request->branch_id]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->status)){
+
+            DealTask::whereIn('id',$ids)->update(['status' => $request->status]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->due_date)){
+
+            DealTask::whereIn('id',$ids)->update(['due_date' => $request->due_date]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->start_date)){
+
+            DealTask::whereIn('id',$ids)->update(['start_date' => $request->start_date]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->remainder_date) && isset($request->remainder_time)){
+
+            DealTask::whereIn('id',$ids)->update(['remainder_date' => $request->remainder_date]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->description)){
+
+            DealTask::whereIn('id',$ids)->update(['description' => $request->description]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->visibility)){
+
+            DealTask::whereIn('id',$ids)->update(['visibility' => $request->visibility]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }elseif(isset($request->assigned_to)){
+
+            DealTask::whereIn('id',$ids)->update(['assigned_to' => $request->assigned_to]);
+            return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks updated successfully');
+
+        }
+    }
+
     public function deleteBulkTasks(Request $request){
         DealTask::whereIn('id', explode(',', $request->ids))->delete();
         return redirect()->route('deals.get.user.tasks')->with('success', 'Tasks deleted successfully');
@@ -3299,5 +3466,35 @@ class DealController extends Controller
         }else{
             return redirect()->route('deals.list')->with('error', 'Atleast select 1 deal.');
         }
+    }
+
+    public function getCompanyEmployees(){
+        $id = $_GET['id'];
+
+        $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
+        $branches = Branch::pluck('name', 'id')->toArray();
+
+        $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to" required> <option value="">Assign to</option> ';
+        foreach ($employees as $key => $user) {
+            $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        }
+        $html .= '</select>';
+        
+        $html1 = ' <select class="form form-control branch_id select2" id="choices-multiple4" name="branch_id" required> <option value="">Select Branch</option> ';
+        foreach ($branches as $key => $branch) {
+            $html1 .= '<option value="' . $key . '">' . $branch . '</option> ';
+        }
+        $html1 .= '</select>';
+
+        return json_encode([
+            'status' => 'success',
+            'employees' => $html,
+            'branches' => $html1,
+        ]);
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
     }
 }

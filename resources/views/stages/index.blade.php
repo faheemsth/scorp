@@ -78,7 +78,7 @@
                                     <ul class="list-group sortable">
                                         @foreach ($pipeline['stages'] as $stage)
                                             <li class="list-group-item" data-id="{{$stage->id}}">
-                                                <span class="text-xs text-dark">{{$stage->name}}</span>
+                                                <span class=" text-dark">{{$stage->name}}</span>
                                                 <span class="float-end d-flex justify-content-center">
 
                                                 @can('edit lead stage')

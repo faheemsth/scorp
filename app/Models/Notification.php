@@ -154,7 +154,7 @@ class Notification extends Model
                                     </div>
                                     <div class="flex-fill ml-3">
                                         <div class="h6 text-sm mb-0">' . $text . '</div>
-                                        <small class="text-muted text-xs">' . $date . '</small>
+                                        <small class="text-muted ">' . $date . '</small>
                                     </div>
                                 </div>
                             </a>';

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\ActivityLog;
+use App\Models\StageHistory;
 use App\Models\LogActivity;
 use App\Models\University;
 use App\Models\User;
@@ -10,7 +11,7 @@ if (!function_exists('countries')) {
     {
         $all_countries = [];
         $contries = \App\Models\Country::get();
-        
+
 
         foreach($contries as $country){
             $all_countries[$country->name] = $country->name;
@@ -57,6 +58,13 @@ if (!function_exists('allUsers')) {
     }
 }
 
+if (!function_exists('companiesEmployees')) {
+    function companiesEmployees($company_id)
+    {
+       return User::where('created_by', $company_id)->pluck('name', 'id')->toArray();
+    }
+}
+
 
 if (!function_exists('allUniversities')) {
     function allUniversities()
@@ -81,10 +89,48 @@ if (!function_exists('addLogActivity')) {
     }
 }
 
-if (!function_exists('getLogActivity')) {
-    function getLogActivity($id)
+if (!function_exists('addLeadHistory')) {
+    function addLeadHistory($data = [])
     {
-        return LogActivity::where('module_id', $id)->get();
+        if(isset($data['stage_id'])){
+            StageHistory::where('type_id', $data['type_id'])
+                        ->where('type', $data['type'])
+                        ->where('stage_id', '>=', $data['stage_id'])
+                        ->delete();
+        }
+
+
+       $new_log = new StageHistory();
+       $new_log->type = $data['type'];
+       $new_log->type_id = $data['type_id'];
+       $new_log->stage_id = $data['stage_id'];
+       $new_log->created_by = \Auth::user()->id;
+       $new_log->save();
+    }
+}
+
+if (!function_exists('getLogActivity')) {
+    function getLogActivity($id, $type)
+    {
+        return LogActivity::where('module_id', $id)->where('module_type', $type)->get();
+    }
+}
+if (!function_exists('formatPhoneNumber')) {
+    function formatPhoneNumber($phoneNumber)
+    {
+        // Remove non-numeric characters from the phone number
+        $phoneNumber = preg_replace('/[^0-9]/', '', $phoneNumber);
+
+        // Check if the phone number starts with '92' (country code for Pakistan)
+        if (strpos($phoneNumber, '92') === 0) {
+            // Remove the leading '92' if present
+            $phoneNumber = substr($phoneNumber, 2);
+        }
+
+        // Add the country code '92' to the phone number
+        $formattedPhoneNumber = '92' . $phoneNumber;
+
+        return $formattedPhoneNumber;
     }
 }
 

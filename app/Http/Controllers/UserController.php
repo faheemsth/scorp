@@ -46,13 +46,32 @@ class UserController extends Controller
 
         if (\Auth::user()->can('manage user')) {
             if (\Auth::user()->type == 'super admin') {
-                $users = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'company')->orwhere('type', '=', 'team')->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $users = User::where('created_by', '=', $user->creatorId())
+                    ->where(function ($query) {
+                        $query->where('type', '=', 'company')
+                            ->orWhere('type', '=', 'team');
+                    });
+
+                if (!empty($_GET['company'])) {
+                    $users->where('email', 'like', '%' . $_GET['company'] . '%');
+                }
+
+                if (!empty($_GET['name'])) {
+                    $users->where('name', 'like', '%' . $_GET['name'] . '%');
+                }
+
+                if (!empty($_GET['phone'])) {
+                    $users->where('phone', 'like', '%' . $_GET['phone'] . '%');
+                }
+
+                $users = $users->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             } else {
-                $users = User::where('created_by', '=', $user->creatorId())->where('type', '!=', 'client')->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $users = User::where('created_by', '=', $user->creatorId())->where('type', '!=', 'client')
+                    ->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }
             $total_records = $users->total();
             // return view('user.index-Old')->with('users', $users);
-            return view('user.index',compact('total_records'))->with('users', $users);
+            return view('user.index', compact('total_records'))->with('users', $users);
         } else {
             return redirect()->back();
         }
@@ -84,7 +103,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-       // dd($request->input());
+        // dd($request->input());
         if (\Auth::user()->can('create user')) {
             $default_language = DB::table('settings')->select('value')->where('name', 'default_language')->first();
             if (\Auth::user()->type == 'super admin') {
@@ -374,7 +393,6 @@ class UserController extends Controller
                 $dir        = '/uploads/avatar/';
                // $dir        = 'storage/';
             } else {
-                //$dir        = 'storage/';
                 $dir        = 'uploads/avatar/';
             }
 
@@ -605,21 +623,47 @@ class UserController extends Controller
     {
 
         $user = \Auth::user();
+        $num_results_on_page = 10;
+
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = ($page - 1) * $num_results_on_page;
+        } else {
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = 0;
+        }
 
         if (\Auth::user()->can('manage employees')) {
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
             if (\Auth::user()->type == 'super admin') {
-                $users = User::whereNotIn('type', $excludedTypes)->get();
+                $usersQuery = User::whereNotIn('type', $excludedTypes);
+
+                if (!empty($_GET['company'])) {
+                    $usersQuery->where('email', 'like', '%' . $_GET['company'] . '%');
+                }
+
+                if (!empty($_GET['name'])) {
+                    $usersQuery->where('name', 'like', '%' . $_GET['name'] . '%');
+                }
+
+                if (!empty($_GET['phone'])) {
+                    $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
+                }
+
+                $users = $usersQuery->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             } else {
-                $users = User::where('created_by', '=', $user->creatorId())->whereNotIn('type', $excludedTypes)->get();
+                $users = User::where('created_by', '=', $user->creatorId())->whereNotIn('type', $excludedTypes)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }
 
-
-            return view('user.employee')->with('users', $users);
+            $total_records = $users->total();
+            return view('user.employee', compact('total_records'))->with('users', $users);
         } else {
             return redirect()->back();
         }
     }
+
+
 
     public function employeeCreate()
     {
@@ -775,16 +819,17 @@ class UserController extends Controller
         }
     }
 
-    public function employeeEdit($id){
+    public function employeeEdit($id)
+    {
 
         $user  = \Auth::user();
         if (\Auth::user()->type == 'super admin') {
             $branches = \App\Models\Branch::get()->pluck('name', 'id');
-          //  $roles = Role::where('name', 'company')->orwhere('name', 'team')->get()->pluck('name', 'name');
+            //  $roles = Role::where('name', 'company')->orwhere('name', 'team')->get()->pluck('name', 'name');
         } else {
             $branches = \App\Models\Branch::where(['created_by' => $user->id])->get()->pluck('name', 'id');
             $branches = [0 => 'Select Branches'] + $branches->toArray();
-           // $roles = Role::whereNotIn('name', ['client', 'super admin', 'company', 'team'])->get()->pluck('name', 'id');
+            // $roles = Role::whereNotIn('name', ['client', 'super admin', 'company', 'team'])->get()->pluck('name', 'id');
         }
 
 
@@ -796,7 +841,7 @@ class UserController extends Controller
             $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
             $roles = Role::whereNotIn('name', $excludedTypes)->get()->unique('name')->pluck('name', 'name');
-           // $autoGeneratedPassword = Str::random(10);
+            // $autoGeneratedPassword = Str::random(10);
 
             return view('user.employeeEdit', compact('user', 'roles', 'customFields', 'branches', 'companies'));
         } else {
@@ -875,7 +920,8 @@ class UserController extends Controller
         }
     }
 
-    public function employeeShow($id){
+    public function employeeShow($id)
+    {
         $employee = User::findOrFail($id);
         $html = view('user.employeeDetail', compact('employee'))->render();
         return json_encode([

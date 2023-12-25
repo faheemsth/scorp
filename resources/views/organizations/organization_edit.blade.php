@@ -25,7 +25,6 @@
 
             </div>
         </div>
-        <div class="modal-body">
             <style>
                 .form-group {
                     margin-bottom: 0px;
@@ -41,6 +40,10 @@
                 }
             </style>
             {{-- ACCORDION --}}
+            <div class="modal-body pt-0 " style="height: 80vh;">
+                <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
+                <div class="card-body px-2 py-0" >
+
             <div class="accordion" id="accordionPanelsStayOpenExample">
                 {{-- Organizaiton Basic Info --}}
                 <div class="accordion-item">
@@ -93,7 +96,7 @@
                             ORGANIZATION CONTACT DETAILS
                         </button>
                     </h2>
-                    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+                    <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show"
                         aria-labelledby="panelsStayOpen-headingTwo">
                         <div class="accordion-body">
                             <div class="form-group row">
@@ -163,7 +166,7 @@
                             ADDRESS INFORMATION
                         </button>
                     </h2>
-                    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse"
+                    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show"
                         aria-labelledby="panelsStayOpen-headingThree">
                         <div class="accordion-body">
 
@@ -226,7 +229,7 @@
                             DESCRIPTION INFORMATION
                         </button>
                     </h2>
-                    <div id="panelsStayOpen-description" class="accordion-collapse collapse"
+                    <div id="panelsStayOpen-description" class="accordion-collapse collapse show"
                         aria-labelledby="panelsStayOpen-headingThree">
                         <div class="accordion-body">
                             <textarea name="organization_description" id="" cols="30" rows="3" class="form form-control">{{ $org_detail->description }}</textarea>
@@ -234,11 +237,9 @@
                     </div>
                 </div>
             </div>
-
-
-
-
         </div>
+                </div>
+            </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-dark">Save changes</button>

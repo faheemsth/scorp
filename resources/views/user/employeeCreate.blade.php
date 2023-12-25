@@ -24,10 +24,10 @@
                 @enderror
             </div>
         @elseif(\Auth::user()->type == 'super admin')
-            
+
         @endif
 
-    
+
         @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team')
             <div class="form-group col-md-6">
                 {{ Form::label('role', __('User Role'),['class'=>'form-label']) }}
@@ -118,8 +118,8 @@
 </div>
 
 <div class="modal-footer">
-    <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+    <input type="button" value="{{__('Cancel')}}" class="btn  btn-light px-2 py-2" data-bs-dismiss="modal">
+    <input type="submit" value="{{__('Create')}}" class="btn  btn-dark px-2 py-2">
 </div>
 
 {{Form::close()}}

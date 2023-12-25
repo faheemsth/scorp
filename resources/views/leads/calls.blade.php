@@ -42,9 +42,9 @@
 <div class="modal-footer">
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
     @if(isset($call))
-        <input type="submit" value="{{__('Update')}}" class="btn  btn-primary">
+        <input type="submit" value="{{__('Update')}}" class="btn  btn-dark px-2">
     @else
-        <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+        <input type="submit" value="{{__('Create')}}" class="btn  btn-dark px-2">
     @endif
 </div>
 {{Form::close()}}

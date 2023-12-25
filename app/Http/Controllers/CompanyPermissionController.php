@@ -28,10 +28,12 @@ class CompanyPermissionController extends Controller
         //                 ->where('u.type', '=', 'company')
         //                 ->get();
 
-        $companies = User::where('type', '=', 'company')->get();
+        $employees = User::orwhere('type', '=', 'Project Director')->orwhere('type', 'Project Manager')->get();
+               
+        $companies = User::where('type', 'company')->get();
         $permission_arr = [];
 
-        foreach ($companies as $com) {
+        foreach ($employees as $com) {
             $permitted_companies = $com->companyPermissions;
 
             foreach($permitted_companies as $per_com){
@@ -39,7 +41,7 @@ class CompanyPermissionController extends Controller
             }
         }
         
-              return view('company_permission.index')->with(['companies' => $companies, 'permission_arr' => $permission_arr]);
+              return view('company_permission.index')->with(['employees' => $employees, 'permission_arr' => $permission_arr, 'companies' => $companies]);
         }
         else
         {
@@ -49,21 +51,21 @@ class CompanyPermissionController extends Controller
 
     public function company_permission_updated(Request $request){
         //dd(\Auth::user()->id);
-        $company_id = $request->company_for;
+        $user_id = $request->company_for;
         $permitted_company = $request->company_permission;
         $is_active = $_POST['active'];
 
-        $company_per = CompanyPermission::where(['company_id' =>  $company_id, 'permitted_company_id' => $permitted_company])->first();
+        $company_per = CompanyPermission::where(['user_id' =>  $user_id, 'permitted_company_id' => $permitted_company])->first();
 
         if(!$company_per){
             $new_permission = new CompanyPermission();
-            $new_permission->company_id = $company_id;
+            $new_permission->user_id = $user_id;
             $new_permission->permitted_company_id = $permitted_company;
             $new_permission->active = $is_active;
             $new_permission->created_by = \Auth::user()->id;
             $new_permission->save();
         }else{
-            $company_per->company_id = $company_id;
+            $company_per->user_id = $user_id;
             $company_per->permitted_company_id = $permitted_company;
             $company_per->active = $is_active;
             $company_per->created_by = \Auth::user()->id;

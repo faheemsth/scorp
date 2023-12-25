@@ -4,9 +4,7 @@
         padding-top: 0px;
     }
 
-    .col-form-label {
-        text-align: center;
-    }
+
 
     .space {
         padding: 3px 3px;
@@ -14,8 +12,10 @@
 </style>
 {{ Form::model(\Auth::user(), ['route' => ['organization.tasks.store', \Auth::user()->id], 'method' => 'POST', 'id' => 'create-task', 'style' => 'z-index: 9999999 !important;']) }}
 
-<div class="modal-body">
-    <div class="row">
+
+<div class="modal-body pt-0 " style="height: 80vh;">
+<div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
+<div class="card-body px-2 py-0" >
 
         {{-- ACCORDION --}}
         <div class="accordion" id="accordionPanelsStayOpenExample">
@@ -33,7 +33,7 @@
                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingOne">
                     <div class="accordion-body ">
-                        
+
                         <div class="form-group row ">
                             <label for="organization-name" class="col-sm-3 col-form-label">
                                 Task Name
@@ -44,19 +44,58 @@
                                     placeholder="Task Name" name='task_name'>
                             </div>
                         </div>
-
+                        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                         <div class="form-group row ">
-                            <label for="branches" class="col-sm-3 col-form-label">Offfice</label>
+                            <label for="branches" class="col-sm-3 col-form-label">Brands</label>
                             <div class="col-sm-6">
-                                <select class="form form-control select2" id="choices-multiple1" name="branch_id">
-                                    <option value="">Select Office</option>
-                                    @foreach ($branches as $key => $branch)
-                                        <option value="{{ $key }}">{{ $branch }}</option>
+                                <select class="form form-control select2 brand_id" id="choices-multiple0" name="brand_id">
+                                    <option value="">Select Brands</option>
+                                    @foreach ($companies as $key => $brand)
+                                        <option value="{{ $key }}">{{ $brand }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
+                        @endif
+                        <div class="form-group row ">
+                            <label for="branches" class="col-sm-3 col-form-label">Office</label>
+                            <div class="col-sm-6" id="branch_div">
+                                <select class="form form-control select2 branch_id" id="choices-multiple1" name="branch_id">
+                                    <option value="">Select Office</option>
+                                   {{-- @foreach ($branches as $key => $branch)
+                                        <option value="{{ $key }}">{{ $branch }}</option>
+                                    @endforeach --}}
+                                </select>
+                            </div>
+                        </div>
 
+                        <div class="form-group row d-none">
+                            <label for="type" class="col-sm-3 col-form-label">Assign Type <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-sm-6">
+                                <select class="form form-control select2 assign_type" id="choices-multiple3"
+                                    name="assign_type">
+                                    {{-- <option value="">Select Assign type</option> --}}
+                                    {{-- <option value="company">Company</option> --}}
+                                    <option value="individual">individual</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row ">
+                            <label for="organization" class="col-sm-3 col-form-label">Assigned to <span
+                                    class="text-danger">*</span></label>
+                            <div class="col-sm-6 " id="assign_to_div">
+                                <select class="form form-control assigned_to select2" id="choices-multiple4"
+                                    name="assigned_to">
+                                    <option value="">Select Employee</option>
+                                    {{--  @foreach($employees as $key => $emp)
+                                        <option value="{{ $key }}">{{ $emp }}</option>
+                                    @endforeach --}}
+                                </select>
+                            </div>
+                        </div>
 
                         <div class="form-group row d-none">
                             <label for="organization" class="col-sm-3 col-form-label">Agency
@@ -73,32 +112,6 @@
                                 </select>
                             </div>
                         </div>
-
-                        <div class="form-group row">
-                            <label for="type" class="col-sm-3 col-form-label">Assign Type <span
-                                    class="text-danger">*</span></label>
-                            <div class="col-sm-6">
-                                <select class="form form-control select2 assign_type" id="choices-multiple3"
-                                    name="assign_type">
-                                    <option value="">Select Assign type</option>
-                                    <option value="company">Company</option>
-                                    <option value="individual">individual</option>
-                                </select>
-                            </div>
-                        </div>
-
-
-                        <div class="form-group row ">
-                            <label for="organization" class="col-sm-3 col-form-label">Assigned to <span
-                                    class="text-danger">*</span></label>
-                            <div class="col-sm-6 " id="assign_to_div">
-                                <select class="form form-control assigned_to select2" id="choices-multiple4"
-                                    name="assigned_to">
-
-                                </select>
-                            </div>
-                        </div>
-
 
                         <div class="form-group row d-none">
                             <label for="organization" class="col-sm-3 col-form-label">Category</label>
@@ -120,7 +133,7 @@
                             </div>
                         </div>
                         </div>
-                   
+
                 </div>
             </div>
 
@@ -128,13 +141,13 @@
             {{-- Organizaiton Contact Info --}}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="ture"
                         aria-controls="panelsStayOpen-collapseTwo">
                         ADDITIONAL INFORMATION
                     </button>
                 </h2>
-                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingTwo">
                     <div class="accordion-body">
                         <div class="form-group row ">
@@ -163,20 +176,21 @@
             {{-- Organizaiton Address Info --}}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false"
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="ture"
                         aria-controls="panelsStayOpen-collapseThree">
                         RELATED TO
                     </button>
                 </h2>
 
 
-                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
                         <div class="form-group row">
-                            <label for="website" class="col-sm-3 col-form-label">Related Type <span
-                                    class="text-danger">*</span></label>
+                            <label for="website" class="col-sm-3 col-form-label">Related Type 
+                                <span
+                                    class="text-danger"></span></label>
                             <div class="col-sm-6">
                                 @if (isset($type) && !empty($type))
                                     <select class="form form-control select2 related_type" disabled
@@ -204,8 +218,9 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="website" class="col-sm-3 col-form-label">Related To <span
-                                    class="text-danger">*</span></label>
+                            <label for="website" class="col-sm-3 col-form-label">Related To 
+                                <span
+                                    class="text-danger"></span></label>
                             <div class="col-sm-6" id="related_to_div">
 
                                 @if (isset($typeId) && !empty($typeId))
@@ -245,13 +260,13 @@
             {{-- Organizaiton Description --}}
             <div class="accordion-item">
                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#panelsStayOpen-description" aria-expanded="false"
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-description" aria-expanded="ture"
                         aria-controls="panelsStayOpen-description">
                         DESCRIPTION INFORMATION
                     </button>
                 </h2>
-                <div id="panelsStayOpen-description" class="accordion-collapse collapse"
+                <div id="panelsStayOpen-description" class="accordion-collapse collapse show"
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
                         <textarea name="description" id="" cols="30" rows="3" class="form form-control"></textarea>
@@ -262,15 +277,15 @@
 
             {{-- Organizaiton Description --}}
             <div class="accordion-item">
-                <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#panelsStayOpen-description" aria-expanded="false"
+                <h2 class="accordion-header" id="panelsStayOpen-headingfour">
+                    <button class="accordion-button " type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-description" aria-expanded="ture"
                         aria-controls="panelsStayOpen-description">
                         PERMISSIONS
                     </button>
                 </h2>
-                <div id="panelsStayOpen-description" class="accordion-collapse collapse"
-                    aria-labelledby="panelsStayOpen-headingThree">
+                <div id="panelsStayOpen-description" class="accordion-collapse collapse show"
+                    aria-labelledby="panelsStayOpen-headingfour">
                     <div class="accordion-body">
                         <div class="form-group row">
                             <label for="website" class="col-sm-3 col-form-label">Task Visibility</label>
@@ -290,37 +305,80 @@
     </div>
 </div>
 
-
+</div>
 <div class="modal-footer">
-    <input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="Create" class="btn  btn-primary create-task-btn">
+    <input type="button" value="{{ __('Cancel') }}" class="btn px-2 btn-light" data-bs-dismiss="modal">
+    <input type="submit" value="Create" class="btn  btn-dark px-2 create-task-btn">
 </div>
 
 {{ Form::close() }}
 
-
 <script>
     $(document).ready(function() {
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('organization.assign_to', 1) }}',
+            data: {
+                type: ''
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status == 'success') {
+                    $("#assign_to_div").html(data.html);
+                    select2();
+                }
+            }
+        });
 
-        $(".assign_type").on("change", function() {
-            var type = $(this).val();
-            var current = $(this);
+        $(".brand_id").on("change", function(){
+            var id = $(this).val();
+
             $.ajax({
                 type: 'GET',
-                url: '{{ route('organization.assign_to', 1) }}',
+                url: '{{ route('deal_companyemployees') }}',
                 data: {
-                    type
+                    id: id  // Add a key for the id parameter
                 },
-                success: function(data) {
+                success: function(data){
                     data = JSON.parse(data);
-                    if (data.status == 'success') {
-                        $("#assign_to_div").html(data.html);
-                        select2();
-                    }
-                }
-            })
 
-        })
+                    if (data.status === 'success') {
+                        $("#assign_to_div").html(data.employees);
+                        select2();
+                        $("#branch_div").html(data.branches);
+                        select2(); 
+                        
+                        select2(); // Assuming this is a function to initialize or update a select2 dropdown
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+
+        // $(".assign_type").on("change", function() {
+        //     var type = $(this).val();
+        //     var current = $(this);
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: '{{ route('organization.assign_to', 1) }}',
+        //         data: {
+        //             type
+        //         },
+        //         success: function(data) {
+        //             data = JSON.parse(data);
+        //             if (data.status == 'success') {
+        //                 $("#assign_to_div").html(data.html);
+        //                 select2();
+        //             }
+        //         }
+        //     })
+
+        // })
 
 
         $(".related_type").on('change', function() {

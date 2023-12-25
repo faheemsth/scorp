@@ -13,7 +13,7 @@
             {{ Form::label('tax_id', __('Tax %'),['class'=>'form-label']) }}
             {{ Form::select('tax_id', $taxes,null, array('class' => 'form-control select2','required'=>'required')) }}
             @if(count($taxes) <= 0)
-                <div class="text-muted text-xs">
+                <div class="text-muted ">
                     {{__('Please create new Tax')}} <a href="{{route('taxes.index')}}">{{__('here')}}</a>.
                 </div>
             @endif

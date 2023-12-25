@@ -834,6 +834,7 @@ Route::resource('organization', OrganizationController::class);
 Route::get('/organization/{id}/delete', [organizationController::class, 'destroy'])->name('organization.delete')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/notes', [organizationController::class, 'notesCreate'])->name('organization.notes.create')->middleware(['auth', 'XSS']);
 
+
 Route::get('/organization/{id}/assignto', [OrganizationController::class, 'getTaskUsers'])->name('organization.assign_to')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/relatedto', [OrganizationController::class, 'getTaskRelatedToUsers'])->name('organization.task.related_to')->middleware(['auth', 'XSS']);
 
@@ -1713,6 +1714,8 @@ Route::get('users/{id}/user_detail', [UserController::class, 'userDetail'])->nam
 Route::get('university/{id}/university_detail', [UniversityController::class, 'universityDetail'])->name('university-detail')->middleware(['auth', 'XSS']);
 
 Route::get('/get-task-detail', [DealController::class, 'getTaskDetails'])->name('get-task-detail');
+Route::post('task-status-change', [DealController::class, 'TaskStatusChange'])->name('task.status.change');
+
 Route::get('/get-organization-detail', [OrganizationController::class, 'getOrganizationDetails'])->name('get-organization-detail');
 
 
@@ -1737,12 +1740,14 @@ Route::get('/get-deal-applications', [ApplicationsController::class, 'getDealApp
 Route::resource('/institute-category', InstituteCategoryController::class);
 
 Route::post("/update-bulk-task-status", [DealController::class, 'updateBulkTaskStatus'])->name('update-bulk-task-status');
+Route::post("/update-bulk-task", [DealController::class, 'updateBulkTask'])->name('update-bulk-task');
 
 Route::get("/delete-bulk-tasks", [DealController::class, 'deleteBulkTasks'])->name('delete-bulk-tasks');
 Route::get("/delete-bulk-deals", [DealController::class, 'deleteBulkDeals'])->name('delete-bulk-deals');
 Route::get("/delete-bulk-leads", [LeadController::class, 'deleteBulkLeads'])->name('delete-bulk-leads');
 Route::get("/delete-bulk-applications", [ApplicationsController::class, 'deleteBulkApplications'])->name('delete-bulk-applications');
 Route::get("/delete-bulk-organizations", [OrganizationController::class, 'deleteBulkOrganizations'])->name('delete-bulk-organizations');
+Route::post("/update-bulk-leads", [LeadController::class, 'updateBulkLead'])->name('update-bulk-leads');
 
 /////////////////////////// Login as company
 Route::get('/logged_in_as_company/{id}','DashboardController@loggedInAsCustomer');
@@ -1751,3 +1756,6 @@ Route::get('/logged_in_as_user/{id}','DashboardController@loggedInAsUser');
 
 //////////////////////////Global Search
 Route::get('/global-search', [GlobalSearchController::class, 'index'])->name('global-search');
+
+Route::get('/lead/companyEmployees', [LeadController::class, 'getCompanyEmployees'])->name('lead_companyemployees');
+Route::get('/deal/companyEmployees', [DealController::class, 'getCompanyEmployees'])->name('deal_companyemployees');

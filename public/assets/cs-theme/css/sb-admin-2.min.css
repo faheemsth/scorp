@@ -1781,9 +1781,10 @@ pre code {
 
 .table td,
 .table th {
-    padding: .75rem;
+    padding: .5rem;
     vertical-align: top;
-    border-top: 1px solid #e3e6f0
+    border-top: 1px solid #e3e6f0;
+    font-size: 14px !important;
 }
 
 .table thead th {
@@ -2305,11 +2306,11 @@ textarea.form-control {
     padding-left: 1.25rem
 }
 
-.form-check-input {
+/* .form-check-input {
     position: absolute;
     margin-top: .3rem;
     margin-left: -1.25rem
-}
+} */
 
 .form-check-input:disabled~.form-check-label,
 .form-check-input[disabled]~.form-check-label {
@@ -2666,7 +2667,9 @@ textarea.form-control.is-invalid {
     }
 }
 .logo img{
-    width: 45%;
+    /* width: 100%; */
+    width: 200px;
+    height: 55px;
 }
 @media screen and (max-width: 768px){
     .logo img{
@@ -4036,7 +4039,7 @@ input[type=submit].btn-block {
     vertical-align: top
 }
 
-.custom-control-label::before {
+/* .custom-control-label::before {
     position: absolute;
     top: .25rem;
     left: -1.5rem;
@@ -4047,9 +4050,9 @@ input[type=submit].btn-block {
     content: "";
     background-color: #fff;
     border: #b7b9cc solid 1px
-}
+} */
 
-.custom-control-label::after {
+/* .custom-control-label::after {
     position: absolute;
     top: .25rem;
     left: -1.5rem;
@@ -4058,7 +4061,7 @@ input[type=submit].btn-block {
     height: 1rem;
     content: "";
     background: 50%/50% 50% no-repeat
-}
+} */
 
 .custom-checkbox .custom-control-label::before {
     border-radius: .35rem
@@ -6223,7 +6226,6 @@ a.close.disabled {
 
 .modal-open .modal {
     overflow-x: hidden;
-    overflow-y: auto
 }
 
 .modal {
@@ -6241,7 +6243,7 @@ a.close.disabled {
 .modal-dialog {
     position: relative;
     width: auto;
-    margin: .5rem;
+    margin:.5rem;
     pointer-events: none
 }
 
@@ -6257,7 +6259,8 @@ a.close.disabled {
 }
 
 .modal.show .modal-dialog {
-    transform: none
+    transform: none;
+    margin: 0px auto;
 }
 
 .modal.modal-static .modal-dialog {
@@ -6345,9 +6348,10 @@ a.close.disabled {
 
 .modal-header {
     display: flex;
-    align-items: flex-start;
+    overflow: hidden;
+    align-items: baseline;
     justify-content: space-between;
-    padding: 1rem 1rem;
+    padding: 0.7rem 1rem;
     border-bottom: 1px solid #e3e6f0;
     border-top-left-radius: calc(.3rem - 1px);
     border-top-right-radius: calc(.3rem - 1px)
@@ -6366,22 +6370,18 @@ a.close.disabled {
 .modal-body {
     position: relative;
     flex: 1 1 auto;
-    padding: 1rem
+    padding: 1rem;
 }
 
 .modal-footer {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
+   position: absolute;
+   bottom: 0;
+   right: 0;
     padding: .75rem;
-    border-top: 1px solid #e3e6f0;
-    border-bottom-right-radius: calc(.3rem - 1px);
-    border-bottom-left-radius: calc(.3rem - 1px)
 }
 
 .modal-footer>* {
-    margin: .25rem
+    /* margin: .25rem */
 }
 
 .modal-scrollbar-measure {
@@ -11198,7 +11198,7 @@ a:focus {
     overflow: hidden !important
 }
 
-.text-xs {
+. {
     font-size: .7rem
 }
 
@@ -11560,7 +11560,7 @@ a:focus {
 }
 
 .sidebar .nav-item.active .nav-link {
-    font-weight: 700
+    /* font-weight: 700 */
 }
 
 .sidebar .nav-item .collapse {
@@ -11610,21 +11610,21 @@ a:focus {
 
 .sidebar .nav-item .collapse .collapse-inner .collapse-item:hover,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-item:hover {
-    background-color: #dddfeb;
-    color: black !important;
-    padding-left: 10px;
+    color: #2E82D0  !important;
+    /* padding-left: 5px; */
 }
+
 
 .sidebar .nav-item .collapse .collapse-inner .collapse-item:active,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-item:active {
     background-color: #dddfeb;
-    color: black !important;
+    color: #2E82D0 !important;
     padding-left: 10px;
 }
 
 .sidebar .nav-item .collapse .collapse-inner .collapse-item.active,
 .sidebar .nav-item .collapsing .collapse-inner .collapse-item.active {
-    color: #4e73df;
+    color: #2E82D0;
     font-weight: 700
 }
 
@@ -11751,7 +11751,8 @@ a:focus {
 
     .sidebar .nav-item .collapse,
     .sidebar .nav-item .collapsing {
-        margin: 0 1rem
+        padding: 5px 1.2rem;
+        background-color: #1F2735;
     }
 
     .sidebar .nav-item .nav-link {

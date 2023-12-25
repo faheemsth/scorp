@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\CompanyPermission;
 
 class OrganizationController extends Controller
 {
@@ -141,10 +141,10 @@ class OrganizationController extends Controller
                 $org_query->where('organizations.billing_state', 'LIKE', '%' . $value . '%');
             } elseif ($column === 'country') {
                 $org_query->whereIn('organizations.billing_country', $value);
-            } 
+            }
         }
 
-        //if list global search 
+        //if list global search
         if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
             $g_search = $_GET['search'];
             $org_query->Where('users.name', 'like', '%' . $g_search . '%');
@@ -170,7 +170,6 @@ class OrganizationController extends Controller
         } else {
             return view('organizations.index', compact('organizations', 'org_types', 'countries', 'user_type'));
         }
-        
     }
 
     /**
@@ -733,16 +732,36 @@ class OrganizationController extends Controller
             $users = User::get()->pluck('name', 'id')->toArray();
 
             if (\Auth::user()->type == 'super admin') {
-                $branches = Branch::get()->pluck('name', 'id')->toArray();
+                    $branches = Branch::get()->pluck('name', 'id')->toArray();
                 }else{
-                    $branches = Branch::where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+                    $branches = Branch::get()->pluck('name', 'id')->toArray();
                 }
+
+
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
-            $employees = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();
+           // $employees = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();
             $teams = User::where('type', 'team')->get()->pluck('name', 'id')->toArray();
-            $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
             $user_type = User::get()->pluck('type', 'id')->toArray();
+
+            // $test = \App\Models\CompanyPermission::where('company_id', 3179)->where('active', 'true')->pluck('permitted_company_id');
+            // $companies = User::where('type', 'company')->whereIn('id', $test)->orwhere('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+            // dd($companies);
+                $companies = array();
+                if(\Auth::user()->type == 'super admin'){
+                    $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+                }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                    $com_permissions = CompanyPermission::where(['user_id' =>  \Auth::user()->id])->pluck('permitted_company_id')->toArray();
+                    $companies = User::whereIn('id',$com_permissions)->where('type','company')->get()->pluck('name', 'id');
+                }else if(\Auth::user()->type == 'company'){
+                    $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+                }
+
+                $employees = [];
+                if(\Auth::user()->type == 'company'){
+                   $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
+                }
+
 
             $type = '';
             $typeId = '';
@@ -784,8 +803,8 @@ class OrganizationController extends Controller
                     'assign_type' => 'required',
                     'due_date' => 'required',
                     'start_date' => 'required',
-                    'related_type' => 'required',
-                    'related_to' => 'required',
+                   // 'related_type' => 'required',
+                   // 'related_to' => 'required',
                     'visibility' => 'required',
                 ]
             );
@@ -800,12 +819,14 @@ class OrganizationController extends Controller
 
             ///////////
             $dealTask = new  DealTask();
-            $dealTask->deal_id = $request->related_to;
-            $dealTask->related_to = $request->related_to;
-            $dealTask->related_type = $request->related_type;
+            $dealTask->deal_id = isset($request->related_to) ? $request->related_to : 0;
+            $dealTask->related_to = isset($request->related_to) ? $request->related_to : 0;
+            $dealTask->related_type = isset($request->related_type) ? $request->related_type : '';
 
             $dealTask->name = $request->task_name;
             $dealTask->branch_id = $request->branch_id;
+            $dealTask->brand_id = $request->brand_id;
+            $dealTask->created_by = \Auth::user()->id;
 
             $dealTask->assigned_to = $request->assigned_to;
             $dealTask->assigned_type = $request->assign_type;
@@ -823,26 +844,27 @@ class OrganizationController extends Controller
 
 
 
-            ActivityLog::create(
-                [
-                    'user_id' => $usr->id,
-                    'deal_id' => $request->related_to,
-                    'log_type' => 'Create Task',
-                    'remark' => json_encode(['title' => $dealTask->name]),
-                ]
-            );
+            // ActivityLog::create(
+            //     [
+            //         'user_id' => $usr->id,
+            //         'deal_id' => $dealTask->,
+            //         'log_type' => 'Create Task',
+            //         'remark' => json_encode(['title' => $dealTask->name]),
+            //     ]
+            // );
+            
 
             //store Activity Log
             $remarks = [
                 'title' => 'Task Created',
                 'message' => 'Task Created successfully'
             ];
-    
+
             //store Log
             $data = [
                 'type' => 'info',
                 'note' => json_encode($remarks),
-                'module_id' => 1,
+                'module_id' => $dealTask->id,
                 'module_type' => 'task',
             ];
             addLogActivity($data);
@@ -875,9 +897,9 @@ class OrganizationController extends Controller
 
             if (\Auth::user()->type == 'super admin') {
                 $branches = Branch::get()->pluck('name', 'id')->toArray();
-                }else{
-                    $branches = Branch::where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
-                }
+            } else {
+                $branches = Branch::where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+            }
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
 
@@ -897,8 +919,25 @@ class OrganizationController extends Controller
             }
 
 
+            if(\Auth::user()->type == 'super admin'){
+                $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('active', 'true')->get();
+                $companies = User::where('type', 'company')->whereIn('id', $com_permissions)->orwhere('id', \Auth::user()->created_by)->get()->pluck('name', 'id')->toArray();
+            }else if(\Auth::user()->type == 'company'){
+                $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+            }
+
+            $employees = [];
+            if(\Auth::user()->type == 'company'){
+               $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
+            }else if(\Auth::user()->type == 'super admin'){
+                $employees =  User::pluck('name', 'id')->toArray();
+            }
+
+
             $stages = Stage::get()->pluck('name', 'id')->toArray();
-            return view('organizations.task_edit', compact('task', 'users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'related_to'));
+            return view('organizations.task_edit', compact('task', 'users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'related_to', 'companies', 'employees'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -934,12 +973,12 @@ class OrganizationController extends Controller
             }
 
 
-            
+
 
             $dealTask = DealTask::where('id', $id)->first();
 
             $is_status_change = false;
-            if($dealTask->status != $request->status){
+            if ($dealTask->status != $request->status) {
                 $is_status_change = true;
             }
 
@@ -983,7 +1022,7 @@ class OrganizationController extends Controller
                 'title' => 'Task Update',
                 'message' => 'Task updated successfully'
             ];
-    
+
             //store Log
             $data = [
                 'type' => 'info',
@@ -994,13 +1033,13 @@ class OrganizationController extends Controller
             addLogActivity($data);
 
 
-            if($is_status_change){
+            if ($is_status_change) {
                 //store Activity Log
                 $remarks = [
                     'title' => 'Task Update',
                     'message' => 'Task status updated'
                 ];
-        
+
                 //store Log
                 $data = [
                     'type' => 'info',
@@ -1037,8 +1076,8 @@ class OrganizationController extends Controller
             // $html = view('organizations.all_tasks', compact('tasks'))->render();
 
             //store Activity Log
-          
-    
+
+
             //store Log
             $data = [
                 'type' => 'info',
@@ -1068,20 +1107,48 @@ class OrganizationController extends Controller
     public function getTaskUsers(Request $request)
     {
         $type = $request->type;
-        if ($type == 'company') {
-            $users = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
-        } else {
+
+        // if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director') {
+
+        //     $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+        // } else if (\Auth::user()->type == 'super admin') {
+        //     $currentUserCompany = \App\Models\User::where('type', 'company')->first();
+        // } else {
+        //     $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
+        // }
+
+        // $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->where('active', 'true')->get();
+
+
+        $html = '';
+        // if ($type == 'company') {
+        //     $users = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+        //     $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
+
+        //     foreach ($users as $key => $user) {
+        //         if ($key == $currentUserCompany->id) {
+        //             $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        //         }
+
+        //         foreach ($com_permissions as $com_permission) {
+        //             if ($key == $com_permission->permitted_company_id) {
+        //                 $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        //             }
+        //         }
+        //     }
+        //     $html .= '</select>';
+        // } else {
             $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
                 ->where('created_by', \Auth::user()->id)
                 ->pluck('name', 'id');
-        }
+            $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
+            foreach ($users as $key => $user) {
+                $html .= '<option value="' . $key . '">' . $user . '</option> ';
+            }
+            $html .= '</select>';
+        // }
 
-        $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
 
-        foreach ($users as $key => $user) {
-            $html .= '<option value="' . $key . '">' . $user . '</option> ';
-        }
-        $html .= '</select>';
 
         return json_encode([
             'status' => 'success',
@@ -1125,12 +1192,14 @@ class OrganizationController extends Controller
         return redirect()->route('deals.get.user.tasks')->with('success', __('Organization successfully deleted!'));
     }
 
-    public function deleteBulkOrganizations(Request $request){
-        if($request->ids != null){
+    public function deleteBulkOrganizations(Request $request)
+    {
+        if ($request->ids != null) {
             User::whereIn('id', explode(',', $request->ids))->where('type', '=', 'organization')->delete();
             return redirect()->route('organization.index')->with('success', 'Organization deleted successfully');
-        }else{
+        } else {
             return redirect()->route('organization.index')->with('error', 'Atleast select 1 organization.');
         }
     }
+
 }

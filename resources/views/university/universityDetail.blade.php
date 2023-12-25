@@ -16,9 +16,9 @@
                         <p class="pb-0 mb-0 fw-normal">{{ __('Name') }}</p>
                         <div class="d-flex align-items-baseline ">
                             @if (strlen($university->name) > 40)
-                                <h4>{{ substr($university->name, 0, 40) }}...</h4>
+                                <h6 class="fw-bold">{{ substr($university->name, 0, 40) }}...</h6 >
                             @else
-                                <h4>{{ $university->name }}</h4>
+                                <h6 class="fw-bold">{{ $university->name }}</h6 >
                             @endif
 
                         </div>
@@ -30,7 +30,7 @@
                     <div class="d-flex justify-content-end gap-1 me-3">
                         <a href="#" data-size="lg" data-url="{{ route('university.edit', $university->id) }}"
                             data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update University') }}"
-                            class="btn btn-sm btn-primary">
+                            class="btn btn-sm btn-dark text-white">
                             <i class="ti ti-pencil"></i>
                         </a>
                     </div>
@@ -38,7 +38,7 @@
             </div>
 
 
-            <div class="lead-info d-flex justify-content-between p-3 text-center">
+            <div class="lead-info d-flex justify-content-between px-5 py-3 text-center">
                 <div class="">
                     <small>{{ __('Phone') }}</small>
                     <span class="font-weight-bolder">
@@ -60,16 +60,16 @@
             <div class="content my-2">
 
                 <div class="card">
-                    <div class="card-header p-1">
+                    <div class="card-header p-1 bg-white">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link active" id="pills-details-tab" data-bs-toggle="pill"
+                                <button class="nav-link pills-link active"  id="pills-details-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-details" type="button" role="tab"
                                     aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
                             </li>
 
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link" id="pills-related-tab" data-bs-toggle="pill" data-bs-target="#pills-related" type="button" role="tab" aria-controls="pills-related" aria-selected="false">{{ __('Related') }}</button>
+                            <li class="nav-item" role="presentation"  >
+                                <button class="nav-link pills-link "  id="pills-related-tab" data-bs-toggle="pill" data-bs-target="#pills-related" type="button" role="tab" aria-controls="pills-related" aria-selected="false">{{ __('Related') }}</button>
                             </li>
                         </ul>
                     </div>
@@ -101,7 +101,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Record ID') }}
                                                                 </td>
                                                                 <td class=""
@@ -112,7 +112,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Name') }}
                                                                 </td>
                                                                 <td class="name-td"
@@ -124,7 +124,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('University Owner') }}
                                                                 </td>
                                                                 <td class="created_by-td"
@@ -160,7 +160,7 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Country') }}
                                                                 </td>
                                                                 <td class=""
@@ -171,7 +171,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('City') }}
                                                                 </td>
                                                                 <td class="name-td"
@@ -206,11 +206,11 @@
 
                                                     <table>
                                                         <tbody>
-                                                            
+
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('University Created') }}
                                                                 </td>
                                                                 <td class=""
@@ -222,7 +222,7 @@
 
                                                             <tr>
                                                                 <td class=""
-                                                                    style="width: 150px; text-align: right; font-size: 14px;">
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('University Updated') }}
                                                                 </td>
                                                                 <td class=""
@@ -270,24 +270,24 @@
                                                             @forelse($applications as $app)
                                                             <tr>
                                                                 <td>
-                                                                  
-                                                                    
+
+
                                                                     <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('deals/'+{{ $app->id }}+'/detail-application')" >
                                                                         {{ $app->application_key }}
-                                                                    </span> 
+                                                                    </span>
                                                                 </td>
                                                                 <td>
-                                                                   
+
 
                                                                     <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/get-deal-detail?deal_id='+{{$app->deal_id}})" >
                                                                         {{ isset($app->deal_id) && isset($dealArr[$app->deal_id]) ? $dealArr[$app->deal_id] : '' }}
-                                                                    </span> 
-                                                                
+                                                                    </span>
+
                                                                 </td>
                                                                 <td> <span class="badge {{ $app->status == "Approved" ? 'bg-success-scorp' : 'bg-warning-scorp' }}">{{ $app->status }}</span></td>
                                                             </tr>
 
-                                                            @empty 
+                                                            @empty
 
                                                             <tr>
                                                                 <td colspan="5"> No Application found !!! </td>
@@ -303,7 +303,7 @@
 
 
 
-                                    <div class="accordion-item">
+                                    {{-- <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                             <button class="accordion-button p-2" type="button"
                                                 data-bs-toggle="collapse"
@@ -333,18 +333,18 @@
                                                                 <td>
                                                                     <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/get-deal-detail?deal_id='+{{$deal->id}})" >
                                                                         {{ $deal->name }}
-                                                                    </span>  
+                                                                    </span>
                                                                 </td>
                                                                 <td>
                                                                     <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/get-organization-detail?org_id='+{{$deal->organization_id}})" >
                                                                        {{  $organizations[$deal->organization_id] }}
-                                                                    </span> 
+                                                                    </span>
                                                                 </td>
                                                                 <td>{{ $stages[$deal->stage_id] }}</td>
                                                                 <td><span class="badge {{ $deal->status == "Active" ? 'bg-success-scorp' : 'bg-warning-scorp' }}">{{ $deal->status }}</span></td>
                                                             </tr>
 
-                                                            @empty 
+                                                            @empty
 
                                                             <tr>
                                                                 <td colspan="5"> No Admission found !!! </td>
@@ -353,11 +353,11 @@
                                                             @endforelse
                                                         </tbody>
                                                     </table>
-                                                   
+
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                 </div>
                             </div>

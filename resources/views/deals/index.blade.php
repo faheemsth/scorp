@@ -337,7 +337,7 @@
         <div class="col-sm-12">
             @php
                 $stages = $pipeline->stages;
-                
+
                 $json = [];
                 foreach ($stages as $stage) {
                     $json[] = 'task-list-' . $stage->id;

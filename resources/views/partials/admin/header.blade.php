@@ -4,6 +4,8 @@
 @endpush
 @php
     $users = \Auth::user();
+    $logo_dark = \App\Models\Utility::getValByName('company_logo_dark');
+
     //$profile=asset(Storage::url('uploads/avatar/'));
     $profile = \App\Models\Utility::get_file('uploads/avatar/');
     $languages = \App\Models\Utility::languages();
@@ -19,7 +21,7 @@
     // dd(Session::get('auth_type_created_by'));
     $com_permissions = [];
     if ($currentUserCompany != null) {
-        $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->get();
+        $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
     }
 
     $all_companies = App\Models\User::where('type', 'company')
@@ -36,7 +38,11 @@
         <i class="fa fa-bars"></i>
     </button>
     <div class="logo ms-md-2">
-        <a href="#"><img src="{{ asset('assets/cs-theme/assets/images/scorp-logo.png') }}" alt=""></a>
+        <a href="#">
+            <!-- <img src="{{ asset('assets/cs-theme/assets/images/scorp-logo.png') }}" alt=""> -->
+            <img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:'assets/cs-theme/assets/images/scorp-logo.png') }}"
+                                                         class="big-logo">
+        </a>
     </div>
     <!-- Sidebar Toggle (Topbar) -->
 
@@ -45,12 +51,12 @@
     <form action="{{ route('global-search') }}" method="GET" id="globalSearchForm"
         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 d-none navbar-search me-0"
         style="margin:auto !important;">
-        <div class="input-group">
-            <input type="text" name="search" class="form-control bg-light border border-dark"
+        <div class="input-group " style="border: none;border-radius: 0px;">
+            <input style="border: none;border-radius: 0px;" type="text" name="search" class="form-control bg-light m-0"
                 placeholder="Search for..." value="{{ isset($_GET['search']) ? $_GET['search'] : '' }}">
-            <div class="input-group-append">
-                <span class="input-group-text bg-light border-0" id="global-search-btn">
-                    <i class="fa fa-search"></i> <!-- Add your search icon here -->
+            <div class="input-group-append" style="border: none;border-radius: 0px;">
+                <span class="input-group-text bg-light" id="global-search-btn" style="border: none;border-radius: 0px;">
+                    <i class="ti ti-search" style="font-size: 18px"></i> <!-- Add your search icon here -->
                 </span>
             </div>
         </div>
@@ -61,9 +67,12 @@
     @if (\Auth::user()->type == 'super admin')
         <select name="company" id="company" class="form form-select" style="width:15% !important"
             onChange="loginWithCompany();">
-            <option value="">Select Companies</option>
+            <option value="">
+                Select
+            </option>
+            <option value="{{ Auth::id() }}" {{ Auth::id() == 1? 'selected':'' }}>{{ Auth::user()->name }}</option>
             @foreach ($all_companies as $key => $comp)
-                <option value="{{ $key }}">{{ $comp }}</option>
+                <option value="{{ $key }}" >{{ $comp }}</option>
             @endforeach
         </select>
     @elseif(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
@@ -73,7 +82,7 @@
                 <option value="">Select Companies</option>
                 @foreach ($all_companies as $key => $comp)
                     @if ($key == $currentUserCompany->id)
-                        <option value="{{ $key }}"><a
+                        <option value="{{ $key }}" selected><a
                                 href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a></option>
                     @endif
                     @foreach ($com_permissions as $com_per)
@@ -94,7 +103,7 @@
                     <option value="{{ $adminOption->id }}">{{ $adminOption->name }}</option>
                 @endif
                 @foreach ($all_companies as $key => $comp)
-                    <option value="{{ $key }}">{{ $comp }}</option>
+                    <option value="{{ $key }}" {{ Auth::id() == $key? 'selected':'' }}>{{ $comp }}</option>
                 @endforeach
             </select>
         @elseif (Session::get('auth_type') == \Auth::user()->type ||
@@ -109,7 +118,7 @@
                 @foreach ($all_companies as $key => $comp)
                     @foreach ($com_permissions as $com_per)
                         @if ($com_per->permitted_company_id == $key)
-                            <option value="{{ $key }}"><a
+                            <option value="{{ $key }}" {{ Auth::id() == $key? 'selected':'' }}><a
                                     href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a>
                             </option>
                         @endif
@@ -208,7 +217,7 @@
 
                 <a class="dropdown-item" href="{{ route('logout') }}"
                     onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
-                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    <i class="fa fa-sign-out fa-sm fa-fw mr-2 text-gray-400"></i>
                     {{ __('Logout') }}
                 </a>
                 <form id="frm-logout" action="{{ route('logout') }}" method="POST" class="d-none">

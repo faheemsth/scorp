@@ -1,14 +1,14 @@
 <tr>
     <td><input type="checkbox"></td>
-    <td class="py-1">
+    <td >
         <span style="cursor:pointer" class="lead-name" onclick="openNav(<?= $lead->id ?>)"
             data-lead-id="{{ $lead->id }}">{{ $lead->name }}</span>
     </td>
 
-    <td class="py-1">{{ $lead->email }}</td>
-    <td class="py-1">{{ $lead->phone }}</td>
+    <td >{{ $lead->email }}</td>
+    <td >{{ $lead->phone }}</td>
     <td>{{ !empty($lead->stage) ? $lead->stage->name : '-' }}</td>
-    <td class="py-1">
+    <td >
         @php
             $assigned_to = isset($lead->user_id) && isset($users[$lead->user_id]) ? $users[$lead->user_id] : 0;
         @endphp

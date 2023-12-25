@@ -2,7 +2,7 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-12 pb-3">
-            <span class="text-xs"><b>{{__('It will auto convert from response on lead based on below setting. It will not convert old response.')}}</b></span>
+            <span class=""><b>{{__('It will auto convert from response on lead based on below setting. It will not convert old response.')}}</b></span>
         </div>
     </div>
     <div class="row px-2">
@@ -63,7 +63,7 @@
                 <div class="form-group">
                     {{ Form::select('user_id', $users,null, array('class' => 'form-control','data-toggle'=>'select')) }}
                     @if(count($users) == 0)
-                        <div class="text-muted text-xs">
+                        <div class="text-muted ">
                             {{__('Please create new employee')}} <a href="{{ route('employee.index') }}" >{{__('here')}}</a>.
                         </div>
                     @endif
@@ -82,7 +82,7 @@
 </div>
 <div class="modal-footer">
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Create')}}" class="btn  btn-primary">
+    <input type="submit" value="{{__('Create')}}" class="btn  btn-dark px-2">
 </div>
 {{Form::close()}}
 

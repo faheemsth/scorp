@@ -89,7 +89,7 @@
 
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="row text-xs">
+                                    <div class="row ">
 
                                         @if($emailTemplate->slug=='new_user')
                                             <div class="row">

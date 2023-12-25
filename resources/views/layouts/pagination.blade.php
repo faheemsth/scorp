@@ -46,12 +46,12 @@
     }
 
     .pagination .currentpage a {
-        background-color: #e2e6e6;
+        background-color: #313949;
         color: #fff;
     }
 
     .pagination .currentpage a:hover {
-        background-color: #e2e6e6;
+        background-color: #313949;
     }
     .desc{
         position: relative;
@@ -64,7 +64,7 @@
 <div class="pagination-footer">
     <?php $page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
 
-    $num_results_on_page =10;
+    $num_results_on_page =50;
     $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
     $record_start = ( ($page - 1) * $num_results_on_page);
     $record_end = $record_start + $num_results_on_page;

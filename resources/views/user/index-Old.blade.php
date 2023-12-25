@@ -119,7 +119,7 @@
                                                 <hr class="my-3">
                                             </div>
                                             <div class="col-12 text-center pb-2">
-                                                <span class="text-dark text-xs">{{__('Plan Expired : ') }} {{!empty($user->plan_expire_date) ? \Auth::user()->dateFormat($user->plan_expire_date): __('Unlimited')}}</span>
+                                                <span class="text-dark ">{{__('Plan Expired : ') }} {{!empty($user->plan_expire_date) ? \Auth::user()->dateFormat($user->plan_expire_date): __('Unlimited')}}</span>
                                             </div>
                                         </div>
                                     </div>

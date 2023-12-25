@@ -84,15 +84,12 @@
 
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                     <div class="col-2">
-                        <p class="mb-0 pb-0">ORGANIZATIONS</p>
+                        <p class="mb-0 pb-0 ps-1">ORGANIZATIONS</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL ORGANIZATION
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
                                 <li><a class="dropdown-item delete-bulk-organizations" href="javascript:void(0)">Delete</a></li>
                             </ul>
                         </div>
@@ -112,15 +109,14 @@
                             style=" color:white;"><i class="ti ti-refresh"
                                 style="font-size: 18px"></i></button>
 
-                        <button class="btn filter-btn-show p-2" style="background-color: #b5282f; color:white;"
+                        <button class="btn filter-btn-show px-2 btn-dark" style="color:white;"
                             type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
 
                         @if(\Auth::user()->type=='super admin' || \Auth::user()->can('create organization'))
-                            <button data-url="{{ route('leads.create') }}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            <button data-url="{{ route('leads.create') }}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <button data-url="{{ route('leads.create') }}" class="btn  px-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 <i class="ti ti-plus" style="font-size:18px"></i>
                             </button>
                         @endif
@@ -187,10 +183,10 @@
 
                             <div class="col-md-4 mt-2">
                                 <br>
-                                <input type="submit" class="btn form-btn me-2"
-                                    style="background-color: #b5282f; color:white;">
-                                <a href="/organization/" class="btn form-btn"
-                                    style="background-color: #b5282f;color:white;">Reset</a>
+                                <input type="submit" class="btn form-btn bg-dark me-2"
+                                    style=" color:white;">
+                                <a href="/organization/" class="btn form-btn bg-dark"
+                                    style="color:white;">Reset</a>
                             </div>
                         </div>
                     </form>
@@ -214,7 +210,7 @@
                                 <td style="border-left: 1px solid #fff;">Action</td>
                             </tr>
                         </thead>
-                        <tbody class="organization_tbody" style="color:rgb(0, 0, 0); font-size: 12px;" class="new-organization-list-tbody">
+                        <tbody class="organization_tbody" style="color:rgb(0, 0, 0); font-size: 14px;" class="new-organization-list-tbody">
 
                             @forelse($organizations as $org)
                             @php
@@ -229,16 +225,16 @@
                                 <td>
                                     <input type="checkbox" name="organizations[]" value="{{$org->id}}" class="sub-check">
                                 </td>
-                                <td class="py-1">
+                                <td>
                                     <span style="cursor:pointer" class="org-name hyper-link" onclick="openNav(<?= $org->id ?>)" data-org-id="{{ $org->id }}">{{$org->name}}</span>
                                 </td>
-                                <td class="py-1">{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
-                                <td class="py-1">{{ isset($org_data->billing_street) ? $org_data->billing_street : '' }}</td>
-                                <td class="py-1">{{ isset($org_data->billing_city) ? $org_data->billing_city : ''  }}</td>
-                                <td class="py-1">{{ isset($org_data->billing_state) ? $org_data->billing_state : ''  }}</td>
-                                <td class="py-1">{{ isset($org_data->billing_country) ? $org_data->billing_country : ''  }}</td>
-                                <td class="py-1"></td>
-                                <td class="py-1">
+                                <td >{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
+                                <td >{{ isset($org_data->billing_street) ? $org_data->billing_street : '' }}</td>
+                                <td >{{ isset($org_data->billing_city) ? $org_data->billing_city : ''  }}</td>
+                                <td >{{ isset($org_data->billing_state) ? $org_data->billing_state : ''  }}</td>
+                                <td >{{ isset($org_data->billing_country) ? $org_data->billing_country : ''  }}</td>
+                                <td ></td>
+                                <td >
                                     <div class="dropdown">
                                         <button class="btn bg-transparents" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
@@ -298,7 +294,7 @@
 
 <!-- Add Organization -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg my-0" role="document">
         <div class="modal-content">
             <form id="organization-creating-form">
                 @csrf
@@ -323,8 +319,6 @@
 
                     </div>
                 </div>
-                <div class="modal-body">
-
                     <style>
                         .form-group {
                             margin-bottom: 0px;
@@ -339,7 +333,9 @@
                             padding: 3px 3px;
                         }
                     </style>
-
+ <div class="modal-body pt-0 " style="height: 80vh;">
+    <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
+    <div class="card-body px-2 py-0" >
                     {{-- ACCORDION --}}
                     <div class="accordion" id="accordionPanelsStayOpenExample">
                         {{-- Organizaiton Basic Info --}}
@@ -386,7 +382,7 @@
                                     ORGANIZATION CONTACT DETAILS
                                 </button>
                             </h2>
-                            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingTwo">
                                 <div class="accordion-body">
                                     <div class="form-group row">
                                         <label for="phone" class="col-sm-3 col-form-label">Phone</label>
@@ -447,7 +443,7 @@
                                     ADDRESS INFORMATION
                                 </button>
                             </h2>
-                            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingThree">
                                 <div class="accordion-body">
 
                                     <div class="form-group row">
@@ -499,16 +495,16 @@
                                     DESCRIPTION INFORMATION
                                 </button>
                             </h2>
-                            <div id="panelsStayOpen-description" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                            <div id="panelsStayOpen-description" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingThree">
                                 <div class="accordion-body">
                                     <textarea name="organization_description" id="" cols="30" rows="3" class="form form-control"></textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
+    </div>
+ </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-dark new-organization-btn">Create</button>

@@ -47,7 +47,7 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <div class="alert alert-info note-constant text-xs">
+            <div class="alert alert-info note-constant ">
                 <strong>{{__('Note')}} :</strong> {{__('System will consider last stage as a completed / done task for get progress on project.')}}
             </div>
         </div>
@@ -59,8 +59,8 @@
                         @foreach ($projectstages as $projectstage)
                             <li class="list-group-item" data-id="{{$projectstage->id}}">
                                 <div class="row">
-                                    <div class="col-6 text-xs text-dark">{{$projectstage->name}}</div>
-                                    <div class="col-4 text-xs text-dark">{{$projectstage->created_at}}</div>
+                                    <div class="col-6  text-dark">{{$projectstage->name}}</div>
+                                    <div class="col-4  text-dark">{{$projectstage->created_at}}</div>
                                     <div class="col-2">
                                         @can('edit project stage')
                                             <a href="#" data-url="{{ URL::to('projectstages/'.$projectstage->id.'/edit') }}" data-ajax-popup="true" data-title="{{__('Edit Project Stages')}}" class="edit-icon">

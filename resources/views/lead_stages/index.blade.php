@@ -1,27 +1,29 @@
 @extends('layouts.admin')
 @section('page-title')
-    {{__('Manage Lead Stages')}}
+    {{ __('Manage Lead Stages') }}
 @endsection
 @push('script-page')
     <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
     <script>
-        $(function () {
+        $(function() {
             $(".sortable").sortable();
             $(".sortable").disableSelection();
             $(".sortable").sortable({
-                stop: function () {
+                stop: function() {
                     var order = [];
-                    $(this).find('li').each(function (index, data) {
+                    $(this).find('li').each(function(index, data) {
                         order[index] = $(data).attr('data-id');
                     });
 
                     $.ajax({
-                        url: "{{route('lead_stages.order')}}",
-                        data: {order: order, _token: $('meta[name="csrf-token"]').attr('content')},
-                        type: 'POST',
-                        success: function (data) {
+                        url: "{{ route('lead_stages.order') }}",
+                        data: {
+                            order: order,
+                            _token: $('meta[name="csrf-token"]').attr('content')
                         },
-                        error: function (data) {
+                        type: 'POST',
+                        success: function(data) {},
+                        error: function(data) {
                             data = data.responseJSON;
                             show_toastr('error', data.error, 'error')
                         }
@@ -32,11 +34,15 @@
     </script>
 @endpush
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
-    <li class="breadcrumb-item">{{__('Lead Stage')}}</li>
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
+    <li class="breadcrumb-item">{{ __('Lead Stage') }}</li>
 @endsection
 @section('content')
-
+<style>
+    span{
+        font-size:14px !important;
+    }
+    </style>
     <div class="row">
         <div class="col-3">
             @include('layouts.crm_setup')
@@ -45,11 +51,12 @@
             <div class="row justify-content-center">
                 <div class="p-3 card">
                     <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
-                        @php($i=0)
-                        @foreach($pipelines as $key => $pipeline)
+                        @php($i = 0)
+                        @foreach ($pipelines as $key => $pipeline)
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link @if($i==0) active @endif" id="pills-user-tab-1" data-bs-toggle="pill"
-                                        data-bs-target="#tab{{$key}}" type="button">{{$pipeline['name']}}
+                                <button class="nav-link @if ($i == 0) active @endif"
+                                    id="pills-user-tab-1" data-bs-toggle="pill" data-bs-target="#tab{{ $key }}"
+                                    type="button">{{ $pipeline['name'] }}
                                 </button>
                             </li>
                             @php($i++)
@@ -62,42 +69,55 @@
                         <h3>Lead Stages</h3>
 
                         @can('create lead stage')
-                        <div class="float-end">
-                            <a href="#" data-size="md" data-url="{{ route('lead_stages.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create Lead Stage')}}" class="btn btn-sm btn-dark">
-                                <i class="ti ti-plus"></i>
-                            </a>
-                        </div>
+                            <div class="float-end">
+                                <a href="#" data-size="md" data-url="{{ route('lead_stages.create') }}"
+                                    data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Lead Stage') }}"
+                                    class="btn btn-sm btn-dark">
+                                    <i class="ti ti-plus"></i>
+                                </a>
+                            </div>
                         @endcan
                     </div>
 
                     <div class="card-body">
                         <div class="tab-content" id="pills-tabContent">
-                            @php($i=0)
-                            @foreach($pipelines as $key => $pipeline)
-                                <div class="tab-pane fade show @if($i==0) active @endif" id="tab{{$key}}" role="tabpanel" aria-labelledby="pills-user-tab-1">
+                            @php($i = 0)
+                            @foreach ($pipelines as $key => $pipeline)
+                                <div class="tab-pane fade show @if ($i == 0) active @endif"
+                                    id="tab{{ $key }}" role="tabpanel" aria-labelledby="pills-user-tab-1">
                                     <ul class="list-group sortable">
                                         @foreach ($pipeline['lead_stages'] as $lead_stages)
-                                            <li class="list-group-item d-flex justify-content-between" data-id="{{$lead_stages->id}}">
+                                            <li class="list-group-item d-flex justify-content-between"
+                                                data-id="{{ $lead_stages->id }}">
 
-                                                <span class="text-xs text-dark" style="width: 100px;">{{$lead_stages->name}}</span>
-                                                
-                                                <span class="text-xs text-dark">{{$lead_stages->type}}</span>
+                                                <span class=" text-dark"
+                                                    style="width: 100px;">{{ $lead_stages->name }}</span>
+
+                                                <span class=" text-dark">{{ $lead_stages->type }}</span>
 
                                                 <span class="d-flex justify-content-center">
 
-                                                @can('edit lead stage')
-                                                        <a href="#" class="mx-1 btn btn-sm btn-dark d-inline-flex align-items-center" data-url="{{ URL::to('lead_stages/'.$lead_stages->id.'/edit') }}" data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-title="{{__('Edit Lead Stages')}}">
+                                                    @can('edit lead stage')
+                                                        <a href="#"
+                                                            class="mx-1 btn btn-sm btn-dark d-inline-flex align-items-center"
+                                                            data-url="{{ URL::to('lead_stages/' . $lead_stages->id . '/edit') }}"
+                                                            data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
+                                                            title="{{ __('Edit') }}"
+                                                            data-title="{{ __('Edit Lead Stages') }}">
                                                             <i class="ti ti-pencil text-white"></i>
                                                         </a>
                                                     @endcan
-                                                    @if(count($pipeline['lead_stages']))
+                                                    @if (count($pipeline['lead_stages']))
                                                         @can('delete lead stage')
-                                                        {!! Form::open(['method' => 'DELETE', 'route' => ['lead_stages.destroy', $lead_stages->id]]) !!}
-                                                                <a href="#" class="btn btn-sm btn-danger align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}"><i class="ti ti-trash text-white"></i></a>
-                                                                {!! Form::close() !!}
+                                                            {!! Form::open(['method' => 'DELETE', 'route' => ['lead_stages.destroy', $lead_stages->id]]) !!}
+                                                            <a href="#"
+                                                                class="btn btn-sm btn-danger align-items-center bs-pass-para"
+                                                                data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i
+                                                                    class="ti ti-trash text-white"></i></a>
+                                                            {!! Form::close() !!}
                                                         @endcan
                                                     @endif
-                                            </span>
+                                                </span>
                                             </li>
                                         @endforeach
                                     </ul>
@@ -105,12 +125,11 @@
                                 @php($i++)
                             @endforeach
                         </div>
-                        <p class="text-muted mt-4"><strong>{{__('Note')}} : </strong>{{__('You can easily change order of lead stage using drag & drop.')}}</p>
+                        <p class="text-muted mt-4"><strong>{{ __('Note') }} :
+                            </strong>{{ __('You can easily change order of lead stage using drag & drop.') }}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
 @endsection

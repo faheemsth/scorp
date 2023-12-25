@@ -1,6 +1,6 @@
 <style>
     table tr td {
-        font-size: 12px
+        font-size: 14px
     }
 
     .form-select {
@@ -40,8 +40,8 @@
 </style>
 
 {{ Form::open(array('url' => 'leads', 'method' => 'POST', 'id' => 'lead-creating-form')) }}
-<div class="modal-body pt-0">
-    <div class="lead-content my-2" style="max-height: 400px; overflow-y: scroll;">
+<div class="modal-body pt-0" style="height: 80vh;" >
+    <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
         <div class="card-body px-2 py-0">
             {{-- Details Pill Start --}}
             <div class="accordion" id="accordionPanelsStayOpenExample">
@@ -61,7 +61,7 @@
                                 <table class="w-100">
                                     <tbody>
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Name') }}
 
                                                 <span class="text-danger">*</span>
@@ -74,7 +74,7 @@
                                         </tr>
 
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Lead Status') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -87,35 +87,43 @@
                                         </tr>
 
                                         <tr>
-                                            <td class="" style="width: 110px; text-align: right; font-size: 13px;">
-                                                {{ __('User Responsible') }}
+                                            <td class="" style="width: 100px; font-size: 13px;">
+                                                {{ __('Brand') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-                                                <select class="form-control select2" id="choice-2" name="lead_assgigned_user">
-                                                    <option value="">Select User</option>
-                                                    @foreach($users as $key => $user)
-                                                    <option value="{{$key}}">{{$user}}</option>
+                                                <select class="form-control select2 brand_id" id="choices-1" name="brand_id">
+                                                    <option value="" >Select Brand</option>
+                                                    @foreach($companies as $key => $company)
+                                                    <option value="{{$key}}" {{ $key == 1 ? 'selected' : ''}}>{{$company}}</option>
                                                     @endforeach
                                                 </select>
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Location') }}
                                             </td>
-                                            <td class="" style="padding-left: 10px; font-size: 13px;">
+                                            <td class="" style="padding-left: 10px; font-size: 13px;" id="branch_div">
                                                 <select class="form-control select2" id="choice-3" name="lead_branch">
-                                                    <option selected>Select Location</option>
-                                                    @foreach($branches as $key => $branch)
-                                                    <option value="{{$key}}">{{$branch}}</option>
-                                                    @endforeach
+                                                    <option selected>Select Branch</option>
                                                 </select>
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 110px; font-size: 13px;">
+                                                {{ __('User Responsible') }}
+                                            </td>
+                                            <td class="" style="padding-left: 10px; font-size: 13px;" id="assign_to_div">
+                                                <select class="form-control select2" id="choice-2" name="lead_assgigned_user">
+                                                    <option value=""> Select User</option>
+                                                </select>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Agency') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -131,7 +139,7 @@
 
                                         {{-- <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 100px; font-size: 13px;">
                                                         {{ __('Agency Link') }}
                                         </td>
                                         <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -144,7 +152,7 @@
                                         </td>
                                         </tr> --}}
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Lead Source') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -177,7 +185,7 @@
                                 <table class="w-100">
                                     <tbody>
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Email Address') }}
 
                                                 <span class="text-danger">*</span>
@@ -187,8 +195,8 @@
                                             </td>
                                         </tr>
 
-                                        <tr>
-                                            <td class="" style="width: 153px; text-align: right; font-size: 13px;">
+                                        <tr class="d-none">
+                                            <td class="" style="width: 153px; font-size: 13px;">
                                                 {{ __('Email Address (Referrer)') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -197,8 +205,8 @@
                                         </tr>
 
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
-                                                {{ __('Phone') }}
+                                            <td class="" style="width: 100px; font-size: 13px;">
+                                                {{ __('Mobile Phone') }}
 
                                                 <span class="text-danger">*</span>
                                             </td>
@@ -207,8 +215,8 @@
                                             </td>
                                         </tr>
 
-                                        <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                        <tr class="d-none">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Mobile Phone') }}
 
                                             </td>
@@ -219,14 +227,14 @@
                                         </tr>
 
 
-                                        <tr>
-                                            <td class="" style="width: 130px; text-align: right; font-size: 13px;">
+                                        {{-- <tr>
+                                            <td class="" style="width: 130px; font-size: 13px;">
                                                 {{ __('Email Opted Out') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="checkbox" name="" id="" class="ms-2">
                                             </td>
-                                        </tr>
+                                        </tr> --}}
                                     </tbody>
                                 </table>
                             </div>
@@ -248,10 +256,10 @@
                                 <table class="w-100">
                                     <tbody>
                                         <tr>
-                                            <td class="" style="width: 115PX; text-align: right; font-size: 13px;padding-right: 20px;">
+                                            <td class="" style="width: 115PX; font-size: 13px;padding-right: 20px;">
                                                 Address
                                             </td>
-                                            <td class="" style="width: 350PX; text-align: right; font-size: 13px; bg-danger">
+                                            <td class="" style="width: 350PX; font-size: 13px; bg-danger">
                                                 <div class="form-floating">
                                                     <textarea class="form-control" placeholder="Street" id="floatingTextarea" name="lead_street"></textarea>
                                                 </div>
@@ -295,7 +303,7 @@
                                 <table class="w-100">
                                     <tbody>
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px;  font-size: 13px;">
                                                 Description
                                             </td>
                                             <td style="width: 374px; text-align: right; font-size: 13px;">
@@ -323,7 +331,7 @@
                                 <table class="w-100">
                                     <tbody>
                                         <tr>
-                                            <td class="" style="width: 100px; text-align: right; font-size: 13px;">
+                                            <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Tag List') }}
                                             </td>
                                             <td class="" style="padding-left: 10px;">
@@ -346,10 +354,41 @@
 </div>
 
 <div class="modal-footer">
-    
-    <input type="button" value="{{__('Cancel')}}" class="btn  btn-danger" data-bs-dismiss="modal">
+
+    <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
     <input type="submit" value="{{__('Create')}}" class="btn  btn-dark new-lead-btn">
 
 </div>
 
 {{Form::close()}}
+
+<script>
+
+    $(".brand_id").on("change", function(){
+        var id = $(this).val();
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('lead_companyemployees') }}',
+            data: {
+                id: id  // Add a key for the id parameter
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $("#assign_to_div").html(data.employees);
+                    select2();
+                    $("#branch_div").html(data.branches);
+                    select2(); // Assuming this is a function to initialize or update a select2 dropdown
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+</script>

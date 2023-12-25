@@ -1,6 +1,18 @@
 @extends('layouts.admin')
-<?php $setting = \App\Models\Utility::colorset(); ?>
-{{-- <link rel="stylesheet" href="{{ asset('css/customsidebar.css') }}"> --}}
+@if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
+    @php
+    $com_permissions = [];
+    $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
+    @endphp
+@endif
+
+<?php
+
+$setting = \App\Models\Utility::colorset();
+?>
+
+
+
 
 
 @section('page-title')
@@ -33,7 +45,7 @@
 
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                     <div class="col-2">
-                        <p class="mb-0 pb-0">Tasks</p>
+                        <p class="mb-0 pb-0 ps-1">Tasks</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL Tasks
@@ -46,15 +58,29 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="col-2">
+                        <!-- <p class="mb-0 pb-0">Tasks</p> -->
+                        <div class="dropdown" id="actions_div" style="display:none">
+                            <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+                                <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
+                                <li><a class="dropdown-item" href="#">Brand Change</a></li>
+                                <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
+                            </ul>
+                        </div>
+                    </div>
 
-                    <div class="col-10 d-flex justify-content-end gap-2">
+                    <div class="col-8 d-flex justify-content-end gap-2">
                         <div class="input-group w-25">
                             <button class="btn btn-sm list-global-search-btn">
                                 <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
                             </button>
-                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
 
                         <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
@@ -64,7 +90,7 @@
                         </button>
 
                         @can('create task')
-                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn btn-sm p-2 btn-dark">
+                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark">
                             <i class="ti ti-plus" style="font-size:18px"></i>
                         </button>
                         @endcan
@@ -106,16 +132,36 @@
                             <div class="col-md-4"> <label for="">Company/Brand</label>
                                 <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
                                     <option value="">Select Brand</option>
+
                                     @foreach ($brands as $key => $brand)
-                                    <option value="{{ $key }}" <?= isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' ?> class="">{{ $brand }}</option>
+                                        @if (\Auth::user()->type == 'super admin')
+                                            <option value="{{ $key }}" {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }}>{{ $brand }}</option>
+                                        @elseif (\Auth::user()->type == 'company' && $key == \Auth::user()->id)
+                                            <option {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }} value="{{ $key }}" class="">{{ $brand }}</option>
+                                        @elseif (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                            @foreach($com_permissions as $com_permission)
+                                                @if($key == $com_permission->permitted_company_id)
+                                                    <option {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }} value="{{ $key }}" class="">{{ $brand }}</option>
+                                                @endif
+                                            @endforeach
+                                        @endif
                                     @endforeach
+
                                 </select>
                             </div>
 
+                            <div class="col-md-4">
+                                <label for="">Status</label>
+                                <select class="form form-control select2" id="status444" name="status" multiple style="width: 95%;">
+                                    <option value="">Select Brand</option>
+                                    <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Completed</option>
+                                    <option value="0" <?= isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : '' ?>>On Going</option>
+                                </select>
+                            </div>
 
-                            <div class="col-md-4 mt-4">
-                                <input type="submit" class="btn form-btn me-2 btn-dark" >
-                                <a href="/deals/get-user-tasks" class="btn form-btn" style="background-color: #b5282f;color:white;">Reset</a>
+                            <div class="col-md-4 mt-4 pt-2">
+                                <input type="submit" class="btn form-btn me-2 btn-dark px-2 py-2" >
+                                <a href="/deals/get-user-tasks" class="btn form-btn px-2 py-2" style="background-color: #b5282f;color:white;">Reset</a>
                             </div>
                         </div>
                         <div class="row my-4">
@@ -163,23 +209,36 @@
                             $due_date = strtotime($task->due_date);
                             $current_date = strtotime(date('Y-m-d'));
 
-                            if ($due_date < $current_date && strtolower($task->status) == 0) {
-                                $color_code = 'bg-danger-scorp';
-                                }elseif (strtolower($task->status) == 1) {
-                                $color_code = 'bg-success-scorp';
-                                }
-                                elseif ($due_date == $current_date && strtolower($task->status) == 0) {
-                                $color_code = 'bg-warning-scorp';
-                                }else {
-                                $color_code = 'bg-secondary-scorp';
-                                }
+                            // Assuming $due_date, $current_date, and $task->status are defined before this code
+
+                            $status = strtolower($task->status); // Store the lowercase status for better readability
+                            $color_code = ''; // Initialize $color_code
+
+                            if ($due_date > $current_date && $status === '0') {
+                                // Ongoing feture time
+                               // $color_code = '#B3CDE1';
+                               $color_code = 'green';
+                            } elseif ($due_date === $current_date && $status === '0') {
+                                // Today date time
+                                $color_code = '#E89D25';
+                            } elseif ($due_date < $current_date && $status === '0') {
+                                // Past date time
+                                $color_code = 'red';
+                            } elseif ($status === '1') {
+                                // Completed task
+                                $color_code = 'green';
+                            }
+
+                            // Use $color_code as needed in the rest of your code
+
+
 
                                 @endphp
                                 <tr>
                                     <td>
                                         <input type="checkbox" name="tasks[]" value="{{$task->id}}" class="sub-check">
                                     </td>
-                                    <td> <span class="badge {{ $color_code }} text-white">{{ $task->due_date }}</span>
+                                    <td> <span class="badge text-white" style="background-color:{{$color_code }}">{{ $task->due_date  }}</span>
                                     </td>
                                     <td>
                                         <span style="cursor:pointer" class="task-name hyper-link" @can('view task') onclick="openNav(<?= $task->id ?>)" @endcan data-task-id="{{ $task->id }}">{{ $task->name }}</span>
@@ -212,10 +271,10 @@
                                     </td>
 
                                     <td>
-                                        @if ($task->status == 1)
-                                        <span class="badge {{ $color_code }} text-white">{{ __('Completed') }}</span>
+                                        @if ($task->status == 0)
+                                            <span class="badge  text-white" style="background-color:#B3CDE1">{{ __('On Going') }}</span>
                                         @else
-                                        <span class="badge {{ $color_code }} text-white">{{ __('On Going') }}</span>
+                                            <span class="badge text-white" style="background: green; " >{{ __('Completed') }}</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -240,9 +299,6 @@
         </div>
     </div>
 </div>
-@endsection
-
-
 
 <div class="modal" id="update-status-modal" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -273,11 +329,66 @@
     </div>
 </div>
 
+<div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg my-0" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mass Update</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('update-bulk-task') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select name="bulk_field" id="bulk_field" class="form form-control">
+                                <option value="">Select Field</option>
+                                <option value="tm">Task Name</option>
+                                <option value="ofc">Office</option>
+                                <!-- <option value="ast">Assign Type</option> -->
+                                <option value="asto">Assigned To</option>
+                                <option value="ts">Task Status</option>
+                                <option value="dd">Due Date</option>
+                                <option value="sd">Start Date</option>
+                                <option value="rd">Reminder Date</option>
+                                <!-- <option value="rt">Related Type</option>
+                                <option value="rto">Related To</option> -->
+                                <option value="des">Description</option>
+                                <option value="per">Permissions</option>
+                            </select>
+                        </div>
+                        <input name='tasks_ids' id="tasks_ids" hidden>
+                        <div class="col-md-6" id="field_to_update">
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" value="Update">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@endsection
+
+
+
+
+
+
 
 @push('script-page')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 <script>
+    let selectedArr = [];
     $(document).ready(function() {
         $('.filter-btn-show').click(function() {
             $("#filter-show").toggle();
@@ -520,9 +631,126 @@
         }
     });
 
+    $('#bulk_field').on('change', function() {
+
+        if(this.value != ''){
+            $('#field_to_update').html('');
+
+            if(this.value == 'tm'){
+
+                let field = '<input type="text" class="form-control" id="task-name" value="" placeholder="Task Name" name="task_name" required>';
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'ofc'){
+
+                var branches = <?= json_encode($branches) ?>;
+                console.log(branches)
+                let options = '';
+                for(let i = 0; i < branches.length; i++){
+                    options += '<option value="'+branches[i].id+'">'+branches[i].name+'</option>';
+                }
+
+                let field = `<select class="form form-control select2" id="choices-multiple1" name="branch_id" required>
+                                <option value="">Select Office</option>
+                                `+options+`
+                            </select>`;
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'ast'){
+
+            }else if(this.value == 'asto'){
+                var assign_users = <?= json_encode($assign_to) ?>;
+                // console.log(branches)
+                let options = '';
+                for(let i = 0; i < assign_users.length; i++){
+                    options += '<option value="'+assign_users[i].id+'">'+assign_users[i].name+'</option>';
+                }
+
+                let field = `<select class="form form-control select2" id="choices-multiple1" name="assigned_to" required>
+                                <option value="">Select person</option>
+                                `+options+`
+                            </select>`;
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'ts'){
+
+                let field = `<select class="form form-control select2" id="choices-multiple5" name="status" required>
+                                <option value="">Select Status</option>
+                                <option value="0">On Going</option>
+                                <option value="1">Completed</option>
+                            </select>`;
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'dd'){
+
+                let field = `<input type="date" class="form form-control"
+                                    name="due_date" required>`;
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'sd'){
+
+                let field = `<input type="date" class="form form-control"
+                                    name="start_date" required>`;
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'rd'){
+
+                let field = `<div class="col-sm-6 d-flex"><input type="date" class="form form-control"
+                                    name="remainder_date" required>
+                                <input type="time" class="form form-control"
+                                    name="remainder_time" required></div>`;
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'des'){
+
+                let field =  `<textarea name="description" id="" cols="30" rows="3" class="form form-control" required></textarea>`;
+                $('#field_to_update').html(field);
+
+            }else if(this.value == 'per'){
+
+                let field = `<select class="form form-control select2" id="choices-multiple8" name="visibility" required>
+                                <option value="">Select Visibility</option>
+                                <option value="public" >public</option>
+                                <option value="private">private</option>
+                            </select>`;
+                $('#field_to_update').html(field);
+
+            }
+        }
+
+    });
+
     $(document).on('change', '.main-check', function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));
     });
+    $(document).on('change', '.sub-check', function() {
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        console.log(selectedIds.length)
+
+        if(selectedIds.length > 0){
+            selectedArr = selectedIds;
+            $("#actions_div").css('display', 'block');
+        }else{
+            selectedArr = selectedIds;
+
+            $("#actions_div").css('display', 'none');
+        }
+        let commaSeperated = selectedArr.join(",");
+        console.log(commaSeperated)
+        $("#tasks_ids").val(commaSeperated);
+
+    });
+
+    function massUpdate(){
+        if(selectedArr.length > 0){
+            $('#mass-update-modal').modal('show')
+        }else{
+            alert('Please choose Tasks!')
+        }
+    }
 
     $(document).on("click", ".update-status-modal", function() {
         // Get an array of selected checkbox IDs

@@ -97,7 +97,7 @@
                                             <div class="progress progress-xs mb-0">
                                                 <div class="progress-bar bg-danger" role="progressbar" style="width: {{$invoiceChartData['progressData']['unpaidPr']}}%;" aria-valuenow="{{$invoiceChartData['progressData']['unpaidPr']}}" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
-                                            <div class="d-flex justify-content-between text-xs text-muted text-end mt-1">
+                                            <div class="d-flex justify-content-between  text-muted text-end mt-1">
                                                 <div>
                                                     <span class="font-weight-bold text-danger">{{__('Unpaid')}}</span>
                                                 </div>
@@ -119,7 +119,7 @@
                                             <div class="progress progress-xs mb-0">
                                                 <div class="progress-bar bg-success" role="progressbar" style="width: {{$invoiceChartData['progressData']['paidPr']}}%;" aria-valuenow="{{$invoiceChartData['progressData']['paidPr']}}" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
-                                            <div class="d-flex justify-content-between text-xs text-muted text-end mt-1">
+                                            <div class="d-flex justify-content-between  text-muted text-end mt-1">
                                                 <div>
                                                     <span class="font-weight-bold text-success">{{__('Paid')}}</span>
                                                 </div>
@@ -141,7 +141,7 @@
                                             <div class="progress progress-xs mb-0">
                                                 <div class="progress-bar bg-info" role="progressbar" style="width: {{$invoiceChartData['progressData']['partialPr']}}%;" aria-valuenow="{{$invoiceChartData['progressData']['partialPr']}}" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
-                                            <div class="d-flex justify-content-between text-xs text-muted text-end mt-1">
+                                            <div class="d-flex justify-content-between  text-muted text-end mt-1">
                                                 <div>
                                                     <span class="font-weight-bold text-info">{{__('Partial Paid')}}</span>
                                                 </div>
@@ -163,7 +163,7 @@
                                             <div class="progress progress-xs mb-0">
                                                 <div class="progress-bar bg-warning" role="progressbar" style="width: {{$invoiceChartData['progressData']['duePr']}}%;" aria-valuenow="{{$invoiceChartData['progressData']['duePr']}}" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
-                                            <div class="d-flex justify-content-between text-xs text-muted text-end mt-1">
+                                            <div class="d-flex justify-content-between  text-muted text-end mt-1">
                                                 <div>
                                                     <span class="font-weight-bold text-warning">{{__('Due')}}</span>
                                                 </div>
