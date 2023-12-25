@@ -56,7 +56,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                         {{ __('Admission Name') }}
                                                     </td>
                                                     <td class="d-flex gap-1 mb-1"
@@ -67,7 +67,7 @@
 
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                     {{ __('Intake Month') }}
                                                     </td>
                                                     <td class=""
@@ -84,7 +84,7 @@
 
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                     {{ __('Intake Year') }}
                                                     </td>
                                                     <td class=""
@@ -101,7 +101,7 @@
 
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 110px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                     {{ __('Linked Contact') }}
                                                     </td>
                                                     <td class=""
@@ -118,7 +118,7 @@
 
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 110px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                     {{ __('User Responsible') }}
                                                     </td>
                                                     <td class=""
@@ -156,13 +156,13 @@
                                             <tbody>
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
-                                                    {{ __('Category') }}
+                                                        style="width: 100px;  font-size: 13px;">
+                                                    {{ __('Category') }} <span class="text-danger" style="font-size: 16px;">*</span>
                                                     </td>
 
                                                      <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
-                                                        <select class="form-control select2" id="choice-5" name="category">
+                                                        <select class="form-control select2" id="choice-5" name="category" required>
                                                            <option value="">Select Category</option>
                                                             <option value="Australia" {{ $deal->category == "Australia" ? "selected" : ""}}>Australia</option>
                                                             <option value="Canada" {{ $deal->category == "Canada" ? "selected" : "" }}>Canada</option>
@@ -181,13 +181,14 @@
 
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 153px; text-align: right; font-size: 13px;">
+                                                        style="width: 153px;  font-size: 13px;">
                                                         {{ __('Institute') }}
+                                                        <span class="text-danger" style="font-size: 16px;">*</span>
                                                     </td>
 
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
-                                                        <select class="form-control select2" id="choice-6" name="university_id">
+                                                        <select class="form-control select2" id="choice-6" name="university_id" required>
                                                            <option value="">Select University</option>
                                                            @foreach($universities as $key => $university)
                                                             <option value="{{$key}}" {{ $key == $deal->university_id ? "selected" : "" }}>{{$university}}</option>
@@ -199,13 +200,14 @@
 
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 153px; text-align: right; font-size: 13px;">
+                                                        style="width: 153px;  font-size: 13px;">
                                                         {{ __('Organization') }}
+                                                        <span class="text-danger" style="font-size: 16px;">*</span>
                                                     </td>
 
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
-                                                        <select class="form-select select2" id="choice-7" name="organization_id">
+                                                        <select class="form-select select2" id="choice-7" name="organization_id" required>
                                                            <option value="">Select Organization</option>
                                                            @foreach($organizations as $key => $organization)
                                                             <option value="{{$key}}" {{ $key == $deal->organization_id ? "selected" : "" }}>{{$organization}}</option>
@@ -216,12 +218,13 @@
 
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 100px;  font-size: 13px;">
                                                         {{ __('Office Responsible') }}
+                                                        <span class="text-danger" style="font-size: 16px;">*</span>
                                                     </td>
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
-                                                        <select class="form-select select2" id="choice-8" name="branch_id">
+                                                        <select class="form-select select2" id="choice-8" name="branch_id" required>
                                                            <option value="">Select Office</option>
                                                            @foreach($branches as $key => $branch)
                                                             <option value="{{$key}}" {{ $key == $deal->branch_id ? "selected" : "" }}>{{$branch}}</option>
@@ -252,7 +255,7 @@
                                                 <tr>
 
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                         {{ __('Pipeline') }}
                                                     </td>
                                                     <td class=""
@@ -272,7 +275,7 @@
                                                 <tr>
 
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                         {{ __('Stage') }}
                                                     </td>
                                                     <td class=""
@@ -306,10 +309,10 @@
                                             <tbody>
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 160px;  font-size: 13px;">
                                                     Description
                                                     </td>
-                                                    <td style="width: 374px; text-align: right; font-size: 13px;">
+                                                    <td style="width: 374px;  font-size: 13px;">
                                                         <div class="" style="margin-left: 14px;">
                                                             <textarea class="form-control" rows="4" placeholder="description" name="deal_description">{{ $deal->description }}</textarea>
                                                           </div>
@@ -328,7 +331,7 @@
 
 <div class="modal-footer">
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Update')}}" class="btn  btn-primary edit-lead-btn">
+    <input type="submit" value="{{__('Update')}}" class="btn  btn-dark px-2 edit-lead-btn">
 </div>
 
 {{Form::close()}}
