@@ -363,7 +363,7 @@ class LeadController extends Controller
         $id = $_GET['id'];
 
         $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
-        $branches = Branch::pluck('name', 'id')->toArray();
+        $branches = Branch::where('created_by',$id)->pluck('name', 'id')->toArray();
         
         $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="lead_assgigned_user" required> <option value="">Select User</option> ';
         foreach ($employees as $key => $user) {

@@ -223,6 +223,35 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
         })
     })
 
+    $(document).ready(function () {
+        // Attach an event listener to the input field
+        $('.list-global-search').keypress(function (e) {
+            // Check if the pressed key is Enter (key code 13)
+            if (e.which === 13) {
+                var search = $(".list-global-search").val();
+                var ajaxCall = 'true';
+                $(".application_tbody").html('Loading...');
+
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ route('applications.index') }}",
+                    data: {
+                        search: search,
+                        ajaxCall: ajaxCall
+                    },
+                    success: function(data) {
+                        data = JSON.parse(data);
+
+                        if (data.status == 'success') {
+                            console.log(data.html);
+                            $(".application_tbody").html(data.html);
+                        }
+                    }
+                })
+            }
+        });
+    });
+
 
     $(".refresh-list").on("click", function() {
         var ajaxCall = 'true';

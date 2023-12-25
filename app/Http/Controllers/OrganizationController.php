@@ -1164,7 +1164,9 @@ class OrganizationController extends Controller
         if ($type == 'organization') {
             $users = User::where(['type' => 'organization', 'created_by' => \Auth::user()->id])->get()->pluck('name', 'id')->toArray();
         } else if ($type == 'lead') {
-            $users = \App\Models\Lead::where(['created_by' => \Auth::user()->id])->get()->pluck('name', 'id')->toArray();
+            // $users = \App\Models\Lead::where(['created_by' => \Auth::user()->id])->get()->pluck('name', 'id')->toArray();
+             $users = \App\Models\Lead::where(['brand_id' => $request->brand_id])->get()->pluck('name', 'id')->toArray();
+            
         } else if ($type == 'deal') {
             $users = Deal::where(['created_by' => \Auth::user()->id])->get()->pluck('name', 'id')->toArray();
         }

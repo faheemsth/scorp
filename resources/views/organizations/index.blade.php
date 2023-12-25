@@ -118,6 +118,7 @@
                         @if(\Auth::user()->type=='super admin' || \Auth::user()->can('create organization'))
                             <button data-url="{{ route('leads.create') }}" class="btn  px-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 <i class="ti ti-plus" style="font-size:18px"></i>
+                                <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
                             </button>
                         @endif
 
@@ -1080,6 +1081,41 @@ $('.filter-btn-show').click(function() {
             }
         })
     })
+
+    $(document).ready(function () {
+            // Attach an event listener to the input field
+            $('.list-global-search').keypress(function (e) {
+                // Check if the pressed key is Enter (key code 13)
+                if (e.which === 13) {
+                    var search = $(".list-global-search").val();
+                    var ajaxCall = 'true';
+
+                    // if (search.trim() == '') {
+                    //     return false;
+                    // }
+
+
+                    $(".organization_tbody").html('Loading...');
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{route('organization.index')}}",
+                        data: {
+                            search: search,
+                            ajaxCall: ajaxCall
+                        },
+                        success: function(data) {
+                            data = JSON.parse(data);
+
+                            if (data.status == 'success') {
+                                console.log(data.html);
+                                $(".organization_tbody").html(data.html);
+                            }
+                        }
+                    })
+                }
+            });
+        });
 
     $(".refresh-list").on("click", function() {
             var ajaxCall = 'true';
