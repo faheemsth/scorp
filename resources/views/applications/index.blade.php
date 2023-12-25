@@ -139,92 +139,41 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         <th style="width: 50px !important;">
                             <input type="checkbox" class="main-check">
                         </th>
-                        <th>
-                            {{ __('Name') }}
-                        </th>
-
-
-                        <th>
-                            {{ __('Application Key') }}
-                        </th>
-
-                        <th>
-                            {{ __('University') }}
-                        </th>
-
-                        <th>
-                            {{ __('Intake') }}
-                        </th>
-
-                        <th>
-                            {{ __('Status') }}
-                        </th>
-
-                        <th>
-                            {{ __('Action') }}
-                        </th>
+                        <th scope="col">{{ __('Name') }}</th>
+                        <th scope="col">{{ __('University') }}</th>
+                        <th scope="col">{{ __('Intake') }}</th>
+                        <th scope="col">{{ __('Brand') }}</th>
+                        <th scope="col">{{ __('Branch') }}</th>
+                        <th scope="col">{{ __('Assigned To') }}</th>
+                        <th scope="col">{{ __('Status') }}</th>
 
                     </tr>
                 </thead>
                 <tbody class="application_tbody">
-
-                    @forelse($applications as $app)
-                    <tr>
-                        <td>
-                            <input type="checkbox" name="applications[]" value="{{$app->id}}" class="sub-check">
-                        </td>
-                        <td>
-                            <span style="cursor:pointer" class="hyper-link" @can('view application') onclick="openSidebar('deals/'+{{ $app->id }}+'/detail-application')" @endcan>
+                      @forelse($applications as $app)
+                            @php 
+                                $university = \App\Models\University::where('id', $app->university_id)->first();
+                                $deal = \App\Models\Deal::where('id', $app->deal_id)->first();
+                                $users = \App\Models\User::pluck('name', 'id')->toArray();
+                                $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
+                            @endphp 
+                            <tr>
+                                 <td>
+                                    <input type="checkbox" name="applications[]" value="{{$app->id}}" class="sub-check">
+                                </td>
+                                <td>
+                                <span style="cursor:pointer" class="hyper-link" @can('view application') onclick="openSidebar('deals/'+{{ $app->id }}+'/detail-application')" @endcan>
                                 {{ strlen($app->name) > 10 ? substr($app->name, 0, 10) . '...' : $app->name }}
                             </span>
-                        </td>
-                        <td>
-
-                            {{ strlen($app->application_key) > 10 ? substr($app->application_key, 0, 10) . '...' : $app->application_key}}
-                        </td>
-                        <td>{{ isset($app->university_id) && isset($universities[$app->university_id]) ? $universities[$app->university_id] : '' }}</td>
-
-                        <td>
-                            {{ $app->intake }}
-                        </td>
-                        <td>
-                            {{ isset($app->stage_id) && isset($stages[$app->stage_id]) ? $stages[$app->stage_id] : '' }}
-                        </td>
-                        <td>
-
-
-                            <div class="d-flex justify-center align-items-center">
-                                @can('edit application')
-
-
-                                <a data-size="lg" title="{{ __('Edit Application') }}" href="#" class="btn px-2 btn-dark mx-1" data-url="{{ route('deals.application.edit', $app->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Application') }}" data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
-                                    <i class="ti ti-edit"></i>
-                                </a>
-
-
-                            @endcan
-
-                            @can('delete application')
-
-                                {!! Form::open([
-                                'method' => 'DELETE',
-                                'route' => ['deals.application.destroy', $app->id],
-                                'id' => 'delete-form-' . $app->id,
-                                'class' => 'mb-0',
-                                ]) !!}
-                                <a href="#" class="mx-2 btn px-2 bg-danger  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i class="ti ti-trash text-white"></i></a>
-
-                                {!! Form::close() !!}
-
-                            @endcan
-                            </div>
-
-
-
-
-                        </td>
-                    </tr>
-                    @empty
+                                </td>
+                                <td>{{ $universities[$app->university_id] }}</td>
+                                <td> {{ $app->intake }} </td>
+                                <td> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }}  </td>
+                                <td> {{ isset($branch->name) ? $branch->name : ''  }} </td>
+                                <td> {{ !empty($deal->assigned_to) ? (isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : '') : '' }} </td>
+                                <td>{{ isset($app->stage_id) && isset($stages[$app->stage_id]) ? $stages[$app->stage_id] : '' }}</td>
+                            </tr>
+                        @empty
                     @endforelse
                 </tbody>
             </table>
