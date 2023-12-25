@@ -16,19 +16,14 @@ class CompanyPermissionController extends Controller
      */
     public function index()
     {
-        //
+        $employees= '';
         $user = \Auth::user();
         if(\Auth::user()->type == 'super admin')
         {
+            if(isset($_GET['role']) && !empty($_GET['role'])){
+                $employees = User::where('type', '=', $_GET['role'])->get();
+            }
         
-
-        //    $companies  = DB::table('users as u')
-        //                 ->leftJoin('company_permission as p', 'u.id', '=', 'p.permitted_company_id')
-        //                 ->select('u.id', 'u.name', 'p.permitted_company_id')
-        //                 ->where('u.type', '=', 'company')
-        //                 ->get();
-
-        $employees = User::orwhere('type', '=', 'Project Director')->orwhere('type', 'Project Manager')->get();
                
         $companies = User::where('type', 'company')->get();
         $permission_arr = [];
@@ -40,7 +35,6 @@ class CompanyPermissionController extends Controller
                 $permission_arr[$com->id][$per_com->permitted_company_id] = $per_com->active;
             }
         }
-        
               return view('company_permission.index')->with(['employees' => $employees, 'permission_arr' => $permission_arr, 'companies' => $companies]);
         }
         else

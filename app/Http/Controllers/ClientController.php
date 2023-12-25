@@ -110,6 +110,15 @@ class ClientController extends Controller
 
             // $clients = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'client')->skip($start)->take($num_results_on_page)->get();
 
+            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+                $html = view('clients.clients_list_ajax', compact('clients', 'total_records'))->render();
+
+                return json_encode([
+                    'status' => 'success',
+                    'html' => $html
+                ]);
+            }
+
             return view('clients.index', compact('clients', 'total_records'));
         }
         else

@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
 
-@if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
+@if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
     @php
-    $com_permissions = [];
-    $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
+        $com_permissions = [];
+        $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
     @endphp
 @endif
 
@@ -46,8 +46,8 @@ if (isset($lead->is_active) && $lead->is_active) {
 @endsection
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
-<li class="breadcrumb-item">{{ __('Leads') }}</li>
+    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
+    <li class="breadcrumb-item">{{ __('Leads') }}</li>
 @endsection
 
 <style>
@@ -74,7 +74,8 @@ if (isset($lead->is_active) && $lead->is_active) {
     .card {
         box-shadow: none !important;
     }
-    .hover-text-color{
+
+    .hover-text-color {
         color: #1F2735 !important;
     }
 </style>
@@ -153,7 +154,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         ALL LEAD
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item delete-bulk-leads" href="javascript:void(0)">Delete</a></li>
+                                        <li><a class="dropdown-item delete-bulk-leads" href="javascript:void(0)">Delete</a>
+                                        </li>
 
                                     </ul>
                                 </div>
@@ -164,14 +166,15 @@ if (isset($lead->is_active) && $lead->is_active) {
                             <div class="col-2">
                                 <!-- <p class="mb-0 pb-0">Tasks</p> -->
                                 <div class="dropdown" id="actions_div" style="display:none">
-                                    <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
                                         Actions
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                         <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
                                         <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
-                                        <li><a class="dropdown-item" href="#">Brand Change</a></li>
-                                        <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
+                                            <li><a class="dropdown-item" href="#">Brand Change</a></li>
+                                            <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
                                     </ul>
                                 </div>
                             </div>
@@ -188,16 +191,19 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         aria-describedby="basic-addon1">
                                 </div>
 
-                                <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                                <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" onclick="RefreshList()"><i class="ti ti-refresh"
+                                        style="font-size: 18px"></i></button>
 
-                                <button class="btn filter-btn-show p-2 btn-dark"  type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                 </button>
 
                                 @can('create lead')
-                                <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark">
-                                    <i class="ti ti-plus" style="font-size:18px"></i>
-                                </button>
+                                    <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true"
+                                        data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark">
+                                        <i class="ti ti-plus" style="font-size:18px"></i>
+                                    </button>
                                 @endcan
                                 <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}"
                                     class="btn px-2 btn-dark" id="import_csv_modal_btn" data-bs-toggle="modal"
@@ -299,30 +305,41 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             @endforeach
                                         </select>
                                     </div>
-                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                    @if (
+                                        \Auth::user()->type == 'super admin' ||
+                                            \Auth::user()->type == 'company' ||
+                                            \Auth::user()->type == 'Project Director' ||
+                                            \Auth::user()->type == 'Project Manager')
+                                        <div class="col-md-4 mt-1"> <label for="">Created By</label>
+                                            <select class="form form-control select2" id="choices-multiple555"
+                                                name="created_by[]" multiple style="width: 95%;">
+                                                <option value="">Select Brand</option>
 
-                                    <div class="col-md-4 mt-1"> <label for="">Created By</label>
-                                        <select class="form form-control select2" id="choices-multiple555"
-                                            name="created_by[]" multiple style="width: 95%;">
-                                            <option value="">Select Brand</option>
+                                                @foreach ($brands as $brand)
+                                                    @if (\Auth::user()->type == 'super admin')
+                                                        <option value="{{ $brand->id }}"
+                                                            {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }}>
+                                                            {{ $brand->name }}</option>
+                                                    @elseif (\Auth::user()->type == 'company' && $brand->id == \Auth::user()->id)
+                                                        <option
+                                                            {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }}
+                                                            value="{{ $brand->id }}" class="">
+                                                            {{ $brand->name }}</option>
+                                                    @elseif (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                                        @foreach ($com_permissions as $com_permission)
+                                                            @if ($brand->id == $com_permission->permitted_company_id)
+                                                                <option
+                                                                    {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }}
+                                                                    value="{{ $brand->id }}" class="">
+                                                                    {{ $brand->name }}</option>
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+                                                @endforeach
 
-                                            @foreach ($brands as $brand)
-                                                @if (\Auth::user()->type == 'super admin')
-                                                    <option value="{{ $brand->id }}" {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }}>{{ $brand->name }}</option>
-                                                @elseif (\Auth::user()->type == 'company' && $brand->id == \Auth::user()->id)
-                                                    <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
-                                                @elseif (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                                    @foreach($com_permissions as $com_permission)
-                                                        @if($brand->id == $com_permission->permitted_company_id)
-                                                            <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
-                                                        @endif
-                                                    @endforeach
-                                                @endif
-                                            @endforeach
 
-
-                                        </select>
-                                    </div>
+                                            </select>
+                                        </div>
                                     @endif
 
 
@@ -335,10 +352,8 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                     <div class="col-md-4 mt-3">
                                         <br>
-                                        <input type="submit" class="btn form-btn me-2 bg-dark"
-                                            style=" color:white;">
-                                        <a href="/leads/list" class="btn form-btn bg-dark"
-                                            style="color:white;">Reset</a>
+                                        <input type="submit" class="btn form-btn me-2 bg-dark" style=" color:white;">
+                                        <a href="/leads/list" class="btn form-btn bg-dark" style="color:white;">Reset</a>
                                     </div>
                                 </div>
                                 <div class="row my-4">
@@ -405,19 +420,20 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     @if (count($leads) > 0)
                                         @foreach ($leads as $lead)
                                             <tr>
-                                                <td><input type="checkbox" name="leads[]" value="{{$lead->id}}" class="sub-check"></td>
+                                                <td><input type="checkbox" name="leads[]" value="{{ $lead->id }}"
+                                                        class="sub-check"></td>
 
 
-                                                <td >
+                                                <td>
                                                     <span style="cursor:pointer" class="lead-name hyper-link"
                                                         onclick="openNav(<?= $lead->id ?>)"
                                                         data-lead-id="{{ $lead->id }}">{{ $lead->name }}</span>
                                                 </td>
 
-                                                <td >{{ $lead->email }}</td>
-                                                <td >{{ $lead->phone }}</td>
+                                                <td>{{ $lead->email }}</td>
+                                                <td>{{ $lead->phone }}</td>
                                                 <td>{{ !empty($lead->stage) ? $lead->stage->name : '-' }}</td>
-                                                <td >
+                                                <td>
                                                     @php
                                                         $assigned_to = isset($lead->user_id) && isset($users[$lead->user_id]) ? $users[$lead->user_id] : 0;
                                                     @endphp
@@ -543,55 +559,55 @@ if (isset($lead->is_active) && $lead->is_active) {
 
     </div>
 
-<div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg my-0" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Mass Update</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ route('update-bulk-leads') }}" method="POST">
-                @csrf
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <select name="bulk_field" id="bulk_field" class="form form-control">
-                                <option value="">Select Field</option>
-                                <option value="nm">Name</option>
-                                <option value="ldst">Lead Status</option>
-                                <!-- <option value="ast">Assign Type</option> -->
-                                <option value="user_res">User Reponsible</option>
-                                <option value="loc">Location</option>
-                                <option value="agy">Agency</option>
-                                <option value="ldsrc">Lead Source</option>
-                                <option value="email">Email Address</option>
-                                <option value="email_ref">Email Address (Referrer)	</option>
-                                <option value="phone">Phone</option>
-                                <option value="m_phone">Mobile Phone</option>
-                                <!-- <option value="mail_opt">Email opt out</option> -->
-                                <option value="address">Address</option>
-                                <option value="desc">Description</option>
-                                <!-- <option value="tag_list">Tag List</option> -->
+    <div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg my-0" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Mass Update</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('update-bulk-leads') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <select name="bulk_field" id="bulk_field" class="form form-control">
+                                    <option value="">Select Field</option>
+                                    <option value="nm">Name</option>
+                                    <option value="ldst">Lead Status</option>
+                                    <!-- <option value="ast">Assign Type</option> -->
+                                    <option value="user_res">User Reponsible</option>
+                                    <option value="loc">Location</option>
+                                    <option value="agy">Agency</option>
+                                    <option value="ldsrc">Lead Source</option>
+                                    <option value="email">Email Address</option>
+                                    <option value="email_ref">Email Address (Referrer) </option>
+                                    <option value="phone">Phone</option>
+                                    <option value="m_phone">Mobile Phone</option>
+                                    <!-- <option value="mail_opt">Email opt out</option> -->
+                                    <option value="address">Address</option>
+                                    <option value="desc">Description</option>
+                                    <!-- <option value="tag_list">Tag List</option> -->
 
-                            </select>
-                        </div>
-                        <input name='lead_ids' id="lead_ids" hidden>
-                        <div class="col-md-6" id="field_to_update">
+                                </select>
+                            </div>
+                            <input name='lead_ids' id="lead_ids" hidden>
+                            <div class="col-md-6" id="field_to_update">
 
+                            </div>
                         </div>
+
                     </div>
-
-                </div>
-                <div class="modal-footer">
-                    <input type="submit" class="btn btn-primary" value="Update">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </form>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="Update">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 
 @endsection
@@ -612,10 +628,10 @@ if (isset($lead->is_active) && $lead->is_active) {
 
             console.log(selectedIds.length)
 
-            if(selectedIds.length > 0){
+            if (selectedIds.length > 0) {
                 selectedArr = selectedIds;
                 $("#actions_div").css('display', 'block');
-            }else{
+            } else {
                 selectedArr = selectedIds;
 
                 $("#actions_div").css('display', 'none');
@@ -626,20 +642,20 @@ if (isset($lead->is_active) && $lead->is_active) {
 
         });
 
-        function massUpdate(){
-            if(selectedArr.length > 0){
+        function massUpdate() {
+            if (selectedArr.length > 0) {
                 $('#mass-update-modal').modal('show')
-            }else{
+            } else {
                 alert('Please choose Tasks!')
             }
         }
 
         $('#bulk_field').on('change', function() {
 
-            if(this.value != ''){
+            if (this.value != '') {
                 $('#field_to_update').html('');
 
-                if(this.value == 'nm'){
+                if (this.value == 'nm') {
 
                     let field = `<div>
                                     <input type="text" class="w-50 form-control" placeholder="First Name" name="lead_first_name" value="" required="">
@@ -647,101 +663,102 @@ if (isset($lead->is_active) && $lead->is_active) {
                                </div>`;
                     $('#field_to_update').html(field);
 
-                }else if(this.value == 'ldst'){
+                } else if (this.value == 'ldst') {
 
                     var stages = <?= json_encode($stages) ?>;
 
                     let options = '';
-                    for(let i = 0; i < stages.length; i++){
-                        options += '<option value="'+stages[i].id+'">'+stages[i].name+'</option>';
+                    for (let i = 0; i < stages.length; i++) {
+                        options += '<option value="' + stages[i].id + '">' + stages[i].name + '</option>';
                     }
 
                     let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_stage" required>
                                     <option value="">Select Status</option>
-                                    `+options+`
+                                    ` + options + `
                                 </select>`;
                     $('#field_to_update').html(field);
 
-                }else if(this.value == 'user_res'){
+                } else if (this.value == 'user_res') {
 
                     var users = <?= json_encode($users) ?>;
                     let options = '';
 
                     $.each(users, function(keyName, keyValue) {
-                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                        options += '<option value="' + keyName + '">' + keyValue + '</option>';
                     });
 
                     let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_assgigned_user" required>
                                     <option value="">Select User</option>
-                                    `+options+`
+                                    ` + options + `
                                 </select>`;
                     $('#field_to_update').html(field);
 
-                }else if(this.value == 'loc'){
+                } else if (this.value == 'loc') {
 
                     var branches = <?= json_encode($branches) ?>;
                     let options = '';
 
                     $.each(branches, function(keyName, keyValue) {
-                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                        options += '<option value="' + keyName + '">' + keyValue + '</option>';
                     });
 
                     let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_branch" required>
                                     <option value="">Select Location</option>
-                                    `+options+`
+                                    ` + options + `
                                 </select>`;
                     $('#field_to_update').html(field);
 
-                }else if(this.value == 'agy'){
+                } else if (this.value == 'agy') {
 
                     var organizations = <?= json_encode($organizations) ?>;
                     let options = '';
 
                     $.each(organizations, function(keyName, keyValue) {
-                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                        options += '<option value="' + keyName + '">' + keyValue + '</option>';
                     });
 
                     let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_organization" required>
                                     <option value="">Select Agency</option>
-                                    `+options+`
+                                    ` + options + `
                                 </select>`;
                     $('#field_to_update').html(field);
 
-                }else if(this.value == 'ldsrc'){
+                } else if (this.value == 'ldsrc') {
 
                     var sources = <?= json_encode($sourcess) ?>;
                     let options = '';
                     $.each(sources, function(keyName, keyValue) {
-                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                        options += '<option value="' + keyName + '">' + keyValue + '</option>';
                     });
 
                     let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_source" required>
                                     <option value="">Select Source</option>
-                                    `+options+`
+                                    ` + options + `
                                 </select>`;
                     $('#field_to_update').html(field);
 
-                }else if(this.value == 'email'){
+                } else if (this.value == 'email') {
 
                     let field = `<input type="email" class="form-control" name="lead_email" required>`;
                     $('#field_to_update').html(field);
 
-                }else if(this.value == 'email_ref'){
+                } else if (this.value == 'email_ref') {
 
                     let field = `<input type="email" class="form-control" name="referrer_email">`;
                     $('#field_to_update').html(field);
 
-                }else if(this.value == 'phone'){
+                } else if (this.value == 'phone') {
 
-                    let field =  `<input type="text" class="form-control" name="lead_phone" value="{{$lead->phone}}" required>`;
+                    let field =
+                        `<input type="text" class="form-control" name="lead_phone" value="{{ $lead->phone }}" required>`;
                     $('#field_to_update').html(field);
 
-                }else if(this.value == 'm_phone'){
+                } else if (this.value == 'm_phone') {
 
                     let field = `<input type="text" class="form-control" name="lead_mobile_phone" >`;
                     $('#field_to_update').html(field);
 
-                }else if(this.value == 'address'){
+                } else if (this.value == 'address') {
 
                     let field = `<div class="form-floating">
                                     <textarea class="form-control" placeholder="Street" id="floatingTextarea" name="lead_street">{{ $lead->street }}</textarea>
@@ -764,12 +781,13 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 </div>`;
                     $('#field_to_update').html(field);
 
-                }else if(this.value == 'desc'){
+                } else if (this.value == 'desc') {
 
-                    let field = `<textarea class="form-control" rows="4" placeholder="description" name="lead_description"></textarea>`;
+                    let field =
+                        `<textarea class="form-control" rows="4" placeholder="description" name="lead_description"></textarea>`;
                     $('#field_to_update').html(field);
 
-                }else if(this.value == 'tag_list'){
+                } else if (this.value == 'tag_list') {
 
                     let field = ``;
                     $('#field_to_update').html(field);
@@ -777,7 +795,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                 }
             }
 
-            });
+        });
 
         $(document).on("click", '.delete-bulk-leads', function() {
             var task_ids = $(".sub-check:checked");
@@ -795,7 +813,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                 confirmButtonText: "Yes, delete it!"
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '/delete-bulk-leads?ids='+selectedIds.join(',');
+                    window.location.href = '/delete-bulk-leads?ids=' + selectedIds.join(',');
                 }
             });
         })
@@ -899,6 +917,28 @@ if (isset($lead->is_active) && $lead->is_active) {
             });
         });
 
+        function RefreshList() {
+            var ajaxCall = 'true';
+            $(".leads-list-tbody").html('Loading...');
+
+            $.ajax({
+                type: 'GET',
+                url: "/leads/list",
+                data: {
+                    ajaxCall: ajaxCall
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        $(".leads-list-tbody").html('');
+                        $('.leads-list-tbody').prepend(data.html);
+                    }
+                },
+            });
+        }
+
+
         // new lead form submitting...
         $(document).on("submit", "#lead-updating-form", function(e) {
 
@@ -951,12 +991,12 @@ if (isset($lead->is_active) && $lead->is_active) {
                     data = JSON.parse(data);
                     if (data.status == 'success') {
                         show_toastr('Success', 'Stage updated successfully.', 'success');
-                        if(stage_id == 6 || stage_id == 7){
+                        if (stage_id == 6 || stage_id == 7) {
                             window.location.href = '/leads/list';
-                        }else{
+                        } else {
                             openNav(lead_id);
                             return false;
-                        }                        
+                        }
                     } else {
                         show_toastr('Error', data.message, 'error');
                     }
