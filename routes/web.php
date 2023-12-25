@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RegionController;
 use App\Models\Utility;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JobController;
@@ -395,7 +396,8 @@ Route::group(
 
 Route::get('/invoices/preview/{template}/{color}', [InvoiceController::class, 'previewInvoice'])->name('invoice.preview');
 Route::post('/invoices/template/setting', [InvoiceController::class, 'saveTemplateSettings'])->name('template.setting');
-
+Route::get('/region/index', [RegionController::class, 'index'])->name('region.index');
+Route::get('/region/create', [RegionController::class, 'index'])->name('region.create');
 
 Route::group(
     [

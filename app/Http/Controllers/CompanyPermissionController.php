@@ -16,7 +16,7 @@ class CompanyPermissionController extends Controller
      */
     public function index()
     {
-        $employees= '';
+        $employees=array();
         $user = \Auth::user();
         if(\Auth::user()->type == 'super admin')
         {
