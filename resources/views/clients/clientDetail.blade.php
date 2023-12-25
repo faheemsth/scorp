@@ -78,8 +78,10 @@
 
                 </div>
 
+                <div class="d-flex justify-content-end gap-1 me-3">
+
                 @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit client'))
-                    <div class="d-flex justify-content-end gap-1 me-3">
+                    <div class="d-flex justify-content-end gap-1 me-1">
                         <a href="#" data-size="lg" data-url="{{ route('clients.edit', $client->id) }}"
                             data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Client') }}"
                             class="btn px-2 btn-dark text-white">
@@ -87,6 +89,21 @@
                         </a>
                     </div>
                 @endif
+
+                @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('delete client'))
+                    {!! Form::open(['method' => 'DELETE', 'route' => ['clients.destroy', $client->id],'id'=>'delete-form-'.$client->id]) !!}
+                    {{-- <a href="#!"  class="dropdown-item bs-pass-para">
+                        <i class="ti ti-archive"></i>
+                        <span> @if($client->delete_status!=0){{__('Delete')}} @else {{__('Restore')}}@endif</span>
+                    </a> --}}
+
+                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn px-2 btn-danger text-white bs-pass-para" >
+                        <i class="ti ti-trash"></i>
+                    </a>
+                    {!! Form::close() !!}
+                @endcan
+
+                </div>
             </div>
 
 

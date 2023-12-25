@@ -170,7 +170,7 @@ class LeadController extends Controller
 
                 foreach ($filters as $column => $value) {
                     if ($column === 'name') {
-                        $leads_query->whereIn('name', $value);
+                        $leads_query->whereIn('leads.name', $value);
                     } elseif ($column === 'stage_id') {
                         $leads_query->whereIn('stage_id', $value);
                     } elseif ($column === 'users') {
@@ -208,7 +208,7 @@ class LeadController extends Controller
                 // Add the dynamic filters
                 foreach ($filters as $column => $value) {
                     if ($column === 'name') {
-                        $leads_query->whereIn('name', $value);
+                        $leads_query->whereIn('leads.name', $value);
                     } elseif ($column === 'stage_id') {
                         $leads_query->whereIn('stage_ids', $value);
                     } elseif ($column === 'users') {

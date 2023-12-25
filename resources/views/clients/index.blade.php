@@ -122,7 +122,7 @@
                             <th style="border-left: 1px solid #fff;">Email</th>
                             <th style="border-left: 1px solid #fff;">Admissions</th>
                             <th style="border-left: 1px solid #fff;">Applications</th>
-                            <th style="border-left: 1px solid #fff;">Action</th>
+                            <th style="border-left: 1px solid #fff; display: none;">Action</th>
                         </tr>
                     </thead>
                     <tbody class="leads-list-div" style="color:rgb(0, 0, 0); font-size: 14px;" class="new-organization-list-tbody">
@@ -140,7 +140,7 @@
                                 <td>{{$client->email}}</td>
                                 <td>{{$client->clientDeals->count()}}</td>
                                 <td>{{$client->clientApplications($client->id)}}</td>
-                                <td>
+                                <td class="d-none">
 
                                     <div class="card-header-right">
                                         <div class="btn-group card-option">

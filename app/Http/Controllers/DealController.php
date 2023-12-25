@@ -776,10 +776,11 @@ class DealController extends Controller
      */
     public function edit(Deal $deal)
     {
+
         // if (\Auth::user()->can('edit deal') || \Auth::user()->type == 'super admin') {
         if (\Auth::user()->type == 'super admin') {
-
-            if ($deal->created_by == \Auth::user()->ownerId()) {
+            
+            if ($deal->created_by == \Auth::user()->ownerId() || \Auth::user()->type == 'super admin') {
                 $pipelines         = Pipeline::get()->pluck('name', 'id')->toArray();
                 $sources           = Source::get()->pluck('name', 'id')->toArray();
 
@@ -800,21 +801,7 @@ class DealController extends Controller
                 $users = User::where('type', 'employee')->get()->pluck('name', 'id');
 
 
-                $months = [
-                    'JAN' => 'January',
-                    'FEB' => 'February',
-                    'MAR' => 'March',
-                    'APR' => 'April',
-                    'MAY' => 'May',
-                    'JUN' => 'June',
-                    'JUL' => 'July',
-                    'AUG' => 'August',
-                    'SEP' => 'September',
-                    'OCT' => 'October',
-                    'NOV' => 'November',
-                    'DEC' => 'December'
-                ];
-
+                $months = months();
                 $currentYear = date('Y');
                 $years = [];
                 for ($i = 0; $i < 5; $i++) {
@@ -858,7 +845,7 @@ class DealController extends Controller
                         'assigned_to' => 'required',
                         'category' => 'required',
                         'university_id' => 'required',
-                        'organization_id' => 'required',
+                       // 'organization_id' => 'required',
                         'branch_id' => 'required',
                         'pipeline_id' => 'required',
                         'stage_id' => 'required'
