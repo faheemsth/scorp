@@ -80,7 +80,7 @@ $setting = \App\Models\Utility::colorset();
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
                             </button>
-                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
 
                         <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
