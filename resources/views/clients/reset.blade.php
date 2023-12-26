@@ -1,6 +1,6 @@
 
 {{Form::model($user,array('route' => array('client.password.update', $user->id), 'method' => 'post')) }}
-<div class="modal-body">
+<div class="modal-body" style="min-height: 40vh;">
     <div class="row">
         <div class="form-group">
             {{ Form::label('password', __('Password')) }}

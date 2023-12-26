@@ -1,5 +1,5 @@
 {{ Form::open(['route' => ['deals.application.store', $id], 'id' => 'create-application']) }}
-<div class="modal-body">
+<div class="modal-body" style="min-height: 65vh;">
     <div class="row">
 
         <div class="col-6 form-group py-0">
@@ -24,7 +24,7 @@
                     <option value="">Select months</option>
                 </select>
             </div>
-            
+
         </div>
 
 
@@ -39,7 +39,7 @@
 <div class="modal-footer">
     <input type="hidden" name="passport_number" value="{{ $deal_passport->passport_number }}">
     <input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{ __('Create') }}" class="btn  btn-primary create-btn" data-entity="application">
+    <input type="submit" value="{{ __('Create') }}" class="btn  btn-dark create-btn" data-entity="application">
 </div>
 {{ Form::close() }}
 
@@ -81,11 +81,11 @@
     $.get('{{ route('get_university_intake') }}', { id: id }, function (data) {
         try {
             data = JSON.parse(data);
-           
+
             console.log(data.html);
-            
+
             if (data.status === 'success') {
-            
+
                 $('#intake_month').html(data.html);
                 select2();
             } else {

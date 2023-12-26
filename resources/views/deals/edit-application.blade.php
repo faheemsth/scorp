@@ -1,5 +1,5 @@
 {{ Form::open(['route' => ['deals.application.update',$application->id], 'id' => 'updating-application']) }}
-<div class="modal-body">
+<div class="modal-body" style="min-height: 65vh;">
     <div class="row">
 
         <div class="col-6 form-group py-0">
@@ -34,7 +34,7 @@
 <div class="modal-footer">
     <input type="hidden" name="passport_number" value="{{ $deal_passport->passport_number}}">
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Update')}}" class="btn  btn-primary edit-btn">
+    <input type="submit" value="{{__('Update')}}" class="btn  btn-dark edit-btn">
 </div>
 {{Form::close()}}
 
