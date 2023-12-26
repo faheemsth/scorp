@@ -364,7 +364,7 @@
 
                             @can('create region')
                             <a href="#" data-size="lg" data-url="{{ route('region.create') }}"
-                                data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}"
+                                data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Origin') }}"
                                 class="btn p-2 btn-dark">
                                 <i class="ti ti-plus"></i>
                             </a>
@@ -427,7 +427,7 @@
                                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                             @can('update region')
                                                             <li><a class="dropdown-item"
-                                                                    href="#" data-size="lg" data-url="{{ url('region/update?id=').$deal->id }}"
+                                                                    href="#" data-size="lg" data-url="{{ url('region/update?id=').$deal->id }}" title="{{ __('Update Origin') }}"
                                                                     data-ajax-popup="true" data-bs-toggle="tooltip">Edit</a></li>
                                                             @endcan
                                                             @can('delete region')

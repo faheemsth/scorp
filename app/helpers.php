@@ -112,7 +112,7 @@ if (!function_exists('addLeadHistory')) {
 if (!function_exists('getLogActivity')) {
     function getLogActivity($id, $type)
     {
-        return LogActivity::where('module_id', $id)->where('module_type', $type)->get();
+        return LogActivity::where('module_id', $id)->where('module_type', $type)->orderBy('created_at', 'desc')->get();
     }
 }
 if (!function_exists('formatPhoneNumber')) {

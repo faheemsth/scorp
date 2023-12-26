@@ -815,9 +815,9 @@ class DealController extends Controller
     {
 
         // if (\Auth::user()->can('edit deal') || \Auth::user()->type == 'super admin') {
-        if (\Auth::user()->type == 'super admin') {
-            // if ($deal->created_by == \Auth::user()->ownerId() || \Auth::user()->type == 'super admin') {
-            if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->can('edit deal')) {
+
+            if (\Auth::user()->can('edit deal') || \Auth::user()->type == 'super admin') {
                 $pipelines         = Pipeline::get()->pluck('name', 'id')->toArray();
                 $sources           = Source::get()->pluck('name', 'id')->toArray();
 
@@ -2995,7 +2995,7 @@ class DealController extends Controller
             $notes = DealNote::where('deal_id', $deal->id)->orderBy('created_at', 'DESC')->get();
 
             $applications = DealApplication::where('deal_id', $deal->id)->get();
-            $tasks = DealTask::where(['related_to' => $deal->id, 'related_type' => 'deal'])->get();
+            $tasks = DealTask::where(['related_to' => $deal->id, 'related_type' => 'deal'])->orderBy('status')->get();
             $log_activities = getLogActivity($deal->id, 'deal');
 
              //Getting lead stages history
@@ -3588,4 +3588,38 @@ class DealController extends Controller
 
         }
     }
+
+    public function updateBulkApplication(Request $request){
+
+        $ids = explode(',',$request->app_ids);
+        // dd($ids);
+        if(isset($request->university)){
+
+            DealApplication::whereIn('id',$ids)->update(['university_id' => $request->university]);
+            return redirect()->route('applications.index')->with('success', 'Applications updated successfully');
+
+        }elseif(isset($request->course)){
+
+            DealApplication::whereIn('id',$ids)->update(['course' => $request->course]);
+            return redirect()->route('applications.index')->with('success', 'Applications updated successfully');
+
+        }elseif(isset($request->application_key)){
+
+            DealApplication::whereIn('id',$ids)->update(['application_key' => $request->application_key]);
+            return redirect()->route('applications.index')->with('success', 'Applications updated successfully');
+
+        }elseif(isset($request->contact)){
+
+            DealApplication::whereIn('id',$ids)->update(['intake' => $request->intake]);
+            return redirect()->route('applications.index')->with('success', 'Applications updated successfully');
+
+        }elseif(isset($request->status)){
+            $status = (int)$request->status;
+            DealApplication::whereIn('id',$ids)->update(['stage_id' => $status]);
+            return redirect()->route('applications.index')->with('success', 'Applications updated successfully');
+
+        }
+    }
+
+
 }

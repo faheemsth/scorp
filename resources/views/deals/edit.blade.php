@@ -31,7 +31,7 @@
     }
 </style>
 
-{{ Form::open(array('url' => 'deals', 'id' => 'deal-updating-form')) }}
+{{ Form::open(array('url' => 'deals', 'id' => 'deal-updating-form', 'novalidate')) }}
 <div class="modal-body pt-0" style="height: 80vh;">
     <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
         <div class="card-body px-2 py-0" >
@@ -202,7 +202,6 @@
                                                     <td class=""
                                                         style="width: 153px;  font-size: 13px;">
                                                         {{ __('Organization') }}
-                                                        <span class="text-danger" style="font-size: 16px;">*</span>
                                                     </td>
 
                                                     <td class=""

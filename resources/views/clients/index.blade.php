@@ -60,8 +60,22 @@ $(document).on('change', '.sub-check', function() {
                         </ul>
                     </div>
                 </div>
-
-                <div class="col-10 d-flex justify-content-end gap-2">
+                <div class="col-2">
+                    <!-- <p class="mb-0 pb-0">Tasks</p> -->
+                    <div class="dropdown" id="actions_div" style="display:none">
+                        <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Actions
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+                            <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
+                                <li><a class="dropdown-item" href="#">Brand Change</a></li>
+                                <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-8 d-flex justify-content-end gap-2">
                     <div class="input-group w-25">
                         <button class="btn btn-sm list-global-search-btn">
                             <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
@@ -81,11 +95,15 @@ $(document).on('change', '.sub-check', function() {
                     </button>
                      <button data-url="{{ route('clients.create') }}" data-ajax-popup="true"  data-bs-toggle="tooltip" title="{{__('Create')}}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal">
                         <i class="ti ti-plus" style="font-size:18px"></i>
-                    </button> 
+                    </button>
 
                 </div>
             </div>
-
+            <style>
+                .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
+            </style>
             {{-- Filters --}}
             <div class="filter-data px-3" id="filter-show"
                 <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
@@ -255,6 +273,44 @@ $(document).on('change', '.sub-check', function() {
                 ])
             @endif
         </div>
+        <div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg my-0" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Mass Update</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('update-bulk-contacts') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <select name="bulk_field" id="bulk_field" class="form form-control">
+                                    <option value="">Select Field</option>
+                                    <option value="name">Name</option>
+                                    <option value="email">Email</option>
+                                    <option value="passport_number">Passport Number</option>
+                                    <option value="password">Password</option>
+                                </select>
+                            </div>
+                            <input name='contacts_ids' id="contacts_ids" hidden>
+                            <div class="col-md-6" id="field_to_update">
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="Update">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     </div>
     @push('script-page')
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
@@ -263,6 +319,76 @@ $(document).on('change', '.sub-check', function() {
             $(document).on('change', '.main-check', function() {
                 $(".sub-check").prop('checked', $(this).prop('checked'));
             });
+
+            
+            $(document).on('change', '.sub-check', function() {
+                var selectedIds = $('.sub-check:checked').map(function() {
+                    return this.value;
+                }).get();
+
+                console.log(selectedIds.length)
+
+                if (selectedIds.length > 0) {
+                    selectedArr = selectedIds;
+                    $("#actions_div").css('display', 'block');
+                } else {
+                    selectedArr = selectedIds;
+
+                    $("#actions_div").css('display', 'none');
+                }
+                let commaSeperated = selectedArr.join(",");
+                console.log(commaSeperated)
+                $("#contacts_ids").val(commaSeperated);
+
+            });
+
+            function massUpdate() {
+                if (selectedArr.length > 0) {
+                    $('#mass-update-modal').modal('show')
+                } else {
+                    alert('Please choose Tasks!')
+                }
+            }
+
+            $('#bulk_field').on('change', function() {
+
+                if (this.value != '') {
+                    $('#field_to_update').html('');
+
+                    if (this.value == 'name') {
+                        
+                        let field = `<div>
+                                        <input class="form-control" placeholder="Enter client Name" required="required" name="name" type="text" id="name">
+                                    </div>`;
+                        $('#field_to_update').html(field);
+
+                    } else if (this.value == 'email') {
+
+                        let field = `<div>
+                                        <input class="form-control" placeholder="Enter Client Email" required="required" name="email" type="email" id="email">
+                                    </div>`;
+                        $('#field_to_update').html(field);
+
+                    }else if (this.value == 'passport_number') {
+
+                        let field = `<div>
+                                        <input class="form-control" placeholder="Enter passport number" required="required" name="passport_number" type="text" id="passport_number">
+                                    </div>`;
+                        $('#field_to_update').html(field);
+
+                    }else if (this.value == 'password') {
+
+                        let field = `<div>
+                                        <input class="form-control" placeholder="Enter User Password" required="required" minlength="6" name="password" type="password" value="" id="password">
+                                    </div>`;
+                        $('#field_to_update').html(field);
+
+                    }
+
+                }
+
+                });
+
             $('.filter-btn-show').click(function() {
                 $("#filter-show").toggle();
             });

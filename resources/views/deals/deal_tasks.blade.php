@@ -36,6 +36,11 @@ $setting = \App\Models\Utility::colorset();
 
 
 @section('content')
+<style>
+    .form-control:focus {
+        border: 1px solid rgb(209, 209, 209) !important;
+    }
+</style>
 <div class="row">
     <div class="col-12">
         <div class="card my-card">
@@ -137,7 +142,7 @@ $setting = \App\Models\Utility::colorset();
                             <div class="col-md-4">
                                 <label for="">Status</label>
                                 <select class="form form-control select2" id="status444" name="status" multiple style="width: 95%;">
-                                    <option value="">Select Brand</option>
+                                    <option value="">Select Status</option>
                                     <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Completed</option>
                                     <option value="0" <?= isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : '' ?>>On Going</option>
                                 </select>
@@ -182,7 +187,7 @@ $setting = \App\Models\Utility::colorset();
                                 <th>{{ __('Due Date') }}</th>
                                 <th>{{ __('Subject') }}</th>
                                 <th>{{ __('Assigned To') }}</th>
-                                <th>{{ __('Company/Team') }}</th>
+                                <th>{{ __('Brand') }}</th>
                                 <th>{{ __('Status') }}</th>
                             </tr>
                         </thead>
@@ -350,6 +355,8 @@ $setting = \App\Models\Utility::colorset();
                     </div>
 
                 </div>
+                <br>
+
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-dark px-2" value="Update">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

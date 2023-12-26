@@ -102,7 +102,11 @@
 <div class="row">
 
 
-
+        <style>
+            .form-control:focus {
+                border: 1px solid rgb(209, 209, 209) !important;
+            }
+        </style>
 
         <div class="col-12">
             <div class="card">
@@ -149,25 +153,6 @@
                         </div>
                     </div>
 
-
-                        <button class="btn px-2 pb-2 pt-2 refresh-list bg-dark"
-                            style=" color:white;"><i class="ti ti-refresh"
-                                style="font-size: 18px"></i></button>
-
-                        <button class="btn filter-btn-show px-2 btn-dark" style="color:white;"
-                            type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="ti ti-filter" style="font-size:18px"></i>
-                        </button>
-
-
-                        @if(\Auth::user()->type=='super admin' || \Auth::user()->can('create organization'))
-                            <button data-url="{{ route('leads.create') }}" class="btn  px-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                <i class="ti ti-plus" style="font-size:18px"></i>
-                            </button>
-                        @endif
-
-                    </div>
-                </div>
 
 
                 <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
@@ -345,99 +330,7 @@
 
                 </div>
 
-                <div class=" mt-3">
-                    <table class="table">
-                        <thead style="background: #ddd; color:rgb(0, 0, 0); font-size: 14px; font-weight: bold;">
-                            <tr>
-                                <th style="width: 50px !important;">
-                                    <input type="checkbox" class="main-check">
-                                </th>
-                                <!-- <td style="border-left: 1px solid #fff;"></td> -->
-                                <td style="border-left: 1px solid #fff;">Organization Name</td>
-                                <td style="border-left: 1px solid #fff;">Phone</td>
-                                <td style="border-left: 1px solid #fff;">Billing Street</td>
-                                <td style="border-left: 1px solid #fff;">Billing City</td>
-                                <td style="border-left: 1px solid #fff;">Billing State</td>
-                                <td style="border-left: 1px solid #fff;">Billing Country</td>
-                                <td style="border-left: 1px solid #fff;"></td>
-                                <td style="border-left: 1px solid #fff;">Action</td>
-                            </tr>
-                        </thead>
-                        <tbody class="organization_tbody" style=" font-size: 14px;" class="new-organization-list-tbody">
-
-                            @forelse($organizations as $org)
-                            @php
-                            $org_data = $org->organization($org->id);
-
-                            @endphp
-
-                            <tr>
-                                <!-- <td class="py-1">
-                                    <input type="checkbox" class="form">
-                                </td> -->
-                                <td>
-                                    <input type="checkbox" name="organizations[]" value="{{$org->id}}" class="sub-check">
-                                </td>
-                                <td>
-                                    <span style="cursor:pointer" class="org-name hyper-link" onclick="openNav(<?= $org->id ?>)" data-org-id="{{ $org->id }}">{{$org->name}}</span>
-                                </td>
-                                <td >{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
-                                <td >{{ isset($org_data->billing_street) ? $org_data->billing_street : '' }}</td>
-                                <td >{{ isset($org_data->billing_city) ? $org_data->billing_city : ''  }}</td>
-                                <td >{{ isset($org_data->billing_state) ? $org_data->billing_state : ''  }}</td>
-                                <td >{{ isset($org_data->billing_country) ? $org_data->billing_country : ''  }}</td>
-                                <td ></td>
-                                <td >
-                                    <div class="dropdown">
-                                        <button class="btn bg-transparents" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
-                                                <path d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z"></path>
-                                            </svg>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            @if(\Auth::user()->type == 'super admin' ||\Auth::user()->can('edit organization'))
-                                            <li>
-                                                <a href="#" data-size="lg" data-url="{{ route('organization.edit', $org->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}" class="dropdown-item">
-                                                    Edit this Organization
-                                                </a>
-                                            </li>
-                                            @endif
-
-                                            <li>
-                                                @if(\Auth::user()->type == 'super admin' ||\Auth::user()->can('delete organization'))
-
-                                                <a href="{{ route('organization.delete', $org->id) }}" class="dropdown-item">
-                                                    Delete this Organization
-                                                </a>
-
-                                                @endif
-                                            </li>
-                                             @can('create task')
-                                            <li>
-                                                <a href="{{ route('organiation.tasks.create', $org->id) }}" data-bs-toggle="tooltip" title="{{ __('Add Message') }}" class="dropdown-item">
-                                                    Add new task For Organization
-                                                </a>
-                                            </li>
-                                            @endcan
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="9" class="py-1">
-                                    No Organizations found
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
-
-                <div id="mySidenav" style="z-index: 1065; padding-left:10px; box-shadow: -5px 0px 30px 0px #aaa;" class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>" style="padding-left: 5px">
-                </div>
-
+            </div>
             </div>
         </div>
     </div>

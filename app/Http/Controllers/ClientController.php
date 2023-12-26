@@ -346,6 +346,7 @@ class ClientController extends Controller
                     return redirect()->back()->with('error', $messages->first());
                 }
                 $post['email'] = $request->email;
+                $post['passport_number'] = $request->passport_number;
 
                 $client->update($post);
 
@@ -453,5 +454,32 @@ class ClientController extends Controller
             return redirect()->route('clients.index')->with('error', 'Atleast select 1 client.');
         }
 
+    }
+
+    public function updateBulkContact(Request $request){
+
+        $ids = explode(',',$request->contacts_ids);
+        // dd($ids);
+        if(isset($request->name)){
+
+            User::whereIn('id',$ids)->where('type', '=', 'client')->update(['name' => $request->name]);
+            return redirect()->route('clients.index')->with('success', 'Contacts updated successfully');
+
+        }elseif(isset($request->email)){
+
+            User::whereIn('id',$ids)->where('type', '=', 'client')->update(['email' => $request->email]);
+            return redirect()->route('clients.index')->with('success', 'Contacts updated successfully');
+
+        }elseif(isset($request->passport_number)){
+
+            User::whereIn('id',$ids)->where('type', '=', 'client')->update(['passport_number' => $request->passport_number]);
+            return redirect()->route('clients.index')->with('success', 'Contacts updated successfully');
+
+        }elseif(isset($request->password)){
+            $password = Hash::make($request->password);
+            User::whereIn('id',$ids)->where('type', '=', 'client')->update(['password' => $password]);
+            return redirect()->route('clients.index')->with('success', 'Contacts updated successfully');
+
+        }
     }
 }
