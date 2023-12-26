@@ -1007,7 +1007,8 @@ class DashboardController extends Controller
                     return view('dashboard.dashboard', compact('arrEvents', 'onGoingTraining', 'activeJob', 'inActiveJOb', 'doneTraining', 'announcements', 'employees', 'meetings', 'countTrainer', 'countClient', 'countUser', 'notClockIns', 'countEmployee'));
                 }
             } else {
-                return $this->project_dashboard_index();
+                return redirect()->route('crm.dashboard');
+               // return $this->project_dashboard_index();
             }
         } else {
             if (!file_exists(storage_path() . "/installed")) {

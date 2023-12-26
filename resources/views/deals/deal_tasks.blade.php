@@ -117,7 +117,7 @@ $setting = \App\Models\Utility::colorset();
                                 </select>
                             </div>
 
-                            <div class="col-md-4"> <label for="">Created By</label>
+                            <div class="col-md-4"> <label for="">Brands</label>
                                 <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
                                     <option value="">Select Brand</option>
 
