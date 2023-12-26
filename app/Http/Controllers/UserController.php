@@ -391,7 +391,8 @@ class UserController extends Controller
 
             $settings = Utility::getStorageSetting();
             if ($settings['storage_setting'] == 'local') {
-                $dir        = 'uploads/avatar/';
+                $dir        = '/uploads/avatar/';
+               // $dir        = 'storage/';
             } else {
                 $dir        = 'uploads/avatar/';
             }
