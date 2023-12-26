@@ -393,7 +393,7 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
-
+        // dd($request);
         $usr = \Auth::user();
         if ($usr->can('create lead') ||  \Auth::user()->type == 'super admin') {
             $validator = \Validator::make(

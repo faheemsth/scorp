@@ -35,7 +35,7 @@
             @foreach($branches as $key => $branch)
             <option value="{{$key}}">{{$branch}}</option>
             @endforeach
-        </select> 
+        </select>
         @else
         <input type="text" name="{{$name}}" class="form form-control {{$name}} bg-transparent" value="{{$deal->$name}}" style="border: 0px;box-shadow:none;border-raduis:0px;padding:4px !important;">
         @endif
@@ -45,7 +45,7 @@
         </span>
     </div>
     <div class="d-flex align-items-end">
-        <button class="btn btn-sm btn-primary mx-2 edit-btn-data" data-name="{{$name}}" style="padding: 10px;"><i class="ti ti-pencil"></i></button>
-        <button class="btn btn-sm btn-secondary edit-lead-remove" data-name="{{$name}}" style="padding: 10px;"><i class="ti ti-minus"></i></button>
+        <button class="btn px-2 btn-dark  mx-2 edit-btn-data" data-name="{{$name}}" style="padding: 10px;"><i class="ti ti-pencil"></i></button>
+        <button class="btn px-2  btn-danger edit-lead-remove" data-name="{{$name}}" style="padding: 10px;"><i class="ti ti-minus"></i></button>
     </div>
-</div> 
+</div>

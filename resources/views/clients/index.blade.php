@@ -9,10 +9,8 @@
 @push('script-page')
 @endpush
 @section('breadcrumb')
-    <li class="breadcrumb-item">
-        <a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
-    </li>
-    <li class="breadcrumb-item">{{ __('Contacts') }}</li>
+    <li class="breadcrumb-item"><a href="{{route('crm.dashboard')}}">{{__('Dashboard')}}</a></li>
+    <li class="breadcrumb-item">{{__('Contacts')}}</li>
 @endsection
 @section('content')
     <style>
@@ -57,9 +55,9 @@
                         data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="ti ti-filter" style="font-size:18px"></i>
                     </button>
-                    {{-- <button data-url="{{ route('clients.create') }}" data-ajax-popup="true"  data-bs-toggle="tooltip" title="{{__('Create')}}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal">
+                     <button data-url="{{ route('clients.create') }}" data-ajax-popup="true"  data-bs-toggle="tooltip" title="{{__('Create')}}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal">
                         <i class="ti ti-plus" style="font-size:18px"></i>
-                    </button> --}}
+                    </button> 
 
                 </div>
             </div>
@@ -150,8 +148,7 @@
                             <th style="border-left: 1px solid #fff; display: none;">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="leads-list-div" style="color:rgb(0, 0, 0); font-size: 14px;"
-                        class="new-organization-list-tbody">
+                    <tbody class="leads-list-div" style="font-size: 14px;" class="new-organization-list-tbody">
 
                         @forelse($clients as $client)
                             <tr>

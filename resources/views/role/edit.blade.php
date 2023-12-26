@@ -260,7 +260,7 @@
                 </div>
                 <div class="tab-pane fade" id="crm" role="tabpanel" aria-labelledby="pills-profile-tab">
                     @php
-                        $modules=['crm dashboard', 'lead','pipeline','lead stage','source','label','deal','stage','task','form builder','form response','contract','contract type', 'application', 'all leads', 'all deals', 'notes', 'organization', 'university', 'branch'];
+                        $modules=['crm dashboard', 'lead','pipeline','lead stage','source','label','deal','stage','task','form builder','form response','contract','contract type', 'application', 'all leads', 'all deals', 'notes', 'organization', 'university', 'branch', 'institute category'];
                     @endphp
                     <div class="col-md-12">
                         <div class="form-group">

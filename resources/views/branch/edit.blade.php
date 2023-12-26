@@ -1,5 +1,5 @@
 {{Form::model($branch,array('route' => array('branch.update', $branch->id), 'method' => 'PUT')) }}
-<div class="modal-body">
+<div class="modal-body" style="min-height: 35vh;">
 
     <div class="row">
         <div class="col-12">
@@ -13,7 +13,7 @@
                 @enderror
             </div>
         </div>
-        
+
     </div>
 </div>
 

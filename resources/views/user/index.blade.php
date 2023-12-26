@@ -10,7 +10,7 @@
 @endpush
 @section('breadcrumb')
     <li class="breadcrumb-item">
-        <a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a>
+        <a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a>
     </li>
     <li class="breadcrumb-item">{{ __('User') }}</li>
 @endsection

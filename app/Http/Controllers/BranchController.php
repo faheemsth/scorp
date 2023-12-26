@@ -12,11 +12,12 @@ class BranchController extends Controller
     {
         if(\Auth::user()->can('manage branch'))
         {
-            if(\Auth::user()->type == 'super admin'){
-                $branches = Branch::get();
-            }else{
-                $branches = Branch::where('created_by', '=', \Auth::user()->creatorId())->get();
-            }
+            // if(\Auth::user()->type == 'super admin'){
+            //     $branches = Branch::get();
+            // }else{
+            //     $branches = Branch::where('created_by', '=', \Auth::user()->creatorId())->get();
+            // }
+            $branches = Branch::get();
             return view('branch.index', compact('branches'));
         }
         else

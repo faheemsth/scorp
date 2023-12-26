@@ -220,7 +220,7 @@
 </style>
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('CRM Dashboard') }}</a></li>
+<li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
 <li class="breadcrumb-item">{{ __('Admissions') }}</li>
 @endsection
 
@@ -616,38 +616,35 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('update-bulk-leads') }}" method="POST">
+            <form action="{{ route('update-bulk-deals') }}" method="POST">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
                             <select name="bulk_field" id="bulk_field" class="form form-control">
                                 <option value="">Select Field</option>
-                                <option value="nm">Name</option>
-                                <option value="ldst">Lead Status</option>
-                                <!-- <option value="ast">Assign Type</option> -->
+                                <option value="adm_name">Admission Name</option>
+                                <option value="intake_month">Intake Month</option>
+                                <option value="intake_year">Intake Year</option>
+                                <option value="linked_contact">Linked Contact</option>
                                 <option value="user_res">User Reponsible</option>
-                                <option value="loc">Location</option>
-                                <option value="agy">Agency</option>
-                                <option value="ldsrc">Lead Source</option>
-                                <option value="email">Email Address</option>
-                                <option value="email_ref">Email Address (Referrer)	</option>
-                                <option value="phone">Phone</option>
-                                <option value="m_phone">Mobile Phone</option>
-                                <!-- <option value="mail_opt">Email opt out</option> -->
-                                <option value="address">Address</option>
+                                <option value="category">Category</option>
+                                <option value="institute">Institute</option>
+                                <option value="org">Organization</option>
+                                <option value="ofc_res">Office Responsible</option>
+                                <option value="pipeline">Pipeline</option>
+                                <option value="stage">Stage</option>
                                 <option value="desc">Description</option>
-                                <!-- <option value="tag_list">Tag List</option> -->
-
                             </select>
                         </div>
-                        <input name='lead_ids' id="lead_ids" hidden>
+                        <input name='deal_ids' id="deal_ids" hidden>
                         <div class="col-md-6" id="field_to_update">
 
                         </div>
                     </div>
 
                 </div>
+                <br>
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-dark px-2" value="Update">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -688,7 +685,7 @@
             }
             let commaSeperated = selectedArr.join(",");
             console.log(commaSeperated)
-            $("#lead_ids").val(commaSeperated);
+            $("#deal_ids").val(commaSeperated);
 
         });
 
@@ -699,6 +696,190 @@
                 alert('Please choose Tasks!')
             }
         }
+
+        $('#bulk_field').on('change', function() {
+
+            if(this.value != ''){
+                $('#field_to_update').html('');
+
+                if(this.value == 'adm_name'){
+
+                    let field = `<div>
+                                    <input type="text" class=" form-control" placeholder="Admission Name" name="name" value="" required="">
+                            </div>`;
+                    $('#field_to_update').html(field);
+
+                }else if(this.value == 'intake_month'){
+
+                    var months = <?= json_encode($months) ?>;
+
+                    let options = '';
+                    $.each(months, function(keyName, keyValue) {
+                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                    });
+
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="intake_month" required>
+                                    <option value="">Select Month</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+                    select2();
+
+                }else if(this.value == 'intake_year'){
+
+                    var years = <?= json_encode($years) ?>;
+
+                    let options = '';
+                    $.each(years, function(keyName, keyValue) {
+                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                    });
+
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="intake_year" required>
+                                    <option value="">Select Year</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+                    select2();
+
+                }else if(this.value == 'linked_contact'){
+
+                    var clients = <?= json_encode($clients) ?>;
+                    let options = '';
+
+                    $.each(clients, function(keyName, keyValue) {
+                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                    });
+
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="contact[]" required>
+                                    <option value="">Select Contact</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+                    select2();
+
+                }else if(this.value == 'user_res'){
+
+                    var users = <?= json_encode($users) ?>;
+                    let options = '';
+
+                    $.each(users, function(keyName, keyValue) {
+                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                    });
+
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="assigned_to" required>
+                                    <option value="">Select Employee</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+                    select2();
+
+                }else if(this.value == 'category'){
+
+                    let field = `<select class="form-control select2" id="choice-5" name="category" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Australia">Australia</option>
+                                    <option value="Canada">Canada</option>
+                                    <option value="China">China</option>
+                                    <option value="E-Learning">E-Learning</option>
+                                    <option value="Europe">Europe</option>
+                                    <option value="Malaysia">Malaysia</option>
+                                    <option value="Russia">Russia</option>
+                                    <option value="Turkey">Turkey</option>
+                                    <option value="Ukraine">Ukraine</option>
+                                    <option value="United Kingdom">United Kingdom</option>
+                                    <option value="United States of America">United States of America</option>
+                                </select>`;
+                    $('#field_to_update').html(field);
+                    select2();
+
+                }else if(this.value == 'institute'){
+
+                    var universities = <?= json_encode($universities) ?>;
+                    let options = '';
+
+                    $.each(universities, function(keyName, keyValue) {
+                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                    });
+
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="university_id" required>
+                                    <option value="">Select Institute</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+                    select2();
+
+                }else if(this.value == 'org'){
+
+                    var organizations = <?= json_encode($organizations) ?>;
+                    let options = '';
+
+                    $.each(organizations, function(keyName, keyValue) {
+                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                    });
+
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="organization_id" required>
+                                    <option value="">Select Organization</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+                    select2();
+
+                }else if(this.value == 'ofc_res'){
+
+                    var branches = <?= json_encode($branches) ?>;
+                    let options = '';
+
+                    $.each(branches, function(keyName, keyValue) {
+                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                    });
+
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="branch_id" required>
+                                    <option value="">Select Branch</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+                    select2();
+
+                }else if(this.value == 'pipeline'){
+
+                    var pipelines = <?= json_encode($pipelines) ?>;
+                    let options = '';
+
+                    $.each(pipelines, function(keyName, keyValue) {
+                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                    });
+
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="pipeline_id" required>
+                                    <option value="">Select Pipeline</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+                    select2();
+
+                }else if(this.value == 'stage'){
+
+                    var stages = <?= json_encode($stages) ?>;
+                    let options = '';
+
+                    $.each(stages, function(keyName, keyValue) {
+                        options += '<option value="'+keyName+'">'+keyValue+'</option>';
+                    });
+
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="stage_id" required>
+                                    <option value="">Select Stage</option>
+                                    `+options+`
+                                </select>`;
+                    $('#field_to_update').html(field);
+                    select2();
+                }else if(this.value == 'desc'){
+
+                    let field = `<textarea class="form-control" rows="4" placeholder="description" name="deal_description"></textarea>`;
+                    $('#field_to_update').html(field);
+
+                }
+            }
+
+            });
 
         // new lead form submitting...
         $(document).on("submit", "#deal-creating-form", function(e) {
@@ -870,8 +1051,9 @@
                 $("#mySidenav").css('width', ww + 'px');
                 $("#main").css('margin-right', ww + 'px');
             } else {
-                $("#mySidenav").css('width', '890px');
-                $("#main").css('margin-right', "890px");
+                $("#mySidenav").css('min-width', '942px');
+                $("#mySidenav").css('max-width', '935px');
+                $("#main").css('margin-right', "942px");
             }
 
             $("#modal-discussion-add").attr('data-lead-id', deal_id);

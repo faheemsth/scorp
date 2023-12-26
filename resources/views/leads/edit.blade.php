@@ -34,7 +34,7 @@
 {{ Form::open(array('url' => 'leads','id' => 'lead-updating-form')) }}
 
 <input type="hidden" value="{{$lead->id}}" class="lead_id">
-<div class="modal-body pt-0">
+<div class="modal-body pt-0" style="min-height: 80vh">
     <div class="lead-content my-2" style="max-height: 400px; overflow-y: scroll;">
         <div class="card-body px-2 py-0" >
                 {{-- Details Pill Start --}}
@@ -58,7 +58,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                         {{ __('Name') }}
                                                         <span class="text-danger">*</span>
                                                     </td>
@@ -77,7 +77,7 @@
 
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                     {{ __('Lead Status') }}
                                                     </td>
                                                     <td class=""
@@ -93,7 +93,7 @@
 
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 110px; text-align: right; font-size: 13px;">
+                                                        style="width: 110px;  font-size: 13px;">
                                                     {{ __('User Responsible') }}
                                                     </td>
                                                     <td class=""
@@ -109,7 +109,7 @@
 
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                         {{ __('Location') }}
                                                     </td>
                                                     <td class=""
@@ -125,7 +125,7 @@
 
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                         {{ __('Agency') }}
                                                     </td>
                                                     <td class=""
@@ -142,7 +142,7 @@
 
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                         {{ __('Lead Source') }}
                                                     </td>
                                                     <td class=""
@@ -179,7 +179,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                     {{ __('Email Address') }}
                                                     <span class="text-danger">*</span>
                                                     </td>
@@ -189,9 +189,9 @@
                                                     </td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr class="d-none">
                                                     <td class=""
-                                                        style="width: 153px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                         {{ __('Email Address (Referrer)') }}
                                                     </td>
                                                     <td class=""
@@ -202,8 +202,8 @@
 
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
-                                                        {{ __('Phone') }}
+                                                        style="width: 150px;  font-size: 13px;">
+                                                        {{ __('Mobile Phone') }}
                                                         <span class="text-danger">*</span>
                                                     </td>
                                                     <td class=""
@@ -212,9 +212,9 @@
                                                     </td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr class="d-none">
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                         {{ __('Mobile Phone') }}
                                                     </td>
                                                     <td class=""
@@ -224,9 +224,9 @@
                                                     </td>
                                                 </tr>
 
-                                                <tr>
+                                                <tr class="d-none">
                                                     <td class=""
-                                                        style="width: 130px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                         {{ __('Email Opted Out') }}
                                                     </td>
                                                     <td class=""
@@ -259,11 +259,11 @@
                                             <tbody>
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 115PX; text-align: right; font-size: 13px;padding-right: 20px;">
+                                                        style="width: 185px;  font-size: 13px;padding-right: 20px;">
                                                     Address
                                                     </td>
                                                     <td class=""
-                                                        style="width: 350PX; text-align: right; font-size: 13px; bg-danger">
+                                                        style="width: 350PX;  font-size: 13px; bg-danger">
                                                         <div class="form-floating">
                                                             <textarea class="form-control" placeholder="Street" id="floatingTextarea" name="lead_street">{{ $lead->street }}</textarea>
                                                           </div>
@@ -310,10 +310,10 @@
                                             <tb class="w-100"ody>
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                     Description
                                                     </td>
-                                                    <td style="width: 374px; text-align: right; font-size: 13px;">
+                                                    <td style="width: 374px;  font-size: 13px;">
                                                         <div class="" style="margin-left: 14px;">
                                                             <textarea class="form-control" rows="4" placeholder="description" name="lead_description">{{ $lead->keynotes }}</textarea>
                                                           </div>
@@ -341,7 +341,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td class=""
-                                                        style="width: 100px; text-align: right; font-size: 13px;">
+                                                        style="width: 150px;  font-size: 13px;">
                                                         {{ __('Tag List') }}
                                                     </td>
                                                     <td class="" style="padding-left: 10px;">
@@ -366,8 +366,8 @@
 </div>
 
 <div class="modal-footer">
-    <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Update')}}" class="btn  btn-primary update-lead-btn">
+    <input type="button" value="{{__('Cancel')}}" class="btn px-2 mx-1 btn-light" data-bs-dismiss="modal">
+    <input type="submit" value="{{__('Update')}}" class="btn  btn-dark px-2 update-lead-btn">
 </div>
 
 {{Form::close()}}

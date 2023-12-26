@@ -53,7 +53,7 @@
 
                     <div class="card-header" style="display: flex; justify-content: space-between;">
                         <h3>ALL Institute Categories</h3>
-                        @can('create document type')
+                        @can('create institute category')
                         <div class="float-end">
                             <a href="#" data-size="md" data-url="{{ route('institute-category.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn btn-sm btn-dark">
                                 <i class="ti ti-plus"></i>
@@ -91,11 +91,13 @@
 
 
                                             <div class="action-btn  ms-2">
+                                                @can('delete institute category')
                                                 {!! Form::open(['method' => 'DELETE', 'route' => ['institute-category.destroy', $category->id]]) !!}
                                                 <a href="#" class="btn btn-sm btn-danger mx-1 align-items-center bs-pass-para"
                                                     data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i
                                                         class="ti ti-trash text-white"></i></a>
                                                 {!! Form::close() !!}
+                                                @endcan
                                             </div>
 
                                         </td>
