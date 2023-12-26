@@ -3588,4 +3588,38 @@ class DealController extends Controller
 
         }
     }
+
+    public function updateBulkApplication(Request $request){
+
+        $ids = explode(',',$request->app_ids);
+        
+        if(isset($request->university)){
+
+            DealApplication::whereIn('id',$ids)->update(['university' => $request->university]);
+            return redirect()->route('applications')->with('success', 'Applications updated successfully');
+
+        }elseif(isset($request->course)){
+
+            DealApplication::whereIn('id',$ids)->update(['course' => $request->course]);
+            return redirect()->route('applications')->with('success', 'Applications updated successfully');
+
+        }elseif(isset($request->application_key)){
+
+            DealApplication::whereIn('id',$ids)->update(['application_key' => $request->application_key]);
+            return redirect()->route('applications')->with('success', 'Applications updated successfully');
+
+        }elseif(isset($request->contact)){
+
+            DealApplication::whereIn('id',$ids)->update(['intake' => $request->intake]);
+            return redirect()->route('applications')->with('success', 'Applications updated successfully');
+
+        }elseif(isset($request->status)){
+
+            DealApplication::whereIn('id',$ids)->update(['status' => $request->status]);
+            return redirect()->route('applications')->with('success', 'Applications updated successfully');
+
+        }
+    }
+
+    
 }
