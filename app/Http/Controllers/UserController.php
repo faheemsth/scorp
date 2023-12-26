@@ -17,6 +17,7 @@ use App\Models\Utility;
 use App\Models\Order;
 use App\Models\Plan;
 use App\Models\UserToDo;
+use App\Models\CompanyPermission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -632,9 +633,8 @@ class UserController extends Controller
             $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
             $start = 0;
         }
-        //dd(\Auth::user()->can('manage employees'));
 
-        if (\Auth::user()->can('manage employees')) {
+        if (\Auth::user()->can('manage employee')) {
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
             if (\Auth::user()->type == 'super admin') {
                 $usersQuery = User::whereNotIn('type', $excludedTypes);
@@ -669,15 +669,24 @@ class UserController extends Controller
     {
         $customFields = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'user')->get();
         $user  = \Auth::user();
+        
         if (\Auth::user()->type == 'super admin') {
             $branches = \App\Models\Branch::get()->pluck('name', 'id');
+            $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
         } else {
             $branches = \App\Models\Branch::where(['created_by' => $user->id])->get()->pluck('name', 'id');
             $branches = [0 => 'Select Branches'] + $branches->toArray();
-            $roles = Role::whereNotIn('name', ['client', 'super admin', 'company', 'team'])->get()->pluck('name', 'id');
+            $permittedCompanies = CompanyPermission::where('user_id', \Auth::user()->id)->pluck('permitted_company_id')->toArray();
+            $companies = User::whereIn('id', $permittedCompanies)
+               // ->orWhere('id', \Auth::user()->brand_id)
+                ->get()
+                ->pluck('name', 'id')
+                ->toArray();
+
         }
 
-        $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+
+
         $excludedTypes = ['super admin', 'company', 'team', 'client'];
         $roles = Role::whereNotIn('name', $excludedTypes)->get()->unique('name')->pluck('name', 'name');
 
@@ -693,9 +702,9 @@ class UserController extends Controller
     public function employeeStore(Request $request)
     {
 
-        if (\Auth::user()->can('create user')) {
+        if (\Auth::user()->can('create employee')) {
             $default_language = DB::table('settings')->select('value')->where('name', 'default_language')->first();
-            if (\Auth::user()->type == 'super admin') {
+           // if (\Auth::user()->type == 'super admin') {
                 $validator = \Validator::make(
                     $request->all(),
                     [
@@ -752,6 +761,7 @@ class UserController extends Controller
                 ExperienceCertificate::defaultExpCertificatRegister($user->id);
                 JoiningLetter::defaultJoiningLetterRegister($user->id);
                 NOC::defaultNocCertificateRegister($user->id);
+           /*
             } else {
                 $validator = \Validator::make(
                     $request->all(),
@@ -794,6 +804,7 @@ class UserController extends Controller
                     return redirect()->back()->with('error', __('Your user limit is over, Please upgrade plan.'));
                 }
             }
+            */
             // Send Email
             $setings = Utility::settings();
 
@@ -810,9 +821,9 @@ class UserController extends Controller
                 $resp = Utility::sendEmailTemplate('new_user', [$user->id => $user->email], $userArr);
 
 
-                return redirect()->route('users.index')->with('success', __('User successfully created.') . ((!empty($resp) && $resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
+                return redirect()->route('user.employees')->with('success', __('User successfully created.') . ((!empty($resp) && $resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
             }
-            return redirect()->route('users.index')->with('success', __('User successfully created.'));
+            return redirect()->route('user.employees')->with('success', __('User successfully created.'));
         } else {
             return redirect()->back();
         }
@@ -909,7 +920,7 @@ class UserController extends Controller
                 $roles[] = $request->role;
                 $user->roles()->sync($roles);
 
-                return redirect()->route('users.index')->with(
+                return redirect()->route('user.employees')->with(
                     'success',
                     'User successfully updated.'
                 );
