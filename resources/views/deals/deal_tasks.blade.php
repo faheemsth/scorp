@@ -92,7 +92,6 @@ $setting = \App\Models\Utility::colorset();
                         @can('create task')
                         <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark">
                             <i class="ti ti-plus" style="font-size:18px"></i>
-                            <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
                         </button>
                         @endcan
                     </div>

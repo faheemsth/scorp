@@ -148,7 +148,6 @@
                         data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"
                         class="btn px-2 btn-dark text-white">
                         <i class="ti ti-pencil"></i>
-                        <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
                     </a>
 
                     <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-danger text-white">

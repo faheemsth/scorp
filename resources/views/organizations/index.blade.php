@@ -142,7 +142,6 @@
                         @if(\Auth::user()->type=='super admin' || \Auth::user()->can('create organization'))
                             <button data-url="{{ route('leads.create') }}" class="btn  px-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                 <i class="ti ti-plus" style="font-size:18px"></i>
-                                <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
                             </button>
                         @endif
 

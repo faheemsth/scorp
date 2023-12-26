@@ -202,7 +202,6 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 @can('create lead')
                                 <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark">
                                     <i class="ti ti-plus" style="font-size:18px"></i>
-                                    <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
                                 </button>
                                 @endcan
                                 <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}"
