@@ -13,7 +13,7 @@
             </div>
         </div>
 
-        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team')
+        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
             <div class="form-group col-md-6">
                 {{ Form::label('role', __('Companies'),['class'=>'form-label']) }}
                 {!! Form::select('companies', $companies, null,array('class' => 'form-control select2', 'id' => 'companies' ,'required'=>'required')) !!}
@@ -28,7 +28,7 @@
         @endif
 
 
-        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team')
+        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
             <div class="form-group col-md-6">
                 {{ Form::label('role', __('User Role'),['class'=>'form-label']) }}
                 {!! Form::select('role', $roles, null,array('class' => 'form-control select2',  'id' => 'roles'  ,'required'=>'required')) !!}
@@ -42,7 +42,7 @@
             {!! Form::hidden('role', 'company', null,array('class' => 'form-control select2','required'=>'required')) !!}
         @endif
 
-        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team')
+        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
         <div class="form-group col-md-6">
             {{ Form::label('branch_id', __('Branch'),['class'=>'form-label']) }}
             {!! Form::select('branch_id', $branches, null,array('class' => 'form-control select2','required'=>'required')) !!}

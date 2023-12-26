@@ -1,4 +1,4 @@
-{{Form::open(array('url'=>route('user.employee.store'),'method'=>'post'))}}
+{{Form::open(array('url'=>route('user.employee.update', $user->id),'method'=>'post'))}}
 <div class="modal-body">
     <div class="row">
         <div class="col-md-6">
@@ -13,10 +13,10 @@
             </div>
         </div>
 
-        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team')
+        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
             <div class="form-group col-md-6">
                 {{ Form::label('role', __('Companies'),['class'=>'form-label']) }}
-                {!! Form::select('companies', $companies, $user->created_by,array('class' => 'form-control select2', 'id' => 'companies' ,'required'=>'required')) !!}
+                {!! Form::select('companies', $companies, $user->brand_id,array('class' => 'form-control select2', 'id' => 'companies' ,'required'=>'required')) !!}
                 @error('role')
                 <small class="invalid-role" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
@@ -28,7 +28,7 @@
         @endif
 
     
-        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team')
+        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
             <div class="form-group col-md-6">
                 {{ Form::label('role', __('User Role'),['class'=>'form-label']) }}
                 {!! Form::select('role', $roles, $user->type,array('class' => 'form-control select2',  'id' => 'roles'  ,'required'=>'required')) !!}
@@ -42,7 +42,7 @@
             {!! Form::hidden('role', 'company', null,array('class' => 'form-control select2','required'=>'required')) !!}
         @endif
 
-        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team')
+        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
         <div class="form-group col-md-6">
             {{ Form::label('branch_id', __('Branch'),['class'=>'form-label']) }}
             {!! Form::select('branch_id', $branches, $user->branch_id,array('class' => 'form-control select2','required'=>'required')) !!}
@@ -119,7 +119,7 @@
 
 <div class="modal-footer">
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Create')}}" class="btn  btn-dark px-2">
+    <input type="submit" value="{{__('Update')}}" class="btn  btn-dark px-2">
 </div>
 
 {{Form::close()}}

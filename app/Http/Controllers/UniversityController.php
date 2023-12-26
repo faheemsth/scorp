@@ -74,6 +74,15 @@ class UniversityController extends Controller
                 'total_records' => $universities->total(), // Use total() for total record count
             ];
 
+            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+                $html = view('university.university_list_ajax', $data)->render();
+
+                return json_encode([
+                    'status' => 'success',
+                    'html' => $html
+                ]);
+            }
+
             return view('university.index', $data);
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));

@@ -3,7 +3,7 @@
     {{ __('Manage Branch') }}
 @endsection
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
     <li class="breadcrumb-item">{{ __('Branch') }}</li>
 @endsection
 
@@ -78,7 +78,7 @@
                         </button>
 
                         @can('create task')
-                        <button data-size="md" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn px-2 btn-dark">
+                        <a href="#" data-size="md" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Branch')}}" class="btn px-2 btn-dark">
                             <i class="ti ti-plus"></i>
                         </button>
                         @endcan

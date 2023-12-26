@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 @php
-   // $profile=asset(Storage::url('uploads/avatar/'));
-    $profile=\App\Models\Utility::get_file('uploads/avatar/');
+    // $profile=asset(Storage::url('uploads/avatar/'));
+    $profile = \App\Models\Utility::get_file('uploads/avatar/');
 @endphp
 @section('page-title')
-    {{__('Manage Contacts')}}
+    {{ __('Manage Contacts') }}
 @endsection
 @push('script-page')
 <script>
@@ -31,28 +31,29 @@ $(document).on('change', '.sub-check', function() {
 </script>
 @endpush
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
+    <li class="breadcrumb-item"><a href="{{route('crm.dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item">{{__('Contacts')}}</li>
 @endsection
 @section('content')
-<style>
-    table tr td{
-        font-size: 14px;
-    }
-</style>
+    <style>
+        table tr td {
+            font-size: 14px;
+        }
+    </style>
     <div class="row">
         <div class="card py-3">
             <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                 <div class="col-2">
                     <p class="mb-0 pb-0 ps-1">CONTACTS</p>
                     <div class="dropdown">
-                        <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
+                            data-bs-toggle="dropdown" aria-expanded="false">
                             ALL CONTACTS
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <!-- <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+                                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                             <li><a class="dropdown-item delete-bulk-contacts" href="javascript:void(0)">Delete</a></li>
                             <li id="actions_div" style="display:none;font-size:14px;color:#3a3b45;"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
 
@@ -67,30 +68,41 @@ $(document).on('change', '.sub-check', function() {
                                 <i class="ti ti-search" style="font-size: 18px"></i>
                             </span>
                         </button>
-                        <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
+                        <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search"
+                            placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                     </div>
-                    <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+
+                    <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" onclick="RefreshList()"><i
+                            class="ti ti-refresh" style="font-size: 18px"></i></button>
+
+                    <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="ti ti-filter" style="font-size:18px"></i>
                     </button>
-                    {{-- <button data-url="{{ route('clients.create') }}" data-ajax-popup="true"  data-bs-toggle="tooltip" title="{{__('Create')}}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal">
+                     <button data-url="{{ route('clients.create') }}" data-ajax-popup="true"  data-bs-toggle="tooltip" title="{{__('Create')}}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal">
                         <i class="ti ti-plus" style="font-size:18px"></i>
-                    </button> --}}
+                    </button> 
 
                 </div>
             </div>
 
             {{-- Filters --}}
-            <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+            <div class="filter-data px-3" id="filter-show"
+                <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                 <form action="/clients" method="GET" class="">
                     <div class="row my-3">
                         <div class="col-md-4 mt-2">
                             <label for="">Name</label>
-                            <input type="text" class="form form-control" placeholder="Search Name" name="name" value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>" style="width: 95%; border-color:#aaa">
+                            <input type="text" class="form form-control" placeholder="Search Name" name="name"
+                                value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>"
+                                style="width: 95%; border-color:#aaa">
                         </div>
 
                         <div class="col-md-4 mt-2">
                             <label for="">Email</label>
-                            <input type="text" class="form form-control" placeholder="Search Email" name="email" value="<?= isset($_GET['email']) ? $_GET['email'] : '' ?>" style="width: 95%; border-color:#aaa">
+                            <input type="text" class="form form-control" placeholder="Search Email" name="email"
+                                value="<?= isset($_GET['email']) ? $_GET['email'] : '' ?>"
+                                style="width: 95%; border-color:#aaa">
                         </div>
 
                         {{-- <div class="col-md-4 mt-2">
@@ -120,12 +132,23 @@ $(document).on('change', '.sub-check', function() {
                             }
                             ?>
                             <input type="hidden" value="<?= http_build_query($all_params) ?>" class="url_params">
-                            <select name="" id="" class="enteries_per_page form form-control" style="width: 100px; margin-right: 1rem;">
-                                <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 25 ? 'selected' : '' ?> value="25">25</option>
-                                <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 100 ? 'selected' : '' ?> value="100">100</option>
-                                <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 300 ? 'selected' : '' ?> value="300">300</option>
-                                <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 1000 ? 'selected' : '' ?> value="1000">1000</option>
-                                <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == $total_records ? 'selected' : '' ?> value="{{ $total_records }}">all</option>
+                            <select name="" id="" class="enteries_per_page form form-control"
+                                style="width: 100px; margin-right: 1rem;">
+                                <option
+                                    <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 25 ? 'selected' : '' ?>
+                                    value="25">25</option>
+                                <option
+                                    <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 100 ? 'selected' : '' ?>
+                                    value="100">100</option>
+                                <option
+                                    <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 300 ? 'selected' : '' ?>
+                                    value="300">300</option>
+                                <option
+                                    <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 1000 ? 'selected' : '' ?>
+                                    value="1000">1000</option>
+                                <option
+                                    <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == $total_records ? 'selected' : '' ?>
+                                    value="{{ $total_records }}">all</option>
                             </select>
 
                             <span style="margin-top: 5px;">entries per page</span>
@@ -154,9 +177,11 @@ $(document).on('change', '.sub-check', function() {
                         @forelse($clients as $client)
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="contacts[]" value="{{$client->id}}" class="sub-check">
+                                    <input type="checkbox" name="contacts[]" value="{{ $client->id }}"
+                                        class="sub-check">
                                 </td>
-                                <td><span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/clients/'+{{$client->id}}+'/client_detail')" >
+                                <td><span style="cursor:pointer" class="hyper-link"
+                                        onclick="openSidebar('/clients/'+{{ $client->id }}+'/client_detail')">
                                         {{ $client->name }}
                                     </span>
 
@@ -168,33 +193,48 @@ $(document).on('change', '.sub-check', function() {
 
                                     <div class="card-header-right">
                                         <div class="btn-group card-option">
-                                            <button type="button" class="btn"
-                                                    data-bs-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="false">
+                                            <button type="button" class="btn" data-bs-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
                                                 <i class="ti ti-dots-vertical"></i>
                                             </button>
 
                                             <div class="dropdown-menu dropdown-menu-end">
                                                 @can('edit client')
-                                                    <a href="#!" data-size="md" data-url="{{ route('clients.edit',$client->id) }}" data-ajax-popup="true" class="dropdown-item" data-bs-original-title="{{__('Edit User')}}">
+                                                    <a href="#!" data-size="md"
+                                                        data-url="{{ route('clients.edit', $client->id) }}"
+                                                        data-ajax-popup="true" class="dropdown-item"
+                                                        data-bs-original-title="{{ __('Edit User') }}">
                                                         <i class="ti ti-pencil"></i>
-                                                        <span>{{__('Edit')}}</span>
+                                                        <span>{{ __('Edit') }}</span>
                                                     </a>
                                                 @endcan
 
                                                 @can('delete client')
-                                                    {!! Form::open(['method' => 'DELETE', 'route' => ['clients.destroy', $client['id']],'id'=>'delete-form-'.$client['id']]) !!}
-                                                    <a href="#!"  class="dropdown-item bs-pass-para">
+                                                    {!! Form::open([
+                                                        'method' => 'DELETE',
+                                                        'route' => ['clients.destroy', $client['id']],
+                                                        'id' => 'delete-form-' . $client['id'],
+                                                    ]) !!}
+                                                    <a href="#!" class="dropdown-item bs-pass-para">
                                                         <i class="ti ti-archive"></i>
-                                                        <span> @if($client->delete_status!=0){{__('Delete')}} @else {{__('Restore')}}@endif</span>
+                                                        <span>
+                                                            @if ($client->delete_status != 0)
+                                                                {{ __('Delete') }}
+                                                            @else
+                                                                {{ __('Restore') }}
+                                                            @endif
+                                                        </span>
                                                     </a>
 
                                                     {!! Form::close() !!}
                                                 @endcan
 
-                                                <a href="#!" data-url="{{route('clients.reset',\Crypt::encrypt($client->id))}}" data-ajax-popup="true" class="dropdown-item" data-bs-original-title="{{__('Reset Password')}}">
+                                                <a href="#!"
+                                                    data-url="{{ route('clients.reset', \Crypt::encrypt($client->id)) }}"
+                                                    data-ajax-popup="true" class="dropdown-item"
+                                                    data-bs-original-title="{{ __('Reset Password') }}">
                                                     <i class="ti ti-adjustments"></i>
-                                                    <span>  {{__('Reset Password')}}</span>
+                                                    <span> {{ __('Reset Password') }}</span>
                                                 </a>
                                             </div>
                                         </div>
@@ -203,7 +243,6 @@ $(document).on('change', '.sub-check', function() {
                                 </td>
                             </tr>
                         @empty
-
                         @endforelse
                     </tbody>
                 </table>
@@ -217,39 +256,58 @@ $(document).on('change', '.sub-check', function() {
             @endif
         </div>
     </div>
-@push('script-page')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    @push('script-page')
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
-<script>
-    $(document).on('change', '.main-check', function() {
-        $(".sub-check").prop('checked', $(this).prop('checked'));
-    });
-    $('.filter-btn-show').click(function() {
-            $("#filter-show").toggle();
-        });
-    $(document).on("click", '.delete-bulk-contacts', function() {
-        var task_ids = $(".sub-check:checked");
-        var selectedIds = $('.sub-check:checked').map(function() {
-            return this.value;
-        }).get();
+        <script>
+            $(document).on('change', '.main-check', function() {
+                $(".sub-check").prop('checked', $(this).prop('checked'));
+            });
+            $('.filter-btn-show').click(function() {
+                $("#filter-show").toggle();
+            });
+            $(document).on("click", '.delete-bulk-contacts', function() {
+                var task_ids = $(".sub-check:checked");
+                var selectedIds = $('.sub-check:checked').map(function() {
+                    return this.value;
+                }).get();
 
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = '/delete-bulk-contacts?ids='+selectedIds.join(',');
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/delete-bulk-contacts?ids=' + selectedIds.join(',');
+                    }
+                });
+            })
+
+            function RefreshList() {
+                var ajaxCall = 'true';
+                $(".leads-list-div").html('Loading...');
+
+                $.ajax({
+                    type: 'GET',
+                    url: "/clients",
+                    data: {
+                        ajaxCall: ajaxCall
+                    },
+                    success: function(data) {
+                        data = JSON.parse(data);
+
+                        if (data.status == 'success') {
+                            $(".leads-list-div").html('');
+                            $('.leads-list-div').prepend(data.html);
+                        }
+                    },
+                });
             }
-        });
-    })
-</script>
-
-@endpush
+        </script>
+    @endpush
 
 @endsection
-
