@@ -470,7 +470,7 @@
                                                 <table>
                                                     <tbody>
 
-                                                        <tr>
+                                                        <tr class="d-none">
                                                             <td class="" style="width: 102px; font-size: 14px;">
                                                                 {{ __('Institute') }}
                                                             </td>
@@ -479,7 +479,7 @@
                                                             </td>
                                                         </tr>
 
-                                                        <tr>
+                                                        <tr class="d-none">
                                                             <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Institution Link') }}
                                                             </td>
@@ -1084,7 +1084,11 @@
                                                                                 @endphp
 
                                                                                 <tr>
-                                                                                    <td>{{ $contact->name }}</td>
+                                                                                    <td>
+                                                                                        <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/clients/'+{{$contact->id}}+'/client_detail')" >
+                                                                                            {{ $contact->name }}
+                                                                                        </span>
+                                                                                    </td>
                                                                                     <td>{{ $contact->email }}</td>
                                                                                     <td>{{ $contact->created_at }}
                                                                                     </td>

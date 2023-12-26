@@ -776,10 +776,11 @@ class DealController extends Controller
      */
     public function edit(Deal $deal)
     {
+
         // if (\Auth::user()->can('edit deal') || \Auth::user()->type == 'super admin') {
         if (\Auth::user()->type == 'super admin') {
 
-            if ($deal->created_by == \Auth::user()->ownerId()) {
+            if ($deal->created_by == \Auth::user()->ownerId() || \Auth::user()->type == 'super admin') {
                 $pipelines         = Pipeline::get()->pluck('name', 'id')->toArray();
                 $sources           = Source::get()->pluck('name', 'id')->toArray();
 
@@ -800,21 +801,7 @@ class DealController extends Controller
                 $users = User::where('type', 'employee')->get()->pluck('name', 'id');
 
 
-                $months = [
-                    'JAN' => 'January',
-                    'FEB' => 'February',
-                    'MAR' => 'March',
-                    'APR' => 'April',
-                    'MAY' => 'May',
-                    'JUN' => 'June',
-                    'JUL' => 'July',
-                    'AUG' => 'August',
-                    'SEP' => 'September',
-                    'OCT' => 'October',
-                    'NOV' => 'November',
-                    'DEC' => 'December'
-                ];
-
+                $months = months();
                 $currentYear = date('Y');
                 $years = [];
                 for ($i = 0; $i < 5; $i++) {
@@ -858,7 +845,7 @@ class DealController extends Controller
                         'assigned_to' => 'required',
                         'category' => 'required',
                         'university_id' => 'required',
-                        'organization_id' => 'required',
+                       // 'organization_id' => 'required',
                         'branch_id' => 'required',
                         'pipeline_id' => 'required',
                         'stage_id' => 'required'
@@ -3472,9 +3459,7 @@ class DealController extends Controller
         $id = $_GET['id'];
 
         $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
-
-        $branches = Branch::where('created_by',$id)->pluck('name', 'id')->toArray();
-
+        $branches = Branch::pluck('name', 'id')->toArray();
 
         $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to" required> <option value="">Assign to</option> ';
         foreach ($employees as $key => $user) {
