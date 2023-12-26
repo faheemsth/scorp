@@ -5,8 +5,8 @@
 @push('script-page')
 @endpush
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
-    <li class="breadcrumb-item">{{ __('Toolkit') }}</li>
+<li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
+<li class="breadcrumb-item">{{ __('Toolkit') }}</li>
 @endsection
 
 @section('content')

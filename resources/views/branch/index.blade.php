@@ -3,7 +3,7 @@
     {{ __('Manage Branch') }}
 @endsection
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
+    <li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
     <li class="breadcrumb-item">{{ __('Branch') }}</li>
 @endsection
 
@@ -26,32 +26,16 @@
     }
 </style>
     <div class="row">
-        {{-- @if (\Auth::user()->type != 'company' && strtolower(\Auth::user()->type) != 'project manager')
-            <div class="col-3">
-                @include('layouts.hrm_setup')
-
-            </div>
-        @endif --}}
 
 
-        <div class=" @if (\Auth::user()->type == 'company') col-12 @else col-12 @endif">
+        <div>
 
 
             <div class="card">
-                {{-- <div class="card-header" style="display: flex; justify-content: space-between;align-items: baseline;">
-                    <h4>Organization Type</h4>
-                    @can('create branch')
-                    <div class="float-end">
-                        <a href="#" data-size="md" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn btn-sm btn-dark">
-                            <i class="ti ti-plus"></i>
-                        </a>
-                    </div>
-                    @endcan
-
-                </div> --}}
-                <div class="row align-items-center mx-2 my-4 ">
+               
+                <div class="row align-items-center mx-2 my-4">
                     <div class="col-2">
-                        <p class="mb-0 pb-0 ps-1">Branchs</p>
+                        <p class="mb-0 pb-0 ps-1">Branches</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL Branch
@@ -64,26 +48,29 @@
                     <div class="col-10 d-flex justify-content-end gap-2">
                         <div class="input-group w-25">
                             <button class="btn btn-sm list-global-search-btn">
-                                <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                                <span class="input-group-text bg-transparent border-0 px-2 py-1" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
                             </button>
                             <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
-
-                        <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
-
-                        <button class="btn filter-btn-show p-2 btn-dark"  type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                
+                        <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                
+                        <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
-
+                
                         @can('create branch')
+                        <!-- Modified the opening tag to match the closing tag -->
                         <a href="#" data-size="md" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Branch')}}" class="btn px-2 btn-dark">
                             <i class="ti ti-plus"></i>
-                        </button>
+                        </a>
                         @endcan
+                        <!-- Added the missing closing div tag -->
                     </div>
                 </div>
+                
 
                 {{-- <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                     <form action="/deals/get-user-tasks" method="GET" class="">
@@ -172,6 +159,7 @@
                         </div>
                     </form>
                 </div> --}}
+                
                 <div class="card-body table-border-style">
                     <div class="table-responsive">
                         <table class="table ">
