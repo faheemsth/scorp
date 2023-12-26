@@ -14,8 +14,9 @@
 </style>
 {{ Form::model(\Auth::user(), ['route' => ['organization.tasks.update', $task->id], 'method' => 'POST', 'id' => 'update-task', 'style' => 'z-index: 9999999 !important;']) }}
 
-<div class="modal-body">
-    <div class="row">
+<div class="modal-body  pt-0" style="min-height: 80vh">
+    <div class="lead-content my-2" style="max-height: 400px; overflow-y: scroll;">
+        <div class="card-body px-2 py-0" >
 
         {{-- ACCORDION --}}
         <div class="accordion" id="accordionPanelsStayOpenExample">
@@ -41,7 +42,7 @@
                             </label>
                             <div class="col-sm-6">
                                 <input type="text" class="form-control" id="task-name" value="{{ $task->name }}"
-                                    placeholder="Task Name" name='task_name' >
+                                    placeholder="Task Name" name='task_name'>
                                 <input type="hidden" class="task_id" value="{{ $task->id }}">
                             </div>
                         </div>
@@ -53,7 +54,7 @@
                                 <span class="text-danger">*</span>
                             </label>
                             <div class="col-sm-6">
-                                <select class="form form-control select2" id="choices-multiple1" name="branch_id" >
+                                <select class="form form-control select2" id="choices-multiple1" name="branch_id">
                                     <option value="">Select Office</option>
                                     @foreach ($branches as $key => $branch)
                                         <option value="{{ $key }}"
@@ -72,7 +73,7 @@
                             </label>
                             <div class="col-sm-6">
                                 <select class="form form-control select2 organization_id" id="choices-multiple2"
-                                    name="organization_id" >
+                                    name="organization_id">
                                     <option value="">Select Agency</option>
                                     @foreach ($orgs as $key => $org)
                                         <option value="{{ $key }}"
@@ -85,25 +86,30 @@
                             </div>
                         </div>
 
-                        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'project director' || \Auth::user()->type == 'project manager')
-                        <div class="form-group row ">
-                            <label for="branches" class="col-sm-3 col-form-label">Brands</label>
-                            <div class="col-sm-6">
-                                <select class="form form-control select2 brand_id" id="choices-multiple0" name="brand_id">
-                                    <option value="">Select Brands</option>
-                                    @foreach ($companies as $key => $brand)
-                                        <option value="{{ $key }}">{{ $brand }}</option>
-                                    @endforeach
-                                </select>
+                        @if (
+                            \Auth::user()->type == 'super admin' ||
+                                \Auth::user()->type == 'project director' ||
+                                \Auth::user()->type == 'project manager')
+                            <div class="form-group row ">
+                                <label for="branches" class="col-sm-3 col-form-label">Brands</label>
+                                <div class="col-sm-6">
+                                    <select class="form form-control select2 brand_id" id="choices-multiple0"
+                                        name="brand_id">
+                                        <option value="">Select Brands</option>
+                                        @foreach ($companies as $key => $brand)
+                                            <option value="{{ $key }}">{{ $brand }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        </div>
                         @endif
 
                         <div class="form-group row">
-                            <label for="type" class="col-sm-3 col-form-label">Assign Type  <span class="text-danger">*</span></label>
+                            <label for="type" class="col-sm-3 col-form-label">Assign Type <span
+                                    class="text-danger">*</span></label>
                             <div class="col-sm-6">
                                 <select class="form form-control select2 assign_type" id="choices-multiple3"
-                                    name="assign_type" >
+                                    name="assign_type">
                                     <option value="">Select Assign type</option>
                                     <option value="company" {{ $task->assigned_type == 'company' ? 'selected' : '' }}>
                                         Company</option>
@@ -116,9 +122,10 @@
 
 
                         <div class="form-group row ">
-                            <label for="organization" class="col-sm-3 col-form-label">Assigned to  <span class="text-danger">*</span></label>
+                            <label for="organization" class="col-sm-3 col-form-label">Assigned to <span
+                                    class="text-danger">*</span></label>
                             <div class="col-sm-6" id="assigned_to_div">
-                                <select class="form form-control assigned_to" id="choices-multiple4" name="assigned_to" >
+                                <select class="form form-control assigned_to" id="choices-multiple4" name="assigned_to">
                                     <option value="">Assign to</option>
                                     @foreach ($employees as $key => $user)
                                         <option value="{{ $key }}"
@@ -135,7 +142,8 @@
                             <div class="col-sm-6">
                                 <select class="form form-control select2" id="choices-multiple5" name="status">
                                     <option value="">Select Status</option>
-                                    <option value="0" {{ empty($task->status) || $task->status == '0' ? 'selected' : '' }}>On Going
+                                    <option value="0"
+                                        {{ empty($task->status) || $task->status == '0' ? 'selected' : '' }}>On Going
                                     </option>
                                     <option value="1" {{ $task->status == '1' ? 'selected' : '' }}>Completed
                                     </option>
@@ -212,8 +220,8 @@
                             </label>
                             <div class="col-sm-6">
 
-                                <select class="form form-control select2 related_type" disabled readonly id="choices-multiple6"
-                                    name="related_type">
+                                <select class="form form-control select2 related_type" disabled readonly
+                                    id="choices-multiple6" name="related_type">
                                     <option value="">Select type</option>
                                     <option value="organization"
                                         {{ $task->related_type == 'organization' ? 'selected' : '' }}>Organization
@@ -227,7 +235,8 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="website" class="col-sm-3 col-form-label">Related To  <span class="text-danger">*</span></label>
+                            <label for="website" class="col-sm-3 col-form-label">Related To <span
+                                    class="text-danger">*</span></label>
                             <div class="col-sm-6">
 
                                 <select class="form form-control related_to" disabled id="choices-multiple7"
@@ -292,14 +301,14 @@
                 </div>
             </div>
         </div>
-
+        </div>
     </div>
 </div>
 
 
 <div class="modal-footer">
-    <input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="Update" class="btn  btn-primary update-task-btn">
+    <input type="button" value="{{ __('Cancel') }}" class="btn px-2 btn-light" data-bs-dismiss="modal">
+    <input type="submit" value="Update" class="btn  btn-dark px-2 update-task-btn">
 </div>
 
 {{ Form::close() }}
@@ -322,7 +331,7 @@
                     data = JSON.parse(data);
                     if (data.status == 'success') {
                         $("#assigned_to_div").html(data.html);
-                       // $(".assigned_to").addClass('select2');
+                        // $(".assigned_to").addClass('select2');
                         select2();
                     }
                 }

@@ -871,8 +871,9 @@
                 $("#mySidenav").css('width', ww + 'px');
                 $("#main").css('margin-right', ww + 'px');
             } else {
-                $("#mySidenav").css('width', '890px');
-                $("#main").css('margin-right', "890px");
+                $("#mySidenav").css('min-width', '942px');
+                $("#mySidenav").css('max-width', '935px');
+                $("#main").css('margin-right', "942px");
             }
 
             $("#modal-discussion-add").attr('data-lead-id', deal_id);

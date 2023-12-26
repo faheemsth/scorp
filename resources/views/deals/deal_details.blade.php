@@ -656,8 +656,8 @@
 
 
                                                 <div style="max-height: 400px; overflow-y: auto;">
-                                                    <table class="table">
-                                                        <thead class="" style="background-color:rgba(0, 0, 0, .08); font-weight: bold;">
+                                                    <table class="table table-hover">
+                                                        <thead  style="background-color:rgba(0, 0, 0, .08); font-weight: bold;color:#000000">
                                                             <tr>
                                                                 <td>{{ __('Name') }}</td>
                                                                 <td>{{ __('Application Key') }}</td>
@@ -667,9 +667,9 @@
                                                                 <td>{{ __('Action') }}</td>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
+                                                        <tbody >
                                                             @forelse($applications as $app)
-                                                            <tr>
+                                                            <tr style="background-color: rgb(255, 255, 255);">
                                                                 <td>
                                                                     <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')">
                                                                         {{ $app->name }}
