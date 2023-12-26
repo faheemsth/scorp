@@ -10,6 +10,20 @@
             {{ Form::label('email', __('E-Mail Address'),['class'=>'form-label']) }}
             {{ Form::email('email', null, array('class' => 'form-control','placeholder'=>__('Enter Client Email'),'required'=>'required')) }}
         </div>
+        
+        <div class="form-group">
+            {{ Form::label('passport_number', __('Passport Number'),['class'=>'form-label']) }}
+            {{ Form::text('passport_number', null, array('class' => 'form-control','placeholder'=>__('Enter passport number'),'required'=>'required')) }}
+        </div>
+        <div class="form-group">
+            {{ Form::label('password', __('Password'),['class'=>'form-label']) }}
+            {{Form::password('password',array('class'=>'form-control','placeholder'=>__('Enter User Password'),'required'=>'required','minlength'=>"6"))}}
+            @error('password')
+            <small class="invalid-password" role="alert">
+                <strong class="text-danger">{{ $message }}</strong>
+            </small>
+            @enderror
+        </div>
 
         @if(!$customFields->isEmpty())
             @include('custom_fields.formBuilder')

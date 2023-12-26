@@ -362,6 +362,8 @@ $setting = \App\Models\Utility::colorset();
                     </div>
 
                 </div>
+                <br>
+
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-primary" value="Update">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
