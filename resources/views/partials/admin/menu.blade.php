@@ -1295,6 +1295,8 @@
                                             </li>
                                         @endcan
 
+                                       
+
                                         @can('manage organization')
                                             <li
                                                 class="emp nav-item {{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
@@ -1321,7 +1323,7 @@
                                         @endif
 
 
-                                        
+
                                         <li style=""
                                             class="emp nav-item {{ Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
 
@@ -1331,8 +1333,8 @@
                                                     id="icon1" width="15px" height="15px"
                                                     style="margin-top:-10px" alt="" srcset="">
                                                 <img src="{{ asset('assets/cs-theme/icons/crmsysblue.png') }}"
-                                                    id="icon2" width="15px" height="15px" style="margin-top:-8px"
-                                                    alt="" srcset="">
+                                                    id="icon2" width="15px" height="15px"
+                                                    style="margin-top:-8px" alt="" srcset="">
 
                                                 {{ __('CRM System Setup') }}</a>
                                         </li>
@@ -1768,8 +1770,8 @@
                 </a>
             </li> -->
                 <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsesuper"
-                        aria-expanded="true" aria-controls="collapsesuper">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                        data-target="#collapsesuper" aria-expanded="true" aria-controls="collapsesuper">
                         <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px"
                             height="15px" style="margin-top:-10px" alt="" srcset="">
                         <span>{{ __('CRM System') }}</span>
@@ -1784,8 +1786,8 @@
                                     <a class="collapse-item" style="color:white; font-size: 13px;"
                                         href="{{ route('deals.get.user.tasks') }}">
                                         <img src="{{ asset('assets/cs-theme/icons/to-do-list-13177 1.png') }}"
-                                            id="icon1" width="15px" height="15px" style="margin-top:-10px"
-                                            alt="" srcset="">
+                                            id="icon1" width="15px" height="15px"
+                                            style="margin-top:-10px" alt="" srcset="">
                                         <img src="{{ asset('assets/cs-theme/icons/taskblue.png') }}"
                                             id="icon2" width="15px" height="15px" style="margin-top:-8px"
                                             alt="" srcset="">
@@ -1939,19 +1941,6 @@
                             aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                             <div class="  collapse-inner rounded">
                                 <ul>
-                                    <li
-                                        class="emp nav-item{{ Request::route()->getName() == 'branch.index' || Request::route()->getName() == 'branch.edit' || Request::route()->getName() == 'branch.show' ? ' active' : '' }}">
-                                        <a class="collapse-item" style="color:white; font-size: 13px;"
-                                            href="{{ route('branch.index') }}">
-                                            <img src="{{ asset('assets/cs-theme/icons/Layer_1 (3).png') }}"
-                                                id="icon1" width="15px" height="15px"
-                                                style="margin-top:-10px" alt="" srcset="">
-                                            <img src="{{ asset('assets/cs-theme/icons/branchesblue.png') }}"
-                                                id="icon2" width="15px" height="15px"
-                                                style="margin-top:-8px" alt="" srcset="">
-
-                                            {{ __('Branches') }}</a>
-                                    </li>
                                     @can('manage user')
                                         <li
                                             class="emp nav-item{{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
@@ -1967,6 +1956,35 @@
                                                 Brands</a>
                                         </li>
                                     @endcan
+
+                                    <li
+                                    class="emp nav-item{{ Request::segment(1) == 'region' ? ' active' : '' }}">
+                                    <a class="collapse-item" style="color:white; font-size: 13px;"
+                                        href="{{ url('/region/index') }}">
+                                        <img src="{{ asset('assets/cs-theme/icons/Layer_1 (3).png') }}"
+                                            id="icon1" width="15px" height="15px"
+                                            style="margin-top:-10px" alt="" srcset="">
+                                        <img src="{{ asset('assets/cs-theme/icons/branchesblue.png') }}"
+                                            id="icon2" width="15px" height="15px"
+                                            style="margin-top:-8px" alt="" srcset="">
+
+                                        {{ __('Region') }}</a>
+                                </li>
+                                
+                                    <li
+                                        class="emp nav-item{{ Request::route()->getName() == 'branch.index' || Request::route()->getName() == 'branch.edit' || Request::route()->getName() == 'branch.show' ? ' active' : '' }}">
+                                        <a class="collapse-item" style="color:white; font-size: 13px;"
+                                            href="{{ route('branch.index') }}">
+                                            <img src="{{ asset('assets/cs-theme/icons/Layer_1 (3).png') }}"
+                                                id="icon1" width="15px" height="15px"
+                                                style="margin-top:-10px" alt="" srcset="">
+                                            <img src="{{ asset('assets/cs-theme/icons/branchesblue.png') }}"
+                                                id="icon2" width="15px" height="15px"
+                                                style="margin-top:-8px" alt="" srcset="">
+
+                                            {{ __('Branches') }}</a>
+                                    </li>
+                                    
                                     <style>
                                         .emp:hover #icon1 {
                                             display: none;
@@ -2082,37 +2100,6 @@
                             </div>
                         </div>
 
-                    </li>
-                @endif
-                @if (\Auth::user()->type == 'super admin')
-                    <li class="nav-item {{ Request::segment(1) == 'region' ? ' active dash-trigger' : '' }}">
-                        <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                            data-target="#collapseRegion" aria-expanded="true" aria-controls="collapseRegion">
-                            <img src="{{ asset('assets/cs-theme/icons/Vector (2).png') }}" width="14px"
-                                height="14px" style="margin-top:-8px" alt="" srcset="">
-                            <span>{{ __('Regional Managers') }}</span>
-                        </a>
-                        <div id="collapseRegion"
-                            class="collapse {{ Request::segment(1) == 'region' ? 'show' : '' }}"
-                            aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                            <div class="  collapse-inner rounded">
-                                <ul>
-                                    <li
-                                        class="emp nav-item{{Request::segment(1) == 'region' ? ' active' : '' }}">
-                                        <a class="collapse-item" style="color:white; font-size: 13px;"
-                                            href="{{ url('/region/index') }}">
-                                            <img src="{{ asset('assets/cs-theme/icons/Layer_1 (3).png') }}"
-                                                id="icon1" width="15px" height="15px"
-                                                style="margin-top:-10px" alt="" srcset="">
-                                            <img src="{{ asset('assets/cs-theme/icons/branchesblue.png') }}"
-                                                id="icon2" width="15px" height="15px"
-                                                style="margin-top:-8px" alt="" srcset="">
-
-                                            {{ __('Region') }}</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
                     </li>
                 @endif
             </ul>

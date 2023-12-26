@@ -592,6 +592,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                         </div>
 
                     </div>
+<<<<<<< HEAD
                     <br>
 
                     <div class="modal-footer">
@@ -600,6 +601,15 @@ if (isset($lead->is_active) && $lead->is_active) {
                     </div>
                 </form>
             </div>
+=======
+
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-dark" value="Update">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+>>>>>>> 2a6275bf56e727e2647c19cc0c951413b1c7ea37
         </div>
     </div>
 
