@@ -82,7 +82,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         </select>
                     </div>
                     @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                    <div class="col-md-4"> <label for="">Created By</label>
+                    <div class="col-md-4"> <label for="">Brands</label>
                         <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple style="width: 95%;">
                             <option value="">Select Brand</option>
                             @foreach ($brands as $brand)
