@@ -78,6 +78,10 @@ if (isset($lead->is_active) && $lead->is_active) {
     .hover-text-color {
         color: #1F2735 !important;
     }
+
+    .form-control:focus {
+        border: 1px solid rgb(209, 209, 209) !important;
+    }
 </style>
 {{-- comment --}}
 
@@ -326,7 +330,11 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             @endforeach
                                         </select>
                                     </div>
-
+                                    <style>
+                                        .form-control:focus {
+                                            border: 1px solid rgb(209, 209, 209) !important;
+                                        }
+                                    </style>
                                     <div class="col-md-4 mt-2">
                                         <label for="">Created at</label>
                                         <input type="date" class="form form-control" name="created_at"

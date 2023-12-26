@@ -417,7 +417,11 @@
                                     </select>
                                 </div>
                                 @endif
-
+                                <style>
+                                    .form-control:focus {
+                                        border: 1px solid rgb(209, 209, 209) !important;
+                                    }
+                                </style>
                                 <div class="col-md-4 mt-2">
                                     <label for="">Created at</label>
                                     <input type="date" class="form form-control" name="created_at" value="<?= isset($_GET['created_at']) ? $_GET['created_at'] : '' ?>" style="width: 95%; border-color:#aaa">
