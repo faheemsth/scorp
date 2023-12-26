@@ -362,11 +362,13 @@
                                     placeholder="Search this list...">
                             </div>
 
+                            @can('create region')
                             <a href="#" data-size="lg" data-url="{{ route('region.create') }}"
                                 data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}"
                                 class="btn p-2 btn-dark">
                                 <i class="ti ti-plus"></i>
                             </a>
+                            @endcan
 
                         </div>
                     </div>
@@ -423,12 +425,16 @@
                                                             </svg>
                                                         </button>
                                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                            @can('update region')
                                                             <li><a class="dropdown-item"
                                                                     href="#" data-size="lg" data-url="{{ url('region/update?id=').$deal->id }}"
                                                                     data-ajax-popup="true" data-bs-toggle="tooltip">Edit</a></li>
-                                                            <li><a class="dropdown-item"
+                                                            @endcan
+                                                            @can('delete region')
+                                                                    <li><a class="dropdown-item"
                                                                     href="{{ url('region/delete?id=').$deal->id }}">Delete</a>
                                                             </li>
+                                                            @endcan
                                                         </ul>
                                                 </td>
                                             </tr>
