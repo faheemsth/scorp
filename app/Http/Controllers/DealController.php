@@ -313,9 +313,46 @@ class DealController extends Controller
             $brands = User::where('type', 'company')->get();
             $users = User::select(['id', 'name'])->get()->pluck('name', 'id')->toArray();
             $sources = Source::get()->pluck('name', 'id')->toArray();
+            $months = [
+                'JAN' => 'January',
+                'FEB' => 'February',
+                'MAR' => 'March',
+                'APR' => 'April',
+                'MAY' => 'May',
+                'JUN' => 'June',
+                'JUL' => 'July',
+                'AUG' => 'August',
+                'SEP' => 'September',
+                'OCT' => 'October',
+                'NOV' => 'November',
+                'DEC' => 'December'
+            ];
+            $currentYear = date('Y');
+            $years = [];
+            for ($i = 0; $i < 5; $i++) {
+                $nextYear = $currentYear + $i;
+                $years[$nextYear] = $nextYear;
+            }
+            $universities = University::get()->pluck('name', 'id')->toArray();
+
+            $clients = array();
+            $branches = array();
+
+            if (\Auth::user()->type == 'super admin') {
+                $branches = Branch::get()->pluck('name', 'id')->toArray();
+                $clients      = User::where('type', 'client')->get()->pluck('name', 'id');
+            } else {
+                $branches = Branch::where('created_at',  \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+                $clients      = User::where('created_by', '=', \Auth::user()->ownerId())->where('type', 'client')->get()->pluck('name', 'id');
+            }
+
+            $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
+            $pipelines = Pipeline::get()->pluck('name', 'id')->toArray();
+            $stages = Stage::get()->pluck('name', 'id')->toArray();
+            $users = User::where('type', 'employee')->get()->pluck('name', 'id');
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-                $html = view('deals.deals_list_ajax', compact('deals', 'organizations', 'stages', 'users', 'total_records', 'sources'))->render();
+                $html = view('deals.deals_list_ajax', compact('deals','pipelines','users','stages','branches','universities', 'organizations', 'stages', 'users', 'total_records', 'sources'))->render();
 
                 return json_encode([
                     'status' => 'success',
@@ -323,9 +360,9 @@ class DealController extends Controller
                 ]);
             }
 
+            // dd($universities);
 
-
-            return view('deals.list', compact('deals', 'organizations', 'stages', 'users', 'total_records', 'sources', 'brands'));
+            return view('deals.list', compact('deals','universities','pipelines','users','branches','months','years','clients', 'organizations', 'stages', 'users', 'total_records', 'sources', 'brands'));
         }
 
 
@@ -3485,5 +3522,72 @@ class DealController extends Controller
             'status' => 'success',
             'html' => $html
         ]);
+    }
+
+    public function updateBulkDeal(Request $request){
+
+        $ids = explode(',',$request->deal_ids);
+       
+        if(isset($request->name)){
+
+            Deal::whereIn('id',$ids)->update(['name' => $request->name]);
+            return redirect()->route('deals.list')->with('success', 'Leads updated successfully');
+
+        }elseif(isset($request->intake_month)){
+
+            Deal::whereIn('id',$ids)->update(['intake_month' => $request->intake_month]);
+            return redirect()->route('deals.list')->with('success', 'Leads updated successfully');
+
+        }elseif(isset($request->intake_year)){
+
+            Deal::whereIn('id',$ids)->update(['intake_year' => $request->intake_year]);
+            return redirect()->route('deals.list')->with('success', 'Leads updated successfully');
+
+        }elseif(isset($request->contact)){
+
+            Deal::whereIn('id',$ids)->update(['contact' => $request->contact]);
+            return redirect()->route('deals.list')->with('success', 'Leads updated successfully');
+
+        }elseif(isset($request->assigned_to)){
+
+            Deal::whereIn('id',$ids)->update(['assigned_to' => $request->assigned_to]);
+            return redirect()->route('deals.list')->with('success', 'Leads updated successfully');
+
+        }elseif(isset($request->category)){
+
+            Deal::whereIn('id',$ids)->update(['category' => $request->category]);
+            return redirect()->route('deals.list')->with('success', 'Leads updated successfully');
+
+        }elseif(isset($request->university_id)){
+
+            Deal::whereIn('id',$ids)->update(['university_id' => $request->university_id]);
+            return redirect()->route('deals.list')->with('success', 'Leads updated successfully');
+
+        }elseif(isset($request->organization_id)){
+
+            Deal::whereIn('id',$ids)->update(['organization_id' => $request->organization_id]);
+            return redirect()->route('deals.list')->with('success', 'Leads updated successfully');
+
+        }elseif(isset($request->branch_id)){
+
+            Deal::whereIn('id',$ids)->update(['branch_id' => $request->branch_id]);
+            return redirect()->route('deals.list')->with('success', 'Leads updated successfully');
+
+        }elseif(isset($request->pipeline_id)){
+
+            Deal::whereIn('id',$ids)->update(['pipeline_id' => $request->pipeline_id]);
+            return redirect()->route('deals.list')->with('success', 'Leads updated successfully');
+
+        }elseif(isset($request->stage_id)){
+
+            Deal::whereIn('id',$ids)->update(['stage_id' => $request->stage_id]);
+            return redirect()->route('deals.list')->with('success', 'Leads updated successfully');
+
+        }elseif(isset($request->deal_description)){
+
+            Deal::whereIn('id',$ids)->update(['description' => $request->deal_description]);
+            return redirect()->route('deals.list')->with('success', 'Leads updated successfully');
+
+        }
     }
 }
