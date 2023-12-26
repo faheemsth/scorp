@@ -3525,7 +3525,7 @@ class DealController extends Controller
     public function updateBulkDeal(Request $request){
 
         $ids = explode(',',$request->deal_ids);
-       
+
         if(isset($request->name)){
 
             Deal::whereIn('id',$ids)->update(['name' => $request->name]);
