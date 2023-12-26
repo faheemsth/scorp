@@ -1319,6 +1319,23 @@
                                                     href="{{ route('contract.index') }}">{{ __('Contract') }}</a>
                                             </li>
                                         @endif
+
+
+                                        
+                                        <li style=""
+                                            class="emp nav-item {{ Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
+
+                                            <a class="collapse-item" style="color:white; font-size: 13px;"
+                                                href="{{ route('pipelines.index') }}   ">
+                                                <img src="{{ asset('assets/cs-theme/icons/administrator-developer-icon 1.png') }}"
+                                                    id="icon1" width="15px" height="15px"
+                                                    style="margin-top:-10px" alt="" srcset="">
+                                                <img src="{{ asset('assets/cs-theme/icons/crmsysblue.png') }}"
+                                                    id="icon2" width="15px" height="15px" style="margin-top:-8px"
+                                                    alt="" srcset="">
+
+                                                {{ __('CRM System Setup') }}</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>

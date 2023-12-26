@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,34 +17,32 @@ class CompanyPermissionController extends Controller
      */
     public function index()
     {
-        $employees=array();
+        $employees = array();
         $user = \Auth::user();
-        if(\Auth::user()->type == 'super admin')
-        {
-            if(isset($_GET['role']) && !empty($_GET['role'])){
+        if (\Auth::user()->type == 'super admin') {
+            if (isset($_GET['role']) && !empty($_GET['role'])) {
                 $employees = User::where('type', '=', $_GET['role'])->get();
             }
-        
-               
-        $companies = User::where('type', 'company')->get();
-        $permission_arr = [];
 
-        foreach ($employees as $com) {
-            $permitted_companies = $com->companyPermissions;
 
-            foreach($permitted_companies as $per_com){
-                $permission_arr[$com->id][$per_com->permitted_company_id] = $per_com->active;
+            $companies = User::where('type', 'company')->get();
+            $permission_arr = [];
+
+            foreach ($employees as $com) {
+                $permitted_companies = $com->companyPermissions;
+
+                foreach ($permitted_companies as $per_com) {
+                    $permission_arr[$com->id][$per_com->permitted_company_id] = $per_com->active;
+                }
             }
-        }
-              return view('company_permission.index')->with(['employees' => $employees, 'permission_arr' => $permission_arr, 'companies' => $companies]);
-        }
-        else
-        {
+            return view('company_permission.index')->with(['employees' => $employees, 'permission_arr' => $permission_arr, 'companies' => $companies]);
+        } else {
             return redirect()->back();
-        } 
+        }
     }
 
-    public function company_permission_updated(Request $request){
+    public function company_permission_updated(Request $request)
+    {
         //dd(\Auth::user()->id);
         $user_id = $request->company_for;
         $permitted_company = $request->company_permission;
@@ -51,14 +50,14 @@ class CompanyPermissionController extends Controller
 
         $company_per = CompanyPermission::where(['user_id' =>  $user_id, 'permitted_company_id' => $permitted_company])->first();
 
-        if(!$company_per){
+        if (!$company_per) {
             $new_permission = new CompanyPermission();
             $new_permission->user_id = $user_id;
             $new_permission->permitted_company_id = $permitted_company;
             $new_permission->active = $is_active;
             $new_permission->created_by = \Auth::user()->id;
             $new_permission->save();
-        }else{
+        } else {
             $company_per->user_id = $user_id;
             $company_per->permitted_company_id = $permitted_company;
             $company_per->active = $is_active;
