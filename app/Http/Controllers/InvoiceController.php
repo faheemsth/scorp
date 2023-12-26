@@ -74,7 +74,7 @@ class InvoiceController extends Controller
         {
             $customFields   = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'invoice')->get();
             $invoice_number = \Auth::user()->invoiceNumberFormat($this->invoiceNumber());
-            $customers      = Customer::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $customers      = User::where('type', 'client')->get()->pluck('name', 'id');
             $customers->prepend('Select Customer', '');
             $category = ProductServiceCategory::where('created_by', \Auth::user()->creatorId())->where('type', 1)->get()->pluck('name', 'id');
             $category->prepend('Select Category', '');

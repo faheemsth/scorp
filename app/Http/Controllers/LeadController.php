@@ -2879,7 +2879,7 @@ class LeadController extends Controller
             $lead_stages = $stageCnt;
 
 
-            $tasks = \App\Models\DealTask::where(['related_to' => $lead->id, 'related_type' => 'lead'])->get();
+            $tasks = \App\Models\DealTask::where(['related_to' => $lead->id, 'related_type' => 'lead'])->orderBy('status')->get();
             $branches = Branch::get()->pluck('name', 'id');
             $users = allUsers();
             $log_activities = getLogActivity($lead->id, 'lead');
