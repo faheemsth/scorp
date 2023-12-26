@@ -71,11 +71,15 @@
                     </button>
                      <button data-url="{{ route('clients.create') }}" data-ajax-popup="true"  data-bs-toggle="tooltip" title="{{__('Create')}}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal">
                         <i class="ti ti-plus" style="font-size:18px"></i>
-                    </button> 
+                    </button>
 
                 </div>
             </div>
-
+            <style>
+                .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
+            </style>
             {{-- Filters --}}
             <div class="filter-data px-3" id="filter-show"
                 <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>

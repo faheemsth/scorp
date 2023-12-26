@@ -83,7 +83,11 @@
                         @endforelse
                     </div>
 
-
+                    <style>
+                        .form-control:focus {
+                            border: 1px solid rgb(209, 209, 209) !important;
+                        }
+                    </style>
 
                     <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                         <div class="col-2">

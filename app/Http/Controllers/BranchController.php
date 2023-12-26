@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Branch;
 use App\Models\Department;
+use App\Models\Region;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class BranchController extends Controller
@@ -17,7 +19,7 @@ class BranchController extends Controller
             // }else{
             //     $branches = Branch::where('created_by', '=', \Auth::user()->creatorId())->get();
             // }
-            $branches = Branch::get();
+            $branches = Branch::with(['branch_manager','region'])->get();
             return view('branch.index', compact('branches'));
         }
         else
@@ -28,9 +30,11 @@ class BranchController extends Controller
 
     public function create()
     {
+        $branchmanager=User::where('type','branch manager')->get();
+        $regions=Region::all();
         if(\Auth::user()->can('create branch'))
         {
-            return view('branch.create');
+            return view('branch.create',compact('branchmanager','regions'));
         }
         else
         {
@@ -57,6 +61,15 @@ class BranchController extends Controller
 
             $branch             = new Branch();
             $branch->name       = $request->name;
+
+            $branch->region_id       = $request->region_id;
+            $branch->branch_manager_id       = $request->branch_manager_id;
+            $branch->google_link       = $request->google_link;
+            $branch->social_media_link       = $request->social_media_link;
+            $branch->phone       = $request->phone;
+            $branch->email       = $request->email;
+
+
             $branch->created_by = \Auth::user()->creatorId();
             $branch->save();
 
@@ -75,12 +88,14 @@ class BranchController extends Controller
 
     public function edit(Branch $branch)
     {
+        $branchmanager=User::where('type','branch manager')->get();
+        $regions=Region::all();
         if(\Auth::user()->can('edit branch'))
         {
             if($branch->created_by == \Auth::user()->creatorId())
             {
 
-                return view('branch.edit', compact('branch'));
+                return view('branch.edit', compact('branch','branchmanager','regions'));
             }
             else
             {
@@ -112,6 +127,12 @@ class BranchController extends Controller
                 }
 
                 $branch->name = $request->name;
+                $branch->region_id       = $request->region_id;
+                $branch->branch_manager_id       = $request->branch_manager_id;
+                $branch->google_link       = $request->google_link;
+                $branch->social_media_link       = $request->social_media_link;
+                $branch->phone       = $request->phone;
+                $branch->email       = $request->email;
                 $branch->save();
 
                 return redirect()->route('branch.index')->with('success', __('Branch successfully updated.'));

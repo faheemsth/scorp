@@ -77,7 +77,11 @@
     <div class="row">
 
 
-
+        <style>
+            .form-control:focus {
+                border: 1px solid rgb(209, 209, 209) !important;
+            }
+        </style>
 
         <div class="col-12">
             <div class="card">
@@ -304,6 +308,7 @@
                     </div>
 
                 </div>
+
             </div>
             </div>
         </div>

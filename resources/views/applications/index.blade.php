@@ -166,12 +166,12 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                 </thead>
                 <tbody class="application_tbody">
                       @forelse($applications as $app)
-                            @php 
+                            @php
                                 $university = \App\Models\University::where('id', $app->university_id)->first();
                                 $deal = \App\Models\Deal::where('id', $app->deal_id)->first();
                                 $users = \App\Models\User::pluck('name', 'id')->toArray();
                                 $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
-                            @endphp 
+                            @endphp
                             <tr>
                                  <td>
                                     <input type="checkbox" name="applications[]" value="{{$app->id}}" class="sub-check">
