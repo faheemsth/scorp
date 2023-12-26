@@ -78,11 +78,7 @@
                         </button>
 
                         @can('create task')
-<<<<<<< HEAD
                         <a href="#" data-size="md" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Branch')}}" class="btn px-2 btn-dark">
-=======
-                        <button data-size="md" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn px-2 btn-dark">
->>>>>>> f058129ad8d6c062157dc51733cb3e0063efae28
                             <i class="ti ti-plus"></i>
                         </button>
                         @endcan
