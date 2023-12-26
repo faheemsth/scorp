@@ -397,7 +397,11 @@ Route::group(
 Route::get('/invoices/preview/{template}/{color}', [InvoiceController::class, 'previewInvoice'])->name('invoice.preview');
 Route::post('/invoices/template/setting', [InvoiceController::class, 'saveTemplateSettings'])->name('template.setting');
 Route::get('/region/index', [RegionController::class, 'index'])->name('region.index');
-Route::get('/region/create', [RegionController::class, 'index'])->name('region.create');
+Route::get('/region/create', [RegionController::class, 'create'])->name('region.create');
+Route::post('/region/create', [RegionController::class, 'save'])->name('region.save');
+Route::get('/region/update', [RegionController::class, 'update'])->name('region.update');
+Route::get('/region/delete', [RegionController::class, 'delete'])->name('region.delete');
+
 
 Route::group(
     [

@@ -2070,18 +2070,18 @@
                 @if (\Auth::user()->type == 'super admin')
                     <li class="nav-item {{ Request::segment(1) == 'region' ? ' active dash-trigger' : '' }}">
                         <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                            data-target="#collapsesu" aria-expanded="true" aria-controls="collapsesu">
+                            data-target="#collapseRegion" aria-expanded="true" aria-controls="collapseRegion">
                             <img src="{{ asset('assets/cs-theme/icons/Vector (2).png') }}" width="14px"
                                 height="14px" style="margin-top:-8px" alt="" srcset="">
                             <span>{{ __('Regional Managers') }}</span>
                         </a>
-                        <div id="collapsesu"
-                            class="collapse {{ Request::segment(1) == 'branch' || Request::segment(1) == 'users' || (Request::segment(1) == 'user' && Request::segment(2) == 'employees') || Request::segment(1) == 'roles' ? 'show' : '' }}"
+                        <div id="collapseRegion"
+                            class="collapse {{ Request::segment(1) == 'region' ? 'show' : '' }}"
                             aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                             <div class="  collapse-inner rounded">
                                 <ul>
                                     <li
-                                        class="emp nav-item{{ Request::route()->getName() == 'branch.index' || Request::route()->getName() == 'branch.edit' || Request::route()->getName() == 'branch.show' ? ' active' : '' }}">
+                                        class="emp nav-item{{Request::segment(1) == 'region' ? ' active' : '' }}">
                                         <a class="collapse-item" style="color:white; font-size: 13px;"
                                             href="{{ url('/region/index') }}">
                                             <img src="{{ asset('assets/cs-theme/icons/Layer_1 (3).png') }}"

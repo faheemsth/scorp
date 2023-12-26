@@ -221,7 +221,7 @@
 
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('CRM Dashboard') }}</a></li>
-    <li class="breadcrumb-item">{{ __('Regions') }}</li>    
+    <li class="breadcrumb-item">{{ __('Regions') }}</li>
 @endsection
 
 @section('content')
@@ -345,8 +345,8 @@
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
                                     <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
-                                    <li><a class="dropdown-item" href="#">Brand Change</a></li>
-                                    <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
+                                            <li><a class="dropdown-item" href="#">Brand Change</a></li>
+                                            <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
                                 </ul>
                             </div>
                         </div>
@@ -378,7 +378,7 @@
                     <div class="table-responsive mt-2">
 
                         {{-- Filters --}}
-                       
+
 
                         <div class="card-body table-responsive leads-list-div">
                             <table class="table" data-resizable-columns-id="lead-table">
@@ -406,32 +406,31 @@
                                                     <input type="checkbox" name="deals[]" value="{{ $deal->id }}"
                                                         class="sub-check">
                                                 </td>
-                                                <td>{{ $deal->stage->name }}</td>
-                                                    <td class="Action d-none">
-                                                        <div class="dropdown">
-                                                            <button class="btn bg-transparents" type="button"
-                                                                id="dropdownMenuButton1" data-bs-toggle="dropdown"
-                                                                aria-expanded="false">
-                                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                                    viewBox="0 0 24 24" width="18" height="18">
-                                                                    <path
-                                                                        d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z">
-                                                                    </path>
-                                                                </svg>
-                                                            </button>
-                                                            <ul class="dropdown-menu"
-                                                                aria-labelledby="dropdownMenuButton1">
-                                                                <li><a class="dropdown-item" href="#">Change</a>
-                                                                </li>
-                                                                <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                                <li><a class="dropdown-item" href="#">Delete</a>
-                                                                </li>
-                                                            </ul>
-
-                                                    </td>
-                                                
-
-
+                                                <td>{{ $deal->name }}</td>
+                                                <td>{{ $deal->location }}</td>
+                                                <td>{{ $deal->phone }}</td>
+                                                <td>{{ $deal->email }}</td>
+                                                <td class="Action">
+                                                    <div class="dropdown">
+                                                        <button class="btn bg-transparents" type="button"
+                                                            id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                            aria-expanded="false">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                                                width="18" height="18">
+                                                                <path
+                                                                    d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z">
+                                                                </path>
+                                                            </svg>
+                                                        </button>
+                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                            <li><a class="dropdown-item"
+                                                                    href="#" data-size="lg" data-url="{{ url('region/update?id=').$deal->id }}"
+                                                                    data-ajax-popup="true" data-bs-toggle="tooltip">Edit</a></li>
+                                                            <li><a class="dropdown-item"
+                                                                    href="{{ url('region/delete?id=').$deal->id }}">Delete</a>
+                                                            </li>
+                                                        </ul>
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @else
@@ -441,107 +440,19 @@
                                             </td>
                                         </tr>
                                     @endif
-
                                 </tbody>
                             </table>
-
-                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-        <div class="modal" tabindex="-1" role="dialog" id="deal_applications" style="z-index: 1150;">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Admission Applications</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <select class="form form-control" id="admission-application">
-
-                        </select>
-
-                        <input type="hidden" id="stage_id" value="">
-                        <input type="hidden" id="deal_id" value="">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-dark px-2" id="save-changes-application-status">Save
-                            changes</button>
-                        <button type="button" class="btn btn-light px-2" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
         <div id="mySidenav"
             style="z-index: 1065; padding-left:5px; box-shadow:0px 4px 4px 0px rgba(0, 0, 0, 0.25);background-color: #EFF3F7;"
             class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>">
-
-
         </div>
-
-        <div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-lg my-0" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Mass Update</h5>
-                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <form action="{{ route('update-bulk-leads') }}" method="POST">
-                        @csrf
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <select name="bulk_field" id="bulk_field" class="form form-control">
-                                        <option value="">Select Field</option>
-                                        <option value="nm">Name</option>
-                                        <option value="ldst">Lead Status</option>
-                                        <!-- <option value="ast">Assign Type</option> -->
-                                        <option value="user_res">User Reponsible</option>
-                                        <option value="loc">Location</option>
-                                        <option value="agy">Agency</option>
-                                        <option value="ldsrc">Lead Source</option>
-                                        <option value="email">Email Address</option>
-                                        <option value="email_ref">Email Address (Referrer) </option>
-                                        <option value="phone">Phone</option>
-                                        <option value="m_phone">Mobile Phone</option>
-                                        <!-- <option value="mail_opt">Email opt out</option> -->
-                                        <option value="address">Address</option>
-                                        <option value="desc">Description</option>
-                                        <!-- <option value="tag_list">Tag List</option> -->
-
-                                    </select>
-                                </div>
-                                <input name='lead_ids' id="lead_ids" hidden>
-                                <div class="col-md-6" id="field_to_update">
-
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <input type="submit" class="btn btn-dark px-2" value="Update">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        {{-- @endif --}}
     @endsection
 
-
     @push('script-page')
-        <script>
-        </script>
+        <script></script>
     @endpush
