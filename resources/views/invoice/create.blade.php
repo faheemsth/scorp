@@ -317,7 +317,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}
+                                        {{ Form::label('issue_date', __('Today Date'),['class'=>'form-label']) }}
                                         <div class="form-icon-user">
                                             {{Form::date('issue_date',null,array('class'=>'form-control','required'=>'required'))}}
 
@@ -413,9 +413,13 @@
                             <tbody class="ui-sortable" data-repeater-item>
                             <tr>
 
-                                <td width="25%" class="form-group pt-0">
-                                    {{ Form::select('item', $product_services,'', array('class' => 'form-control select2 item','data-url'=>route('invoice.product'),'required'=>'required')) }}
+                                <td>
+                                    <div class="form-group price-input input-group search-form">
+                                    {{ Form::text('item', '', ['class' => 'form-control item', 'required' => 'required', 'placeholder' => __('Item')]) }}
+                                    <span class="unit input-group-text bg-transparent"></span>
+                                    </div>
                                 </td>
+
                                 <td>
                                     <div class="form-group price-input input-group search-form">
                                         {{ Form::text('quantity','', array('class' => 'form-control quantity','required'=>'required','placeholder'=>__('Qty'),'required'=>'required')) }}

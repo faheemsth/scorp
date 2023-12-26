@@ -815,11 +815,9 @@ class DealController extends Controller
     {
 
         // if (\Auth::user()->can('edit deal') || \Auth::user()->type == 'super admin') {
-        if (\Auth::user()->type == 'super admin') {
-            
-            // if ($deal->created_by == \Auth::user()->ownerId() || \Auth::user()->type == 'super admin') {
-            if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->can('edit deal')) {
 
+            if (\Auth::user()->can('edit deal') || \Auth::user()->type == 'super admin') {
                 $pipelines         = Pipeline::get()->pluck('name', 'id')->toArray();
                 $sources           = Source::get()->pluck('name', 'id')->toArray();
 
@@ -2997,7 +2995,7 @@ class DealController extends Controller
             $notes = DealNote::where('deal_id', $deal->id)->orderBy('created_at', 'DESC')->get();
 
             $applications = DealApplication::where('deal_id', $deal->id)->get();
-            $tasks = DealTask::where(['related_to' => $deal->id, 'related_type' => 'deal'])->get();
+            $tasks = DealTask::where(['related_to' => $deal->id, 'related_type' => 'deal'])->orderBy('status')->get();
             $log_activities = getLogActivity($deal->id, 'deal');
 
              //Getting lead stages history
