@@ -7,6 +7,28 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
 {{__('Manage Applications')}}
 @endsection
 @push('script-page')
+<script>
+       $(document).on('change', '.sub-check', function() {
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        console.log(selectedIds.length)
+
+        if(selectedIds.length > 0){
+            selectedArr = selectedIds;
+            $("#actions_div").css('display', 'block');
+        }else{
+            selectedArr = selectedIds;
+
+            $("#actions_div").css('display', 'none');
+        }
+        let commaSeperated = selectedArr.join(",");
+        console.log(commaSeperated)
+        $("#lead_ids").val(commaSeperated);
+
+    });
+</script>
 @endpush
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
@@ -24,6 +46,8 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li><a class="dropdown-item delete-bulk-applciations" href="javascript:void(0)">Delete</a></li>
+                            <li id="actions_div" style="display:none;font-size:14px;color:#3a3b45;"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+
                         </ul>
                 </div>
             </div>
@@ -151,12 +175,12 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                 </thead>
                 <tbody class="application_tbody">
                       @forelse($applications as $app)
-                            @php 
+                            @php
                                 $university = \App\Models\University::where('id', $app->university_id)->first();
                                 $deal = \App\Models\Deal::where('id', $app->deal_id)->first();
                                 $users = \App\Models\User::pluck('name', 'id')->toArray();
                                 $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
-                            @endphp 
+                            @endphp
                             <tr>
                                  <td>
                                     <input type="checkbox" name="applications[]" value="{{$app->id}}" class="sub-check">

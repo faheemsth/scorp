@@ -323,7 +323,7 @@
 
                 {{-- topbar --}}
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                    <div class="col-2">
+                    <div class="col-4">
                         <p class="mb-0 pb-0 ps-1">ADMISSIONS</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -331,23 +331,11 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
+                                <li id="actions_div" style="display:none"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
                           </ul>
                         </div>
                     </div>
-                    <div class="col-2">
-                        <!-- <p class="mb-0 pb-0">Tasks</p> -->
-                        <div class="dropdown" id="actions_div" style="display:none">
-                            <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                Actions
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
-                                <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
-                                <li><a class="dropdown-item" href="#">Brand Change</a></li>
-                                <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
-                            </ul>
-                        </div>
-                    </div>
+
 
                     <div class="col-8 d-flex justify-content-end gap-2">
                         <div class="input-group w-25">
@@ -618,7 +606,7 @@
             </div>
             <form action="{{ route('update-bulk-leads') }}" method="POST">
                 @csrf
-                <div class="modal-body">
+                <div class="modal-body" style="min-height: 40vh;">
                     <div class="row">
                         <div class="col-md-6">
                             <select name="bulk_field" id="bulk_field" class="form form-control">

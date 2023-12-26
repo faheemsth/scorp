@@ -7,6 +7,28 @@
     {{__('Manage Contacts')}}
 @endsection
 @push('script-page')
+<script>
+$(document).on('change', '.sub-check', function() {
+    var selectedIds = $('.sub-check:checked').map(function() {
+        return this.value;
+    }).get();
+
+    console.log(selectedIds.length)
+
+    if(selectedIds.length > 0){
+        selectedArr = selectedIds;
+        $("#actions_div").css('display', 'block');
+    }else{
+        selectedArr = selectedIds;
+
+        $("#actions_div").css('display', 'none');
+    }
+    let commaSeperated = selectedArr.join(",");
+    console.log(commaSeperated)
+    $("#lead_ids").val(commaSeperated);
+
+});
+</script>
 @endpush
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
@@ -32,6 +54,8 @@
                             <li><a class="dropdown-item" href="#">Another action</a></li>
                             <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                             <li><a class="dropdown-item delete-bulk-contacts" href="javascript:void(0)">Delete</a></li>
+                            <li id="actions_div" style="display:none;font-size:14px;color:#3a3b45;"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+
                         </ul>
                     </div>
                 </div>

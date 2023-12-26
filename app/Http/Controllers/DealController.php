@@ -779,15 +779,8 @@ class DealController extends Controller
 
         // if (\Auth::user()->can('edit deal') || \Auth::user()->type == 'super admin') {
         if (\Auth::user()->type == 'super admin') {
-<<<<<<< HEAD
-
-            if ($deal->created_by == \Auth::user()->ownerId() || \Auth::user()->type == 'super admin') {
-=======
-            
             // if ($deal->created_by == \Auth::user()->ownerId() || \Auth::user()->type == 'super admin') {
             if (\Auth::user()->type == 'super admin') {
-
->>>>>>> 1522f8ffa874ee63ee3558066f10033754a01116
                 $pipelines         = Pipeline::get()->pluck('name', 'id')->toArray();
                 $sources           = Source::get()->pluck('name', 'id')->toArray();
 

@@ -10,6 +10,30 @@
 @endsection
 {{-- <link rel="stylesheet" href="{{ asset('css/customsidebar.css') }}"> --}}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@push('script-page')
+<script>
+    $(document).on('change', '.sub-check', function() {
+      var selectedIds = $('.sub-check:checked').map(function() {
+          return this.value;
+      }).get();
+
+      console.log(selectedIds.length)
+
+      if(selectedIds.length > 0){
+          selectedArr = selectedIds;
+          $("#actions_div").css('display', 'block');
+      }else{
+          selectedArr = selectedIds;
+
+          $("#actions_div").css('display', 'none');
+      }
+      let commaSeperated = selectedArr.join(",");
+      console.log(commaSeperated)
+      $("#lead_ids").val(commaSeperated);
+
+  });
+</script>
+@endpush
 <style>
     #objType {
         font-size: 11px;
@@ -73,6 +97,7 @@
 
 
 @section('content')
+
 <div class="row">
 
 
@@ -91,6 +116,8 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a class="dropdown-item delete-bulk-organizations" href="javascript:void(0)">Delete</a></li>
+                                <li id="actions_div" style="display:none;font-size:14px;color:#3a3b45;"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+
                             </ul>
                         </div>
                     </div>
@@ -210,7 +237,7 @@
                                 <td style="border-left: 1px solid #fff;">Action</td>
                             </tr>
                         </thead>
-                        <tbody class="organization_tbody" style="color:rgb(0, 0, 0); font-size: 14px;" class="new-organization-list-tbody">
+                        <tbody class="organization_tbody" style=" font-size: 14px;" class="new-organization-list-tbody">
 
                             @forelse($organizations as $org)
                             @php

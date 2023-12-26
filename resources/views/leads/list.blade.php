@@ -95,6 +95,7 @@ if (isset($lead->is_active) && $lead->is_active) {
         $('.filter-btn-show').click(function() {
             $("#filter-show").toggle();
         });
+
     </script>
 @endpush
 
@@ -145,7 +146,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 
                         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                            <div class="col-2">
+                            <div class="col-4">
                                 <p class="mb-0 pb-0 ps-1">LEADS</p>
                                 <div class="dropdown">
                                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
@@ -154,6 +155,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                         <li><a class="dropdown-item delete-bulk-leads" href="javascript:void(0)">Delete</a></li>
+                                        <li id="actions_div" style="display:none;font-size:14px;color:#3a3b45;"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
 
                                     </ul>
                                 </div>
@@ -161,20 +163,19 @@ if (isset($lead->is_active) && $lead->is_active) {
                             {{-- /// --}}
 
                             {{-- /// --}}
-                            <div class="col-2">
-                                <!-- <p class="mb-0 pb-0">Tasks</p> -->
+                            {{-- <div class="col-2">
+                                <p class=""></p>
                                 <div class="dropdown" id="actions_div" style="display:none">
                                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                         Actions
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
                                         <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
                                         <li><a class="dropdown-item" href="#">Brand Change</a></li>
                                         <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
                                     </ul>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-8 d-flex justify-content-end gap-2">
                                 <div class="input-group w-25">
                                     <button class="btn  list-global-search-btn">
@@ -550,7 +551,7 @@ if (isset($lead->is_active) && $lead->is_active) {
             </div>
             <form action="{{ route('update-bulk-leads') }}" method="POST">
                 @csrf
-                <div class="modal-body">
+                <div class="modal-body" style="min-height: 40vh;">
                     <div class="row">
                         <div class="col-md-6">
                             <select name="bulk_field" id="bulk_field" class="form form-control">
@@ -581,7 +582,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" class="btn btn-primary" value="Update">
+                    <input type="submit" class="btn btn-dark" value="Update">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -637,7 +638,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                 if(this.value == 'nm'){
 
-                    let field = `<div>
+                    let field = `<div style="display:flex;gap:10px;">
                                     <input type="text" class="w-50 form-control" placeholder="First Name" name="lead_first_name" value="" required="">
                                     <input type="text" class="w-50 form-control" placeholder="Last Name" name="lead_last_name" value="" required="">
                                </div>`;
@@ -739,14 +740,14 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                 }else if(this.value == 'address'){
 
-                    let field = `<div class="form-floating">
+                    let field = `<div class="form-floating mb-2">
                                     <textarea class="form-control" placeholder="Street" id="floatingTextarea" name="lead_street"></textarea>
                                 </div>
                                 <div class="row">
-                                    <div class="col-6 col-form">
+                                    <div class="col-6 col-form mb-2">
                                         <input type="text" class="form-control" id="formGroupExampleInput" placeholder="City" name="lead_city" >
                                     </div>
-                                    <div class="col-6 col-form">
+                                    <div class="col-6 col-form mb-2">
                                         <input type="text" class="form-control" id="formGroupExampleInput" placeholder="State/Province" name="lead_state" >
                                     </div>
                                     <div class="col-6 col-form">
@@ -1282,6 +1283,7 @@ $('.' + name + '-td').html(html);
             var html = '<div class="d-flex edit-input-field-div">' +
                 '<div class="input-group border-0 d-flex">' +
                 '<a href="">'+
+                    'ssjhj'+
                 address +
                 '</a>'+
                 '</div>' +

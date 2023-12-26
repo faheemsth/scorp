@@ -89,8 +89,9 @@
                             <div class="col-sm-6 " id="assign_to_div">
                                 <select class="form form-control assigned_to select2" id="choices-multiple4"
                                     name="assigned_to">
+
                                     <option value="">Select Employee</option>
-                                    {{--  @foreach($employees as $key => $emp)
+                                     {{-- @foreach($employees as $key => $emp)
                                         <option value="{{ $key }}">{{ $emp }}</option>
                                     @endforeach --}}
                                 </select>
@@ -188,7 +189,7 @@
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
                         <div class="form-group row">
-                            <label for="website" class="col-sm-3 col-form-label">Related Type 
+                            <label for="website" class="col-sm-3 col-form-label">Related Type
                                 <span
                                     class="text-danger"></span></label>
                             <div class="col-sm-6">
@@ -218,7 +219,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="website" class="col-sm-3 col-form-label">Related To 
+                            <label for="website" class="col-sm-3 col-form-label">Related To
                                 <span
                                     class="text-danger"></span></label>
                             <div class="col-sm-6" id="related_to_div">
@@ -346,8 +347,8 @@
                         $("#assign_to_div").html(data.employees);
                         select2();
                         $("#branch_div").html(data.branches);
-                        select2(); 
-                        
+                        select2();
+
                         select2(); // Assuming this is a function to initialize or update a select2 dropdown
                     } else {
                         console.error('Server returned an error:', data.message);

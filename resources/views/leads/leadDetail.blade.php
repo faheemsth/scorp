@@ -455,7 +455,7 @@
                                                                 </td>
                                                                 <td class="drive_link-td"
                                                                     style="padding-left: 10px; font-size: 14px; width:300px">
-
+                                                                <a href="">
                                                                     <div class="d-flex edit-input-field-div">
                                                                         <div class="input-group  drive_link"
                                                                             style="width: 316px;border: none;">
@@ -477,6 +477,7 @@
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
                                                                     </div>
+                                                                </a>
                                                                     {{-- <a href="{{ $lead->drive_link }}"
                                                                         style="width: 300px; word-wrap: break-word; font-size: 14px; color: blue; text-decoration: underline;"
                                                                         target="_blank">
