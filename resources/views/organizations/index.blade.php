@@ -5,8 +5,8 @@
 @endsection
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
-    <li class="breadcrumb-item">{{ __('Organizations') }}</li>
+<li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
+<li class="breadcrumb-item">{{ __('Organizations') }}</li>
 @endsection
 {{-- <link rel="stylesheet" href="{{ asset('css/customsidebar.css') }}"> --}}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
