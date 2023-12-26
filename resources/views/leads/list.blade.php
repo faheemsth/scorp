@@ -46,7 +46,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 @endsection
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
+<li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
 <li class="breadcrumb-item">{{ __('Leads') }}</li>
 @endsection
 

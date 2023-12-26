@@ -220,7 +220,7 @@
 </style>
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('CRM Dashboard') }}</a></li>
+<li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
 <li class="breadcrumb-item">{{ __('Admissions') }}</li>
 @endsection
 
