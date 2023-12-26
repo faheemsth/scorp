@@ -317,9 +317,9 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        {{ Form::label('issue_date', __('Today Date'),['class'=>'form-label']) }}
+                                        {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label']) }}
                                         <div class="form-icon-user">
-                                            {{Form::date('issue_date',null,array('class'=>'form-control','required'=>'required'))}}
+                                            {{ Form::date('issue_date', now(), array('class' => 'form-control', 'required' => 'required')) }}
 
                                         </div>
                                     </div>
