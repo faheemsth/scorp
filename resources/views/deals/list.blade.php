@@ -371,7 +371,6 @@
 
                         <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}" class="btn p-2 btn-dark">
                             <i class="ti ti-plus"></i>
-                            <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
                         </a>
 
                     </div>
@@ -409,7 +408,7 @@
                                     </select>
                                 </div>
                                 @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                <div class="col-md-4"> <label for="">Created By</label>
+                                <div class="col-md-4"> <label for="">Brands</label>
                                     <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple style="width: 95%;">
                                         <option value="">Select Brand</option>
                                         @foreach ($brands as $brand)

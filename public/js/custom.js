@@ -80,9 +80,20 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
     if ($('#discount_hidden').length > 0) {
         data['discount'] = $('#discount_hidden').val();
     }
+    var kids = $(this).children();
+    var className = $(kids[0]).attr('class');
+
+    if($(kids[0]).hasClass('ti-pencil')){
+        $(kids[0]).css('display','none');
+        $(this).append('<span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>'); 
+    }else if($(kids[0]).hasClass('ti-plus')){
+        $(kids[0]).css('display','none');
+        $(this).append('<span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>'); 
+    }
+
     $('.spnier-updbtn').removeClass('d-none');
-    $('.ti-plus').css('display','none');
-    $('.ti-pencil').css('display','none');
+    // $('.ti-plus').css('display','none');
+    // $('.ti-pencil').css('display','none');
     
     $.ajax({
         url: url,
@@ -91,10 +102,16 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
            
             $('#commonModal .body').html(data);
             $("#commonModal").modal('show');
-            $('.spnier-updbtn').addClass('d-none');
-            $('.ti-plus').css('display','block');
-            $('.ti-pencil').css('display','block');
-
+            // $('.spnier-updbtn').addClass('d-none');
+            // $('.ti-plus').css('display','block');
+            // $('.ti-pencil').css('display','block');
+            if($(kids[0]).hasClass('ti-pencil')){
+                $(kids[0]).css('display','block');
+                $(".spnier-updbtn").remove();
+            }else if($(kids[0]).hasClass('ti-plus')){
+                $(kids[0]).css('display','block');
+                $(".spnier-updbtn").remove();
+            }
             // daterange_set();
             taskCheckbox();
             common_bind("#commonModal");
@@ -106,6 +123,13 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
         error: function (data) {
             data = data.responseJSON;
             show_toastr('Error', data.error, 'error')
+            if($(kids[0]).hasClass('ti-pencil')){
+                $(kids[0]).css('display','block');
+                $(".spnier-updbtn").remove();
+            }else if($(kids[0]).hasClass('ti-plus')){
+                $(kids[0]).css('display','block');
+                $(".spnier-updbtn").remove();
+            }
         }
     });
 

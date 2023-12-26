@@ -632,6 +632,7 @@ class UserController extends Controller
             $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
             $start = 0;
         }
+        //dd(\Auth::user()->can('manage employees'));
 
         if (\Auth::user()->can('manage employees')) {
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
@@ -679,7 +680,6 @@ class UserController extends Controller
         $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
         $excludedTypes = ['super admin', 'company', 'team', 'client'];
         $roles = Role::whereNotIn('name', $excludedTypes)->get()->unique('name')->pluck('name', 'name');
-
 
 
         if (\Auth::user()->can('create user')) {

@@ -197,7 +197,6 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 @can('create lead')
                                 <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark">
                                     <i class="ti ti-plus" style="font-size:18px"></i>
-                                    <span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>
                                 </button>
                                 @endcan
                                 <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}"
@@ -275,7 +274,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                     @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
 
-                                        <div class="col-md-4 mt-1"> <label for="">Created By</label>
+                                        <div class="col-md-4 mt-1"> <label for="">Brands</label>
                                             <select class="form form-control select2" id="choices-multiple555"
                                                 name="created_by[]" multiple style="width: 95%;">
                                                 <option value="">Select Brand</option>
@@ -730,7 +729,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                 }else if(this.value == 'phone'){
 
-                    let field =  `<input type="text" class="form-control" name="lead_phone" value="{{$lead->phone}}" required>`;
+                    let field =  `<input type="text" class="form-control" name="lead_phone" value="" required>`;
                     $('#field_to_update').html(field);
 
                 }else if(this.value == 'm_phone'){
@@ -741,7 +740,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                 }else if(this.value == 'address'){
 
                     let field = `<div class="form-floating">
-                                    <textarea class="form-control" placeholder="Street" id="floatingTextarea" name="lead_street">{{ $lead->street }}</textarea>
+                                    <textarea class="form-control" placeholder="Street" id="floatingTextarea" name="lead_street"></textarea>
                                 </div>
                                 <div class="row">
                                     <div class="col-6 col-form">
@@ -774,7 +773,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                 }
             }
 
-            });
+        });
 
         $(document).on("click", '.delete-bulk-leads', function() {
             var task_ids = $(".sub-check:checked");
