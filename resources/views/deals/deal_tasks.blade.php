@@ -149,7 +149,7 @@ $setting = \App\Models\Utility::colorset();
                             <div class="col-md-4">
                                 <label for="">Status</label>
                                 <select class="form form-control select2" id="status444" name="status" multiple style="width: 95%;">
-                                    <option value="">Select Brand</option>
+                                    <option value="">Select Status</option>
                                     <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Completed</option>
                                     <option value="0" <?= isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : '' ?>>On Going</option>
                                 </select>
@@ -194,7 +194,7 @@ $setting = \App\Models\Utility::colorset();
                                 <th>{{ __('Due Date') }}</th>
                                 <th>{{ __('Subject') }}</th>
                                 <th>{{ __('Assigned To') }}</th>
-                                <th>{{ __('Company/Team') }}</th>
+                                <th>{{ __('Brand') }}</th>
                                 <th>{{ __('Status') }}</th>
                             </tr>
                         </thead>

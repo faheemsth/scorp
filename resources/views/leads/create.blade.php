@@ -91,7 +91,7 @@
                                                 {{ __('Brand') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-                                                <select class="form-control select2 brand_id" id="choices-1" name="brand_id">
+                                                <select class="form-control select2 brand_id" id="choices-1011" name="brand_id">
                                                     <option value="" >Select Brand</option>
                                                     @foreach($companies as $key => $company)
                                                     <option value="{{$key}}" {{ $key == 1 ? 'selected' : ''}}>{{$company}}</option>
@@ -162,6 +162,15 @@
                                                     <option value="{{$key}}">{{$source}}</option>
                                                     @endforeach
                                                 </select>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="" style="width: 100px; font-size: 13px;">
+                                                {{ __('Drive Link') }}
+                                            </td>
+                                            <td class="" style="padding-left: 10px; font-size: 13px;">
+                                                <input type="text" class="form form-control" name="drive_link" value="">
                                             </td>
                                         </tr>
 

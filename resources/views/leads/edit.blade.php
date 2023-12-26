@@ -156,6 +156,15 @@
                                                     </td>
                                                 </tr>
 
+                                                <tr>
+                                                    <td class="" style="width: 100px; font-size: 13px;">
+                                                        {{ __('Drive Link') }}
+                                                    </td>
+                                                    <td class="" style="padding-left: 10px; font-size: 13px;">
+                                                        <input type="text" class="form form-control" name="drive_link" value="{{ $lead->drive_link}}">
+                                                    </td>
+                                                </tr>
+
                                             </tbody>
                                         </table>
                                     </div>

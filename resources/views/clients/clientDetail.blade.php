@@ -80,11 +80,15 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
 
+                <a href="https://wa.me/{{ !empty($client->phone) ? formatPhoneNumber($client->phone) : '' }}?text=Hello ! Dear {{ $client->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" data-bs-title="{{ __('Whatsapp') }}" class="btn btn-dark text-white">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </a>
+
                 @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit client'))
                     <div class="d-flex justify-content-end gap-1 me-1">
                         <a href="#" data-size="lg" data-url="{{ route('clients.edit', $client->id) }}"
                             data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Client') }}"
-                            class="btn px-2 btn-dark text-white">
+                            class="btn btn-dark text-white px-2">
                             <i class="ti ti-pencil "></i>
                         </a>
                     </div>

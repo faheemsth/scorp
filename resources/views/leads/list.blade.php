@@ -394,7 +394,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         <th data-resizable-columns-id="stage" class="ps-3">{{ __('Stage') }}</th>
                                         <th data-resizable-columns-id="users" class="ps-3">{{ __('Assigned to') }}</th>
                                         @if (\Auth::user()->type == 'super admin')
-                                            <th data-resizable-columns-id="created_by">{{ __('Created By') }}</th>
+                                            <th data-resizable-columns-id="created_by">{{ __('Brand') }}</th>
                                         @endif
                                         {{-- <th data-resizable-columns-id="actions" style="width: 5%;">{{ __('Action') }}
                                         </th> --}}
@@ -430,7 +430,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                     @endif
                                                 </td>
                                                 @if (\Auth::user()->type == 'super admin')
-                                                    <td>{{ $users[$lead->created_by] }}</td>
+                                                    <td>{{ $users[$lead->brand_id] }}</td>
                                                 @endif
 
                                                 @if (Auth::user()->type != 'client')

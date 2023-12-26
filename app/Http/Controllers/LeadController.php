@@ -466,6 +466,7 @@ class LeadController extends Controller
                 $lead->pipeline_id = $pipeline->id;
                 $lead->created_by  = $usr->creatorId();
                 $lead->date        = date('Y-m-d');
+                $lead->drive_link = isset($request->drive_link) ? $request->drive_link : '';
                 $lead->save();
 
 
@@ -792,6 +793,7 @@ class LeadController extends Controller
                 $lead->subject     =  $request->lead_first_name . ' ' . $request->lead_last_name;
                 $lead->user_id     = $request->lead_assgigned_user;
                 $lead->date        = date('Y-m-d');
+                $lead->drive_link = isset($request->drive_link) ? $request->drive_link : '';
                 $lead->save();
 
                 //Log

@@ -369,9 +369,9 @@
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
-                        <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}" class="btn p-2 btn-dark">
+                        {{-- <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}" class="btn p-2 btn-dark">
                             <i class="ti ti-plus"></i>
-                        </a>
+                        </a> --}}
 
                     </div>
                 </div>
@@ -423,14 +423,14 @@
                                     <input type="date" class="form form-control" name="created_at" value="<?= isset($_GET['created_at']) ? $_GET['created_at'] : '' ?>" style="width: 95%; border-color:#aaa">
                                 </div>
 
-                                <div class="col-md-4 mt-2">
+                                <div class="col-md-4 mt-3">
                                     <br>
                                     <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
                                     <a href="/deals/list" class="btn bg-dark" style="color:white;">Reset</a>
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row d-none">
                                 <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
                                     <?php
@@ -486,7 +486,7 @@
 
 
                                     <td style="width: 100px !important; ">
-                                        <span style="cursor:pointer" class="deal-name hyper-link" onclick="openNav(<?= $deal->id ?>)" data-deal-id="{{ $deal->id }}">
+                                        <span style="cursor:pointer" class="deal-name hyper-link" onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})" data-deal-id="{{ $deal->id }}">
 
                                             @if (strlen($deal->name) > 40)
                                             {{ substr($deal->name, 0, 40) }}...
@@ -1025,56 +1025,7 @@
                 }
             });
 
-        })
-
-        /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
-        function openNav(deal_id) {
-            var ww = $(window).width()
-
-            $.ajax({
-                type: 'GET',
-                url: "{{ route('get-deal-detail') }}",
-                data: {
-                    deal_id: deal_id
-                },
-                success: function(data) {
-                    data = JSON.parse(data);
-                    if (data.status == 'success') {
-                        $("#mySidenav").html(data.html);
-                        $(".block-screen").css('display', 'none');
-                    }
-                }
-            });
-
-
-            if (ww < 500) {
-                $("#mySidenav").css('width', ww + 'px');
-                $("#main").css('margin-right', ww + 'px');
-            } else {
-                $("#mySidenav").css('min-width', '942px');
-                $("#mySidenav").css('max-width', '935px');
-                $("#main").css('margin-right', "942px");
-            }
-
-            $("#modal-discussion-add").attr('data-lead-id', deal_id);
-            $('.modal-discussion-add-span').removeClass('ti-minus');
-            $('.modal-discussion-add-span').addClass('ti-plus');
-            $(".add-discussion-div").addClass('d-none');
-            $(".block-screen").css('display', 'block');
-            $("#body").css('overflow', 'hidden');
-        }
-
-        /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
-        function closeNav() {
-            $("#mySidenav").css("width", '0');
-            $("#main").css("margin-right", '0');
-            $("#modal-discussion-add").removeAttr('data-deal-id');
-            $('.modal-discussion-add-span').removeClass('ti-minus');
-            $('.modal-discussion-add-span').addClass('ti-plus');
-            $(".add-discussion-div").addClass('d-none');
-            $(".block-screen").css('display', 'none');
-            $("#body").css('overflow', 'visible');
-        }
+        });
 
 
         $(document).on("click", ".edit-input", function() {

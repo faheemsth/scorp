@@ -127,26 +127,7 @@
 
                         </div>
                     </div>
-
-
-                        <button class="btn px-2 pb-2 pt-2 refresh-list bg-dark"
-                            style=" color:white;"><i class="ti ti-refresh"
-                                style="font-size: 18px"></i></button>
-
-                        <button class="btn filter-btn-show px-2 btn-dark" style="color:white;"
-                            type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="ti ti-filter" style="font-size:18px"></i>
-                        </button>
-
-
-                        @if(\Auth::user()->type=='super admin' || \Auth::user()->can('create organization'))
-                            <button data-url="{{ route('leads.create') }}" class="btn  px-2 btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                <i class="ti ti-plus" style="font-size:18px"></i>
-                            </button>
-                        @endif
-
-                    </div>
-                </div>
+                
 
 
                 <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
@@ -323,6 +304,7 @@
                     </div>
 
                 </div>
+            </div>
             </div>
         </div>
     </div>
