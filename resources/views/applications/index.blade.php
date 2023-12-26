@@ -27,8 +27,23 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         </ul>
                 </div>
             </div>
+            <div class="col-2">
+                <!-- <p class="mb-0 pb-0">Tasks</p> -->
+                <div class="dropdown" id="actions_div" style="display:none">
+                    <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        Actions
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+                        <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
+                            <li><a class="dropdown-item" href="#">Brand Change</a></li>
+                            <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
+                    </ul>
+                </div>
+            </div>
 
-            <div class="col-10 d-flex justify-content-end gap-2">
+            <div class="col-8 d-flex justify-content-end gap-2">
                 <div class="input-group w-25">
                     <button class="btn btn-sm list-global-search-btn">
                         <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
@@ -186,6 +201,45 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
         ])
         @endif
     </div>
+    <div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg my-0" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Mass Update</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('update-bulk-applications') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <select name="bulk_field" id="bulk_field" class="form form-control">
+                                    <option value="">Select Field</option>
+                                    <option value="university">University</option>
+                                    <option value="course">Course</option>
+                                    <option value="application_key">Application ID</option>
+                                    <option value="intake">Intake</option>
+                                    <option value="status">Status</option>
+                                </select>
+                            </div>
+                            <input name='app_ids' id="app_ids" hidden>
+                            <div class="col-md-6" id="field_to_update">
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <br>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="Update">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -199,6 +253,99 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
     $(document).on('change', '.main-check', function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));
     });
+
+    $(document).on('change', '.sub-check', function() {
+            var selectedIds = $('.sub-check:checked').map(function() {
+                return this.value;
+            }).get();
+
+            console.log(selectedIds.length)
+
+            if (selectedIds.length > 0) {
+                selectedArr = selectedIds;
+                $("#actions_div").css('display', 'block');
+            } else {
+                selectedArr = selectedIds;
+
+                $("#actions_div").css('display', 'none');
+            }
+            let commaSeperated = selectedArr.join(",");
+            console.log(commaSeperated)
+            $("#app_ids").val(commaSeperated);
+
+        });
+
+        function massUpdate() {
+            if (selectedArr.length > 0) {
+                $('#mass-update-modal').modal('show')
+            } else {
+                alert('Please choose Tasks!')
+            }
+        }
+
+        $('#bulk_field').on('change', function() {
+
+            if (this.value != '') {
+                $('#field_to_update').html('');
+
+                if (this.value == 'university') {
+
+                    
+                    var universities = <?= json_encode($universities) ?>;
+                    let options = '';
+
+                    $.each(universities, function(keyName, keyValue) {
+                        options += '<option value="' + keyName + '">' + keyValue + '</option>';
+                    });
+
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="university" required>
+                                    <option value="">Select University</option>
+                                    ` + options + `
+                                </select>`;
+                    $('#field_to_update').html(field);
+                    select2();
+
+                } else if (this.value == 'course') {
+
+                    let field = `<div>
+                                    <input type="text" class="form-control" placeholder="Course" name="course" value="" required="">
+                               </div>`;
+                    $('#field_to_update').html(field);
+
+                }else if (this.value == 'application_key') {
+
+                    let field = `<div>
+                                    <input type="text" class="form-control" placeholder="" name="application_key" value="" required="">
+                            </div>`;
+                    $('#field_to_update').html(field);
+
+                }else if (this.value == 'intake') {
+
+                    let field = `<div>
+                                <input class="form-control" required="required" style="height: 45px;" name="intake" type="month"  id="intake">
+                            </div>`;
+                    $('#field_to_update').html(field);
+
+                }else if (this.value == 'status') {
+
+                    var stages = <?= json_encode($stages) ?>;
+                    let options = '';
+
+                    $.each(stages, function(keyName, keyValue) {
+                        options += '<option value="' + keyName + '">' + keyValue + '</option>';
+                    });
+
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="status" required>
+                                    <option value="">Select Status</option>
+                                    ` + options + `
+                                </select>`;
+                    $('#field_to_update').html(field);
+                    select2();
+                }
+
+            }
+
+        });
 
     $(document).on("click", ".list-global-search-btn", function() {
         var search = $(".list-global-search").val();
