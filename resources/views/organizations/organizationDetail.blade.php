@@ -483,7 +483,8 @@
                                                                                     class="ti ti-pencil"></i></button>
                                                                         </div>
                                                                     </div> --}}
-                                                                    {{ $org_detail->drive_link }}
+                                                                  <a href="  {{ $org_detail->drive_link }}">
+                                                                    {{ $org_detail->drive_link }}</a>
                                                                 </td>
                                                             </tr>
                                                         </tbody>

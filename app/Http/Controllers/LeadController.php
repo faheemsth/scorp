@@ -265,7 +265,7 @@ class LeadController extends Controller
            // if(!isset($_GET['stages']) || !in_array(6, $_GET['stages']) || !in_array(7, $_GET['stages'])){
                  $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
            // }
-            
+
 
             $total_records =  $leads_query->clone()->count();
             $leads = $leads_query->clone()->groupBy('leads.id')->orderBy('leads.created_at', 'desc')->skip($start)->take($num_results_on_page)->get();
@@ -364,7 +364,7 @@ class LeadController extends Controller
 
         $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
         $branches = Branch::where('created_by',$id)->pluck('name', 'id')->toArray();
-        
+
         $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="lead_assgigned_user" required> <option value="">Select User</option> ';
         foreach ($employees as $key => $user) {
             $html .= '<option value="' . $key . '">' . $user . '</option> ';
@@ -393,7 +393,7 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
-
+        // dd($request);
         $usr = \Auth::user();
         if ($usr->can('create lead') ||  \Auth::user()->type == 'super admin') {
             $validator = \Validator::make(
@@ -2394,7 +2394,7 @@ class LeadController extends Controller
         $deal->university_id = $request->university_id;
         $deal->assigned_to = $lead->user_id;
         $deal->brand_id = $lead->brand_id;
-        $deal->organization_id = gettype($lead->organization_id) == 'string' ? 0 : $lead->organization_id; 
+        $deal->organization_id = gettype($lead->organization_id) == 'string' ? 0 : $lead->organization_id;
         $deal->organization_link = $lead->organization_link;
         $deal->save();
         // end create deal

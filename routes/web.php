@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RegionController;
 use App\Models\Utility;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JobController;
@@ -190,10 +191,13 @@ Route::get('/', [DashboardController::class, 'crm_dashboard_index'])->name('crm.
 
 Route::get('/crm-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('crm.dashboard')->middleware(['XSS', 'revalidate',]);
 
-Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+//Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/account-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+
 
 //new dashboard
-Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+//Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/account-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
 
 // Route::get('/', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['XSS', 'revalidate',]);
 
@@ -215,7 +219,7 @@ Route::get('/user/employees', [UserController::class, 'employees'])->name('user.
 Route::get('/user/employee/create', [UserController::class, 'employeeCreate'])->name('user.employee.create')->middleware(['auth', 'XSS', 'revalidate']);
 Route::post('/user/employee/store', [UserController::class, 'employeeStore'])->name('user.employee.store')->middleware(['auth', 'XSS', 'revalidate']);
 Route::get('/user/employee/edit/{id}', [UserController::class, 'employeeEdit'])->name('user.employee.edit')->middleware(['auth', 'XSS', 'revalidate']);
-Route::post('/user/employee/update', [UserController::class, 'employeeUpdate'])->name('user.employee.update')->middleware(['auth', 'XSS', 'revalidate']);
+Route::post('/user/employee/update/{id}', [UserController::class, 'employeeUpdate'])->name('user.employee.update')->middleware(['auth', 'XSS', 'revalidate']);
 Route::get('/user/employee/{id}/show', [UserController::class, 'employeeShow'])->name('user.employee.show')->middleware(['auth', 'XSS', 'revalidate']);
 
 
@@ -392,6 +396,11 @@ Route::group(
 
 Route::get('/invoices/preview/{template}/{color}', [InvoiceController::class, 'previewInvoice'])->name('invoice.preview');
 Route::post('/invoices/template/setting', [InvoiceController::class, 'saveTemplateSettings'])->name('template.setting');
+Route::get('/region/index', [RegionController::class, 'index'])->name('region.index');
+Route::get('/region/create', [RegionController::class, 'create'])->name('region.create');
+Route::post('/region/create', [RegionController::class, 'save'])->name('region.save');
+Route::get('/region/update', [RegionController::class, 'update'])->name('region.update');
+Route::get('/region/delete', [RegionController::class, 'delete'])->name('region.delete');
 
 
 Route::group(

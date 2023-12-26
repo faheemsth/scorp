@@ -78,9 +78,13 @@
                         </button>
 
                         @can('create task')
-                        <a href="#" data-size="md" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn px-2 btn-dark">
+<<<<<<< HEAD
+                        <a href="#" data-size="md" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Branch')}}" class="btn px-2 btn-dark">
+=======
+                        <button data-size="md" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn px-2 btn-dark">
+>>>>>>> f058129ad8d6c062157dc51733cb3e0063efae28
                             <i class="ti ti-plus"></i>
-                        </a>
+                        </button>
                         @endcan
                     </div>
                 </div>
@@ -188,26 +192,27 @@
                                         <td class="Action text-end">
                                             <span>
                                                 @can('edit branch')
-                                                    <div class="action-btn ms-2">
+                                                    <div class=" mx-2 d-flex justify-content-center-center align-items-center-center">
 
-                                                        <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para"
+                                                        <a href="#" class="btn px-2 py-2 btn-dark mx-1  bs-pass-para"
                                                             data-url="{{ URL::to('branch/' . $branch->id . '/edit') }}"
                                                             data-ajax-popup="true" data-title="{{ __('Edit Branch') }}"
                                                             data-bs-toggle="tooltip" title="{{ __('Edit') }}"
                                                             data-original-title="{{ __('Edit') }}"><i
                                                                 class="ti ti-pencil text-white"></i></a>
-                                                    </div>
+
                                                 @endcan
                                                 @can('delete branch')
-                                                    <div class="action-btn ms-2">
+
                                                         {!! Form::open([
                                                             'method' => 'DELETE',
                                                             'route' => ['branch.destroy', $branch->id],
                                                             'id' => 'delete-form-' . $branch->id,
+
                                                         ]) !!}
 
                                                         <a href="#"
-                                                        class="btn btn-sm btn-danger mx-1 align-items-center bs-pass-para"
+                                                        class="btn px-2 py-2 btn-danger mx-1 bs-pass-para"
                                                             data-bs-toggle="tooltip" title="{{ __('Delete') }}"
                                                             data-original-title="{{ __('Delete') }}"
                                                             data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"

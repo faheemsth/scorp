@@ -1,18 +1,4 @@
-<table class="table " data-resizable-columns-id="lead-table" id="tfont">
-    <thead>
-        <tr>
-            <th data-resizable-columns-id="name"><input type="checkbox" class=""></th>
-            <th data-resizable-columns-id="name">{{ __('Name') }}</th>
-            <th data-resizable-columns-id="email_address" class="ps-3">{{ __('Email Address') }}</th>
-            <th data-resizable-columns-id="phone" class="ps-3">{{ __('Phone') }}</th>
-            <th data-resizable-columns-id="stage" class="ps-3">{{ __('Stage') }}</th>
-            <th data-resizable-columns-id="users" class="ps-3">{{ __('ASSIGNED TO') }}</th>
-            @if (\Auth::user()->type == 'super admin')
-                <th data-resizable-columns-id="created_by">{{ __('Created By') }}</th>
-            @endif
-        </tr>
-    </thead>
-    <tbody>
+
         @if (count($leads) > 0)
             @foreach ($leads as $lead)
                 <tr>
@@ -114,13 +100,4 @@
                 </td>
             </tr>
         @endif
-
-    </tbody>
-</table>
-
-@if ($total_records > 0)
-    @include('layouts.pagination', [
-        'total_pages' => $total_records
-    ])
-@endif
 

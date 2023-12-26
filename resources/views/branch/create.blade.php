@@ -1,5 +1,5 @@
 {{Form::open(array('url'=>'branch','method'=>'post'))}}
-<div class="modal-body">
+<div class="modal-body" style="min-height: 35vh;">
 
     <div class="row">
         <div class="col-12">
@@ -12,7 +12,7 @@
                 </span>
                 @enderror
             </div>
-        </div>  
+        </div>
     </div>
 </div>
 <div class="modal-footer">
