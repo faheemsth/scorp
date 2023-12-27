@@ -30,7 +30,7 @@
                     <div class="d-flex justify-content-end gap-1 me-3">
                         <a href="#" data-size="lg" data-url="{{ route('university.edit', $university->id) }}"
                             data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update University') }}"
-                            class="btn btn-sm btn-dark text-white">
+                            class="btn p-2 btn-dark text-white">
                             <i class="ti ti-pencil"></i>
                         </a>
                     </div>
