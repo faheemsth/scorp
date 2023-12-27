@@ -103,8 +103,19 @@
                         }
 
                         ?>
+                        <style>
+                            .missedup{
+                                background-color:#e0e0e0 !important;
+                                color:white !important;
+                            }
+                            .missedup::after{
+                                border-left-color: #e0e0e0 !important;
+                            }
+                          </style>
 
-                        <a type="button" data-application-id="{{ $application->id }}" data-stage-id="{{ $key }}" class="application_stage {{ $application->stage_id == $key ? 'current' : ($done == true ? 'done' : '') }} " style="font-size:13px">{{ $stage }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
+                        <a type="button" data-application-id="{{ $application->id }}" data-stage-id="{{ $key }}"
+                            class="application_stage {{ $is_missed == true ? 'missedup' : ($application->stage_id == $key ? 'current' : ($done == true ? 'done' : '')) }} "
+                            style="font-size:13px">{{ $stage }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
                         @empty
                         @endforelse
                     </div>
@@ -226,8 +237,11 @@
                                                                     {{ __('Branch') }}
                                                                 </td>
                                                                 <td class="status-td" style="padding-left: 10px; font-size: 14px;">
-
+                                                                    @if (App\Models\Deal::find($application->deal_id)->branch_id)
                                                                     {{ App\Models\Branch::find(App\Models\Deal::find($application->deal_id)->branch_id)->name }}
+                                                                    @else
+                                                                    {{__(" ")}}
+                                                                    @endif
 
 
                                                                 </td>
@@ -238,8 +252,12 @@
                                                                     {{ __('Assigned To') }}
                                                                 </td>
                                                                 <td class="status-td" style="padding-left: 10px; font-size: 14px;">
+                                                                    @if (App\Models\Deal::find($application->deal_id)->assigned_to)
 
                                                                     {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->assigned_to)->name }}
+                                                                    @else
+                                                                    {{__(" ")}}
+                                                                    @endif
 
                                                                 </td>
                                                             </tr>
@@ -251,6 +269,7 @@
                                                                 <td class="status-td" style="padding-left: 10px; font-size: 14px;">
 
                                                                     {{ isset($application->stage_id) && isset($stages[$application->stage_id]) ? $stages[$application->stage_id] : '' }}
+
 
                                                                 </td>
                                                             </tr>

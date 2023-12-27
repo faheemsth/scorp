@@ -219,11 +219,19 @@
 
                             ?>
 
-
+                          <style>
+                            .missedup{
+                                background-color:#e0e0e0 !important;
+                                color:white !important;
+                            }
+                            .missedup::after{
+                                border-left-color: #e0e0e0 !important;
+                            }
+                          </style>
 
                             <a type="button" data-lead-id="{{ $lead->id }}" data-stage-id="{{ $stage->id }}"
-                                class="lead_stage {{ $lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '') }} "
-                                style="font-size:13px;{{ $is_missed == true ? 'background-color:#e0e0e0 !important;color:white !important;' : '' }}"> {{ $stage->name }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
+                                class="lead_stage  {{ $is_missed == true ? 'missedup' : ($lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '')) }}"
+                                style="font-size:13px;"> {{ $stage->name }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
                         @empty
                         @endforelse
                     </div>
