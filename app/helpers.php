@@ -3,6 +3,7 @@
 use App\Models\ActivityLog;
 use App\Models\StageHistory;
 use App\Models\LogActivity;
+use App\Models\Region;
 use App\Models\University;
 use App\Models\User;
 
@@ -55,6 +56,13 @@ if (!function_exists('allUsers')) {
     function allUsers()
     {
        return User::pluck('name', 'id')->toArray();
+    }
+}
+
+if (!function_exists('allRegions')) {
+    function allRegions()
+    {
+       return Region::pluck('name', 'id')->toArray();
     }
 }
 
