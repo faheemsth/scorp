@@ -242,7 +242,9 @@
         <div class="stages my-2  bg-white">
             <h2 class="mb-3">Deal STATUS: <span class="d-inline-block fw-light">{{ 'List' }}</span>
             </h2>
-            <div class="wizard mb-2">
+            <div class="wizard mb-2"  style="background: #EFF3F7;
+            box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+        };">
 
 
                 <?php $done = true; ?>

@@ -1009,8 +1009,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                 $("#mySidenav").css('width', ww + 'px');
                 $("#main").css('margin-right', ww + 'px');
             } else {
-                $("#mySidenav").css('width', '945px');
-                $("#main").css('margin-right', "945px");
+                $("#mySidenav").css('width', '890px');
+                $("#main").css('margin-right', "890px");
             }
 
             $("#modal-discussion-add").attr('data-lead-id', lead_id);
