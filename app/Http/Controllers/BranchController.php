@@ -19,7 +19,7 @@ class BranchController extends Controller
             // }else{
             //     $branches = Branch::where('created_by', '=', \Auth::user()->creatorId())->get();
             // }
-            $branches = Branch::with(['branch_manager','region'])->get();
+            $branches = Branch::with(['manager','region'])->get();
             return view('branch.index', compact('branches'));
         }
         else

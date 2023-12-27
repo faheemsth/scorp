@@ -166,8 +166,8 @@
                             <thead>
                                 <tr>
                                     <th>{{ __('Branch') }}</th>
-                                    {{-- <th>{{ __('Region') }}</th> --}}
-                                    {{-- <th>{{ __('Branch Manager') }}</th> --}}
+                                    <th>{{ __('Region') }}</th>
+                                    <th>{{ __('Branch Manager') }}</th>
                                     <th>{{ __('Google Link') }}</th>
                                     <th>{{ __('Social Media') }}</th>
                                     <th>{{ __('Phone') }}</th>
@@ -180,8 +180,8 @@
                                 @foreach ($branches as $branch)
                                     <tr>
                                         <td>{{ $branch->name }}</td>
-                                        {{-- <td>{{ $branch->region_id }}</td> --}}
-                                        {{-- <td>{{ $branch->branch_manager_id }}</td> --}}
+                                        <td>{{ optional($branch->region)->name }}</td>
+                                        <td>{{ optional($branch->manager)->name  }}</td>
                                         <td>{{ $branch->google_link }}</td>
                                         <td>{{ $branch->social_media_link }}</td>
                                         <td>{{ $branch->phone }}</td>
