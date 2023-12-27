@@ -3621,5 +3621,5 @@ class DealController extends Controller
         }
     }
 
-    
+
 }
