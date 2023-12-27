@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Region;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class RegionController extends Controller
@@ -24,7 +25,8 @@ class RegionController extends Controller
     public function create()
     {
         $regions = Region::all();
-        return view('region.create', compact('regions'));
+        $regionmanager=User::where('type','branch manager')->get();
+        return view('region.create', compact('regions','regionmanager'));
     }
 
     public function save(Request $request)
@@ -43,7 +45,9 @@ class RegionController extends Controller
     {
 
         $regions = Region::find($request->id);
-        return view('region.create', compact('regions'));
+        $regionmanager=User::where('type','branch manager')->get();
+
+        return view('region.create', compact('regions','regionmanager'));
     }
 
     public function delete(Request $request)

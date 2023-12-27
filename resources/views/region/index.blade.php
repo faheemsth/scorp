@@ -394,6 +394,7 @@
                                         <th style="width: 100px !important;">{{ __('Location') }}</th>
 
                                         <th>{{ __('Phone') }}</th>
+                                        <th>{{ __('Regions Manager') }}</th>
 
                                         <th>{{ __('Email') }}</th>
 
@@ -411,6 +412,7 @@
                                                 <td>{{ $deal->name }}</td>
                                                 <td>{{ $deal->location }}</td>
                                                 <td>{{ $deal->phone }}</td>
+                                                <td>{{ optional($deal->manager)->name }}</td>
                                                 <td>{{ $deal->email }}</td>
                                                 <td class="Action">
                                                     <div class="dropdown">

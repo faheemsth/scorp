@@ -64,7 +64,7 @@
                                     <tbody>
                                         <tr>
                                             <td class=""
-                                                style="width: 100px; text-align: right; font-size: 13px;">
+                                                style="width: 150px;  font-size: 13px;">
                                                 {{ __('Name') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
@@ -75,7 +75,7 @@
 
                                         <tr>
                                             <td class=""
-                                                style="width: 100px; text-align: right; font-size: 13px;">
+                                                style="width: 150px;  font-size: 13px;">
                                                 {{ __('Location') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
@@ -87,7 +87,7 @@
 
                                         <tr>
                                             <td class=""
-                                                style="width: 100px; text-align: right; font-size: 13px;">
+                                                style="width: 150px;  font-size: 13px;">
                                                 {{ __('Phone') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
@@ -98,7 +98,7 @@
 
                                         <tr>
                                             <td class=""
-                                                style="width: 100px; text-align: right; font-size: 13px;">
+                                                style="width: 150px;  font-size: 13px;">
                                                 {{ __('Email') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
@@ -106,7 +106,25 @@
                                                     value="{{ optional($regions)->email ?? '' }}" name="email">
                                             </td>
                                         </tr>
-
+                                        <tr>
+                                            <td style="width: 150px;  font-size: 13px;">
+                                                {{ __('Region Manager') }}
+                                            </td>
+                                            <td style="display: flex;justify-content: end;">
+                                                <select name="region_manager_id" id="" class="form-control" style="padding-left: 10px; font-size: 13px;width: 94%;">
+                                                    <option value="">Select Region</option>
+                                                    @if(!empty($regionmanager))
+                                                        @foreach ($regionmanager as $regionmanage)
+                                                            @if(!empty($regions->region_manager_id) && $regions->region_manager_id == $regionmanage->id)
+                                                                <option value="{{$regionmanage->id }}" selected>{{$regionmanage->name }}</option>
+                                                            @else
+                                                                <option value="{{$regionmanage->id }}">{{$regionmanage->name }}</option>
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+                                                </select>
+                                            </td>
+                                        </tr>
 
                                     </tbody>
                                 </table>

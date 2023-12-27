@@ -15,6 +15,7 @@ class Invoice extends Model
         'status',
         'category_id',
         'created_by',
+        'user_name'
     ];
 
     public static $statues = [

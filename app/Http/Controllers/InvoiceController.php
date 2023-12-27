@@ -117,7 +117,7 @@ class InvoiceController extends Controller
         {
             $validator = \Validator::make(
                 $request->all(), [
-                                   'customer_id' => 'required',
+                                //    'customer_id' => 'required',
                                    'issue_date' => 'required',
                                    'due_date' => 'required',
                                    'category_id' => 'required',
@@ -135,6 +135,7 @@ class InvoiceController extends Controller
             $invoice                 = new Invoice();
             $invoice->invoice_id     = $this->invoiceNumber();
             $invoice->customer_id    = $request->customer_id;
+            $invoice->user_name    = $request->user_name;
             $invoice->status         = 0;
             $invoice->issue_date     = $request->issue_date;
             $invoice->due_date       = $request->due_date;
