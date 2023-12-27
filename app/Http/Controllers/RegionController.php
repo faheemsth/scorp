@@ -25,7 +25,7 @@ class RegionController extends Controller
     public function create()
     {
         $regions = Region::all();
-        $regionmanager=User::where('type','branch manager')->get();
+        $regionmanager=User::where('type','Region Manager')->get();
         return view('region.create', compact('regions','regionmanager'));
     }
 

@@ -87,7 +87,7 @@ if (!function_exists('allUniversities')) {
 if (!function_exists('allPermittedCompanies')) {
     function allPermittedCompanies()
     {
-       return CompanyPermission::where('user_id', \Auth::user()->id)->pluck('permitted_company_id')->toArray();
+       return CompanyPermission::where('user_id', \Auth::user()->id)->where('active', 'true')->pluck('permitted_company_id')->toArray();
     }
 }
 

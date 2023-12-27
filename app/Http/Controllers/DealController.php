@@ -2645,26 +2645,29 @@ class DealController extends Controller
 
         if (\Auth::user()->can('manage task') || \Auth::user()->type == 'super admin') {
             $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to');
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
+            $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
 
+            // if(\Auth::user()->type == 'super admin'){
 
-            if(\Auth::user()->type == 'super admin'){
-
-            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
-                $permittedCompanies = allPermittedCompanies();
-                $tasks->whereIn('deal_tasks.brand_id', $permittedCompanies);
-                $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
-            }else if(\Auth::user()->type == 'Regional Manager'){
-                $regions = Region::where('region_manager_id', \Auth::user()->id)->pluck('id')->toArray();
-                $branches = Branch::whereIn('region_id', $regions)->pluck('id')->toArray();
-                $tasks->whereIn('deal_tasks.branch_id', $branches);
-                $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
-            }else if(\Auth::user()->type == 'Branch Manager') {
-                $branches = Branch::whereIn('branch_manager_id', \Auth::user()->id)->pluck('id')->toArray();
-                $tasks->whereIn('deal_tasks.branch_id', $branches);
-                $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
-            }else{
-                $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
-            }
+            // }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            //     $permittedCompanies = allPermittedCompanies();
+            //     $tasks->whereIn('deal_tasks.brand_id', $permittedCompanies);
+            //     $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
+            // }else if(\Auth::user()->type == 'Regional Manager'){
+            //     $regions = Region::where('region_manager_id', \Auth::user()->id)->pluck('id')->toArray();
+            //     $branches = Branch::whereIn('region_id', $regions)->pluck('id')->toArray();
+            //     $tasks->whereIn('deal_tasks.branch_id', $branches);
+            //     $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
+            // }else if(\Auth::user()->type == 'Branch Manager') {
+            //     $branches = Branch::whereIn('branch_manager_id', \Auth::user()->id)->pluck('id')->toArray();
+            //     $tasks->whereIn('deal_tasks.branch_id', $branches);
+            //     $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
+            // }else{
+            //     $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
+            // }
 
 
 
@@ -3454,8 +3457,10 @@ class DealController extends Controller
     public function getCompanyEmployees(){
         $id = $_GET['id'];
 
-        $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
-        $branches = Branch::where('created_by',$id)->pluck('name', 'id')->toArray();
+        $brand = User::where('id', $id)->first();
+
+        $employees =  User::where('brand_id', $id)->pluck('name', 'id')->toArray();
+        $branches = Branch::whereIn('id', [$brand->branch_id])->pluck('name', 'id')->toArray();
 
         $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to" required> <option value="">Assign to</option> ';
         foreach ($employees as $key => $user) {
