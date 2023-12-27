@@ -592,16 +592,6 @@ if (isset($lead->is_active) && $lead->is_active) {
                         </div>
 
                     </div>
-<<<<<<< HEAD
-                    <br>
-
-                    <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="Update">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
-=======
 
                 </div>
                 <div class="modal-footer">
@@ -609,7 +599,6 @@ if (isset($lead->is_active) && $lead->is_active) {
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </form>
->>>>>>> 2a6275bf56e727e2647c19cc0c951413b1c7ea37
         </div>
     </div>
 
@@ -1031,8 +1020,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                 $("#mySidenav").css('width', ww + 'px');
                 $("#main").css('margin-right', ww + 'px');
             } else {
-                $("#mySidenav").css('width', '890px');
-                $("#main").css('margin-right', "890px");
+                $("#mySidenav").css('width', '945px');
+                $("#main").css('margin-right', "945px");
             }
 
             $("#modal-discussion-add").attr('data-lead-id', lead_id);
