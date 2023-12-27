@@ -60,6 +60,7 @@
                         Auth::user()->type == 'team' ||
                         Gate::check('show hrm dashboard') ||
                         Gate::check('show project dashboard') ||
+                        Gate::check('show crm dashboard') ||
                         Gate::check('show account dashboard'))
                     <li
                         class="nav-item {{ Request::segment(1) == null ||

@@ -314,14 +314,11 @@
                                             <input type="checkbox" class="main-check">
                                         </th>
                                         <th>{{ __('Name') }}</th>
-
+                                        <th>{{ __('Email') }}</th>
+                                        <th>{{ __('Phone') }}</th>
                                         <th>{{ __('Location') }}</th>
 
-                                        <th>{{ __('Phone') }}</th>
                                         <th>{{ __('Regions Manager') }}</th>
-
-                                        <th>{{ __('Email') }}</th>
-
                                         {{-- <th width="300px" class="d-none">{{ __('Action') }}</th> --}}
                                     </tr>
                                 </thead>
@@ -334,10 +331,11 @@
                                                         class="sub-check">
                                                 </td>
                                                 <td>{{ $deal->name }}</td>
-                                                <td>{{ $deal->location }}</td>
-                                                <td>{{ $deal->phone }}</td>
-                                                <td>{{ optional($deal->manager)->name }}</td>
                                                 <td>{{ $deal->email }}</td>
+                                                <td>{{ $deal->phone }}</td>
+                                                <td>{{ $deal->location }}</td>
+                                                <td>{{ optional($deal->manager)->name }}</td>
+                                               
                                                 {{-- <td class="Action d-none">
                                                     <div class="dropdown">
                                                         <button class="btn bg-transparents" type="button"
