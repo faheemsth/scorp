@@ -86,7 +86,9 @@
                 <div class="stages mt-2 bg-white">
                     <h2 class="mb-3">Application STATUS: <span class="d-inline-block fw-light">{{ $stages[$application->stage_id] }}</span>
                     </h2>
-                    <div class="wizard ">
+                    <div class="wizard mb-2" style="    background: #EFF3F7;
+                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+                };">
                         <?php $done = true; ?>
                         @forelse ($stages as $key => $stage)
                         <?php
@@ -95,7 +97,7 @@
                         }
 
                         $is_missed = false;
-                            
+
                         if (!empty($stage_histories) && !in_array($key, $stage_histories) && $key <= max($stage_histories)) {
                             $is_missed = true;
                         }

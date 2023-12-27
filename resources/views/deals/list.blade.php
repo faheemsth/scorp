@@ -399,8 +399,8 @@
                                 <div class="col-md-4"> <label for="">Brands</label>
                                     <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple style="width: 95%;">
                                         <option value="">Select Brand</option>
-                                        @foreach ($brands as $brand)
-                                        <option value="{{ $brand->id }}" <?= isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' ?> class="">{{ $brand->name }}</option>
+                                        @foreach ($brands as $key => $brand)
+                                        <option value="{{ $key }}" <?= isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' ?> class="">{{ $brand }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -514,7 +514,7 @@
 
                                         @if($assigned_to != 0)
                                         <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{$deal->assigned_to}}+'/user_detail')">
-                                            {{ $assigned_to }}
+                                            {{$users[$deal->assigned_to] }}
                                         </span>
                                         @endif
 

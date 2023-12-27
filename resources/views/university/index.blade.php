@@ -242,7 +242,7 @@
                                     @endif
 
                                     @if (\Auth::user()->type != 'super admin')
-                                        <th scope="col">{{ __('Action') }}</th>
+                                        <th scope="col" class="d-none">{{ __('Action') }}</th>
                                     @endif
 
 
@@ -275,7 +275,7 @@
                                         @endif
 
                                         @if (\Auth::user()->type != 'super admin')
-                                            <td class="action ">
+                                            <td class="action d-none">
                                                 @can('edit university')
                                                     <div class="action-btn bg-info ms-2">
                                                         <a href="#"

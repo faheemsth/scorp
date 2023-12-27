@@ -63,7 +63,7 @@
 
                         @can('create branch')
                         <!-- Modified the opening tag to match the closing tag -->
-                        <a href="#" data-size="md" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Branch')}}" class="btn px-2 btn-dark">
+                        <a href="#" data-size="lg" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Branch')}}" class="btn px-2 btn-dark">
                             <i class="ti ti-plus"></i>
                         </a>
                         @endcan
@@ -168,11 +168,10 @@
                                     <th>{{ __('Branch') }}</th>
                                     <th>{{ __('Region') }}</th>
                                     <th>{{ __('Branch Manager') }}</th>
-                                    <th>{{ __('Google Link') }}</th>
-                                    <th>{{ __('Social Media') }}</th>
                                     <th>{{ __('Phone') }}</th>
                                     <th>{{ __('Email') }}</th>
-
+                                    <th>{{ __('Google Link') }}</th>
+                                    <th>{{ __('Social Media') }}</th>
                                     <th width="200px">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
@@ -180,23 +179,25 @@
                                 @foreach ($branches as $branch)
                                     <tr>
                                         <td>{{ $branch->name }}</td>
-                                        <td>{{ optional($branch->region)->name }}</td>
-                                        <td>{{ optional($branch->manager)->name  }}</td>
-                                        <td>{{ $branch->google_link }}</td>
-                                        <td>{{ $branch->social_media_link }}</td>
+                                        <td>{{ !empty($branch->region_id) ? $regions[$branch->region_id] : '' }}</td>
+                                        <td>{{ !empty($branch->branch_manager_id) ? $users[$branch->branch_manager_id] : '' }}</td>
                                         <td>{{ $branch->phone }}</td>
                                         <td>{{ $branch->email }}</td>
+                                        <td>{{ $branch->google_link }}</td>
+                                        <td>{{ $branch->social_media_link }}</td>
+                                        
                                         <td class="Action text-end">
                                             <span>
                                                 @can('edit branch')
                                                     <div class=" mx-2 d-flex justify-content-center-center align-items-center-center">
 
-                                                        <a href="#" class="btn px-2 py-2 btn-dark mx-1  bs-pass-para"
+                                                        <a href="#" class="btn px-2 py-2 btn-dark mx-1"
+                                                            data-size="lg"
                                                             data-url="{{ URL::to('branch/' . $branch->id . '/edit') }}"
                                                             data-ajax-popup="true" data-title="{{ __('Edit Branch') }}"
                                                             data-bs-toggle="tooltip" title="{{ __('Edit') }}"
                                                             data-original-title="{{ __('Edit') }}"><i
-                                                                class="ti ti-pencil text-white"></i></a>
+                                                            class="ti ti-pencil text-white"></i></a>
 
                                                 @endcan
                                                 @can('delete branch')

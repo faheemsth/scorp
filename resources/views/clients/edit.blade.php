@@ -1,6 +1,6 @@
 
 {{ Form::model($client, array('route' => array('clients.update', $client->id), 'method' => 'PUT')) }}
-<div class="modal-body">
+<div class="modal-body" style="min-height: 50vh;">
     <div class="row">
         <div class="form-group">
             {{ Form::label('name', __('Name'),['class'=>'form-label']) }}

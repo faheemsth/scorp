@@ -1,6 +1,8 @@
 {{Form::open(array('url'=>route('user.employee.store'),'method'=>'post'))}}
 <div class="modal-body">
+
     <div class="row">
+
         <div class="col-md-6">
             <div class="form-group">
                 {{Form::label('name',__('Name'),['class'=>'form-label']) }}

@@ -145,6 +145,9 @@
                                 id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="ti ti-filter" style="font-size:18px"></i>
                             </button>
+                            <a href="#" data-size="lg" data-url="{{ route('organization.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Organization') }}" class="btn p-2 btn-dark">
+                                <i class="ti ti-plus"></i>
+                            </a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a class="dropdown-item delete-bulk-organizations" href="javascript:void(0)">Delete</a></li>
                                 <li id="actions_div" style="display:none;font-size:14px;color:#3a3b45;"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
@@ -152,7 +155,7 @@
                             </ul>
                         </div>
                     </div>
-                
+
 
 
                 <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>

@@ -1,5 +1,5 @@
 {{ Form::open(array('url' => 'clients')) }}
-<div class="modal-body">
+<div class="modal-body" style="min-height: 65vh;">
     <div class="row">
         <div class="form-group">
             {{ Form::label('name', __('Name'),['class'=>'form-label']) }}
@@ -34,8 +34,8 @@
 </div>
 
 <div class="modal-footer">
-    
-    <input type="button" value="{{__('Cancel')}}" class="btn  btn-danger" data-bs-dismiss="modal"> 
+
+    <input type="button" value="{{__('Cancel')}}" class="btn  btn-danger" data-bs-dismiss="modal">
     <input type="submit" value="{{__('Create')}}" class="btn  btn-dark">
 </div>
 

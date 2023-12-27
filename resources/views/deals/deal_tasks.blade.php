@@ -1,13 +1,7 @@
 @extends('layouts.admin')
-@if(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
-    @php
-    $com_permissions = [];
-    $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
-    @endphp
-@endif
 
 <?php
-
+$brands = FiltersBrands();
 $setting = \App\Models\Utility::colorset();
 ?>
 
@@ -93,40 +87,23 @@ $setting = \App\Models\Utility::colorset();
                 <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                     <form action="/deals/get-user-tasks" method="GET" class="">
 
+                       
                         <div class="row my-3">
-                            <div class="col-md-4 mt-2">
-                                <label for="">Due Date</label>
-                                <input type="date" class="form form-control" name="due_date" value="<?= isset($_GET['due_date']) ? $_GET['due_date'] : '' ?>" style="width: 95%; border-color:#aaa">
-                            </div>
-
-
-                            <div class="col-md-4"> <label for="">Subject</label>
-                                <select class="form form-control select2" id="choices-multiple110" name="subjects[]" multiple style="width: 95%;">
-                                    <option value="">Select Subject</option>
-                                    @foreach ($tasks_for_filter as $filter_task)
-                                    <option value="{{ $filter_task->name }}" <?= isset($_GET['subjects']) && in_array($filter_task->name, $_GET['subjects']) ? 'selected' : '' ?> class="">{{ $filter_task->name }}</option>
+                            <div class="col-md-4"> <label for="">Brands</label>
+                                <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
+                                    <option value="">Select Brand</option>
+                                    @foreach ($brands as $key => $brand)
+                                      <option value="{{ $key }}" {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }}>{{ $brand }}</option>
                                     @endforeach
                                 </select>
                             </div>
 
-                            <div class="col-md-4"> <label for="">Brands</label>
-                                <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
-                                    <option value="">Select Brand</option>
-
-                                    @foreach ($brands as $key => $brand)
-                                        @if (\Auth::user()->type == 'super admin')
-                                            <option value="{{ $key }}" {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }}>{{ $brand }}</option>
-                                        @elseif (\Auth::user()->type == 'company' && $key == \Auth::user()->id)
-                                            <option {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }} value="{{ $key }}" class="">{{ $brand }}</option>
-                                        @elseif (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                            @foreach($com_permissions as $com_permission)
-                                                @if($key == $com_permission->permitted_company_id)
-                                                    <option {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }} value="{{ $key }}" class="">{{ $brand }}</option>
-                                                @endif
-                                            @endforeach
-                                        @endif
+                            <div class="col-md-4"> <label for="">Subject</label>
+                                <select class="form form-control select2" id="choices-multiple110" name="subjects[]" multiple style="width: 95%;">
+                                    <option value="">Select Subject</option>
+                                    @foreach ($tasks as $filter_task)
+                                    <option value="{{ $filter_task->name }}" <?= isset($_GET['subjects']) && in_array($filter_task->name, $_GET['subjects']) ? 'selected' : '' ?> class="">{{ $filter_task->name }}</option>
                                     @endforeach
-
                                 </select>
                             </div>
 
@@ -139,6 +116,7 @@ $setting = \App\Models\Utility::colorset();
                                 </select>
                             </div>
 
+
                             <div class="col-md-4">
                                 <label for="">Status</label>
                                 <select class="form form-control select2" id="status444" name="status" multiple style="width: 95%;">
@@ -146,6 +124,11 @@ $setting = \App\Models\Utility::colorset();
                                     <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Completed</option>
                                     <option value="0" <?= isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : '' ?>>On Going</option>
                                 </select>
+                            </div>
+
+                            <div class="col-md-4 mt-2">
+                                <label for="">Due Date</label>
+                                <input type="date" class="form form-control" name="due_date" value="<?= isset($_GET['due_date']) ? $_GET['due_date'] : '' ?>" style="width: 95%; border-color:#aaa">
                             </div>
 
                             <div class="col-md-4 mt-4 pt-2">
