@@ -1,10 +1,13 @@
 <?php
 
 use App\Models\ActivityLog;
+use App\Models\Branch;
 use App\Models\StageHistory;
 use App\Models\LogActivity;
+use App\Models\Region;
 use App\Models\University;
 use App\Models\User;
+use App\Models\CompanyPermission;
 
 if (!function_exists('countries')) {
     function countries()
@@ -58,6 +61,13 @@ if (!function_exists('allUsers')) {
     }
 }
 
+if (!function_exists('allRegions')) {
+    function allRegions()
+    {
+       return Region::pluck('name', 'id')->toArray();
+    }
+}
+
 if (!function_exists('companiesEmployees')) {
     function companiesEmployees($company_id)
     {
@@ -70,6 +80,14 @@ if (!function_exists('allUniversities')) {
     function allUniversities()
     {
        return University::pluck('name', 'id')->toArray();
+    }
+}
+
+
+if (!function_exists('allPermittedCompanies')) {
+    function allPermittedCompanies()
+    {
+       return CompanyPermission::where('user_id', \Auth::user()->id)->where('active', 'true')->pluck('permitted_company_id')->toArray();
     }
 }
 
@@ -133,5 +151,37 @@ if (!function_exists('formatPhoneNumber')) {
         return $formattedPhoneNumber;
     }
 }
+
+
+if (!function_exists('FiltersBrands')) {
+    function FiltersBrands()
+    {
+        $brands = User::where('type', 'company');
+        $user_brand = !empty(\Auth::user()->brand_id) ? \Auth::user()->brand_id : 0;
+
+        if(\Auth::user()->type == 'super admin'){
+
+        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            $permittedCompanies = allPermittedCompanies();
+            $brands->whereIn('id', $permittedCompanies);
+            $brands->orWhere('id', $user_brand);
+        }else if(\Auth::user()->type == 'Regional Manager'){
+            $regions = Region::where('region_manager_id', \Auth::user()->id)->pluck('id')->toArray();
+            $branches = Branch::whereIn('region_id', $regions)->pluck('id')->toArray();
+            $brands->whereIn('branch_id', $branches);
+            $brands->orWhere('id', $user_brand);
+        }else if(\Auth::user()->type == 'Branch Manager') {
+            $branches = Branch::whereIn('branch_manager_id', \Auth::user()->id)->pluck('id')->toArray();
+            $brands->whereIn('branch_id', $branches);
+            $brands->orWhere('id', $user_brand);
+        }else{
+            $brands->where('id', $user_brand);
+        }
+
+       return $brands->pluck('name', 'id')->toArray();
+    }
+}
+
+
 
 ?>

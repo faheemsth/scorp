@@ -346,8 +346,8 @@
                                             <td class="" style="padding-left: 10px;">
                                                 <select name="lead_tags_list" id="choice-6" class="form form-control select2">
                                                     <option value=""></option>
-                                                    <option value="tag1">tag1</option>
-                                                    <option value="tag2">tag2</option>
+                                                    <option value="Public">Public</option>
+                                                    <option value="Private">Private</option>
                                                 </select>
                                             </td>
                                         </tr>

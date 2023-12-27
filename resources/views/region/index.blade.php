@@ -225,79 +225,6 @@
 @endsection
 
 @section('content')
-    {{-- @if ($pipeline) --}}
-    @if (\Auth::user()->type == 'super admin')
-        <div class="row d-none">
-            <div class="col-sm-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col-auto mb-3 mb-sm-0">
-                                <small class="text-muted">{{ __('Total Deals') }}</small>
-                                <h3 class="m-0">{{ count($regions) }}</h3>
-                            </div>
-                            <div class="col-auto">
-                                <div class="theme-avtar bg-info">
-                                    <i class="ti ti-layers-difference"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col-auto mb-3 mb-sm-0">
-                                <small class="text-muted">{{ __('This Month Total Deals') }}</small>
-                                <h3 class="m-0">{{ 0 }}</h3>
-                            </div>
-                            <div class="col-auto">
-                                <div class="theme-avtar bg-dark">
-                                    <i class="ti ti-layers-difference"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col-auto mb-3 mb-sm-0">
-                                <small class="text-muted">{{ __('This Week Total Deals') }}</small>
-                                <h3 class="m-0">{{ 0 }}</h3>
-                            </div>
-                            <div class="col-auto">
-                                <div class="theme-avtar bg-dark">
-                                    <i class="ti ti-layers-difference"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col-auto mb-3 mb-sm-0">
-                                <small class="text-muted">{{ __('Last 30 Days Total Deals') }}</small>
-                                <h3 class="m-0">{{ 0 }}</h3>
-                            </div>
-                            <div class="col-auto">
-                                <div class="theme-avtar bg-dark">
-                                    <i class="ti ti-layers-difference"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif
 
     <style>
         .form-controls,
@@ -324,11 +251,11 @@
                     {{-- topbar --}}
                     <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                         <div class="col-2">
-                            <p class="mb-0 pb-0 ps-1">ADMISSIONS</p>
+                            <p class="mb-0 pb-0 ps-1">Regions</p>
                             <div class="dropdown">
                                 <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    ALL ADMISSIONS
+                                    ALL Regions
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
@@ -344,9 +271,6 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
-                                    <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
-                                            <li><a class="dropdown-item" href="#">Brand Change</a></li>
-                                            <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
                                 </ul>
                             </div>
                         </div>
@@ -382,22 +306,20 @@
                         {{-- Filters --}}
 
 
-                        <div class="card-body table-responsive leads-list-div">
-                            <table class="table" data-resizable-columns-id="lead-table">
+                        <div class="card-body table-responsive">
+                            <table class="table">
                                 <thead>
                                     <tr>
                                         <th style="width: 50px !important;">
                                             <input type="checkbox" class="main-check">
                                         </th>
                                         <th>{{ __('Name') }}</th>
-
-                                        <th style="width: 100px !important;">{{ __('Location') }}</th>
-
-                                        <th>{{ __('Phone') }}</th>
-
                                         <th>{{ __('Email') }}</th>
+                                        <th>{{ __('Phone') }}</th>
+                                        <th>{{ __('Location') }}</th>
 
-                                        <th width="300px" class="d-none">{{ __('Action') }}</th>
+                                        <th>{{ __('Regions Manager') }}</th>
+                                        {{-- <th width="300px" class="d-none">{{ __('Action') }}</th> --}}
                                     </tr>
                                 </thead>
                                 <tbody id="deals_tbody">
@@ -409,10 +331,12 @@
                                                         class="sub-check">
                                                 </td>
                                                 <td>{{ $deal->name }}</td>
-                                                <td>{{ $deal->location }}</td>
-                                                <td>{{ $deal->phone }}</td>
                                                 <td>{{ $deal->email }}</td>
-                                                <td class="Action">
+                                                <td>{{ $deal->phone }}</td>
+                                                <td>{{ $deal->location }}</td>
+                                                <td>{{ optional($deal->manager)->name }}</td>
+                                               
+                                                {{-- <td class="Action d-none">
                                                     <div class="dropdown">
                                                         <button class="btn bg-transparents" type="button"
                                                             id="dropdownMenuButton1" data-bs-toggle="dropdown"
@@ -436,7 +360,7 @@
                                                             </li>
                                                             @endcan
                                                         </ul>
-                                                </td>
+                                                </td> --}}
                                             </tr>
                                         @endforeach
                                     @else
