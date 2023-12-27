@@ -269,6 +269,18 @@ if (isset($lead->is_active) && $lead->is_active) {
                             <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                             <form action="/leads/list" method="GET" class="">
                                 <div class="row my-3">
+                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                    <div class="col-md-4 mt-1"> <label for="">Brands</label>
+                                        <select class="form form-control select2" id="choices-multiple555"
+                                            name="created_by[]" multiple style="width: 95%;">
+                                            <option value="">Select Brand</option>
+                                            @foreach ($brands as $key => $brand)
+                                            <option value="{{ $key }}" {{ isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' }}>{{ $brand }}</option>
+                                          @endforeach
+                                        </select>
+                                    </div>
+                                    @endif 
+
                                     <div class="col-md-4"> <label for="">Name</label>
                                         <select class="form form-control select2" id="choices-multiple110" name="name[]"
                                             multiple style="width: 95%;">
@@ -281,31 +293,18 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         </select>
                                     </div>
 
-                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
 
-                                        <div class="col-md-4 mt-1"> <label for="">Brands</label>
-                                            <select class="form form-control select2" id="choices-multiple555"
-                                                name="created_by[]" multiple style="width: 95%;">
-                                                <option value="">Select Brand</option>
-
-                                                @foreach ($brands as $brand)
-                                                    @if (\Auth::user()->type == 'super admin')
-                                                        <option value="{{ $brand->id }}" {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }}>{{ $brand->name }}</option>
-                                                    @elseif (\Auth::user()->type == 'company' && $brand->id == \Auth::user()->id)
-                                                        <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
-                                                    @elseif (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                                        @foreach($com_permissions as $com_permission)
-                                                            @if($brand->id == $com_permission->permitted_company_id)
-                                                                <option {{ isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' }} value="{{ $brand->id }}" class="">{{ $brand->name }}</option>
-                                                            @endif
-                                                        @endforeach
-                                                    @endif
-                                                @endforeach
-
-
-                                            </select>
-                                        </div>
-                                        @endif
+                                    <div class="col-md-4"> <label for="">Assigned To</label>
+                                        <select name="users[]" id="choices-multiple333" class="form form-control select2"
+                                            multiple style="width: 95%;">
+                                            <option value="">Select user</option>
+                                            @foreach ($companies as $key => $company)
+                                                <option value="{{ $key }}"
+                                                    <?= isset($_GET['users']) && in_array($key, $_GET['users']) ? 'selected' : '' ?>
+                                                    class="">{{ $company }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
 
                                     <div class="col-md-4"> <label for="">Stage</label>
                                         <select class="form form-control select2" id="choices-multiple444"
@@ -319,17 +318,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         </select>
                                     </div>
 
-                                    <div class="col-md-4"> <label for="">Assigned To</label>
-                                        <select name="users[]" id="choices-multiple333" class="form form-control select2"
-                                            multiple style="width: 95%;">
-                                            <option value="">Select user</option>
-                                            @foreach ($companies as $key => $company)
-                                                <option value="{{ $key }}"
-                                                    <?= isset($_GET['users']) && in_array($key, $_GET['users']) ? 'selected' : '' ?>
-                                                    class="">{{ $company }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+
                                     <style>
                                         .form-control:focus {
                                             border: 1px solid rgb(209, 209, 209) !important;
@@ -348,7 +337,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         <a href="/leads/list" class="btn form-btn bg-dark" style="color:white;">Reset</a>
                                     </div>
                                 </div>
-                                <div class="row my-4">
+                                <div class="row my-4 d-none">
                                     <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
                                         <?php

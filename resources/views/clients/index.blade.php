@@ -108,7 +108,7 @@ $(document).on('change', '.sub-check', function() {
             <div class="filter-data px-3" id="filter-show"
                 <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                 <form action="/clients" method="GET" class="">
-                    <div class="row my-3">
+                    <div class="row">
                         <div class="col-md-4 mt-2">
                             <label for="">Name</label>
                             <input type="text" class="form form-control" placeholder="Search Name" name="name"
@@ -140,7 +140,7 @@ $(document).on('change', '.sub-check', function() {
                             <a href="/clients" class="btn bg-dark" style="color:white;">Reset</a>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row d-none">
                         <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
                             <?php
