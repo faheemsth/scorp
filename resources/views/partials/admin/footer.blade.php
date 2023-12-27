@@ -136,8 +136,8 @@
             $("#mySidenav").css('width', ww + 'px');
             $("#main").css('margin-right', ww + 'px');
         } else {
-            $("#mySidenav").css('width', '890px');
-            $("#main").css('margin-right', "890px");
+            $("#mySidenav").css('width', '943px');
+            $("#main").css('margin-right', "943px");
         }
 
         $(".block-screen").css('display', 'block');

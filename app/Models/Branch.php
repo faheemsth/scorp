@@ -3,21 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\Region;
 
 class Branch extends Model
 {
     protected $fillable = [
-        'name','created_by'
+        'name', 'created_by', 'branch_manager_id', 'region_id'
     ];
 
-    public function branch_manager()
+    public function manager()
     {
-        return $this->hasMany('App\Models\User', 'id');
+        return $this->belongsTo(User::class, 'branch_manager_id');
     }
 
     public function region()
     {
-        return $this->hasMany('App\Models\Region', 'id');
+        return $this->belongsTo(Region::class, 'region_id');
     }
 }
-?>

@@ -32,6 +32,8 @@ use App\Models\DealApplication;
 use App\Models\ClientPermission;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use App\Models\CompanyPermission;
+use App\Models\Region;
 
 class DealController extends Controller
 {
@@ -270,31 +272,11 @@ class DealController extends Controller
                     $deals_query->whereDate('deals.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
                 }
             }
-            if(strtolower(\Auth::user()->type) == 'super admin'){
 
-            }else if (\Auth::user()->type == 'company') {
-                $users = $this->companyEmployees(\auth::id());
-                $users[$usr->id] = $usr->name;
-                $companies = $users;
-                $deal_created_by = array_keys($users);
-
-                $deals_query->whereIn('deals.created_by', $deal_created_by);
-            } else if (strtolower(\Auth::user()->type) == 'project manager') {
-                $users = $this->companyEmployees($usr->created_by);
-                $users[$usr->id] = $usr->name;
-                $users[$usr->created_by] = $usr->created_by;
-                $companies = $users;
-                $deal_created_by = array_keys($users);
-                $deals_query->whereIn('deals.created_by', $deal_created_by);
-            } else if (strtolower(\auth::user()->type) == 'marketing officer') {
-                $branch_admission_officer = User::where(['type' => 'Admission Officer', 'branch_id' => $usr->branch_id])->pluck('id', 'id')->toArray();
-                $branch_admission_officer[] = $usr->id;
-                $deals_query->whereIn('deals.created_by', $branch_admission_officer);
-                $companies = User::where('id', $usr->id)->get()->pluck('name', 'id');
-            } else {
-                $deals_query->where('assigned_to', \Auth::user()->id);
-            }
-
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $deals_query->whereIn('brand_id', $brand_ids);
+            $deals_query->orWhere('assigned_to', \Auth::user()->id);
 
             //if list global search
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
@@ -311,23 +293,10 @@ class DealController extends Controller
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
-            $brands = User::where('type', 'company')->get();
-            $users = User::select(['id', 'name'])->get()->pluck('name', 'id')->toArray();
+            $brands = $companies;
+            $users = allUsers();
             $sources = Source::get()->pluck('name', 'id')->toArray();
-            $months = [
-                'JAN' => 'January',
-                'FEB' => 'February',
-                'MAR' => 'March',
-                'APR' => 'April',
-                'MAY' => 'May',
-                'JUN' => 'June',
-                'JUL' => 'July',
-                'AUG' => 'August',
-                'SEP' => 'September',
-                'OCT' => 'October',
-                'NOV' => 'November',
-                'DEC' => 'December'
-            ];
+            $months = months();
             $currentYear = date('Y');
             $years = [];
             for ($i = 0; $i < 5; $i++) {
@@ -338,19 +307,16 @@ class DealController extends Controller
 
             $clients = array();
             $branches = array();
-
+            $branches = Branch::get()->pluck('name', 'id')->toArray();
             if (\Auth::user()->type == 'super admin') {
-                $branches = Branch::get()->pluck('name', 'id')->toArray();
                 $clients      = User::where('type', 'client')->get()->pluck('name', 'id');
             } else {
-                $branches = Branch::where('created_at',  \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
                 $clients      = User::where('created_by', '=', \Auth::user()->ownerId())->where('type', 'client')->get()->pluck('name', 'id');
             }
 
             $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
             $pipelines = Pipeline::get()->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
-            $users = User::where('type', 'employee')->get()->pluck('name', 'id');
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('deals.deals_list_ajax', compact('deals','pipelines','users','stages','branches','universities', 'organizations', 'stages', 'users', 'total_records', 'sources'))->render();
@@ -2680,23 +2646,29 @@ class DealController extends Controller
 
         if (\Auth::user()->can('manage task') || \Auth::user()->type == 'super admin') {
             $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to');
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
+            $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
 
+            // if(\Auth::user()->type == 'super admin'){
 
-            if (\Auth::user()->type == 'super admin') {
-            } elseif(strtolower(\Auth::user()->type) == 'project manager'){
-                $all_created_emp = User::where(['created_by' => \Auth::user()->created_by, 'type' => 'employee'])->get()->pluck('id', 'id')->toArray();
-                $all_created_emp[] = \Auth::user()->id;
-                $all_created_emp[] = \Auth::user()->created_by;
-                $tasks->whereIn('assigned_to', $all_created_emp);
-            } elseif (\Auth::user()->can('create task')) {
-                //fetch all created employees
-                $all_created_emp = User::where(['created_by' => \Auth::user()->id, 'type' => 'employee'])->get()->pluck('id', 'id')->toArray();
-                $all_created_emp[] = \Auth::user()->id;
-                $tasks->whereIn('assigned_to', $all_created_emp);
-            } else {
-                $tasks->where('assigned_to', \Auth::user()->id);
-                $tasks->orWhere('assigned_to', \Auth::user()->created_by);
-            }
+            // }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            //     $permittedCompanies = allPermittedCompanies();
+            //     $tasks->whereIn('deal_tasks.brand_id', $permittedCompanies);
+            //     $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
+            // }else if(\Auth::user()->type == 'Regional Manager'){
+            //     $regions = Region::where('region_manager_id', \Auth::user()->id)->pluck('id')->toArray();
+            //     $branches = Branch::whereIn('region_id', $regions)->pluck('id')->toArray();
+            //     $tasks->whereIn('deal_tasks.branch_id', $branches);
+            //     $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
+            // }else if(\Auth::user()->type == 'Branch Manager') {
+            //     $branches = Branch::whereIn('branch_manager_id', \Auth::user()->id)->pluck('id')->toArray();
+            //     $tasks->whereIn('deal_tasks.branch_id', $branches);
+            //     $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
+            // }else{
+            //     $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
+            // }
 
 
 
@@ -2731,8 +2703,6 @@ class DealController extends Controller
             }
 
 
-
-            $tasks_for_filter = $tasks->get();
             $total_records = $tasks->count();
 
             $tasks = $tasks->orderBy('created_at', 'DESC')->skip($start)->take($num_results_on_page)->get();
@@ -2741,12 +2711,7 @@ class DealController extends Controller
             $users = User::get()->pluck('name', 'id')->toArray();
             $brands = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
             $branches = array();
-
-            if (\Auth::user()->type == 'super admin') {
-                $branches = Branch::get();
-            } else {
-                $branches = Branch::where('created_by', \Auth::user()->id)->get();
-            }
+            $branches = Branch::get();
 
             $assign_to = array();
             if(\Auth::user()->type == 'super admin'){
@@ -2760,7 +2725,7 @@ class DealController extends Controller
 
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-                $html = view('deals.tasks_list_ajax',compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'))->render();
+                $html = view('deals.tasks_list_ajax',compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands'))->render();
 
                 return json_encode([
                     'status' => 'success',
@@ -2769,7 +2734,9 @@ class DealController extends Controller
             }
 
 
-            return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'tasks_for_filter'));
+
+
+            return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -3056,12 +3023,7 @@ class DealController extends Controller
 
         if ($deal->is_active) {
 
-
-            if (\Auth::user()->type == 'super admin') {
-                $branches = Branch::get()->pluck('name', 'id')->toArray();
-            } else {
-                $branches = Branch::where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
-            }
+            $branches = Branch::get()->pluck('name', 'id')->toArray();
             $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
             $universities = University::get()->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
@@ -3572,8 +3534,10 @@ class DealController extends Controller
     public function getCompanyEmployees(){
         $id = $_GET['id'];
 
-        $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
-        $branches = Branch::where('created_by',$id)->pluck('name', 'id')->toArray();
+        $brand = User::where('id', $id)->first();
+
+        $employees =  User::where('brand_id', $id)->pluck('name', 'id')->toArray();
+        $branches = Branch::whereIn('id', [$brand->branch_id])->pluck('name', 'id')->toArray();
 
         $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to" required> <option value="">Assign to</option> ';
         foreach ($employees as $key => $user) {

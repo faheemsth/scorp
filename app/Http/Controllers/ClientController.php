@@ -66,7 +66,7 @@ class ClientController extends Controller
             }
 
 
-            $clients = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'client')->skip($start)->take($num_results_on_page)->get();
+           // $clients = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'client')->skip($start)->take($num_results_on_page)->get();
 
             $client_query = User::select(['users.*'])->join('client_deals', 'client_deals.client_id', 'users.id')->join('deals', 'deals.id', 'client_deals.deal_id');
 
@@ -78,32 +78,10 @@ class ClientController extends Controller
                 $client_query->where('users.email', 'like', '%' . $_GET['email'] . '%');
             }
 
-            if (\Auth::user()->type == 'super admin') {
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $client_query->whereIn('deals.brand_id', $brand_ids);
 
-            }else if (\Auth::user()->type == 'company') {
-
-                $users = $this->companyEmployees(\auth::id());
-                $users[$user->id] = $user->name;
-                $companies = $users;
-                $client_query_created_by = array_keys($users);
-                $client_query->whereIn('deals.created_by', $client_query_created_by);
-
-            }else if (strtolower(\Auth::user()->type) == 'project manager') {
-
-                $users = $this->companyEmployees($user->created_by);
-                $users[$user->id] = $user->name;
-                $users[$user->created_by] = $user->created_by;
-                $companies = $users;
-                $client_query_created_by = array_keys($users);
-                $client_query->whereIn('deals.created_by', $client_query_created_by);
-
-            }  else if(strtolower(\auth::user()->type) == 'marketing officer') {
-                $branch_admission_officer = User::where(['type' => 'Admission Officer', 'branch_id' => $user->branch_id])->pluck('id', 'id')->toArray();
-                $branch_admission_officer[] = $user->id;
-                $client_query->whereIn('deals.created_by', $branch_admission_officer);
-            }else {
-                $client_query->where('deals.branch_id', $user->branch_id);
-            }
 
             $total_records = $client_query->count();
             $clients = $client_query->orderBy('created_at', 'DESC')->skip($start)->take($num_results_on_page)->get();
