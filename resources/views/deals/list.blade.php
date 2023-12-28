@@ -331,13 +331,12 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
-                                <li id="actions_div" style="display:none"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
                           </ul>
                         </div>
                     </div>
 
 
-                    <div class="col-8 d-flex justify-content-end gap-2">
+                    <div class="col-8 d-flex justify-content-end gap-2 pe-0">
                         <div class="input-group w-25">
                             <button class="btn btn-sm list-global-search-btn">
                                 <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
@@ -360,6 +359,8 @@
                         {{-- <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}" class="btn p-2 btn-dark">
                             <i class="ti ti-plus"></i>
                         </a> --}}
+                        <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+
 
                     </div>
                 </div>

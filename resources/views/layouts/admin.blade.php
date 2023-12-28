@@ -452,6 +452,7 @@ $lang=Utility::getValByName('default_language');
         overflow-x:scroll !important;
     }
 
+
     </style>
 </head>
 
@@ -468,10 +469,24 @@ $lang=Utility::getValByName('default_language');
     @include('partials.admin.header')
 
     <!-- Page Wrapper -->
-    <div id="wrapper">
+    <div id="wrapper" style="position: relative;">
         @include('partials.admin.menu')
         <!-- [ navigation menu ] end -->
-
+       @include('partials.admin.filter')
+       <div style="    position: fixed;
+       left: 17px;
+       bottom: 25px;
+       width: 50px;
+       height: 50px;
+       background-color:#B3CDE1;
+       border-radius: 50%;
+       display: flex;
+       justify-content: center;
+       align-items: center;">
+        <button data-bs-toggle="tooltip" title="{{__('Save Filter')}}" class="btn btn-white" onclick="myFunction()">
+            <i class="fa-regular fa-bookmark" style="color: #ffffff;font-size: 24px"></i>
+        </button>
+    </div>
         <div id="mySidenav" style="z-index: 1065; padding-left:5px; box-shadow: -5px 0px 30px 0px #aaa;" class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>" style="padding-left: 5px"></div>
 
 
@@ -535,9 +550,9 @@ $lang=Utility::getValByName('default_language');
         <!-- [ Header ] end -->
 
         <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column" style="background:  #ECEBEB !important;position: relative;">
+        <div id="content-wrapper" class="d-flex flex-column" style="background:  #ECEBEB !important;">
             <!-- Main Content -->
-            <div id="content" style="background:  #ECEBEB !important;">
+            <div id="content" style="background:  #ECEBEB !important; ">
                 <div class="container-fluid" style="padding: 0">
 
                     <div class="my-3">
@@ -557,24 +572,15 @@ $lang=Utility::getValByName('default_language');
                     <!-- Content Wrapper -->
 
                 </div>
-                {{-- <button  class="bg-dark" onclick="myFunction()"
-                style="width: 7%;
-                height: 7%;
-                border-radius: 50%;
-                margin-left: 125px;"
-                >
-                    <i class="fa-regular fa-bookmark" style="color: #ffffff;"></i>
-                </button> --}}
+
+
             </div>
-                {{-- <div id="myDIV" style="position: absolute;width: 15%;height: 100vh;background-color: wheat;">
-                    This.
-                </div> --}}
         </div>
 
     </div>
 
 
-  {{-- <script>
+  <script>
       function myFunction() {
         var x = document.getElementById("myDIV");
         if (x.style.display === "none") {
@@ -583,7 +589,7 @@ $lang=Utility::getValByName('default_language');
           x.style.display = "none";
         }
       }
-  </script> --}}
+  </script>
 
 
     <div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2000;">

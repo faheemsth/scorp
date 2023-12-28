@@ -67,7 +67,7 @@
                                         <?= isset($_GET['stages']) && $_GET['stages'] == 'Project Manager' ? 'selected' : '' ?>>
                                         Project Manager</option>
                                 </select>
-                                <button class="btn btn-dark" type="submit">Submit</button>
+                                <button class="btn btn-dark" type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}">Submit</button>
                             </div>
                         </div>
                     </form>

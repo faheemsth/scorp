@@ -54,13 +54,13 @@ $setting = \App\Models\Utility::colorset();
                                 <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
                                 <li><a class="dropdown-item" href="#">Brand Change</a></li>
                                 <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li>
-                                <li id="actions_div" style="display:none"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+                                {{-- <li id="actions_div" style="display:none"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li> --}}
                             </ul>
                         </div>
                     </div>
 
 
-                    <div class="col-8 d-flex justify-content-end gap-2">
+                    <div class="col-8 d-flex justify-content-end gap-2 pe-0">
                         <div class="input-group w-25">
                             <button class="btn btn-sm list-global-search-btn">
                                 <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
@@ -81,13 +81,15 @@ $setting = \App\Models\Utility::colorset();
                             <i class="ti ti-plus" style="font-size:18px"></i>
                         </button>
                         @endcan
+                        <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+
                     </div>
                 </div>
 
                 <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                     <form action="/deals/get-user-tasks" method="GET" class="">
 
-                       
+
                         <div class="row my-3">
                             <div class="col-md-4"> <label for="">Brands</label>
                                 <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">

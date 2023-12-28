@@ -150,7 +150,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 
                         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                            <div class="col-2">
+                            <div class="col-4">
                                 <p class="mb-0 pb-0 ps-1">LEADS</p>
                                 <div class="dropdown">
                                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
@@ -167,22 +167,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                             {{-- /// --}}
 
                             {{-- /// --}}
-                            <div class="col-2">
-                                <!-- <p class="mb-0 pb-0">Tasks</p> -->
-                                <div class="dropdown" id="actions_div" style="display:none">
-                                    <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        Actions
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
-                                        <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
-                                            <li><a class="dropdown-item" href="#">Brand Change</a></li>
-                                            <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-8 d-flex justify-content-end gap-2">
+
+                            <div class="col-8 d-flex justify-content-end gap-2 pe-0">
                                 <div class="input-group w-25">
                                     <button class="btn  list-global-search-btn">
                                         <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
@@ -195,11 +181,10 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         aria-describedby="basic-addon1">
                                 </div>
 
-                                <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" onclick="RefreshList()"><i class="ti ti-refresh"
+                                <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()"><i class="ti ti-refresh"
                                         style="font-size: 18px"></i></button>
 
-                                <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" aria-expanded="false">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                 </button>
 
@@ -213,6 +198,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     data-bs-target="#import_csv">
                                     <i class="fa fa-file-csv"></i>
                                 </button>
+                                <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+
                             </div>
                         </div>
 
@@ -279,7 +266,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                           @endforeach
                                         </select>
                                     </div>
-                                    @endif 
+                                    @endif
 
                                     <div class="col-md-4"> <label for="">Name</label>
                                         <select class="form form-control select2" id="choices-multiple110" name="name[]"
@@ -392,6 +379,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         <th data-resizable-columns-id="users" class="ps-3">{{ __('Assigned to') }}</th>
                                         @if (\Auth::user()->type == 'super admin')
                                             <th data-resizable-columns-id="created_by">{{ __('Brand') }}</th>
+                                            <th data-resizable-columns-id="created_by">{{ __('Branch') }}</th>
                                         @endif
                                         {{-- <th data-resizable-columns-id="actions" style="width: 5%;">{{ __('Action') }}
                                         </th> --}}
@@ -428,6 +416,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                 </td>
                                                 @if (\Auth::user()->type == 'super admin')
                                                     <td>{{ $users[$lead->brand_id] }}</td>
+                                                    <td>{{ $branches[$lead->branch_id] }}</td>
                                                 @endif
 
                                                 @if (Auth::user()->type != 'client')

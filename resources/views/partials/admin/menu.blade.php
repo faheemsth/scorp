@@ -38,7 +38,7 @@
     }
 </style>
 
-<div id="wrapper">
+<div id="wrapper" style="position: relative">
 
     <!-- <div class="m-header main-logo">
 <a href="#" class="b-brand">
@@ -1296,7 +1296,7 @@
                                             </li>
                                         @endcan
 
-                                       
+
 
                                         @can('manage organization')
                                             <li
@@ -1778,7 +1778,7 @@
                         <span>{{ __('CRM System') }}</span>
                     </a>
                     <div id="collapsesuper"
-                        class="collapse {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' || Request::segment(1) == 'company-permission' || Request::segment(1) == 'pipelines' ? 'show' : '' }}"
+                        class="collapse {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' ? 'show' : '' }}"
                         aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="  collapse-inner rounded">
                             <ul>
@@ -1879,7 +1879,7 @@
 
 
                                 <li
-                                    class="emp nav-item{{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
+                                    class="d-none emp nav-item{{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
                                     <a class="collapse-item" style="color:white; font-size: 13px;"
                                         href="{{ route('organization.index') }}">
                                         <img src="{{ asset('assets/cs-theme/icons/organization-01-1 1.png') }}"
@@ -1892,35 +1892,7 @@
                                         {{ __('Organizations') }}</a>
                                 </li>
 
-                                <li style=""
-                                    class="emp nav-item {{ Request::segment(1) == 'finance-dashboard' ? 'active dash-trigger' : '' }}">
-                                    <a class="collapse-item" style="color:white; font-size: 13px;"
-                                        href="{{ route('company-permission') }}   ">
-                                        <img src="{{ asset('assets/cs-theme/icons/Layer_1 (2).png') }}"
-                                            id="icon1" width="15px" height="15px"
-                                            style="margin-top:-10px" alt="" srcset="">
-                                        <img src="{{ asset('assets/cs-theme/icons/compblue.png') }}"
-                                            id="icon2" width="15px" height="15px" style="margin-top:-8px"
-                                            alt="" srcset="">
 
-                                        {{ __('Company Permission') }}</a>
-                                </li>
-
-
-                                <li style=""
-                                    class="emp nav-item {{ Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
-
-                                    <a class="collapse-item" style="color:white; font-size: 13px;"
-                                        href="{{ route('pipelines.index') }}   ">
-                                        <img src="{{ asset('assets/cs-theme/icons/administrator-developer-icon 1.png') }}"
-                                            id="icon1" width="15px" height="15px"
-                                            style="margin-top:-10px" alt="" srcset="">
-                                        <img src="{{ asset('assets/cs-theme/icons/crmsysblue.png') }}"
-                                            id="icon2" width="15px" height="15px" style="margin-top:-8px"
-                                            alt="" srcset="">
-
-                                        {{ __('CRM System Setup') }}</a>
-                                </li>
 
                             </ul>
                         </div>
@@ -1971,7 +1943,7 @@
 
                                         {{ __('Region') }}</a>
                                 </li>
-                                
+
                                     <li
                                         class="emp nav-item{{ Request::route()->getName() == 'branch.index' || Request::route()->getName() == 'branch.edit' || Request::route()->getName() == 'branch.show' ? ' active' : '' }}">
                                         <a class="collapse-item" style="color:white; font-size: 13px;"
@@ -1985,7 +1957,7 @@
 
                                             {{ __('Branches') }}</a>
                                     </li>
-                                    
+
                                     <style>
                                         .emp:hover #icon1 {
                                             display: none;
@@ -2038,6 +2010,93 @@
                         </div>
 
                     </li>
+                @endif
+
+                @if (\Auth::user()->type == 'super admin')
+                @if (Gate::check('manage company plan') || Gate::check('manage order') || Gate::check('manage company settings')||Gate::check('super admin'))
+                <li class="nav-item">
+                    <a class="nav-link collapsed" href="#" data-toggle="collapse"
+                        data-target="#collapseten" aria-expanded="true" aria-controls="collapseten">
+                        <img src="{{ asset('assets/cs-theme/icons/settings-3110 1.png') }}" width="15px"
+                            height="15px" style="margin-top:-5px" alt="" srcset="">
+
+                        <span>{{ __('Settings') }}</span>
+                    </a>
+                    <div id="collapseten"
+                        class="collapse {{ Request::segment(1) == 'settings' || Request::segment(1) == 'plans' || Request::segment(1) == 'company-permission' || Request::segment(1) == 'pipelines' ? 'show' : '' }}"
+                        aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                        <div class="  collapse-inner rounded">
+                            <ul>
+                                @if (Gate::check('super admin'))
+
+
+                                <li style=""
+                                    class="emp nav-item {{ Request::segment(1) == 'company-permission' || Request::segment(1) == 'finance-dashboard' ? 'active dash-trigger' : '' }}">
+                                    <a class="collapse-item" style="color:white; font-size: 13px;"
+                                        href="{{ route('company-permission') }}   ">
+                                        <img src="{{ asset('assets/cs-theme/icons/Layer_1 (2).png') }}"
+                                            id="icon1" width="15px" height="15px"
+                                            style="margin-top:-10px" alt="" srcset="">
+                                        <img src="{{ asset('assets/cs-theme/icons/compblue.png') }}"
+                                            id="icon2" width="15px" height="15px" style="margin-top:-8px"
+                                            alt="" srcset="">
+
+                                        {{ __('Company Permission') }}</a>
+                                </li>
+
+
+                                <li style=""
+                                    class="emp nav-item {{  Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
+
+                                    <a class="collapse-item" style="color:white; font-size: 13px;"
+                                        href="{{ route('pipelines.index') }}   ">
+                                        <img src="{{ asset('assets/cs-theme/icons/administrator-developer-icon 1.png') }}"
+                                            id="icon1" width="15px" height="15px"
+                                            style="margin-top:-10px" alt="" srcset="">
+                                        <img src="{{ asset('assets/cs-theme/icons/crmsysblue.png') }}"
+                                            id="icon2" width="15px" height="15px" style="margin-top:-8px"
+                                            alt="" srcset="">
+
+                                        {{ __('CRM System Setup') }}</a>
+                                </li>
+                                @endif
+                                @if (Gate::check('manage company settings'))
+                                    <li class=" {{ Request::segment(1) == 'settings' ? ' active show' : '' }}">
+                                        <a href="{{ route('settings') }}" class="collapse-item"
+                                            style="color: white; font-size: 13px;">{{ __('System Settings') }}</a>
+                                    </li>
+                                @endif
+                                @if (Gate::check('manage company plan'))
+                                    <li
+                                        class="{{ Request::route()->getName() == 'plans.index' || Request::route()->getName() == 'stripe' ? ' active' : '' }}">
+                                        <a href="{{ route('plans.index') }}" class="collapse-item"
+                                            style="color: white; font-size: 13px;">{{ __('Setup Subscription Plan') }}</a>
+                                    </li>
+                                @endif
+
+                                @if (Gate::check('manage order') && Auth::user()->type == 'company')
+                                    <li class=" {{ Request::segment(1) == 'order' ? 'active' : '' }}">
+                                        <a href="{{ route('order.index') }}" class="collapse-item"
+                                            style="color: white; font-size: 13px;">{{ __('Order') }}</a>
+                                    </li>
+                                @endif
+
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                @endif
+                @endif
+                @if (\Auth::user()->type == 'super admin')
+                <li class="nav-item">
+                    <a href="{{ route('support.index') }}"
+                        class="nav-link {{ Request::segment(1) == 'support' ? 'active' : '' }}">
+                        <img src="{{ asset('assets/cs-theme/icons/Layer_1 (4).png') }}" width="15px"
+                            height="15px" style="margin-top:-6px" alt="" srcset="">
+
+                        <span>{{ __('Support') }}</span>
+                    </a>
+                </li>
                 @endif
 
 
@@ -2106,4 +2165,5 @@
             </ul>
         @endif
     </ul>
+
 </div>

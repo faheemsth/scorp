@@ -43,7 +43,7 @@ $(document).on('change', '.sub-check', function() {
     <div class="row">
         <div class="card py-3">
             <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                <div class="col-2">
+                <div class="col-4">
                     <p class="mb-0 pb-0 ps-1">CONTACTS</p>
                     <div class="dropdown">
                         <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
@@ -55,27 +55,13 @@ $(document).on('change', '.sub-check', function() {
                                     <li><a class="dropdown-item" href="#">Another action</a></li>
                                     <li><a class="dropdown-item" href="#">Something else here</a></li> -->
                             <li><a class="dropdown-item delete-bulk-contacts" href="javascript:void(0)">Delete</a></li>
-                            <li id="actions_div" style="display:none;font-size:14px;color:#3a3b45;"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+                            {{-- <li id="actions_div" style="display:none;font-size:14px;color:#3a3b45;"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li> --}}
 
                         </ul>
                     </div>
                 </div>
-                <div class="col-2">
-                    <!-- <p class="mb-0 pb-0">Tasks</p> -->
-                    <div class="dropdown" id="actions_div" style="display:none">
-                        <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
-                            data-bs-toggle="dropdown" aria-expanded="false">
-                            Actions
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
-                            <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
-                                <li><a class="dropdown-item" href="#">Brand Change</a></li>
-                                <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-8 d-flex justify-content-end gap-2">
+
+                <div class="col-8 d-flex justify-content-end gap-2 pe-0">
                     <div class="input-group w-25">
                         <button class="btn btn-sm list-global-search-btn">
                             <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
@@ -86,16 +72,17 @@ $(document).on('change', '.sub-check', function() {
                             placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                     </div>
 
-                    <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" onclick="RefreshList()"><i
+                    <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" data-bs-toggle="tooltip" title="{{__('Refresh')}}"  onclick="RefreshList()"><i
                             class="ti ti-refresh" style="font-size: 18px"></i></button>
 
-                    <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn filter-btn-show p-2 btn-dark" type="button"    data-bs-toggle="tooltip" title="{{__('Filter')}}" >
                         <i class="ti ti-filter" style="font-size:18px"></i>
                     </button>
-                     <button data-url="{{ route('clients.create') }}" data-ajax-popup="true"  data-bs-toggle="tooltip" title="{{__('Create')}}" class="btn btn-sm p-2 btn-dark" data-bs-toggle="modal">
+                     <button data-url="{{ route('clients.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}"  class="btn p-2 btn-dark" data-bs-toggle="modal">
                         <i class="ti ti-plus" style="font-size:18px"></i>
                     </button>
+                    <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+
 
                 </div>
             </div>
@@ -212,7 +199,7 @@ $(document).on('change', '.sub-check', function() {
                                     <div class="card-header-right">
                                         <div class="btn-group card-option">
                                             <button type="button" class="btn" data-bs-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false">
+                                                aria-haspopup="true" aria-expanded="false" >
                                                 <i class="ti ti-dots-vertical"></i>
                                             </button>
 
@@ -278,7 +265,7 @@ $(document).on('change', '.sub-check', function() {
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Mass Update</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close" data-bs-toggle="tooltip" title="{{__('Close')}}">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -304,8 +291,8 @@ $(document).on('change', '.sub-check', function() {
                     </div>
                     <br>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="Update">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-dark" data-bs-toggle="tooltip" title="{{__('Update')}}" value="Update">
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="tooltip" title="{{__('Close')}}" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
             </div>
@@ -320,7 +307,7 @@ $(document).on('change', '.sub-check', function() {
                 $(".sub-check").prop('checked', $(this).prop('checked'));
             });
 
-            
+
             $(document).on('change', '.sub-check', function() {
                 var selectedIds = $('.sub-check:checked').map(function() {
                     return this.value;
@@ -356,7 +343,7 @@ $(document).on('change', '.sub-check', function() {
                     $('#field_to_update').html('');
 
                     if (this.value == 'name') {
-                        
+
                         let field = `<div>
                                         <input class="form-control" placeholder="Enter client Name" required="required" name="name" type="text" id="name">
                                     </div>`;

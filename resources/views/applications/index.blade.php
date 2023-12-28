@@ -38,7 +38,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
 <div class="row">
     <div class="card py-3 my-card">
         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-            <div class="col-2">
+            <div class="col-4">
                 <p class="mb-0 pb-0 ps-1">APPLICATIONS</p>
                 <div class="dropdown">
                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -46,28 +46,13 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                             <li><a class="dropdown-item delete-bulk-applciations" href="javascript:void(0)">Delete</a></li>
-                            <li id="actions_div" style="display:none;font-size:14px;color:#3a3b45;"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+                            {{-- <li id="actions_div" style="display:none;font-size:14px;color:#3a3b45;"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li> --}}
 
                         </ul>
                 </div>
             </div>
-            <div class="col-2">
-                <!-- <p class="mb-0 pb-0">Tasks</p> -->
-                <div class="dropdown" id="actions_div" style="display:none">
-                    <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Actions
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
-                        <!-- <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
-                            <li><a class="dropdown-item" href="#">Brand Change</a></li>
-                            <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li> -->
-                    </ul>
-                </div>
-            </div>
 
-            <div class="col-8 d-flex justify-content-end gap-2">
+            <div class="col-8 d-flex justify-content-end gap-2 pe-0">
                 <div class="input-group w-25">
                     <button class="btn btn-sm list-global-search-btn">
                         <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
@@ -84,6 +69,8 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                 <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="ti ti-filter" style="font-size:18px"></i>
                 </button>
+                <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+
             </div>
         </div>
 
@@ -314,7 +301,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
 
                 if (this.value == 'university') {
 
-                    
+
                     var universities = <?= json_encode($universities) ?>;
                     let options = '';
 
