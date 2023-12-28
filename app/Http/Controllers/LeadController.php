@@ -275,8 +275,9 @@ class LeadController extends Controller
         
 
         $employees =  User::where('brand_id', $id)->pluck('name', 'id')->toArray();
-        $branches = Branch::whereIn('id', [$brand->branch_id])->pluck('name', 'id')->toArray();
+        $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
 
+        
         $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="lead_assgigned_user" required> <option value="">Select User</option> ';
         foreach ($employees as $key => $user) {
             $html .= '<option value="' . $key . '">' . $user . '</option> ';
