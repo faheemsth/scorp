@@ -192,7 +192,7 @@
                                     @if ($total_records > 0)
                                         @include('layouts.pagination', [
                                             'total_pages' => $total_records,
-                                            'num_results_on_page' => 10,
+                                            'num_results_on_page' => 50,
                                         ])
                                     @endif
                                 </div>

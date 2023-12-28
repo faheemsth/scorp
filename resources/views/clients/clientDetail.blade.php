@@ -80,18 +80,18 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
 
-                <a href="https://wa.me/{{ !empty($client->phone) ? formatPhoneNumber($client->phone) : '' }}?text=Hello ! Dear {{ $client->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" data-bs-title="{{ __('Whatsapp') }}" class="btn btn-dark text-white">
+                <a href="https://wa.me/{{ !empty($client->phone) ? formatPhoneNumber($client->phone) : '' }}?text=Hello ! Dear {{ $client->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" data-bs-title="{{ __('Whatsapp') }}" class="btn p-2 btn-dark text-white">
                     <i class="fa-brands fa-whatsapp"></i>
                 </a>
 
                 @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit client'))
-                    <div class="d-flex justify-content-end gap-1 me-1">
+
                         <a href="#" data-size="lg" data-url="{{ route('clients.edit', $client->id) }}"
                             data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Client') }}"
-                            class="btn btn-dark text-white px-2">
+                            class="btn btn-dark text-white p-2">
                             <i class="ti ti-pencil "></i>
                         </a>
-                    </div>
+
                 @endif
 
                 @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('delete client'))
@@ -101,7 +101,7 @@
                         <span> @if($client->delete_status!=0){{__('Delete')}} @else {{__('Restore')}}@endif</span>
                     </a> --}}
 
-                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn px-2 btn-danger text-white bs-pass-para" >
+                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn p-2 btn-danger text-white bs-pass-para" >
                         <i class="ti ti-trash"></i>
                     </a>
                     {!! Form::close() !!}
@@ -451,10 +451,10 @@
                                                                                 </thead>
                                                                                 <tbody class="notes-tbody">
                                                                                     @forelse($deals as $deal)
-                                                                                        @php    
+                                                                                        @php
                                                                                             $users = \App\Models\User::pluck('name', 'id')->toArray();
                                                                                             $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
-                                                                                        @endphp 
+                                                                                        @endphp
 
                                                                                         <tr>
                                                                                             <td>@php
@@ -464,7 +464,7 @@
                                                                                                 }
                                                                                                 echo $name;
                                                                                             @endphp </td>
-                                                                                            
+
                                                                                             <td>{{ '1-' . (empty($deal->intake_month) ? 'Jan' : $deal->intake_month) . '-' . (empty($deal->intakeYear) ? date('Y') : $deal->intakeYear) }}</td>
                                                                                             <td>{{ !empty($deal->brand_id) ? (isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '') : '' }}</td>
                                                                                             <td>{{ isset($branch->name) ? $branch->name : '' }}</td>
@@ -514,12 +514,12 @@
                                                                 <tbody>
 
                                                                     @forelse($applications as $app)
-                                                                        @php 
+                                                                        @php
                                                                             $university = \App\Models\University::where('id', $app->university_id)->first();
                                                                             $deal = \App\Models\Deal::where('id', $app->deal_id)->first();
                                                                             $users = \App\Models\User::pluck('name', 'id')->toArray();
                                                                             $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
-                                                                        @endphp 
+                                                                        @endphp
                                                                         <tr>
                                                                             <td>{{ $universities[$app->university_id] }}</td>
                                                                             <td> {{ $app->intake }} </td>

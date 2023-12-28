@@ -49,6 +49,11 @@ class Lead extends Model
         return $this->hasOne('App\Models\Pipeline', 'id', 'pipeline_id');
     }
 
+    public function branch()
+    {
+        return $this->hasOne('App\Models\Branch', 'id', 'branch_id');
+    }
+
     public function products()
     {
         if($this->products)

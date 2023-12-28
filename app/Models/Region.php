@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Region extends Model
 {
     use HasFactory;
-    protected $fillable = ['name','location','phone','email','region_manager_id'];
+    protected $fillable = ['name','brands','location','phone','email','region_manager_id'];
     public function manager()
     {
         return $this->belongsTo(User::class, 'region_manager_id');

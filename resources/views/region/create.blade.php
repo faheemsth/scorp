@@ -37,6 +37,9 @@
     .row {
         padding: 6px
     }
+    .choices{
+        width: 100%;
+    }
 </style>
 
 {{ Form::open(['url' => 'region/create', 'method' => 'POST' ,'id' => 'CreateRigon']) }}
@@ -72,7 +75,21 @@
                                                     value="{{ optional($regions)->name ?? '' }}" name="name">
                                             </td>
                                         </tr>
-
+                                        <tr>
+                                            <td class=""
+                                                style="width: 150px;  font-size: 13px;">
+                                                {{ __('Brands') }}
+                                            </td>
+                                            <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
+                                                <select class="form form-control select2" id="choices-multiple555"
+                                                    name="brands[]" multiple style="width: 100% !important;" required>
+                                                    <option value="">Select Brand</option>
+                                                        @foreach ($brands as $brand)
+                                                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                        @endforeach
+                                                </select>
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td class=""
                                                 style="width: 150px;  font-size: 13px;">
@@ -143,5 +160,7 @@
 </div>
 
 {{ Form::close() }}
+
+
 
 

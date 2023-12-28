@@ -157,7 +157,7 @@
 
                     <a href="#" data-size="lg" data-url="{{ route('deals.edit', $deal->id) }}"
                         data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Deal') }}"
-                        class="btn px-2 text-white" style="background-color: #313949;">
+                        class="btn px-2 py-2 text-white" style="background-color: #313949;">
                         <i class="ti ti-pencil"></i>
 
                     </a>
@@ -171,7 +171,7 @@
                     'class'=>'mb-0',
                     ]) !!}
 
-                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn px-2 btn-danger text-white bs-pass-para" >
+                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn py-2 px-2 btn-danger text-white bs-pass-para" >
                         <i class="ti ti-trash"></i>
                     </a>
 
@@ -658,7 +658,7 @@
                                             <div class="d-flex justify-content-end align-items-center p-2 pb-0">
                                                 <div class="float-end">
                                                     @if (\Auth::user()->can('create application'))
-                                                    <a data-size="lg" data-url="{{ route('deals.application.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Application') }}" class="btn btn-dark px-2 text-white" >
+                                                    <a data-size="lg" data-url="{{ route('deals.application.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Application') }}" class="btn btn-dark p-2 text-white" >
                                                         <i class="ti ti-plus"></i>
                                                     </a>
                                                     @endif
@@ -946,7 +946,7 @@
                                                                         <div class="d-flex justify-content-end">
                                                                             <div class="float-end">
                                                                                 @can('create task')
-                                                                                <a data-size="lg" data-url="/organiation/1/task?type=deal&typeid={{ $deal->id }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Task') }}" class="btn px-2 btn-dark text-white" >
+                                                                                <a data-size="lg" data-url="/organiation/1/task?type=deal&typeid={{ $deal->id }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Task') }}" class="btn p-2 btn-dark text-white" >
                                                                                     <i class="ti ti-plus"></i>
                                                                                 </a>
                                                                                 @endcan

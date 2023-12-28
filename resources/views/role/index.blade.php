@@ -96,7 +96,7 @@
                                         <span class="d-flex">
                                             @can('edit role')
                                                 <div class=" ms-2">
-                                                <a href="#" class="mx-2 btn px-2 btn-dark" data-url="{{ route('roles.edit',$role->id) }}" data-ajax-popup="true"  data-size="lg" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-title="{{__('Role Edit')}}">
+                                                <a href="#" class="mx-2 btn p-2 btn-dark" data-url="{{ route('roles.edit',$role->id) }}" data-ajax-popup="true"  data-size="lg" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-title="{{__('Role Edit')}}">
                                                 <i class="ti ti-pencil text-white"></i>
                                                 </a>
                                             </div>
@@ -104,7 +104,7 @@
                                             @can('delete role')
                                                 <div class="">
                                                     {!! Form::open(['method' => 'DELETE', 'route' => ['roles.destroy', $role->id],'id'=>'delete-form-'.$role->id]) !!}
-                                                    <a href="#" class=" btn px-2 btn-danger bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" ><i class="ti ti-trash text-white"></i></a>
+                                                    <a href="#" class=" btn p-2 btn-danger bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" ><i class="ti ti-trash text-white"></i></a>
 
 
                                                     {!! Form::close() !!}
