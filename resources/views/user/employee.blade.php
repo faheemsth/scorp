@@ -76,11 +76,19 @@
                                <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                                <form action="/user/employees" method="GET" class="">
                                    <div class="row my-3">
+
+
                                        <div class="col-md-4 mt-2">
-                                           <label for="">Name</label>
-                                           <input type="text" class="form form-control" placeholder="Search Name"
-                                               name="name" value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>"
-                                               style="width: 95%; border-color:#aaa">
+                                        <label for="">Name</label>
+                                        <select name="name" class="form form-control" style="width: 95%; border-color:#aaa">
+                                            <option value="">Select User</option>
+
+                                            @if (!empty($brands))
+                                                @foreach ($brands as $brand)
+                                                    <option value="{{ $brand->name }}" <?= isset($_GET['name']) && isset($brand->name) && $_GET['name'] == $brand->name ? "selected" : '' ?> > {{ $brand->name }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
                                        </div>
 
                                        <div class="col-md-4 mt-2">
