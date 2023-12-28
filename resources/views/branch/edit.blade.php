@@ -37,6 +37,21 @@
         </div>
 
         <div class="col-md-6">
+            <div class="form-group" id="brands_div">
+                <label for="region_id">{{ __('Brands') }}</label>
+                <select name="brands[]" multiple id="brands" class="form-control select2">
+                    <option value="">Select Brands</option>
+                    @php
+                        $brd = explode(',',$branch->brands);
+                    @endphp
+                    @foreach ($brands as $key => $brand)
+                        <option value="{{ $key }}" @if (in_array($key, $brd)) selected @endif>{{ $brand }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-6">
             <div class="form-group">
                 <label for="branch_manager_id">{{ __('Branch Manager') }}</label>
                 <select name="branch_manager_id" id="" class="form-control">
@@ -117,3 +132,33 @@
 </div>
 
 {{ Form::close() }}
+<script>
+    $(document).ready(function() {
+        select2();
+        $("#region_id").on("change", function(){
+            var id = $(this).val();
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id  // Add a key for the id parameter
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#brands').remove();
+                        $("#brands_div").html(data.brands);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+    })
+</script>

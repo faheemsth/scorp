@@ -674,6 +674,8 @@ class UserController extends Controller
         if (\Auth::user()->type == 'super admin') {
             $branches = \App\Models\Branch::get()->pluck('name', 'id');
             $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+            $companies = [0 => 'Select Brand'] + $companies;
+
         } else {
             $branches = \App\Models\Branch::get()->pluck('name', 'id');
             $branches = [0 => 'Select Branches'] + $branches->toArray();
@@ -683,6 +685,7 @@ class UserController extends Controller
                 ->get()
                 ->pluck('name', 'id')
                 ->toArray();
+            $companies = [0 => 'Select Brand'] + $companies;
 
         }
 
