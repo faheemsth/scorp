@@ -328,6 +328,16 @@
                                                             <tr>
                                                                 <td class=""
                                                                     style="width: 200px; font-size: 14px;">
+                                                                    {{ __('Branch') }}
+                                                                </td>
+                                                                <td class=""
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $lead->branch->name }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 200px; font-size: 14px;">
                                                                     {{ __('Location') }}
                                                                 </td>
                                                                 <td class=""
