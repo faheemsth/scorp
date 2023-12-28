@@ -9,7 +9,7 @@ use App\Models\Region;
 class Branch extends Model
 {
     protected $fillable = [
-        'name', 'created_by', 'branch_manager_id', 'region_id'
+        'name','brands', 'created_by', 'branch_manager_id', 'region_id'
     ];
 
     public function manager()

@@ -45,9 +45,14 @@
         @endif
 
         @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-        <div class="form-group col-md-6">
-            {{ Form::label('branch_id', __('Branch'),['class'=>'form-label']) }}
-            {!! Form::select('branch_id', $branches, null,array('class' => 'form-control select2','required'=>'required')) !!}
+     
+        <div class="form-group col-md-6" >
+            <label for="region_id">{{ __('Branch') }}</label>
+            <div id="branch_div">
+                <select name="branch_id" id="branch_id" class="form-control select2">
+                    <option value="">Select Branch</option>
+                </select>
+            </div>
             @error('branch_id')
             <small class="invalid-branch" branch="alert">
                 <strong class="text-danger">{{ $message }}</strong>
@@ -125,3 +130,30 @@
 </div>
 
 {{Form::close()}}
+
+<script>
+$("#companies").on("change", function(){
+    var id = $(this).val();
+
+    $.ajax({
+        type: 'GET',
+        url: '{{ route('deal_companyemployees') }}',
+        data: {
+            id: id  // Add a key for the id parameter
+        },
+        success: function(data){
+            data = JSON.parse(data);
+
+            if (data.status === 'success') {
+                $("#branch_div").html(data.branches);
+                select2();
+            } else {
+                console.error('Server returned an error:', data.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('AJAX request failed:', status, error);
+        }
+    });
+});
+</script>

@@ -18,7 +18,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="region_id">{{ __('Region') }}</label>
-                        <select name="region_id" id="" class="form-control">
+                        <select name="region_id" id="region_id" class="form-control">
                             <option value="">Select Region</option>
                             @if (!empty($regions))
                                 @foreach ($regions as $region)
@@ -33,7 +33,14 @@
                         @enderror
                     </div>
                 </div>
-
+                <div class="col-md-6">
+                    <div class="form-group" id="brands_div">
+                        <label for="region_id">{{ __('Brands') }}</label>
+                        <select name="brands[]" id="brands" class="form-control select2">
+                            <option value="">Select Brands</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="branch_manager_id">{{ __('Branch Manager') }}</label>
@@ -111,3 +118,39 @@
         <input type="submit" value="{{ __('Create') }}" class="btn btn-dark px-2">
     </div>
 </form>
+
+<script>
+    $(document).ready(function() {
+
+        $("#region_id").on("change", function(){
+            var id = $(this).val();
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id  // Add a key for the id parameter
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#brands').remove();
+                        $("#brands_div").html(data.brands);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+
+
+
+
+    })
+</script>
