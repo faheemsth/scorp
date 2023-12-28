@@ -82,11 +82,12 @@ class Deal extends Model
 
         return [];
     }
-    
+
     public function users()
     {
         return $this->belongsToMany('App\Models\User', 'user_deals', 'deal_id', 'user_id');
     }
+
 
     public function products()
     {

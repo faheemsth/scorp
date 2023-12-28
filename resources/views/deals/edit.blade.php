@@ -106,13 +106,12 @@
                                                     </td>
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
-                                                        <select class="form-control select2" id="choice-3"  name="contact[]" multiple>
-                                                           <option value="">Select contact</option>
-
-                                                           @foreach($clients as $key => $client)
-                                                            <option value="{{$key}}" {{ in_array($key, $contacts) ? 'selected' : '' }}>{{$client}}</option>
-                                                           @endforeach
-                                                          </select>
+                                                        <select class="form-control select2" id="choice-3" name="contact[]" multiple disabled>
+                                                            <option value="">Select contact</option>
+                                                            @foreach($clients as $key => $client)
+                                                                <option value="{{$key}}" {{ in_array($key, $contacts) ? 'selected' : '' }}>{{$client}}</option>
+                                                            @endforeach
+                                                        </select>
                                                     </td>
                                                 </tr>
 

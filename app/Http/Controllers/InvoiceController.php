@@ -117,7 +117,7 @@ class InvoiceController extends Controller
         {
             $validator = \Validator::make(
                 $request->all(), [
-                                //    'customer_id' => 'required',
+                                // 'customer_id' => 'integer',
                                    'issue_date' => 'required',
                                    'due_date' => 'required',
                                    'category_id' => 'required',
@@ -131,11 +131,13 @@ class InvoiceController extends Controller
                 return redirect()->back()->with('error', $messages->first());
             }
             $status = Invoice::$statues;
-
             $invoice                 = new Invoice();
             $invoice->invoice_id     = $this->invoiceNumber();
-            $invoice->customer_id    = $request->customer_id;
-            $invoice->user_name    = $request->user_name;
+            if($request->customer_id != null){
+                $invoice->customer_id    = $request->customer_id ? $request->customer_id : '';
+
+            }
+            $invoice->user_name    = $request->user_name  ?? '';
             $invoice->status         = 0;
             $invoice->issue_date     = $request->issue_date;
             $invoice->due_date       = $request->due_date;
@@ -149,40 +151,56 @@ class InvoiceController extends Controller
 
 
 
-            for($i = 0; $i < count($products); $i++)
+
+                        for($i = 0; $i < count($products); $i++)
             {
 
                 $invoiceProduct              = new InvoiceProduct();
                 $invoiceProduct->invoice_id  = $invoice->id;
-                $invoiceProduct->product_id  = $products[$i]['item'];
+                $invoiceProduct->product_name  = $products[$i]['item'];
                 $invoiceProduct->quantity    = $products[$i]['quantity'];
                 $invoiceProduct->tax         = $products[$i]['tax'];
-//                $invoiceProduct->discount    = isset($products[$i]['discount']) ? $products[$i]['discount'] : 0;
                 $invoiceProduct->discount    = $products[$i]['discount'];
                 $invoiceProduct->price       = $products[$i]['price'];
                 $invoiceProduct->description = $products[$i]['description'];
 
                 $invoiceProduct->save();
+        }
 
-                //inventory management (Quantity)
+//             for($i = 0; $i < count($products); $i++)
+//             {
+
+//                 $invoiceProduct              = new InvoiceProduct();
+//                 $invoiceProduct->invoice_id  = $invoice->id;
+//                 $invoiceProduct->product_id  = $products[$i]['item'];
+//                 $invoiceProduct->quantity    = $products[$i]['quantity'];
+//                 $invoiceProduct->tax         = $products[$i]['tax'];
+// //                $invoiceProduct->discount    = isset($products[$i]['discount']) ? $products[$i]['discount'] : 0;
+//                 $invoiceProduct->discount    = $products[$i]['discount'];
+//                 $invoiceProduct->price       = $products[$i]['price'];
+//                 $invoiceProduct->description = $products[$i]['description'];
+
+//                 $invoiceProduct->save();
+
+//                 //inventory management (Quantity)
 
 
-                Utility::total_quantity('minus',$invoiceProduct->quantity,$invoiceProduct->product_id);
+//                 // Utility::total_quantity('minus',$invoiceProduct->quantity,$invoiceProduct->product_id);
 
-                //Slack Notification
-                $setting  = Utility::settings(\Auth::user()->creatorId());
-                if(isset($setting['invoice_notification']) && $setting['invoice_notification'] ==1){
-                    $msg = __("New Invoice").' '. \Auth::user()->invoiceNumberFormat($invoice->invoice_id).' '. __("created by").' ' .\Auth::user()->name.'.';
-                    Utility::send_slack_msg($msg);
-                }
+//                 //Slack Notification
+//                 $setting  = Utility::settings(\Auth::user()->creatorId());
+//                 if(isset($setting['invoice_notification']) && $setting['invoice_notification'] ==1){
+//                     $msg = __("New Invoice").' '. \Auth::user()->invoiceNumberFormat($invoice->invoice_id).' '. __("created by").' ' .\Auth::user()->name.'.';
+//                     Utility::send_slack_msg($msg);
+//                 }
 
-                //Telegram Notification
-                $setting  = Utility::settings(\Auth::user()->creatorId());
-                if(isset($setting['telegram_invoice_notification']) && $setting['telegram_invoice_notification'] ==1){
-                    $msg = __("New Invoice").' '. \Auth::user()->invoiceNumberFormat($invoice->invoice_id).' '. __("created by").' ' .\Auth::user()->name.'.';
-                    Utility::send_telegram_msg($msg);
-                }
-            }
+//                 //Telegram Notification
+//                 $setting  = Utility::settings(\Auth::user()->creatorId());
+//                 if(isset($setting['telegram_invoice_notification']) && $setting['telegram_invoice_notification'] ==1){
+//                     $msg = __("New Invoice").' '. \Auth::user()->invoiceNumberFormat($invoice->invoice_id).' '. __("created by").' ' .\Auth::user()->name.'.';
+//                     Utility::send_telegram_msg($msg);
+//                 }
+//             }
 
             //Twilio Notification
             $setting  = Utility::settings(\Auth::user()->creatorId());
@@ -194,11 +212,11 @@ class InvoiceController extends Controller
             }
 
             //Product Stock Report
-            $type='invoice';
-            $type_id = $invoice->id;
-            StockReport::where('type','=','invoice')->where('type_id' ,'=', $invoice->id)->delete();
-            $description=$invoiceProduct->quantity.'  '.__(' quantity sold in invoice').' '. \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
-            Utility::addProductStock( $invoiceProduct->product_id,$invoiceProduct->quantity,$type,$description,$type_id);
+            // $type='invoice';
+            // $type_id = $invoice->id;
+            // StockReport::where('type','=','invoice')->where('type_id' ,'=', $invoice->id)->delete();
+            // $description=$invoiceProduct->quantity.'  '.__(' quantity sold in invoice').' '. \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
+            // Utility::addProductStock( $invoiceProduct->product_id,$invoiceProduct->quantity,$type,$description,$type_id);
 
 
             return redirect()->route('invoice.index', $invoice->id)->with('success', __('Invoice successfully created.'));
@@ -217,7 +235,8 @@ class InvoiceController extends Controller
             $invoice = Invoice::find($id);
 
             $invoice_number = \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
-            $customers      = Customer::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            // $customers      = Customer::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $customers      = User::where('type', 'client')->get()->pluck('name', 'id');
             $category       = ProductServiceCategory::where('created_by', \Auth::user()->creatorId())->where('type', 1)->get()->pluck('name', 'id');
             $category->prepend('Select Category', '');
             $product_services = ProductService::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
