@@ -624,7 +624,7 @@ class UserController extends Controller
     {
 
         $user = \Auth::user();
-        $num_results_on_page = 10;
+        $num_results_on_page = 50;
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
@@ -890,8 +890,8 @@ class UserController extends Controller
                     return redirect()->back()->with('error', $messages->first());
                 }
 
-                //                $role = Role::findById($request->role);
-                $role = Role::findByName('company');
+                                $role = Role::findById($request->role);
+                //$role = Role::findByName('company');
                 $input = $request->all();
                 $input['type'] = $role->name;
                 $user->fill($input)->save();

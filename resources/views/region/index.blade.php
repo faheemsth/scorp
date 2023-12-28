@@ -192,14 +192,6 @@
         font-size: 14px !important;
     }
 
-    table th:last-child {
-        text-align: end;
-    }
-
-    table td:last-child {
-        text-align: end;
-    }
-
     @media screen and (max-width: 480px) {
         .dash-header {
             left: 0 !important;
@@ -318,7 +310,7 @@
                                         <th>{{ __('Phone') }}</th>
                                         <th>{{ __('Location') }}</th>
 
-                                        <th>{{ __('Regions Manager') }}</th>
+                                        <th class="text-align: left;">{{ __('Region\'s Manager') }}</th>
                                         {{-- <th width="300px" class="d-none">{{ __('Action') }}</th> --}}
                                     </tr>
                                 </thead>

@@ -30,7 +30,7 @@
                     <div class="d-flex justify-content-end gap-1 me-3">
                         <a href="#" data-size="lg" data-url="{{ route('users.edit', $user->id) }}"
                             data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update User') }}"
-                            class="btn btn-sm btn-primary">
+                            class="btn p-2 btn-dark">
                             <i class="ti ti-pencil"></i>
                         </a>
                     </div>
@@ -42,7 +42,7 @@
                 <div class="">
                     <small>{{ __('Organization') }}</small>
                     <span class="font-weight-bolder">
-                        
+
                     </span>
                 </div>
                 <div class="">
@@ -131,7 +131,7 @@
                                                                 </td>
                                                                 <td class="university_id-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                   
+
                                                                 </td>
                                                             </tr>
 
@@ -191,7 +191,7 @@
                                                                 </td>
                                                                 <td class="phone-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    
+
                                                                 </td>
                                                             </tr>
                                                         </tbody>

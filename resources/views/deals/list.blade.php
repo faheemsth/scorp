@@ -446,7 +446,7 @@
                         </form>
                     </div>
 
-                    <div class="card-body table-responsive leads-list-div">
+                    <div class="card-body table-responsive">
                         <table class="table" data-resizable-columns-id="lead-table">
                             <thead>
                                 <tr>
@@ -893,7 +893,8 @@
                         show_toastr('Success', data.message, 'success');
                         $('#commonModal').modal('hide');
                         $('.leads-list-tbody').prepend(data.html);
-                        openNav(data.deal.id);
+                       // openNav(data.deal.id);
+                        openSidebar('/get-deal-detail?deal_id='+data.deal.id);
                         return false;
                     } else {
                         show_toastr('Error', data.message, 'error');
@@ -923,7 +924,8 @@
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
                         $('#commonModal').modal('hide');
-                        openNav(data.deal.id);
+                       // openNav(data.deal.id);
+                        openSidebar('/get-deal-detail?deal_id='+data.deal.id);
                         return false;
                     } else {
                         show_toastr('Error', data.message, 'error');
@@ -937,7 +939,8 @@
 
         $(document).on("click", ".edit-lead-remove", function() {
             var id = $(".deal-id").val();
-            openNav(id);
+            openSidebar('/get-deal-detail?deal_id='+id);
+            //openNav(id);
         });
 
 
@@ -980,7 +983,8 @@
                     data = JSON.parse(data);
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
-                        openNav(deal_id);
+                       // openNav(deal_id);
+                        openSidebar('/get-deal-detail?deal_id='+deal_id);
                         //window.location.href = '/deals/list';
 
                     } else {
@@ -1010,7 +1014,8 @@
                     if (data.status == 'success') {
                         $("#deal_applications").modal('hide');
                         show_toastr('Success', data.message, 'success');
-                        openNav(deal_id);
+                       // openNav(deal_id);
+                        openSidebar('/get-deal-detail?deal_id='+deal_id);
                     } else {
                         show_toastr('Error', data.message, 'error');
                     }
@@ -1062,7 +1067,8 @@
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'msg');
                         // $('.' + name + '-td').html(data.html);
-                        openNav(id);
+                       // openNav(id);
+                        openSidebar('/get-deal-detail?deal_id='+id);
                     }
                 }
             });

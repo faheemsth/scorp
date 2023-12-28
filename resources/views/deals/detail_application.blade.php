@@ -164,7 +164,7 @@
                                                                 </td>
                                                                 <td class="application_key-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                    {{$application->external_app_id}}
+                                                                    {{$application->application_key}}
                                                                 </td>
                                                             </tr>
 
@@ -172,8 +172,75 @@
                                                                 <td class="" style="width: 150px; font-size: 14px;">
                                                                     {{ __('University') }}
                                                                 </td>
-                                                                <td class="university_id-td" style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ isset($application->university_id) && isset($universities[$application->university_id]) ? $universities[$application->university_id] : ''}}
+                                                                <td class="university_name-td" style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $universities[$application->university_id] }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="" style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Course') }}
+                                                                </td>
+                                                                <td class="course-td" style="padding-left: 10px; font-size: 14px;">
+
+                                                                    {{ ($application->course) }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="" style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Intake') }}
+                                                                </td>
+                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
+
+                                                                    {{($application->intake) }}
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="" style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Student ID') }}
+                                                                </td>
+                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
+
+                                                                    {{ $application->deal_id}}
+
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="" style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Brand') }}
+                                                                </td>
+                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
+                                                                    @if (App\Models\Deal::find($application->deal_id)->brand_id < 0)
+                                                                    {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->brand_id)->name }}
+                                                                    @else
+                                                                    {{__(" ")}}
+                                                                    @endif
+
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="" style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Branch') }}
+                                                                </td>
+                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
+
+                                                                    {{ App\Models\Branch::find(App\Models\Deal::find($application->deal_id)->branch_id)->name }}
+
+
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="" style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Assigned To') }}
+                                                                </td>
+                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
+
+                                                                    {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->assigned_to)->name }}
+
                                                                 </td>
                                                             </tr>
 

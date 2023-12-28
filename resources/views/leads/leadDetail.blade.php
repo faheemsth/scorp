@@ -113,7 +113,7 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @can('View Deal')
-                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" data-bs-title="{{ __('Already Converted To Deal') }}" class="btn btn-dark text-white" style="background-color: #313949">
+                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" data-bs-title="{{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949">
                         <i class="fa-brands fa-whatsapp"></i>
                     </a>
 
@@ -124,7 +124,7 @@
                         @if (!empty($deal))
                             <a href="javascript:void(0)" @can('View Deal') @if ($deal->is_active)   onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }}) @else '' @endif @else '' @endcan"
                                 data-size="lg" data-bs-toggle="tooltip"
-                                data-bs-title=" {{ __('Already Converted To Deal') }}" class="btn btn-dark text-white"
+                                data-bs-title=" {{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white"
                                 style="background-color: #313949">
                                 <i class="ti ti-exchange"></i>
                             </a>
@@ -132,7 +132,7 @@
                             <a href="#" data-size="lg"
                                 data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
                                 data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] To Deal') }}"
-                                class="btn  btn-dark text-white">
+                                class="btn px-2 py-2 btn-dark text-white">
                                 <i class="ti ti-exchange"></i>
                             </a>
                         @endif
@@ -140,13 +140,13 @@
                     @endcan
 
                     <a href="#" data-url="{{ URL::to('leads/' . $lead->id . '/labels') }}" data-ajax-popup="true"
-                        data-size="lg" data-bs-toggle="tooltip" title="{{ __('Label') }}" class="btn  text-white"
+                        data-size="lg" data-bs-toggle="tooltip" title="{{ __('Label') }}" class="btn px-2 py-2 text-white"
                         style="background-color: #313949;">
                         <i class="ti ti-bookmark"></i>
                     </a>
                     <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}"
                         data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Edit') }}"
-                        class="btn  text-white" style="background-color: #313949;">
+                        class="btn px-2 py-2 text-white" style="background-color: #313949;">
                         <i class="ti ti-pencil"></i>
                     </a>
 
@@ -158,7 +158,7 @@
                         ]) !!}
 
                         <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}"
-                            class="btn  text-white bs-pass-para bg-danger">
+                            class="btn px-2 py-2 text-white bs-pass-para bg-danger">
                             <i class="ti ti-trash"></i>
                         </a>
 
@@ -484,10 +484,10 @@
 
                                                                         </div>
                                                                         <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-dark p-1 text-white rounded-0 btn-effect-none edit-input"
+                                                                            <a
+                                                                                class="btn btn-dark  text-white px-2 py-2 edit-input"
                                                                                 name="drive_link"><i
-                                                                                    class="ti ti-pencil"></i></button>
+                                                                                    class="ti ti-pencil"></i></a>
                                                                         </div>
                                                                     </div>
                                                                 </a>
@@ -1074,7 +1074,7 @@
                                                                             data-ajax-popup="true"
                                                                             data-bs-toggle="tooltip"
                                                                             title="{{ __('Add Task') }}"
-                                                                            class="btn px-2 text-white"
+                                                                            class="btn p-2 text-white"
                                                                             style="background-color: #313949;">
                                                                             <i class="ti ti-plus"></i>
                                                                         </a>
@@ -1312,7 +1312,7 @@
                                                                                         data-ajax-popup="true"
                                                                                         data-bs-toggle="tooltip"
                                                                                         title="{{ __('Add Message') }}"
-                                                                                        class="btn px-2 text-white"
+                                                                                        class="btn p-2 text-white"
                                                                                         style="background-color: #313949;">
                                                                                         <i class="ti ti-plus"></i>
                                                                                     </a>
