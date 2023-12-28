@@ -1149,7 +1149,7 @@
                                 <span>{{ __('CRM System') }}</span>
                             </a>
                             <div id="collapsefour"
-                                class="collapse {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' || Request::segment(1) == 'company-permission' || Request::segment(1) == 'pipelines' ? 'show' : '' }}"
+                                class="collapse {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' || Request::segment(1) == 'company-permission' ? 'show' : '' }}"
                                 aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                                 <div class="  collapse-inner rounded">
                                     <ul
@@ -1280,27 +1280,13 @@
                                  <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('course.index') }}">{{__('Courses')}}</a>
                              </li> --}}
                                         @endcan
-                                        @can('manage branch')
-                                            <li
-                                                class="emp nav-item {{ Request::route()->getName() == 'branch.index' || Request::route()->getName() == 'branch.edit' || Request::route()->getName() == 'branch.show' ? ' active' : '' }}">
-                                                <a class="collapse-item" style="color: white; font-size: 13px;"
-                                                    href="{{ route('branch.index') }}">
-                                                    <img src="{{ asset('assets/cs-theme/icons/Layer_1 (3).png') }}"
-                                                        id="icon1" width="15px" height="15px"
-                                                        style="margin-top:-10px" alt="" srcset="">
-                                                    <img src="{{ asset('assets/cs-theme/icons/branchesblue.png') }}"
-                                                        id="icon2" width="15px" height="15px"
-                                                        style="margin-top:-8px" alt="" srcset="">
 
-                                                    {{ __('Branches') }}</a>
-                                            </li>
-                                        @endcan
 
 
 
                                         @can('manage organization')
                                             <li
-                                                class="emp nav-item {{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
+                                                class="d-none emp nav-item {{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
                                                 <a class="collapse-item" style="color: white; font-size: 13px;"
                                                     href="{{ route('organization.index') }}">
                                                     <img src="{{ asset('assets/cs-theme/icons/organization-01-1 1.png') }}"
@@ -1325,20 +1311,7 @@
 
 
 
-                                        <li style=""
-                                            class="emp nav-item {{ Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
 
-                                            <a class="collapse-item" style="color:white; font-size: 13px;"
-                                                href="{{ route('pipelines.index') }}   ">
-                                                <img src="{{ asset('assets/cs-theme/icons/administrator-developer-icon 1.png') }}"
-                                                    id="icon1" width="15px" height="15px"
-                                                    style="margin-top:-10px" alt="" srcset="">
-                                                <img src="{{ asset('assets/cs-theme/icons/crmsysblue.png') }}"
-                                                    id="icon2" width="15px" height="15px"
-                                                    style="margin-top:-8px" alt="" srcset="">
-
-                                                {{ __('CRM System Setup') }}</a>
-                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -1483,11 +1456,25 @@
                                 {{ __('Users') }}</span>
                         </a>
                         <div id="collapseseven"
-                            class="collapse {{ Request::segment(1) == 'user' && Request::segment(2) == 'employees' ? 'show' : '' }}"
+                            class="collapse {{Request::segment(1) == 'branch' || Request::segment(1) == 'user' && Request::segment(2) == 'employees' ? 'show' : '' }}"
                             aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                             <div class="  collapse-inner rounded">
                                 <ul>
+                                    @can('manage branch')
+                                    <li
+                                        class="emp nav-item {{ Request::route()->getName() == 'branch.index' || Request::route()->getName() == 'branch.edit' || Request::route()->getName() == 'branch.show' ? ' active' : '' }}">
+                                        <a class="collapse-item" style="color: white; font-size: 13px;"
+                                            href="{{ route('branch.index') }}">
+                                            <img src="{{ asset('assets/cs-theme/icons/Layer_1 (3).png') }}"
+                                                id="icon1" width="15px" height="15px"
+                                                style="margin-top:-10px" alt="" srcset="">
+                                            <img src="{{ asset('assets/cs-theme/icons/branchesblue.png') }}"
+                                                id="icon2" width="15px" height="15px"
+                                                style="margin-top:-8px" alt="" srcset="">
 
+                                            {{ __('Branches') }}</a>
+                                    </li>
+                                @endcan
                                     <li
                                         class="emp nav-item{{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
                                         <a class="collapse-item" style="color:white; font-size: 13px;"
@@ -1642,7 +1629,7 @@
                                 <span>{{ __('Settings') }}</span>
                             </a>
                             <div id="collapseten"
-                                class="collapse {{ Request::segment(1) == 'settings' ? 'show' : '' }}"
+                                class="collapse {{Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' || Request::segment(1) == 'settings' ? 'show' : '' }}"
                                 aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                                 <div class="  collapse-inner rounded">
                                     <ul>
@@ -1666,6 +1653,20 @@
                                                     style="color: white; font-size: 13px;">{{ __('Order') }}</a>
                                             </li>
                                         @endif
+                                        <li style=""
+                                        class="emp nav-item {{ Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
+
+                                        <a class="collapse-item" style="color:white; font-size: 13px;"
+                                            href="{{ route('pipelines.index') }}   ">
+                                            <img src="{{ asset('assets/cs-theme/icons/administrator-developer-icon 1.png') }}"
+                                                id="icon1" width="15px" height="15px"
+                                                style="margin-top:-10px" alt="" srcset="">
+                                            <img src="{{ asset('assets/cs-theme/icons/crmsysblue.png') }}"
+                                                id="icon2" width="15px" height="15px"
+                                                style="margin-top:-8px" alt="" srcset="">
+
+                                            {{ __('CRM System Setup') }}</a>
+                                    </li>
                                     </ul>
                                 </div>
                             </div>
@@ -2061,14 +2062,18 @@
                                 </li>
                                 @endif
                                 @if (Gate::check('manage company settings'))
-                                    <li class=" {{ Request::segment(1) == 'settings' ? ' active show' : '' }}">
+                                    <li class="emp {{ Request::segment(1) == 'settings' ? ' active show' : '' }}">
                                         <a href="{{ route('settings') }}" class="collapse-item"
-                                            style="color: white; font-size: 13px;">{{ __('System Settings') }}</a>
+                                            style="color: white; font-size: 13px;">
+                                            <i class="fa-solid fa-gears"id="icon1" style="color: #ffffff;font-size: 15px;"></i>
+
+                                            <i class="fa-solid fa-gears" id="icon2" style="color: #2e82d0;font-size: 15px;"></i>
+                                            {{ __('System Settings') }}</a>
                                     </li>
                                 @endif
                                 @if (Gate::check('manage company plan'))
                                     <li
-                                        class="{{ Request::route()->getName() == 'plans.index' || Request::route()->getName() == 'stripe' ? ' active' : '' }}">
+                                        class="d-none {{ Request::route()->getName() == 'plans.index' || Request::route()->getName() == 'stripe' ? ' active' : '' }}">
                                         <a href="{{ route('plans.index') }}" class="collapse-item"
                                             style="color: white; font-size: 13px;">{{ __('Setup Subscription Plan') }}</a>
                                     </li>
