@@ -11,7 +11,7 @@
             {{ Form::label('client_passport', __('Contact Passport'),['class'=>'form-label']) }}
             {{ Form::text('client_passport',null, array('class' => 'form-control','required'=>'required')) }}
         </div>
-        <div class="col-sm-12 col-md-12">
+        <div class="col-sm-12 col-md-12 d-none">
             <div class="d-flex radio-check">
                 <div class="orm-check form-check-inline form-group col-md-6">
                     <input type="radio" name="client_check" value="new" id="new_client" class="form-check-input" @if(empty($exist_client)) checked @endif/>

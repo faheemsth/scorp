@@ -3536,7 +3536,7 @@ class DealController extends Controller
 
         $brand = User::where('id', $id)->first();
 
-        $employees =  User::where('brand_id', $id)->pluck('name', 'id')->toArray();
+        $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
         $branches = Branch::whereIn('id', [$brand->branch_id])->pluck('name', 'id')->toArray();
 
         $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to" required> <option value="">Assign to</option> ';
