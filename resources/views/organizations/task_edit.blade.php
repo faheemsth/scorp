@@ -125,7 +125,7 @@
                             <label for="organization" class="col-sm-3 col-form-label">Assigned to <span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-6" id="assigned_to_div">
-                                <select class="form form-control assigned_to" id="choices-multiple4" name="assigned_to">
+                                <select class="form form-control select2 assigned_to" id="choices-multiple4" name="assigned_to">
                                     <option value="">Assign to</option>
                                     @foreach ($employees as $key => $user)
                                         <option value="{{ $key }}"
@@ -315,7 +315,7 @@
 
 <script>
     $(document).ready(function() {
-
+        select2();
         $(".assign_type").on("change", function() {
 
 
