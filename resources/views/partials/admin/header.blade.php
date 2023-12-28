@@ -5,6 +5,7 @@
 @php
     $users = \Auth::user();
     $logo_dark = \App\Models\Utility::getValByName('company_logo_dark');
+    $notifications = \App\Models\Notification::all();
 
     //$profile=asset(Storage::url('uploads/avatar/'));
     $profile = \App\Models\Utility::get_file('uploads/avatar/');
@@ -183,7 +184,13 @@
                 <!-- Counter - Alerts -->
                 <span class="badge badge-danger badge-counter"></span>
             </a>
-
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                @foreach($notifications as $notification)
+                    {!! $notification->data !!}
+                @endforeach
+            </div>
+        </li>
             <!-- Nav Item - Messages -->
         <li class="nav-item dropdown no-arrow mx-1">
             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
