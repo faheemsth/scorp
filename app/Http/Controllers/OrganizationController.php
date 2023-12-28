@@ -747,15 +747,15 @@ class OrganizationController extends Controller
             // $test = \App\Models\CompanyPermission::where('company_id', 3179)->where('active', 'true')->pluck('permitted_company_id');
             // $companies = User::where('type', 'company')->whereIn('id', $test)->orwhere('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             // dd($companies);
-                $companies = array();
-                if(\Auth::user()->type == 'super admin'){
-                    $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
-                }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
-                    $com_permissions = CompanyPermission::where(['user_id' =>  \Auth::user()->id])->pluck('permitted_company_id')->toArray();
-                    $companies = User::whereIn('id',$com_permissions)->where('type','company')->get()->pluck('name', 'id');
-                }else if(\Auth::user()->type == 'company'){
-                    $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
-                }
+                $companies = FiltersBrands();
+                // if(\Auth::user()->type == 'super admin'){
+                //     $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+                // }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                //     $com_permissions = CompanyPermission::where(['user_id' =>  \Auth::user()->id])->pluck('permitted_company_id')->toArray();
+                //     $companies = User::whereIn('id',$com_permissions)->where('type','company')->get()->pluck('name', 'id');
+                // }else if(\Auth::user()->type == 'company'){
+                //     $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+                // }
 
                 $employees = [];
                 if(\Auth::user()->type == 'company'){

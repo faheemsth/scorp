@@ -340,7 +340,7 @@
                                                                 </td>
                                                                 <td class=""
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $lead->branch->name }}
+                                                                    {{ isset($lead->branch->name) ? $lead->branch->name : '' }}
                                                                 </td>
                                                             </tr>
                                                             <tr>
