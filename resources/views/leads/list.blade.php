@@ -217,7 +217,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <form action="{{ url('leads/import-csv') }}" method="POST"
                                         enctype="multipart/form-data">
                                         @csrf
-                                        <div class="modal-body">
+                                        <div class="modal-body" style="height: 40vh;">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-groups mt-2">
