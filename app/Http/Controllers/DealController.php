@@ -14,6 +14,7 @@ use App\Models\DealCall;
 use App\Models\DealFile;
 use App\Models\DealNote;
 use App\Models\DealTask;
+use App\Models\Notification;
 use App\Models\Pipeline;
 use App\Models\UserDeal;
 use App\Models\DealEmail;
@@ -2741,6 +2742,82 @@ class DealController extends Controller
         }
     }
 
+    public function tasksCron(){
+        $date = \Carbon\Carbon::now();
+        $date = $date->format('Y-m-d');
+
+        $remainder_date_tasks = DealTask::where('remainder_date','=',$date)->get();
+        $due_date_tasks = DealTask::where('due_date','=',$date)->get();
+
+        if(sizeof($remainder_date_tasks) > 0){
+            foreach($remainder_date_tasks as $task){
+                $link       = '';
+                // $link       = route('deals.show', [$tasks->id,]);
+                $text       = "Today is task (".$task->name.") remainder date.";
+                $icon       = "fa fa-tasks";
+                $icon_color = 'bg-primary';
+
+                $date = \Carbon\Carbon::now()->diffForHumans();
+                $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
+                                    </div>
+                                    <div class="flex-fill ml-3">
+                                        <div class="h6 text-sm mb-0">' . $text . '</div>
+                                        <small class="text-muted ">' . $date . '</small>
+                                    </div>
+                                </div>
+                            </a>';
+
+                $notification = new Notification;
+                $notification->user_id = 0;
+                $notification->type = 'Task Remainder';
+                $notification->data = $html;
+                $notification->is_read = 0;
+                $notification->save();
+
+            }
+            
+
+        }
+
+        if(sizeof($due_date_tasks) > 0){
+            foreach($due_date_tasks as $task){
+                $link       = '';
+                // $link       = route('deals.show', [$tasks->id,]);
+                $text       = "Today is task (".$task->name.") Due date.";
+                $icon       = "fa fa-tasks";
+                $icon_color = 'bg-primary';
+
+                $date = \Carbon\Carbon::now()->diffForHumans();
+                $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="d-flex align-items-center">
+                                    <div>
+                                        <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
+                                    </div>
+                                    <div class="flex-fill ml-3">
+                                        <div class="h6 text-sm mb-0">' . $text . '</div>
+                                        <small class="text-muted ">' . $date . '</small>
+                                    </div>
+                                </div>
+                            </a>';
+
+                $notification = new Notification;
+                $notification->user_id = 0;
+                $notification->type = 'Task Due Date';
+                $notification->data = $html;
+                $notification->is_read = 0;
+                $notification->save();
+
+            }
+            
+
+        }
+
+    }
 
     public function dealDriveLink(Request $request)
     {

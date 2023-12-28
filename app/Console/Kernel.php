@@ -16,6 +16,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        // $schedule->call('\App\Http\Controllers\DealController@tasksCron')->dailyAt('12:01');
+        $schedule->call('\App\Http\Controllers\DealController@tasksCron')->everyMinute();
+
     }
 
     /**

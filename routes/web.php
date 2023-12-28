@@ -678,6 +678,7 @@ Route::delete('/deals/{id}/call/{cid}', [DealController::class, 'callDestroy'])-
 
 // User Tasks
 Route::get('deals/get-user-tasks', [DealController::class, 'userTasks'])->name('deals.get.user.tasks')->middleware(['auth', 'XSS']);
+Route::get('deals/task-cron', [DealController::class, 'tasksCron'])->middleware(['auth', 'XSS']);
 
 Route::get('deals/{id}/deals-drive-link', [DealController::class, 'dealDriveLink'])->name('deals.drive.link')->middleware(['auth', 'XSS']);;
 Route::get('leads/{id}/drive-link', [LeadController::class, 'driveLink'])->name('leads.drive.link')->middleware(['auth', 'XSS']);;
