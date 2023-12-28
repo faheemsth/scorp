@@ -66,8 +66,14 @@ class BranchController extends Controller
                 return redirect()->back()->with('error', $messages->first());
             }
 
+            $brands = null;
+            if($request->brands != null && sizeof($request->brands) > 0){
+                $brands = implode(',',$request->brands);
+            }
+
             $branch             = new Branch();
             $branch->name       = $request->name;
+            $branch->brands       = $brands;
 
             $branch->region_id       = $request->region_id;
             $branch->branch_manager_id       = $request->branch_manager_id;
@@ -97,12 +103,19 @@ class BranchController extends Controller
     {
         $branchmanager=User::where('type','branch manager')->get();
         $regions=Region::all();
+
+        $region = Region::where('id', $branch->region_id)->first();
+
+
+        $ids = explode(',',$region->brands);
+        $brands = User::whereIn('id',$ids)->where('type', 'company')->pluck('name', 'id')->toArray();
+        
         if(\Auth::user()->can('edit branch'))
         {
             if($branch->created_by == \Auth::user()->creatorId())
             {
 
-                return view('branch.edit', compact('branch','branchmanager','regions'));
+                return view('branch.edit', compact('branch','brands','branchmanager','regions'));
             }
             else
             {
@@ -132,9 +145,15 @@ class BranchController extends Controller
 
                     return redirect()->back()->with('error', $messages->first());
                 }
-
+               
+                $brands = null;
+                if($request->brands != null && sizeof($request->brands) > 0){
+                    $brands = implode(',',$request->brands);
+                }
+                
                 $branch->name = $request->name;
                 $branch->region_id       = $request->region_id;
+                $branch->brands       = $brands;
                 $branch->branch_manager_id       = $request->branch_manager_id;
                 $branch->google_link       = $request->google_link;
                 $branch->social_media_link       = $request->social_media_link;

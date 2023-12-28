@@ -360,7 +360,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                             </form>
                         </div>
 
-                        <div class="card-body table-responsive leads-list-div" style="padding: 25px 3px; width:auto;">
+                        <div class="card-body table-responsive" style="padding: 25px 3px; width:auto;">
                             <table class="table " data-resizable-columns-id="lead-table" id="tfont">
                                 <thead>
                                     <tr>
@@ -385,7 +385,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         </th> --}}
                                     </tr>
                                 </thead>
-                                <tbody class="leads-list-tbody">
+                                <tbody class="leads-list-tbody leads-list-div">
                                     @if (count($leads) > 0)
                                         @foreach ($leads as $lead)
                                             <tr>
