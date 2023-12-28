@@ -19,8 +19,20 @@
 
         <div class="col-6 form-group py-0">
             {{ Form::label('intake', __('Intake'), ['class' => 'form-label']) }}
-            {{ Form::month('intake', date('Y-m', strtotime($application->intake)), ['class' => 'form-control', 'required' => 'required', 'style' => 'height: 45px;']) }}
+            <div class="intake_month_div" id="intake_month_div">
+                <select name="intake_month" class="form form-control" id="intake_month">
+                    <option value="">Select months</option>
+                    @if(isset($application) && isset($application->intake))
+                        @php
+                            $selectedValue = date('Y-m', strtotime($application->intake));
+                        @endphp
+                        <option value="{{ $selectedValue }}" selected>{{ date('F', strtotime($application->intake)) }}</option>
+                    @endif
+                </select>
+
+            </div>
         </div>
+
 
 
         <div class="col-6 form-group py-0">
@@ -68,4 +80,29 @@
                     }
                 });
     })
+    $("#university").on("change", function () {
+    var id = $(this).val();
+
+    // Use shorthand $.get for a simple GET request
+    $.get('{{ route('get_university_intake') }}', { id: id }, function (data) {
+        try {
+            data = JSON.parse(data);
+
+            console.log(data.html);
+
+            if (data.status === 'success') {
+
+                $('#intake_month').html(data.html);
+                select2();
+            } else {
+                console.error('Unexpected response:', data);
+            }
+        } catch (error) {
+            console.error('Error parsing JSON response:', error);
+        }
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+        console.error('AJAX request failed:', textStatus, errorThrown);
+    });
+});
 </script>

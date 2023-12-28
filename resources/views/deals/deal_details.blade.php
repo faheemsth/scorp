@@ -144,6 +144,16 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @if (\Auth::user()->can('edit deal'))
+                            @if (!empty($deal->phone))
+                                <a href="https://wa.me/{{ formatPhoneNumber($deal->phone) }}?text=Hello ! Dear {{ $deal->name }}"
+                                    target="_blank" data-size="lg" data-bs-toggle="tooltip"
+                                    data-bs-title="{{ __('Already Converted To Deal') }}" class="btn btn-dark text-white"
+                                    style="background-color: #313949">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </a>
+                            @endif
+                    @endif
+                    @if (\Auth::user()->can('edit deal'))
 
                     <a href="#" data-size="lg" data-url="{{ route('deals.edit', $deal->id) }}"
                         data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Deal') }}"
@@ -683,11 +693,11 @@
                                                                 <td>
                                                                     <div class="d-flex justify-center align-items-center">
                                                                     @can('edit application')
-
-                                                                        <a data-size="lg" title="{{ __('Edit Application') }}" href="#" class="btn px-2 btn-dark text-white mx-1" data-url="{{ route('deals.application.edit', $app->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Application') }}" data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
-                                                                            <i class="ti ti-edit"></i>
-                                                                        </a>
-
+                                                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                                                    <a data-size="lg" title="{{ __('Edit Application') }}" href="#" class="btn px-2 btn-dark text-white mx-1" data-url="{{ route('deals.application.edit', $app->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Application') }}" data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
+                                                                        <i class="ti ti-edit"></i>
+                                                                    </a>
+                                                                    @endif
                                                                     @endcan
 
                                                                     @can('delete application')

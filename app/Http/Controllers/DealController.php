@@ -2451,22 +2451,28 @@ class DealController extends Controller
             $university_name = University::select('name')->where(['id' => (int)$request->university])->first()->name;
             $university_name = str_replace(' ', '-', $university_name);
 
-
-
-            $is_exist = DealApplication::where(['application_key' => $passport_number . '-' . $university_name])->first();
+            $deal = Deal::findOrFail($request->id);
+            $userName = optional(
+                User::find(
+                    optional(
+                        ClientDeal::where('deal_id', $request->id)->first()
+                    )->client_id
+                )
+            )->name;
+            $brandName=optional(User::find($deal->brand_id))->name;
+            $branchname=optional(Branch::find($deal->branch_id))->name;
+            $is_exist = DealApplication::where(['application_key' => $userName .'-'. $passport_number . '-' . $university_name .'-'. $request->intake_month .'-'. $request->id])->first();
 
 
             if ($passport_number && $is_exist) {
                 return json_encode([
                     'status' => 'error',
-                    'message' => __('Application already created by '.allUsers()[$is_exist->created_by].' for '.allUniversities()[$is_exist->university_id])
+                    'message' => __('Application already created by '.allUsers()[$is_exist->created_by].' for '.allUniversities()[$is_exist->university_id].' for '. $branchname.' for '.$userName.' for '.$brandName)
                 ]);
             }
 
-            $deal = Deal::findOrFail($request->id);
-
             $new_app = DealApplication::create([
-                'application_key' => $passport_number . '-' . $university_name,
+                'application_key' =>  $userName .'-'. $passport_number . '-' . $university_name .'-'. $request->intake_month .'-'. $request->id,
                 'deal_id' => $request->id,
                 'university_id' => (int)$request->university,
                 'course' => $request->course,
@@ -2779,7 +2785,7 @@ class DealController extends Controller
                 $notification->save();
 
             }
-            
+
 
         }
 
@@ -2813,7 +2819,7 @@ class DealController extends Controller
                 $notification->save();
 
             }
-            
+
 
         }
 
