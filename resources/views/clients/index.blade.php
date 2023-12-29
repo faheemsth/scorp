@@ -44,7 +44,7 @@ $(document).on('change', '.sub-check', function() {
         <div class="card py-3">
             <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                 <div class="col-2">
-                    <p class="mb-0 pb-0 ps-1">CONTACTS</p>
+                    <p class="mb-0 pb-0 ps-1">ACTION ITEMS:</p>
                     <div class="dropdown">
                         <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -183,8 +183,8 @@ $(document).on('change', '.sub-check', function() {
                             <th style="width: 50px !important;">
                                 <input type="checkbox" class="main-check">
                             </th>
-                            <th style="border-left: 1px solid #fff;">Name</th>
-                            <th style="border-left: 1px solid #fff;">Email</th>
+                            <th style="border-left: 1px solid #fff;">Contact Name</th>
+                            <th style="border-left: 1px solid #fff;">Contact Email</th>
                             <th style="border-left: 1px solid #fff;">Admissions</th>
                             <th style="border-left: 1px solid #fff;">Applications</th>
                             <th style="border-left: 1px solid #fff; display: none;">Action</th>
@@ -320,7 +320,7 @@ $(document).on('change', '.sub-check', function() {
                 $(".sub-check").prop('checked', $(this).prop('checked'));
             });
 
-            
+
             $(document).on('change', '.sub-check', function() {
                 var selectedIds = $('.sub-check:checked').map(function() {
                     return this.value;
@@ -356,7 +356,7 @@ $(document).on('change', '.sub-check', function() {
                     $('#field_to_update').html('');
 
                     if (this.value == 'name') {
-                        
+
                         let field = `<div>
                                         <input class="form-control" placeholder="Enter client Name" required="required" name="name" type="text" id="name">
                                     </div>`;
