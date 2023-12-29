@@ -2,10 +2,6 @@
 @foreach ($deals as $deal)
     <tr>
         <td> <input type="checkbox" name=""></td>
-        
-        <td>{{ $deal->stage->name }}</td>
-
-
         <td style="width: 100px !important; ">
             <span style="cursor:pointer" class="deal-name hyper-link"
                 onclick="openNav(<?= $deal->id ?>)"
@@ -18,37 +14,37 @@
                 @endif
             </span>
         </td>
-
+        <td>{{ $deal->stage->name }}</td>
         <td>
-            @php 
+            @php
                 $lead = \App\Models\Lead::join('client_deals', 'client_deals.client_id', 'leads.is_converted')->where('client_deals.deal_id', $deal->id)->first();
                 $source = isset($lead->sources) && isset($sources[$lead->sources]) ? $sources[$lead->sources] : '';
-            @endphp 
+            @endphp
 
             {{ $source }}
         </td>
-        
+
         <td>
-            @php 
+            @php
                 $month = !empty($deal->intake_month) ? $deal->intake_month : 'January';
                 $year = !empty($deal->intake_year) ? $deal->intake_year : '2023';
-            @endphp 
+            @endphp
             {{ $month.' 1 ,'.$year }}
         </td>
 
 
-        
+
         <td class="">
-            @php 
+            @php
                 $assigned_to = isset($deal->assigned_to) && isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : 0;
-            @endphp 
-        
+            @endphp
+
             @if($assigned_to !=  0)
             <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{$deal->assigned_to}}+'/user_detail')" >
                 {{ $assigned_to }}
             </span>
             @endif
-        
+
         </td>
 
 

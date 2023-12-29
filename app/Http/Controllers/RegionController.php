@@ -26,7 +26,8 @@ class RegionController extends Controller
     {
         $regions = Region::all();
         $brands = User::where('type', 'company')->get();
-        $regionmanager=User::where('type','Region Manager')->get();
+        $regionmanager=User::where('type','branch manager')->get();
+
         return view('region.create', compact('regions','regionmanager','brands'));
     }
 
@@ -58,12 +59,12 @@ class RegionController extends Controller
             ]);
         }
 
-        
+
     }
 
     public function save(Request $request)
     {
-       
+
         if (!empty($request->id)) {
             Region::find($request->id)->update($request->all());
         } else {
@@ -71,10 +72,10 @@ class RegionController extends Controller
             if($request->brands != null && sizeof($request->brands) > 0){
                 $brands = implode(',',$request->brands);
             }
-            
+
             $data = $request->all();
             $data['brands'] = $brands;
-          
+
             Region::create($data);
         }
 
@@ -86,14 +87,27 @@ class RegionController extends Controller
     {
 
         $regions = Region::find($request->id);
+        $brands = User::where('type', 'company')->get();
         $regionmanager=User::where('type','branch manager')->get();
 
-        return view('region.create', compact('regions','regionmanager'));
+        return view('region.create', compact('regions','regionmanager','brands'));
     }
 
-    public function delete(Request $request)
+    public function delete($id)
     {
-        Region::find($request->id)->delete();
+        Region::find($id)->delete();
         return back();
     }
+
+    public function regions_show($id)
+    {
+        $employee = Region::findOrFail($id);
+        $html = view('region.employeeDetail', compact('employee'))->render();
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
+    }
+
+
 }

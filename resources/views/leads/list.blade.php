@@ -369,11 +369,11 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         </th>
 
 
-                                        <th data-resizable-columns-id="name">{{ __('Name') }}</th>
+                                        <th data-resizable-columns-id="name">{{ __('Admission Name') }}</th>
                                         {{-- <th>{{ __('Subject') }}</th> --}}
 
                                         <th data-resizable-columns-id="email_address" class="ps-3">
-                                            {{ __('Email Address') }}</th>
+                                            {{ __('Email') }}</th>
                                         <th data-resizable-columns-id="phone" class="ps-3">{{ __('Phone') }}</th>
                                         <th data-resizable-columns-id="stage" class="ps-3">{{ __('Stage') }}</th>
                                         <th data-resizable-columns-id="users" class="ps-3">{{ __('Assigned to') }}</th>

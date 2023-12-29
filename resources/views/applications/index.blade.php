@@ -165,8 +165,9 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         <th style="width: 50px !important;">
                             <input type="checkbox" class="main-check">
                         </th>
-                        <th scope="col">{{ __('Name') }}</th>
+                        <th scope="col">{{ __('Student Name') }}</th>
                         <th scope="col">{{ __('University') }}</th>
+                        <th scope="col">{{ __('Course') }}</th>
                         <th scope="col">{{ __('Intake') }}</th>
                         <th scope="col">{{ __('Brand') }}</th>
                         <th scope="col">{{ __('Branch') }}</th>
@@ -193,6 +194,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                             </span>
                                 </td>
                                 <td>{{ $universities[$app->university_id] }}</td>
+                                <td>{{ $app['course'] }}</td>
                                 <td> {{ $app->intake }} </td>
                                 <td> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }}  </td>
                                 <td> {{ isset($branch->name) ? $branch->name : ''  }} </td>

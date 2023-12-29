@@ -454,11 +454,8 @@
                                     <th style="width: 50px !important;">
                                         <input type="checkbox" class="main-check">
                                     </th>
-                                    <th>{{ __('Stage') }}</th>
-
-
                                     <th style="width: 100px !important;">{{ __('Admission Name') }}</th>
-
+                                    <th>{{ __('Stage') }}</th>
                                     <th>{{ __('Lead Source') }}</th>
 
                                     <th>{{ __('Intake') }}</th>
@@ -475,9 +472,6 @@
                                     <td>
                                         <input type="checkbox" name="deals[]" value="{{$deal->id}}" class="sub-check">
                                     </td>
-                                    <td>{{ $deal->stage->name }}</td>
-
-
                                     <td style="width: 100px !important; ">
                                         <span style="cursor:pointer" class="deal-name hyper-link" onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})" data-deal-id="{{ $deal->id }}">
 
@@ -488,7 +482,7 @@
                                             @endif
                                         </span>
                                     </td>
-
+                                    <td>{{ $deal->stage->name }}</td>
                                     <td>
                                         @php
                                         $lead = \App\Models\Lead::join('client_deals', 'client_deals.client_id', 'leads.is_converted')->where('client_deals.deal_id', $deal->id)->first();

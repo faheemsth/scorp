@@ -274,7 +274,7 @@ class LeadController extends Controller
         $employees =  User::where('brand_id', $id)->pluck('name', 'id')->toArray();
         $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
 
-        
+
         $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="lead_assgigned_user" required> <option value="">Select User</option> ';
         foreach ($employees as $key => $user) {
             $html .= '<option value="' . $key . '">' . $user . '</option> ';
@@ -535,8 +535,10 @@ class LeadController extends Controller
                 $sources = Source::get()->pluck('name', 'id');
                 $countries = $this->countries_list();
 
-                return view('leads.edit', compact('lead', 'pipelines', 'sources', 'products', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries'));
-            } else if ($lead->created_by == \Auth::user()->creatorId() || \Auth::user()->can('edit lead')) {
+                $companies = FiltersBrands();
+                return view('leads.edit', compact('companies','lead', 'pipelines', 'sources', 'products', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries'));
+            } else if ($lead->created_by == \Auth::user()->creatorId()) {
+
                 // $pipelines = Pipeline::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
                 // $pipelines->prepend(__('Select Pipeline'), '');
                 // $sources        = Source::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -682,7 +684,7 @@ class LeadController extends Controller
                 // $lead->email       = $request->lead_email;
                 $lead->phone       = $request->lead_phone;
                 $lead->mobile_phone = $request->lead_mobile_phone;
-                $lead->branch_id      = gettype($request->lead_branch) == 'string' ? 0 : $request->lead_branch;;
+                $lead->branch_id      = $request->lead_branch;
                 $lead->organization_id =gettype($request->lead_organization) == 'string' ? 0 : $request->lead_organization;;
                 $lead->organization_link = $request->lead_organization_link;
                 $lead->sources = $request->lead_sources;

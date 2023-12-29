@@ -145,7 +145,7 @@
                         <i class="ti ti-bookmark"></i>
                     </a>
                     <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}"
-                        data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"
+                        data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Lead') }}" title="Update Lead" data-original-title="{{ __('Update Lead') }}"
                         class="btn px-2 py-2 text-white" style="background-color: #313949;">
                         <i class="ti ti-pencil"></i>
                     </a>
@@ -340,7 +340,7 @@
                                                                 </td>
                                                                 <td class=""
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ isset($lead->branch->name) ? $lead->branch->name : '' }}
+                                                                    {{ optional(App\Models\Branch::find($lead->branch_id))->name }}
                                                                 </td>
                                                             </tr>
                                                             <tr>
