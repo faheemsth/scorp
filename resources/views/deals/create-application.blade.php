@@ -66,9 +66,16 @@
                     openSidebar('/deals/' + data.app_id + '/detail-application');
                     return false;
                 } else {
-                    show_toastr('Error', data.message, 'error');
-                    $(".create-btn").val('Create');
-                    $('.create-btn').removeAttr('disabled');
+                    Swal.fire({
+                    title: "Already Exist",
+                    text: data.message,
+                    icon: "error",
+                    showCancelButton: false,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                });
+                $(".create-btn").val('Create');
+                $('.create-btn').removeAttr('disabled');
                 }
             }
         });

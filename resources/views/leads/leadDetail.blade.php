@@ -230,7 +230,7 @@
                           </style>
 
                             <a type="button" data-lead-id="{{ $lead->id }}" data-stage-id="{{ $stage->id }}"
-                                class="lead_stage  {{ $is_missed == true ? 'missedup' : ($lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '')) }}"
+                                class="lead_stage {{ $is_missed == true ? 'missedup' : ($lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '')) }}"
                                 style="font-size:13px;"> {{ $stage->name }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
                         @empty
                         @endforelse

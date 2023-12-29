@@ -334,13 +334,13 @@
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <div class="form-group">
                                 <label>
-                                    {{ Form::radio('cars', 'customer', true, ['class' => 'form-check-input']) }}
-                                    User Type
+                                    {{ Form::radio('cars', 'customer', false, ['class' => 'form-check-input']) }}
+                                    User Voucher
                                 </label>
 
                                 <label class="px-5">
                                     {{ Form::radio('cars', 'threeCarDiv', false, ['class' => 'form-check-input']) }}
-                                    Open Type
+                                    Open Voucher
                                 </label>
                             </div>
                             <div id="customer" class="desc">
@@ -433,7 +433,8 @@
             </div>
         </div>
         <div class="col-12">
-            <h5 class=" d-inline-block mb-4">{{ __('Product & Services') }}</h5>
+            {{-- <h5 class=" d-inline-block mb-4">{{ __('Product & Services') }}</h5> --}}
+            <h5 class=" d-inline-block mb-4 ps-2">{{ __('Services') }}</h5>
             <div class="card repeater  py-5">
                 <div class="item-section py-2">
                     <div class="row justify-content-between align-items-center">
