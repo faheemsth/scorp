@@ -129,12 +129,14 @@
                                 <i class="ti ti-exchange"></i>
                             </a>
                         @else
+                            @can('lead convert to admission')
                             <a href="#" data-size="lg"
                                 data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
                                 data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] To Deal') }}"
                                 class="btn px-2 py-2 btn-dark text-white">
                                 <i class="ti ti-exchange"></i>
                             </a>
+                            @endcan
                         @endif
 
                     @endcan
