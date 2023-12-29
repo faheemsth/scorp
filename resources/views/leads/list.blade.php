@@ -321,6 +321,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <div class="col-md-4 mt-3">
                                         <br>
                                         <input type="submit" class="btn form-btn me-2 bg-dark" style=" color:white;">
+                                        <a type="button" onClick="saveFilter()" class="btn form-btn me-2 bg-dark" style=" color:white;">Save Filter</a>
                                         <a href="/leads/list" class="btn form-btn bg-dark" style="color:white;">Reset</a>
                                     </div>
                                 </div>
@@ -612,6 +613,25 @@ if (isset($lead->is_active) && $lead->is_active) {
             $("#lead_ids").val(commaSeperated);
 
         });
+
+        function saveFilter(){
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('save-filter') }}",
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        
+                    } else {
+                        
+                    }
+                }
+            });
+
+        }
 
         function massUpdate() {
             if (selectedArr.length > 0) {
