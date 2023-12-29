@@ -113,7 +113,7 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @can('View Deal')
-                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" data-bs-title="{{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949">
+                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949;">
                         <i class="fa-brands fa-whatsapp"></i>
                     </a>
 
@@ -157,9 +157,9 @@
                             'id' => 'delete-form-' . $lead->id,
                         ]) !!}
 
-                        <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}"
+                        <a href="#" data-bs-toggle="tooltip" title="{{__('Delete')}}"
                             class="btn px-2 py-2 text-white bs-pass-para bg-danger">
-                            <i class="ti ti-trash"></i>
+                            <i class="ti ti-trash" ></i>
                         </a>
 
 
@@ -219,11 +219,19 @@
 
                             ?>
 
-
+                          <style>
+                            .missedup{
+                                background-color:#e0e0e0 !important;
+                                color:white !important;
+                            }
+                            .missedup::after{
+                                border-left-color: #e0e0e0 !important;
+                            }
+                          </style>
 
                             <a type="button" data-lead-id="{{ $lead->id }}" data-stage-id="{{ $stage->id }}"
-                                class="lead_stage {{ $lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '') }} "
-                                style="font-size:13px;{{ $is_missed == true ? 'background-color:#e0e0e0 !important;color:white !important;' : '' }}"> {{ $stage->name }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
+                                class="lead_stage  {{ $is_missed == true ? 'missedup' : ($lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '')) }}"
+                                style="font-size:13px;"> {{ $stage->name }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
                         @empty
                         @endforelse
                     </div>

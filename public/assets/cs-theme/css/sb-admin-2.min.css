@@ -6376,7 +6376,7 @@ a.close.disabled {
 .modal-footer {
    position: absolute;
    bottom: 0;
-   right: 0;
+   right: 30px;
     padding: .75rem;
 }
 
@@ -11536,7 +11536,7 @@ a:focus {
 
 .sidebar {
     width: 6.5rem;
-    min-height: 100vh
+    min-height: calc(100vh - 4.375rem);
 }
 
 .sidebar .nav-item {

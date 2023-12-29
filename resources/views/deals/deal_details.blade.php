@@ -272,7 +272,20 @@
                 }
 
                 ?>
-                <a type="button" data-lead-id="{{ $deal->id }}" data-stage-id="{{ $key }}" class="lead_stage deal_stage {{ $deal->stage->name == $stage ? 'current' : ($done == true ? 'done' : '') }}" style="font-size:12px">{{ $stage }}  @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif</a>
+
+<style>
+    .missedup{
+        background-color:#e0e0e0 !important;
+        color:white !important;
+    }
+    .missedup::after{
+        border-left-color: #e0e0e0 !important;
+    }
+  </style>
+
+                <a type="button" data-lead-id="{{ $deal->id }}" data-stage-id="{{ $key }}"
+                    class="lead_stage deal_stage {{ $is_missed == true ? 'missedup' : ($deal->stage->name == $stage ? 'current' : ($done == true ? 'done' : '')) }}"
+                    style="font-size:12px">{{ $stage }}  @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif</a>
                 @endforeach
 
             </div>

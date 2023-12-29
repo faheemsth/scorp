@@ -24,97 +24,64 @@
     <li class="breadcrumb-item">{{__('Invoice')}}</li>
 @endsection
 
-@section('action-btn')
-    <div class="float-end">
-        {{--        <a class="btn btn-sm btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1" data-bs-toggle="tooltip" title="{{__('Filter')}}">--}}
-        {{--            <i class="ti ti-filter"></i>--}}
-        {{--        </a>--}}
 
-        <a href="{{ route('invoice.export') }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{__('Export')}}">
-            <i class="ti ti-file-export"></i>
-        </a>
-
-        @can('create invoice')
-            <a href="{{ route('invoice.create', 0) }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{__('Create')}}">
-                <i class="ti ti-plus"></i>
-            </a>
-        @endcan
-    </div>
-@endsection
 
 
 
 @section('content')
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="mt-2 " id="multiCollapseExample1">
-                <div class="card">
-                    <div class="card-body">
-{{--                        @if (!\Auth::guard('customer')->check())--}}
-                            {{ Form::open(['route' => ['invoice.index'], 'method' => 'GET', 'id' => 'customer_submit']) }}
-{{--                        @else--}}
-{{--                            {{ Form::open(['route' => ['customer.invoice'], 'method' => 'GET', 'id' => 'customer_submit']) }}--}}
-{{--                        @endif--}}
-                        <div class="row d-flex align-items-center justify-content-end">
-                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 mr-2">
-                                <div class="btn-box">
-                                    {{ Form::label('issue_date', __('Issue Date'),['class'=>'form-label'])}}
-                                    {{ Form::date('issue_date', isset($_GET['issue_date'])?$_GET['issue_date']:'', array('class' => 'form-control month-btn','id'=>'pc-daterangepicker-1')) }}
-
-
-                                </div>
-                            </div>
-{{--                            @if (!\Auth::guard('customer')->check())--}}
-                                <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12 mr-2">
-                                    <div class="btn-box">
-                                        {{ Form::label('customer', __('Customer'),['class'=>'form-label'])}}
-                                        {{ Form::select('customer', $customer, isset($_GET['customer']) ? $_GET['customer'] : '', ['class' => 'form-control select']) }}
-                                    </div>
-                                </div>
-{{--                            @endif--}}
-                            <div class="col-xl-3 col-lg-3 col-md-6 col-sm-12 col-12">
-                                <div class="btn-box">
-                                    {{ Form::label('status', __('Status'),['class'=>'form-label'])}}
-                                    {{ Form::select('status', [''=>'Select Status'] + $status,isset($_GET['status'])?$_GET['status']:'', array('class' => 'form-control select')) }}
-
-                                </div>
-                            </div>
-                            <div class="col-auto float-end ms-2 mt-4">
-
-                                <a href="#" class="btn btn-sm btn-primary"
-                                   onclick="document.getElementById('customer_submit').submit(); return false;"
-                                   data-toggle="tooltip" data-original-title="{{ __('apply') }}">
-                                    <span class="btn-inner--icon"><i class="ti ti-search"></i></span>
-                                </a>
-
-{{--                                @if (!\Auth::guard('customer')->check())--}}
-{{--                                    <a href="{{ route('invoice.index') }}" class="btn btn-sm btn-danger" data-toggle="tooltip"--}}
-{{--                                       data-original-title="{{ __('Reset') }}">--}}
-{{--                                        <span class="btn-inner--icon"><i class="ti ti-trash-off text-white-off"></i></span>--}}
-{{--                                    </a>--}}
-{{--                                @else--}}
-                                    <a href="{{ route('customer.index') }}" class="btn btn-sm btn-primary" data-toggle="tooltip"
-                                       data-original-title="{{ __('Reset') }}">
-                                        <span class="btn-inner--icon"><i class="ti ti-trash text-white-off"></i></span>
-                                    </a>
-{{--                                @endif--}}
-                            </div>
-
-                        </div>
-                        {{ Form::close() }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-body table-border-style">
-                    <h5></h5>
+
+                    <div class="row d-flex justify-content-center align-items-center ps-0 ms-0 mb-4 my-2">
+                        <div class="col-4">
+                            <p class="mb-0 pb-0 ps-1">INVOICE</p>
+                            <div class="dropdown">
+                                <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="    border: 1px solid lightgrey;
+    background-color: transparent;">
+                                    ALL INVOICE
+                                </button>
+                                <ul class="" aria-labelledby="dropdownMenuButton1">
+                              </ul>
+                            </div>
+                        </div>
+
+
+                        <div class="col-8 d-flex justify-content-end gap-2">
+                            <div class="input-group w-25">
+                                <button class="btn btn-sm list-global-search-btn">
+                                    <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                                        <i class="ti ti-search" style="font-size: 18px"></i>
+                                    </span>
+                                </button>
+                                <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list...">
+                            </div>
+
+
+
+
+
+                                <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+
+                            <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="ti ti-filter" style="font-size:18px"></i>
+                            </button>
+                            <a href="{{ route('invoice.export') }}" class="btn p-2 btn-dark" data-bs-toggle="tooltip" title="{{__('Export')}}">
+                                <i class="ti ti-file-export"></i>
+                            </a>
+
+                            @can('create invoice')
+                <a href="{{ route('invoice.create', 0) }}" class="btn p-2 btn-dark" data-bs-toggle="tooltip" title="{{__('Create')}}">
+                    <i class="ti ti-plus"></i>
+                </a>
+            @endcan
+
+                        </div>
+                    </div>
+                    <div class="card-body table-border-style">
                     <div class="table-responsive">
-                        <table class="table datatable">
+                        <table class="table ">
                             <thead>
                             <tr>
                                 <th> {{ __('Invoice') }}</th>
@@ -144,7 +111,7 @@
 {{--                                        @if (\Auth::guard('customer')->check())--}}
 {{--                                            <a href="{{ route('customer.invoice.show', \Crypt::encrypt($invoice->id)) }}" class="btn btn-outline-primary">{{ AUth::user()->invoiceNumberFormat($invoice->invoice_id) }}</a>--}}
 {{--                                        @else--}}
-                                            <a href="{{ route('invoice.show', \Crypt::encrypt($invoice->id)) }}" class="btn btn-outline-primary">{{ AUth::user()->invoiceNumberFormat($invoice->invoice_id) }}</a>
+                                            <a href="{{ route('invoice.show', \Crypt::encrypt($invoice->id)) }}" class="btn btn-outline-dark" style="font-size: 14px;">{{ AUth::user()->invoiceNumberFormat($invoice->invoice_id) }}</a>
 {{--                                        @endif--}}
                                     </td>
 {{--                                    @if (!\Auth::guard('customer')->check())--}}
@@ -185,14 +152,14 @@
 
                                                     @can('copy invoice')
                                                         <div class="action-btn bg-warning ms-2">
-                                                            <a href="#" id="{{ route('invoice.link.copy',[$invoiceID]) }}" class="mx-3 btn btn-sm align-items-center"   onclick="copyToClipboard(this)" data-bs-toggle="tooltip" data-original-title="{{__('Click to copy')}}"><i class="ti ti-link text-white"></i></a>
+                                                            <a href="#" id="{{ route('invoice.link.copy',[$invoiceID]) }}" class="mx-3 btn btn-dark p-2"   onclick="copyToClipboard(this)" data-bs-toggle="tooltip" data-original-title="{{__('Click to copy')}}"><i class="ti ti-link text-white"></i></a>
                                                         </div>
                                                     @endcan
                                                     @can('duplicate invoice')
                                                         <div class="action-btn bg-success ms-2">
                                                            {!! Form::open(['method' => 'get', 'route' => ['invoice.duplicate', $invoice->id], 'id' => 'duplicate-form-' . $invoice->id]) !!}
 
-                                                            <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-toggle="tooltip"
+                                                            <a href="#" class="mx-3 btn p-2 btn-dark" data-toggle="tooltip"
                                                                data-original-title="{{ __('Duplicate') }}" data-bs-toggle="tooltip" title="Duplicate Invoice"
                                                                data-original-title="{{ __('Delete') }}"
                                                                data-confirm="You want to confirm this action. Press Yes to continue or Cancel to go back"
@@ -215,7 +182,7 @@
 {{--                                                        @else--}}
                                                             <div class="action-btn bg-info ms-2">
                                                                     <a href="{{ route('invoice.show', \Crypt::encrypt($invoice->id)) }}"
-                                                                       class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="Show "
+                                                                       class="mx-3 btn p-2 btn-dark" data-bs-toggle="tooltip" title="Show "
                                                                        data-original-title="{{ __('Detail') }}">
                                                                         <i class="ti ti-eye text-white"></i>
                                                                     </a>
@@ -225,7 +192,7 @@
                                                     @can('edit invoice')
                                                         <div class="action-btn bg-primary ms-2">
                                                                 <a href="{{ route('invoice.edit', \Crypt::encrypt($invoice->id)) }}"
-                                                                   class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="Edit "
+                                                                   class="mx-3 btn p-2 btn-dark" data-bs-toggle="tooltip" title="Edit "
                                                                    data-original-title="{{ __('Edit') }}">
                                                                     <i class="ti ti-pencil text-white"></i>
                                                                 </a>
@@ -234,7 +201,7 @@
                                                     @can('delete invoice')
                                                         <div class="action-btn bg-danger ms-2">
                                                                 {!! Form::open(['method' => 'DELETE', 'route' => ['invoice.destroy', $invoice->id], 'id' => 'delete-form-' . $invoice->id]) !!}
-                                                                    <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para " data-bs-toggle="tooltip" title="{{__('Delete')}}"
+                                                                    <a href="#" class="mx-3 btn p-2 btn-danger " data-bs-toggle="tooltip" title="{{__('Delete')}}"
                                                                        data-original-title="{{ __('Delete') }}"
                                                                        data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
                                                                        data-confirm-yes="document.getElementById('delete-form-{{ $invoice->id }}').submit();">

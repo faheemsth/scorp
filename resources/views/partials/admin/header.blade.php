@@ -185,10 +185,34 @@
                 <span class="badge badge-danger badge-counter"></span>
             </a>
             <!-- Dropdown - User Information -->
-            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                @foreach($notifications as $notification)
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown" style="width: 225px !important;">
+                {{-- @foreach($notifications as $notification)
                     {!! $notification->data !!}
-                @endforeach
+                @endforeach --}}
+                <ul>
+                    <li class="px-2">
+                        <h6 class="mb-0">title</h6>
+                        <p class="mb-1" style="color: gray">Discription</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="color:#b2b2b2;font-size: 13px;">12-27-2023</span>
+                            <a href="!#" class="text-decoration-none">
+                                Clear
+                            </a>
+                        </div>
+                        <hr style="color: #dddddd00;" class="my-1">
+                    </li>
+                    <li class="px-2">
+                        <h6 class="mb-0">title</h6>
+                        <p class="mb-1" style="color: gray">Discription</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span style="color:#b2b2b2;font-size: 13px;">12-27-2023</span>
+                            <a href="!#" class="text-decoration-none">
+                                Clear
+                            </a>
+                        </div>
+                        <hr style="color: #dddddd00;" class="my-1">
+                    </li>
+                </ul>
             </div>
         </li>
             <!-- Nav Item - Messages -->
