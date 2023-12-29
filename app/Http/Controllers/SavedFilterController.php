@@ -9,20 +9,17 @@ class SavedFilterController extends Controller
 {
     public function save(Request $request)
     {
-        if(\Auth::user()->can('manage set salary'))
-        {
-            $employees = Employee::where(
-                [
-                    'created_by' => \Auth::user()->creatorId(),
-                ]
-            )->get();
+    
+        $filter = new SavedFilter;
+        $filter->filter_name = $request->filter_name;
+        $filter->url = $request->url;
+        $filter->module = $request->module;
+        $filter->count = $request->count;
+        $filter->created_by = \Auth::user()->id;
+        $filter->save();
 
-            return view('setsalary.index', compact('employees'));
-        }
-        else
-        {
-            return redirect()->back()->with('error', __('Permission denied.'));
-        }
+        return redirect()->back()->with('success', __('Filter Saved'));
+    
     }
 
 }
