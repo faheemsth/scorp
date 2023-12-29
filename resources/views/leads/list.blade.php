@@ -417,7 +417,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                 </td>
                                                 @if (\Auth::user()->type == 'super admin')
                                                     <td>{{ $users[$lead->brand_id] }}</td>
-                                                    <td>{{ $branches[$lead->branch_id] }}</td>
+                                                    <td>{{ isset( $branches[$lead->branch_id]) ?  $branches[$lead->branch_id] : '' }}</td> 
                                                 @endif
 
                                                 @if (Auth::user()->type != 'client')
