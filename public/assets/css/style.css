@@ -6290,17 +6290,14 @@ fieldset:disabled .btn {
     padding: 1.25rem;
 }
 .modal-footer {
-    position: absolute;
+    /* position: absolute;
     bottom: 0;
-    right: 0;
-     padding: .75rem;
+    right: 0; */
+    float: right;
+     padding:0px .75rem 10px;
  }
 
 
-
-.modal-footer > * {
-    /* margin: 0.25rem; */
-}
 
 @media (min-width: 576px) {
     .modal-dialog {

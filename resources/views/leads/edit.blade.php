@@ -41,24 +41,24 @@
 
 {{ Form::open(['url' => 'leads', 'id' => 'lead-updating-form']) }}
 
-<input type="hidden" value="{{ $lead->id }}" class="lead_id">
-<div class="modal-body pt-0" style="height: 80vh;">
+<input type="hidden" value="{{$lead->id}}" class="lead_id">
+<div class="modal-body pt-0" style="height: 80vh">
     <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
-        <div class="card-body px-2 py-0">
-            {{-- Details Pill Start --}}
-            <div class="accordion" id="accordionPanelsStayOpenExample">
-                <!-- Open Accordion Item -->
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="panelsStayOpen-headinginfo">
-                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#panelsStayOpen-collapseinfo">
-                            {{ __('LEAD INFORMATION') }}
-                        </button>
-                    </h2>
-                    <input type="hidden" value="{{ $lead }}" class="lead">
-                    <div id="panelsStayOpen-collapseinfo" class="accordion-collapse collapse show"
-                        aria-labelledby="panelsStayOpen-headinginfo">
-                        <div class="accordion-body">
+        <div class="card-body px-2 py-0" >
+                {{-- Details Pill Start --}}
+                    <div class="accordion" id="accordionPanelsStayOpenExample">
+                        <!-- Open Accordion Item -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headinginfo">
+                                <button class="accordion-button p-2" type="button"
+                                    data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseinfo">
+                                    {{ __('LEAD INFORMATION') }}
+                                </button>
+                            </h2>
+                            <input type="hidden" value="{{$lead}}" class="lead">
+                            <div id="panelsStayOpen-collapseinfo" class="accordion-collapse collapse show"
+                            aria-labelledby="panelsStayOpen-headinginfo">
+                            <div class="accordion-body">
 
                             <div class="mt-1" style="margin-left: 10px; width: 65%;">
 

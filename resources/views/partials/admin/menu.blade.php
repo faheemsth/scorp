@@ -1634,9 +1634,13 @@
                                 <div class="  collapse-inner rounded">
                                     <ul>
                                         @if (Gate::check('manage company settings'))
-                                            <li class=" {{ Request::segment(1) == 'settings' ? ' active' : '' }}">
+                                            <li class="emp {{ Request::segment(1) == 'settings' ? ' active' : '' }}">
                                                 <a href="{{ route('settings') }}" class="collapse-item"
-                                                    style="color: white; font-size: 13px;">{{ __('System Settings') }}</a>
+                                                    style="color: white; font-size: 13px;">
+                                                    <i class="fa-solid fa-gears"id="icon1" style="color: #ffffff;font-size: 15px;"></i>
+
+                                                    <i class="fa-solid fa-gears" id="icon2" style="color: #2e82d0;font-size: 15px;"></i>
+                                                    {{ __('System Settings') }}</a>
                                             </li>
                                         @endif
                                         @if (Gate::check('manage company plan'))
