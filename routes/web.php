@@ -1771,3 +1771,6 @@ Route::get('/global-search', [GlobalSearchController::class, 'index'])->name('gl
 Route::get('/lead/companyEmployees', [LeadController::class, 'getCompanyEmployees'])->name('lead_companyemployees');
 Route::get('/deal/companyEmployees', [DealController::class, 'getCompanyEmployees'])->name('deal_companyemployees');
 Route::get('/region/regionBrands', [RegionController::class, 'getRegionBrands'])->name('region_brands');
+
+Route::post("/save-filter", [SavedFilterController::class, 'save'])->name('save-filter');
+
