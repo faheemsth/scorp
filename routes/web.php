@@ -133,7 +133,7 @@ use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\ApplicationsController;
 use App\Http\Controllers\InstituteCategoryController;
 use App\Http\Controllers\GlobalSearchController;
-
+use App\Http\Controllers\SavedFilterController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
