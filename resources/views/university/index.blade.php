@@ -98,19 +98,19 @@
                             </div>
 
 
-                            <button class="btn filter-btn-show px-2 btn-dark" style="color:white;" type="button"
-                                id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn filter-btn-show p-2 btn-dark" style="color:white;" type="button"
+                            data-bs-toggle="tooltip" title="{{__('Filter')}}">
                                 <i class="ti ti-filter" style="font-size:18px"></i>
                             </button>
 
-                            <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" onclick="RefreshList()"><i class="ti ti-refresh"
+                            <button class="btn p-2 refresh-list btn-dark" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()"><i class="ti ti-refresh"
                                 style="font-size: 18px"></i></button>
                             @can('create university')
-                                <a href="#" data-size="lg" data-url="{{ route('university.create') }}"
+                                <button data-size="lg" data-url="{{ route('university.create') }}"
                                     data-ajax-popup="true" data-bs-toggle="tooltip" data-size="lg"
-                                    title="{{ __('Create University') }}" class="btn btn-sm btn-dark pt-2">
+                                    title="{{ __('Create University') }}" class="btn  btn-dark p-2">
                                     <i class="ti ti-plus"></i>
-                                </a>
+                                </button>
                             @endcan
 
                         </div>
