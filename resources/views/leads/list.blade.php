@@ -5,10 +5,12 @@
     @php
         $com_permissions = [];
         $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
+        
     @endphp
 @endif
 
 <?php
+$leads_count = sizeof($leads);
 $lead = \App\Models\Lead::first();
 if (isset($lead->is_active) && $lead->is_active) {
     $calenderTasks = [];
@@ -321,7 +323,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <div class="col-md-4 mt-3">
                                         <br>
                                         <input type="submit" class="btn form-btn me-2 bg-dark" style=" color:white;">
-                                        <a type="button" onClick="saveFilter()" class="btn form-btn me-2 bg-dark" style=" color:white;">Save Filter</a>
+                                        <a type="button" id="save-filter-btn" onClick="saveFilter()" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                         <a href="/leads/list" class="btn form-btn bg-dark" style="color:white;">Reset</a>
                                     </div>
                                 </div>
@@ -586,6 +588,14 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 @push('script-page')
     <script>
+        
+        $(document).ready(function() {
+            let curr_url = window.location.href;
+        
+            if(curr_url.includes('?')){
+                $('#save-filter-btn').css('display','inline-block');
+            }
+        });
         $(document).on("click", "#import_csv_modal_btn", function() {
             $("#import_csv").modal('show');
         })
@@ -616,13 +626,22 @@ if (isset($lead->is_active) && $lead->is_active) {
 
         function saveFilter(){
 
+            let url = window.location.href;
+            let name = 'test';
+            var count = <?= json_encode($leads_count) ?>;
+            var csrf_token = $('meta[name="csrf-token"]').attr('content');
+
             $.ajax({
                 type: "POST",
                 url: "{{ route('save-filter') }}",
-                data: formData,
+                data: {
+                    url: url,
+                    filter_name: name,
+                    module: 'leads',
+                    count: count,
+                    _token: csrf_token,
+                },
                 success: function(data) {
-                    data = JSON.parse(data);
-
                     if (data.status == 'success') {
                         
                     } else {
