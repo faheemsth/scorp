@@ -400,7 +400,8 @@ Route::get('/region/index', [RegionController::class, 'index'])->name('region.in
 Route::get('/region/create', [RegionController::class, 'create'])->name('region.create');
 Route::post('/region/create', [RegionController::class, 'save'])->name('region.save');
 Route::get('/region/update', [RegionController::class, 'update'])->name('region.update');
-Route::get('/region/delete', [RegionController::class, 'delete'])->name('region.delete');
+Route::get('/region/delete/{id}', [RegionController::class, 'delete'])->name('region.delete');
+Route::get('/regions/{id}/show', [RegionController::class, 'regions_show'])->name('regions.show');
 
 
 Route::group(

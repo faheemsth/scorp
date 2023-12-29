@@ -44,7 +44,7 @@
 
 {{ Form::open(['url' => 'region/create', 'method' => 'POST' ,'id' => 'CreateRigon']) }}
 <div class="modal-body py-0" style="height: 80vh;">
-    <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
+    <div class="lead-content my-2" style="height: 100%; overflow-y: scroll;">
         <div class="card-body px-2 py-0">
             {{-- Details Pill Start --}}
             <div class="accordion" id="accordionPanelsStayOpenExample">
@@ -81,8 +81,8 @@
                                                 {{ __('Brands') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
-                                                <select class="form form-control select2" id="choices-multiple555"
-                                                    name="brands[]" multiple style="width: 100% !important;" required>
+                                                <select class="form form-control select2" id="choices-multiple55"
+                                                    name="brands" style="width: 100% !important;" required>
                                                     <option value="">Select Brand</option>
                                                         @foreach ($brands as $brand)
                                                             <option value="{{ $brand->id }}">{{ $brand->name }}</option>
@@ -127,18 +127,19 @@
                                             <td style="width: 150px;  font-size: 13px;">
                                                 {{ __('Region Manager') }}
                                             </td>
-                                            <td style="display: flex;justify-content: end;">
-                                                <select name="region_manager_id" id="" class="form-control" style="padding-left: 10px; font-size: 13px;width: 94%;">
-                                                    <option value="">Select Region</option>
+                                            <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
+                                                <select class="form form-control select2" id="choices-multiple555"
+                                                    name="region_manager_id"  required>
+                                                    <option value="">Select Brand</option>
                                                     @if(!empty($regionmanager))
-                                                        @foreach ($regionmanager as $regionmanage)
-                                                            @if(!empty($regions->region_manager_id) && $regions->region_manager_id == $regionmanage->id)
-                                                                <option value="{{$regionmanage->id }}" selected>{{$regionmanage->name }}</option>
-                                                            @else
-                                                                <option value="{{$regionmanage->id }}">{{$regionmanage->name }}</option>
-                                                            @endif
-                                                        @endforeach
-                                                    @endif
+                                                    @foreach ($regionmanager as $regionmanage)
+                                                        @if(!empty($regions->region_manager_id) && $regions->region_manager_id == $regionmanage->id)
+                                                            <option value="{{$regionmanage->id }}" selected>{{$regionmanage->name }}</option>
+                                                        @else
+                                                            <option value="{{$regionmanage->id }}">{{$regionmanage->name }}</option>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
                                                 </select>
                                             </td>
                                         </tr>
