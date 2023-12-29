@@ -311,7 +311,7 @@
                                         <th>{{ __('Location') }}</th>
 
                                         <th class="text-align: left;">{{ __('Region\'s Manager') }}</th>
-                                        {{-- <th width="300px" class="d-none">{{ __('Action') }}</th> --}}
+                                        <th width="300px" class="d-none">{{ __('Action') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody id="deals_tbody">
@@ -328,7 +328,7 @@
                                                 <td>{{ $deal->location }}</td>
                                                 <td>{{ optional($deal->manager)->name }}</td>
                                                
-                                                {{-- <td class="Action d-none">
+                                                <td class="Action d-none">
                                                     <div class="dropdown">
                                                         <button class="btn bg-transparents" type="button"
                                                             id="dropdownMenuButton1" data-bs-toggle="dropdown"
@@ -341,7 +341,7 @@
                                                             </svg>
                                                         </button>
                                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                            @can('update region')
+                                                            @can('edit region')
                                                             <li><a class="dropdown-item"
                                                                     href="#" data-size="lg" data-url="{{ url('region/update?id=').$deal->id }}" title="{{ __('Update Origin') }}"
                                                                     data-ajax-popup="true" data-bs-toggle="tooltip">Edit</a></li>
@@ -352,7 +352,7 @@
                                                             </li>
                                                             @endcan
                                                         </ul>
-                                                </td> --}}
+                                                </td>
                                             </tr>
                                         @endforeach
                                     @else

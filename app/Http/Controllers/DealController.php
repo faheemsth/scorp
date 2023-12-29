@@ -3534,11 +3534,9 @@ class DealController extends Controller
     public function getCompanyEmployees(){
         $id = $_GET['id'];
 
-        $brand = User::where('id', $id)->first();
-
         $employees =  User::where('brand_id', $id)->pluck('name', 'id')->toArray();
         $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
-        
+
         $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to" required> <option value="">Assign to</option> ';
         foreach ($employees as $key => $user) {
             $html .= '<option value="' . $key . '">' . $user . '</option> ';

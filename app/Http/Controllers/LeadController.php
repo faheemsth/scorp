@@ -271,9 +271,6 @@ class LeadController extends Controller
     public function getCompanyEmployees(){
         $id = $_GET['id'];
 
-        $brand = User::where('id', $id)->first();
-        
-
         $employees =  User::where('brand_id', $id)->pluck('name', 'id')->toArray();
         $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
 
@@ -539,7 +536,7 @@ class LeadController extends Controller
                 $countries = $this->countries_list();
 
                 return view('leads.edit', compact('lead', 'pipelines', 'sources', 'products', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries'));
-            } else if ($lead->created_by == \Auth::user()->creatorId()) {
+            } else if ($lead->created_by == \Auth::user()->creatorId() || \Auth::user()->can('edit lead')) {
                 // $pipelines = Pipeline::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
                 // $pipelines->prepend(__('Select Pipeline'), '');
                 // $sources        = Source::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -651,7 +648,7 @@ class LeadController extends Controller
     {
         $lead              = Lead::where('id', $id)->first();
         if (\Auth::user()->can('edit lead') || \Auth::user()->type == 'super admin') {
-            if ($lead->created_by == \Auth::user()->creatorId() || \Auth::user()->type == 'super admin') {
+            if ($lead->created_by == \Auth::user()->creatorId() || \Auth::user()->can('edit lead') || \Auth::user()->type == 'super admin') {
                 $validator = \Validator::make(
                     $request->all(),
                     [

@@ -171,7 +171,7 @@ if (!function_exists('FiltersBrands')) {
             $brands->whereIn('branch_id', $branches);
             $brands->orWhere('id', $user_brand);
         }else if(\Auth::user()->type == 'Branch Manager') {
-            $branches = Branch::whereIn('branch_manager_id', \Auth::user()->id)->pluck('id')->toArray();
+            $branches = Branch::where('branch_manager_id', \Auth::user()->id)->pluck('id')->toArray();
             $brands->whereIn('branch_id', $branches);
             $brands->orWhere('id', $user_brand);
         }else{
