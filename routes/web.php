@@ -910,6 +910,8 @@ Route::resource('department', DepartmentController::class)->middleware(['auth', 
 Route::resource('designation', DesignationController::class)->middleware(['auth', 'XSS']);
 Route::resource('document', DocumentController::class)->middleware(['auth', 'XSS']);
 Route::resource('branch', BranchController::class)->middleware(['auth', 'XSS']);
+Route::get('/branch/{id}/show', [BranchController::class, 'branchDetail'])->middleware('auth');
+
 
 Route::post('get-departments', [DesignationController::class, 'get_departments'])->middleware(['auth', 'XSS']);
 Route::post('get_designations', [DesignationController::class, 'get_designations'])->middleware(['auth', 'XSS']);

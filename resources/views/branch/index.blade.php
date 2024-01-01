@@ -172,55 +172,23 @@
                                     <th>{{ __('Email') }}</th>
                                     <th>{{ __('Google Link') }}</th>
                                     <th>{{ __('Social Media') }}</th>
-                                    <th width="200px">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="font-style">
                                 @foreach ($branches as $branch)
                                     <tr>
-                                        <td>{{ $branch->name }}</td>
-                                        <td>{{ !empty($branch->region_id) ? $regions[$branch->region_id] : '' }}</td>
+                                        <td>
+                                            <span style="cursor:pointer" class="hyper-link"
+                                                    onclick="openSidebar('/branch/{{ $branch->id }}/show')">
+                                                    {{ $branch->name }}
+                                            </span>
+                                        </td>
+                                        <td>{{ !empty($regions[$branch->region_id]) ? $regions[$branch->region_id] : '' }}</td>
                                         <td>{{ !empty($branch->branch_manager_id) ? $users[$branch->branch_manager_id] : '' }}</td>
                                         <td>{{ $branch->phone }}</td>
                                         <td>{{ $branch->email }}</td>
                                         <td>{{ $branch->google_link }}</td>
                                         <td>{{ $branch->social_media_link }}</td>
-                                        
-                                        <td class="Action text-end">
-                                            <span>
-                                                @can('edit branch')
-                                                    <div class=" mx-2 d-flex justify-content-center-center align-items-center-center">
-
-                                                        <a href="#" class="btn px-2 py-2 btn-dark mx-1"
-                                                            data-size="lg"
-                                                            data-url="{{ URL::to('branch/' . $branch->id . '/edit') }}"
-                                                            data-ajax-popup="true" data-title="{{ __('Edit Branch') }}"
-                                                            data-bs-toggle="tooltip" title="{{ __('Edit') }}"
-                                                            data-original-title="{{ __('Edit') }}"><i
-                                                            class="ti ti-pencil text-white"></i></a>
-
-                                                @endcan
-                                                @can('delete branch')
-
-                                                        {!! Form::open([
-                                                            'method' => 'DELETE',
-                                                            'route' => ['branch.destroy', $branch->id],
-                                                            'id' => 'delete-form-' . $branch->id,
-
-                                                        ]) !!}
-
-                                                        <a href="#"
-                                                        class="btn px-2 py-2 btn-danger mx-1 bs-pass-para"
-                                                            data-bs-toggle="tooltip" title="{{ __('Delete') }}"
-                                                            data-original-title="{{ __('Delete') }}"
-                                                            data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
-                                                            data-confirm-yes="document.getElementById('delete-form-{{ $branch->id }}').submit();"><i
-                                                                class="ti ti-trash text-white text-white"></i></a>
-                                                        {!! Form::close() !!}
-                                                    </div>
-                                                @endcan
-                                            </span>
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -107,9 +107,10 @@ class BranchController extends Controller
         $region = Region::where('id', $branch->region_id)->first();
 
 
-        $ids = explode(',',$region->brands);
+       $ids = explode(',', $region->brands ?? '');
+
         $brands = User::whereIn('id',$ids)->where('type', 'company')->pluck('name', 'id')->toArray();
-        
+
         if(\Auth::user()->can('edit branch'))
         {
             if($branch->created_by == \Auth::user()->creatorId())
@@ -145,12 +146,12 @@ class BranchController extends Controller
 
                     return redirect()->back()->with('error', $messages->first());
                 }
-               
+
                 $brands = null;
                 if($request->brands != null && sizeof($request->brands) > 0){
                     $brands = implode(',',$request->brands);
                 }
-                
+
                 $branch->name = $request->name;
                 $branch->region_id       = $request->region_id;
                 $branch->brands       = $brands;
@@ -223,4 +224,17 @@ class BranchController extends Controller
 
         return response()->json($employees);
     }
+    public function branchDetail($id)
+    {
+        $Branch = Branch::findOrFail($id);
+        $Regions = Region::get()->pluck('name', 'id')->toArray();
+        $Manager = User::get()->pluck('name', 'id')->toArray();
+
+        $html = view('branch.BranchDetail', compact('Branch','Regions','Manager'))->render();
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
+    }
+
 }
