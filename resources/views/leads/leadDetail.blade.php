@@ -1424,9 +1424,14 @@
                                                                           <p class="bold" style="margin-bottom: 0rem; color: #000000;">{{ $remark->title }}</p>
                                                                           <p class="mt-0">{{ $remark->message }}</p>
                                                                     </div>
+                                                                    <div class="bold mb-5" style="text-align: left; margin-left: 80px;margin-top: 0px;">
+                                                                        <p class="bold" style="margin-bottom: 0rem; color: #000000;">User</p>
+                                                                        <p class="mt-0">{{ optional(App\Models\User::find($activity->created_by))->name }}</p>
+                                                                   </div>
                                                                 </li>
 
                                                             @endforeach
+
                                                         </ul>
                                                     </div>
                                                 </div>

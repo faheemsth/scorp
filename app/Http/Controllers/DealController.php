@@ -257,7 +257,7 @@ class DealController extends Controller
 
         $filters = $this->dealFilters();
 
-        if ($usr->can('manage deal') || \Auth::user()->type == 'super admin') {
+        if ($usr->can('manage deal') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company') {
 
             //whole query
             $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
@@ -2654,36 +2654,12 @@ class DealController extends Controller
             $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
         }
 
-        if (\Auth::user()->can('manage task') || \Auth::user()->type == 'super admin') {
+        if (\Auth::user()->can('manage task') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company') {
             $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to');
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
             $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
-
-            // if(\Auth::user()->type == 'super admin'){
-
-            // }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
-            //     $permittedCompanies = allPermittedCompanies();
-            //     $tasks->whereIn('deal_tasks.brand_id', $permittedCompanies);
-            //     $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
-            // }else if(\Auth::user()->type == 'Regional Manager'){
-            //     $regions = Region::where('region_manager_id', \Auth::user()->id)->pluck('id')->toArray();
-            //     $branches = Branch::whereIn('region_id', $regions)->pluck('id')->toArray();
-            //     $tasks->whereIn('deal_tasks.branch_id', $branches);
-            //     $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
-            // }else if(\Auth::user()->type == 'Branch Manager') {
-            //     $branches = Branch::whereIn('branch_manager_id', \Auth::user()->id)->pluck('id')->toArray();
-            //     $tasks->whereIn('deal_tasks.branch_id', $branches);
-            //     $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
-            // }else{
-            //     $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
-            // }
-
-
-
-
-            ///////Add filter
             $filters = $this->TasksFilter();
 
             foreach ($filters as $column => $value) {
