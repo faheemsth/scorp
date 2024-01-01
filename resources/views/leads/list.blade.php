@@ -195,6 +195,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <i class="ti ti-plus" style="font-size:18px"></i>
                                 </button>
                                 @endcan
+
                                 <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}"
                                     class="btn px-2 btn-dark" id="import_csv_modal_btn" data-bs-toggle="modal"
                                     data-bs-target="#import_csv">
@@ -398,7 +399,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                                 <td>
                                                     <span style="cursor:pointer" class="lead-name hyper-link"
-                                                        onclick="openNav(<?= $lead->id ?>)"
+                                                       @can('view lead') onclick="openNav(<?= $lead->id ?>)" @endcan
                                                         data-lead-id="{{ $lead->id }}">{{ $lead->name }}</span>
                                                 </td>
 

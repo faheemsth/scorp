@@ -15,8 +15,8 @@
 
         @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
             <div class="form-group col-md-6">
-                {{ Form::label('role', __('Companies'),['class'=>'form-label']) }}
-                {!! Form::select('companies', $companies, $user->brand_id,array('class' => 'form-control select2', 'id' => 'companies' ,'required'=>'required')) !!}
+                {{ Form::label('role', __('Brand'),['class'=>'form-label']) }}
+                {!! Form::select('companies', $companies, $user->brand_id,array('class' => 'form-control select2', 'id' => 'companies' ,'required'=>'required', 'disabled' => !\Auth::user()->can('edit brand employee') ? 'disabled' : null)) !!}
                 @error('role')
                 <small class="invalid-role" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
@@ -27,11 +27,18 @@
             
         @endif
 
-    
+        @if(!\Auth::user()->can('edit role employee')) 
+            @php 
+           $userRole = Spatie\Permission\Models\Role::where('name', $user->type)->first();
+    $roleId = $userRole ? $userRole->id : null;
+            @endphp
+            <input type="hidden" name="role" value="{{ $roleId }}">
+        @endif 
+
         @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
             <div class="form-group col-md-6">
                 {{ Form::label('role', __('User Role'),['class'=>'form-label']) }}
-                {!! Form::select('role', $roles, $user->type,array('class' => 'form-control select2',  'id' => 'roles'  ,'required'=>'required')) !!}
+                {!! Form::select('role', $roles, $user->type,array('class' => 'form-control select2',  'id' => 'roles'  ,'required'=>'required', 'disabled' => !\Auth::user()->can('edit role employee') ? 'disabled' : null)) !!}
                 @error('role')
                 <small class="invalid-role" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
@@ -45,7 +52,7 @@
         @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
         <div class="form-group col-md-6">
             {{ Form::label('branch_id', __('Branch'),['class'=>'form-label']) }}
-            {!! Form::select('branch_id', $branches, $user->branch_id,array('class' => 'form-control select2','required'=>'required')) !!}
+            {!! Form::select('branch_id', $branches, $user->branch_id,array('class' => 'form-control select2','required'=>'required', 'disabled' => !\Auth::user()->can('edit branch employee') ? 'disabled' : null)) !!}
             @error('branch_id')
             <small class="invalid-branch" branch="alert">
                 <strong class="text-danger">{{ $message }}</strong>

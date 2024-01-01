@@ -129,7 +129,7 @@
                                 <i class="ti ti-exchange"></i>
                             </a>
                         @else
-                            @can('lead convert to admission')
+                            @can('convert lead')
                             <a href="#" data-size="lg"
                                 data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
                                 data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] To Deal') }}"
@@ -146,11 +146,14 @@
                         style="background-color: #313949;">
                         <i class="ti ti-bookmark"></i>
                     </a>
+
+                    @can('edit lead')
                     <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}"
                         data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Lead') }}" title="Update Lead" data-original-title="{{ __('Update Lead') }}"
                         class="btn px-2 py-2 text-white" style="background-color: #313949;">
                         <i class="ti ti-pencil"></i>
                     </a>
+                    @endcan
 
                     @can('delete lead')
                         {!! Form::open([
@@ -232,7 +235,7 @@
                           </style>
 
                             <a type="button" data-lead-id="{{ $lead->id }}" data-stage-id="{{ $stage->id }}"
-                                class="lead_stage {{ $is_missed == true ? 'missedup' : ($lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '')) }}"
+                                class="@can('edit stage lead') 'lead_stage' @endcan {{ $is_missed == true ? 'missedup' : ($lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '')) }}"
                                 style="font-size:13px;"> {{ $stage->name }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
                         @empty
                         @endforelse
@@ -898,7 +901,7 @@
 
                                                                     <div class="col-12">
                                                                         <div class="card">
-                                                                            <textarea name="" id="" cols="95" class="form-control textareaClass" readonly style="cursor: pointer"></textarea>
+                                                                            <textarea name="" id="" cols="95" class="form-control @can('create notes') textareaClass @endcan " readonly style="cursor: pointer"></textarea>
                                                                             <span id="textareaID" style="display: none;">
                                                                                 <div class="card-header px-0 pt-0"
                                                                                     style="padding-bottom: 18px;">

@@ -245,7 +245,7 @@
                                         <td>
                                             @if (!empty($university->name))
                                                 <span style="cursor:pointer" class="hyper-link"
-                                                    onclick="openSidebar('/university/'+{{ $university->id }}+'/university_detail')">
+                                                    @can('show university') onclick="openSidebar('/university/'+{{ $university->id }}+'/university_detail')" @endcan >
                                                     {{ !empty($university->name) ? $university->name : '' }}
                                                 </span>
                                             @endif

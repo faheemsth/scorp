@@ -106,7 +106,7 @@
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2 brand_id" id="choices-1011"
-                                                    name="brand_id">
+                                                    name="brand_id" {{ !\Auth::user()->can('edit brand lead') ? 'disabled' : '' }}>
                                                     <option value="">Select Brand</option>
                                                     @foreach ($companies as $key => $company)
                                                         <option value="{{ $key }}"
@@ -122,7 +122,7 @@
                                                 {{ __('Location') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-                                                <select class="form-control select2" id="choice-3" name="lead_branch">
+                                                <select class="form-control select2" id="choice-3" name="lead_branch" {{ !\Auth::user()->can('edit branch lead') ? 'disabled' : '' }}>
                                                     <option selected>Select Branch</option>
                                                     @foreach ($branches as $key => $branch)
                                                         <option value="{{ $key }}"
@@ -139,7 +139,7 @@
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choice-2"
-                                                    name="lead_assgigned_user">
+                                                    name="lead_assgigned_user" {{ !\Auth::user()->can('edit assign to lead') ? 'disabled' : '' }}>
                                                     <option value="">Select User</option>
                                                     @foreach ($users as $key => $user)
                                                         <option value="{{ $key }}"

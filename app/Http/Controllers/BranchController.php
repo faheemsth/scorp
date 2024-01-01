@@ -112,15 +112,15 @@ class BranchController extends Controller
         
         if(\Auth::user()->can('edit branch'))
         {
-            if($branch->created_by == \Auth::user()->creatorId())
-            {
+            // if($branch->created_by == \Auth::user()->creatorId())
+            // {
 
                 return view('branch.edit', compact('branch','brands','branchmanager','regions'));
-            }
-            else
-            {
-                return response()->json(['error' => __('Permission denied.')], 401);
-            }
+            // }
+            // else
+            // {
+            //     return response()->json(['error' => __('Permission denied.')], 401);
+            // }
         }
         else
         {
@@ -132,8 +132,8 @@ class BranchController extends Controller
     {
         if(\Auth::user()->can('edit branch'))
         {
-            if($branch->created_by == \Auth::user()->creatorId())
-            {
+            // if($branch->created_by == \Auth::user()->creatorId())
+            // {
                 $validator = \Validator::make(
                     $request->all(), [
                                        'name' => 'required',
@@ -154,7 +154,9 @@ class BranchController extends Controller
                 $branch->name = $request->name;
                 $branch->region_id       = $request->region_id;
                 $branch->brands       = $brands;
-                $branch->branch_manager_id       = $request->branch_manager_id;
+                if(isset($request->branch_manager_id)){
+                    $branch->branch_manager_id       = $request->branch_manager_id;
+                }
                 $branch->google_link       = $request->google_link;
                 $branch->social_media_link       = $request->social_media_link;
                 $branch->phone       = $request->phone;
@@ -162,11 +164,11 @@ class BranchController extends Controller
                 $branch->save();
 
                 return redirect()->route('branch.index')->with('success', __('Branch successfully updated.'));
-            }
-            else
-            {
-                return redirect()->back()->with('error', __('Permission denied.'));
-            }
+            // }
+            // else
+            // {
+            //     return redirect()->back()->with('error', __('Permission denied.'));
+            // }
         }
         else
         {

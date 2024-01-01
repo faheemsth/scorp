@@ -324,7 +324,7 @@
                                                 </td>
                                                 <td>
                                                     <span style="cursor:pointer" class="hyper-link"
-                                                            onclick="openSidebar('/regions/{{ $deal->id }}/show')">
+                                                           @can('view region') onclick="openSidebar('/regions/{{ $deal->id }}/show')" @endcan >
                                                             {{ $deal->name }}
                                                     </span>
                                                 </td>

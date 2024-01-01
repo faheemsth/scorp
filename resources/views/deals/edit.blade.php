@@ -122,7 +122,7 @@
                                                     </td>
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
-                                                        <select class="form-control select2" id="choice-4"  name="assigned_to">
+                                                        <select class="form-control select2" id="choice-4"  name="assigned_to" {{ !\Auth::user()->can('edit assign to deal') ? 'disabled' : '' }}>
                                                            <option value="">Select Employee</option>
                                                            @foreach($users as $key => $user)
                                                             <option value="{{$key}}" {{ $deal->assigned_to == $key ? 'selected' : '' }}>{{$user}}</option>
@@ -222,7 +222,7 @@
                                                     </td>
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
-                                                        <select class="form-select select2" id="choice-8" name="branch_id" required>
+                                                        <select class="form-select select2" id="choice-8" name="branch_id" required {{ !\Auth::user()->can('edit branch deal') ? 'disabled' : '' }}>
                                                            <option value="">Select Office</option>
                                                            @foreach($branches as $key => $branch)
                                                             <option value="{{$key}}" {{ $key == $deal->branch_id ? "selected" : "" }}>{{$branch}}</option>

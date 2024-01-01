@@ -5,7 +5,7 @@
             class="sub-check">
     </td>
     <td><span style="cursor:pointer" class="hyper-link"
-            onclick="openSidebar('/clients/'+{{ $client->id }}+'/client_detail')">
+        @can('show client') onclick="openSidebar('/clients/'+{{ $client->id }}+'/client_detail')" @endcan>
             {{ $client->name }}
         </span>
 

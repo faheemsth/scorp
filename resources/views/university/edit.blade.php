@@ -38,7 +38,7 @@
         </div>
 
         <div class="form-group col-md-6 py-0">
-            {{ Form::label('name', __('Companies'),['class'=>'form-label']) }}
+            {{ Form::label('name', __('Brand'),['class'=>'form-label']) }}
             {{ Form::select('company_id', $companies, $university->company_id, ['class' => 'form-control select2', 'id' => 'companies' ,'required' => 'required']) }}
         </div>
 

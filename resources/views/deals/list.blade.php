@@ -473,7 +473,7 @@
                                         <input type="checkbox" name="deals[]" value="{{$deal->id}}" class="sub-check">
                                     </td>
                                     <td style="width: 100px !important; ">
-                                        <span style="cursor:pointer" class="deal-name hyper-link" onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})" data-deal-id="{{ $deal->id }}">
+                                        <span style="cursor:pointer" class="deal-name hyper-link" @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})" @endcan data-deal-id="{{ $deal->id }}">
 
                                             @if (strlen($deal->name) > 40)
                                             {{ substr($deal->name, 0, 40) }}...

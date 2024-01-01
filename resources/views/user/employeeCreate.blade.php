@@ -17,7 +17,7 @@
 
         @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
             <div class="form-group col-md-6">
-                {{ Form::label('role', __('Companies'),['class'=>'form-label']) }}
+                {{ Form::label('role', __('Brand'),['class'=>'form-label']) }}
                 {!! Form::select('companies', $companies, null,array('class' => 'form-control select2', 'id' => 'companies' ,'required'=>'required')) !!}
                 @error('role')
                 <small class="invalid-role" role="alert">
