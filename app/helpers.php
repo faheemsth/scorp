@@ -157,7 +157,11 @@ if (!function_exists('FiltersBrands')) {
     function FiltersBrands()
     {
         $brands = User::where('type', 'company');
-        $user_brand = !empty(\Auth::user()->brand_id) ? \Auth::user()->brand_id : 0;
+        if(\Auth::user()->type == 'company'){
+            $user_brand = !empty(\Auth::user()->id) ? \Auth::user()->id : 0;
+        }else{
+            $user_brand = !empty(\Auth::user()->brand_id) ? \Auth::user()->brand_id : 0;
+        }
 
         if(\Auth::user()->type == 'super admin'){
 

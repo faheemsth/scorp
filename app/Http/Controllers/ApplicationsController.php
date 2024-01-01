@@ -51,27 +51,17 @@ class ApplicationsController extends Controller
          } else {
              $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
          }
- 
+
          /////////////////end pagination calculation
 
-         if ($usr->can('view application') || $usr->type == 'super admin') {
+         if ($usr->can('view application') || $usr->type == 'super admin' || $usr->type == 'company') {
 
             $app_query = DealApplication::select(['deal_applications.*']);
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->whereIn('deals.brand_id', $brand_ids);
-
-            // if ($usr->type == 'super admin') { 
-            //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
-            // }else if ($usr->type == 'company') {
-            //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->where('deals.created_by', $usr->id);
-            // }else {
-            //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->where('deals.created_by', $usr->created_by);
-            // }
-            
             $total_records = $app_query->count();
-
-            //$filters 
+            //$filters
             $app_for_filer = $app_query->get();
 
 
@@ -109,7 +99,7 @@ class ApplicationsController extends Controller
                 ]);
             }
 
-             
+
             return view('applications.index', compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands'));
 
          }else{
@@ -120,7 +110,7 @@ class ApplicationsController extends Controller
     public function getDealApplication(){
         $id = $_GET['id'];
         $applications = \App\Models\DealApplication::where('deal_id', $id)->pluck('application_key', 'id');
-        
+
         $html = '<option value=""> Select Application</option>';
 
         foreach($applications as $key => $app){

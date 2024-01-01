@@ -68,9 +68,7 @@
     @if (\Auth::user()->type == 'super admin')
         <select name="company" id="company" class="form form-select" style="width:15% !important"
             onChange="loginWithCompany();">
-            <option value="">
-                Select
-            </option>
+            <option value="">Select Companies</option>
             <option value="{{ Auth::id() }}" {{ Auth::id() == 1? 'selected':'' }}>{{ Auth::user()->name }}</option>
             @foreach ($all_companies as $key => $comp)
                 <option value="{{ $key }}" >{{ $comp }}</option>
@@ -285,7 +283,10 @@
 
         function loginWithCompany() {
             let value = $('#company').val();
-            window.location.href = "{{ url('logged_in_as_company') }}/" + value;
+            if(value !== '')
+            {
+                window.location.href = "{{ url('logged_in_as_company') }}/" + value;
+            }
         }
 
         function LoginBack(value) {
