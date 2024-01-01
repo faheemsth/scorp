@@ -10,7 +10,6 @@
 @endif
 
 <?php
-$leads_count = sizeof($leads);
 $lead = \App\Models\Lead::first();
 if (isset($lead->is_active) && $lead->is_active) {
     $calenderTasks = [];
@@ -323,7 +322,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <div class="col-md-4 mt-3">
                                         <br>
                                         <input type="submit" class="btn form-btn me-2 bg-dark" style=" color:white;">
-                                        <a type="button" id="save-filter-btn" onClick="saveFilter()" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
+                                        <a type="button" id="save-filter-btn" onClick="saveFilter('leads',<?= sizeof($leads) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                         <a href="/leads/list" class="btn form-btn bg-dark" style="color:white;">Reset</a>
                                     </div>
                                 </div>
@@ -541,30 +540,30 @@ if (isset($lead->is_active) && $lead->is_active) {
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('update-bulk-leads') }}" method="POST">
+                <form action="{{ route('update-bulk-deals') }}" method="POST">
                     @csrf
-                    <div class="modal-body">
+                    <div class="modal-body" style="min-height: 40vh;">
                         <div class="row">
                             <div class="col-md-6">
-                                <select name="bulk_field" id="bulk_field" class="form form-control">
-                                    <option value="">Select Field</option>
-                                    <option value="nm">Name</option>
-                                    <option value="ldst">Lead Status</option>
-                                    <!-- <option value="ast">Assign Type</option> -->
-                                    <option value="user_res">User Reponsible</option>
-                                    <option value="loc">Location</option>
-                                    <option value="agy">Agency</option>
-                                    <option value="ldsrc">Lead Source</option>
-                                    <option value="email">Email Address</option>
-                                    <option value="email_ref">Email Address (Referrer) </option>
-                                    <option value="phone">Phone</option>
-                                    <option value="m_phone">Mobile Phone</option>
-                                    <!-- <option value="mail_opt">Email opt out</option> -->
-                                    <option value="address">Address</option>
-                                    <option value="desc">Description</option>
-                                    <!-- <option value="tag_list">Tag List</option> -->
+                                    <select name="bulk_field" id="bulk_field" class="form form-control">
+                                        <option value="">Select Field</option>
+                                        <option value="nm">Name</option>
+                                        <option value="ldst">Lead Status</option>
+                                        <!-- <option value="ast">Assign Type</option> -->
+                                        <option value="user_res">User Reponsible</option>
+                                        <option value="loc">Location</option>
+                                        <option value="agy">Agency</option>
+                                        <option value="ldsrc">Lead Source</option>
+                                        <option value="email">Email Address</option>
+                                        <option value="email_ref">Email Address (Referrer) </option>
+                                        <option value="phone">Phone</option>
+                                        <option value="m_phone">Mobile Phone</option>
+                                        <!-- <option value="mail_opt">Email opt out</option> -->
+                                        <option value="address">Address</option>
+                                        <option value="desc">Description</option>
+                                        <!-- <option value="tag_list">Tag List</option> -->
 
-                                </select>
+                                    </select>
                             </div>
                             <input name='lead_ids' id="lead_ids" hidden>
                             <div class="col-md-6" id="field_to_update">
@@ -573,16 +572,17 @@ if (isset($lead->is_active) && $lead->is_active) {
                         </div>
 
                     </div>
-
-                </div>
-                <div class="modal-footer">
-                    <input type="submit" class="btn btn-dark" value="Update">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </form>
+                    <br>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-dark px-2" value="Update">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
+    
 
 @endsection
 
@@ -624,33 +624,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
         });
 
-        function saveFilter(){
-
-            let url = window.location.href;
-            let name = 'test';
-            var count = <?= json_encode($leads_count) ?>;
-            var csrf_token = $('meta[name="csrf-token"]').attr('content');
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('save-filter') }}",
-                data: {
-                    url: url,
-                    filter_name: name,
-                    module: 'leads',
-                    count: count,
-                    _token: csrf_token,
-                },
-                success: function(data) {
-                    if (data.status == 'success') {
-                        
-                    } else {
-                        
-                    }
-                }
-            });
-
-        }
+        
 
         function massUpdate() {
             if (selectedArr.length > 0) {

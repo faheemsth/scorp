@@ -22,4 +22,9 @@ class SavedFilterController extends Controller
     
     }
 
+    public function deleteFilter(Request $request){
+        $filter = SavedFilter::where('id',$request->id)->delete();
+        return redirect()->back()->with('success', __('Filter Deleted'));
+    }
+
 }

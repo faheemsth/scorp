@@ -2,6 +2,7 @@
 @php
     // $profile=asset(Storage::url('uploads/avatar/'));
     $profile = \App\Models\Utility::get_file('uploads/avatar/');
+    
 @endphp
 @section('page-title')
     {{ __('Manage Contacts') }}
@@ -124,6 +125,7 @@ $(document).on('change', '.sub-check', function() {
                         <div class="col-md-4 mt-3">
                             <br>
                             <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
+                            <a type="button" id="save-filter-btn" onClick="saveFilter('clients',<?= sizeof($clients) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                             <a href="/clients" class="btn bg-dark" style="color:white;">Reset</a>
                         </div>
                     </div>
@@ -306,7 +308,13 @@ $(document).on('change', '.sub-check', function() {
             $(document).on('change', '.main-check', function() {
                 $(".sub-check").prop('checked', $(this).prop('checked'));
             });
-
+            $(document).ready(function() {
+                let curr_url = window.location.href;
+            
+                if(curr_url.includes('?')){
+                    $('#save-filter-btn').css('display','inline-block');
+                }
+            });
 
             $(document).on('change', '.sub-check', function() {
                 var selectedIds = $('.sub-check:checked').map(function() {

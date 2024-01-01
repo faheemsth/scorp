@@ -2,6 +2,7 @@
 @php
 // $profile=asset(Storage::url('uploads/avatar/'));
 $profile=\App\Models\Utility::get_file('uploads/avatar/');
+
 @endphp
 @section('page-title')
 {{__('Manage Applications')}}
@@ -124,6 +125,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     <div class="col-md-4 mt-2">
                         <br>
                         <input type="submit" class="btn form-btn me-2 btn-dark">
+                        <a type="button" id="save-filter-btn" onClick="saveFilter('applications',<?= sizeof($applications) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                         <a href="/applications/" class="btn form-btn btn-danger">Reset</a>
                     </div>
                 </div>
@@ -260,6 +262,13 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
     $('.filter-btn-show').click(function() {
         $("#filter-show").toggle();
     })
+    $(document).ready(function() {
+        let curr_url = window.location.href;
+    
+        if(curr_url.includes('?')){
+            $('#save-filter-btn').css('display','inline-block');
+        }
+    });
 
     $(document).on('change', '.main-check', function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));

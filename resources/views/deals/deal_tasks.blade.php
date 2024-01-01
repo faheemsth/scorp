@@ -3,6 +3,7 @@
 <?php
 $brands = FiltersBrands();
 $setting = \App\Models\Utility::colorset();
+
 ?>
 
 
@@ -135,6 +136,7 @@ $setting = \App\Models\Utility::colorset();
 
                             <div class="col-md-4 mt-4 pt-2">
                                 <input type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}" class="btn form-btn me-2 btn-dark px-2 py-2" >
+                                <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                 <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn px-2 py-2" style="background-color: #b5282f;color:white;">Reset</a>
                             </div>
                         </div>
@@ -369,6 +371,14 @@ $setting = \App\Models\Utility::colorset();
         $('.filter-btn-show').click(function() {
             $("#filter-show").toggle();
         });
+    });
+
+    $(document).ready(function() {
+        let curr_url = window.location.href;
+    
+        if(curr_url.includes('?')){
+            $('#save-filter-btn').css('display','inline-block');
+        }
     });
 
     $(document).on("click", ".list-global-search-btn", function() {
