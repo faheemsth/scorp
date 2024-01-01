@@ -56,11 +56,14 @@
                                 <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                   </button>
+                                
+                                @can('create employee')
                                 <a href="#" data-size="lg" data-url="{{ route('user.employee.create') }}"
                                     data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Employee') }}"
                                     class="btn btn-dark py-2 px-2">
                                     <i class="ti ti-plus"></i>
                                 </a>
+                                @endcan 
                             </div>
                         </div>
                         <script>
@@ -171,7 +174,7 @@
                                                     <td>
 
                                                         <span style="cursor:pointer" class="hyper-link"
-                                                            onclick="openSidebar('/user/employee/{{ $employee->id }}/show')">
+                                                           @can('view employee') onclick="openSidebar('/user/employee/{{ $employee->id }}/show')" @endcan >
                                                             {{ $employee->name }}
                                                         </span>
                                                     </td>

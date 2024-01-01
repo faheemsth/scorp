@@ -350,16 +350,16 @@
 
 
 
-                            <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                            <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
-                        <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
                         {{-- <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}" class="btn p-2 btn-dark">
                             <i class="ti ti-plus"></i>
                         </a> --}}
-                        <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+                        <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
 
 
                     </div>
@@ -455,11 +455,8 @@
                                     <th style="width: 50px !important;">
                                         <input type="checkbox" class="main-check">
                                     </th>
-                                    <th>{{ __('Stage') }}</th>
-
-
                                     <th style="width: 100px !important;">{{ __('Admission Name') }}</th>
-
+                                    <th>{{ __('Stage') }}</th>
                                     <th>{{ __('Lead Source') }}</th>
 
                                     <th>{{ __('Intake') }}</th>
@@ -476,11 +473,8 @@
                                     <td>
                                         <input type="checkbox" name="deals[]" value="{{$deal->id}}" class="sub-check">
                                     </td>
-                                    <td>{{ $deal->stage->name }}</td>
-
-
                                     <td style="width: 100px !important; ">
-                                        <span style="cursor:pointer" class="deal-name hyper-link" onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})" data-deal-id="{{ $deal->id }}">
+                                        <span style="cursor:pointer" class="deal-name hyper-link" @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})" @endcan data-deal-id="{{ $deal->id }}">
 
                                             @if (strlen($deal->name) > 40)
                                             {{ substr($deal->name, 0, 40) }}...
@@ -489,7 +483,7 @@
                                             @endif
                                         </span>
                                     </td>
-
+                                    <td>{{ $deal->stage->name }}</td>
                                     <td>
                                         @php
                                         $lead = \App\Models\Lead::join('client_deals', 'client_deals.client_id', 'leads.is_converted')->where('client_deals.deal_id', $deal->id)->first();

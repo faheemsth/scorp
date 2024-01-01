@@ -44,8 +44,8 @@ $(document).on('change', '.sub-check', function() {
     <div class="row">
         <div class="card py-3">
             <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                <div class="col-4">
-                    <p class="mb-0 pb-0 ps-1">CONTACTS</p>
+                <div class="col-2">
+                    <p class="mb-0 pb-0 ps-1">ACTION ITEMS:</p>
                     <div class="dropdown">
                         <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
                             data-bs-toggle="dropdown" aria-expanded="false">
@@ -62,7 +62,7 @@ $(document).on('change', '.sub-check', function() {
                     </div>
                 </div>
 
-                <div class="col-8 d-flex justify-content-end gap-2 pe-0">
+                <div class="col-10 d-flex justify-content-end gap-2 pe-0">
                     <div class="input-group w-25">
                         <button class="btn btn-sm list-global-search-btn">
                             <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
@@ -79,9 +79,13 @@ $(document).on('change', '.sub-check', function() {
                     <button class="btn filter-btn-show p-2 btn-dark" type="button"    data-bs-toggle="tooltip" title="{{__('Filter')}}" >
                         <i class="ti ti-filter" style="font-size:18px"></i>
                     </button>
+
+                    @can('create client')
                      <button data-url="{{ route('clients.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}"  class="btn p-2 btn-dark" data-bs-toggle="modal">
                         <i class="ti ti-plus" style="font-size:18px"></i>
                     </button>
+                    @endcan
+
                     <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
 
 
@@ -172,8 +176,8 @@ $(document).on('change', '.sub-check', function() {
                             <th style="width: 50px !important;">
                                 <input type="checkbox" class="main-check">
                             </th>
-                            <th style="border-left: 1px solid #fff;">Name</th>
-                            <th style="border-left: 1px solid #fff;">Email</th>
+                            <th style="border-left: 1px solid #fff;">Contact Name</th>
+                            <th style="border-left: 1px solid #fff;">Contact Email</th>
                             <th style="border-left: 1px solid #fff;">Admissions</th>
                             <th style="border-left: 1px solid #fff;">Applications</th>
                             <th style="border-left: 1px solid #fff; display: none;">Action</th>
@@ -188,7 +192,7 @@ $(document).on('change', '.sub-check', function() {
                                         class="sub-check">
                                 </td>
                                 <td><span style="cursor:pointer" class="hyper-link"
-                                        onclick="openSidebar('/clients/'+{{ $client->id }}+'/client_detail')">
+                                       @can('show client') onclick="openSidebar('/clients/'+{{ $client->id }}+'/client_detail')" @endcan>
                                         {{ $client->name }}
                                     </span>
 

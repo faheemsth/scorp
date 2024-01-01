@@ -139,10 +139,12 @@
                 {{-- @if (\Auth::user()->type == 'super admin') --}}
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @if ($task->status == 0)
+                    @can('edit status task')
                     <a href="javascript:void(0)" onclick="ChangeTaskStatus({{ $task->id }})"
                         title="{{ __('Edit Status') }}" class="btn px-2 btn-dark text-white">
                         <i class="fa-solid fa-check" style="color: #ffffff;"></i>
                     </a>
+                    @endcan
                     @endif
 
                     @can('edit task')

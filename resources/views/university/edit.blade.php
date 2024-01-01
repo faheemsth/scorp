@@ -1,5 +1,8 @@
 {{ Form::model($university, array('route' => array('university.update', $university->id), 'method' => 'PUT')) }}
-<div class="modal-body">
+
+<div class="modal-body pt-0 " style="height: 80vh;">
+    <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
+
     <div class="row">
         <div class="form-group col-12 py-0">
             {{ Form::label('name', __('Institute Category'),['class'=>'form-label']) }}
@@ -35,7 +38,7 @@
         </div>
 
         <div class="form-group col-md-6 py-0">
-            {{ Form::label('name', __('Companies'),['class'=>'form-label']) }}
+            {{ Form::label('name', __('Brand'),['class'=>'form-label']) }}
             {{ Form::select('company_id', $companies, $university->company_id, ['class' => 'form-control select2', 'id' => 'companies' ,'required' => 'required']) }}
         </div>
 
@@ -58,6 +61,7 @@
             {{ Form::label('name', __('Note'),['class'=>'form-label']) }}
             {{ Form::textarea('note', $university->note, array('class' => 'form-control','required'=>'required')) }}
         </div>
+    </div>
     </div>
 </div>
 <div class="modal-footer">

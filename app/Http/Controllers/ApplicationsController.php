@@ -57,14 +57,18 @@ class ApplicationsController extends Controller
          if ($usr->can('view application') || $usr->type == 'super admin') {
 
             $app_query = DealApplication::select(['deal_applications.*']);
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->whereIn('deals.brand_id', $brand_ids);
 
-            if ($usr->type == 'super admin') { 
-                $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
-            }else if ($usr->type == 'company') {
-                $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->where('deals.created_by', $usr->id);
-            }else {
-                $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->where('deals.created_by', $usr->created_by);
-            }
+            // if ($usr->type == 'super admin') { 
+            //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
+            // }else if ($usr->type == 'company') {
+            //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->where('deals.created_by', $usr->id);
+            // }else {
+            //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->where('deals.created_by', $usr->created_by);
+            // }
+            
             $total_records = $app_query->count();
 
             //$filters 

@@ -6370,15 +6370,14 @@ a.close.disabled {
 }
 
 .modal-footer {
-    position: absolute;
+    /* position: absolute;
     bottom: 0;
-    right: 30px;
-     padding: .75rem;
+    right: 30px; */
+    float: right;
+     padding: 0px .75rem 10px;
  }
 
-.modal-footer>* {
-    /* margin: .25rem */
-}
+
 
 .modal-scrollbar-measure {
     position: absolute;

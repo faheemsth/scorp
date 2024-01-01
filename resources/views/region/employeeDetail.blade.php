@@ -92,27 +92,22 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-1 me-3">
-                    @can('edit employee')
-                    <a href="#!" data-size="lg" data-url="{{ route('user.employee.edit', $employee->id) }}" data-ajax-popup="true" class="btn px-2 py-2 btn-dark text-white" data-bs-original-title="{{__('Edit Employee')}}" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
+                    @can('edit region')
+
+                    <a href="#!" data-size="lg" data-url="{{ url('region/update?id=').$employee->id }}" data-ajax-popup="true" class="btn px-2 py-2 btn-dark text-white" data-bs-original-title="{{__('Edit Employee')}}" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
                     <i class="ti ti-pencil"></i>
                       </a>
                     @endcan
 
-                    @can('delete employee')
-                    {!! Form::open(['method' => 'DELETE','class'=>'mb-0' , 'route' => ['users.destroy', $employee['id']],'id'=>'delete-form-'.$employee['id']]) !!}
+                    @can('delete region')
+                    {!! Form::open(['method' => 'GET', 'class' => 'mb-0', 'url' => ['region/delete', 'id' => $employee['id']], 'id' => 'delete-form-'.$employee['id']]) !!}
                     <a href="#!" class="btn px-2 py-2 btn-danger text-white bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
                         <i class="ti ti-archive"></i>
                         <!-- <span> @if($employee->delete_status!=0){{__('Delete')}} @else {{__('Restore')}}@endif</span> -->
                     </a>
+
                     {!! Form::close() !!}
                     @endcan
-
-                    @can('password reset employee')
-                    <a href="#!" data-url="{{route('users.reset',\Crypt::encrypt($employee->id))}}" data-ajax-popup="true" data-size="md" class="btn px-2 btn-dark py-2 text-white" data-bs-original-title="{{__('Reset Password')}}" data-bs-toggle="tooltip" title="{{ __('Password Reset') }}">
-                        <i class="ti ti-adjustments"></i>
-                    </a>
-                    @endcan
-
                 </div>
             </div>
 
@@ -142,7 +137,7 @@
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headinginfo">
                                             <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseinfo">
-                                                {{ __('EMPLOYEE INFORMATION') }}
+                                                {{ __('REGION INFORMATION') }}
                                             </button>
                                         </h2>
 

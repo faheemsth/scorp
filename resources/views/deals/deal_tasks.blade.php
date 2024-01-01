@@ -221,7 +221,7 @@ $setting = \App\Models\Utility::colorset();
                                     </td>
                                     <td>
                                         @if (!empty($task->assigned_to))
-                                        <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{ $task->assigned_to }}+'/user_detail')">
+                                        <span style="cursor:pointer" class="hyper-link" @can('view task') onclick="openSidebar('/users/'+{{ $task->assigned_to }}+'/user_detail')" @endcan>
                                             {{ $users[$task->assigned_to] }}
                                         </span>
                                         @endif

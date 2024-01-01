@@ -838,19 +838,19 @@ class DealController extends Controller
         $deal = Deal::findOrFail($id);
 
         if (\Auth::user()->can('edit deal') || \Auth::user()->type == 'super admin') {
-            if ($deal->created_by == \Auth::user()->ownerId() || \Auth::user()->type == 'super admin') {
+            if (\Auth::user()->can('edit deal') || $deal->created_by == \Auth::user()->ownerId() || \Auth::user()->type == 'super admin') {
                 $validator = \Validator::make(
                     $request->all(),
                     [
                         'name' => 'required',
                         'intake_month' => 'required',
                         'intake_year' => 'required',
-                        'contact' => 'required',
-                        'assigned_to' => 'required',
+                        //'contact' => 'required',
+                        //'assigned_to' => 'required',
                         'category' => 'required',
                         'university_id' => 'required',
                        // 'organization_id' => 'required',
-                        'branch_id' => 'required',
+                       // 'branch_id' => 'required',
                         'pipeline_id' => 'required',
                         'stage_id' => 'required'
                     ]
@@ -867,11 +867,15 @@ class DealController extends Controller
 
                 $usr = \Auth::user();
                 $deal->name  = $request->name;
-                $deal->assigned_to = $request->input('assigned_to');
+                if(isset($request->assigned_to)){
+                 $deal->assigned_to = $request->input('assigned_to');
+                }
                 $deal->category = $request->input('category');
                 $deal->university_id = $request->input('university_id');
                 $deal->organization_id = $request->input('organization_id');
-                $deal->branch_id = $request->input('branch_id');
+                if(isset($request->branch_id)){
+                 $deal->branch_id = $request->input('branch_id');
+                }
                 $deal->intake_month = $request->input('intake_month');
                 $deal->intake_year = $request->input('intake_year');
                 $deal->price = 0;
@@ -884,15 +888,15 @@ class DealController extends Controller
 
 
                 //send email
-                $clients = User::whereIN('id', array_filter($request->input('contact')))->get()->pluck('email', 'id')->toArray();
+                // $clients = User::whereIN('id', array_filter($request->input('contact')))->get()->pluck('email', 'id')->toArray();
 
-                foreach (array_keys($clients) as $client) {
-                    ClientDeal::where('deal_id', $deal->id)->update(
-                        [
-                            'client_id' => $client
-                        ]
-                    );
-                }
+                // foreach (array_keys($clients) as $client) {
+                //     ClientDeal::where('deal_id', $deal->id)->update(
+                //         [
+                //             'client_id' => $client
+                //         ]
+                //     );
+                // }
 
 
                 $data = [

@@ -194,6 +194,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <i class="ti ti-plus" style="font-size:18px"></i>
                                 </button>
                                 @endcan
+
                                 <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}"
                                     class="btn px-2 btn-dark" id="import_csv_modal_btn" data-bs-toggle="modal"
                                     data-bs-target="#import_csv">
@@ -371,11 +372,11 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         </th>
 
 
-                                        <th data-resizable-columns-id="name">{{ __('Name') }}</th>
+                                        <th data-resizable-columns-id="name">{{ __('Admission Name') }}</th>
                                         {{-- <th>{{ __('Subject') }}</th> --}}
 
                                         <th data-resizable-columns-id="email_address" class="ps-3">
-                                            {{ __('Email Address') }}</th>
+                                            {{ __('Email') }}</th>
                                         <th data-resizable-columns-id="phone" class="ps-3">{{ __('Phone') }}</th>
                                         <th data-resizable-columns-id="stage" class="ps-3">{{ __('Stage') }}</th>
                                         <th data-resizable-columns-id="users" class="ps-3">{{ __('Assigned to') }}</th>
@@ -397,7 +398,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                                 <td>
                                                     <span style="cursor:pointer" class="lead-name hyper-link"
-                                                        onclick="openNav(<?= $lead->id ?>)"
+                                                       @can('view lead') onclick="openNav(<?= $lead->id ?>)" @endcan
                                                         data-lead-id="{{ $lead->id }}">{{ $lead->name }}</span>
                                                 </td>
 

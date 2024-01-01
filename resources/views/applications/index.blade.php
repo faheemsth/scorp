@@ -167,13 +167,16 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         <th style="width: 50px !important;">
                             <input type="checkbox" class="main-check">
                         </th>
-                        <th scope="col">{{ __('Name') }}</th>
+                        <th scope="col">{{ __('Student Name') }}</th>
+                        <th scope="col">{{ __('Course') }}</th>
                         <th scope="col">{{ __('University') }}</th>
-                        <th scope="col">{{ __('Intake') }}</th>
-                        <th scope="col">{{ __('Brand') }}</th>
-                        <th scope="col">{{ __('Branch') }}</th>
+                        <th scope="col">{{ __('Stage') }}</th>
                         <th scope="col">{{ __('Assigned To') }}</th>
-                        <th scope="col">{{ __('Status') }}</th>
+
+                        <th scope="col" class="d-none">{{ __('Intake') }}</th>
+                        <th scope="col" class="d-none">{{ __('Brand') }}</th>
+                        <th scope="col" class="d-none">{{ __('Branch') }}</th>
+                       
 
                     </tr>
                 </thead>
@@ -194,12 +197,17 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                                 {{ strlen($app->name) > 10 ? substr($app->name, 0, 10) . '...' : $app->name }}
                             </span>
                                 </td>
+                                <td>{{ $app['course'] }}</td>
                                 <td>{{ $universities[$app->university_id] }}</td>
-                                <td> {{ $app->intake }} </td>
-                                <td> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }}  </td>
-                                <td> {{ isset($branch->name) ? $branch->name : ''  }} </td>
-                                <td> {{ !empty($deal->assigned_to) ? (isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : '') : '' }} </td>
                                 <td>{{ isset($app->stage_id) && isset($stages[$app->stage_id]) ? $stages[$app->stage_id] : '' }}</td>
+                                <td> {{ !empty($deal->assigned_to) ? (isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : '') : '' }} </td>
+
+
+                                <td class="d-none"> {{ $app->intake }} </td>
+                                <td class="d-none"> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }}  </td>
+                                <td class="d-none"> {{ isset($branch->name) ? $branch->name : ''  }} </td>
+                               
+                               
                             </tr>
                         @empty
                     @endforelse

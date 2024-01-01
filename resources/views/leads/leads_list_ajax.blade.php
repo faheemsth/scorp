@@ -5,7 +5,7 @@
                     <td><input type="checkbox" ></td>
                     <td >
                         <span style="cursor:pointer" class="lead-name"
-                            onclick="openNav(<?= $lead->id ?>)"
+                        @can('view lead')  onclick="openNav(<?= $lead->id ?>)" @endcan
                             data-lead-id="{{ $lead->id }}">{{ $lead->name }}</span>
                     </td>
 

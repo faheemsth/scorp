@@ -322,12 +322,17 @@
                                                     <input type="checkbox" name="deals[]" value="{{ $deal->id }}"
                                                         class="sub-check">
                                                 </td>
-                                                <td>{{ $deal->name }}</td>
+                                                <td>
+                                                    <span style="cursor:pointer" class="hyper-link"
+                                                           @can('view region') onclick="openSidebar('/regions/{{ $deal->id }}/show')" @endcan >
+                                                            {{ $deal->name }}
+                                                    </span>
+                                                </td>
                                                 <td>{{ $deal->email }}</td>
                                                 <td>{{ $deal->phone }}</td>
                                                 <td>{{ $deal->location }}</td>
                                                 <td>{{ optional($deal->manager)->name }}</td>
-                                               
+
                                                 <td class="Action d-none">
                                                     <div class="dropdown">
                                                         <button class="btn bg-transparents" type="button"

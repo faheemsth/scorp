@@ -274,7 +274,7 @@ class LeadController extends Controller
         $employees =  User::where('brand_id', $id)->pluck('name', 'id')->toArray();
         $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
 
-        
+
         $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="lead_assgigned_user" required> <option value="">Select User</option> ';
         foreach ($employees as $key => $user) {
             $html .= '<option value="' . $key . '">' . $user . '</option> ';
@@ -535,8 +535,10 @@ class LeadController extends Controller
                 $sources = Source::get()->pluck('name', 'id');
                 $countries = $this->countries_list();
 
-                return view('leads.edit', compact('lead', 'pipelines', 'sources', 'products', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries'));
-            } else if ($lead->created_by == \Auth::user()->creatorId() || \Auth::user()->can('edit lead')) {
+                $companies = FiltersBrands();
+                return view('leads.edit', compact('companies','lead', 'pipelines', 'sources', 'products', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries'));
+            } else if (\Auth::user()->can('edit lead') || $lead->created_by == \Auth::user()->creatorId()) {
+
                 // $pipelines = Pipeline::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
                 // $pipelines->prepend(__('Select Pipeline'), '');
                 // $sources        = Source::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -568,9 +570,10 @@ class LeadController extends Controller
                 $branches = Branch::pluck('name', 'id')->toArray();
                 $organizations = User::where('type', 'organization')->get()->pluck('name', 'id');
                 $sources = Source::get()->pluck('name', 'id');
-                $countries = $this->countries_list();
+                $countries = countries();
+                $companies = FiltersBrands();
 
-                return view('leads.edit', compact('lead', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries'));
+                return view('leads.edit', compact('lead', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'companies'));
                 // return view('leads.edit', compact('lead', 'pipelines', 'sources', 'products', 'users'));
             } else {
                 return response()->json(['error' => __('Permission Denied.')], 401);
@@ -682,7 +685,19 @@ class LeadController extends Controller
                 // $lead->email       = $request->lead_email;
                 $lead->phone       = $request->lead_phone;
                 $lead->mobile_phone = $request->lead_mobile_phone;
-                $lead->branch_id      = gettype($request->lead_branch) == 'string' ? 0 : $request->lead_branch;;
+
+                if(isset($request->branch_id)){
+                    $lead->branch_id      = $request->lead_branch;
+                }
+
+                if(isset($request->brand_id)){
+                    $lead->brand_id      = $request->brand_id;
+                }
+
+                if(isset($request->lead_assgigned_user)){
+                    $lead->user_id     = $request->lead_assgigned_user;
+                }
+
                 $lead->organization_id =gettype($request->lead_organization) == 'string' ? 0 : $request->lead_organization;;
                 $lead->organization_link = $request->lead_organization_link;
                 $lead->sources = $request->lead_sources;
@@ -696,7 +711,6 @@ class LeadController extends Controller
                 $lead->tags = $request->lead_tags_list;
                 $lead->stage_id    = $request->lead_stage;
                 $lead->subject     =  $request->lead_first_name . ' ' . $request->lead_last_name;
-                $lead->user_id     = $request->lead_assgigned_user;
                 $lead->date        = date('Y-m-d');
                 $lead->drive_link = isset($request->drive_link) ? $request->drive_link : '';
                 $lead->save();
@@ -1067,6 +1081,7 @@ class LeadController extends Controller
     public function importCsv(Request $request)
     {
         $usr = \Auth::user();
+        
         if ($usr->can('edit lead')) {
             $file = $request->file('leads_file');
 

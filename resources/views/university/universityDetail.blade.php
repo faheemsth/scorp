@@ -29,7 +29,7 @@
                 @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit university'))
                     <div class="d-flex justify-content-end gap-1 me-3">
                         <a href="#" data-size="lg" data-url="{{ route('university.edit', $university->id) }}"
-                            data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update University') }}"
+                            data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update University') }}"
                             class="btn p-2 btn-dark text-white">
                             <i class="ti ti-pencil"></i>
                         </a>
