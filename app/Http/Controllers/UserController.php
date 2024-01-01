@@ -891,7 +891,7 @@ class UserController extends Controller
                     return redirect()->back()->with('error', $messages->first());
                 }
 
-                                $role = Role::findById($request->role);
+                $role = Role::findById($request->role);
                 //$role = Role::findByName('company');
                 $input = $request->all();
                 $input['type'] = $role->name;

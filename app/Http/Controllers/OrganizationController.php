@@ -954,7 +954,7 @@ class OrganizationController extends Controller
                 [
                     'task_name' => 'required',
                     //'branch_id' => 'required',
-                    'assigned_to' => 'required',
+                    //'assigned_to' => 'required',
                     'assign_type' => 'required',
                     'due_date' => 'required',
                     'start_date' => 'required',
@@ -987,18 +987,24 @@ class OrganizationController extends Controller
             //$dealTask->related_type = $request->related_type;
 
             $dealTask->name = $request->task_name;
-            $dealTask->branch_id = $request->branch_id;
+            if(isset($request->branch_id)){
+                $dealTask->branch_id = $request->branch_id;
+            }
 
             //$dealTask->organization_id = isset($request->organization_id) ? $request->organization_id : '';
 
-            $dealTask->assigned_to = $request->assigned_to;
+            if(isset($request->assigned_to)){
+                $dealTask->assigned_to = $request->assigned_to;
+            }
             $dealTask->assigned_type = $request->assign_type;
 
             // $dealTask->deal_stage_id = $request->stage_id;
             $dealTask->due_date = isset($request->due_date) ? $request->due_date : '';
             $dealTask->start_date = $request->start_date;
             $dealTask->date = $request->start_date;
-            $dealTask->status = $request->status;
+            if(isset($request->status)){
+             $dealTask->status = $request->status;
+            }
             $dealTask->remainder_date = $request->remainder_date;
             $dealTask->description = $request->description;
             $dealTask->visibility = $request->visibility;

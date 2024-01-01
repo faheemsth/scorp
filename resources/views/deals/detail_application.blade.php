@@ -114,7 +114,7 @@
                           </style>
 
                         <a type="button" data-application-id="{{ $application->id }}" data-stage-id="{{ $key }}"
-                            class="application_stage {{ $is_missed == true ? 'missedup' : ($application->stage_id == $key ? 'current' : ($done == true ? 'done' : '')) }} "
+                            class="@can('edit stage application') application_stage @endcan {{ $is_missed == true ? 'missedup' : ($application->stage_id == $key ? 'current' : ($done == true ? 'done' : '')) }} "
                             style="font-size:13px">{{ $stage }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
                         @empty
                         @endforelse

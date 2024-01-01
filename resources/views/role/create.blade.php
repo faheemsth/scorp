@@ -131,7 +131,8 @@
                                                             </div>
                                                         @endif
                                                     @endif
-
+                                                    
+                                                   
 
                                                     @if(in_array('send '.$module,(array) $permissions))
                                                         @if($key = array_search('send '.$module,$permissions))
@@ -350,8 +351,71 @@
                                                             </div>
                                                         @endif
                                                     @endif
+                                                    
+                                                     @if(in_array('convert '.$module,(array) $permissions))
+                                                        @if($key = array_search('convert '.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck crm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Convert',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                    @endif
 
+                                                    @if(in_array('edit status '.$module,(array) $permissions))
+                                                        @if($key = array_search('edit status '.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck crm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Edit Status',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                    @endif
 
+                                                    @if(in_array('edit brand '.$module,(array) $permissions))
+                                                        @if($key = array_search('edit brand '.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck crm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Edit brand',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                    @endif
+
+                                                    @if(in_array('edit branch '.$module,(array) $permissions))
+                                                        @if($key = array_search('edit branch '.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck crm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Edit branch',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                    @endif
+
+                                                    @if(in_array('edit assign to '.$module,(array) $permissions))
+                                                        @if($key = array_search('edit assign to '.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck crm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Edit assign to',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                    @endif
+
+                                                    @if(in_array('edit stage '.$module,(array) $permissions))
+                                                        @if($key = array_search('edit stage '.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck crm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Edit stage',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                   @endif
+
+                                                   @if(in_array('edit manager '.$module,(array) $permissions))
+                                                        @if($key = array_search('edit manager'.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck crm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Edit manager',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                    @endif
+
+    
                                                     @if(in_array('send '.$module,(array) $permissions))
                                                         @if($key = array_search('send '.$module,$permissions))
                                                             <div class="col-md-3 custom-control custom-checkbox">
@@ -788,6 +852,51 @@
                                                             <div class="col-md-3 custom-control custom-checkbox">
                                                                 {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck hrm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
                                                                 {{Form::label('permission'.$key,'Show',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                    @endif
+
+                                                    @if(in_array('password reset '.$module,(array) $permissions))
+                                                        @if($key = array_search('password reset '.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck crm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Password reset',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                   @endif
+
+                                                   @if(in_array('edit role '.$module,(array) $permissions))
+                                                        @if($key = array_search('edit role '.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck crm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Edit role',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                   @endif
+
+                                                   @if(in_array('edit brand '.$module,(array) $permissions))
+                                                        @if($key = array_search('edit brand '.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck crm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Edit brand',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                    @endif
+
+                                                    @if(in_array('edit branch '.$module,(array) $permissions))
+                                                        @if($key = array_search('edit branch '.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck crm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Edit branch',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                    @endif
+
+                                                    @if(in_array('edit branch manager '.$module,(array) $permissions))
+                                                        @if($key = array_search('edit branch manager'.$module,$permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck crm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'Edit branch manager',['class'=>'custom-control-label'])}}<br>
                                                             </div>
                                                         @endif
                                                     @endif

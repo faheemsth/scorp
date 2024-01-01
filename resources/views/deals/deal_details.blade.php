@@ -670,7 +670,7 @@
                                         <div class="accordion-body">
                                             <div class="d-flex justify-content-end align-items-center p-2 pb-0">
                                                 <div class="float-end">
-                                                    @if (\Auth::user()->can('create application'))
+                                                    @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('create application'))
                                                     <a data-size="lg" data-url="{{ route('deals.application.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Application') }}" class="btn btn-dark p-2 text-white" >
                                                         <i class="ti ti-plus"></i>
                                                     </a>
@@ -807,7 +807,7 @@
 
                                                             <div class="col-12">
                                                                 <div class="card">
-                                                                    <textarea name="" id="" cols="95" class="form-control textareaClass" readonly style="cursor: pointer"></textarea>
+                                                                    <textarea name="" id="" cols="95" class="form-control @can('create notes') textareaClass @endcan " readonly style="cursor: pointer"></textarea>
                                                                     <span id="textareaID" style="display: none;">
                                                                         <div class="card-header px-0 pt-0"
                                                                             style="padding-bottom: 18px;">

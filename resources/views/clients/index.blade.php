@@ -61,7 +61,7 @@ $(document).on('change', '.sub-check', function() {
                     </div>
                 </div>
 
-                <div class="col-8 d-flex justify-content-end gap-2 pe-0">
+                <div class="col-10 d-flex justify-content-end gap-2 pe-0">
                     <div class="input-group w-25">
                         <button class="btn btn-sm list-global-search-btn">
                             <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
@@ -78,9 +78,13 @@ $(document).on('change', '.sub-check', function() {
                     <button class="btn filter-btn-show p-2 btn-dark" type="button"    data-bs-toggle="tooltip" title="{{__('Filter')}}" >
                         <i class="ti ti-filter" style="font-size:18px"></i>
                     </button>
+
+                    @can('create client')
                      <button data-url="{{ route('clients.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}"  class="btn p-2 btn-dark" data-bs-toggle="modal">
                         <i class="ti ti-plus" style="font-size:18px"></i>
                     </button>
+                    @endcan
+
                     <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
 
 
@@ -186,7 +190,7 @@ $(document).on('change', '.sub-check', function() {
                                         class="sub-check">
                                 </td>
                                 <td><span style="cursor:pointer" class="hyper-link"
-                                        onclick="openSidebar('/clients/'+{{ $client->id }}+'/client_detail')">
+                                       @can('show client') onclick="openSidebar('/clients/'+{{ $client->id }}+'/client_detail')" @endcan>
                                         {{ $client->name }}
                                     </span>
 

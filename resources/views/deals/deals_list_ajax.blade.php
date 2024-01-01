@@ -4,7 +4,7 @@
         <td> <input type="checkbox" name=""></td>
         <td style="width: 100px !important; ">
             <span style="cursor:pointer" class="deal-name hyper-link"
-                onclick="openNav(<?= $deal->id ?>)"
+            @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})" @endcan
                 data-deal-id="{{ $deal->id }}">
 
                 @if (strlen($deal->name) > 40)
