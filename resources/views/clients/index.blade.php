@@ -2,7 +2,7 @@
 @php
     // $profile=asset(Storage::url('uploads/avatar/'));
     $profile = \App\Models\Utility::get_file('uploads/avatar/');
-    
+
 @endphp
 @section('page-title')
     {{ __('Manage Contacts') }}
@@ -314,7 +314,7 @@ $(document).on('change', '.sub-check', function() {
             });
             $(document).ready(function() {
                 let curr_url = window.location.href;
-            
+
                 if(curr_url.includes('?')){
                     $('#save-filter-btn').css('display','inline-block');
                 }
