@@ -1775,4 +1775,5 @@ Route::get('/deal/companyEmployees', [DealController::class, 'getCompanyEmployee
 Route::get('/region/regionBrands', [RegionController::class, 'getRegionBrands'])->name('region_brands');
 
 Route::post("/save-filter", [SavedFilterController::class, 'save'])->name('save-filter');
+Route::post("/delete-filter", [SavedFilterController::class, 'deleteFilter'])->name('delete-filter');
 
