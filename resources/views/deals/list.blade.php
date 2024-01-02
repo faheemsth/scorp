@@ -456,7 +456,9 @@
                                         <input type="checkbox" class="main-check">
                                     </th>
                                     <th style="width: 100px !important;">{{ __('Admission Name') }}</th>
+                                    <th>{{ __('Passport') }}</th>
                                     <th>{{ __('Stage') }}</th>
+
                                     <th>{{ __('Lead Source') }}</th>
 
                                     <th>{{ __('Intake') }}</th>
@@ -469,6 +471,12 @@
                             <tbody id="deals_tbody">
                                 @if (count($deals) > 0)
                                 @foreach ($deals as $deal)
+
+                                @php 
+                                $client = \App\Models\User::join('client_deals', 'client_deals.client_id', 'users.id')->where('client_deals.deal_id', $deal->id)->first();
+                                $passport_number = isset($client->passport_number) ? $client->passport_number : '';
+                                @endphp 
+                                
                                 <tr>
                                     <td>
                                         <input type="checkbox" name="deals[]" value="{{$deal->id}}" class="sub-check">
@@ -483,6 +491,7 @@
                                             @endif
                                         </span>
                                     </td>
+                                    <td> {{ $passport_number }}</td>
                                     <td>{{ $deal->stage->name }}</td>
                                     <td>
                                         @php

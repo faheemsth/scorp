@@ -2881,7 +2881,6 @@ class LeadController extends Controller
             $users = allUsers();
             $log_activities = getLogActivity($lead->id, 'lead');
 
-
             //Getting lead stages history
             $stage_histories = StageHistory::where('type', 'lead')->where('type_id', $lead->id)->pluck('stage_id')->toArray();
 
@@ -2898,6 +2897,11 @@ class LeadController extends Controller
     {
         $lead_id = $_GET['lead_id'];
         $stage_id = $_GET['stage_id'];
+
+        $from_stage = Lead::where('id', $lead_id)->first()->stage_id;
+        $to_stage = $stage_id;
+        $stages = LeadStage::pluck('name', 'id')->toArray();
+
         Lead::where('id', $lead_id)->update(['stage_id' => $stage_id]);
 
 
@@ -2915,7 +2919,7 @@ class LeadController extends Controller
             'type' => 'info',
             'note' => json_encode([
                             'title' => 'Stage Updated',
-                            'message' => 'Lead stage updated successfully.'
+                            'message' => 'Lead stage has been updated successfully from '.$stages[$from_stage].' to '.$stages[$to_stage].'.'
                         ]),
             'module_id' => $lead_id,
             'module_type' => 'lead',

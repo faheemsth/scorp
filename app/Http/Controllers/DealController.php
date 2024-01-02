@@ -2658,8 +2658,6 @@ class DealController extends Controller
             $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to');
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
-            $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
             $filters = $this->TasksFilter();
 
             foreach ($filters as $column => $value) {
@@ -2677,9 +2675,14 @@ class DealController extends Controller
             }
 
             if(!isset($_GET['status'])){
-                $tasks->where('status',0);
+                $tasks->where('status', 0);
             }
+            $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
+            $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
 
+            
+
+            
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];

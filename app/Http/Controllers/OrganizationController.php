@@ -887,6 +887,7 @@ class OrganizationController extends Controller
     {
 
         if (\Auth::user()->can('edit task')) {
+           
 
             $task = DealTask::where('id', $id)->first();
 
@@ -909,6 +910,7 @@ class OrganizationController extends Controller
                 $users = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();
             }
 
+             
             $related_to = [];
             if ($task->related_type == 'organization') {
                 $related_to = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
@@ -918,15 +920,15 @@ class OrganizationController extends Controller
                 $related_to = Deal::get()->pluck('name', 'id')->toArray();
             }
 
-
-            if(\Auth::user()->type == 'super admin'){
-                $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
-            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
-                $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('active', 'true')->get();
-                $companies = User::where('type', 'company')->whereIn('id', $com_permissions)->orwhere('id', \Auth::user()->created_by)->get()->pluck('name', 'id')->toArray();
-            }else if(\Auth::user()->type == 'company'){
-                $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
-            }
+            // if(\Auth::user()->type == 'super admin'){
+            //     $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+            // }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            //     $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('active', 'true')->get();
+            //     $companies = User::where('type', 'company')->whereIn('id', $com_permissions)->orwhere('id', \Auth::user()->created_by)->get()->pluck('name', 'id')->toArray();
+            // }else if(\Auth::user()->type == 'company'){
+            //     $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+            // }
+            $companies = FiltersBrands();
 
             $employees = [];
             if(\Auth::user()->type == 'company'){
@@ -934,7 +936,6 @@ class OrganizationController extends Controller
             }else if(\Auth::user()->type == 'super admin'){
                 $employees =  User::pluck('name', 'id')->toArray();
             }
-
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             return view('organizations.task_edit', compact('task', 'users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'related_to', 'companies', 'employees'));

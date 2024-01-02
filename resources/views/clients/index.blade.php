@@ -81,7 +81,7 @@ $(document).on('change', '.sub-check', function() {
                     </button>
 
                     @can('create client')
-                     <button data-url="{{ route('clients.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}"  class="btn p-2 btn-dark" data-bs-toggle="modal">
+                     <button data-url="{{ route('clients.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}"  class="btn p-2 btn-dark d-none" data-bs-toggle="modal">
                         <i class="ti ti-plus" style="font-size:18px"></i>
                     </button>
                     @endcan

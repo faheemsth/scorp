@@ -235,7 +235,7 @@
                           </style>
 
                             <a type="button" data-lead-id="{{ $lead->id }}" data-stage-id="{{ $stage->id }}"
-                                class="@can('edit stage lead') 'lead_stage' @endcan {{ $is_missed == true ? 'missedup' : ($lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '')) }}"
+                                class="@can('edit stage lead') lead_stage @endcan {{ $is_missed == true ? 'missedup' : ($lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '')) }}"
                                 style="font-size:13px;"> {{ $stage->name }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
                         @empty
                         @endforelse
@@ -1422,12 +1422,9 @@
                                                                     <div class="bold time">{{ $activity->created_at }}</div>
                                                                     <div class="bold" style="text-align: left; margin-left: 80px;">
                                                                           <p class="bold" style="margin-bottom: 0rem; color: #000000;">{{ $remark->title }}</p>
-                                                                          <p class="mt-0">{{ $remark->message }}</p>
+                                                                          <p class="m-0">{{ $remark->message }}</p>
+                                                                          <span class="text-muted text-sm" style="cursor: pointer;" @can('show employee') onclick="openSidebar('/user/employee/{{ isset($activity->created_by) ? $activity->created_by : '' }}/show')"  @endcan ><i class="step__icon fa fa-user me-2" aria-hidden="true"></i>{{ isset($users[$activity->created_by]) ? $users[$activity->created_by] : '' }}</span>
                                                                     </div>
-                                                                    <div class="bold mb-5" style="text-align: left; margin-left: 80px;margin-top: 0px;">
-                                                                        <p class="bold" style="margin-bottom: 0rem; color: #000000;">User</p>
-                                                                        <p class="mt-0">{{ optional(App\Models\User::find($activity->created_by))->name }}</p>
-                                                                   </div>
                                                                 </li>
 
                                                             @endforeach

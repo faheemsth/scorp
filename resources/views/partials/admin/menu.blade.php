@@ -1239,12 +1239,14 @@
                                                 class="emp nav-item {{ Request::route()->getName() == 'clients.index' || Request::segment(1) == 'clients' || Request::route()->getName() == 'clients.edit' ? ' active' : '' }}">
                                                 <a class="collapse-item" style="color: white; font-size: 13px;"
                                                     href="{{ route('clients.index') }}">
-                                                    <img src="{{ asset('assets/cs-theme/icons/Layer_1 (1).png') }}"
+                                                    {{-- <img src="{{ asset('assets/cs-theme/icons/Layer_1 (1).png') }}"
                                                         id="icon1" width="15px" height="15px"
                                                         style="margin-top:-10px" alt="" srcset="">
                                                     <img src="{{ asset('assets/cs-theme/icons/callblue.png') }}"
                                                         id="icon2" width="15px" height="15px"
-                                                        style="margin-top:-8px" alt="" srcset="">
+                                                        style="margin-top:-8px" alt="" srcset=""> --}}
+                                                        <i class="fa-solid fa-address-card pe-1" id="icon1" style="color: #ffffff;font-size:15px;"></i>
+                                                        <i class="fa-solid fa-address-card pe-1" id="icon2" style="color: #2e82d0;font-size:15px;"></i>
 
                                                     {{ __('Contacts') }}</a>
                                             </li>
@@ -1847,12 +1849,14 @@
                                     class="emp nav-item{{ Request::route()->getName() == 'clients.index' || Request::segment(1) == 'clients' || Request::route()->getName() == 'clients.edit' ? ' active' : '' }}">
                                     <a class="collapse-item" style="color:white; font-size: 13px;"
                                         href="{{ route('clients.index') }}">
-                                        <img src="{{ asset('assets/cs-theme/icons/Layer_1 (1).png') }}"
+                                        {{-- <img src="{{ asset('assets/cs-theme/icons/Layer_1 (1).png') }}"
                                             id="icon1" width="15px" height="15px"
                                             style="margin-top:-10px" alt="" srcset="">
                                         <img src="{{ asset('assets/cs-theme/icons/callblue.png') }}"
                                             id="icon2" width="15px" height="15px" style="margin-top:-8px"
-                                            alt="" srcset="">
+                                            alt="" srcset=""> --}}
+                                            <i class="fa-solid fa-address-card pe-1" id="icon1" style="color: #ffffff;font-size:15px;"></i>
+                                            <i class="fa-solid fa-address-card pe-1" id="icon2" style="color: #2e82d0;font-size:15px;"></i>
 
                                         {{ __('Contacts') }}</a>
                                 </li>

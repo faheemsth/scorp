@@ -16,19 +16,41 @@
         background-color: #CCC;
         z-index: 1021;
     }
+    .dright{
+        position: absolute;
+    inset: 0px auto auto 0px;
+    transform: translate(-143px, 34px) !important;
+    }
 </style>
 
 <div id="wrapper" id="savefilter">
 
     <div class="sidebar" id="myDIV" style="display: none;" >
+        <ul style="list-style: none;">
         @foreach($filters as $filter)
-            <p>
+            {{-- <p>
                 <a href="{{$filter->url}}">{{$filter->filter_name}}</a> {{$filter->module}} ({{$filter->count}})
                 <a onclick="deleteFilter(`{{$filter->id}}`)" class="btn px-2 btn-danger text-white" style="float:right">
                     <i class="ti ti-trash "></i>
                 </a>
-            </p>
+            </p> --}}
+            <li class="px-2 py-2 d-flex justify-content-between align-items-center">
+                <div>
+                    <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                    <span class="text-dark"> {{$filter->module}} ({{$filter->count}})</span>
+                </div>
+                <div class="dropdown">
+                    <button class="btn bg-transparent" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                    </button>
+                    <ul class="dropdown-menu dright"  aria-labelledby="dropdownMenuButton1" >
+                      <li><a class="dropdown-item" href="#">Rename</a></li>
+                      <li><a class="dropdown-item"  onclick="deleteFilter(`{{$filter->id}}`)" href="#">Delete</a></li>
+                    </ul>
+                  </div>
+            </li>
         @endforeach
+    </ul>
     </div>
     <div class="modal" id="save-filter-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg my-0" role="document">
@@ -83,14 +105,14 @@ function storeFilter(){
             count: count,
             _token: csrf_token,
         },
-        success: function(data) {            
+        success: function(data) {
             $('#save-filter-modal').modal('hide')
             show_toastr('{{__("success")}}', 'Filter saved successfully!', 'success');
             location.reload();
             if (data.status == 'success') {
-                
+
             } else {
-                
+
             }
         }
     });
@@ -114,13 +136,13 @@ function deleteFilter(id){
             id: id,
             _token: csrf_token,
         },
-        success: function(data) {            
+        success: function(data) {
             show_toastr('{{__("success")}}', 'Filter deleted successfully!', 'success');
             location.reload();
             if (data.status == 'success') {
-                
+
             } else {
-                
+
             }
         }
     });
