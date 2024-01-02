@@ -87,8 +87,10 @@ class LeadController extends Controller
                 $total_records = Lead::whereIn('leads.created_by', $lead_created_by)->count();
             }
 
+            $avatar = User::get()->pluck('avatar', 'id');
+            $username = User::get()->pluck('name', 'id');
 
-            return view('leads.index', compact('pipelines', 'pipeline', 'total_records'));
+            return view('leads.index', compact('pipelines', 'pipeline', 'total_records','username','avatar'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
