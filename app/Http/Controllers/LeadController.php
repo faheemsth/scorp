@@ -2167,9 +2167,21 @@ class LeadController extends Controller
             $post       = $request->all();
             $lead       = Lead::find($post['lead_id']);
             $lead_users = $lead->users->pluck('email', 'id')->toArray();
-
             if ($lead->stage_id != $post['stage_id']) {
                 $newStage = LeadStage::find($post['stage_id']);
+
+                $from=LeadStage::find($lead->stage_id)->name;
+                //Log
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                        'title' => 'Lead Updated',
+                        'message' => ($from != $newStage->name) ? 'Lead updated from ' . $from . ' to ' . $newStage->name . ' successfully' : 'Lead updated successfully'
+                    ]),
+                    'module_id' => $lead->id,
+                    'module_type' => 'lead',
+                ];
+                addLogActivity($data);
 
                 LeadActivityLog::create(
                     [
