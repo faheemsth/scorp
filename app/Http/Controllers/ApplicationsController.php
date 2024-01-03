@@ -10,6 +10,10 @@ use App\Models\University;
 use App\Models\StageHistory;
 use Illuminate\Http\Request;
 use App\Models\DealApplication;
+use App\Models\Pipeline;
+use App\Models\ActivityLog;
+use App\Models\Utility;
+
 
 class ApplicationsController extends Controller
 {
@@ -160,6 +164,140 @@ class ApplicationsController extends Controller
             return redirect()->route('applications.index')->with('success', 'Application deleted successfully');
         }else{
             return redirect()->route('applications.index')->with('error', 'Atleast select 1 application.');
+        }
+    }
+
+    public function application()
+    {
+        $usr=\Auth::user();
+        $pipeline = Pipeline::get();
+        if ($usr->can('manage deal') || $usr->type == 'super admin') {
+            if ($usr->default_pipeline) {
+                $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
+                if (!$pipeline) {
+                    $pipeline = Pipeline::first();
+                }
+            } else {
+                $pipeline = Pipeline::first();
+            }
+            $pipelines = Pipeline::get()->pluck('name', 'id');
+            if ($usr->type == 'client') {
+                $id_deals = $usr->clientDeals->pluck('id');
+            } else {
+                $id_deals = $usr->deals->pluck('id');
+            }
+            $deals       = DealApplication::whereIn('id', $id_deals)->where('pipeline_id', '=', $pipeline->id)->get();
+            $curr_month  = DealApplication::whereIn('id', $id_deals)->where('pipeline_id', '=', $pipeline->id)->whereMonth('created_at', '=', date('m'))->get();
+            $curr_week   = DealApplication::whereIn('id', $id_deals)->where('pipeline_id', '=', $pipeline->id)->whereBetween(
+                'created_at',
+                [
+                    \Carbon\Carbon::now()->startOfWeek(),
+                    \Carbon\Carbon::now()->endOfWeek(),
+                ]
+            )->get();
+            $last_30days = DealApplication::whereIn('id', $id_deals)->where('pipeline_id', '=', $pipeline->id)->whereDate('created_at', '>', \Carbon\Carbon::now()->subDays(30))->get();
+            // Deal Summary
+            $cnt_deal                = [];
+            $cnt_deal['total']       = DealApplication::getDealSummary($deals);
+            $cnt_deal['this_month']  = DealApplication::getDealSummary($curr_month);
+            $cnt_deal['this_week']   = DealApplication::getDealSummary($curr_week);
+            $cnt_deal['last_30days'] = DealApplication::getDealSummary($last_30days);
+            $total_records = DealApplication::count();
+            if ($usr->can('view all deals') || \Auth::user()->type == 'super admin') {
+                $total_records =  DealApplication::select('deals.*')->count();
+            } else if (\auth::user()->type == "company") {
+                $users = User::select(['users.id'])->join('roles', 'roles.name', '=', 'users.type')
+                    ->join('role_has_permissions', 'role_has_permissions.role_id', '=', 'roles.id')
+                    ->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
+                    ->where(['users.created_by' => \auth::id(), 'permissions.name' => 'create deal'])
+                    ->groupBy('users.id')
+                    ->pluck('id')
+                    ->toArray();
+                $deal_created_by = $users;
+                $deal_created_by[] = $usr->id;
+                $total_records = DealApplication::select('deals.*')->whereIn('created_by', $deal_created_by)->count();
+            } else {
+                $deal_created_by[] = \auth::user()->created_by;
+                $deal_created_by[] = $usr->id;
+                $deal1_query = DealApplication::select('deals.*');
+                $total_records = $deal1_query->whereIn('created_by', $deal_created_by)->count();
+            }
+            return view('applications.list', compact('pipelines', 'pipeline', 'cnt_deal', 'total_records'));
+        } else {
+            return redirect()->back()->with('error', __('Permission Denied.'));
+        }
+    }
+
+    public function order(Request $request)
+    {
+        $usr = \Auth::user();
+
+        if ($usr->can('move application')) {
+            $post       = $request->all();
+            $deal       = DealApplication::where('deal_id',$post['deal_id'])->first();
+            $clients    = ClientDeal::select('client_id')->where('deal_id', '=', $deal->deal_id)->get()->pluck('client_id')->toArray();
+            $deal_users = $deal->users->pluck('id')->toArray();
+            $usrs       = User::whereIN('id', array_merge($deal_users, $clients))->get()->pluck('email', 'id')->toArray();
+
+            if ($deal->stage_id != $post['stage_id']) {
+                $newStage = Stage::find($post['stage_id']);
+                $from=Stage::find($deal->stage_id)->name;
+                //Log
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                        'title' => 'Lead Updated',
+                        'message' => ($from != $newStage->name) ? 'Lead updated from ' . $from . ' to ' . $newStage->name . ' successfully' : 'Lead updated successfully'
+                    ]),
+                    'module_id' => $deal->deal_id,
+                    'module_type' => 'Application',
+                ];
+                addLogActivity($data);
+                ActivityLog::create(
+                    [
+                        'user_id' => $usr->id,
+                        'deal_id' => $deal->deal_id,
+                        'log_type' => 'Move',
+                        'remark' => json_encode(
+                            [
+                                'title' => $deal->name,
+                                'old_status' => $deal->stage->name,
+                                'new_status' => $newStage->name,
+                            ]
+                        ),
+                    ]
+                );
+
+                $dealArr = [
+                    'deal_id' => $deal->deal_id,
+                    'name' => $deal->name,
+                    'updated_by' => $usr->id,
+                    'old_status' => $deal->stage->name,
+                    'new_status' => $newStage->name,
+                ];
+
+                $dArr = [
+                    'deal_name' => $deal->name,
+                    'deal_pipeline' => $deal->email,
+                    'deal_stage' => $deal->stage->name,
+                    'deal_status' => $deal->status,
+                    'deal_price' => $usr->priceFormat($deal->price),
+                    'deal_old_stage' => $deal->stage->name,
+                    'deal_new_stage' => $newStage->name,
+                ];
+
+                // Send Email
+                Utility::sendEmailTemplate('Move Deal', $usrs, $dArr);
+            }
+
+            foreach ($post['order'] as $key => $item) {
+                $deal           = DealApplication::where('deal_id',$item)->first();
+                $deal->order    = $key;
+                $deal->stage_id = $post['stage_id'];
+                $deal->save();
+            }
+        } else {
+            return response()->json(['error' => __('Permission Denied.')], 401);
         }
     }
 }

@@ -1740,6 +1740,9 @@ Route::get('/organization/{id}/task-delete', [OrganizationController::class, 'ta
 
 
 Route::get('applications/', [ApplicationsController::class, 'index'])->name('applications.index')->middleware(['auth', 'XSS']);
+Route::get('application/', [ApplicationsController::class, 'application'])->name('application')->middleware(['auth', 'XSS']);
+Route::post('/application/order', [ApplicationsController::class, 'order'])->name('application.order')->middleware(['auth', 'XSS']);
+
 Route::get('/update-application-stage', [ApplicationsController::class, 'updateApplicationStage'])->name('update-application-stage')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/taskDeleted', [OrganizationController::class, 'taskDeleted'])->middleware(['auth', 'XSS']);
 

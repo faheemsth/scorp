@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use App\Models\CompanyPermission;
 use App\Models\Region;
+use App\Models\ApplicationStage;
 
 class DealController extends Controller
 {
@@ -2546,7 +2547,7 @@ class DealController extends Controller
             ];
             $application = DealApplication::where('id', $id)->first();
             $deal_passport = Deal::select(['users.*'])->join('client_deals', 'client_deals.deal_id', 'deals.id')->join('users', 'users.id', 'client_deals.client_id')->where(['deals.id' => $application->deal_id])->first();
-            $stages = Stage::get()->pluck('name', 'id')->toArray();
+            $stages = ApplicationStage::get()->pluck('name', 'id')->toArray();
 
             return view('deals.edit-application', compact('application', 'universities', 'statuses', 'deal_passport', 'stages'));
         } else {
@@ -2558,20 +2559,36 @@ class DealController extends Controller
     {
 
         if (\Auth::user()->can('edit application')) {
-
+            $usr = \Auth::user();
             $validator = \Validator::make(
                 $request->all(),
                 [
                     'university' => 'required',
                     'course' => 'required',
                     'status' => 'required',
-                    'intake' => 'required'
+                    'intake_month' => 'required'
                 ]
             );
+                // Default Field Value
+                if ($usr->default_pipeline) {
+                    $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
+                    if (!$pipeline) {
+                        $pipeline = Pipeline::first();
+                    }
+                } elseif (\Auth::user()->type == 'super admin') {
+                    $pipeline = Pipeline::first();
+                } else {
+                    $pipeline = Pipeline::first();
+                }
             if ($validator->fails()) {
+
                 $messages = $validator->getMessageBag();
-                return redirect()->back()->with('error', $messages->first());
+                return json_encode([
+                    'status' => 'error',
+                    'message' => $messages->first()
+                ]);
             }
+
 
             $passport_number = $request->passport_number;
             $university_name = University::select('name')->where(['id' => (int)$request->university])->first()->name;
@@ -2594,7 +2611,7 @@ class DealController extends Controller
             $application->university_id = $request->university;
             $application->stage_id = $request->status;
             $application->course = $request->course;
-
+            $application->pipeline_id = $pipeline->id;
             $application->external_app_id = $request->application_key;
             $application->intake = date('Y-m-d', strtotime($request->intake));
             $application->name = $deal->name . '-' . $request->course . '-' . $university_name . '-' . $request->application_key;
