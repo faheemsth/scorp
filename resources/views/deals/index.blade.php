@@ -64,7 +64,9 @@
                                 pipeline_id: pipeline_id,
                                 "_token": $('meta[name="csrf-token"]').attr('content')
                             },
-                            success: function(data) {},
+                            success: function(data) {
+                                show_toastr('{{__('Success')}}', '{{ __("Move Content Successfully!")}}', 'success');
+                            },
                             error: function(data) {
                                 data = data.responseJSON;
                                 show_toastr('error', data.error, 'error')
@@ -166,7 +168,7 @@
     <li class="breadcrumb-item">{{ __('Deal') }}</li>
 @endsection
 @section('action-btn')
-    <div class="float-end">
+    <div class="float-end d-none">
         {{ Form::open(['route' => 'deals.change.pipeline', 'id' => 'change-pipeline', 'class' => 'btn btn-sm ']) }}
         {{ Form::select('default_pipeline_id', $pipelines, $pipeline->id, ['class' => 'form-control select', 'id' => 'default_pipeline_id']) }}
         {{ Form::close() }}
@@ -225,82 +227,8 @@
 </div>
 
 @section('content')
-    @can('show deals stats')
-        <div class="row">
-            <div class="col-sm-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col-auto mb-3 mb-sm-0">
-                                <small class="text-muted">{{ __('Total Deals') }}</small>
-                                <h4 class="m-0">{{ $cnt_deal['total'] }}</h4>
-                            </div>
-                            <div class="col-auto">
-                                <div class="theme-avtar bg-info">
-                                    <i class="ti ti-layers-difference"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col-auto mb-3 mb-sm-0">
-                                <small class="text-muted">{{ __('This Month Total Deals') }}</small>
-                                <h4 class="m-0">{{ $cnt_deal['this_month'] }}</h4>
-                            </div>
-                            <div class="col-auto">
-                                <div class="theme-avtar bg-primary">
-                                    <i class="ti ti-layers-difference"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col-auto mb-3 mb-sm-0">
-                                <small class="text-muted">{{ __('This Week Total Deals') }}</small>
-                                <h4 class="m-0">{{ $cnt_deal['this_week'] }}</h4>
-                            </div>
-                            <div class="col-auto">
-                                <div class="theme-avtar bg-warning">
-                                    <i class="ti ti-layers-difference"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center justify-content-between">
-                            <div class="col-auto mb-3 mb-sm-0">
-                                <small class="text-muted">{{ __('Last 30 Days Total Deals') }}</small>
-                                <h4 class="m-0">{{ $cnt_deal['last_30days'] }}</h4>
-                            </div>
-                            <div class="col-auto">
-                                <div class="theme-avtar bg-danger">
-                                    <i class="ti ti-layers-difference"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endcan
     <div class="row">
-
-        <div class="col-sm-12">
+        {{-- <div class="col-sm-12">
             <div class="my-4 mx-4">
                 <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
@@ -333,7 +261,70 @@
                     <span style="margin-top: 5px;">entries per page</span>
                 </div>
             </div>
-        </div>
+        </div> --}}
+        <div class="card my-card" style="max-width: 98%;border-radius:0px; min-height: 250px !important;">
+            <div class="card-body table-border-style" style="padding: 25px 3px;">
+                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
+                    <div class="col-4">
+                        <div class="my-4 mx-4">
+                            <div class="enries_per_page" style="max-width: 300px; display: flex;">
+
+                                <?php
+                                $all_params = isset($_GET) ? $_GET : '';
+                                if (isset($all_params['num_results_on_page'])) {
+                                    unset($all_params['num_results_on_page']);
+                                }
+                                ?>
+                                <input type="hidden" value="<?= http_build_query($all_params) ?>" class="url_params">
+                                <select name="" id="" class="enteries_per_page form form-control"
+                                    style="width: 100px; margin-right: 1rem;">
+                                    <option
+                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 25 ? 'selected' : '' ?>
+                                        value="25">25</option>
+                                    <option
+                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 100 ? 'selected' : '' ?>
+                                        value="100">100</option>
+                                    <option
+                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 300 ? 'selected' : '' ?>
+                                        value="300">300</option>
+                                    <option
+                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 1000 ? 'selected' : '' ?>
+                                        value="1000">1000</option>
+                                    <option
+                                        <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == $total_records ? 'selected' : '' ?>
+                                        value="{{ $total_records }}">all</option>
+                                </select>
+
+                                <span style="margin-top: 5px;">entries per page</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-8 d-flex justify-content-end gap-2">
+
+                            {{-- {{ Form::open(['route' => 'deals.change.pipeline', 'id' => 'change-pipeline', 'class' => 'btn btn-sm ']) }}
+                            {{ Form::select('default_pipeline_id', $pipelines, $pipeline->id, ['class' => 'form-control select', 'id' => 'default_pipeline_id']) }}
+                            {{ Form::close() }} --}}
+
+                            @can('show deals stats')
+                            <a href="{{ route('deals.list') }}" data-size="lg" data-bs-toggle="tooltip" title="{{ __('List View') }}"
+                                class="btn btn-sm btn-dark">
+                                <i class="ti ti-list"></i>
+                            </a>
+                            <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true"
+                                data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn btn-sm btn-dark">
+                                <i class="ti ti-plus"></i>
+                            </a>
+                            <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}" class="btn btn-sm btn-dark"
+                                style="display: none;" id="import_csv_modal_btn" data-bs-toggle="modal" data-bs-target="#import_csv">
+                                <i class="fa fa-file-csv"></i>
+                            </button>
+                            @endcan
+                    </div>
+                </div>
+
+
+
+
         <div class="col-sm-12">
             @php
                 $stages = $pipeline->stages;
@@ -481,6 +472,8 @@
                 ])
             @endif
         </div>
+        </div>
+    </div>
     </div>
 @endsection
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>

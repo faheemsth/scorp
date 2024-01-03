@@ -976,6 +976,18 @@ class DealController extends Controller
 
             if ($deal->stage_id != $post['stage_id']) {
                 $newStage = Stage::find($post['stage_id']);
+                $from=Stage::find($deal->stage_id)->name;
+                //Log
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                        'title' => 'Lead Updated',
+                        'message' => ($from != $newStage->name) ? 'Lead updated from ' . $from . ' to ' . $newStage->name . ' successfully' : 'Lead updated successfully'
+                    ]),
+                    'module_id' => $deal->id,
+                    'module_type' => 'Deal',
+                ];
+                addLogActivity($data);
                 ActivityLog::create(
                     [
                         'user_id' => $usr->id,
@@ -2680,9 +2692,9 @@ class DealController extends Controller
             $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
             $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
 
-            
 
-            
+
+
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
