@@ -22,6 +22,7 @@ use App\Models\Pipeline;
 use App\Models\UserDeal;
 use App\Models\UserLead;
 use App\Models\DealEmail;
+use App\Models\LogActivity;
 use App\Models\LeadEmail;
 use App\Models\LeadStage;
 use Illuminate\View\View;
@@ -86,8 +87,10 @@ class LeadController extends Controller
                 $total_records = Lead::whereIn('leads.created_by', $lead_created_by)->count();
             }
 
+            $avatar = User::get()->pluck('avatar', 'id');
+            $username = User::get()->pluck('name', 'id');
 
-            return view('leads.index', compact('pipelines', 'pipeline', 'total_records'));
+            return view('leads.index', compact('pipelines', 'pipeline', 'total_records','username','avatar'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -188,7 +191,7 @@ class LeadController extends Controller
                 if ($column === 'name') {
                     $leads_query->whereIn('leads.name', $value);
                 } elseif ($column === 'stage_id') {
-                    $leads_query->whereIn('stage_ids', $value);
+                    $leads_query->whereIn('stage_id', $value);
                 } elseif ($column === 'users') {
                     $leads_query->whereIn('leads.user_id', $value);
                 } elseif ($column == 'created_at') {
@@ -234,7 +237,18 @@ class LeadController extends Controller
             foreach($total_leads_by_status_records as $status){
                 $total_leads_by_status[$status->type] = $status->total_leads;
             }
-            return view('leads.list', compact('pipelines','branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status'));
+
+            $assign_to = array();
+            if(\Auth::user()->type == 'super admin'){
+                $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+                ->pluck('name', 'id')->toArray();
+            }else{
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+
+                $assign_to = User::whereIn('brand_id', $brand_ids)->pluck('name', 'id')->toArray();
+            }
+            return view('leads.list', compact('pipelines','branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status', 'assign_to'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -650,6 +664,7 @@ class LeadController extends Controller
     public function update(Request $request, $id)
     {
         $lead              = Lead::where('id', $id)->first();
+        $from=LeadStage::find($lead->stage_id)->name;
         if (\Auth::user()->can('edit lead') || \Auth::user()->type == 'super admin') {
             if ($lead->created_by == \Auth::user()->creatorId() || \Auth::user()->can('edit lead') || \Auth::user()->type == 'super admin') {
                 $validator = \Validator::make(
@@ -715,13 +730,14 @@ class LeadController extends Controller
                 $lead->drive_link = isset($request->drive_link) ? $request->drive_link : '';
                 $lead->save();
 
+                $to=LeadStage::find($request->lead_stage)->name;
                 //Log
                 $data = [
                     'type' => 'info',
                     'note' => json_encode([
-                                    'title' => 'Lead Updated',
-                                    'message' => 'Lead updated successfully'
-                                ]),
+                        'title' => 'Lead Updated',
+                        'message' => ($from != $to) ? 'Lead updated from ' . $from . ' to ' . $to . ' successfully' : 'Lead updated successfully'
+                    ]),
                     'module_id' => $lead->id,
                     'module_type' => 'lead',
                 ];
@@ -1081,7 +1097,7 @@ class LeadController extends Controller
     public function importCsv(Request $request)
     {
         $usr = \Auth::user();
-        
+
         if ($usr->can('edit lead')) {
             $file = $request->file('leads_file');
 
@@ -2162,9 +2178,21 @@ class LeadController extends Controller
             $post       = $request->all();
             $lead       = Lead::find($post['lead_id']);
             $lead_users = $lead->users->pluck('email', 'id')->toArray();
-
             if ($lead->stage_id != $post['stage_id']) {
                 $newStage = LeadStage::find($post['stage_id']);
+
+                $from=LeadStage::find($lead->stage_id)->name;
+                //Log
+                $data = [
+                    'type' => 'info',
+                    'note' => json_encode([
+                        'title' => 'Lead Updated',
+                        'message' => ($from != $newStage->name) ? 'Lead updated from ' . $from . ' to ' . $newStage->name . ' successfully' : 'Lead updated successfully'
+                    ]),
+                    'module_id' => $lead->id,
+                    'module_type' => 'lead',
+                ];
+                addLogActivity($data);
 
                 LeadActivityLog::create(
                     [
@@ -2909,7 +2937,7 @@ class LeadController extends Controller
             'type' => 'lead'
         ];
         addLeadHistory($data_for_stage_history);
-
+// dd(LogActivity::find($lead_id));
 
         //Log
         $data = [
