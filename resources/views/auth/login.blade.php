@@ -45,14 +45,16 @@
                 </div>
             @endif
         </div>
-      {{--  <div class="form-group mb-3">
-            <label for="password" class="form-label">{{__('Password')}}</label>
-            <input class="form-control @error('password') is-invalid @enderror" id="password" type="password" name="password" required autocomplete="current-password">
-            @error('password')
-            <div class="invalid-feedback" role="alert">{{ $message }}</div>
-            @enderror
+        @if(env('APP_ENV') == 'local')
+            <div class="form-group mb-3">
+                <label for="password" class="form-label">{{__('Password')}}</label>
+                <input class="form-control @error('password') is-invalid @enderror" id="password" type="password" name="password" required autocomplete="current-password">
+                @error('password')
+                <div class="invalid-feedback" role="alert">{{ $message }}</div>
+                @enderror
 
-        </div> --}}
+            </div> 
+        @endif
 
         @if(env('RECAPTCHA_MODULE') == 'on')
             <div class="form-group mb-3">
@@ -64,13 +66,15 @@
                 @enderror
             </div>
         @endif
-      {{--  <div class="form-group mb-4">
+        @if(env('APP_ENV') == 'local')
+         <div class="form-group mb-4">
 
                 @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}" class="">{{ __('Forgot Your Password?') }}</a>
                 @endif
 
-        </div> --}}
+        </div> 
+        @endif
         <div class="d-grid">
             <button type="submit" class="btn-login btn btn-primary btn-block mt-2" id="login_button">{{__('Login')}}</button>
         </div>
