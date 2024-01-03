@@ -134,6 +134,8 @@ use App\Http\Controllers\ApplicationsController;
 use App\Http\Controllers\InstituteCategoryController;
 use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\SavedFilterController;
+use App\Http\Controllers\AppStageController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -1740,6 +1742,12 @@ Route::get('/organization/{id}/task-delete', [OrganizationController::class, 'ta
 Route::get('applications/', [ApplicationsController::class, 'index'])->name('applications.index')->middleware(['auth', 'XSS']);
 Route::get('/update-application-stage', [ApplicationsController::class, 'updateApplicationStage'])->name('update-application-stage')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/taskDeleted', [OrganizationController::class, 'taskDeleted'])->middleware(['auth', 'XSS']);
+
+Route::get('/application_stages', [AppStageController::class, 'index'])->name('application_stages.index')->middleware(['auth', 'XSS']);
+Route::get('/application_stages/create', [AppStageController::class, 'create'])->middleware(['auth', 'XSS']);
+Route::post('/application_stages/save', [AppStageController::class, 'save'])->middleware(['auth', 'XSS']);
+Route::post('/application_stages/update/{id}', [AppStageController::class, 'update'])->name('application_stages.update')->middleware(['auth', 'XSS']);
+Route::get('/application_stages/{id}/edit', [AppStageController::class, 'edit'])->middleware(['auth', 'XSS']);
 
 
 Route::get('/save-countries', [SystemController::class, 'saveCountries']);
