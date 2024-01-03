@@ -82,7 +82,7 @@
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form form-control select2" id="choices-multiple55"
-                                                    name="brands" style="width: 100% !important;" required>
+                                                    name="brands[]" style="width: 100% !important;" required>
                                                     <option value="">Select Brand</option>
                                                         @foreach ($brands as $brand)
                                                             <option value="{{ $brand->id }}">{{ $brand->name }}</option>
