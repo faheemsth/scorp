@@ -280,7 +280,7 @@
 
                             @can('create region')
                             <a href="#" data-size="lg" data-url="{{ route('region.create') }}"
-                                data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Origin') }}"
+                                data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Region') }}"
                                 class="btn p-2 btn-dark">
                                 <i class="ti ti-plus"></i>
                             </a>

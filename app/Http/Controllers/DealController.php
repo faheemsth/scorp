@@ -2666,7 +2666,7 @@ class DealController extends Controller
                 } elseif ($column === 'assigned_to') {
                     $tasks->whereIn('assigned_to', $value);
                 } elseif ($column === 'created_by') {
-                    $tasks->whereIn('brand_id', $value);
+                    $tasks->whereIn('deal_tasks.brand_id', $value);
                 } elseif ($column == 'due_date') {
                     $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
                 }elseif ($column == 'status') {
@@ -2705,10 +2705,12 @@ class DealController extends Controller
             $assign_to = array();
             if(\Auth::user()->type == 'super admin'){
                 $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
-                ->get();
+                ->pluck('name', 'id')->toArray();
             }else{
-                $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
-                ->where('created_by', \Auth::user()->id)->get();
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+
+                $assign_to = User::whereIn('brand_id', $brand_ids)->pluck('name', 'id')->toArray();
             }
 
 
