@@ -36,18 +36,23 @@
         <div class="form-group mb-3">
             <label for="email" class="form-label">{{__('Email')}}</label>
             <input class="form-control @error('email') is-invalid @enderror" id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-            @error('email')
-            <div class="invalid-feedback" role="alert">{{ $message }}</div>
-            @enderror
+           {{-- @error('email')
+            <div class="invalid-feedback" role="alert" style="display:block !important">{{ $message }}</div>
+            @enderror --}}
+            @if (session('error'))
+                <div class="invalid-feedback" role="alert" style="display:block !important">
+                    {{ session('error') }}
+                </div>
+            @endif
         </div>
-        <div class="form-group mb-3">
+      {{--  <div class="form-group mb-3">
             <label for="password" class="form-label">{{__('Password')}}</label>
             <input class="form-control @error('password') is-invalid @enderror" id="password" type="password" name="password" required autocomplete="current-password">
             @error('password')
             <div class="invalid-feedback" role="alert">{{ $message }}</div>
             @enderror
 
-        </div>
+        </div> --}}
 
         @if(env('RECAPTCHA_MODULE') == 'on')
             <div class="form-group mb-3">
@@ -59,13 +64,13 @@
                 @enderror
             </div>
         @endif
-        <div class="form-group mb-4">
+      {{--  <div class="form-group mb-4">
 
                 @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}" class="">{{ __('Forgot Your Password?') }}</a>
                 @endif
 
-        </div>
+        </div> --}}
         <div class="d-grid">
             <button type="submit" class="btn-login btn btn-primary btn-block mt-2" id="login_button">{{__('Login')}}</button>
         </div>

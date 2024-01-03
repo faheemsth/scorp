@@ -186,6 +186,7 @@ Route::post('/company-permission-updated', [CompanyPermissionController::class, 
 Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
 
 Route::get('/login/{lang?}', [AuthenticatedSessionController::class, 'showLoginForm'])->name('login');
+Route::get('auth/google/callback', [AuthenticatedSessionController::class, 'handleGoogleCallback']);
 
 Route::get('/', [DashboardController::class, 'crm_dashboard_index'])->name('crm.dashboard')->middleware(['XSS', 'revalidate',]);
 
