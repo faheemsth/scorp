@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\Customer;
+use Carbon\Carbon;
 use App\Models\Plan;
+use App\Models\User;
 use App\Models\Vender;
 use  App\Models\Utility;
-use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Providers\RouteServiceProvider;
+use App\Models\Customer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-
+// use Laravel\Socialite\Facades\Socialite;
+use Socialite;
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -66,77 +66,168 @@ class AuthenticatedSessionController extends Controller
     //    }
 
 
-    public function store(LoginRequest $request)
-    {
-
-        //ReCpatcha
-        if(env('RECAPTCHA_MODULE') == 'on')
-        {
-            $validation['g-recaptcha-response'] = 'required|captcha';
+    public function store(LoginRequest $request){
+        
+        // dd($request->email);
+        $user = User::where('email',$request->email)->first();
+        
+        $environment = env('APP_ENV', 'local');
+        if($environment == 'production'){
+            if($user){
+                return Socialite::driver('google')->redirect();
+            }else{
+                return back()->with('error', 'User did not find.');
+            }
         }else{
-            $validation = [];
-        }
-        $this->validate($request, $validation);
 
-        $request->authenticate();
-        $request->session()->regenerate();
-        $user = Auth::user();
-
-
-        if($user->delete_status == 0)
-        {
-            auth()->logout();
-        }
-
-        if($user->is_active == 0)
-        {
-            auth()->logout();
-        }
-        $user = \Auth::user();
-        if($user->type == 'company')
-        {
-            $plan = Plan::find($user->plan);
-            if($plan)
+            //ReCpatcha
+            if(env('RECAPTCHA_MODULE') == 'on')
             {
-                if($plan->duration != 'unlimited')
-                {
-                    $datetime1 = new \DateTime($user->plan_expire_date);
-                    $datetime2 = new \DateTime(date('Y-m-d'));
-                    //                    $interval  = $datetime1->diff($datetime2);
-                    $interval = $datetime2->diff($datetime1);
-                    $days     = $interval->format('%r%a');
-                    if($days <= 0)
-                    {
-                        $user->assignPlan(1);
+                $validation['g-recaptcha-response'] = 'required|captcha';
+            }else{
+                $validation = [];
+            }
+            $this->validate($request, $validation);
 
-                        return redirect()->intended(RouteServiceProvider::HOME)->with('error', __('Your Plan is expired.'));
-                    }
-                }
+            $request->authenticate();
+            $request->session()->regenerate();
+            $user = Auth::user();
+
+
+            if($user->delete_status == 0)
+            {
+                auth()->logout();
             }
 
+            if($user->is_active == 0)
+            {
+                auth()->logout();
+            }
+            $user = \Auth::user();
+            if($user->type == 'company')
+            {
+                $plan = Plan::find($user->plan);
+                if($plan)
+                {
+                    if($plan->duration != 'unlimited')
+                    {
+                        $datetime1 = new \DateTime($user->plan_expire_date);
+                        $datetime2 = new \DateTime(date('Y-m-d'));
+                        //                    $interval  = $datetime1->diff($datetime2);
+                        $interval = $datetime2->diff($datetime1);
+                        $days     = $interval->format('%r%a');
+                        if($days <= 0)
+                        {
+                            $user->assignPlan(1);
+
+                            return redirect()->intended(RouteServiceProvider::HOME)->with('error', __('Your Plan is expired.'));
+                        }
+                    }
+                }
+
+            }
+
+
+
+
+            // Update Last Login Time
+            $user->update(
+                [
+                    'last_login_at' => Carbon::now()->toDateTimeString(),
+                ]
+            );
+            //        if($user->type =='employee')
+            if($user->type =='team' || $user->type =='company' || $user->type =='super admin' || $user->type =='client')
+            {
+                return redirect()->intended(RouteServiceProvider::HOME);
+
+            }
+            else
+            {
+                return redirect()->intended(RouteServiceProvider::EMPHOME);
+            }
         }
 
-
-
-
-        // Update Last Login Time
-        $user->update(
-            [
-                'last_login_at' => Carbon::now()->toDateTimeString(),
-            ]
-        );
-//        if($user->type =='employee')
-        if($user->type =='team' || $user->type =='company' || $user->type =='super admin' || $user->type =='client')
-        {
-            return redirect()->intended(RouteServiceProvider::HOME);
-
-        }
-        else
-        {
-            return redirect()->intended(RouteServiceProvider::EMPHOME);
-        }
+        
 
     }
+
+    public function handleGoogleCallback()
+    {
+        // $timestamp = mktime(9, 39, 22, 10, 9, 2023);
+
+        $dateString = Carbon::now();
+        try {
+            $user = Socialite::driver('google')->user();
+            
+            $finduser = User::where('email', $user->email)->first();
+            // dd($finduser);
+            if($finduser){
+
+                Auth::login($finduser);
+                $user = Auth::user();
+
+
+                if($user->delete_status == 0)
+                {
+                    auth()->logout();
+                }
+
+                if($user->is_active == 0)
+                {
+                    auth()->logout();
+                }
+                $user = \Auth::user();
+                if($user->type == 'company')
+                {
+                    $plan = Plan::find($user->plan);
+                    if($plan)
+                    {
+                        if($plan->duration != 'unlimited')
+                        {
+                            $datetime1 = new \DateTime($user->plan_expire_date);
+                            $datetime2 = new \DateTime(date('Y-m-d'));
+                            //                    $interval  = $datetime1->diff($datetime2);
+                            $interval = $datetime2->diff($datetime1);
+                            $days     = $interval->format('%r%a');
+                            if($days <= 0)
+                            {
+                                $user->assignPlan(1);
+
+                                return redirect()->intended(RouteServiceProvider::HOME)->with('error', __('Your Plan is expired.'));
+                            }
+                        }
+                    }
+
+                }
+
+                // Update Last Login Time
+                $user->update(
+                    [
+                        'last_login_at' => Carbon::now()->toDateTimeString(),
+                    ]
+                );
+        //        if($user->type =='employee')
+                if($user->type =='team' || $user->type =='company' || $user->type =='super admin' || $user->type =='client')
+                {
+                    return redirect()->intended(RouteServiceProvider::HOME);
+
+                }
+                else
+                {
+                    return redirect()->intended(RouteServiceProvider::EMPHOME);
+                }
+
+            }else{
+                return back()->with('error', 'User did not find.');
+            }
+
+        } catch (Exception $e) {
+            
+           return back();
+        }
+    }
+
     /**
      * Destroy an authenticated session.
      *
