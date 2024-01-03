@@ -55,53 +55,7 @@ $lang = Auth::user()->lang;
         @if (\Auth::user()->type != 'client')
         <!-- Sidebar -->
         <ul style="list-style: none">
-
-        <!-- New Menu -->
-            <li class="nav-item {{ Request::segment(1) == null ||
-                            Request::segment(1) == 'crm-dashboard' ||
-                            Request::segment(1) == 'account-dashboard' ||
-                            Request::segment(1) == 'income report' ||
-                            Request::segment(1) == 'report' ||
-                            Request::segment(1) == 'reports-payroll' ||
-                            Request::segment(1) == 'reports-leave' ||
-                            Request::segment(1) == 'reports-monthly-attendance'
-                                ? 'active dash-trigger'
-                                : '' }}">
-
-
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseone" aria-expanded="true" aria-controls="collapseone">
-                    <img src="{{ asset('assets/cs-theme/icons/Group 138.png') }}" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
-
-                    <span>{{ __('Dashboard') }}</span>
-                </a>
-                <div id="collapseone" class="collapse {{ Request::segment(1) == 'crm-dashboard' || Request::segment(1) == 'hrm-dashboard' ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="  collapse-inner rounded">
-                        <ul>
-
-                            @can('show crm dashboard')
-                            <li class="{{ Request::route()->getName() == 'crm.dashboard' ? ' active' : '' }}">
-                                <a class="collapse-item" href="{{ route('crm.dashboard') }}" style="color:white; font-size: 13px;">
-                                    <i class="fa-solid fa-chart-line me-1" style="color: #ffffff;"></i>
-                                    CRM Dashboard</a>
-                            </li>
-                            @endcan
-
-                            
-
-
-                        </ul>
-                    </div>
-                </div>
-            </li>
-        <!-- End new Menu -->
-
-
-
-
-
-
-
-
+        
             @if (Auth::user()->type == 'company' ||
             Auth::user()->type == 'team' ||
             Gate::check('show hrm dashboard') ||
