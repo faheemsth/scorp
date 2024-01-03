@@ -191,7 +191,7 @@ class LeadController extends Controller
                 if ($column === 'name') {
                     $leads_query->whereIn('leads.name', $value);
                 } elseif ($column === 'stage_id') {
-                    $leads_query->whereIn('stage_ids', $value);
+                    $leads_query->whereIn('stage_id', $value);
                 } elseif ($column === 'users') {
                     $leads_query->whereIn('leads.user_id', $value);
                 } elseif ($column == 'created_at') {
@@ -237,7 +237,18 @@ class LeadController extends Controller
             foreach($total_leads_by_status_records as $status){
                 $total_leads_by_status[$status->type] = $status->total_leads;
             }
-            return view('leads.list', compact('pipelines','branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status'));
+
+            $assign_to = array();
+            if(\Auth::user()->type == 'super admin'){
+                $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+                ->pluck('name', 'id')->toArray();
+            }else{
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+
+                $assign_to = User::whereIn('brand_id', $brand_ids)->pluck('name', 'id')->toArray();
+            }
+            return view('leads.list', compact('pipelines','branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status', 'assign_to'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }

@@ -32,10 +32,10 @@
                     <div class="card-body">
                         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                             <div class="col-2">
-                                <p class="mb-0 pb-0">Institutes</p>
+                                <p class="mb-0 pb-0">Brands</p>
                                 <div class="dropdown">
                                     <button class="All-leads" type="button">
-                                        ALL Institutes
+                                        ALL Brands
                                     </button>
                                 </div>
                             </div>
