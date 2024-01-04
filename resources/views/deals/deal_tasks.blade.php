@@ -26,7 +26,7 @@ $setting = \App\Models\Utility::colorset();
 @endsection
 
 @push('css-page')
-<link rel="stylesheet" href="{{ asset('assets/js/drag-resize-columns/dist/jquery.resizableColumns.css') }}">
+{{-- <link rel="stylesheet" href="{{ asset('assets/js/drag-resize-columns/dist/jquery.resizableColumns.css') }}"> --}}
 @endpush
 
 

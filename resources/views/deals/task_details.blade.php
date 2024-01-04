@@ -1,117 +1,4 @@
-<style>
-    .editable:hover {
-        border: 1px solid rgb(136, 136, 136);
-    }
-    #dellhover{
-        opacity: 0;
-    }
-    #lihover:hover #dellhover{
-        opacity: 1;
-    }
 
-    .task-details table tr td {
-        font-size: 14px;
-    }
-
-    .task-details table tr td {
-        font-size: 14px;
-    }
-
-    .card-body {
-        padding: 25px 15px !important;
-    }
-
-    .edit-input-field-div {
-        background-color: #ffffff;
-        border: 0px solid rgb(224, 224, 224);
-        max-width: max-content;
-        max-height: 30px;
-    }
-
-
-    .edit-input-field-div .input-group {
-        min-width: 70px;
-        min-height: 30px;
-        border: none !important;
-    }
-
-    .edit-input-field-div .input-group input {
-        border: none !important;
-    }
-
-    .edit-input-field {
-        border: 0px;
-        box-shadow: none;
-        padding: 4px !important;
-
-    }
-
-    .edit-input-field-div .edit-btn-div {
-        display: none;
-    }
-
-    .edit-input-field-div:hover {
-        /* border: 1px solid rgb(224, 224, 224); */
-    }
-
-    .edit-input-field-div:hover .edit-btn-div {
-        display: block;
-    }
-
-    .edit-input {
-        padding: 7px;
-    }
-
-    .block-items {
-        overflow: auto;
-        padding-right: 7px;
-        padding-bottom: 5px;
-        padding-top: 1px;
-        padding-left: 1px;
-        width: 100%;
-        display: flex;
-    }
-
-
-    .block-item {
-        display: inline-block;
-        vertical-align: top;
-        padding: 10px;
-        text-align: left;
-        white-space: nowrap;
-        -webkit-box-flex: 1;
-        -ms-flex: 1;
-        flex: 1;
-        -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .16), 0 0 0 1px rgba(0, 0, 0, .08);
-        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .16), 0 0 0 1px rgba(0, 0, 0, .08);
-        border-radius: 2px;
-        margin-right: 10px;
-        line-height: initial;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-
-    .top-label {
-        text-transform: uppercase;
-        white-space: nowrap;
-        width: 100%;
-        color: #757575;
-        font-size: 11px;
-        line-height: 12px;
-        font-weight: normal;
-        padding-bottom: 4px;
-        display: block;
-    }
-
-
-    .block-item-count-total {
-        font-weight: bold;
-        font-size: 14px;
-        text-align: left;
-    }
-</style>
 <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
 <div class="container-fluid px-1 mx-0 task-details">
     <div class="row">
@@ -153,7 +40,7 @@
                         <i class="ti ti-pencil"></i>
                     </button>
                     @endcan
-
+                
                     @can('delete task')
                     <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-danger text-white"  title="{{ __('Delete') }}">
                         <i class="ti ti-trash"></i>
