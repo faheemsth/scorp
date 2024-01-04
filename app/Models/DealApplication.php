@@ -58,4 +58,8 @@ class DealApplication extends Model
     {
         return $this->belongsToMany('App\Models\User', 'user_deals', 'deal_id', 'user_id');
     }
+    public function stage()
+    {
+        return $this->hasOne('App\Models\Stage', 'id', 'stage_id');
+    }
 }

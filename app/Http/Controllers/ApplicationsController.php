@@ -240,9 +240,11 @@ class ApplicationsController extends Controller
             $usrs       = User::whereIN('id', array_merge($deal_users, $clients))->get()->pluck('email', 'id')->toArray();
 
             if ($deal->stage_id != $post['stage_id']) {
+
                 $newStage = Stage::find($post['stage_id']);
                 $from=Stage::find($deal->stage_id)->name;
                 //Log
+
                 $data = [
                     'type' => 'info',
                     'note' => json_encode([
@@ -253,6 +255,7 @@ class ApplicationsController extends Controller
                     'module_type' => 'Application',
                 ];
                 addLogActivity($data);
+
                 ActivityLog::create(
                     [
                         'user_id' => $usr->id,
@@ -267,7 +270,6 @@ class ApplicationsController extends Controller
                         ),
                     ]
                 );
-
                 $dealArr = [
                     'deal_id' => $deal->deal_id,
                     'name' => $deal->name,
@@ -289,7 +291,6 @@ class ApplicationsController extends Controller
                 // Send Email
                 Utility::sendEmailTemplate('Move Deal', $usrs, $dArr);
             }
-
             foreach ($post['order'] as $key => $item) {
                 $deal           = DealApplication::where('deal_id',$item)->first();
                 $deal->order    = $key;
