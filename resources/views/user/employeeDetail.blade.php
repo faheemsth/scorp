@@ -83,7 +83,7 @@
                     </div>
 
                     <div class="lead-basic-info">
-                        <p class="pb-0 mb-0 fw-normal">{{ __('USER') }}</p>
+                        <p class="pb-0 mb-0 fw-normal">{{ __('Employee') }}</p>
                         <div class="d-flex align-items-baseline">
                             <h5 class="fw-bold">{{ $employee->name }}</h5>
                         </div>
