@@ -350,7 +350,7 @@
                             <div class="card-body kanban-box" id="task-list-{{ $stage->id }}"
                                 data-id="{{ $stage->id }}">
                                 @foreach ($deals as $deal)
-                                    <div class="card lazy" data-id="{{ $deal->id }}">
+                                    <div class="card lazy" data-id="{{ $deal->deal_id }}">
                                         <div class="pt-3 ps-3">
                                             @php($labels = $deal->labels())
                                             @if ($labels)
@@ -361,10 +361,10 @@
                                             @endif
                                         </div>
                                         <div class="card-header border-0 pb-0 position-relative">
-                                            <h5><a href="@can('view deal')@if ($deal->is_active){{ route('deals.show', $deal->id) }}@else#@endif @else#@endcan"
+                                            <h5><a href="@can('view deal')@if ($deal->is_active){{ route('deals.show', $deal->deal_id) }}@else#@endif @else#@endcan"
                                                     style="font-size: 14px;">{{ $deal->name }}</a>
-                                                <span style="cursor:pointer" onclick="openNav(<?= $deal->id ?>)"
-                                                    data-deal-id="{{ $deal->id }}"
+                                                <span style="cursor:pointer" onclick="openNav(<?= $deal->deal_id ?>)"
+                                                    data-deal-id="{{ $deal->deal_id }}"
                                                     class="ti ti-brand-hipchat"></span>
                                             </h5>
 
@@ -379,7 +379,7 @@
                                                         <div class="dropdown-menu dropdown-menu-end">
                                                             @can('edit deal')
                                                                 <a href="#!" data-size="md"
-                                                                    data-url="{{ URL::to('deals/' . $deal->id . '/labels') }}"
+                                                                    data-url="{{ URL::to('deals/' . $deal->deal_id . '/labels') }}"
                                                                     data-ajax-popup="true" class="dropdown-item"
                                                                     data-bs-original-title="{{ __('Labels') }}">
                                                                     <i class="ti ti-bookmark"></i>
@@ -387,7 +387,7 @@
                                                                 </a>
 
                                                                 <a href="#!" data-size="lg"
-                                                                    data-url="{{ URL::to('deals/' . $deal->id . '/edit') }}"
+                                                                    data-url="{{ URL::to('deals/' . $deal->deal_id . '/edit') }}"
                                                                     data-ajax-popup="true" class="dropdown-item"
                                                                     data-bs-original-title="{{ __('Edit Deal') }}">
                                                                     <i class="ti ti-pencil"></i>
@@ -397,8 +397,8 @@
                                                             @can('delete deal')
                                                                 {!! Form::open([
                                                                     'method' => 'DELETE',
-                                                                    'route' => ['deals.destroy', $deal->id],
-                                                                    'id' => 'delete-form-' . $deal->id,
+                                                                    'route' => ['deals.destroy', $deal->deal_id],
+                                                                    'id' => 'delete-form-' . $deal->deal_id,
                                                                 ]) !!}
                                                                 <a href="#!" class="dropdown-item bs-pass-para">
                                                                     <i class="ti ti-archive"></i>
