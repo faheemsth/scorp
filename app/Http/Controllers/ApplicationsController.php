@@ -63,7 +63,7 @@ class ApplicationsController extends Controller
             $app_query = DealApplication::select(['deal_applications.*']);
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->whereIn('deals.brand_id', $brand_ids);
+            $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->whereIn('deal_applications.brand_id', $brand_ids);
             $total_records = $app_query->count();
             //$filters
             $app_for_filer = $app_query->get();
@@ -78,7 +78,7 @@ class ApplicationsController extends Controller
                 } elseif ($column == 'university_id') {
                     $app_query->whereIn('deal_applications.university_id', $value);
                 }elseif ($column == 'created_by') {
-                    $app_query->whereIn('deals.created_by', $value);
+                    $app_query->whereIn('deal_applications.created_by', $value);
                 }
             }
 
@@ -113,7 +113,7 @@ class ApplicationsController extends Controller
 
     public function getDealApplication(){
         $id = $_GET['id'];
-        $applications = \App\Models\DealApplication::where('deal_id', $id)->pluck('application_key', 'id');
+        $applications = DealApplication::where('deal_id', $id)->pluck('application_key', 'id');
 
         $html = '<option value=""> Select Application</option>';
 
@@ -204,7 +204,7 @@ class ApplicationsController extends Controller
             $cnt_deal['last_30days'] = DealApplication::getDealSummary($last_30days);
             $total_records = DealApplication::count();
             if ($usr->can('view all deals') || \Auth::user()->type == 'super admin') {
-                $total_records =  DealApplication::select('deals.*')->count();
+                $total_records =  DealApplication::select('deal_applications.*')->count();
             } else if (\auth::user()->type == "company") {
                 $users = User::select(['users.id'])->join('roles', 'roles.name', '=', 'users.type')
                     ->join('role_has_permissions', 'role_has_permissions.role_id', '=', 'roles.id')
@@ -215,11 +215,11 @@ class ApplicationsController extends Controller
                     ->toArray();
                 $deal_created_by = $users;
                 $deal_created_by[] = $usr->id;
-                $total_records = DealApplication::select('deals.*')->whereIn('created_by', $deal_created_by)->count();
+                $total_records = DealApplication::select('deal_applications.*')->whereIn('created_by', $deal_created_by)->count();
             } else {
                 $deal_created_by[] = \auth::user()->created_by;
                 $deal_created_by[] = $usr->id;
-                $deal1_query = DealApplication::select('deals.*');
+                $deal1_query = DealApplication::select('deal_applications.*');
                 $total_records = $deal1_query->whereIn('created_by', $deal_created_by)->count();
             }
             return view('applications.list', compact('pipelines', 'pipeline', 'cnt_deal', 'total_records'));
