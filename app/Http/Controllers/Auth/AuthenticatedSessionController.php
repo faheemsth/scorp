@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Socialite;
 use Carbon\Carbon;
 use App\Models\Plan;
 use App\Models\User;
@@ -17,7 +18,10 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 // use Laravel\Socialite\Facades\Socialite;
-use Socialite;
+use Illuminate\Support\Facades\Mail;
+use App\Providers\RouteServiceProvider;
+use App\Http\Requests\Auth\LoginRequest;
+
 class AuthenticatedSessionController extends Controller
 {
     /**
