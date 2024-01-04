@@ -18,6 +18,7 @@ use App\Models\Order;
 use App\Models\Plan;
 use App\Models\UserToDo;
 use App\Models\CompanyPermission;
+use App\Models\Region;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -657,16 +658,24 @@ class UserController extends Controller
             $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
             $companies = [0 => 'Select Brand'] + $companies;
 
+
+
         } else {
             $branches = \App\Models\Branch::get()->pluck('name', 'id');
             $branches = [0 => 'Select Branches'] + $branches->toArray();
             $permittedCompanies = CompanyPermission::where('user_id', \Auth::user()->id)->where('active', 'true')->pluck('permitted_company_id')->toArray();
+           
+           
             $companies = User::whereIn('id', $permittedCompanies)
                // ->orWhere('id', \Auth::user()->brand_id)
                 ->get()
                 ->pluck('name', 'id')
                 ->toArray();
             $companies = [0 => 'Select Brand'] + $companies;
+
+            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
+
+
 
         }
 

@@ -29,11 +29,10 @@
 
         @endif
 
-
         @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
             <div class="form-group col-md-6">
-                {{ Form::label('role', __('User Role'),['class'=>'form-label']) }}
-                {!! Form::select('role', $roles, null,array('class' => 'form-control select2',  'id' => 'roles'  ,'required'=>'required')) !!}
+                {{ Form::label('role', __('Brand'),['class'=>'form-label']) }}
+                {!! Form::select('companies', $companies, null,array('class' => 'form-control select2', 'id' => 'companies' ,'required'=>'required')) !!}
                 @error('role')
                 <small class="invalid-role" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>
@@ -41,8 +40,10 @@
                 @enderror
             </div>
         @elseif(\Auth::user()->type == 'super admin')
-            {!! Form::hidden('role', 'company', null,array('class' => 'form-control select2','required'=>'required')) !!}
+
         @endif
+
+
 
         @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
      
@@ -59,6 +60,20 @@
             </small>
             @enderror
         </div>
+        @endif
+
+        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+            <div class="form-group col-md-6">
+                {{ Form::label('role', __('User Role'),['class'=>'form-label']) }}
+                {!! Form::select('role', $roles, null,array('class' => 'form-control select2',  'id' => 'roles'  ,'required'=>'required')) !!}
+                @error('role')
+                <small class="invalid-role" role="alert">
+                    <strong class="text-danger">{{ $message }}</strong>
+                </small>
+                @enderror
+            </div>
+        @elseif(\Auth::user()->type == 'super admin')
+            {!! Form::hidden('role', 'company', null,array('class' => 'form-control select2','required'=>'required')) !!}
         @endif
 
         <div class="col-md-6">
