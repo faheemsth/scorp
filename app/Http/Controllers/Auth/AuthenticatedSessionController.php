@@ -21,7 +21,6 @@ use Laravel\Socialite\Facades\Socialite;
 // use Illuminate\Support\Facades\Mail;
 // use App\Providers\RouteServiceProvider;
 // use App\Http\Requests\Auth\LoginRequest;
-
 class AuthenticatedSessionController extends Controller
 {
     /**

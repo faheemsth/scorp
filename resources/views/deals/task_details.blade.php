@@ -148,16 +148,15 @@
                     @endif
 
                     @can('edit task')
-                    <a href="#" data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}"
-                        data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"
-                        class="btn px-2 btn-dark text-white">
+                    <button href="#" data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}"
+                        data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"class="btn px-2 btn-dark text-white">
                         <i class="ti ti-pencil"></i>
-                    </a>
+                    </button>
                     @endcan
 
                     @can('delete task')
-                    <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-danger text-white">
-                        <i class="ti ti-trash "></i>
+                    <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-danger text-white"  title="{{ __('Delete') }}">
+                        <i class="ti ti-trash"></i>
                     </a>
                     @endcan
                 </div>
