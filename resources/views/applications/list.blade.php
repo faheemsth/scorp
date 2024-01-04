@@ -306,17 +306,17 @@
                             {{ Form::close() }} --}}
 
                             @can('show deals stats')
-                            <a href="{{ route('deals.list') }}" data-size="lg" data-bs-toggle="tooltip" title="{{ __('List View') }}"
-                                class="btn btn-sm btn-dark">
-                                <i class="ti ti-list"></i>
+                            <a href="{{ route('applications.index') }}" data-size="lg" data-bs-toggle="tooltip" title="{{ __('List View') }}"
+                                class="btn btn-sm p-2 btn-dark">
+                                <i class="ti ti-list" style="font-size:18px,color:white"></i>
                             </a>
                             <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true"
-                                data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn btn-sm btn-dark">
-                                <i class="ti ti-plus"></i>
+                                data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn btn-sm p-2 btn-dark d-none">
+                                <i class="ti ti-plus" style="font-size:18px,color:white"></i>
                             </a>
-                            <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}" class="btn btn-sm btn-dark"
+                            <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}" class="btn btn-sm p-2 btn-dark"
                                 style="display: none;" id="import_csv_modal_btn" data-bs-toggle="modal" data-bs-target="#import_csv">
-                                <i class="fa fa-file-csv"></i>
+                                <i class="fa fa-file-csv" style="font-size:18px,color:white"></i>
                             </button>
                             @endcan
                     </div>
@@ -361,8 +361,11 @@
                                             @endif
                                         </div>
                                         <div class="card-header border-0 pb-0 position-relative">
-                                            <h5><a href="@can('view deal')@if ($deal->is_active){{ route('deals.show', $deal->deal_id) }}@else#@endif @else#@endcan"
+                                            <h5>
+                                                @can('view application')
+                                                <a href="javascript:void(0)" onclick="openSidebar('deals/{{ $deal->id }}/detail-application')"
                                                     style="font-size: 14px;">{{ $deal->name }}</a>
+                                                    @endcan
                                                 <span style="cursor:pointer" onclick="openNav(<?= $deal->deal_id ?>)"
                                                     data-deal-id="{{ $deal->deal_id }}"
                                                     class="ti ti-brand-hipchat"></span>

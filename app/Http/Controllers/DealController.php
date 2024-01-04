@@ -2425,7 +2425,7 @@ class DealController extends Controller
 
             $universities = University::get()->pluck('name', 'id');
             $universities->prepend('Select Institute');
-            $stages = Stage::get()->pluck('name', 'id')->toArray();
+            $stages = ApplicationStage::get()->pluck('name', 'id')->toArray();
 
             $statuses = [
                 'Pending' => 'Pending',
@@ -3442,7 +3442,7 @@ class DealController extends Controller
     public function detailApplication($id)
     {
         $application = DealApplication::where('id', $id)->first();
-        $stages = Stage::get()->pluck('name', 'id')->toArray();
+        $stages = ApplicationStage::get()->pluck('name', 'id')->toArray();
         $universities = University::get()->pluck('name', 'id')->toArray();
 
         //Getting lead stages history
