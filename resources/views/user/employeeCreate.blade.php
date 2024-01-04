@@ -1,4 +1,4 @@
-{{Form::open(array('url'=>route('user.employee.store'),'method'=>'post'))}}
+{{Form::open(array('url'=>route('user.employee.store'),'method'=>'post', 'novalidate' => 'novalidate'))}}
 <div class="modal-body">
 
     <div class="row">
