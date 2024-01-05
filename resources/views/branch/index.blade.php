@@ -167,11 +167,11 @@
                                 <tr>
                                     <th>{{ __('Branch') }}</th>
                                     <th>{{ __('Region') }}</th>
-                                    <th>{{ __('') }}</th>
+                                    <th>{{ __('Brand Manager') }}</th>
                                     <th>{{ __('Phone') }}</th>
                                     <th>{{ __('Email') }}</th>
                                     <th>{{ __('Google Link') }}</th>
-                                    <th>{{ __('') }}</th>
+                                    <th>{{ __('Social Media Link') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="font-style">
