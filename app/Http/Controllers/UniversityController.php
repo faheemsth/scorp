@@ -83,6 +83,8 @@ class UniversityController extends Controller
                 ]);
             }
 
+            $data['users'] = allUsers();
+
             return view('university.index', $data);
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));

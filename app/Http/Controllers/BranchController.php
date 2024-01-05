@@ -37,7 +37,7 @@ class BranchController extends Controller
 
     public function create()
     {
-        $branchmanager=User::where('type','branch manager')->get();
+        $branchmanager=User::where('type','')->get();
         $regions=Region::all();
         if(\Auth::user()->can('create branch'))
         {
@@ -101,7 +101,7 @@ class BranchController extends Controller
 
     public function edit(Branch $branch)
     {
-        $branchmanager=User::where('type','branch manager')->get();
+        $branchmanager=User::where('type','')->get();
         $regions=Region::all();
 
         $region = Region::where('id', $branch->region_id)->first();
