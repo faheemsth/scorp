@@ -147,7 +147,8 @@ class UniversityController extends Controller
                     'country' => 'required|max:20',
                     'city' => 'required|max:20',
                     'phone' => 'required|max:20',
-                    'note' => 'required'
+                    'note' => 'required',
+                    'category_id' => 'required'
                 ]
             );
 
