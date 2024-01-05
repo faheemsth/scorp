@@ -1,4 +1,4 @@
-{{ Form::open(['url' => route('user.employee.store'), 'method' => 'post']) }}
+{{Form::open(array('url'=>route('user.employee.store'),'method'=>'post', 'novalidate' => 'novalidate'))}}
 <div class="modal-body">
 
     <div class="row">
@@ -197,6 +197,57 @@
                 {!! Form::hidden('role', 'company', null, ['class' => 'form-control select2', 'required' => 'required']) !!}
             @endif
         @endif
+<<<<<<< HEAD
+=======
+
+        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+            <div class="form-group col-md-6">
+                {{ Form::label('role', __('Brand'),['class'=>'form-label']) }}
+                {!! Form::select('companies', $companies, null,array('class' => 'form-control select2', 'id' => 'companies' ,'required'=>'required')) !!}
+                @error('role')
+                <small class="invalid-role" role="alert">
+                    <strong class="text-danger">{{ $message }}</strong>
+                </small>
+                @enderror
+            </div>
+        @elseif(\Auth::user()->type == 'super admin')
+
+        @endif
+
+
+
+        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+
+        <div class="form-group col-md-6" >
+            <label for="region_id">{{ __('Branch') }}</label>
+            <div id="branch_div">
+                <select name="branch_id" id="branch_id" class="form-control select2">
+                    <option value="">Select Branch</option>
+                </select>
+            </div>
+            @error('branch_id')
+            <small class="invalid-branch" branch="alert">
+                <strong class="text-danger">{{ $message }}</strong>
+            </small>
+            @enderror
+        </div>
+        @endif
+
+        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+            <div class="form-group col-md-6">
+                {{ Form::label('role', __('User Role'),['class'=>'form-label']) }}
+                {!! Form::select('role', $roles, null,array('class' => 'form-control select2',  'id' => 'roles'  ,'required'=>'required')) !!}
+                @error('role')
+                <small class="invalid-role" role="alert">
+                    <strong class="text-danger">{{ $message }}</strong>
+                </small>
+                @enderror
+            </div>
+        @elseif(\Auth::user()->type == 'super admin')
+            {!! Form::hidden('role', 'company', null,array('class' => 'form-control select2','required'=>'required')) !!}
+        @endif
+
+>>>>>>> ae0910f23503d201e444b7ab91ceeb3f6fc63fbe
         <div class="col-md-6">
             <div class="form-group">
                 {{ Form::label('email', __('Email'), ['class' => 'form-label']) }}
