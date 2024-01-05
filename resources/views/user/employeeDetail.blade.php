@@ -213,7 +213,7 @@
                                                                     {{ __('Region') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $Region[$employee->region_id] }}
+                                                                {{ $Region[$employee->region_id] ?? '' }}
                                                                 </td>
                                                             </tr>
 

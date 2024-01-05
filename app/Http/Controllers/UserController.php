@@ -657,7 +657,7 @@ class UserController extends Controller
 
         if (\Auth::user()->type == 'super admin') {
             $branches = \App\Models\Branch::get()->pluck('name', 'id');
-            
+
             $companies = FiltersBrands();
             $companies = [0 => 'Select Brand'] + $companies;
 
@@ -666,11 +666,11 @@ class UserController extends Controller
         } else {
             $branches = \App\Models\Branch::get()->pluck('name', 'id');
             $branches = [0 => 'Select Branches'] + $branches->toArray();
-           
+
             $companies = FiltersBrands();
             $companies = [0 => 'Select Brand'] + $companies;
 
-            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
+            $regions = Region::pluck('name', 'id')->toArray();
 
 
 
@@ -882,7 +882,7 @@ class UserController extends Controller
                     return redirect()->back()->with('error', $messages->first());
                 }
 
-                $role = Role::findById($request->role);
+                $role = Role::findByName($request->role);
                 //$role = Role::findByName('company');
                 $input = $request->all();
                 $input['type'] = $role->name;

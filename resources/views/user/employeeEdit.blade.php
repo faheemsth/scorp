@@ -1,4 +1,4 @@
-{{Form::open(array('url'=>route('user.employee.update', $user->id),'method'=>'post', 'novalidate' => 'novalidate'))}}
+{{ Form::open(['url' => route('user.employee.update', $user->id), 'method' => 'post', 'novalidate' => 'novalidate']) }}
 <div class="modal-body">
     <div class="row">
         <div class="col-md-6">
@@ -36,29 +36,34 @@
         @elseif(\Auth::user()->type == 'super admin')
         @endif
 
-        {{-- @if (!\Auth::user()->can('edit region employee')) --}}
-            {{-- region_id --}}
-            @php
-$userType = \Auth::user()->type;
-@endphp
+        @if (!\Auth::user()->can('edit region employee'))
+        {{-- region_id --}}
+        @php
+            $userType = \Auth::user()->type;
+        @endphp
 
-@if ($userType == 'super admin' || $userType == 'company' || $userType == 'team' || $userType == 'Project Director' || $userType == 'Project Manager')
-    <div class="form-group col-md-6">
-        {{ Form::label('region_id', __('Region'), ['class' => 'form-label']) }}
-        {!! Form::select('region_id', $Region, $user->region_id, [
-            'class' => 'form-control select2',
-            'id' => 'region_id',
-            'required' => 'required',
-        ]) !!}
-        @error('region_id')
-            <small class="invalid-feedback" role="alert">
-                <strong class="text-danger">{{ $message }}</strong>
-            </small>
-        @enderror
-    </div>
-@endif
+        @if (
+            $userType == 'super admin' ||
+                $userType == 'company' ||
+                $userType == 'team' ||
+                $userType == 'Project Director' ||
+                $userType == 'Project Manager')
+            <div class="form-group col-md-6">
+                {{ Form::label('region_id', __('Region'), ['class' => 'form-label']) }}
+                {!! Form::select('region_id', $Region, $user->region_id, [
+                    'class' => 'form-control select2',
+                    'id' => 'region_id',
+                    'required' => 'required',
+                ]) !!}
+                @error('region_id')
+                    <small class="invalid-feedback" role="alert">
+                        <strong class="text-danger">{{ $message }}</strong>
+                    </small>
+                @enderror
+            </div>
+        @endif
 
-        {{-- @endcan --}}
+        @endcan
         @if (!\Auth::user()->can('edit role employee'))
             @php
                 $userRole = Spatie\Permission\Models\Role::where('name', $user->type)->first();
@@ -96,12 +101,13 @@ $userType = \Auth::user()->type;
                 \Auth::user()->type == 'Project Manager')
             <div class="form-group col-md-6">
                 {{ Form::label('role', __('User Role'), ['class' => 'form-label']) }}
-                {!! Form::select('role', $roles, $user->type, [
-                    'class' => 'form-control select2',
-                    'id' => 'roles',
-                    'required' => 'required',
-                    'disabled' => !\Auth::user()->can('edit role employee') ? 'disabled' : null,
-                ]) !!}
+                <select name="role" id="roles" class ='form-control select2' required {{ !\Auth::user()->can('edit role employee') ? 'disabled' : null }}>
+                    @if (!empty($roles))
+                        @foreach ($roles as $role)
+                            <option value="{{ $role }}" {{ $role == $user->type ? "selected":"" }}></option>
+                        @endforeach
+                    @endif
+                </select>
                 @error('role')
                     <small class="invalid-role" role="alert">
                         <strong class="text-danger">{{ $message }}</strong>
@@ -111,9 +117,6 @@ $userType = \Auth::user()->type;
         @elseif(\Auth::user()->type == 'super admin')
             {!! Form::hidden('role', 'company', null, ['class' => 'form-control select2', 'required' => 'required']) !!}
         @endif
-
-
-
         <div class="col-md-6">
             <div class="form-group">
                 {{ Form::label('email', __('Email'), ['class' => 'form-label']) }}
@@ -125,20 +128,6 @@ $userType = \Auth::user()->type;
                 @enderror
             </div>
         </div>
-
-        <!-- <div class="col-md-6">
-        <div class="form-group">
-            {{ Form::label('password', __('Password'), ['class' => 'form-label']) }}
-            <input type="text" class="form-control" placeholder="Enter User Password" value="" name="{{ $user->password }}" required minlength="6">
-            @error('password')
-<small class="invalid-password" role="alert">
-                        <strong class="text-danger">{{ $message }}</strong>
-                    </small>
-@enderror
-        </div>
-    </div> -->
-
-
         <div class="col-md-6">
             <div class="form-group">
                 {{ Form::label('phone', __('Phone'), ['class' => 'form-label']) }}
@@ -150,9 +139,6 @@ $userType = \Auth::user()->type;
                 @enderror
             </div>
         </div>
-
-
-
         <div class="col-md-6">
             <div class="form-group">
                 {{ Form::label('dob', __('Date of Birth'), ['class' => 'form-label']) }}
@@ -173,13 +159,13 @@ $userType = \Auth::user()->type;
                 </div>
             </div>
         @endif
-</div>
+    </div>
 
 </div>
 
 <div class="modal-footer">
-<input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
-<input type="submit" value="{{ __('Update') }}" class="btn  btn-dark px-2">
+    <input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
+    <input type="submit" value="{{ __('Update') }}" class="btn  btn-dark px-2">
 </div>
 
 {{ Form::close() }}
