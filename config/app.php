@@ -198,7 +198,7 @@ return [
         /* Setup Wizard */
 
         RachidLaasri\LaravelInstaller\Providers\LaravelInstallerServiceProvider::class,
-        // Laravel\Socialite\SocialiteServiceProvider::class
+        Laravel\Socialite\SocialiteServiceProvider::class
         /* End */
 
     ],
