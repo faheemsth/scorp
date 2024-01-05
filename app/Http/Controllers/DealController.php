@@ -3563,7 +3563,7 @@ class DealController extends Controller
         }
         $html .= '</select>';
 
-        $html1 = ' <select class="form form-control branch_id select2" id="choices-multiple4" name="branch_id" required> <option value="">Select Branch</option> ';
+        $html1 = ' <select onchange="toggleDiv()" class="form form-control branch_id select2" id="branch_id" name="branch_id2" required> <option value="">Select Branch</option> ';
         foreach ($branches as $key => $branch) {
             $html1 .= '<option value="' . $key . '">' . $branch . '</option> ';
         }

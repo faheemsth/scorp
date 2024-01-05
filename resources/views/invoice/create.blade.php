@@ -47,7 +47,6 @@
                         for (var i = 0; i < inputs.length; i++) {
                             subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
                         }
-                        
                         var totalItemDiscountPrice = 0;
                         var itemDiscountPriceInput = $('.discount');
 
@@ -255,7 +254,6 @@
             // var price = $(this).val();
             // var price = $('td .price').val();
             var price = $(el.find('.price')).val();
-            
             // var quantity = $('td .quantity').val();
             var quantity = $(el.find('.quantity')).val();
 
@@ -263,7 +261,6 @@
                 quantity = 1;
             }
             var discount = $(el.find('.discount')).val();
-       
             var totalItemPrice = (quantity * price);
 
             var amount = (totalItemPrice);
@@ -379,9 +376,13 @@
                 totalItemTaxPrice)).toFixed(2));
         })
 
-        
 
 
+
+<<<<<<< HEAD
+
+=======
+>>>>>>> 816c02f07ec4646ff2b434abccc6b2a855adfeb6
         // $(document).on('keyup', '.price', function() {
         //     var price = $(this).val();
         //     console.log('price ===============')
