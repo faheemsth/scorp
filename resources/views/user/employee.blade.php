@@ -82,26 +82,63 @@
 
 
                                        <div class="col-md-4 mt-2">
-                                        <label for="">Name</label>
-                                        <select name="name" class="form form-control" style="width: 95%; border-color:#aaa">
+                                        <label for="">Brand</label>
+                                        <select name="brand" class="form form-control" style="width: 95%; border-color:#aaa">
                                             <option value="">Select User</option>
+                                            @if (!empty($brandss))
+                                                @foreach ($brandss as $key=>$brand)
+                                                    <option value="{{ $key }}" <?= isset($key) && isset($_GET['brand']) && $_GET['brand'] == $key ? "selected" : '' ?>
+                                                    > {{ $brand }}</option>
+                                                @endforeach
+                                            @endif
 
-                                            @if (!empty($brands))
-                                                @foreach ($brands as $brand)
-                                                    <option value="{{ $brand->name }}" <?= isset($_GET['name']) && isset($brand->name) && $_GET['name'] == $brand->name ? "selected" : '' ?> > {{ $brand->name }}</option>
+                                        </select>
+                                       </div>
+
+                                       <div class="col-md-4 mt-2">
+                                        <label for="">Region</label>
+                                        <select name="Region" class="form form-control" style="width: 95%; border-color:#aaa">
+                                            <option value="">Select Region</option>
+
+                                            @if (!empty($Regions))
+                                                @foreach ($Regions as $key=> $Region)
+                                                    <option value="{{ $key }}" <?= isset($_GET['Region']) && isset($key) && $_GET['Region'] == $key ? "selected" : '' ?> > {{ $Region }}</option>
                                                 @endforeach
                                             @endif
                                         </select>
                                        </div>
 
                                        <div class="col-md-4 mt-2">
-                                           <label for="">Company</label>
-                                           <input type="text" class="form form-control" placeholder="Search Company"
-                                               name="company"
-                                               value="<?= isset($_GET['company']) ? $_GET['company'] : '' ?>"
-                                               style="width: 95%; border-color:#aaa">
+                                        <label for="">Branch</label>
+                                        <select name="Branch" class="form form-control" style="width: 95%; border-color:#aaa">
+                                            <option value="">Select Branch</option>
+
+                                            @if (!empty($Branchs))
+                                                @foreach ($Branchs as $key=> $Branch)
+                                                    <option value="{{ $key }}" <?= isset($_GET['Branch']) && isset($key) && $_GET['Branch'] == $key ? "selected" : '' ?> > {{ $Branch }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
                                        </div>
 
+                                       <div class="col-md-4 mt-2">
+                                        <label for="">Name</label>
+                                        <input type="text" class="form form-control" placeholder="Search Name"
+                                            name="Name"
+                                            value="<?= isset($_GET['Name']) ? $_GET['Name'] : '' ?>"
+                                            style="width: 95%; border-color:#aaa">
+                                      </div>
+                                      <div class="col-md-4 mt-2">
+                                        <label for="">Designation</label>
+                                        <select name="Designation" class="form form-control" style="width: 95%; border-color:#aaa">
+                                            <option value="">Select Designation</option>
+                                            @if (!empty($Designations))
+                                                @foreach ($Designations as $Designation)
+                                                <option <?= isset($_GET['Designation']) && isset($Designation) && $_GET['Designation'] == $Designation ? "selected" : '' ?> value="{{ $Designation }}">{{ $Designation }}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                       </div>
                                        <div class="col-md-4 mt-2">
                                            <label for="">Phone</label>
                                            <input type="text" class="form form-control" placeholder="Search Phone"

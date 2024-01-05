@@ -26,6 +26,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Session;
 use Spatie\Permission\Models\Role;
+use App\Models\Branch;
+
 
 
 class UserController extends Controller
@@ -623,13 +625,25 @@ class UserController extends Controller
             if (\Auth::user()->type == 'super admin') {
                 $usersQuery = User::whereNotIn('type', $excludedTypes);
 
-                if (!empty($_GET['company'])) {
-                    $usersQuery->where('email', 'like', '%' . $_GET['company'] . '%');
+                if (!empty($_GET['brand'])) {
+                    $usersQuery->where('brand_id', $_GET['brand']);
+                }
+                if (!empty($_GET['Region'])) {
+                    $usersQuery->where('region_id', $_GET['Region']);
                 }
 
-                if (!empty($_GET['name'])) {
-                    $usersQuery->where('name', 'like', '%' . $_GET['name'] . '%');
+                if (!empty($_GET['Branch'])) {
+                    $usersQuery->where('branch_id', $_GET['Branch']);
                 }
+
+                if (!empty($_GET['Name'])) {
+                    $usersQuery->where('name', 'like', '%' . $_GET['Name'] . '%');
+                }
+
+                if (!empty($_GET['Designation'])) {
+                    $usersQuery->where('type', 'like', '%' . $_GET['Designation'] . '%');
+                }
+
 
                 if (!empty($_GET['phone'])) {
                     $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
@@ -640,11 +654,12 @@ class UserController extends Controller
                 $users = User::where('created_by', '=', $user->creatorId())->whereNotIn('type', $excludedTypes)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }
             $brands = User::whereNotIn('type', $excludedTypes)->get();
-            $Region = Region::pluck('name', 'id')->toArray();
-
-
+            $brandss = User::where('type', 'company')->pluck('name', 'id')->toArray();
+            $Regions = Region::pluck('name', 'id')->toArray();
+            $Branchs = Branch::pluck('name', 'id')->toArray();
+            $Designations = Role::where('name', '!=', 'super admin')->pluck('name', 'id')->toArray();
             $total_records = $users->total();
-            return view('user.employee', compact('total_records', 'users', 'brands','Region'));
+            return view('user.employee', compact('total_records', 'users', 'brands','Regions','brandss','Branchs','Designations'));
         } else {
             return redirect()->back();
         }
