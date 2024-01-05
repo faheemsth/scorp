@@ -302,7 +302,6 @@
 </script>
 <script>
         function toggleDiv() {
-            alert(1);
             var branchSelect = document.getElementById("branch_id");
             var hiddenDiv = document.getElementById("roleID");
             if (branchSelect.value !== "") {
