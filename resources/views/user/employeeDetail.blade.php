@@ -208,6 +208,15 @@
                                                                 </td>
                                                             </tr>
 
+                                                            <tr>
+                                                                <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                    {{ __('Region') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                {{ $Region[$employee->region_id] }}
+                                                                </td>
+                                                            </tr>
+
 
                                                         </tbody>
                                                     </table>
