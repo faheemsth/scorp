@@ -56,14 +56,14 @@
                                 <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                   </button>
-                                
+
                                 @can('create employee')
                                 <a href="#" data-size="lg" data-url="{{ route('user.employee.create') }}"
                                     data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Employee') }}"
                                     class="btn btn-dark py-2 px-2">
                                     <i class="ti ti-plus"></i>
                                 </a>
-                                @endcan 
+                                @endcan
                             </div>
                         </div>
                         <script>
@@ -163,6 +163,7 @@
                                                 <th>Company</th>
                                                 <th>Designation</th>
                                                 <th>Phone</th>
+                                                <th>Region</th>
                                                 <th>Last Login</th>
                                             </tr>
                                         </thead>
@@ -181,6 +182,7 @@
                                                     <td>{{ $employee->email }}</td>
                                                     <td>{{ $employee->type }}</td>
                                                     <td>{{ $employee->phone }}</td>
+                                                    <td>{{ $Region[$employee->region_id] ?? '' }}</td>
                                                     <td>{{ !empty($employee->last_login_at) ? $employee->last_login_at : '' }}
                                                     </td>
 

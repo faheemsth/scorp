@@ -640,9 +640,11 @@ class UserController extends Controller
                 $users = User::where('created_by', '=', $user->creatorId())->whereNotIn('type', $excludedTypes)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }
             $brands = User::whereNotIn('type', $excludedTypes)->get();
+            $Region = Region::pluck('name', 'id')->toArray();
+
 
             $total_records = $users->total();
-            return view('user.employee', compact('total_records', 'users', 'brands'));
+            return view('user.employee', compact('total_records', 'users', 'brands','Region'));
         } else {
             return redirect()->back();
         }

@@ -162,7 +162,7 @@
                 <div class="form-group col-md-6" id="branchID" style="display: none">
                     <label for="region_id">{{ __('Branch') }}</label>
                     <div id="branch_div">
-                        <select name="branch_id" id="branch_id" class="form-control select2">
+                        <select name="branch_id" id="branch_id" class="form-control select2" onchange="toggleDiv()">
                             <option value="">Select Branch</option>
                         </select>
                     </div>
@@ -299,4 +299,17 @@
     $("#branch_id").on("change", function() {
         $('#roleID').show();
     });
+</script>
+<script>
+        function toggleDiv() {
+            alert(1);
+            var branchSelect = document.getElementById("branch_id");
+            var hiddenDiv = document.getElementById("roleID");
+            if (branchSelect.value !== "") {
+                hiddenDiv.style.display = "block";
+            } else {
+                hiddenDiv.style.display = "none";
+            }
+        }
+
 </script>
