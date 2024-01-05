@@ -216,14 +216,14 @@
                             <thead>
                                 <tr>
                                     <th scope="col">{{ __('#') }}</th>
-                                    <th scope="col">{{ __('Name') }}</th>
+                                    <th scope="col">{{ __('Institutes') }}</th>
 
-                                    <th scope="col">{{ __('Country') }}</th>
-
-                                    <th scope="col">{{ __('City') }}</th>
-                                    <th scope="col">{{ __('Phone') }}</th>
-                                    <th scope="col">{{ __('Note') }}</th>
-
+                                    <th scope="col">{{ __('Campuses') }}</th>
+                                    <th scope="col">{{ __('Intake') }}</th>
+                                    <th scope="col">{{ __('Territory') }}</th>
+                                    <th scope="col">{{ __('Company') }}</th>
+                                    <th scope="col">{{ __('Resources') }}</th>
+                                    <th scope="col">{{ __('Application Method') }}</th>
                                     @if (\Auth::user()->type == 'super admin')
                                         <th scope="col">{{ __('Created By') }}</th>
                                     @endif
@@ -236,7 +236,7 @@
 
                                 </tr>
                             </thead>
-                            <tbody id="universtyDivs">
+                            <tbody id="">
                                 @foreach ($universities as $key => $university)
                                     <tr class="font-style">
                                         <td>
@@ -251,10 +251,21 @@
                                             @endif
 
                                         </td>
-                                        <td>{{ !empty($university->country) ? $university->country : '' }}</td>
-                                        <td>{{ !empty($university->city) ? $university->city : '' }}</td>
-                                        <td>{{ !empty($university->phone) ? $university->phone : '' }}</td>
-                                        <td>{{ !empty($university->note) ? $university->note : '' }}</td>
+                                        {{-- <td>{{ !empty($university->Institutes) ? $university->Institutes: '' }}</td> --}}
+                                        <td>{{ !empty($university->campuses) ? $university->campuses : '' }}</td>
+                                        <td>{{ !empty($university->intake_months) ? $university->intake_months : '' }}</td>
+                                        <td>{{ !empty($university->territory) ? $university->territory : '' }}</td>
+                                        <td>{{   $users[$university->company_id]  ?? ''  }}</td>
+                                        <td>
+                                        <a href="{{ !empty($university->resource_drive_link) ? $university->resource_drive_link : '' }}">
+                                        Click to view
+                                        </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ !empty($university->application_method_drive_link) ? $university->application_method_drive_link : '' }}">
+                                                {{ !empty($university->name) ? $university->name : '' }}
+                                            </a>
+                                        </td>
 
                                         @if (\Auth::user()->type == 'super admin')
                                             <td>{{ isset($users[$university->created_by]) ? $users[$university->created_by] : '' }}
@@ -314,7 +325,7 @@
 
         function RefreshList() {
             var ajaxCall = 'true';
-            $("#universtyDivs").html('Loading...');
+            $("#").html('Loading...');
 
             $.ajax({
                 type: 'GET',
@@ -326,7 +337,7 @@
                     data = JSON.parse(data);
 
                     if (data.status == 'success') {
-                        $("#universtyDivs").html('');
+                        $("#").html('');
                         $('#universtyDivs').prepend(data.html);
                     }
                 },

@@ -165,7 +165,7 @@
                                                             {{ $user->name }}
                                                         </span>
                                                     </td>
-                                                    <td>{{ $user->website_link }}</td>
+                                                    <td><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
                                                     <td>{{ !empty($user->project_director_id) && isset($projectDirectors[$user->project_director_id]) ? $projectDirectors[$user->project_director_id] : '' }}</td>
                                                 </tr>
                                             @empty
