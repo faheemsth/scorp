@@ -13,7 +13,8 @@
 @endphp
 <style>
      #myDIV{
-        background-color: #CCC;
+        background-color: #fff;
+        box-shadow:  2px 0px 3px gray;
         z-index: 1021;
     }
     .dright{
@@ -26,6 +27,7 @@
 <div id="wrapper" id="savefilter">
 
     <div class="sidebar" id="myDIV" style="display: none;" >
+        <h5 class="fw-bold px-2 py-2">Save Filter List</h5>
         <ul style="list-style: none;">
         @foreach($filters as $filter)
             {{-- <p>
@@ -51,6 +53,7 @@
             </li>
         @endforeach
     </ul>
+    <button data-bs-toggle="tooltip" title="" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" data-original-title="Refresh"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
     </div>
     <div class="modal" id="save-filter-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg my-0" role="document">

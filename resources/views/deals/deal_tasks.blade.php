@@ -26,7 +26,7 @@ $setting = \App\Models\Utility::colorset();
 @endsection
 
 @push('css-page')
-<link rel="stylesheet" href="{{ asset('assets/js/drag-resize-columns/dist/jquery.resizableColumns.css') }}">
+{{-- <link rel="stylesheet" href="{{ asset('assets/js/drag-resize-columns/dist/jquery.resizableColumns.css') }}"> --}}
 @endpush
 
 
@@ -363,7 +363,7 @@ $setting = \App\Models\Utility::colorset();
 
 
 @push('script-page')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> --}}
 
 <script>
     let selectedArr = [];
