@@ -76,27 +76,31 @@
                                     <form action="/users" method="GET" class="">
                                         <div class="row my-3">
                                             <div class="col-md-4 mt-2">
-                                                <label for="">Name</label>
-                                                <input type="text" class="form form-control" placeholder="Search Name"
-                                                    name="name" value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>"
-                                                    style="width: 95%; border-color:#aaa">
+                                                <label for="">Brand</label>
+                                                <select name="Brand" class="form form-control select2" id="">
+                                                    <option value="">Select Option</option>
+                                                    @if (!empty($Brands))
+                                                        @foreach ($Brands as $key => $Brand)
+                                                           <option value="{{ $key }}" {{ !empty($_GET) && $_GET['Brand'] == $key ? "selected" : "" }}>{{ $Brand }}</option>
+                                                        @endforeach
+                                                    @endif
+
+                                                </select>
                                             </div>
 
                                             <div class="col-md-4 mt-2">
-                                                <label for="">Company</label>
-                                                <input type="text" class="form form-control" placeholder="Search Company"
-                                                    name="company"
-                                                    value="<?= isset($_GET['company']) ? $_GET['company'] : '' ?>"
-                                                    style="width: 95%; border-color:#aaa">
+                                                <label for="">Project Director</label>
+                                                <select name="Director" class="form form-control select2" id="">
+                                                    <option value="">Select Option</option>
+                                                    @if (!empty($ProjectDirector))
+                                                        @foreach ($ProjectDirector as $key => $ProjectDirect)
+                                                           <option value="{{ $key }}" {{ !empty($_GET) && $_GET['Director'] == $key ? "selected" : "" }}>{{ $ProjectDirect }}</option>
+                                                        @endforeach
+                                                    @endif
+
+                                                </select>
                                             </div>
 
-                                            <div class="col-md-4 mt-2">
-                                                <label for="">Phone</label>
-                                                <input type="text" class="form form-control" placeholder="Search Phone"
-                                                    name="phone"
-                                                    value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>"
-                                                    style="width: 95%; border-color:#aaa">
-                                            </div>
                                             <div class="col-md-4 mt-2">
                                                 <br>
                                                 <input type="submit" class="btn me-2 bg-dark" style=" color:white;">

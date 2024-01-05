@@ -54,17 +54,15 @@ class UserController extends Controller
                             ->orWhere('type', '=', 'team');
                     });
 
-                if (!empty($_GET['company'])) {
-                    $users->where('email', 'like', '%' . $_GET['company'] . '%');
-                }
+                    if (isset($_GET['Brand']) && !empty($_GET['Brand'])) {
+                        $brandId = intval($_GET['Brand']); // Assuming it's an integer, adjust accordingly
+                        $users->where('id', $brandId);
+                        }
 
-                if (!empty($_GET['name'])) {
-                    $users->where('name', 'like', '%' . $_GET['name'] . '%');
-                }
-
-                if (!empty($_GET['phone'])) {
-                    $users->where('phone', 'like', '%' . $_GET['phone'] . '%');
-                }
+                        if (isset($_GET['Director']) && !empty($_GET['Director'])) {
+                        $directorId = intval($_GET['Director']); // Assuming it's an integer, adjust accordingly
+                        $users->where('project_director_id', $directorId);
+                        }
 
                 $users = $users->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             } else {
@@ -75,7 +73,9 @@ class UserController extends Controller
 
             $projectDirectors = allUsers();
             // return view('user.index-Old')->with('users', $users);
-            return view('user.index', compact('total_records', 'projectDirectors'))->with('users', $users);
+            $Brands = User::where('type','company')->pluck('name', 'id')->toArray();
+            $ProjectDirector = User::where('type', 'Project Director')->pluck('name', 'id')->toArray();
+            return view('user.index', compact('total_records', 'projectDirectors','Brands','ProjectDirector'))->with('users', $users);
         } else {
             return redirect()->back();
         }
