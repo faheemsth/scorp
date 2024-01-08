@@ -2423,8 +2423,7 @@ class DealController extends Controller
                 );
             }
 
-            $universities = University::get()->pluck('name', 'id');
-            $universities->prepend('Select Institute');
+            $universities = University::pluck('name', 'id')->toArray();
             $stages = ApplicationStage::get()->pluck('name', 'id')->toArray();
 
             $statuses = [

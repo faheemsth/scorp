@@ -50,13 +50,7 @@
             <div class="accordion" id="accordionPanelsStayOpenExample">
                 <!-- Open Accordion Item -->
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="panelsStayOpen-headinginfo">
-                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#panelsStayOpen-collapseinfo">
-                            {{ __('N') }}
-                        </button>
-                    </h2>
-
+              
                     <div id="panelsStayOpen-collapseinfo" class="accordion-collapse collapse show"
                         aria-labelledby="panelsStayOpen-headinginfo">
                         <div class="accordion-body">

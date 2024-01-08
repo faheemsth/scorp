@@ -10,15 +10,34 @@ class RegionController extends Controller
 {
     public function index()
     {
-        $regions = Region::all();
+
+        if(\Auth::user()->type == 'super admin'){
+            $regions = Region::get();
+       }else if(\Auth::user()->type == 'super admin'){
+            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->get();
+       }else{
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->get();
+       } 
+
+       $users = allUsers();
+
+       $data = [
+        'regions' => $regions,
+        'users' => $users,
+       ];
+
+
+
         if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-            $html = view('region.region_ajax_list', compact('regions'))->render();
+            $html = view('region.region_ajax_list', $data)->render();
             return json_encode([
                 'status' => 'success',
                 'html' => $html
             ]);
         } else {
-            return view('region.index', compact('regions'));
+            return view('region.index', $data);
         }
     }
 

@@ -33,6 +33,7 @@
                         @enderror
                     </div>
                 </div>
+                
                 <div class="col-md-6">
                     <div class="form-group" id="brands_div">
                         <label for="region_id">{{ __('Brands') }}</label>
@@ -41,6 +42,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="branch_manager_id">{{ __('') }}</label>
