@@ -43,7 +43,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="branch_manager_id">{{ __('') }}</label>
+                        <label for="branch_manager_id">{{ __('Branch') }}</label>
                         <select name="branch_manager_id" id="" class="form-control">
                             <option value="">Select Branch</option>
                             @if (!empty($branchmanager))
