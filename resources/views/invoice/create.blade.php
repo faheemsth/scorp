@@ -136,7 +136,7 @@
             $('#customer_detail').addClass('d-none');
         })
 
-        $(document).on('change', '.item', function() {
+        $(document).on('change', '.items', function() {
 
             var iteams_id = $(this).val();
             var url = $(this).data('url');
@@ -379,10 +379,6 @@
 
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 816c02f07ec4646ff2b434abccc6b2a855adfeb6
         // $(document).on('keyup', '.price', function() {
         //     var price = $(this).val();
         //     console.log('price ===============')
@@ -428,7 +424,7 @@
                             <div id="customer" class="desc">
                                 <div class="form-group type1" id="customer">
                                     {{ Form::label('customer_id', __('User'), ['class' => 'form-label']) }}
-                                    {{ Form::select('customer_id', $customers, $customerId, ['class' => 'form-control select2 desc', 'id' => 'customer', 'data-url' => route('invoice.customer')]) }}
+                                    {{ Form::select('customer_id', $customers, $customerId, ['class' => 'form-control desc', 'id' => 'customer', 'data-url' => route('invoice.customer')]) }}
                                 </div>
                             </div>
                             <div id="threeCarDiv" class="desc">
@@ -472,7 +468,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         {{ Form::label('category_id', __('Category'), ['class' => 'form-label']) }}
-                                        {{ Form::select('category_id', $category, null, ['class' => 'form-control select', 'required' => 'required']) }}
+                                        {{ Form::select('category_id', $category, null, ['class' => 'form-control select']) }}
                                     </div>
                                 </div>
                                  <style>
