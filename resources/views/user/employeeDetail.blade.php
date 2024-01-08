@@ -83,7 +83,7 @@
                     </div>
 
                     <div class="lead-basic-info">
-                        <p class="pb-0 mb-0 fw-normal">{{ __('USER') }}</p>
+                        <p class="pb-0 mb-0 fw-normal">{{ __('Employee') }}</p>
                         <div class="d-flex align-items-baseline">
                             <h5 class="fw-bold">{{ $employee->name }}</h5>
                         </div>
@@ -205,6 +205,15 @@
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
                                                                 {{ $employee->updated_at }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                    {{ __('Region') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                {{ $Region[$employee->region_id] ?? '' }}
                                                                 </td>
                                                             </tr>
 

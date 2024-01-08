@@ -484,7 +484,8 @@ $lang=Utility::getValByName('default_language');
        display: flex;
        justify-content: center;
        align-items: center;">
-        <button data-bs-toggle="tooltip" title="{{__('Save Filter')}}" class="btn btn-white" onclick="myFunction()">
+        </button>
+        <button data-bs-toggle="tooltip" title="{{__('Save Filter')}}" class="btn btn-white " onclick="myFunction()" title="Save Filter">
             <i class="fa-regular fa-bookmark" style="color: #ffffff;font-size: 24px"></i>
         </button>
     </div>

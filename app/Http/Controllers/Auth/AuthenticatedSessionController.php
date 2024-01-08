@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Models\Customer;
+// use Socialite;
+use Carbon\Carbon;
 use App\Models\Plan;
 use App\Models\User;
 use App\Models\Vender;
 use  App\Models\Utility;
-use Carbon\Carbon;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Providers\RouteServiceProvider;
+use App\Models\Customer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Providers\RouteServiceProvider;
 // use Laravel\Socialite\Facades\Socialite;
-use Socialite;
+
 class AuthenticatedSessionController extends Controller
 {
     /**

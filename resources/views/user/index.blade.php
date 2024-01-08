@@ -4,7 +4,7 @@
     $profile = \App\Models\Utility::get_file('uploads/avatar');
 @endphp
 @section('page-title')
-    {{ __('Manage User') }}
+    {{ __('Manage Brand') }}
 @endsection
 @push('script-page')
 @endpush
@@ -12,7 +12,7 @@
     <li class="breadcrumb-item">
         <a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a>
     </li>
-    <li class="breadcrumb-item">{{ __('User') }}</li>
+    <li class="breadcrumb-item">{{ __('Brand') }}</li>
 @endsection
 <style>
     .full-card {
@@ -68,35 +68,39 @@
                               });
                             });
                           </script>
-                        <div class="row mt-5">
-                            <div class="col-12">
+                        {{-- <div class="row mt-5"> --}}
+                            {{-- <div class="col-12"> --}}
                                 {{-- Filters --}}
                                 <div class="filter-data px-3" id="filterToggle"
                                     <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                                     <form action="/users" method="GET" class="">
                                         <div class="row my-3">
                                             <div class="col-md-4 mt-2">
-                                                <label for="">Name</label>
-                                                <input type="text" class="form form-control" placeholder="Search Name"
-                                                    name="name" value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>"
-                                                    style="width: 95%; border-color:#aaa">
+                                                <label for="">Brand</label>
+                                                <select name="Brand" class="form form-control select2" id="">
+                                                    <option value="">Select Option</option>
+                                                    @if (!empty($Brands))
+                                                        @foreach ($Brands as $key => $Brand)
+                                                           <option value="{{ $key }}" {{ !empty($_GET) && $_GET['Brand'] == $key ? "selected" : "" }}>{{ $Brand }}</option>
+                                                        @endforeach
+                                                    @endif
+
+                                                </select>
                                             </div>
 
                                             <div class="col-md-4 mt-2">
-                                                <label for="">Company</label>
-                                                <input type="text" class="form form-control" placeholder="Search Company"
-                                                    name="company"
-                                                    value="<?= isset($_GET['company']) ? $_GET['company'] : '' ?>"
-                                                    style="width: 95%; border-color:#aaa">
+                                                <label for="">Project Director</label>
+                                                <select name="Director" class="form form-control select2" id="">
+                                                    <option value="">Select Option</option>
+                                                    @if (!empty($ProjectDirector))
+                                                        @foreach ($ProjectDirector as $key => $ProjectDirect)
+                                                           <option value="{{ $key }}" {{ !empty($_GET) && $_GET['Director'] == $key ? "selected" : "" }}>{{ $ProjectDirect }}</option>
+                                                        @endforeach
+                                                    @endif
+
+                                                </select>
                                             </div>
 
-                                            <div class="col-md-4 mt-2">
-                                                <label for="">Phone</label>
-                                                <input type="text" class="form form-control" placeholder="Search Phone"
-                                                    name="phone"
-                                                    value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>"
-                                                    style="width: 95%; border-color:#aaa">
-                                            </div>
                                             <div class="col-md-4 mt-2">
                                                 <br>
                                                 <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
@@ -139,18 +143,16 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="table-responsive">
+
+                                <div class="table-responsive mt-3">
                                     <table class="table">
                                         <thead>
                                             <tr>
                                                 <th>S.No</th>
                                                 <th>Name</th>
-                                                <th>Company</th>
-                                                <th>Designation</th>
-                                                <th>Phone</th>
-                                                <th>Last Login</th>
-                                                {{-- <th>Action</th> --}}
-                                            </tr>
+                                                <th>Website Link</th>
+                                                <th>Project Director</th>
+                                           </tr>
                                         </thead>
 
                                         <tbody>
@@ -160,84 +162,16 @@
                                                     <td>
 
                                                         <span style="cursor:pointer" class="hyper-link"
-                                                            onclick="openSidebar('/user/employee/{{ $user->id }}/show')">
+                                                            onclick="openSidebar('/users/{{ $user->id }}/user_detail')">
                                                             {{ $user->name }}
                                                         </span>
                                                     </td>
-                                                    <td>{{ $user->email }}</td>
-                                                    <td>{{ $user->type }}</td>
-                                                    <td>{{ $user->phone }}</td>
-                                                    <td>{{ !empty($user->last_login_at) ? $user->last_login_at : '' }}
-                                                    </td>
-                                                    {{-- <td>
-                                                        @if (Gate::check('edit user') || Gate::check('delete user'))
-                                                            <div class="card-header-right" style="top: 0px; right:2px;">
-                                                                <div class="btn-group card-option">
-                                                                    @if ($user->is_active == 1)
-                                                                        <button type="button" class="btn"
-                                                                            data-bs-toggle="dropdown" aria-haspopup="true"
-                                                                            aria-expanded="false">
-                                                                            <i class="ti ti-dots-vertical"></i>
-                                                                        </button>
-
-                                                                        <div class="dropdown-menu dropdown-menu-end">
-                                                                            @if (Gate::check('edit user'))
-                                                                                <a href="#!" data-size="lg"
-                                                                                    data-url="{{ route('users.edit', $user->id) }}"
-                                                                                    data-ajax-popup="true"
-                                                                                    class="dropdown-item"
-                                                                                    data-bs-original-title="{{ __('Edit User') }}">
-                                                                                    <i class="ti ti-pencil"></i>
-                                                                                    <span>{{ __('Edit') }}</span>
-                                                                                </a>
-                                                                            @endif
-
-                                                                            @if (Gate::check('delete user'))
-                                                                                {!! Form::open([
-                                                                                    'method' => 'DELETE',
-                                                                                    'route' => ['users.destroy', $user['id']],
-                                                                                    'id' => 'delete-form-' . $user['id'],
-                                                                                ]) !!}
-                                                                                <a href="#!"
-                                                                                    class="dropdown-item bs-pass-para">
-                                                                                    <i class="ti ti-archive"></i>
-                                                                                    <span>
-                                                                                        @if ($user->delete_status != 0)
-                                                                                            {{ __('Delete') }}
-                                                                                        @else
-                                                                                            {{ __('Restore') }}
-                                                                                        @endif
-                                                                                    </span>
-                                                                                </a>
-                                                                                {!! Form::close() !!}
-                                                                            @endif
-
-                                                                            @if (Gate::check('edit user') || Gate::check('delete user'))
-                                                                                <a href="#!"
-                                                                                    data-url="{{ route('users.reset', \Crypt::encrypt($user->id)) }}"
-                                                                                    data-ajax-popup="true" data-size="md"
-                                                                                    class="dropdown-item"
-                                                                                    data-bs-original-title="{{ __('Reset Password') }}">
-                                                                                    <i class="ti ti-adjustments"></i>
-                                                                                    <span>
-                                                                                        {{ __('Reset Password') }}</span>
-                                                                                </a>
-                                                                            @endif
-                                                                        </div>
-                                                                    @else
-                                                                        <a href="#" class="action-item"><i
-                                                                                class="ti ti-lock"></i></a>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-                                                        @endif
-
-                                                    </td> --}}
-                                                    <!-- Add more cells as needed with corresponding data -->
+                                                    <td><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
+                                                    <td>{{ !empty($user->project_director_id) && isset($projectDirectors[$user->project_director_id]) ? $projectDirectors[$user->project_director_id] : '' }}</td>
                                                 </tr>
                                             @empty
                                                 <tr>
-                                                    <td colspan="6">No employees found</td>
+                                                    <td colspan="4">No employees found</td>
                                                 </tr>
                                             @endforelse
                                         </tbody>
@@ -246,12 +180,12 @@
                                     @if ($total_records > 0)
                                         @include('layouts.pagination', [
                                             'total_pages' => $total_records,
-                                            'num_results_on_page' => 10,
+                                            'num_results_on_page' => 50,
                                         ])
                                     @endif
                                 </div>
-                            </div>
-                        </div>
+                            {{-- </div> --}}
+                        {{-- </div> --}}
                     </div>
                 </div>
             </div>

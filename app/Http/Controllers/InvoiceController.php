@@ -120,7 +120,7 @@ class InvoiceController extends Controller
                                 // 'customer_id' => 'integer',
                                    'issue_date' => 'required',
                                    'due_date' => 'required',
-                                   'category_id' => 'required',
+                                   //'category_id' => 'required',
                                    'items' => 'required',
                                ]
             );

@@ -63,6 +63,10 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                 </div>
 
+                <a href="{{ url('application') }}" class="btn filter-btn-show p-2 btn-dark" type="button">
+                    <i class="ti ti-file" style="font-size:18px,color:white"></i>
+                </a>
+
                 <div>
                     <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
                 </div>
@@ -176,7 +180,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         <th scope="col" class="d-none">{{ __('Intake') }}</th>
                         <th scope="col" class="d-none">{{ __('Brand') }}</th>
                         <th scope="col" class="d-none">{{ __('Branch') }}</th>
-                       
+
 
                     </tr>
                 </thead>
@@ -206,8 +210,8 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                                 <td class="d-none"> {{ $app->intake }} </td>
                                 <td class="d-none"> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }}  </td>
                                 <td class="d-none"> {{ isset($branch->name) ? $branch->name : ''  }} </td>
-                               
-                               
+
+
                             </tr>
                         @empty
                     @endforelse
@@ -272,7 +276,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
     })
     $(document).ready(function() {
         let curr_url = window.location.href;
-    
+
         if(curr_url.includes('?')){
             $('#save-filter-btn').css('display','inline-block');
         }

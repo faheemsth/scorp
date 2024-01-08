@@ -508,7 +508,7 @@
                                                                         <th scope="col">{{ __('Brand') }}</th>
                                                                         <th scope="col">{{ __('Branch') }}</th>
                                                                         <th scope="col">{{ __('Assigned To') }}</th>
-                                                                        <th scope="col">{{ __('Status') }}</th>
+                                                                        <th scope="col">{{ __('Applications Stage') }}</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>

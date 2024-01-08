@@ -26,7 +26,7 @@ $setting = \App\Models\Utility::colorset();
 @endsection
 
 @push('css-page')
-<link rel="stylesheet" href="{{ asset('assets/js/drag-resize-columns/dist/jquery.resizableColumns.css') }}">
+{{-- <link rel="stylesheet" href="{{ asset('assets/js/drag-resize-columns/dist/jquery.resizableColumns.css') }}"> --}}
 @endpush
 
 
@@ -113,7 +113,7 @@ $setting = \App\Models\Utility::colorset();
                             <div class="col-md-4"> <label for="">Assigned To</label>
                                 <select name="assigned_to[]" id="choices-multiple333" class="form form-control select2" multiple style="width: 95%;">
                                     <option value="">Select user</option>
-                                    @foreach ($users as $key => $user)
+                                    @foreach ($assign_to as $key => $user)
                                     <option value="{{ $key }}" <?= isset($_GET['assigned_to']) && in_array($key, $_GET['assigned_to']) ? 'selected' : '' ?> class="">{{ $user }}</option>
                                     @endforeach
                                 </select>
@@ -363,7 +363,7 @@ $setting = \App\Models\Utility::colorset();
 
 
 @push('script-page')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> --}}
 
 <script>
     let selectedArr = [];
