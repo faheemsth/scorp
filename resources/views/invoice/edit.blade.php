@@ -12,62 +12,63 @@
     <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('js/jquery.repeater.min.js') }}"></script>
     <script>
-        var selector = "body";
-        if ($(selector + " .repeater").length) {
-            var $dragAndDrop = $("body .repeater tbody").sortable({
-                handle: '.sort-handler'
-            });
-            var $repeater = $(selector + ' .repeater').repeater({
-                initEmpty: true,
-                defaultValues: {
-                    'status': 1
-                },
-                show: function() {
-                    $(this).slideDown();
-                    var file_uploads = $(this).find('input.multi');
-                    if (file_uploads.length) {
-                        $(this).find('input.multi').MultiFile({
-                            max: 3,
-                            accept: 'png|jpg|jpeg',
-                            max_size: 2048
-                        });
-                    }
-                    if ($('.select2').length) {
-                        $('.select2').select2();
-                    }
-                },
-                hide: function(deleteElement) {
+        // var selector = "body";
+        // if ($(selector + " .repeater").length) {
+        //     var $dragAndDrop = $("body .repeater tbody").sortable({
+        //         handle: '.sort-handler'
+        //     });
+        //     var $repeater = $(selector + ' .repeater').repeater({
+        //         initEmpty: true,
+        //         defaultValues: {
+        //             'status': 1
+        //         },
+        //         show: function() {
+        //             $(this).slideDown();
+        //             var file_uploads = $(this).find('input.multi');
+        //             if (file_uploads.length) {
+        //                 $(this).find('input.multi').MultiFile({
+        //                     max: 3,
+        //                     accept: 'png|jpg|jpeg',
+        //                     max_size: 2048
+        //                 });
+        //             }
+        //             if ($('.select2').length) {
+        //                 $('.select2').select2();
+        //             }
+        //         },
+        //         hide: function(deleteElement) {
 
 
-                    $(this).slideUp(deleteElement);
-                    $(this).remove();
-                    var inputs = $(".amount");
-                    var subTotal = 0;
-                    for (var i = 0; i < inputs.length; i++) {
-                        subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
-                    }
-                    $('.subTotal').html(subTotal.toFixed(2));
-                    $('.totalAmount').html(subTotal.toFixed(2));
+        //             // $(this).slideUp(deleteElement);
+        //             // $(this).remove();
+        //             // var inputs = $(".amount");
+        //             // var subTotal = 0;
+        //             // for (var i = 0; i < inputs.length; i++) {
+        //             //     subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
+        //             // }
+        //             // $('.subTotal').html(subTotal.toFixed(2));
+        //             // $('.totalAmount').html(subTotal.toFixed(2));
 
-                },
-                ready: function(setIndexes) {
-                    $dragAndDrop.on('drop', setIndexes);
-                },
-                isFirstItemUndeletable: true
-            });
-            var value = $(selector + " .repeater").attr('data-value');
+        //         },
+        //         ready: function(setIndexes) {
+        //             $dragAndDrop.on('drop', setIndexes);
+        //         },
+        //         isFirstItemUndeletable: true
+        //     });
+        //     // var value = $(selector + " .repeater").attr('data-value');
 
-            if (typeof value != 'undefined' && value.length != 0) {
-                value = JSON.parse(value);
-                $repeater.setList(value);
-                for (var i = 0; i < value.length; i++) {
-                    var tr = $('#sortable-table .id[value="' + value[i].id + '"]').parent();
-                    tr.find('.item').val(value[i].product_id);
-                    changeItem(tr.find('.item'));
-                }
-            }
+        //     // if (typeof value != 'undefined' && value.length != 0) {
+        //     //     value = JSON.parse(value);
+        //     //     console.log(value)
+        //     //     $repeater.setList(value);
+        //     //     for (var i = 0; i < value.length; i++) {
+        //     //         var tr = $('#sortable-table .id[value="' + value[i].id + '"]').parent();
+        //     //         tr.find('.item').val(value[i].product_name);
+        //     //         changeItem(tr.find('.item'));
+        //     //     }
+        //     // }
 
-        }
+        // }
 
         $(document).on('change', '#customer', function() {
             $('#customer_detail').removeClass('d-none');
@@ -115,11 +116,13 @@
 
         function changeItem(element) {
 
-
+            console.log(element)
             var iteams_id = element.val();
-
+            console.log(iteams_id)
 
             var url = element.data('url');
+            console.log(url)
+
             var el = element;
             $.ajax({
                 url: url,
@@ -156,6 +159,13 @@
 
                                 $(el.parent().parent().find('.quantity')).val(invoiceItems
                                 .quantity);
+                                let tax = invoiceItems.tax;
+                                if(tax != NULL){
+                                    tax = (tax/amount)*100;
+                                }else{
+                                    tax = '';
+                                }
+                                $(el.parent().parent().find('.taxamount')).val(tax);
                                 $(el.parent().parent().find('.price')).val(invoiceItems.price);
                                 $(el.parent().parent().find('.discount')).val(invoiceItems
                                 .discount);
@@ -399,7 +409,7 @@
             }
         });
         $(document).ready(function() {
-            $("div.desc").hide();
+            // $("div.desc").hide();
             $("input[name$='cars']").click(function() {
                 var test = $(this).val();
                 $("div.desc").hide();
@@ -421,26 +431,26 @@
                         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                             <div class="form-group">
                                 <label>
-                                    {{ Form::radio('cars', 'customer', false, ['class' => 'form-check-input']) }}
+                                    {{ Form::radio('cars', 'customer', false, ['class' => 'form-check-input','checked' => $invoice->customer_id != NULL ?'checked':'']) }}
                                     User Voucher
                                 </label>
 
                                 <label class="px-5">
-                                    {{ Form::radio('cars', 'threeCarDiv', false, ['class' => 'form-check-input']) }}
+                                    {{ Form::radio('cars', 'threeCarDiv', false, ['class' => 'form-check-input','checked' => $invoice->customer_id == NULL ?'checked':'']) }}
                                     Open Voucher
                                 </label>
                             </div>
-                            <div id="customer" class="desc">
+                            <div id="customer" class="desc {{ $invoice->customer_id == NULL ?'d-none':'' }}">
                                 <div class="form-group type1" id="customer">
                                     {{ Form::label('customer_id', __('User'), ['class' => 'form-label']) }}
                                     {{ Form::select('customer_id', $customers, null, ['class' => 'form-control select2 desc', 'id' => 'customer', 'data-url' => route('invoice.customer')]) }}
                                 </div>
                             </div>
 
-                            <div id="threeCarDiv" class="desc">
+                            <div id="threeCarDiv" class="desc {{ $invoice->customer_id != NULL ?'d-none':'' }}">
                                 <div class="form-group type2" id="threeCarDiv">
                                     {{ Form::label('user_name', __('User Name'), ['class' => 'form-label']) }}
-                                    {{ Form::text('user_name', '', ['class' => 'form-control  desc', 'placeholder' => __('Enter user name')]) }}
+                                    {{ Form::text('user_name', $invoice->user_name, ['class' => 'form-control  desc', 'placeholder' => __('Enter user name')]) }}
                                 </div>
                             </div>
                             <div id="customer_detail" class="d-none">
@@ -516,7 +526,9 @@
         </div>
         <div class="col-12">
             <h5 class=" d-inline-block mb-4">{{ __('Product & Services') }}</h5>
-            <div class="card repeater" data-value='{!! json_encode($invoice->items) !!}'>
+           {{-- <div class="card repeater" data-value='{!! json_encode($invoice->items) !!}'> --}}
+            <div class="card repeater" >
+
                 <div class="item-section py-2">
                     <div class="row justify-content-between align-items-center">
                         <div class="col-md-12 d-flex align-items-center justify-content-between justify-content-md-end">
@@ -544,22 +556,44 @@
                                 </tr>
                             </thead>
                             <tbody class="ui-sortable" data-repeater-item>
+                                @php
+                                    $totalQuantity=0;
+                                    $totalRate=0;
+                                    $totalTaxPrice=0;
+                                    $totalDiscount=0;
+                                    $taxesData=[];
+                                    $totalTax= 0 ;
+
+                                @endphp
+                                @foreach($items as $key =>$item)
+                                    @php
+                                                        
+                                        $totalQuantity+=$item->quantity;
+                                        $totalRate+=$item->price;
+                                        $totalDiscount+=$item->discount;
+                                        $totalTax+=$item->tax;
+                                        $amount = $item->quantity * $item->price;
+                                        $tax = ($item->tax/$amount)*100;
+                                    @endphp
                                 <tr>
                                     {{ Form::hidden('id', null, ['class' => 'form-control id']) }}
-                                    <td width="25%" class="form-group pt-0">
-                                        {{ Form::select('item', $product_services, null, ['class' => 'form-control item select', 'data-url' => route('invoice.product')]) }}
+                                    <td >
+                                        <div class="form-group price-input input-group search-form">
+                                            {{ Form::text('item', $item->product_name, ['class' => 'form-control item','data-url' => route('invoice.product'), 'required' => 'required', 'placeholder' => __('Item')]) }}
+                                            <span class="unit input-group-text bg-transparent"></span>
+                                        </div>
 
                                     </td>
                                     <td>
 
                                         <div class="form-group price-input input-group search-form">
-                                            {{ Form::text('quantity', null, ['class' => 'form-control quantity', 'required' => 'required', 'placeholder' => __('Qty'), 'required' => 'required']) }}
+                                            {{ Form::text('quantity',$item->quantity , ['class' => 'form-control quantity', 'required' => 'required', 'placeholder' => __('Qty'), 'required' => 'required']) }}
                                             <span class="unit input-group-text bg-transparent"></span>
                                         </div>
                                     </td>
                                     <td>
                                         <div class="form-group price-input input-group search-form">
-                                            {{ Form::text('price', null, ['class' => 'form-control price', 'required' => 'required', 'placeholder' => __('Price'), 'required' => 'required']) }}
+                                            {{ Form::text('price', $item->price, ['class' => 'form-control price', 'required' => 'required', 'placeholder' => __('Price'), 'required' => 'required']) }}
                                             <span
                                                 class="input-group-text bg-transparent">{{ \Auth::user()->currencySymbol() }}</span>
                                         </div>
@@ -568,6 +602,7 @@
                                         <div class="form-group">
                                             <div class="input-group colorpickerinput">
                                                 <div class="taxes"></div>
+                                                {{ Form::text('tax', $tax, ['class' => 'form-control taxamount', 'required' => 'required', 'placeholder' => __('Tax')]) }}</div>
                                                 {{ Form::hidden('tax', '', ['class' => 'form-control tax']) }}
                                                 {{ Form::hidden('itemTaxPrice', '', ['class' => 'form-control itemTaxPrice']) }}
                                                 {{ Form::hidden('itemTaxRate', '', ['class' => 'form-control itemTaxRate']) }}
@@ -576,12 +611,12 @@
                                     </td>
                                     <td>
                                         <div class="form-group price-input input-group search-form">
-                                            {{ Form::text('discount', null, ['class' => 'form-control discount', 'required' => 'required', 'placeholder' => __('Discount')]) }}
+                                            {{ Form::text('discount', $item->discount, ['class' => 'form-control discount', 'required' => 'required', 'placeholder' => __('Discount')]) }}
                                             <span
                                                 class="input-group-text bg-transparent">{{ \Auth::user()->currencySymbol() }}</span>
                                         </div>
                                     </td>
-                                    <td class="text-end amount">0.00</td>
+                                    <td class="text-end amount">{{$amount}}</td>
 
                                     <td>
                                         @can('delete invoice product')
@@ -598,6 +633,7 @@
                                     </td>
                                     <td colspan="5"></td>
                                 </tr>
+                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -616,7 +652,7 @@
                                     <td>&nbsp;</td>
                                     <td></td>
                                     <td><strong>{{ __('Discount') }} ({{ \Auth::user()->currencySymbol() }})</strong></td>
-                                    <td class="text-end totalDiscount">0.00</td>
+                                    <td class="text-end totalDiscount">{{\Auth::user()->priceFormat($totalDiscount)}}</td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -625,7 +661,7 @@
                                     <td>&nbsp;</td>
                                     <td></td>
                                     <td><strong>{{ __('Tax') }} ({{ \Auth::user()->currencySymbol() }})</strong></td>
-                                    <td class="text-end totalTax">0.00</td>
+                                    <td class="text-end totalTax">{{\Auth::user()->priceFormat($totalTax)}}</td>
                                     <td></td>
                                 </tr>
                                 <tr>
@@ -635,7 +671,7 @@
                                     <td>&nbsp;</td>
                                     <td class="blue-text"><strong>{{ __('Total Amount') }}
                                             ({{ \Auth::user()->currencySymbol() }})</strong></td>
-                                    <td class="text-end totalAmount blue-text">0.00</td>
+                                    <td class="text-end totalAmount blue-text">{{\Auth::user()->priceFormat($invoice->getTotal())}}</td>
                                     <td></td>
                                 </tr>
                             </tfoot>
