@@ -81,7 +81,7 @@
                 <div class="d-flex justify-content-end gap-1 me-3">
 
                 <a href="https://wa.me/{{ !empty($client->phone) ? formatPhoneNumber($client->phone) : '' }}?text=Hello ! Dear {{ $client->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" data-bs-title="{{ __('Whatsapp') }}" class="btn p-2 btn-dark text-white">
-                    <i class="fa-brands fa-whatsapp"></i>
+                    <i class=""></i>
                 </a>
 
                 @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit client'))

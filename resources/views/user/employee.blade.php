@@ -178,7 +178,7 @@
                                                             {{ $employee->name }}
                                                         </span>
                                                     </td>
-                                                    <td>{{ $employee->email }}</td>
+                                                    <td><a href="{{ $employee->email }}">{{ $employee->email }}</a></td>
                                                     <td>{{ $employee->type }}</td>
                                                     <td>{{ $employee->phone }}</td>
                                                     <td>{{ !empty($employee->last_login_at) ? $employee->last_login_at : '' }}

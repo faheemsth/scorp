@@ -15,16 +15,6 @@
 @endsection
 
 @section('action-btn')
-    <div class="float-end">
-        <a href="{{ route('support.grid') }}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="{{__('Grid View')}}">
-            <i class="ti ti-layout-grid text-white"></i>
-        </a>
-
-       <a href="#" data-size="lg" data-url="{{ route('support.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Support')}}" class="btn btn-sm btn-primary">
-            <i class="ti ti-plus"></i>
-        </a>
-
-    </div>
 @endsection
 
 @section('content')
@@ -130,11 +120,132 @@
 </div>
 
     <div class="row">
+        
         <div class="col-md-12">
             <div class="card">
+                <div class="row align-items-center" style="margin-left: 5px;margin-top: 20px">
+                    <div class="col-2">
+                        <div class="dropdown">
+                            <button class=" All-leads" type="button" id="dropdownMenuButton1">
+                                ALL Support
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="#">Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-10 d-flex justify-content-end gap-2">
+                        <div class="input-group w-25">
+                            <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                                <i class="ti ti-search" style="font-size: 18px"></i>
+                            </span>
+                            <input type="Search" class="form-control border-0 bg-transparent ps-0"
+                                placeholder="Search this list..." aria-label="Username"
+                                aria-describedby="basic-addon1">
+                        </div>
+                        @can('create ')
+
+                        <div class="float-end">
+                            <a href="{{ route('support.grid') }}" class="btn btn-dark py-2 px-2" data-bs-toggle="tooltip" title="{{__('Grid View')}}">
+                                <i class="ti ti-layout-grid text-white" style="font-size:18px"></i>
+                            </a>
+                    
+                           <a href="#" data-size="lg" data-url="{{ route('support.create') }}" data-ajax-popup="true"
+                            data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Support')}}" class="btn btn-dark py-2 px-2">
+                                <i class="ti ti-plus" style="font-size:18px"></i>
+                            </a>
+                    
+                        </div>
+                        @endcan 
+                    </div>
+                </div>
+                <script>
+                    $(document).ready(function() {
+                      $("#dropdownMenuButton3").click(function() {
+                        $("#filterToggle").toggle();
+                      });
+                    });
+                  </script>
             <div class="card-body table-border-style">
+                <div class="filter-data px-5" id="filterToggle"
+                <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+                <form action="/user/employees" method="GET" class="">
+                <div class="row my-3">
+
+
+                <div class="col-md-4 mt-2">
+                    <label for="">Name</label>
+                    <select name="name" class="form form-control" style="width: 95%; border-color:#aaa">
+                        <option value="">Select User</option>
+
+                        @if (!empty($brands))
+                            @foreach ($brands as $brand)
+                                <option value="{{ $brand->name }}" <?= isset($_GET['name']) && isset($brand->name) && $_GET['name'] == $brand->name ? "selected" : '' ?> > {{ $brand->name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+
+                <div class="col-md-4 mt-2">
+                    <label for="">Company</label>
+                    <input type="text" class="form form-control" placeholder="Search Company"
+                        name="company"
+                        value="<?= isset($_GET['company']) ? $_GET['company'] : '' ?>"
+                        style="width: 95%; border-color:#aaa">
+                </div>
+
+                <div class="col-md-4 mt-2">
+                    <label for="">Phone</label>
+                    <input type="text" class="form form-control" placeholder="Search Phone"
+                        name="phone"
+                        value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>"
+                        style="width: 95%; border-color:#aaa">
+                </div>
+                <div class="col-md-4 mt-2">
+                    <br>
+                    <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
+                    <a href="/user/employees" class="btn bg-dark" style="color:white;">Reset</a>
+                </div>
+                </div>
+                {{-- <div class="row">
+                <div class="enries_per_page" style="max-width: 300px; display: flex;">
+
+                    <?php
+                    $all_params = isset($_GET) ? $_GET : '';
+                    if (isset($all_params['num_results_on_page'])) {
+                        unset($all_params['num_results_on_page']);
+                    }
+                    ?>
+                    <input type="hidden" value="<?= http_build_query($all_params) ?>"
+                        class="url_params">
+                    <select name="" id=""
+                        class="enteries_per_page form form-control"
+                        style="width: 100px; margin-right: 1rem;">
+                        <option
+                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 25 ? 'selected' : '' ?>
+                            value="25">25</option>
+                        <option
+                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 100 ? 'selected' : '' ?>
+                            value="100">100</option>
+                        <option
+                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 300 ? 'selected' : '' ?>
+                            value="300">300</option>
+                        <option
+                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 1000 ? 'selected' : '' ?>
+                            value="1000">1000</option>
+                        <option
+                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] ==  ? 'selected' : '' ?>
+                            value="{{  }}">all</option>
+                    </select>
+
+                    <span style="margin-top: 5px;">entries per page</span>
+                </div>
+                </div> --}}
+                </form>
+                </div>
                 <div class="table-responsive">
-                <table class="table datatable">
+
+                <table class="table">
                         <thead>
                         <tr>
                             <th scope="col">{{__('Created By')}}</th>
