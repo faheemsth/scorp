@@ -42,7 +42,8 @@
     }
 </style>
 
-{{ Form::open(['url' => 'region/create', 'method' => 'POST' ,'id' => 'CreateRigon']) }}
+{{ Form::open(['url' => 'region/create', 'method' => 'POST', 'id' => 'CreateRegion', 'novalidate' => 'novalidate']) }}
+
 <div class="modal-body py-0" style="height: 80vh;">
     <div class="lead-content my-2" style="height: 100%; overflow-y: scroll;">
         <div class="card-body px-2 py-0">
@@ -50,12 +51,12 @@
             <div class="accordion" id="accordionPanelsStayOpenExample">
                 <!-- Open Accordion Item -->
                 <div class="accordion-item">
-                    <h2 class="accordion-header" id="panelsStayOpen-headinginfo">
-                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#panelsStayOpen-collapseinfo">
-                            {{ __('N') }}
-                        </button>
-                    </h2>
+                    <!--<h2 class="accordion-header" id="panelsStayOpen-headinginfo">-->
+                    <!--    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse"-->
+                    <!--        data-bs-target="#panelsStayOpen-collapseinfo">-->
+                    <!--        {{ __('N') }}-->
+                    <!--    </button>-->
+                    <!--</h2>-->
 
                     <div id="panelsStayOpen-collapseinfo" class="accordion-collapse collapse show"
                         aria-labelledby="panelsStayOpen-headinginfo">

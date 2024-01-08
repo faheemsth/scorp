@@ -1,4 +1,4 @@
-<form action="{{ url('branch') }}" method="post">
+<form action="{{ url('branch') }}" method="post" novalidate>
     @csrf
     <div class="modal-body" style="min-height: 35vh;">
         <div class="row">
@@ -43,9 +43,9 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="branch_manager_id">{{ __('') }}</label>
+                        <label for="branch_manager_id">{{ __('Branch Manager') }}</label>
                         <select name="branch_manager_id" id="" class="form-control">
-                            <option value="">Select Branch</option>
+                            <option value="">Select Branch Manager</option>
                             @if (!empty($branchmanager))
                                 @foreach ($branchmanager as $branchmanage)
                                     <option value="{{ $branchmanage->id }}">{{ $branchmanage->name }}</option>

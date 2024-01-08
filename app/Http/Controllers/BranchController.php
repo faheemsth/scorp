@@ -19,7 +19,23 @@ class BranchController extends Controller
             // }else{
             //     $branches = Branch::where('created_by', '=', \Auth::user()->creatorId())->get();
             // }
-            $branches = Branch::get();
+            //$branches = Branch::get();
+            
+            
+            
+            if(\Auth::user()->type == 'super admin'){
+                 $branches = Branch::get();
+            }else if(\Auth::user()->type == 'super admin'){
+                 $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->get();
+            }else{
+                 $companies = FiltersBrands();
+                 $brand_ids = array_keys($companies);
+                 $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->get();
+            }   
+           
+            
+            
+            
             $users = allUsers();
             $regions = allRegions();
             $data = [

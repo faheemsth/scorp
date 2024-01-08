@@ -94,7 +94,7 @@
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @can('edit region')
 
-                    <a href="#!" data-size="lg" data-url="{{ url('region/update?id=').$employee->id }}" data-ajax-popup="true" class="btn px-2 py-2 btn-dark text-white" data-bs-original-title="{{__('Edit Employee')}}" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
+                    <a href="#!" data-size="lg" data-url="{{ url('region/update?id=').$employee->id }}" data-ajax-popup="true" class="btn px-2 py-2 btn-dark text-white" data-bs-original-title="{{__('Edit Region')}}" data-bs-toggle="tooltip" title="{{ __('Edit Region') }}">
                     <i class="ti ti-pencil"></i>
                       </a>
                     @endcan

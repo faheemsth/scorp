@@ -1,4 +1,5 @@
-{{ Form::model($branch, ['route' => ['branch.update', $branch->id], 'method' => 'PUT']) }}
+{{ Form::model($branch, ['route' => ['branch.update', $branch->id], 'method' => 'PUT', 'novalidate' => 'novalidate']) }}
+
 <div class="modal-body" style="min-height: 35vh;">
 
     <div class="row">

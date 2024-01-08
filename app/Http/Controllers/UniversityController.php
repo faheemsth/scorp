@@ -367,9 +367,9 @@ class UniversityController extends Controller
     public function getIntakeMonths()
     {
         $id = $_GET['id'];
-        $university = University::findOrFail($id);
+        $university = University::where('id', $id)->first();
         $html = '<option value=""> Select month </option>';
-
+        
 
 
         if ($university) {
@@ -386,7 +386,7 @@ class UniversityController extends Controller
             }
            // $html .= '</select>';
         }
-
+                
         return json_encode([
             'status' => 'success',
             'html' => $html
