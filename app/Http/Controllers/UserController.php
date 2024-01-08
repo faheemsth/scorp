@@ -656,10 +656,11 @@ class UserController extends Controller
             $brands = User::whereNotIn('type', $excludedTypes)->get();
             $brandss = User::where('type', 'company')->pluck('name', 'id')->toArray();
             $Regions = Region::pluck('name', 'id')->toArray();
+            $RegionForLocation = Region::pluck('location', 'id')->toArray();
             $Branchs = Branch::pluck('name', 'id')->toArray();
             $Designations = Role::where('name', '!=', 'super admin')->pluck('name', 'id')->toArray();
             $total_records = $users->total();
-            return view('user.employee', compact('total_records', 'users', 'brands','Regions','brandss','Branchs','Designations'));
+            return view('user.employee', compact('total_records', 'users', 'brands','Regions','brandss','Branchs','Designations','RegionForLocation'));
         } else {
             return redirect()->back();
         }
