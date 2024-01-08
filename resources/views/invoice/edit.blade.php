@@ -12,63 +12,98 @@
     <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('js/jquery.repeater.min.js') }}"></script>
     <script>
-        // var selector = "body";
-        // if ($(selector + " .repeater").length) {
-        //     var $dragAndDrop = $("body .repeater tbody").sortable({
-        //         handle: '.sort-handler'
-        //     });
-        //     var $repeater = $(selector + ' .repeater').repeater({
-        //         initEmpty: true,
-        //         defaultValues: {
-        //             'status': 1
-        //         },
-        //         show: function() {
-        //             $(this).slideDown();
-        //             var file_uploads = $(this).find('input.multi');
-        //             if (file_uploads.length) {
-        //                 $(this).find('input.multi').MultiFile({
-        //                     max: 3,
-        //                     accept: 'png|jpg|jpeg',
-        //                     max_size: 2048
-        //                 });
-        //             }
-        //             if ($('.select2').length) {
-        //                 $('.select2').select2();
-        //             }
-        //         },
-        //         hide: function(deleteElement) {
+        var selector = "body";
+        if ($(selector + " .repeater").length) {
+            var $dragAndDrop = $("body .repeater tbody").sortable({
+                handle: '.sort-handler'
+            });
+            var $repeater = $(selector + ' .repeater').repeater({
+                // initEmpty: true,
+                defaultValues: {
+                    'status': 1
+                },
+                show: function() {
+                    $(this).slideDown();
+                    var file_uploads = $(this).find('input.multi');
+                    if (file_uploads.length) {
+                        $(this).find('input.multi').MultiFile({
+                            max: 3,
+                            accept: 'png|jpg|jpeg',
+                            max_size: 2048
+                        });
+                    }
+                    // if ($('.select2').length) {
+                    //     $('.select2').select2();
+                    // }
+                },
+                hide: function(deleteElement) {
 
 
-        //             // $(this).slideUp(deleteElement);
-        //             // $(this).remove();
-        //             // var inputs = $(".amount");
-        //             // var subTotal = 0;
-        //             // for (var i = 0; i < inputs.length; i++) {
-        //             //     subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
-        //             // }
-        //             // $('.subTotal').html(subTotal.toFixed(2));
-        //             // $('.totalAmount').html(subTotal.toFixed(2));
+                    $(this).slideUp(deleteElement);
+                    $(this).remove();
+                    var inputs = $(".amount");
+                        var subTotal = 0;
+                        for (var i = 0; i < inputs.length; i++) {
+                            subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
+                        }
+                        
+                        var totalItemDiscountPrice = 0;
+                        var itemDiscountPriceInput = $('.discount');
 
-        //         },
-        //         ready: function(setIndexes) {
-        //             $dragAndDrop.on('drop', setIndexes);
-        //         },
-        //         isFirstItemUndeletable: true
-        //     });
-        //     // var value = $(selector + " .repeater").attr('data-value');
+                        for (var k = 0; k < itemDiscountPriceInput.length; k++) {
 
-        //     // if (typeof value != 'undefined' && value.length != 0) {
-        //     //     value = JSON.parse(value);
-        //     //     console.log(value)
-        //     //     $repeater.setList(value);
-        //     //     for (var i = 0; i < value.length; i++) {
-        //     //         var tr = $('#sortable-table .id[value="' + value[i].id + '"]').parent();
-        //     //         tr.find('.item').val(value[i].product_name);
-        //     //         changeItem(tr.find('.item'));
-        //     //     }
-        //     // }
+                            totalItemDiscountPrice += parseFloat(itemDiscountPriceInput[k].value);
+                        }
 
-        // }
+                        var totalItemTaxPrice = 0;
+                        var itemTaxPriceInput = $('.taxamount');
+                        var itemPriceInput = $('.price');
+                        var itemQuantityInput = $('.quantity');
+
+                        for (var k = 0; k < itemTaxPriceInput.length; k++) {
+                            let tax = parseFloat(itemTaxPriceInput[k].value);
+                            if(!isNaN(tax)){
+
+                                let price = itemPriceInput[k].value;
+                                let quantity = itemQuantityInput[k].value;
+                                price = price * quantity;
+                                var itemTaxPrice = parseFloat((tax / 100) * (price));
+                                // $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
+
+                                totalItemTaxPrice += parseFloat(itemTaxPrice.toFixed(2));
+                            }else{
+                                totalItemTaxPrice += 0;
+                            }
+                        }
+
+                        $('.totalDiscount').html(totalItemDiscountPrice.toFixed(2));
+
+                        $('.totalTax').html(totalItemTaxPrice.toFixed(2));
+
+                        $('.subTotal').html(subTotal.toFixed(2));
+                        $('.totalAmount').html(subTotal.toFixed(2) - parseFloat(totalItemDiscountPrice) + parseFloat(totalItemTaxPrice) );
+
+                },
+                ready: function(setIndexes) {
+                    $dragAndDrop.on('drop', setIndexes);
+                },
+                isFirstItemUndeletable: true
+            });
+            var value = $(selector + " .repeater").attr('data-value');
+
+            if (typeof value != 'undefined' && value.length != 0) {
+                value = JSON.parse(value);
+                console.log(value)
+                // $repeater.setList(value);
+                
+                // for (var i = 0; i < value.length; i++) {
+                //     var tr = $('#sortable-table .id[value="' + value[i].id + '"]').parent();
+                //     tr.find('.item').val(value[i].product_name);
+                //     changeItem(tr.find('.item'));
+                // }
+            }
+
+        }
 
         $(document).on('change', '#customer', function() {
             $('#customer_detail').removeClass('d-none');
@@ -261,65 +296,139 @@
             });
         }
 
-        $(document).on('keyup', '.quantity', function() {
-            var quntityTotalTaxPrice = 0;
+        // $(document).on('keyup', '.quantity', function() {
+        //     var quntityTotalTaxPrice = 0;
 
+        //     var el = $(this).parent().parent().parent().parent();
+        //     var quantity = $(this).val();
+        //     var price = $(el.find('.price')).val();
+        //     var discount = $(el.find('.discount')).val();
+
+        //     var totalItemPrice = (quantity * price);
+        //     var amount = (totalItemPrice);
+        //     $(el.find('.amount')).html(amount);
+
+        //     var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
+        //     var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
+        //     $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
+
+
+        //     var totalItemTaxPrice = 0;
+        //     var itemTaxPriceInput = $('.itemTaxPrice');
+        //     for (var j = 0; j < itemTaxPriceInput.length; j++) {
+        //         totalItemTaxPrice += parseFloat(itemTaxPriceInput[j].value);
+        //     }
+
+
+        //     var inputs = $(".amount");
+        //     var subTotal = 0;
+        //     for (var i = 0; i < inputs.length; i++) {
+        //         subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
+        //     }
+        //     $('.subTotal').html(subTotal.toFixed(2));
+        //     $('.totalTax').html(totalItemTaxPrice.toFixed(2));
+
+        //     $('.totalAmount').html((parseFloat(subTotal) + parseFloat(totalItemTaxPrice)).toFixed(2));
+
+        // })
+
+
+        // $(document).on('keyup', '.price', function() {
+
+        //     var el = $(this).parent().parent().parent().parent();
+        //     var price = $(this).val();
+        //     var quantity = $(el.find('.quantity')).val();
+        //     var discount = $(el.find('.discount')).val();
+        //     var totalItemPrice = (quantity * price);
+
+        //     var amount = (totalItemPrice);
+        //     $(el.find('.amount')).html(amount);
+
+
+        //     var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
+        //     var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
+        //     $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
+
+
+        //     var totalItemTaxPrice = 0;
+        //     var itemTaxPriceInput = $('.itemTaxPrice');
+        //     for (var j = 0; j < itemTaxPriceInput.length; j++) {
+        //         totalItemTaxPrice += parseFloat(itemTaxPriceInput[j].value);
+        //     }
+
+
+        //     var inputs = $(".amount");
+        //     var subTotal = 0;
+        //     for (var i = 0; i < inputs.length; i++) {
+        //         subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
+        //     }
+        //     $('.totalTax').html(totalItemTaxPrice.toFixed(2));
+
+        //     $('.subTotal').html(subTotal.toFixed(2));
+        //     $('.totalAmount').html((parseFloat(subTotal) + parseFloat(totalItemTaxPrice)).toFixed(2));
+
+        // })
+        $(document).on('keyup', '.price, .quantity, .discount, .taxamount', function() {
             var el = $(this).parent().parent().parent().parent();
-            var quantity = $(this).val();
+            // var price = $(this).val();
+            // var price = $('td .price').val();
             var price = $(el.find('.price')).val();
-            var discount = $(el.find('.discount')).val();
-
-            var totalItemPrice = (quantity * price);
-            var amount = (totalItemPrice);
-            $(el.find('.amount')).html(amount);
-
-            var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
-            var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
-            $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
-
-
-            var totalItemTaxPrice = 0;
-            var itemTaxPriceInput = $('.itemTaxPrice');
-            for (var j = 0; j < itemTaxPriceInput.length; j++) {
-                totalItemTaxPrice += parseFloat(itemTaxPriceInput[j].value);
-            }
-
-
-            var inputs = $(".amount");
-            var subTotal = 0;
-            for (var i = 0; i < inputs.length; i++) {
-                subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
-            }
-            $('.subTotal').html(subTotal.toFixed(2));
-            $('.totalTax').html(totalItemTaxPrice.toFixed(2));
-
-            $('.totalAmount').html((parseFloat(subTotal) + parseFloat(totalItemTaxPrice)).toFixed(2));
-
-        })
-
-
-        $(document).on('keyup', '.price', function() {
-
-            var el = $(this).parent().parent().parent().parent();
-            var price = $(this).val();
+            // var quantity = $('td .quantity').val();
             var quantity = $(el.find('.quantity')).val();
+
+            if (quantity < 1) {
+                quantity = 1;
+            }
             var discount = $(el.find('.discount')).val();
             var totalItemPrice = (quantity * price);
 
             var amount = (totalItemPrice);
-            $(el.find('.amount')).html(amount);
+            // alert(amount)
+            console.log(el)
+            console.log(el.find('.amount'))
+            console.log(amount)
+
+            $(el.find('.amount').first()).html(amount);
 
 
-            var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
-            var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
+            // var totaltex = $('td .taxamount').val();
+            var totaltex = el.find('.taxamount').val();
+
+            console.log(totaltex)
+            var itemTaxPrice = parseFloat((totaltex / 100) * (totalItemPrice));
+            
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 
 
             var totalItemTaxPrice = 0;
             var itemTaxPriceInput = $('.itemTaxPrice');
             for (var j = 0; j < itemTaxPriceInput.length; j++) {
-                totalItemTaxPrice += parseFloat(itemTaxPriceInput[j].value);
+                let tax = parseFloat(itemTaxPriceInput[j].value);
+                console.log('totalItemTaxPrice',tax)
+                
+                if(!isNaN(tax)){
+
+                    totalItemTaxPrice += parseFloat(tax);
+                console.log('totalItemTaxPrice===',totalItemTaxPrice)
+
+                }else{
+                    totalItemTaxPrice += 0;
+                }
             }
+
+            var totalItemDiscountPrice = 0;
+            var itemDiscountPriceInput = $('.discount');
+
+            for (var k = 0; k < itemDiscountPriceInput.length; k++) {
+                let dis = parseFloat(itemDiscountPriceInput[k].value);
+                if(isNaN(dis)){
+                    totalItemDiscountPrice += 0;
+                }else{
+                    totalItemDiscountPrice += parseFloat(dis);
+                }
+                console.log('totalItemDiscountPricetotalItemDiscountPricetotalItemDiscountPrice',totalItemDiscountPrice)
+            }
+
 
 
             var inputs = $(".amount");
@@ -330,7 +439,21 @@
             $('.totalTax').html(totalItemTaxPrice.toFixed(2));
 
             $('.subTotal').html(subTotal.toFixed(2));
-            $('.totalAmount').html((parseFloat(subTotal) + parseFloat(totalItemTaxPrice)).toFixed(2));
+
+            subTotal = parseFloat(subTotal);
+            totalItemDiscountPrice = parseFloat(totalItemDiscountPrice);
+            totalItemTaxPrice = parseFloat(totalItemTaxPrice);
+
+            if(isNaN(totalItemDiscountPrice)){
+                totalItemDiscountPrice = 0;
+                $('.totalDiscount').html(totalItemDiscountPrice.toFixed(2));
+
+            }
+            console.log('subTotal',subTotal)
+            console.log('totalItemDiscountPrice',totalItemDiscountPrice)
+            console.log('totalItemTaxPrice',totalItemTaxPrice)
+
+            $('.totalAmount').html((parseFloat(subTotal) - parseFloat(totalItemDiscountPrice) + parseFloat(totalItemTaxPrice)).toFixed(2));
 
         })
 
@@ -340,10 +463,15 @@
             var price = $(el.find('.price')).val();
 
             var quantity = $(el.find('.quantity')).val();
+            if (quantity < 1) {
+                quantity = 1;
+            }
             var totalItemPrice = (quantity * price);
 
-            var totalItemTaxRate = $(el.find('.itemTaxRate')).val();
-            var itemTaxPrice = parseFloat((totalItemTaxRate / 100) * (totalItemPrice));
+            // var totalItemTaxRate = $(el.find('.taxamount')).val();
+            var totaltex = $(el.find('.taxamount')).val();
+
+            var itemTaxPrice = parseFloat((totaltex / 100) * (totalItemPrice));
             $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
 
 
@@ -358,8 +486,13 @@
             var itemDiscountPriceInput = $('.discount');
 
             for (var k = 0; k < itemDiscountPriceInput.length; k++) {
-
-                totalItemDiscountPrice += parseFloat(itemDiscountPriceInput[k].value);
+                let dis = parseFloat(itemDiscountPriceInput[k].value);
+                if(isNaN(dis)){
+                    totalItemDiscountPrice += 0;
+                }else{
+                    totalItemDiscountPrice += parseFloat(dis);
+                }
+                
             }
 
             var amount = (totalItemPrice);
@@ -378,12 +511,13 @@
                 totalItemTaxPrice)).toFixed(2));
         })
 
-        $(document).on('click', '[data-repeater-create]', function() {
-            $('.item :selected').each(function() {
-                var id = $(this).val();
-                $(".item option[value=" + id + "]").prop("disabled", true);
-            });
-        })
+        // $(document).on('click', '[data-repeater-create]', function() {
+            
+        //     $('.item :selected').each(function() {
+        //         var id = $(this).val();
+        //         $(".item option[value=" + id + "]").prop("disabled", true);
+        //     });
+        // })
 
         $(document).on('click', '[data-repeater-delete]', function() {
             // $('.delete_item').click(function () {
@@ -487,7 +621,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     {{ Form::label('category_id', __('Category'), ['class' => 'form-label']) }}
-                                    {{ Form::select('category_id', $category, null, ['class' => 'form-control select', 'required' => 'required']) }}
+                                    {{ Form::select('category_id', $category, null, ['class' => 'form-control select']) }}
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -549,7 +683,7 @@
                                     <th>{{ __('Items') }}</th>
                                     <th>{{ __('Quantity') }}</th>
                                     <th>{{ __('Price') }} </th>
-                                    <th>{{ __('Tax') }}</th>
+                                    <th>{{ __('Tax') }}(%)</th>
                                     <th>{{ __('Discount') }}</th>
                                     <th class="text-end">{{ __('Amount') }} </th>
                                     <th></th>
@@ -576,10 +710,10 @@
                                         $tax = ($item->tax/$amount)*100;
                                     @endphp
                                 <tr>
-                                    {{ Form::hidden('id', null, ['class' => 'form-control id']) }}
+                                   {{-- {{ Form::hidden('id', null, ['class' => 'form-control id']) }} --}}
                                     <td >
                                         <div class="form-group price-input input-group search-form">
-                                            {{ Form::text('item', $item->product_name, ['class' => 'form-control item','data-url' => route('invoice.product'), 'required' => 'required', 'placeholder' => __('Item')]) }}
+                                            {{ Form::text('item', $item->product_name, ['class' => 'form-control item', 'required' => 'required', 'placeholder' => __('Item')]) }}
                                             <span class="unit input-group-text bg-transparent"></span>
                                         </div>
 
@@ -604,7 +738,7 @@
                                                 <div class="taxes"></div>
                                                 {{ Form::text('tax', $tax, ['class' => 'form-control taxamount', 'required' => 'required', 'placeholder' => __('Tax')]) }}</div>
                                                 {{ Form::hidden('tax', '', ['class' => 'form-control tax']) }}
-                                                {{ Form::hidden('itemTaxPrice', '', ['class' => 'form-control itemTaxPrice']) }}
+                                                {{ Form::hidden('itemTaxPrice', $item->tax, ['class' => 'form-control itemTaxPrice']) }}
                                                 {{ Form::hidden('itemTaxRate', '', ['class' => 'form-control itemTaxRate']) }}
                                             </div>
                                         </div>
