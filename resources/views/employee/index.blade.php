@@ -80,10 +80,10 @@
                                     <td>
                                         {{ (!empty($employee->user->last_login_at)) ? $employee->user->last_login_at : '-' }}
                                     </td>
-                                    @if(Gate::check('edit employee') || Gate::check('delete employee'))
+                                    @if(Gate::check('') || Gate::check('delete employee'))
                                         <td>
                                             @if($employee->is_active==1)
-                                                @can('edit employee')
+                                                @can('')
                                                 <div class="action-btn bg-primary ms-2">
                                                     <a href="{{route('employee.edit',\Illuminate\Support\Facades\Crypt::encrypt($employee->id))}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}"
                                                      data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>

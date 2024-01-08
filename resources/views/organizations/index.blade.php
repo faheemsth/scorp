@@ -341,7 +341,7 @@
 
 
     <!-- Add Organization -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby=""
         aria-hidden="true">
         <div class="modal-dialog modal-lg my-0" role="document">
             <div class="modal-content">
