@@ -892,11 +892,11 @@
                                                         @endif
                                                     @endif
 
-                                                    @if(in_array('edit branch manager '.$module,(array) $permissions))
-                                                        @if($key = array_search('edit branch manager'.$module,$permissions))
+                                                    @if(in_array('edit '.$module,(array) $permissions))
+                                                        @if($key = array_search('edit'.$module,$permissions))
                                                             <div class="col-md-3 custom-control custom-checkbox">
                                                                 {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck crm_checkall isscheck_'.str_replace(' ', '', $module),'id' =>'permission'.$key])}}
-                                                                {{Form::label('permission'.$key,'Edit branch manager',['class'=>'custom-control-label'])}}<br>
+                                                                {{Form::label('permission'.$key,'Edit',['class'=>'custom-control-label'])}}<br>
                                                             </div>
                                                         @endif
                                                     @endif
