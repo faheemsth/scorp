@@ -152,7 +152,7 @@ Route::get('/welcome', function () {
 });
 Route::get('/welcome2', function () {
 
-
+dd(1);
     $labels = ["Italy", "France", "Spain", "USA", "Argentina", "France", "Spain", "USA", "Argentina"];
     $values = [105, 95, 85, 75, 65, 55, 45, 35, 25, 15];
     $backgroundColor = ["#1F2735", "#1F2735", "#1F2735", "#1F2735", "#1F2735", "#1F2735", "#1F2735", "#1F2735", "#1F2735", "#1F2735"];
