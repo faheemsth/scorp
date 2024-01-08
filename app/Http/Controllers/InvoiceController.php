@@ -120,7 +120,7 @@ class InvoiceController extends Controller
                                 // 'customer_id' => 'integer',
                                    'issue_date' => 'required',
                                    'due_date' => 'required',
-                                   //'category_id' => 'required',
+                                //    'category_id' => 'required',
                                    'items' => 'required',
                                ]
             );
@@ -150,7 +150,7 @@ class InvoiceController extends Controller
             $products = $request->items;
 
 
-
+            // dd($products);
 
                         for($i = 0; $i < count($products); $i++)
             {
@@ -159,7 +159,7 @@ class InvoiceController extends Controller
                 $invoiceProduct->invoice_id  = $invoice->id;
                 $invoiceProduct->product_name  = $products[$i]['item'];
                 $invoiceProduct->quantity    = $products[$i]['quantity'];
-                $invoiceProduct->tax         = $products[$i]['tax'];
+                $invoiceProduct->tax         = $products[$i]['itemTaxPrice'];
                 $invoiceProduct->discount    = $products[$i]['discount'];
                 $invoiceProduct->price       = $products[$i]['price'];
                 $invoiceProduct->description = $products[$i]['description'];
@@ -243,8 +243,9 @@ class InvoiceController extends Controller
 
             $invoice->customField = CustomField::getData($invoice, 'invoice');
             $customFields         = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'invoice')->get();
-
-            return view('invoice.edit', compact('customers', 'product_services', 'invoice', 'invoice_number', 'category', 'customFields'));
+            $items               = $invoice->items;
+            // dd($items);
+            return view('invoice.edit', compact('customers','items', 'product_services', 'invoice', 'invoice_number', 'category', 'customFields'));
         }
         else
         {
