@@ -55,7 +55,7 @@ $lang = Auth::user()->lang;
         @if (\Auth::user()->type != 'client')
         <!-- Sidebar -->
         <ul style="list-style: none">
-        
+
             @if (Auth::user()->type == 'company' ||
             Auth::user()->type == 'team' ||
             Gate::check('show hrm dashboard') ||
@@ -78,7 +78,7 @@ $lang = Auth::user()->lang;
 
                     <span>{{ __('Dashboard') }}</span>
                 </a>
-                <div id="collapseone" class="collapse {{ Request::segment(1) == 'crm-dashboard' || Request::segment(1) == 'hrm-dashboard' ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseone" class="collapse {{ Request::segment(1) == 'crm-dashboard' || Request::segment(1) == 'hrm-dashboard' || Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="  collapse-inner rounded">
                         <ul>
                             @if (Gate::check('show crm dashboard') || Auth::user()->type == 'team' || Auth::user()->type == 'company')
@@ -88,6 +88,10 @@ $lang = Auth::user()->lang;
                                     CRM Dashboard</a>
                             </li>
                             @endif
+                            <li class="{{ Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' ? ' active' : '' }}">
+                                <a class="collapse-item" href="{{ url('ChartApplication') }}" style="color:white; font-size: 13px;">
+                                    <i class="fa-solid fa-chart-line me-1" style="color: #ffffff;"></i>{{ __('Reports') }}</a>
+                            </li>
                             {{-- //// --}}
                             @if (\Auth::user()->show_account() == 1 && Gate::check('show account dashboard'))
 

@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 @section('page-title')
-    {{ __('Visas Deposited') }}
+    {{ __('Deposits Analysis') }}
 @endsection
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
-    <li class="breadcrumb-item">{{ __('Visas Deposited') }}</li>
+    <li class="breadcrumb-item">{{ __('Deposits Analysis') }}</li>
 @endsection
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <style>
@@ -60,7 +60,7 @@
 
             <div class="container">
                 <div class="row justify-content-center align-items-center my-4">
-                    <div class="col-3">
+                    <a class="col-3 py-5 text-decoration-none" href="{{ url('ChartGranted') }}">
                         <div class="row justify-content-center align-items-center">
                             <div class="col-auto d-flex flex-column gap-2 justify-content-center align-items-center">
                                 <div style="border: 2px solid black; border-radius: 50%;text-align: center;width: 25px;height: 25px;"
@@ -70,8 +70,8 @@
                                 <h6 class="fw-bold">Visas Analysis</h6>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-3 py-5" style="background-color: #B3CDE1; border-radius: 5%;">
+                    </a>
+                    <a class="col-3 py-5 text-decoration-none" href="{{ url('ChartDeposited') }}" style="background-color: #B3CDE1; border-radius: 5%;">
                         <div class="row justify-content-center align-items-center">
                             <div class="col-auto d-flex flex-column gap-2 justify-content-center align-items-center">
                                 <div style="border: 2px solid black; border-radius: 50%;text-align: center;width: 25px;height: 25px;"
@@ -81,9 +81,9 @@
                                 <h6 class="fw-bold">Deposits Analysis</h6>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
-                    <div class="col-3">
+                    <a class="col-3 py-5 text-decoration-none" href="{{ url('ChartApplication') }}">
                         <div class="row justify-content-center align-items-center">
                             <div class="col-auto d-flex flex-column gap-2 justify-content-center align-items-center">
                                 <div style="border: 2px solid black; border-radius: 50%;text-align: center;width: 25px;height: 25px;"
@@ -93,7 +93,7 @@
                                 <h6 class="fw-bold">Application Analysis</h6>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
 
             </div>
