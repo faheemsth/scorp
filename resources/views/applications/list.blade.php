@@ -42,7 +42,7 @@
                         });
 
                         var id = $(el).attr('data-id');
-
+                        var app = $(el).attr('data-app');
                         var old_status = $("#" + source.id).data('status');
                         var new_status = $("#" + target.id).data('status');
                         var stage_id = $(target).attr('data-id');
@@ -62,6 +62,7 @@
                                 new_status: new_status,
                                 old_status: old_status,
                                 pipeline_id: pipeline_id,
+                                app:app,
                                 "_token": $('meta[name="csrf-token"]').attr('content')
                             },
                             success: function(data) {
@@ -69,8 +70,9 @@
                             },
                             error: function(data) {
                                 data = data.responseJSON;
-                                show_toastr('error', data.error, 'error')
+                                show_toastr('error', 'Data Not Move', 'error');
                             }
+
                         });
                     });
                 })
@@ -350,7 +352,7 @@
                             <div class="card-body kanban-box" id="task-list-{{ $stage->id }}"
                                 data-id="{{ $stage->id }}">
                                 @foreach ($deals as $deal)
-                                    <div class="card lazy" data-id="{{ $deal->deal_id }}">
+                                    <div class="card lazy" data-app="{{ $deal->id }}" data-id="{{ $deal->deal_id }}">
                                         <div class="pt-3 ps-3">
                                             @php($labels = $deal->labels())
                                             @if ($labels)
