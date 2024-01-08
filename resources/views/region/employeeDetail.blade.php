@@ -83,7 +83,7 @@
                     </div>
 
                     <div class="lead-basic-info">
-                        <p class="pb-0 mb-0 fw-normal">{{ __('USER') }}</p>
+                        <p class="pb-0 mb-0 fw-normal">{{ __('Region') }}</p>
                         <div class="d-flex align-items-baseline">
                             <h5 class="fw-bold">{{ $employee->name }}</h5>
                         </div>
@@ -167,9 +167,6 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td class="" style="width: 100px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Designation') }}
-                                                                </td>
                                                                 <td style="padding-left: 10px; font-size: 14px;">
                                                                     <div class="bg-danger text-white ps-1">
                                                                     {{ $employee->type }}
@@ -179,10 +176,10 @@
 
                                                             <tr>
                                                                 <td class="" style="width: 100px; text-align: right; font-size: 14px;">
-                                                                    {{ __('Company') }}
+                                                                    {{ __('Brands') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                   {{ $employee->created_by }}
+                                                                    {{ optional(App\Models\User::find(str_replace(['["', '"]'], '', $employee->brands)))->name }}
                                                                 </td>
                                                             </tr>
                                                             <tr>

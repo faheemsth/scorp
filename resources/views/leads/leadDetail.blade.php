@@ -203,7 +203,7 @@
             <div class="lead-content my-2" style="border-radius: 8px;
             background: #FFF;
             box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-            ">
+">
                 <div class="stages my-2 ">
                     <h2 class="mb-2 py-2 ps-3">LEAD STATUS: <span class="d-inline-block fw-light ms-1">{{ $lead->stage->name }}</span>
                     </h2>

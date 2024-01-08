@@ -53,7 +53,7 @@
                     <h2 class="accordion-header" id="panelsStayOpen-headinginfo">
                         <button class="accordion-button p-2" type="button" data-bs-toggle="collapse"
                             data-bs-target="#panelsStayOpen-collapseinfo">
-                            {{ __('REGION INFORMATION') }}
+                            {{ __('N') }}
                         </button>
                     </h2>
 
