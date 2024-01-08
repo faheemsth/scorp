@@ -75,11 +75,20 @@
                                                 {{ __('Brands') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
-                                                <select class="form form-control select2" id="choices-multiple55"
+                                                @php 
+                                                $brand_ids =  $regions->brands ?? '';
+                                                
+                                                if(!empty($brand_ids)){
+                                                    $brand_ids = explode(',', $brand_ids);
+                                                }
+                                            @endphp 
+                                               
+                                               
+                                                 <select class="form form-control select2" id="choices-multiple55"
                                                     name="brands[]" style="width: 100% !important;" required>
                                                     <option value="">Select Brand</option>
                                                         @foreach ($brands as $brand)
-                                                            <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                            <option value="{{ $brand->id }}" {{ in_array($brand->id, $brand_ids) ? 'selected' : ''}}>{{ $brand->name }}</option>
                                                         @endforeach
                                                 </select>
                                             </td>
@@ -123,7 +132,7 @@
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form form-control select2" id="choices-multiple555"
-                                                    name="region_manager_id"  required>
+                                                    name="region_manager_id" >
                                                     <option value="">Select Brand</option>
                                                     @if(!empty($regionmanager))
                                                     @foreach ($regionmanager as $regionmanage)

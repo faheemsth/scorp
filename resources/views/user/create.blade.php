@@ -14,10 +14,10 @@
         </div>
 
 
-        <div class="col-md-6">
+        <div class="col-md-6 d-none">
             <div class="form-group">
                 {{Form::label('name',__('Domain link'),['class'=>'form-label']) }}
-                {{Form::text('domain_link',null,array('class'=>'form-control','placeholder'=>__('Domain link'),'required'=>'required'))}}
+                {{Form::text('domain_link',null,array('class'=>'form-control','placeholder'=>__('Domain link')))}}
                 @error('domain_link')
                 <small class="invalid-name" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>

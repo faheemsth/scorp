@@ -85,7 +85,18 @@ class RegionController extends Controller
     {
 
         if (!empty($request->id)) {
-            Region::find($request->id)->update($request->all());
+            
+           // Region::find($request->id)->update($request->all());
+           $region = Region::findOrFail($request->id);
+           $region->name = $request->name;
+           $region->region_manager_id = $request->region_manager_id;
+           $region->location = $request->location;
+           $region->phone = $request->phone;
+           $region->email = $request->email;
+           $region->brands =implode(',',$request->brands);
+           $region->update();
+
+
         } else {
             $brands = null;
             if($request->brands != null && sizeof($request->brands) > 0){
@@ -121,7 +132,8 @@ class RegionController extends Controller
     public function regions_show($id)
     {
         $employee = Region::findOrFail($id);
-        $html = view('region.employeeDetail', compact('employee'))->render();
+        $users = allUsers();
+        $html = view('region.employeeDetail', compact('employee', 'users'))->render();
         return json_encode([
             'status' => 'success',
             'html' => $html

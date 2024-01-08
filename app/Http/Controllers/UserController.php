@@ -120,7 +120,7 @@ class UserController extends Controller
                 $request->all(),
                 [
                     'name' => 'required|max:120',
-                    'domain_link' => 'required',
+                    //'domain_link' => 'required',
                     'website_link' => 'required',
                     'drive_link' => 'required'
                 ]
