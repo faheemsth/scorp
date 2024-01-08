@@ -247,7 +247,7 @@
                             <div class="dropdown">
                                 <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    ALL Regions
+                                    All Regions
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
@@ -328,7 +328,7 @@
                                                             {{ $deal->name }}
                                                     </span>
                                                 </td>
-                                                <td>{{ $deal->email }}</td>
+                                                <td><a href="mailto:{{ $deal->email }}">{{ $deal->email }}</a></td>
                                                 <td>{{ $deal->phone }}</td>
                                                 <td>{{ $deal->location }}</td>
                                                 <td>{{ optional($deal->manager)->name }}</td>

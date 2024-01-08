@@ -54,7 +54,7 @@ $profile = asset(Storage::url('uploads/avatar/'));
                                     <th>{{ __('Contact') }}</th>
                                     <th>{{ __('Email') }}</th>
                                     <th>{{ __('Balance') }}</th>
-                                    <th>{{ __('Last Login At') }}</th>
+                                    <th>{{ __(' At') }}</th>
                                     <th>{{ __('Action') }}</th>
                                 </tr>
                             </thead>

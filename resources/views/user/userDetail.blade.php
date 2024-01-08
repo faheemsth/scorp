@@ -192,7 +192,7 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td class="" style="width: 100px; font-size: 14px;">
+    `                                                     <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Created By') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">

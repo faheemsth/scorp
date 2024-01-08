@@ -147,19 +147,22 @@ use App\Http\Controllers\AppStageController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/welcome', function () {
+    return view('chartOfAccount.TestChart');
+});
+Route::get('/', function () {
+    return view('welcome');
+ });
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth'])->name('dashboard');
+ Route::get('/dashboard', function () {
+     return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 require __DIR__ . '/auth.php';
 
 
-//Route::get('/', ['as' => 'home','uses' =>'HomeController@index'])->middleware(['XSS']);
-//Route::get('/home', ['as' => 'home','uses' =>'HomeController@index'])->middleware(['auth','XSS']);
+Route::get('/', ['as' => 'home','uses' =>'HomeController@index'])->middleware(['XSS']);
+Route::get('/home', ['as' => 'home','uses' =>'HomeController@index'])->middleware(['auth','XSS']);
 
 Route::get('/', [DashboardController::class, 'account_dashboard_index'])->name('home')->middleware(['XSS', 'revalidate',]);
 
@@ -172,18 +175,18 @@ Route::get('/company-permission', [CompanyPermissionController::class, 'index'])
 Route::post('/company-permission-updated', [CompanyPermissionController::class, 'company_permission_updated'])->name('company-added')->middleware(['XSS', 'revalidate',]);
 
 
-//Route::get('/register/{lang?}', function () {
-//    $settings = Utility::settings();
-//    $lang = $settings['default_language'];
-//
-//    if($settings['enable_signup'] == 'on'){
-//        return view("auth.register", compact('lang'));
-//       // Route::get('/register', 'Auth\RegisteredUserController@showRegistrationForm')->name('register');
-//    }else{
-//        return Redirect::to('login');
-//    }
-//
-//});
+Route::get('/register/{lang?}', function () {
+   $settings = Utility::settings();
+    $lang = $settings['default_language'];
+
+    if($settings['enable_signup'] == 'on'){
+       return view("auth.register", compact('lang'));
+       Route::get('/register', 'Auth\RegisteredUserController@showRegistrationForm')->name('register');
+    }else{
+        return Redirect::to('login');
+   }
+
+});
 
 Route::post('register', [RegisteredUserController::class, 'store'])->name('register');
 
@@ -194,20 +197,20 @@ Route::get('/', [DashboardController::class, 'crm_dashboard_index'])->name('crm.
 
 Route::get('/crm-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('crm.dashboard')->middleware(['XSS', 'revalidate',]);
 
-//Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
 Route::get('/account-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
 
 
 //new dashboard
-//Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
 Route::get('/account-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
 
-// Route::get('/', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['XSS', 'revalidate',]);
+Route::get('/', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['XSS', 'revalidate',]);
 
-// Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth','XSS', 'revalidate']);
+ Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth','XSS', 'revalidate']);
 
-// //new dashboard
-// Route::get('/finance-dashboard', [DashboardController::class, 'finance_dashboard_index'])->name('finance.dashboard')->middleware(['auth','XSS', 'revalidate']);
+ //new dashboard
+Route::get('/finance-dashboard', [DashboardController::class, 'finance_dashboard_index'])->name('finance.dashboard')->middleware(['auth','XSS', 'revalidate']);
 
 Route::get('/project-dashboard', [DashboardController::class, 'project_dashboard_index'])->name('project.dashboard')->middleware(['auth', 'XSS', 'revalidate']);
 
