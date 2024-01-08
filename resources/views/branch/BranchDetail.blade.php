@@ -158,7 +158,7 @@
                                                     <tbody>
                                                         <tr>
                                                             <td class=""
-                                                                style="width: 100px; text-align: right; font-size: 14px;">
+                                                                style="width: 125px; text-align: right; font-size: 14px;">
                                                                 {{ __('Record ID') }}
                                                             </td>
                                                             <td class=""
@@ -169,7 +169,7 @@
 
                                                         <tr>
                                                             <td class=""
-                                                                style="width: 100px; text-align: right; font-size: 14px;">
+                                                                style="width: 125px; text-align: right; font-size: 14px;">
                                                                 {{ __('Name') }}
                                                             </td>
                                                             <td class=""
@@ -180,7 +180,7 @@
 
                                                         <tr>
                                                             <td class=""
-                                                                style="width: 100px; text-align: right; font-size: 14px;">
+                                                                style="width: 125px; text-align: right; font-size: 14px;">
                                                                 {{ __('Region') }}
                                                             </td>
                                                             <td style="padding-left: 10px; font-size: 14px;">
@@ -190,28 +190,27 @@
 
                                                         <tr>
                                                             <td class=""
-                                                                style="width: 100px; text-align: right; font-size: 14px;">
+                                                                style="width: 125px; text-align: right; font-size: 14px;">
                                                                 {{ __('Brands') }}
                                                             </td>
                                                             <td class=""
-                                                                style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $Branch->brands ?? '' }}
+                                                                style="padding-left: 10px; font-size: 14px;">                                                                {{ optional(App\Models\User::find(str_replace(['["', '"]'], '',  $Branch->brands)))->name }}
                                                             </td>
                                                         </tr>
                                                         <tr>
                                                             <td class=""
-                                                                style="width: 100px; text-align: right; font-size: 14px;">
+                                                                style="width: 125px; text-align: right; font-size: 14px;">
                                                                 {{ __('Branch Manager') }}
                                                             </td>
                                                             <td class=""
                                                                 style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $Manager[$Branch->branch_manager_id] ?? '' }}
+                                                                {{$Branch->branch_manager_id ?? '' }}
                                                             </td>
                                                         </tr>
 
                                                         <tr>
                                                             <td class=""
-                                                                style="width: 100px; text-align: right; font-size: 14px;">
+                                                                style="width: 125px; text-align: right; font-size: 14px;">
                                                                 {{ __('Google Link') }}
                                                             </td>
                                                             <td class=""
@@ -222,7 +221,7 @@
 
                                                         <tr>
                                                             <td class=""
-                                                                style="width: 100px; text-align: right; font-size: 14px;">
+                                                                style="width: 125px; text-align: right; font-size: 14px;">
                                                                 {{ __('Social Media Link') }}
                                                             </td>
                                                             <td class=""
@@ -232,7 +231,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td class=""
-                                                                style="width: 100px; text-align: right; font-size: 14px;">
+                                                                style="width: 125px; text-align: right; font-size: 14px;">
                                                                 {{ __('Phone') }}
                                                             </td>
                                                             <td class=""
@@ -242,7 +241,7 @@
                                                         </tr>
                                                         <tr>
                                                             <td class=""
-                                                                style="width: 100px; text-align: right; font-size: 14px;">
+                                                                style="width: 125px; text-align: right; font-size: 14px;">
                                                                 {{ __('Email') }}
                                                             </td>
                                                             <td class=""
