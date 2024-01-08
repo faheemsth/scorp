@@ -193,31 +193,55 @@
     </div>
 @endsection
 @push('script-page')
-    <script>
-        const xValFirst = ["Italy", "France", "Spain", "USA", "Argentina", "France", "Spain", "USA", "Argentina"];
-        const yValFirst = [55, 49, 44, 24, 15, 24, 15, 25, 105, 35];
-        const barColorFirst = ["#1F2735", "#1F2735", "#1F2735", "#1F2735", "#1F2735"];
-
-        new Chart("FirstChart", {
-            type: "bar",
-            data: {
-                labels: xValFirst,
-                datasets: [{
-                    backgroundColor: barColorFirst,
-                    data: yValFirst
-                }]
+<script>
+    const chartConfig = {
+        type: "bar",
+        data: {
+            labels: [],
+            datasets: [{
+                backgroundColor: [],
+                data: []
+            }]
+        },
+        options: {
+            legend: {
+                display: false
             },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: "World Wine Production 2018"
-                }
+            title: {
+                display: true,
+                text: "World Wine Production 2018"
             }
-        });
-    </script>
+        }
+    };
+    const myChart = new Chart("FirstChart", chartConfig);
+    $.ajax({
+        url: '/welcome2',
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            myChart.data.labels = data.labels;
+            myChart.data.datasets[0].data = data.values;
+            myChart.data.datasets[0].backgroundColor = data.backgroundColor;
+            myChart.update();
+        },
+        error: function (error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
     <script>
         const xValues = ["Italy", "France", "Spain", "USA", "Argentina", "Argentina", "Argentina", "Argentina"];
         const yValues = [55, 49, 44, 24, 15, 25, 105, 35];
