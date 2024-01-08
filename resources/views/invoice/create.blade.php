@@ -47,6 +47,7 @@
                         for (var i = 0; i < inputs.length; i++) {
                             subTotal = parseFloat(subTotal) + parseFloat($(inputs[i]).html());
                         }
+                        
                         var totalItemDiscountPrice = 0;
                         var itemDiscountPriceInput = $('.discount');
 
@@ -136,7 +137,7 @@
             $('#customer_detail').addClass('d-none');
         })
 
-        $(document).on('change', '.items', function() {
+        $(document).on('change', '.item', function() {
 
             var iteams_id = $(this).val();
             var url = $(this).data('url');
@@ -254,6 +255,7 @@
             // var price = $(this).val();
             // var price = $('td .price').val();
             var price = $(el.find('.price')).val();
+            
             // var quantity = $('td .quantity').val();
             var quantity = $(el.find('.quantity')).val();
 
@@ -261,6 +263,7 @@
                 quantity = 1;
             }
             var discount = $(el.find('.discount')).val();
+       
             var totalItemPrice = (quantity * price);
 
             var amount = (totalItemPrice);
@@ -376,7 +379,7 @@
                 totalItemTaxPrice)).toFixed(2));
         })
 
-
+        
 
 
         // $(document).on('keyup', '.price', function() {
@@ -424,7 +427,7 @@
                             <div id="customer" class="desc">
                                 <div class="form-group type1" id="customer">
                                     {{ Form::label('customer_id', __('User'), ['class' => 'form-label']) }}
-                                    {{ Form::select('customer_id', $customers, $customerId, ['class' => 'form-control desc', 'id' => 'customer', 'data-url' => route('invoice.customer')]) }}
+                                    {{ Form::select('customer_id', $customers, $customerId, ['class' => 'form-control select2 desc', 'id' => 'customer', 'data-url' => route('invoice.customer')]) }}
                                 </div>
                             </div>
                             <div id="threeCarDiv" class="desc">
