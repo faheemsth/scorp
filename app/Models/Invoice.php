@@ -63,9 +63,11 @@ class Invoice extends Model
         $totalTax = 0;
         foreach($this->items as $product)
         {
-            $taxes = Utility::totalTaxRate($product->tax);
+            // $taxes = Utility::totalTaxRate($product->tax);
 
-            $totalTax += ($taxes / 100) * ($product->price * $product->quantity);
+            // $totalTax += ($taxes / 100) * ($product->price * $product->quantity);
+            $totalTax += $product->tax;
+
         }
 
         return $totalTax;
