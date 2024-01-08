@@ -4,7 +4,7 @@
     $profile = \App\Models\Utility::get_file('uploads/avatar');
 @endphp
 @section('page-title')
-    {{ __('Manage User') }}
+    {{ __('Manage Brand') }}
 @endsection
 @push('script-page')
 @endpush
@@ -12,7 +12,7 @@
     <li class="breadcrumb-item">
         <a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a>
     </li>
-    <li class="breadcrumb-item">{{ __('User') }}</li>
+    <li class="breadcrumb-item">{{ __('Brand') }}</li>
 @endsection
 <style>
     .full-card {
