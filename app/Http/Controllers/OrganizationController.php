@@ -731,11 +731,9 @@ class OrganizationController extends Controller
             $status     = DealTask::$status;
             $users = User::get()->pluck('name', 'id')->toArray();
 
-            if (\Auth::user()->type == 'super admin') {
-                    $branches = Branch::get()->pluck('name', 'id')->toArray();
-                }else{
-                    $branches = Branch::get()->pluck('name', 'id')->toArray();
-                }
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', $brand_ids)->pluck('name', 'id')->toArray();
 
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
@@ -1146,7 +1144,6 @@ class OrganizationController extends Controller
         //     $html .= '</select>';
         // } else {
             $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
-                ->where('created_by', \Auth::user()->id)
                 ->pluck('name', 'id');
             $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
             foreach ($users as $key => $user) {
