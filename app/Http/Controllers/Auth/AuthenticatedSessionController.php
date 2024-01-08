@@ -17,10 +17,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
-use Laravel\Socialite\Facades\Socialite;
-// use Illuminate\Support\Facades\Mail;
-// use App\Providers\RouteServiceProvider;
-// use App\Http\Requests\Auth\LoginRequest;
+// use Laravel\Socialite\Facades\Socialite;
+
 class AuthenticatedSessionController extends Controller
 {
     /**

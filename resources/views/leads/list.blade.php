@@ -372,7 +372,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         </th>
 
 
-                                        <th data-resizable-columns-id="name">{{ __('Admission Name') }}</th>
+                                        <th data-resizable-columns-id="name">{{ __('Name') }}</th>
                                         {{-- <th>{{ __('Subject') }}</th> --}}
 
                                         <th data-resizable-columns-id="email_address" class="ps-3">

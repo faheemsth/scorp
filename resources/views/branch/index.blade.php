@@ -167,11 +167,11 @@
                                 <tr>
                                     <th>{{ __('Branch') }}</th>
                                     <th>{{ __('Region') }}</th>
-                                    <th>{{ __('Branch Manager') }}</th>
+                                    <th>{{ __('Brand Manager') }}</th>
                                     <th>{{ __('Phone') }}</th>
                                     <th>{{ __('Email') }}</th>
                                     <th>{{ __('Google Link') }}</th>
-                                    <th>{{ __('Social Media') }}</th>
+                                    <th>{{ __('Social Media Link') }}</th>
                                 </tr>
                             </thead>
                             <tbody class="font-style">
@@ -186,9 +186,9 @@
                                         <td>{{ !empty($regions[$branch->region_id]) ? $regions[$branch->region_id] : '' }}</td>
                                         <td>{{ !empty($branch->branch_manager_id) ? $users[$branch->branch_manager_id] : '' }}</td>
                                         <td>{{ $branch->phone }}</td>
-                                        <td>{{ $branch->email }}</td>
-                                        <td>{{ $branch->google_link }}</td>
-                                        <td>{{ $branch->social_media_link }}</td>
+                                        <td><a href="mailto:{{ $branch->email }}">{{ $branch->email }}</a></td>
+                                        <td><a href="{{ $branch->google_link }}">{{ $branch->google_link }}</a></td>
+                                        <td><a href="{{ $branch->social_media_link }}">{{ $branch->social_media_link }}</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -71,7 +71,7 @@
     }
 </style>
 <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
-<div class="container-fluid px-1 mx-0">
+<div class=" px-1 mx-0">
     <div class="row">
         <div class="col-sm-12">
 

@@ -18,6 +18,7 @@ use App\Models\Order;
 use App\Models\Plan;
 use App\Models\UserToDo;
 use App\Models\CompanyPermission;
+use App\Models\Region;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -25,6 +26,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Session;
 use Spatie\Permission\Models\Role;
+use App\Models\Branch;
+
 
 
 class UserController extends Controller
@@ -53,17 +56,15 @@ class UserController extends Controller
                             ->orWhere('type', '=', 'team');
                     });
 
-                if (!empty($_GET['company'])) {
-                    $users->where('email', 'like', '%' . $_GET['company'] . '%');
-                }
+                    if (isset($_GET['Brand']) && !empty($_GET['Brand'])) {
+                        $brandId = intval($_GET['Brand']); // Assuming it's an integer, adjust accordingly
+                        $users->where('id', $brandId);
+                        }
 
-                if (!empty($_GET['name'])) {
-                    $users->where('name', 'like', '%' . $_GET['name'] . '%');
-                }
-
-                if (!empty($_GET['phone'])) {
-                    $users->where('phone', 'like', '%' . $_GET['phone'] . '%');
-                }
+                        if (isset($_GET['Director']) && !empty($_GET['Director'])) {
+                        $directorId = intval($_GET['Director']); // Assuming it's an integer, adjust accordingly
+                        $users->where('project_director_id', $directorId);
+                        }
 
                 $users = $users->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             } else {
@@ -74,7 +75,9 @@ class UserController extends Controller
 
             $projectDirectors = allUsers();
             // return view('user.index-Old')->with('users', $users);
-            return view('user.index', compact('total_records', 'projectDirectors'))->with('users', $users);
+            $Brands = User::where('type','company')->pluck('name', 'id')->toArray();
+            $ProjectDirector = User::where('type', 'Project Director')->pluck('name', 'id')->toArray();
+            return view('user.index', compact('total_records', 'projectDirectors','Brands','ProjectDirector'))->with('users', $users);
         } else {
             return redirect()->back();
         }
@@ -127,7 +130,7 @@ class UserController extends Controller
                 return redirect()->back()->with('error', $messages->first());
             }
 
-           
+
             if (\Auth::user()->type == 'super admin') {
                 $psw = '1234';
 
@@ -222,7 +225,7 @@ class UserController extends Controller
 
     public function edit($id)
     {
-       
+
         if (\Auth::user()->can('edit user')) {
             $user              = User::findOrFail($id);
             $projectDirectors = User::where('type', 'Project Director')->pluck('name', 'id')->toArray();
@@ -254,7 +257,7 @@ class UserController extends Controller
 
             if (\Auth::user()->type == 'super admin') {
                 $user = User::findOrFail($id);
-                
+
                 //                $role = Role::findById($request->role);
                 $role = Role::findByName('company');
                 $input = $request->all();
@@ -276,7 +279,7 @@ class UserController extends Controller
                 );
             } else {
                 $user = User::findOrFail($id);
-               
+
                 $role          = Role::findById($request->role);
                 $input         = $request->all();
                 $input['type'] = $role->name;
@@ -312,27 +315,29 @@ class UserController extends Controller
         if (\Auth::user()->can('delete user')) {
             $user = User::find($id);
             if ($user) {
-                if (\Auth::user()->type == 'super admin') {
-                    if ($user->delete_status == 0) {
-                        $user->delete_status = 1;
-                    } else {
-                        $user->delete_status = 0;
-                    }
-                    $user->save();
-                }
-                if (\Auth::user()->type == 'company') {
-                    $employee = Employee::where(['user_id' => $user->id])->delete();
-                    if ($employee) {
-                        $delete_user = User::where(['id' => $user->id])->delete();
-                        if ($delete_user) {
-                            return redirect()->route('users.index')->with('success', __('User successfully deleted .'));
-                        } else {
-                            return redirect()->back()->with('error', __('Something is wrong.'));
-                        }
-                    } else {
-                        return redirect()->back()->with('error', __('Something is wrong.'));
-                    }
-                }
+                $user->delete();
+
+                // if (\Auth::user()->type == 'super admin') {
+                //     if ($user->delete_status == 0) {
+                //         $user->delete_status = 1;
+                //     } else {
+                //         $user->delete_status = 0;
+                //     }
+                //     $user->save();
+                // }
+                // if (\Auth::user()->type == 'company') {
+                //     $employee = Employee::where(['user_id' => $user->id])->delete();
+                //     if ($employee) {
+                //         $delete_user = User::where(['id' => $user->id])->delete();
+                //         if ($delete_user) {
+                //             return redirect()->route('users.index')->with('success', __('User successfully deleted .'));
+                //         } else {
+                //             return redirect()->back()->with('error', __('Something is wrong.'));
+                //         }
+                //     } else {
+                //         return redirect()->back()->with('error', __('Something is wrong.'));
+                //     }
+                // }
 
                 return redirect()->route('users.index')->with('success', __('User successfully deleted .'));
             } else {
@@ -620,13 +625,25 @@ class UserController extends Controller
             if (\Auth::user()->type == 'super admin') {
                 $usersQuery = User::whereNotIn('type', $excludedTypes);
 
-                if (!empty($_GET['company'])) {
-                    $usersQuery->where('email', 'like', '%' . $_GET['company'] . '%');
+                if (!empty($_GET['brand'])) {
+                    $usersQuery->where('brand_id', $_GET['brand']);
+                }
+                if (!empty($_GET['Region'])) {
+                    $usersQuery->where('region_id', $_GET['Region']);
                 }
 
-                if (!empty($_GET['name'])) {
-                    $usersQuery->where('name', 'like', '%' . $_GET['name'] . '%');
+                if (!empty($_GET['Branch'])) {
+                    $usersQuery->where('branch_id', $_GET['Branch']);
                 }
+
+                if (!empty($_GET['Name'])) {
+                    $usersQuery->where('name', 'like', '%' . $_GET['Name'] . '%');
+                }
+
+                if (!empty($_GET['Designation'])) {
+                    $usersQuery->where('type', 'like', '%' . $_GET['Designation'] . '%');
+                }
+
 
                 if (!empty($_GET['phone'])) {
                     $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
@@ -637,9 +654,12 @@ class UserController extends Controller
                 $users = User::where('created_by', '=', $user->creatorId())->whereNotIn('type', $excludedTypes)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }
             $brands = User::whereNotIn('type', $excludedTypes)->get();
-
+            $brandss = User::where('type', 'company')->pluck('name', 'id')->toArray();
+            $Regions = Region::pluck('name', 'id')->toArray();
+            $Branchs = Branch::pluck('name', 'id')->toArray();
+            $Designations = Role::where('name', '!=', 'super admin')->pluck('name', 'id')->toArray();
             $total_records = $users->total();
-            return view('user.employee', compact('total_records', 'users', 'brands'));
+            return view('user.employee', compact('total_records', 'users', 'brands','Regions','brandss','Branchs','Designations'));
         } else {
             return redirect()->back();
         }
@@ -654,19 +674,22 @@ class UserController extends Controller
 
         if (\Auth::user()->type == 'super admin') {
             $branches = \App\Models\Branch::get()->pluck('name', 'id');
-            $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+
+            $companies = FiltersBrands();
             $companies = [0 => 'Select Brand'] + $companies;
+
+
 
         } else {
             $branches = \App\Models\Branch::get()->pluck('name', 'id');
             $branches = [0 => 'Select Branches'] + $branches->toArray();
-            $permittedCompanies = CompanyPermission::where('user_id', \Auth::user()->id)->where('active', 'true')->pluck('permitted_company_id')->toArray();
-            $companies = User::whereIn('id', $permittedCompanies)
-               // ->orWhere('id', \Auth::user()->brand_id)
-                ->get()
-                ->pluck('name', 'id')
-                ->toArray();
+
+            $companies = FiltersBrands();
             $companies = [0 => 'Select Brand'] + $companies;
+
+            $regions = Region::pluck('name', 'id')->toArray();
+
+
 
         }
 
@@ -674,13 +697,16 @@ class UserController extends Controller
 
         $excludedTypes = ['super admin', 'company', 'team', 'client'];
         $roles = Role::whereNotIn('name', $excludedTypes)->get()->unique('name')->pluck('name', 'name');
+        $Region=Region::get()->pluck('name', 'id')->toArray();
 
-
-        if (\Auth::user()->can('create user')) {
+        if (\Auth::user()->can('create employee')) {
             $autoGeneratedPassword = Str::random(10);
-            return view('user.employeeCreate', compact('roles', 'customFields', 'branches', 'autoGeneratedPassword', 'companies'));
+            return view('user.employeeCreate', compact('Region','roles', 'customFields', 'branches', 'autoGeneratedPassword', 'companies'));
         } else {
-            return redirect()->back();
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Permission Denied'
+               ]);
         }
     }
 
@@ -712,6 +738,7 @@ class UserController extends Controller
                 $user['password']   = Hash::make($request->password);
                 $user['type']       =  $request->role;
                 $user['branch_id'] = $request->branch_id;
+                $user['region_id'] = $request->region_id;
                 $user['brand_id'] = isset($request->companies) ? $request->companies : \Auth::user()->brand_id;
                 $user['default_pipeline'] = 1;
                 $user['plan'] = 1;
@@ -845,9 +872,10 @@ class UserController extends Controller
 
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
             $roles = Role::whereNotIn('name', $excludedTypes)->get()->unique('name')->pluck('name', 'id');
-            // $autoGeneratedPassword = Str::random(10);
+            $Region=Region::get()->pluck('name', 'id')->toArray();
+        // $autoGeneratedPassword = Str::random(10);
 
-            return view('user.employeeEdit', compact('user', 'roles', 'customFields', 'branches', 'companies'));
+            return view('user.employeeEdit', compact('user', 'roles', 'customFields', 'branches', 'companies','Region'));
         } else {
             return redirect()->back();
         }
@@ -871,7 +899,7 @@ class UserController extends Controller
                     return redirect()->back()->with('error', $messages->first());
                 }
 
-                $role = Role::findById($request->role);
+                $role = Role::findByName($request->role);
                 //$role = Role::findByName('company');
                 $input = $request->all();
                 $input['type'] = $role->name;
@@ -907,6 +935,7 @@ class UserController extends Controller
                 $user->date_of_birth =  $request->dob;
                 $user->phone = $request->phone;
                 //$user->branch_id = $request->branch_id;
+                $user['region_id'] = $request->region_id;
                 $user->type = $role->name;
                 $user->update();
                 Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId());
@@ -928,7 +957,8 @@ class UserController extends Controller
     public function employeeShow($id)
     {
         $employee = User::findOrFail($id);
-        $html = view('user.employeeDetail', compact('employee'))->render();
+        $Region=Region::get()->pluck('name', 'id')->toArray();
+        $html = view('user.employeeDetail', compact('employee','Region'))->render();
         return json_encode([
             'status' => 'success',
             'html' => $html

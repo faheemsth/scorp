@@ -83,6 +83,8 @@ class UniversityController extends Controller
                 ]);
             }
 
+            $data['users'] = allUsers();
+
             return view('university.index', $data);
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
@@ -147,7 +149,8 @@ class UniversityController extends Controller
                     'country' => 'required|max:20',
                     'city' => 'required|max:20',
                     'phone' => 'required|max:20',
-                    'note' => 'required'
+                    'note' => 'required',
+                    'category_id' => 'required'
                 ]
             );
 

@@ -687,7 +687,7 @@
                                                                 <td>{{ __('Application Key') }}</td>
                                                                 <td>{{ __('University') }}</td>
                                                                 <td>{{ __('Intake') }}</td>
-                                                                <td>{{ __('Status') }}</td>
+                                                                <td>{{ __('Applications Stage') }}</td>
                                                                 <td>{{ __('Action') }}</td>
                                                             </tr>
                                                         </thead>

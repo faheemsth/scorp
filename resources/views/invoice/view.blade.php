@@ -445,35 +445,28 @@
                                                 $totalTaxPrice=0;
                                                 $totalDiscount=0;
                                                 $taxesData=[];
+                                                $totalTax= 0 ;
+
                                             @endphp
                                             @foreach($iteams as $key =>$iteam)
-                                                @if(!empty($iteam->tax))
-                                                    @php
-                                                        $taxes=App\Models\Utility::tax($iteam->tax);
-                                                        $totalQuantity+=$iteam->quantity;
-                                                        $totalRate+=$iteam->price;
-                                                        $totalDiscount+=$iteam->discount;
-                                                        foreach($taxes as $taxe){
-                                                            $taxDataPrice=App\Models\Utility::taxRate($taxe->rate,$iteam->price,$iteam->quantity);
-                                                            if (array_key_exists($taxe->name,$taxesData))
-                                                            {
-                                                                $taxesData[$taxe->name] = $taxesData[$taxe->name]+$taxDataPrice;
-                                                            }
-                                                            else
-                                                            {
-                                                                $taxesData[$taxe->name] = $taxDataPrice;
-                                                            }
-                                                        }
-                                                    @endphp
-                                                @endif
+                          
+                                                @php
+                                                    
+                                                    $totalQuantity+=$iteam->quantity;
+                                                    $totalRate+=$iteam->price;
+                                                    $totalDiscount+=$iteam->discount;
+                                                    $totalTax+=$iteam->tax;
+
+                                                @endphp
+                                             
                                                 <tr>
                                                     <td>{{$key+1}}</td>
-                                                    <td>{{!empty($iteam->product())?$iteam->product()->name:''}}</td>
+                                                    <td>{{!empty($iteam->product_name)?$iteam->product_name:''}}</td>
                                                     <td>{{$iteam->quantity}}</td>
                                                     <td>{{\Auth::user()->priceFormat($iteam->price)}}</td>
                                                     <td>
-
-                                                        @if(!empty($iteam->tax))
+                                                        {{$iteam->tax}}
+                                                        {{-- @if(!empty($iteam->tax))
                                                             <table>
                                                                 @php $totalTaxRate = 0;@endphp
                                                                 @foreach($taxes as $tax)
@@ -489,7 +482,7 @@
                                                             </table>
                                                         @else
                                                             -
-                                                        @endif
+                                                        @endif --}}
                                                     </td>
                                                     <td>
                                                         {{\Auth::user()->priceFormat($iteam->discount)}}
@@ -523,8 +516,12 @@
                                                     <td class="text-end"><b>{{__('Discount')}}</b></td>
                                                     <td class="text-end">{{\Auth::user()->priceFormat($invoice->getTotalDiscount())}}</td>
                                                 </tr>
-
-                                            @if(!empty($taxesData))
+                                                <tr>
+                                                    <td colspan="6"></td>
+                                                        <td class="text-end"><b>Total Tax</b></td>
+                                                        <td class="text-end">{{\Auth::user()->priceFormat($totalTax)}}</td>
+                                                    </tr>
+                                            {{-- @if(!empty($taxesData))
                                                 @foreach($taxesData as $taxName => $taxPrice)
                                                     <tr>
                                                         <td colspan="6"></td>
@@ -532,7 +529,7 @@
                                                         <td class="text-end">{{ \Auth::user()->priceFormat($taxPrice) }}</td>
                                                     </tr>
                                                 @endforeach
-                                            @endif
+                                            @endif --}}
                                             <tr>
                                                 <td colspan="6"></td>
                                                 <td class="blue-text text-end"><b>{{__('Total')}}</b></td>
