@@ -68,8 +68,8 @@
                               });
                             });
                           </script>
-                        <div class="row mt-5">
-                            <div class="col-12">
+                        {{-- <div class="row mt-5"> --}}
+                            {{-- <div class="col-12"> --}}
                                 {{-- Filters --}}
                                 <div class="filter-data px-3" id="filterToggle"
                                     <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
@@ -143,7 +143,8 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="table-responsive">
+
+                                <div class="table-responsive mt-3">
                                     <table class="table">
                                         <thead>
                                             <tr>
@@ -165,7 +166,7 @@
                                                             {{ $user->name }}
                                                         </span>
                                                     </td>
-                                                    <td>{{ $user->website_link }}</td>
+                                                    <td><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
                                                     <td>{{ !empty($user->project_director_id) && isset($projectDirectors[$user->project_director_id]) ? $projectDirectors[$user->project_director_id] : '' }}</td>
                                                 </tr>
                                             @empty
@@ -183,8 +184,8 @@
                                         ])
                                     @endif
                                 </div>
-                            </div>
-                        </div>
+                            {{-- </div> --}}
+                        {{-- </div> --}}
                     </div>
                 </div>
             </div>

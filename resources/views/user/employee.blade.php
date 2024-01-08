@@ -36,7 +36,7 @@
                                 <div class="dropdown">
                                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        ALL Employees
+                                        
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                         <li><a class="dropdown-item" href="#">Delete</a></li>
@@ -216,7 +216,7 @@
                                                             {{ $employee->name }}
                                                         </span>
                                                     </td>
-                                                    <td>{{ $employee->email }}</td>
+                                                    <td><a href="mailto:{{ $employee->email }}">{{ $employee->email }}</a></td>
                                                     <td>{{ $employee->type }}</td>
                                                     <td>{{ $employee->phone }}</td>
                                                     <td>{{ $Region[$employee->region_id] ?? '' }}</td>
