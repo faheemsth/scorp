@@ -173,6 +173,24 @@
 
                                                             <tr>
                                                                 <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Email') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                     {{ $employee->email }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Phone') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                     {{ $employee->phone }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Designation') }}
                                                                 </td>
                                                                 <td style="padding-left: 10px; font-size: 14px;">

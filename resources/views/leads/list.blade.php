@@ -188,7 +188,10 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" aria-expanded="false">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                 </button>
-
+                                <a  href="{{ url('/leads') }}" data-bs-toggle="tooltip" title="{{ __('Leads View') }}" class="btn px-2 btn-dark d-flex align-items-center">
+                                    {{-- <i class="ti ti-plus" style="font-size:18px"></i> --}}
+                                    <i class="fa-solid fa-border-all" style="font-size:18px"></i>
+                                </a>
                                 @can('create lead')
                                 <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark">
                                     <i class="ti ti-plus" style="font-size:18px"></i>

@@ -1126,9 +1126,28 @@ class OrganizationController extends Controller
 
     public function getTaskUsers(Request $request)
     {
+<<<<<<< HEAD
+=======
+        $type = $request->type;
+        $branch_id = $request->branch_id;
+
+        // if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director') {
+
+        //     $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+        // } else if (\Auth::user()->type == 'super admin') {
+        //     $currentUserCompany = \App\Models\User::where('type', 'company')->first();
+        // } else {
+        //     $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
+        // }
+
+        // $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->where('active', 'true')->get();
+
+
+>>>>>>> e26608fa8c36307ab2d7ef97396457e7833a3637
         $html = '';
 
             $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+                ->where('branch_id', $branch_id)
                 ->pluck('name', 'id');
             $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
             foreach ($users as $key => $user) {
