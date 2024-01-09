@@ -184,7 +184,7 @@ class LeadController extends Controller
             $brand_ids = array_keys($companies);
 
             $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id');
-            $leads_query->whereIn('brand_id', $brand_ids);
+            $leads_query->whereIn('brand_id', $brand_ids)->where('is_converted',0);
 
             // Add the dynamic filters
             foreach ($filters as $column => $value) {

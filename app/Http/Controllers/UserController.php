@@ -674,12 +674,11 @@ class UserController extends Controller
         $user  = \Auth::user();
 
         if (\Auth::user()->type == 'super admin') {
-            $branches = \App\Models\Branch::get()->pluck('name', 'id');
-
+            $branches = Branch::get()->pluck('name', 'id');
             $companies = FiltersBrands();
             $companies = [0 => 'Select Brand'] + $companies;
         } else {
-            $branches = \App\Models\Branch::get()->pluck('name', 'id');
+            $branches = Branch::get()->pluck('name', 'id');
             $branches = [0 => 'Select Branches'] + $branches->toArray();
 
             $companies = FiltersBrands();

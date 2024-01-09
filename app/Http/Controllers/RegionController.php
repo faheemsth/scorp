@@ -11,32 +11,34 @@ class RegionController extends Controller
 {
     public function index()
     {
-        //$regions = Region::all();
-        
-        
-        
-        
-        
-        
-         if(\Auth::user()->type == 'super admin'){
-                 $regions = Region::get();
-            }else if(\Auth::user()->type == 'super admin'){
-                 $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->get();
-            }else{
-                 $companies = FiltersBrands();
-                 $brand_ids = array_keys($companies);
-                 $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->get();
-            }  
-            
-            
+
+        if(\Auth::user()->type == 'super admin'){
+            $regions = Region::get();
+       }else if(\Auth::user()->type == 'company'){
+            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->get();
+       }else{
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->get();
+       } 
+
+       $users = allUsers();
+
+       $data = [
+        'regions' => $regions,
+        'users' => $users,
+       ];
+
+
+
         if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-            $html = view('region.region_ajax_list', compact('regions'))->render();
+            $html = view('region.region_ajax_list', $data)->render();
             return json_encode([
                 'status' => 'success',
                 'html' => $html
             ]);
         } else {
-            return view('region.index', compact('regions'));
+            return view('region.index', $data);
         }
     }
 
@@ -115,6 +117,7 @@ class RegionController extends Controller
     {
 
         if (!empty($request->id)) {
+<<<<<<< HEAD
            // Region::find($request->id)->update($request->all());
             
             $region = Region::findOrFail($request->id);
@@ -126,6 +129,20 @@ class RegionController extends Controller
             $region->brands =implode(',',$request->brands);
             $region->update();
             
+=======
+            
+           // Region::find($request->id)->update($request->all());
+           $region = Region::findOrFail($request->id);
+           $region->name = $request->name;
+           $region->region_manager_id = $request->region_manager_id;
+           $region->location = $request->location;
+           $region->phone = $request->phone;
+           $region->email = $request->email;
+           $region->brands =implode(',',$request->brands);
+           $region->update();
+
+
+>>>>>>> 647c85d537a798e71c45f8e212271f8eebf426d3
         } else {
           
             

@@ -25,7 +25,7 @@ class BranchController extends Controller
             
             if(\Auth::user()->type == 'super admin'){
                  $branches = Branch::get();
-            }else if(\Auth::user()->type == 'super admin'){
+            }else if(\Auth::user()->type == 'company'){
                  $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->get();
             }else{
                  $companies = FiltersBrands();

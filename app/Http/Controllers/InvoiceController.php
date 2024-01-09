@@ -255,16 +255,16 @@ class InvoiceController extends Controller
 
     public function update(Request $request, Invoice $invoice)
     {
-
+        // dd();
         if (\Auth::user()->can('edit invoice')) {
             if ($invoice->created_by == \Auth::user()->creatorId()) {
                 $validator = \Validator::make(
                     $request->all(),
                     [
-                        'customer_id' => 'required',
+                        // 'customer_id' => 'required',
                         'issue_date' => 'required',
                         'due_date' => 'required',
-                        'category_id' => 'required',
+                        // 'category_id' => 'required',
                         'items' => 'required',
                     ]
                 );
@@ -273,7 +273,10 @@ class InvoiceController extends Controller
 
                     return redirect()->route('invoice.index')->with('error', $messages->first());
                 }
-                $invoice->customer_id    = $request->customer_id;
+                if($request->customer_id != null){
+                    $invoice->customer_id    = $request->customer_id ? $request->customer_id : '';
+                }
+                $invoice->user_name    = $request->user_name  ?? '';
                 $invoice->issue_date     = $request->issue_date;
                 $invoice->due_date       = $request->due_date;
                 $invoice->ref_number     = $request->ref_number;
