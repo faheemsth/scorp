@@ -138,11 +138,11 @@
         $("#roles").on("change", function(){
             var role = $(this).text();
             if(role == 'Project Director' || role == 'Project Manager'){
-                $("#brand_div").css('display', 'none');
+                //$("#brand_div").css('display', 'none');
                 $("#region_div").css('display', 'none');
                 $("#branch_div").css('display', 'none');
             }else{
-                $("#brand_div").css('display', 'block');
+               // $("#brand_div").css('display', 'block');
                 $("#region_div").css('display', 'block');
                 $("#branch_div").css('display', 'block');
             }

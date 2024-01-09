@@ -182,7 +182,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' ? 'd-none' : ''}}">
+                                                            <tr>
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Brand') }}
                                                                 </td>

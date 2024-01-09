@@ -951,8 +951,8 @@
                                                                                             <div class="w-100">
                                                                                                 <div
                                                                                                     class="d-flex align-items-center justify-content-between w-100">
-                                                                                                    <div class="mb-3 mb-sm-0 w-50">
-                                                                                                        <p class="mb-0" style="color: blue;">
+                                                                                                    <div class="mb-3 mb-sm-0 w-50 pb-3">
+                                                                                                        <p class="mb-0">
                                                                                                             {{ $note->description }}
                                                                                                         </p>
                                                                                                         <span
@@ -961,14 +961,6 @@
                                                                                                         <span
                                                                                                             class="text-muted text-sm"><i class="step__icon fa fa-user me-2" aria-hidden="true"></i>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
                                                                                                         </span>
-                                                                                                        <div class="row">
-                                                                                                            <div class="col-4">
-                                                                                                                <p>Status</p>
-                                                                                                            </div>
-                                                                                                            <div class="col-6">
-                                                                                                                <p>:Not Started</p>
-                                                                                                            </div>
-                                                                                                        </div>
                                                                                                     </div>
 
                                                                                                     <style>

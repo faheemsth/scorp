@@ -176,7 +176,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                         <tr>
                                             <th>S.No</th>
                                             <th>Name</th>
-                                            <th>Company</th>
+                                            <th>Email</th>
                                             <th>Designation</th>
                                             <th>Phone</th>
                                             <th>Region</th>
