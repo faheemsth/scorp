@@ -12,21 +12,36 @@ class RegionController extends Controller
     public function index()
     {
 
+        $num_results_on_page = 25;
+
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = ($page - 1) * $num_results_on_page;
+        } else {
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = 0;
+        }
+
         if(\Auth::user()->type == 'super admin'){
-            $regions = Region::get();
+            $regions = Region::skip($start)->take($num_results_on_page)->paginate($num_results_on_page);;;
+            $total_records=Region::count();
        }else if(\Auth::user()->type == 'company'){
-            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->get();
+        $total_records=Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->count();
+            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);;
        }else{
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->get();
-       } 
+        $total_records=Region::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->count();
+            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);;
+       }
 
        $users = allUsers();
 
        $data = [
         'regions' => $regions,
         'users' => $users,
+        'total_records' => $total_records
        ];
 
 
@@ -47,7 +62,7 @@ class RegionController extends Controller
        // $regions = Region::all();
 
         $brands = FiltersBrands();
-       
+
         $regionmanager=User::where('type','branch manager')->get();
 
         return view('region.create', compact('regionmanager','brands'));
@@ -55,7 +70,7 @@ class RegionController extends Controller
 
     public function getRegionBrands(Request $request){
         $id = $_GET['id'];
-        $type = $request->type; 
+        $type = $request->type;
 
         if($type == 'brand'){
             $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
@@ -117,20 +132,7 @@ class RegionController extends Controller
     {
 
         if (!empty($request->id)) {
-<<<<<<< HEAD
-           // Region::find($request->id)->update($request->all());
-            
-            $region = Region::findOrFail($request->id);
-            $region->name = $request->name;
-            $region->region_manager_id = $request->region_manager_id;
-            $region->location = $request->location;
-            $region->phone = $request->phone;
-            $region->email = $request->email;
-            $region->brands =implode(',',$request->brands);
-            $region->update();
-            
-=======
-            
+
            // Region::find($request->id)->update($request->all());
            $region = Region::findOrFail($request->id);
            $region->name = $request->name;
@@ -142,10 +144,9 @@ class RegionController extends Controller
            $region->update();
 
 
->>>>>>> 647c85d537a798e71c45f8e212271f8eebf426d3
         } else {
-          
-            
+
+
             $brands = null;
             if($request->brands != null && sizeof($request->brands) > 0){
                 $brands = implode(',',$request->brands);

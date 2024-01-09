@@ -79,11 +79,11 @@
                                                 <label for="">Brand</label>
                                                 <select name="Brand" class="form form-control select2" id="">
                                                     <option value="">Select Option</option>
-                                                    @if (!empty($Brands))
-                                                        @foreach ($Brands as $key => $Brand)
-                                                           <option value="{{ $key }}" {{ !empty($_GET) && $_GET['Brand'] == $key ? "selected" : "" }}>{{ $Brand }}</option>
-                                                        @endforeach
-                                                    @endif
+                                                @if (!empty($Brands))
+                                                    @foreach ($Brands as $key => $Brand)
+                                                        <option value="{{ $key }}" {{ !empty($_GET['Brand']) && $_GET['Brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
+                                                    @endforeach
+                                                @endif
 
                                                 </select>
                                             </div>
@@ -94,7 +94,7 @@
                                                     <option value="">Select Option</option>
                                                     @if (!empty($ProjectDirector))
                                                         @foreach ($ProjectDirector as $key => $ProjectDirect)
-                                                           <option value="{{ $key }}" {{ !empty($_GET) && $_GET['Director'] == $key ? "selected" : "" }}>{{ $ProjectDirect }}</option>
+                                                           <option value="{{ $key }}" {{ !empty($_GET['Director']) && $_GET['Director'] == $key ? "selected" : "" }}>{{ $ProjectDirect }}</option>
                                                         @endforeach
                                                     @endif
 
@@ -180,7 +180,7 @@
                                     @if ($total_records > 0)
                                         @include('layouts.pagination', [
                                             'total_pages' => $total_records,
-                                            'num_results_on_page' => 50,
+                                            'num_results_on_page' => 25,
                                         ])
                                     @endif
                                 </div>

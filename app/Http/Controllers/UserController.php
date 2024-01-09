@@ -37,7 +37,7 @@ class UserController extends Controller
     {
         $user = \Auth::user();
 
-        $num_results_on_page = 10;
+        $num_results_on_page = 25;
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
@@ -609,7 +609,7 @@ class UserController extends Controller
     {
 
         $user = \Auth::user();
-        $num_results_on_page = 50;
+        $num_results_on_page = 25;
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
