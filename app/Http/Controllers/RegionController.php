@@ -27,14 +27,23 @@ class RegionController extends Controller
             $regions = Region::skip($start)->take($num_results_on_page)->paginate($num_results_on_page);;;
             $total_records=Region::count();
        }else if(\Auth::user()->type == 'company'){
-        $total_records=Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->count();
+             $total_records=Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->count();
             $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);;
        }else{
+
+       
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-        $total_records=Region::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->count();
-            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);;
-       }
+          
+            $region_query = Region::query();
+
+           foreach ($brand_ids as $brandId) {
+               $region_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+           }
+           $total_records = $region_query->count();
+
+           $regions = $region_query->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+        }
 
        $users = allUsers();
 

@@ -179,7 +179,7 @@
                                                                     {{ __('Brands') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ optional(App\Models\User::find(str_replace(['["', '"]'], '', $employee->brands)))->name }}
+                                                                    {{ $users[$employee->brands] ?? ''  }}
                                                                 </td>
                                                             </tr>
 

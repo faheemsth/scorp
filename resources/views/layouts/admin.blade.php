@@ -470,12 +470,13 @@ $lang=Utility::getValByName('default_language');
 
     <!-- Page Wrapper -->
     <div id="wrapper" style="position: relative;">
-        @include('partials.admin.menu')
+        @include('partials.admin.menucan')
         <!-- [ navigation menu ] end -->
        @include('partials.admin.filter')
        <div style="    position: fixed;
        left: 17px;
        bottom: 25px;
+       z-index: 2025;
        width: 50px;
        height: 50px;
        background-color:#B3CDE1;

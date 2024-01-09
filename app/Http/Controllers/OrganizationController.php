@@ -733,11 +733,18 @@ class OrganizationController extends Controller
             $users = User::get()->pluck('name', 'id')->toArray();
 
             if(\Auth::user()->type == 'super admin'){
-           $branches = Branch::pluck('name', 'id')->toArray();
+                $branches = Branch::pluck('name', 'id')->toArray();
             }else{
-                      $companies = FiltersBrands();
-            $brand_ids = array_keys($companies);
-           $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', $brand_ids)->pluck('name', 'id')->toArray();
+                    $companies = FiltersBrands();
+                    $brand_ids = array_keys($companies);
+                
+                    $branch_query = Branch::query();
+
+                    foreach ($brand_ids as $brandId) {
+                        $branch_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+                    }
+                    $branches = $branch_query->pluck('name', 'id')->toArray();
+                
             }
 
 
@@ -751,7 +758,8 @@ class OrganizationController extends Controller
             // $test = \App\Models\CompanyPermission::where('company_id', 3179)->where('active', 'true')->pluck('permitted_company_id');
             // $companies = User::where('type', 'company')->whereIn('id', $test)->orwhere('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             // dd($companies);
-                $companies = FiltersBrands();
+                
+                $companies = ['0' => 'Select Brand'] + FiltersBrands();
                 // if(\Auth::user()->type == 'super admin'){
                 //     $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
                 // }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
@@ -835,7 +843,7 @@ class OrganizationController extends Controller
             $dealTask->brand_id = $request->brand_id;
             $dealTask->created_by = \Auth::user()->id;
 
-            $dealTask->assigned_to = $request->assigned_to;
+            $dealTask->assigned_to = $request->lead_assgigned_user;
             $dealTask->assigned_type = $request->assign_type;
 
             $dealTask->due_date = isset($request->due_date) ? $request->due_date : '';
@@ -1120,9 +1128,25 @@ class OrganizationController extends Controller
 
     public function getTaskUsers(Request $request)
     {
+        $type = $request->type;
+        $branch_id = $request->branch_id;
+
+        // if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director') {
+
+        //     $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+        // } else if (\Auth::user()->type == 'super admin') {
+        //     $currentUserCompany = \App\Models\User::where('type', 'company')->first();
+        // } else {
+        //     $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
+        // }
+
+        // $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->where('active', 'true')->get();
+
+
         $html = '';
 
             $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+                ->where('branch_id', $branch_id)
                 ->pluck('name', 'id');
             $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
             foreach ($users as $key => $user) {

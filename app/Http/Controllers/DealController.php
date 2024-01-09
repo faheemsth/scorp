@@ -2707,10 +2707,9 @@ class DealController extends Controller
             if(!isset($_GET['status'])){
                 $tasks->where('status', 0);
             }
+
             $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
             $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
-
-
 
 
 

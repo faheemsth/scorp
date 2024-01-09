@@ -277,11 +277,11 @@
                             </span>
                             <input type="search" class="form-control border-0 bg-transparent ps-0" id="searchInput" placeholder="Search this list..." aria-label="Search" aria-describedby="basic-addon1">
                         </div>
-                        <div>
-                            <button class="btn btn-dark px-2 pb-2 pt-2">
+
+                            <button class="btn btn-dark p-2">
                                 <i class="ti ti-refresh"style="font-size: 18px"></i></button>
-                        </div>
-                        <div class="dropdown">
+
+                        <div class="dropdown d-none">
                             <button class="btn btn-dark dropdown-toggle px-2 pb-1 pt-2 d-none" type="button"
                                 id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="ti ti-settings" style="font-size:18px"></i>
@@ -311,10 +311,10 @@
                         {{-- {!! Form::open(['route' => 'deals.change.pipeline', 'id' => 'change-pipeline', 'class' => 'btn btn-sm']) !!}
                             {!! Form::select('default_pipeline_id', $pipelines, $pipeline->id, ['class' => 'form-control select px-2 py-1', 'id' => 'default_pipeline_id', 'style' => 'width: 200px']) !!}
                         {!! Form::close() !!} --}}
-                        <button href="{{ route('leads.list') }}" data-size="lg" data-bs-toggle="tooltip"
-                            title="{{ __('List View') }}" class=" btn btn-dark px-2 pb-2 pt-2">
+                        <a href="{{ url('leads/list') }}"  data-bs-toggle="tooltip"
+                            title="{{ __('List View') }}" class=" btn btn-dark px-2 pb-2 pt-2 d-flex align-items-center">
                             <i class="ti ti-list" style="font-size:18px"></i>
-                        </button>
+                        </a>
                         <button href="#" data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true"
                             data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}"
                             class="btn btn-dark px-2 pb-2 pt-2">
@@ -373,7 +373,7 @@
                         $json[] = 'task-list-' . $lead_stage->id;
                     }
                 @endphp
-                <div class="row kanban-wrapper horizontal-scroll-cards" data-containers='{!! json_encode($json) !!}'
+                <div class="row kanban-wrapper horizontal-scroll-cards " style="flex-wrap: nowrap" data-containers='{!! json_encode($json) !!}'
                     data-plugin="dragula">
                     @foreach ($lead_stages as $lead_stage)
                         @php($leads = $lead_stage->lead())

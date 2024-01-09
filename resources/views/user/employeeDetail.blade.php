@@ -173,6 +173,24 @@
 
                                                             <tr>
                                                                 <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Email') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                     {{ $employee->email }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Phone') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                     {{ $employee->phone }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Designation') }}
                                                                 </td>
                                                                 <td style="padding-left: 10px; font-size: 14px;">
@@ -200,7 +218,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' ? 'd-none' : ''}}">
+                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' || $employee->type == 'Region Manager'? 'd-none' : ''}}">
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Branch') }}
                                                                 </td>

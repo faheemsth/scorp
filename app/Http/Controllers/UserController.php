@@ -68,8 +68,25 @@ class UserController extends Controller
 
                 $users = $users->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             } else {
-                $users = User::where('created_by', '=', $user->creatorId())->where('type', '!=', 'client')
-                    ->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+
+
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+
+                $users = User::query();
+                if (isset($_GET['Brand']) && !empty($_GET['Brand'])) {
+                      $brandId = intval($_GET['Brand']); // Assuming it's an integer, adjust accordingly
+                      $users->where('id', $brandId);
+                  }
+  
+                  if (isset($_GET['Director']) && !empty($_GET['Director'])) {
+                      $directorId = intval($_GET['Director']); // Assuming it's an integer, adjust accordingly
+                      $users->where('project_director_id', $directorId);
+                  }
+
+
+                $users = $users->whereIn('id', $brand_ids)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);;
+
             }
             $total_records = $users->total();
 
@@ -873,9 +890,17 @@ class UserController extends Controller
         } else {
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', $brand_ids)->pluck('name', 'id');
-            $branches = [0 => 'Select Branches'] + $branches->toArray();
             $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+        
+            $branch_query = Branch::query();
+
+            foreach ($brand_ids as $brandId) {
+                $branch_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+            }
+            $branches = $branch_query->pluck('name', 'id');
+            $branches = [0 => 'Select Branches'] + $branches->toArray();
+           
         }
 
 
