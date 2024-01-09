@@ -48,8 +48,8 @@
                         <div class="form-group row ">
                             <label for="branches" class="col-sm-3 col-form-label">Brands</label>
                             <div class="form-group col-md-6" id="brand_div">
-                                {!! Form::select('companies', $companies, null, [
-                                    'class' => 'form-control select2',
+                                {!! Form::select('brand_id', $companies, null, [
+                                    'class' => 'form-control select2 brand_id',
                                     'id' => 'brands'
                                 ]) !!}
                             </div>
@@ -473,21 +473,35 @@
             }
         });
     });
+</script>
 
-    $(document).on("change","#branch_id" ,function(){
+<script>
+
+    $(".brand_id").on("change", function(){
         var id = $(this).val();
+
         $.ajax({
             type: 'GET',
-            url: '{{ route('organization.assign_to',3) }}',
-            success: function(data) {
-                if (data.status == 'success') {
-                    $("#assign_to_div").html(data.html);
+            url: '{{ route('lead_companyemployees') }}',
+            data: {
+                id: id  // Add a key for the id parameter
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $("#assign_to_div").html(data.employees);
                     select2();
+                    $("#branch_div").html(data.branches);
+                    select2(); // Assuming this is a function to initialize or update a select2 dropdown
+                } else {
+                    console.error('Server returned an error:', data.message);
                 }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
             }
         });
-
-    })
-
+    });
 
 </script>

@@ -803,7 +803,7 @@ class OrganizationController extends Controller
                 [
                     'task_name' => 'required',
                     // 'branch_id' => 'required',
-                    'assigned_to' => 'required',
+                    // 'assigned_to' => 'required',
                     'assign_type' => 'required',
                     'due_date' => 'required',
                     'start_date' => 'required',
@@ -829,6 +829,8 @@ class OrganizationController extends Controller
 
             $dealTask->name = $request->task_name;
             $dealTask->branch_id = $request->branch_id;
+            $dealTask->region_id = $request->region_id;
+
             $dealTask->brand_id = $request->brand_id;
             $dealTask->created_by = \Auth::user()->id;
 
