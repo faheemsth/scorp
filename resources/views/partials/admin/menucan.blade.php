@@ -76,7 +76,9 @@
                             <li class="{{ Request::route()->getName() == 'crm.dashboard' ? ' active' : '' }}">
                                 <a class="collapse-item" href="{{ route('crm.dashboard') }}"
                                     style="color:white; font-size: 13px;">
-                                    <i class="fa-solid fa-chart-line me-1" style="color: #ffffff;"></i>
+                                    <i class="fa-solid fa-chart-line me-1" id="icon1" style="color: #ffffff;font-size: 15px;"></i>
+                                    <i class="fa-solid fa-chart-line me-1" id="icon2" style="color: #2e82d0;font-size: 15px;"></i>
+
                                     CRM Dashboard</a>
                             </li>
                         @endcan
@@ -85,8 +87,8 @@
                             <li class=" {{ \Request::route()->getName() == 'hrm.dashboard' ? ' active' : '' }}">
                                 <a class="collapse-item" style="color: white; font-size: 13px;"
                                     href="{{ route('hrm.dashboard') }}">
-                                    <img src="{{ asset('assets/cs-theme/icons/Layer_1.png') }}" width="15px"
-                                        height="15px" style="margin-top:-10px" alt="" srcset="">
+                                    <i class="fa-solid fa-gauge-high me-1" id="icon1" style="color: #ffffff;font-size: 15px;"></i>
+                                    <i class="fa-solid fa-gauge-high me-1" id="icon2" style="color: #2e82d0;font-size: 15px;"></i>
 
                                     {{ __('HRM Dashboard') }}</a>
                             </li>
@@ -178,20 +180,204 @@
             </li>
         @endcan
         {{-- //// --}}
+               <!--------------------- Start CRM ----------------------------------->
+        @can('show crm dashboard')
+        @if (Gate::check('manage lead') ||
+                Gate::check('manage task') ||
+                Gate::check('manage deal') ||
+                Gate::check('manage application') ||
+                Gate::check('manage client') ||
+                Gate::check('manage courses') ||
+                Gate::check('manage university') ||
+                Gate::check('manage organization') ||
+                Gate::check('manage form builder') ||
+                Gate::check('manage contract'))
+            <li class="nav-item">
+                <a class="nav-link {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' ? '' : 'collapsed' }} "
+                    href="#" data-toggle="collapse" data-target="#collapsefour" aria-expanded="true"
+                    aria-controls="collapsefour">
+                    <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px"
+                        style="margin-top:-10px" alt="" srcset="">
+                    <span>{{ __('CRM System') }}</span>
+                </a>
+                <div id="collapsefour"
+                    class="collapse {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' ? 'show' : '' }}"
+                    aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                    <div class="  collapse-inner rounded">
+                        <ul
+                            class="
+                              {{ Request::segment(1) == 'stages' ||
+                              Request::segment(1) == 'labels' ||
+                              Request::segment(1) == 'sources' ||
+                              Request::segment(1) == 'university' ||
+                              Request::segment(1) == 'lead_stages' ||
+                              Request::segment(1) == 'leads' ||
+                              Request::segment(1) == 'form_builder' ||
+                              Request::segment(1) == 'course' ||
+                              Request::segment(1) == 'form_response' ||
+                              Request::segment(1) == 'deals'
+                                  ? 'show'
+                                  : '' }}">
 
+                            @can('manage task')
+                                <li
+                                    class="emp nav-item {{ Request::route()->getName() == 'deals.get.user.tasks' ? ' active' : '' }}">
+                                    <a class="collapse-item" style="color: white; font-size: 13px;"
+                                        href="{{ route('deals.get.user.tasks') }}">
+                                        <img src="{{ asset('assets/cs-theme/icons/to-do-list-13177 1.png') }}"
+                                            id="icon1" width="15px" height="15px" style="margin-top:-10px"
+                                            alt="" srcset="">
+                                        <img src="{{ asset('assets/cs-theme/icons/taskblue.png') }}" id="icon2"
+                                            width="15px" height="15px" style="margin-top:-8px" alt=""
+                                            srcset="">
+
+                                        {{ __('Tasks') }}</a>
+                                </li>
+                            @endcan
+                            @can('manage lead')
+                                <li
+                                    class="emp nav-item {{ Request::route()->getName() == 'leads.list' || Request::route()->getName() == 'leads.index' || Request::route()->getName() == 'leads.show' ? ' active' : '' }}">
+                                    <a class="collapse-item" style="color: white; font-size: 13px;"
+                                        href="{{ route('leads.list') }}">
+                                        <img src="{{ asset('assets/cs-theme/icons/Layer_1.png') }}" id="icon1"
+                                            width="15px" height="15px" style="margin-top:-10px" alt=""
+                                            srcset="">
+                                        <img src="{{ asset('assets/cs-theme/icons/leadsblue.png') }}" id="icon2"
+                                            width="15px" height="15px" style="margin-top:-8px" alt=""
+                                            srcset="">
+
+                                        {{ __('Leads') }}</a>
+                                </li>
+                            @endcan
+                            @can('manage deal')
+                                <li
+                                    class="emp nav-item {{ Request::route()->getName() == 'deals.list' || Request::route()->getName() == 'deals.index' || Request::route()->getName() == 'deals.show' ? ' active' : '' }}">
+                                    <a class="collapse-item" style="color: white; font-size: 13px;"
+                                        href="{{ route('deals.list') }}">
+                                        <img src="{{ asset('assets/cs-theme/icons/edit-icon 1.png') }}" id="icon1"
+                                            width="15px" height="15px" style="margin-top:-10px" alt=""
+                                            srcset="">
+                                        <img src="{{ asset('assets/cs-theme/icons/admiblue.png') }}" id="icon2"
+                                            width="15px" height="15px" style="margin-top:-8px" alt=""
+                                            srcset="">
+                                        Admissions</a>
+                                </li>
+                            @endcan
+                            @can('manage application')
+                                <li
+                                    class="emp nav-item {{ Request::route()->getName() == 'applications.index' ? ' active' : '' }}">
+                                    <a class="collapse-item" style="color: white; font-size: 13px;"
+                                        href="{{ route('applications.index') }}">
+                                        <img src="{{ asset('assets/cs-theme/icons/result-pass-icon 1.png') }}"
+                                            id="icon1" width="15px" height="15px" style="margin-top:-10px"
+                                            alt="" srcset="">
+                                        <img src="{{ asset('assets/cs-theme/icons/appblue.png') }}" id="icon2"
+                                            width="15px" height="15px" style="margin-top:-8px" alt=""
+                                            srcset="">
+
+                                        Applications</a>
+                                </li>
+                            @endcan
+                            @can('manage client')
+                                <li
+                                    class="emp nav-item {{ Request::route()->getName() == 'clients.index' || Request::segment(1) == 'clients' || Request::route()->getName() == 'clients.edit' ? ' active' : '' }}">
+                                    <a class="collapse-item" style="color: white; font-size: 13px;"
+                                        href="{{ route('clients.index') }}">
+                                        {{-- <img src="{{ asset('assets/cs-theme/icons/Layer_1 (1).png') }}"
+                                     id="icon1" width="15px" height="15px"
+                                     style="margin-top:-10px" alt="" srcset="">
+                                     <img src="{{ asset('assets/cs-theme/icons/callblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset=""> --}}
+                                        <i class="fa-solid fa-address-card pe-1" id="icon1"
+                                            style="color: #ffffff;font-size:15px;"></i>
+                                        <i class="fa-solid fa-address-card pe-1" id="icon2"
+                                            style="color: #2e82d0;font-size:15px;"></i>
+
+                                        {{ __('Contacts') }}</a>
+                                </li>
+                            @endcan
+                            @can('manage form builder')
+                                {{-- <li class=" {{ (Request::segment(1) == 'form_builder' || Request::segment(1) == 'form_response')?'active open':''}}">
+                             <a class="collapse-item" style="color: white; font-size: 13px;" href="{{route('form_builder.index')}}">{{__('Form Builder')}}</a>
+                             </li> --}}
+                            @endcan
+                            @can('manage university')
+                                <li
+                                    class="emp nav-item {{ Request::route()->getName() == 'university.list' || Request::route()->getName() == 'university.index' || Request::route()->getName() == 'university.show' ? ' active' : '' }}">
+                                    <a class="collapse-item" style="color: white; font-size: 13px;"
+                                        href="{{ route('university.index') }}">
+                                        <img src="{{ asset('assets/cs-theme/icons/Layer_1 (7).png') }}" id="icon1"
+                                            width="15px" height="15px" style="margin-top:-10px" alt=""
+                                            srcset="">
+                                        <img src="{{ asset('assets/cs-theme/icons/toolkitblue.png') }}" id="icon2"
+                                            width="15px" height="15px" style="margin-top:-8px" alt=""
+                                            srcset="">
+
+                                        {{ __('Toolkit') }}</a>
+                                </li>
+                            @endcan
+                            @can('manage courses')
+                                {{-- <li class=" {{ (Request::route()->getName() == 'course.list' || Request::route()->getName() == 'course.index' || Request::route()->getName() == 'course.show') ? ' active' : '' }}">
+                              <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('course.index') }}">{{__('Courses')}}</a>
+                              </li> --}}
+                            @endcan
+                            @can('manage organization')
+                                <li
+                                    class="d-none emp nav-item {{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
+                                    <a class="collapse-item" style="color: white; font-size: 13px;"
+                                        href="{{ route('organization.index') }}">
+                                        <img src="{{ asset('assets/cs-theme/icons/organization-01-1 1.png') }}"
+                                            id="icon1" width="15px" height="15px" style="margin-top:-10px"
+                                            alt="" srcset="">
+                                        <img src="{{ asset('assets/cs-theme/icons/orgblue.png') }}" id="icon2"
+                                            width="15px" height="15px" style="margin-top:-8px" alt=""
+                                            srcset="">
+
+                                        {{ __('Organizations') }}</a>
+                                </li>
+                            @endcan
+                            @can('company')
+                                <li class=" d-none" style="display: none;"
+                                    {{ Request::route()->getName() == 'contract.index' || Request::route()->getName() == 'contract.show' ? 'active' : '' }}">
+                                    <a class="collapse-item" style="color: white; font-size: 13px;"
+                                        href="{{ route('contract.index') }}">{{ __('Contract') }}</a>
+                                </li>
+                            @endcan
+
+
+
+
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        @endif
+    @endcan
+    <!--------------------- End CRM ----------------------------------->
         {{--  --}}
         @can('manage report')
             <li class="nav-item ">
-                <a class="nav-link {{ Request::segment(1) == 'report' ? '' : 'collapsed' }}" href="#"
+                <a class="nav-link {{ Request::segment(1) == 'report' || Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' ? '' : 'collapsed' }}" href="#"
                     data-toggle="collapse" data-target="#collapsesreport" aria-expanded="true"
                     aria-controls="collapsesreport">
-
+                    <i class="fa-solid fa-chart-bar me-1" style="color: #ffffff;font-size: 15px;"></i>
                     <span>{{ __('Reports') }}</span>
                 </a>
-                <div id="collapsesreport" class="collapse {{ Request::segment(1) == 'report' ? 'show' : '' }}"
+                <div id="collapsesreport" class="collapse {{ Request::segment(1) == 'report' || Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' ? 'show' : '' }}"
                     aria-labelledby="headingrepost" data-parent="#accordionSidebar">
                     <div class="  collapse-inner rounded">
                         <ul>
+                            <li
+                                class="emp nav-item {{ Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' ? ' active' : '' }}">
+                                <a class="collapse-item" href="{{ url('/ChartGranted') }}"
+                                    style="color:white; font-size: 13px;">
+
+                                    <i class="fa-solid fa-chart-pie me-1" id="icon1" style="color: #ffffff;font-size: 15px;"></i>
+                                    <i class="fa-solid fa-chart-pie me-1" id="icon2" style="color: #2e82d0;font-size: 15px;"></i>
+
+                                    {{ __('Analysis Report') }}</a>
+                            </li>
+                        </ul>
+                        <ul class="d-none">
                             @can('expense report')
                                 <li
                                     class="emp nav-item {{ Request::route()->getName() == 'report.expense.summary' ? ' active' : '' }}">
@@ -268,179 +454,7 @@
             </li>
         @endcan
         {{--  --}}
-        <!--------------------- Start CRM ----------------------------------->
-        @can('show crm dashboard')
-            @if (Gate::check('manage lead') ||
-                    Gate::check('manage task') ||
-                    Gate::check('manage deal') ||
-                    Gate::check('manage application') ||
-                    Gate::check('manage client') ||
-                    Gate::check('manage courses') ||
-                    Gate::check('manage university') ||
-                    Gate::check('manage organization') ||
-                    Gate::check('manage form builder') ||
-                    Gate::check('manage contract'))
-                <li class="nav-item">
-                    <a class="nav-link {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' ? '' : 'collapsed' }} "
-                        href="#" data-toggle="collapse" data-target="#collapsefour" aria-expanded="true"
-                        aria-controls="collapsefour">
-                        <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px"
-                            style="margin-top:-10px" alt="" srcset="">
-                        <span>{{ __('CRM System') }}</span>
-                    </a>
-                    <div id="collapsefour"
-                        class="collapse {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' ? 'show' : '' }}"
-                        aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-                        <div class="  collapse-inner rounded">
-                            <ul
-                                class="
-                                  {{ Request::segment(1) == 'stages' ||
-                                  Request::segment(1) == 'labels' ||
-                                  Request::segment(1) == 'sources' ||
-                                  Request::segment(1) == 'university' ||
-                                  Request::segment(1) == 'lead_stages' ||
-                                  Request::segment(1) == 'leads' ||
-                                  Request::segment(1) == 'form_builder' ||
-                                  Request::segment(1) == 'course' ||
-                                  Request::segment(1) == 'form_response' ||
-                                  Request::segment(1) == 'deals'
-                                      ? 'show'
-                                      : '' }}">
 
-                                @can('manage task')
-                                    <li
-                                        class="emp nav-item {{ Request::route()->getName() == 'deals.get.user.tasks' ? ' active' : '' }}">
-                                        <a class="collapse-item" style="color: white; font-size: 13px;"
-                                            href="{{ route('deals.get.user.tasks') }}">
-                                            <img src="{{ asset('assets/cs-theme/icons/to-do-list-13177 1.png') }}"
-                                                id="icon1" width="15px" height="15px" style="margin-top:-10px"
-                                                alt="" srcset="">
-                                            <img src="{{ asset('assets/cs-theme/icons/taskblue.png') }}" id="icon2"
-                                                width="15px" height="15px" style="margin-top:-8px" alt=""
-                                                srcset="">
-
-                                            {{ __('Tasks') }}</a>
-                                    </li>
-                                @endcan
-                                @can('manage lead')
-                                    <li
-                                        class="emp nav-item {{ Request::route()->getName() == 'leads.list' || Request::route()->getName() == 'leads.index' || Request::route()->getName() == 'leads.show' ? ' active' : '' }}">
-                                        <a class="collapse-item" style="color: white; font-size: 13px;"
-                                            href="{{ route('leads.list') }}">
-                                            <img src="{{ asset('assets/cs-theme/icons/Layer_1.png') }}" id="icon1"
-                                                width="15px" height="15px" style="margin-top:-10px" alt=""
-                                                srcset="">
-                                            <img src="{{ asset('assets/cs-theme/icons/leadsblue.png') }}" id="icon2"
-                                                width="15px" height="15px" style="margin-top:-8px" alt=""
-                                                srcset="">
-
-                                            {{ __('Leads') }}</a>
-                                    </li>
-                                @endcan
-                                @can('manage deal')
-                                    <li
-                                        class="emp nav-item {{ Request::route()->getName() == 'deals.list' || Request::route()->getName() == 'deals.index' || Request::route()->getName() == 'deals.show' ? ' active' : '' }}">
-                                        <a class="collapse-item" style="color: white; font-size: 13px;"
-                                            href="{{ route('deals.list') }}">
-                                            <img src="{{ asset('assets/cs-theme/icons/edit-icon 1.png') }}" id="icon1"
-                                                width="15px" height="15px" style="margin-top:-10px" alt=""
-                                                srcset="">
-                                            <img src="{{ asset('assets/cs-theme/icons/admiblue.png') }}" id="icon2"
-                                                width="15px" height="15px" style="margin-top:-8px" alt=""
-                                                srcset="">
-                                            Admissions</a>
-                                    </li>
-                                @endcan
-                                @can('manage application')
-                                    <li
-                                        class="emp nav-item {{ Request::route()->getName() == 'applications.index' ? ' active' : '' }}">
-                                        <a class="collapse-item" style="color: white; font-size: 13px;"
-                                            href="{{ route('applications.index') }}">
-                                            <img src="{{ asset('assets/cs-theme/icons/result-pass-icon 1.png') }}"
-                                                id="icon1" width="15px" height="15px" style="margin-top:-10px"
-                                                alt="" srcset="">
-                                            <img src="{{ asset('assets/cs-theme/icons/appblue.png') }}" id="icon2"
-                                                width="15px" height="15px" style="margin-top:-8px" alt=""
-                                                srcset="">
-
-                                            Applications</a>
-                                    </li>
-                                @endcan
-                                @can('manage client')
-                                    <li
-                                        class="emp nav-item {{ Request::route()->getName() == 'clients.index' || Request::segment(1) == 'clients' || Request::route()->getName() == 'clients.edit' ? ' active' : '' }}">
-                                        <a class="collapse-item" style="color: white; font-size: 13px;"
-                                            href="{{ route('clients.index') }}">
-                                            {{-- <img src="{{ asset('assets/cs-theme/icons/Layer_1 (1).png') }}"
-                                         id="icon1" width="15px" height="15px"
-                                         style="margin-top:-10px" alt="" srcset="">
-                                         <img src="{{ asset('assets/cs-theme/icons/callblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset=""> --}}
-                                            <i class="fa-solid fa-address-card pe-1" id="icon1"
-                                                style="color: #ffffff;font-size:15px;"></i>
-                                            <i class="fa-solid fa-address-card pe-1" id="icon2"
-                                                style="color: #2e82d0;font-size:15px;"></i>
-
-                                            {{ __('Contacts') }}</a>
-                                    </li>
-                                @endcan
-                                @can('manage form builder')
-                                    {{-- <li class=" {{ (Request::segment(1) == 'form_builder' || Request::segment(1) == 'form_response')?'active open':''}}">
-                                 <a class="collapse-item" style="color: white; font-size: 13px;" href="{{route('form_builder.index')}}">{{__('Form Builder')}}</a>
-                                 </li> --}}
-                                @endcan
-                                @can('manage university')
-                                    <li
-                                        class="emp nav-item {{ Request::route()->getName() == 'university.list' || Request::route()->getName() == 'university.index' || Request::route()->getName() == 'university.show' ? ' active' : '' }}">
-                                        <a class="collapse-item" style="color: white; font-size: 13px;"
-                                            href="{{ route('university.index') }}">
-                                            <img src="{{ asset('assets/cs-theme/icons/Layer_1 (7).png') }}" id="icon1"
-                                                width="15px" height="15px" style="margin-top:-10px" alt=""
-                                                srcset="">
-                                            <img src="{{ asset('assets/cs-theme/icons/toolkitblue.png') }}" id="icon2"
-                                                width="15px" height="15px" style="margin-top:-8px" alt=""
-                                                srcset="">
-
-                                            {{ __('Toolkit') }}</a>
-                                    </li>
-                                @endcan
-                                @can('manage courses')
-                                    {{-- <li class=" {{ (Request::route()->getName() == 'course.list' || Request::route()->getName() == 'course.index' || Request::route()->getName() == 'course.show') ? ' active' : '' }}">
-                                  <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('course.index') }}">{{__('Courses')}}</a>
-                                  </li> --}}
-                                @endcan
-                                @can('manage organization')
-                                    <li
-                                        class="d-none emp nav-item {{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
-                                        <a class="collapse-item" style="color: white; font-size: 13px;"
-                                            href="{{ route('organization.index') }}">
-                                            <img src="{{ asset('assets/cs-theme/icons/organization-01-1 1.png') }}"
-                                                id="icon1" width="15px" height="15px" style="margin-top:-10px"
-                                                alt="" srcset="">
-                                            <img src="{{ asset('assets/cs-theme/icons/orgblue.png') }}" id="icon2"
-                                                width="15px" height="15px" style="margin-top:-8px" alt=""
-                                                srcset="">
-
-                                            {{ __('Organizations') }}</a>
-                                    </li>
-                                @endcan
-                                @can('company')
-                                    <li class=" d-none" style="display: none;"
-                                        {{ Request::route()->getName() == 'contract.index' || Request::route()->getName() == 'contract.show' ? 'active' : '' }}">
-                                        <a class="collapse-item" style="color: white; font-size: 13px;"
-                                            href="{{ route('contract.index') }}">{{ __('Contract') }}</a>
-                                    </li>
-                                @endcan
-
-
-
-
-                            </ul>
-                        </div>
-                    </div>
-                </li>
-            @endif
-        @endcan
-        <!--------------------- End CRM ----------------------------------->
         <!--------------------- Start Project ----------------------------------->
 
         @can('show project dashboard')
@@ -864,7 +878,8 @@
                                     <a href="{{ route('plans.index') }}" class="collapse-item"
                                         style="color:white; font-size: 13px;">{{ __('Plan') }}</a>
                                 </li>
-                                <li class="d-none emp nav-item {{ Request::segment(1) == 'plan_request' ? 'active' : '' }}">
+                                <li
+                                    class="d-none emp nav-item {{ Request::segment(1) == 'plan_request' ? 'active' : '' }}">
                                     <a href="{{ route('plan_request.index') }}" class="collapse-item"
                                         style="color:white; font-size: 13px;">{{ __('Plan Request') }}</a>
                                 </li>

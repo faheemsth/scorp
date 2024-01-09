@@ -5,7 +5,7 @@
     @php
         $com_permissions = [];
         $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
-        
+
     @endphp
 @endif
 
@@ -188,7 +188,10 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" aria-expanded="false">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                 </button>
-
+                                <a  href="{{ url('/leads') }}" data-bs-toggle="tooltip" title="{{ __('Leads View') }}" class="btn px-2 btn-dark d-flex align-items-center">
+                                    {{-- <i class="ti ti-plus" style="font-size:18px"></i> --}}
+                                    <i class="fa-solid fa-border-all" style="font-size:18px"></i>
+                                </a>
                                 @can('create lead')
                                 <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark">
                                     <i class="ti ti-plus" style="font-size:18px"></i>
@@ -419,7 +422,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                 </td>
                                                 @if (\Auth::user()->type == 'super admin')
                                                     <td>{{ $users[$lead->brand_id] }}</td>
-                                                    <td>{{ isset( $branches[$lead->branch_id]) ?  $branches[$lead->branch_id] : '' }}</td> 
+                                                    <td>{{ isset( $branches[$lead->branch_id]) ?  $branches[$lead->branch_id] : '' }}</td>
                                                 @endif
 
                                                 @if (Auth::user()->type != 'client')
@@ -583,16 +586,16 @@ if (isset($lead->is_active) && $lead->is_active) {
         </div>
     </div>
 
-    
+
 
 @endsection
 
 @push('script-page')
     <script>
-        
+
         $(document).ready(function() {
             let curr_url = window.location.href;
-        
+
             if(curr_url.includes('?')){
                 $('#save-filter-btn').css('display','inline-block');
             }
@@ -625,7 +628,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
         });
 
-        
+
 
         function massUpdate() {
             if (selectedArr.length > 0) {
