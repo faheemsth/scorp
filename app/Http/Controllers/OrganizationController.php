@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\CompanyPermission;
 use App\Models\Region;
-
+use Session;
 class OrganizationController extends Controller
 {
 
@@ -850,7 +850,7 @@ class OrganizationController extends Controller
             $dealTask->region_id = $request->region_id;
 
             $dealTask->brand_id = $request->brand_id;
-            $dealTask->created_by = \Auth::user()->id;
+            $dealTask->created_by = Session::get('auth_type_id') != null ? Session::get('auth_type_id') : \Auth::user()->id;
 
             $dealTask->assigned_to = $request->lead_assgigned_user;
             $dealTask->assigned_type = $request->assign_type;
