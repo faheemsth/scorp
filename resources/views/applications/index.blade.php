@@ -202,7 +202,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                             </span>
                                 </td>
                                 <td>{{ $app['course'] }}</td>
-                                <td>{{ $universities[$app->university_id] }}</td>
+                                <td>{{ $universities[$app->university_id] ?? '' }}</td>
                                 <td>{{ isset($app->stage_id) && isset($stages[$app->stage_id]) ? $stages[$app->stage_id] : '' }}</td>
                                 <td> {{ !empty($deal->assigned_to) ? (isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : '') : '' }} </td>
 

@@ -169,6 +169,8 @@ Route::get('/', function () {
  });
 
  Route::get('/dashboard', function () {
+    return redirect('/crm-dashboard');
+
      return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 

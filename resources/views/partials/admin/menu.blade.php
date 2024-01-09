@@ -88,7 +88,7 @@ $lang = Auth::user()->lang;
                                     CRM Dashboard</a>
                             </li>
                             @endif
-                            <li class="{{ Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' ? ' active' : '' }}">
+                            <li class="d-none {{ Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' ? ' active' : '' }}">
                                 <a class="collapse-item" href="{{ url('ChartApplication') }}" style="color:white; font-size: 13px;">
                                     <i class="fa-solid fa-chart-line me-1" style="color: #ffffff;"></i>{{ __('Reports') }}</a>
                             </li>
@@ -1099,6 +1099,16 @@ $lang = Auth::user()->lang;
     <div id="collapseseven" class="collapse {{Request::segment(1) == 'branch' || Request::segment(1) == 'user' && Request::segment(2) == 'employees' ? 'show' : '' }}" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
         <div class="  collapse-inner rounded">
             <ul>
+            @can('manage region')
+                 <li class="emp nav-item{{ Request::segment(1) == 'region' ? ' active' : '' }}">
+                    <a class="collapse-item" style="color:white; font-size: 13px;" href="{{ url('/region/index') }}">
+                        <img src="{{ asset('assets/cs-theme/icons/Layer_1 (3).png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+                        <img src="{{ asset('assets/cs-theme/icons/branchesblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+
+                        {{ __('Region') }}</a>
+                </li>
+                @endcan
+                
                 @can('manage branch')
                 <li class="emp nav-item {{ Request::route()->getName() == 'branch.index' || Request::route()->getName() == 'branch.edit' || Request::route()->getName() == 'branch.show' ? ' active' : '' }}">
                     <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('branch.index') }}">
@@ -1108,6 +1118,7 @@ $lang = Auth::user()->lang;
                         {{ __('Branches') }}</a>
                 </li>
                 @endcan
+                
                 <li class="emp nav-item{{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
                     <a class="collapse-item" style="color:white; font-size: 13px;" href="{{ route('user.employees') }}">
                         <img src="{{ asset('assets/cs-theme/icons/Vector (1).png') }}" id="icon1" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
