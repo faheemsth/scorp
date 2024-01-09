@@ -72,7 +72,6 @@ class DashboardController extends Controller
      */
     public function account_dashboard_index()
     {
-
         if (Auth::check()) {
             if (Auth::user()->type == 'super admin') {
                 return redirect()->route('client.dashboard.view');
@@ -162,7 +161,6 @@ class DashboardController extends Controller
 
     private function superAdminCrmDashboarData()
     {
-        
         //$labels   = Label::get();
         $labels   = Label::select('labels.*')->join('pipelines', 'pipelines.id', '=', 'labels.pipeline_id')->orderBy('labels.pipeline_id')->get();
         $lead_label_color = array();
@@ -904,7 +902,6 @@ class DashboardController extends Controller
     public function hrm_dashboard_index()
     {
 
-
         if (Auth::check()) {
 
             if (\Auth::user()->can('show hrm dashboard')) {
@@ -1049,8 +1046,9 @@ class DashboardController extends Controller
     }
 
     public function clientView()
-    {
+    {   
         return redirect('/crm-dashboard');
+
         if (Auth::check()) {
             if (Auth::user()->type == 'super admin') {
                 $user                       = \Auth::user();

@@ -730,10 +730,15 @@ class OrganizationController extends Controller
             $priorities = DealTask::$priorities;
             $status     = DealTask::$status;
             $users = User::get()->pluck('name', 'id')->toArray();
-
-            $companies = FiltersBrands();
+    
+            if(\Auth::user()->type == 'super admin'){
+           $branches = Branch::pluck('name', 'id')->toArray();
+            }else{
+                      $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', $brand_ids)->pluck('name', 'id')->toArray();
+           $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', $brand_ids)->pluck('name', 'id')->toArray();
+            }
+          
 
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();

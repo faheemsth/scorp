@@ -1099,7 +1099,7 @@ $lang = Auth::user()->lang;
     <div id="collapseseven" class="collapse {{Request::segment(1) == 'branch' || Request::segment(1) == 'user' && Request::segment(2) == 'employees' ? 'show' : '' }}" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
         <div class="  collapse-inner rounded">
             <ul>
-            @can('manage region')
+                @can('manage region')
                  <li class="emp nav-item{{ Request::segment(1) == 'region' ? ' active' : '' }}">
                     <a class="collapse-item" style="color:white; font-size: 13px;" href="{{ url('/region/index') }}">
                         <img src="{{ asset('assets/cs-theme/icons/Layer_1 (3).png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">

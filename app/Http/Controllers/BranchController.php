@@ -19,19 +19,23 @@ class BranchController extends Controller
             // }else{
             //     $branches = Branch::where('created_by', '=', \Auth::user()->creatorId())->get();
             // }
-            // $branches = Branch::get();
-
+            //$branches = Branch::get();
+            
+            
+            
             if(\Auth::user()->type == 'super admin'){
-                $branches = Branch::get();
-           }else if(\Auth::user()->type == 'super admin'){
-                $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->get();
-           }else{
-                $companies = FiltersBrands();
-                $brand_ids = array_keys($companies);
-                $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->get();
-           }   
-          
+                 $branches = Branch::get();
+            }else if(\Auth::user()->type == 'company'){
+                 $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->get();
+            }else{
+                 $companies = FiltersBrands();
+                 $brand_ids = array_keys($companies);
+                 $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->get();
+            }   
            
+            
+            
+            
             $users = allUsers();
             $regions = allRegions();
             $data = [
@@ -49,11 +53,14 @@ class BranchController extends Controller
 
     public function create()
     {
-        $branchmanager=User::where('type','')->get();
+        $companies = FiltersBrands();
+        $brand_ids = array_keys($companies);
+        $brands = User::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
+        $branchmanager=User::where('type','Branch Manager')->get();
         $regions=Region::all();
         if(\Auth::user()->can('create branch'))
         {
-            return view('branch.create',compact('branchmanager','regions'));
+            return view('branch.create',compact('branchmanager','regions', 'brands'));
         }
         else
         {

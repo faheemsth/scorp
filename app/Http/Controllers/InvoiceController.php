@@ -152,7 +152,7 @@ class InvoiceController extends Controller
 
             // dd($products);
 
-                        for($i = 0; $i < count($products); $i++)
+            for($i = 0; $i < count($products); $i++)
             {
 
                 $invoiceProduct              = new InvoiceProduct();
@@ -165,7 +165,7 @@ class InvoiceController extends Controller
                 $invoiceProduct->description = $products[$i]['description'];
 
                 $invoiceProduct->save();
-        }
+            }
 
 //             for($i = 0; $i < count($products); $i++)
 //             {
@@ -285,53 +285,64 @@ class InvoiceController extends Controller
                 $invoice->save();
 
                 Utility::starting_number( $invoice->invoice_id + 1, 'invoice');
-                CustomField::saveData($invoice, $request->customField);
+                // CustomField::saveData($invoice, $request->customField);
                 $products = $request->items;
-
+                InvoiceProduct::where('invoice_id',$invoice->id)->delete();
                 for ($i = 0; $i < count($products); $i++) {
-                    $invoiceProduct = InvoiceProduct::find($products[$i]['id']);
-                    // Utility::total_quantity('minus',$invoiceProduct->quantity,$invoiceProduct->product_id);
 
-
-                    if ($invoiceProduct == null) {
-                        $invoiceProduct             = new InvoiceProduct();
-                        $invoiceProduct->invoice_id = $invoice->id;
-
-                        Utility::total_quantity('minus',$products[$i]['quantity'],$products[$i]['item']);
-                    }
-                    else{
-                        Utility::total_quantity('plus',$invoiceProduct->quantity,$invoiceProduct->product_id);
-
-                    }
-
-                    if (isset($products[$i]['item'])) {
-                        $invoiceProduct->product_id = $products[$i]['item'];
-                    }
-
+                    $invoiceProduct              = new InvoiceProduct();
+                    $invoiceProduct->invoice_id  = $invoice->id;
+                    $invoiceProduct->product_name  = $products[$i]['item'];
                     $invoiceProduct->quantity    = $products[$i]['quantity'];
-                    $invoiceProduct->tax         = $products[$i]['tax'];
-//                    $invoiceProduct->discount    = isset($products[$i]['discount']) ? $products[$i]['discount'] : 0;
+                    $invoiceProduct->tax         = $products[$i]['itemTaxPrice'];
                     $invoiceProduct->discount    = $products[$i]['discount'];
                     $invoiceProduct->price       = $products[$i]['price'];
                     $invoiceProduct->description = $products[$i]['description'];
+
                     $invoiceProduct->save();
+//                     $invoiceProduct = InvoiceProduct::find($products[$i]['id']);
+//                     // Utility::total_quantity('minus',$invoiceProduct->quantity,$invoiceProduct->product_id);
+
+
+//                     if ($invoiceProduct == null) {
+//                         $invoiceProduct             = new InvoiceProduct();
+//                         $invoiceProduct->invoice_id = $invoice->id;
+
+//                         Utility::total_quantity('minus',$products[$i]['quantity'],$products[$i]['item']);
+//                     }
+//                     else{
+//                         Utility::total_quantity('plus',$invoiceProduct->quantity,$invoiceProduct->product_id);
+
+//                     }
+
+//                     if (isset($products[$i]['item'])) {
+//                         $invoiceProduct->product_id = $products[$i]['item'];
+//                     }
+
+//                     $invoiceProduct->quantity    = $products[$i]['quantity'];
+//                     $invoiceProduct->tax         = $products[$i]['tax'];
+// //                    $invoiceProduct->discount    = isset($products[$i]['discount']) ? $products[$i]['discount'] : 0;
+//                     $invoiceProduct->discount    = $products[$i]['discount'];
+//                     $invoiceProduct->price       = $products[$i]['price'];
+//                     $invoiceProduct->description = $products[$i]['description'];
+//                     $invoiceProduct->save();
 
                     // Utility::total_quantity('plus',$products[$i]['quantity'],$invoiceProduct->product_id);
-                    if($products[$i]['id'] > 0){
-                        Utility::total_quantity('minus',$products[$i]['quantity'],$invoiceProduct->product_id);
-                    }
+                    // if($products[$i]['id'] > 0){
+                    //     Utility::total_quantity('minus',$products[$i]['quantity'],$invoiceProduct->product_id);
+                    // }
 //                    else{
 //                        Utility::total_quantity('minus',$products[$i]['quantity'],$products[$i]['item']);
 //                    }
 
                     //Product Stock Report
-                    $type='invoice';
-                    $type_id = $invoice->id;
-                    StockReport::where('type','=','invoice')->where('type_id' ,'=', $invoice->id)->delete();
-                    $description=$products[$i]['quantity'].'  '.__(' quantity sold in invoice').' '. \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
-                    if(empty($products[$i]['id'])){
-                        Utility::addProductStock( $products[$i]['item'],$products[$i]['quantity'],$type,$description,$type_id);
-                    }
+                    // $type='invoice';
+                    // $type_id = $invoice->id;
+                    // StockReport::where('type','=','invoice')->where('type_id' ,'=', $invoice->id)->delete();
+                    // $description=$products[$i]['quantity'].'  '.__(' quantity sold in invoice').' '. \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
+                    // if(empty($products[$i]['id'])){
+                    //     Utility::addProductStock( $products[$i]['item'],$products[$i]['quantity'],$type,$description,$type_id);
+                    // }
 
                     // Utility::addProductStock( $products[$i]['item'],$products[$i]['quantity'],$type,$description,$type_id);
 
@@ -504,28 +515,36 @@ class InvoiceController extends Controller
                 $invoice->status    = 1;
                 $invoice->save();
 
-                $customer         = Customer::where('id', $invoice->customer_id)->first();
-                $invoice->name    = !empty($customer) ? $customer->name : '';
-                $invoice->invoice = \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
+                if($invoice->customer_id != null){
 
-                $invoiceId    = Crypt::encrypt($invoice->id);
-                $invoice->url = route('invoice.pdf', $invoiceId);
+                    $customer         = Customer::where('id', $invoice->customer_id)->first();
+                    $invoice->name    = !empty($customer) ? $customer->name : '';
+                    $invoice->invoice = \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
 
-                Utility::userBalances('customer', $customer->id, $invoice->getTotal(), 'credit');
+                    $invoiceId    = Crypt::encrypt($invoice->id);
+                    $invoice->url = route('invoice.pdf', $invoiceId);
 
-                $customerArr = [
+                    Utility::userBalances('customer', $customer->id, $invoice->getTotal(), 'credit');
 
-                    'customer_name'=> $customer->name,
-                    'customer_email' => $customer->email,
-                    'invoice_name' => $customer->name,
-                    'invoice_number' => $invoice->invoice,
-                    'invoice_url' => $invoice->url,
+                    $customerArr = [
 
-                ];
-                $resp = Utility::sendEmailTemplate('customer_invoice_sent', [$customer->id => $customer->email], $customerArr);
+                        'customer_name'=> $customer->name,
+                        'customer_email' => $customer->email,
+                        'invoice_name' => $customer->name,
+                        'invoice_number' => $invoice->invoice,
+                        'invoice_url' => $invoice->url,
 
+                    ];
+                    $resp = Utility::sendEmailTemplate('customer_invoice_sent', [$customer->id => $customer->email], $customerArr);
+                    return redirect()->back()->with('success', __('Invoice successfully sent.') .(($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
 
-                return redirect()->back()->with('success', __('Invoice successfully sent.') .(($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
+                }elseif($invoice->user_name != null){
+
+                    return redirect()->back()->with('success', __('Invoice successfully sent.'));
+
+                }
+                
+
 
             }
 

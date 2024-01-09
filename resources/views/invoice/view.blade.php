@@ -465,7 +465,7 @@
                                                     <td>{{$iteam->quantity}}</td>
                                                     <td>{{\Auth::user()->priceFormat($iteam->price)}}</td>
                                                     <td>
-                                                        {{$iteam->tax}}
+                                                        {{\Auth::user()->priceFormat($iteam->tax)}}
                                                         {{-- @if(!empty($iteam->tax))
                                                             <table>
                                                                 @php $totalTaxRate = 0;@endphp
@@ -498,7 +498,7 @@
                                                 <td><b>{{__('Total')}}</b></td>
                                                 <td><b>{{$totalQuantity}}</b></td>
                                                 <td><b>{{\Auth::user()->priceFormat($totalRate)}}</b></td>
-                                                <td><b>{{\Auth::user()->priceFormat($totalTaxPrice)}}</b></td>
+                                                <td><b>{{\Auth::user()->priceFormat($totalTax)}}</b></td>
                                                 <td>
                                                         <b>{{\Auth::user()->priceFormat($totalDiscount)}}</b>
 

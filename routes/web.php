@@ -168,13 +168,14 @@ Route::get('/', function () {
     return view('welcome');
  });
 
- Route::get('/dashboard', function () {
-    return redirect('/crm-dashboard');
 
+require __DIR__ . '/auth.php';
+
+ Route::get('/dashboard', function () {
+     return redirect('/crm-dashboard');
      return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-require __DIR__ . '/auth.php';
 
 
 Route::get('/', ['as' => 'home','uses' =>'HomeController@index'])->middleware(['XSS']);
