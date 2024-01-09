@@ -453,14 +453,14 @@
 
                                                         <li class="list-inline-item d-inline-flex align-items-center"
                                                             data-bs-toggle="tooltip" title="{{ __('Product') }}">
-                                                            <i class="f-16 text-primary ti ti-shopping-cart"></i>
+                                                            <i class="f-16 text-primary ti ti-shopping-cart d-none"></i>
                                                             {{ count($products) }}
                                                         </li>
 
                                                         <li class="list-inline-item d-inline-flex align-items-center"
                                                             data-bs-toggle="tooltip" title="{{ __('Source') }}">
                                                             <i
-                                                                class="f-16 text-primary ti ti-social"></i>{{ count($sources) }}
+                                                                class="f-16 text-primary ti ti-social d-none"></i>{{ count($sources) }}
                                                         </li>
                                                     </ul>
                                                     <div class="user-group">

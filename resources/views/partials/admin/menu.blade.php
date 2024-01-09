@@ -308,17 +308,16 @@
         <!-- End new Menu -->
 
         @if (\Auth::user()->type != 'client')
-            <!-- Sidebar -->
-            <ul style="list-style: none">
+        <!-- Sidebar -->
+        <ul style="list-style: none">
 
-                @if (Auth::user()->type == 'company' ||
-                        Auth::user()->type == 'team' ||
-                        Gate::check('show hrm dashboard') ||
-                        Gate::check('show project dashboard') ||
-                        Gate::check('show crm dashboard') ||
-                        Gate::check('show account dashboard'))
-                    <li
-                        class="nav-item {{ Request::segment(1) == null ||
+            @if (Auth::user()->type == 'company' ||
+            Auth::user()->type == 'team' ||
+            Gate::check('show hrm dashboard') ||
+            Gate::check('show project dashboard') ||
+            Gate::check('show crm dashboard') ||
+            Gate::check('show account dashboard'))
+            <li class="nav-item {{ Request::segment(1) == null ||
                         Request::segment(1) == 'crm-dashboard' ||
                         Request::segment(1) == 'account-dashboard' ||
                         Request::segment(1) == 'income report' ||
@@ -334,6 +333,7 @@
                             <img src="{{ asset('assets/cs-theme/icons/Group 138.png') }}" width="15px"
                                 height="15px" style="margin-top:-10px" alt="" srcset="">
 
+<<<<<<< HEAD
                             <span>{{ __('Dashboard') }}</span>
                         </a>
                         <div id="collapseone"
@@ -352,6 +352,26 @@
                                     @endif
                                     {{-- //// --}}
                                     @if (\Auth::user()->show_account() == 1 && Gate::check('show account dashboard'))
+=======
+                    <span>{{ __('Dashboard') }}</span>
+                </a>
+                <div id="collapseone" class="collapse {{ Request::segment(1) == 'crm-dashboard' || Request::segment(1) == 'hrm-dashboard' || Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' ? 'show' : '' }}" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="  collapse-inner rounded">
+                        <ul>
+                            @if (Gate::check('show crm dashboard') || Auth::user()->type == 'team' || Auth::user()->type == 'company')
+                            <li class="{{ Request::route()->getName() == 'crm.dashboard' ? ' active' : '' }}">
+                                <a class="collapse-item" href="{{ route('crm.dashboard') }}" style="color:white; font-size: 13px;">
+                                    <i class="fa-solid fa-chart-line me-1" style="color: #ffffff;"></i>
+                                    CRM Dashboard</a>
+                            </li>
+                            @endif
+                            <li class="d-none {{ Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' ? ' active' : '' }}">
+                                <a class="collapse-item" href="{{ url('ChartApplication') }}" style="color:white; font-size: 13px;">
+                                    <i class="fa-solid fa-chart-line me-1" style="color: #ffffff;"></i>{{ __('Reports') }}</a>
+                            </li>
+                            {{-- //// --}}
+                            @if (\Auth::user()->show_account() == 1 && Gate::check('show account dashboard'))
+>>>>>>> 4844a7fe92669af1dae9af3907dd9e7da8c0c8e3
 
                                         <li
                                             class="nav-item  {{ Request::segment(1) == 'account-dashboard' || Request::segment(1) == 'report' ? ' active dash-trigger' : '' }}">
@@ -1960,16 +1980,35 @@
                     </li>
                 @endif
 
-                @if (Gate::check('manage project task'))
-                    <li class="nav-item  {{ Request::segment(1) == 'taskboard' ? ' active' : '' }}">
-                        <a href="{{ route('taskBoard.view', 'list') }}" class="nav-link">
-                            <img src="{{ asset('assets/cs-theme/icons/to-do-list-13177 1.png') }}" width="15px"
-                                height="15px" style="margin-top:-10px" alt="" srcset="">
+            {{ __('Users') }}</span>
+    </a>
+    <div id="collapseseven" class="collapse {{Request::segment(1) == 'branch' || Request::segment(1) == 'user' && Request::segment(2) == 'employees' ? 'show' : '' }}" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+        <div class="  collapse-inner rounded">
+            <ul>
+                @can('manage region')
+                 <li class="emp nav-item{{ Request::segment(1) == 'region' ? ' active' : '' }}">
+                    <a class="collapse-item" style="color:white; font-size: 13px;" href="{{ url('/region/index') }}">
+                        <img src="{{ asset('assets/cs-theme/icons/Layer_1 (3).png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+                        <img src="{{ asset('assets/cs-theme/icons/branchesblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
 
-                            <span>{{ __('Tasks') }}</span>
-                        </a>
-                    </li>
-                @endif
+                        {{ __('Region') }}</a>
+                </li>
+                @endcan
+
+                @can('manage branch')
+                <li class="emp nav-item {{ Request::route()->getName() == 'branch.index' || Request::route()->getName() == 'branch.edit' || Request::route()->getName() == 'branch.show' ? ' active' : '' }}">
+                    <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('branch.index') }}">
+                        <img src="{{ asset('assets/cs-theme/icons/Layer_1 (3).png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+                        <img src="{{ asset('assets/cs-theme/icons/branchesblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+
+                        {{ __('Branches') }}</a>
+                </li>
+                @endcan
+
+                <li class="emp nav-item{{ Request::route()->getName() == 'users.index' || Request::route()->getName() == 'users.create' || Request::route()->getName() == 'users.edit' ? ' active' : '' }}">
+                    <a class="collapse-item" style="color:white; font-size: 13px;" href="{{ route('user.employees') }}">
+                        <img src="{{ asset('assets/cs-theme/icons/Vector (1).png') }}" id="icon1" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+                        <img src="{{ asset('assets/cs-theme/icons/employeeblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
 
                 @if (Gate::check('manage bug report'))
                     <li class="nav-item {{ Request::segment(1) == 'bugs-report' ? ' active' : '' }}">
@@ -2409,5 +2448,11 @@
             </ul>
         @endif
     </ul>
+
+</li>
+@endif
+</ul>
+@endif
+</ul>
 
 </div>

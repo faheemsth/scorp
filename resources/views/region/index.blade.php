@@ -331,7 +331,7 @@
                                                 <td><a href="mailto:{{ $deal->email }}">{{ $deal->email }}</a></td>
                                                 <td>{{ $deal->phone }}</td>
                                                 <td>{{ $deal->location }}</td>
-                                                <td>{{ optional($deal->manager)->name }}</td>
+                                                <td>{{ $users[$deal->region_manager_id] ?? '' }}</td>
 
                                                 <td class="Action d-none">
                                                     <div class="dropdown">

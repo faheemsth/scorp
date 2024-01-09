@@ -197,7 +197,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                             <td><a href="mailto:{{ $employee->email }}">{{ $employee->email }}</a></td>
                                             <td>{{ $employee->type }}</td>
                                             <td>{{ $employee->phone }}</td>
-                                            <td>{{ $employee->region_id }}</td>
+                                            <td>{{ $Regions[$employee->region_id] ?? '' }}</td>
                                             <td>{{ !empty($employee->last_login_at) ? $employee->last_login_at : '' }}
                                             </td>
 

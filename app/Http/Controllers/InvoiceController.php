@@ -120,7 +120,7 @@ class InvoiceController extends Controller
                                 // 'customer_id' => 'integer',
                                    'issue_date' => 'required',
                                    'due_date' => 'required',
-                                   //'category_id' => 'required',
+                                //    'category_id' => 'required',
                                    'items' => 'required',
                                ]
             );
@@ -150,7 +150,7 @@ class InvoiceController extends Controller
             $products = $request->items;
 
 
-
+            // dd($products);
 
                         for($i = 0; $i < count($products); $i++)
             {
@@ -159,7 +159,7 @@ class InvoiceController extends Controller
                 $invoiceProduct->invoice_id  = $invoice->id;
                 $invoiceProduct->product_name  = $products[$i]['item'];
                 $invoiceProduct->quantity    = $products[$i]['quantity'];
-                $invoiceProduct->tax         = $products[$i]['tax'];
+                $invoiceProduct->tax         = $products[$i]['itemTaxPrice'];
                 $invoiceProduct->discount    = $products[$i]['discount'];
                 $invoiceProduct->price       = $products[$i]['price'];
                 $invoiceProduct->description = $products[$i]['description'];
@@ -243,8 +243,9 @@ class InvoiceController extends Controller
 
             $invoice->customField = CustomField::getData($invoice, 'invoice');
             $customFields         = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'invoice')->get();
-
-            return view('invoice.edit', compact('customers', 'product_services', 'invoice', 'invoice_number', 'category', 'customFields'));
+            $items               = $invoice->items;
+            // dd($items);
+            return view('invoice.edit', compact('customers','items', 'product_services', 'invoice', 'invoice_number', 'category', 'customFields'));
         }
         else
         {
@@ -254,16 +255,16 @@ class InvoiceController extends Controller
 
     public function update(Request $request, Invoice $invoice)
     {
-
+        // dd();
         if (\Auth::user()->can('edit invoice')) {
             if ($invoice->created_by == \Auth::user()->creatorId()) {
                 $validator = \Validator::make(
                     $request->all(),
                     [
-                        'customer_id' => 'required',
+                        // 'customer_id' => 'required',
                         'issue_date' => 'required',
                         'due_date' => 'required',
-                        'category_id' => 'required',
+                        // 'category_id' => 'required',
                         'items' => 'required',
                     ]
                 );
@@ -272,7 +273,10 @@ class InvoiceController extends Controller
 
                     return redirect()->route('invoice.index')->with('error', $messages->first());
                 }
-                $invoice->customer_id    = $request->customer_id;
+                if($request->customer_id != null){
+                    $invoice->customer_id    = $request->customer_id ? $request->customer_id : '';
+                }
+                $invoice->user_name    = $request->user_name  ?? '';
                 $invoice->issue_date     = $request->issue_date;
                 $invoice->due_date       = $request->due_date;
                 $invoice->ref_number     = $request->ref_number;

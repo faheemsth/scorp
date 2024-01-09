@@ -17,6 +17,11 @@
             }).parent().removeClass('text-primary');
         });
     </script>
+    <style>
+        h5::after{
+            background-color: #313949!important
+        }
+    </style>
 @endpush
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
@@ -36,7 +41,7 @@
             </div>
         </div>
         <div class="col-xl-9">
-            <div id="personal_info" class="card">
+            <div id="personal_info" class="card" h5::after="">
                 <div class="card-header">
                     <h5>{{__('Personal Info')}}</h5>
                 </div>
@@ -66,7 +71,7 @@
                                 <div class="form-group">
                                     <div class="choose-files">
                                         <label for="avatar">
-                                            <div class=" bg-primary profile_update"> <i class="ti ti-upload px-1"></i>{{__('Choose file here')}}</div>
+                                            <div class=" profile_update" style="background-color: #313949 !important;border-color:#313949!important;"> <i class="ti ti-upload px-1"></i>{{__('Choose file here')}}</div>
                                             <input type="file" class="form-control file" name="profile" id="avatar" data-filename="profile_update">
                                         </label>
                                     </div>
@@ -79,7 +84,7 @@
 
                             </div>
                             <div class="col-lg-12 text-end">
-                                <input type="submit" value="{{__('Save Changes')}}" class="btn btn-print-invoice  btn-primary m-r-10">
+                                <input type="submit" style="background-color: #313949 !important;border-color:#313949!important;" value="{{__('Save Changes')}}" class="btn btn-print-invoice  btn-primary m-r-10">
                             </div>
                         </div>
                     </form>
@@ -115,7 +120,7 @@
                                 <input class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation" type="password" required autocomplete="new-password" id="password_confirmation" placeholder="{{ __('Enter Your Password') }}">
                             </div>
                             <div class="col-lg-12 text-end">
-                                <input type="submit" value="{{__('Change Password')}}" class="btn btn-print-invoice  btn-primary m-r-10">
+                                <input type="submit" style="background-color: #313949 !important;border-color:#313949!important;" value="{{__('Change Password')}}" class="btn btn-print-invoice  btn-primary m-r-10">
                             </div>
                         </div>
                     </form>

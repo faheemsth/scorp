@@ -149,7 +149,7 @@
                                     target="_blank" data-size="lg" data-bs-toggle="tooltip"
                                     data-bs-title="{{ __('Already Converted To Deal') }}" class="btn btn-dark text-white"
                                     style="background-color: #313949">
-                                    <i class="fa-brands fa-whatsapp"></i>
+                                    <i class=""></i>
                                 </a>
                             @endif
                     @endif

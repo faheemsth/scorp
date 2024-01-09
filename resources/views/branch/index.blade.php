@@ -167,7 +167,7 @@
                                 <tr>
                                     <th>{{ __('Branch') }}</th>
                                     <th>{{ __('Region') }}</th>
-                                    <th>{{ __('Brand Manager') }}</th>
+                                    <th>{{ __('Branch Manager') }}</th>
                                     <th>{{ __('Phone') }}</th>
                                     <th>{{ __('Email') }}</th>
                                     <th>{{ __('Google Link') }}</th>
@@ -184,7 +184,7 @@
                                             </span>
                                         </td>
                                         <td>{{ !empty($regions[$branch->region_id]) ? $regions[$branch->region_id] : '' }}</td>
-                                        <td>{{ !empty($branch->branch_manager_id) ? $users[$branch->branch_manager_id] : '' }}</td>
+                                        <td>{{ !empty($branch->branch_manager_id) && isset($users[$branch->branch_manager_id]) ? $users[$branch->branch_manager_id] : '' }}</td>
                                         <td>{{ $branch->phone }}</td>
                                         <td><a href="mailto:{{ $branch->email }}">{{ $branch->email }}</a></td>
                                         <td><a href="{{ $branch->google_link }}">{{ $branch->google_link }}</a></td>
