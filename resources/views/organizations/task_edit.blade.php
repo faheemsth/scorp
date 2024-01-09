@@ -407,3 +407,192 @@
         });
     })
 </script>
+<script>
+    $(document).ready(function() {
+        // $.ajax({
+        //     type: 'GET',
+        //     url: '{{ route('organization.assign_to', 3) }}',
+        //     data: {
+        //         type: ''
+        //     },
+        //     success: function(data) {
+        //         data = JSON.parse(data);
+        //         if (data.status == 'success') {
+        //             $("#assign_to_div").html(data.html);
+        //             select2();
+        //         }
+        //     }
+        // });
+        $(".related_type").on('change', function() {
+            var type = $(this).val();
+            var brand_id  = $('.brand_id').val();
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('organization.task.related_to', 1) }}',
+                data: {
+                    type:type,
+                    brand_id:brand_id,
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if (data.status == 'success') {
+                        //console.log(data.html);
+                        $("#related_to_div").html(data.html);
+                        select2();
+                    }
+                }
+            })
+
+        })
+
+
+        $(document).on("submit", "#create-task", function(e) {
+
+            e.preventDefault();
+            var formData = $(this).serialize();
+            var id = $('.org-id').val();
+
+            $(".create-task-btn").val('Processing...');
+            $('.create-task-btn').attr('disabled', 'disabled');
+
+            $.ajax({
+                type: "POST",
+                url: "/organization/" + id + "/task",
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('#commonModal').modal('hide');
+                        $(".modal-backdrop").removeClass("modal-backdrop");
+                        $(".block-screen").css('display', 'none');
+                        openSidebar('/get-task-detail?task_id=' + data.task_id);
+                        return false;
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                        $(".create-task-btn").val('Create');
+                        $('.create-task-btn').removeAttr('disabled');
+                    }
+                }
+            });
+        });
+    })
+</script>
+<script>
+    function toggleDiv() {
+        var branchSelect = document.getElementById("branch_id");
+        var hiddenDiv = document.getElementById("roleID");
+        if (branchSelect.value !== "") {
+            hiddenDiv.style.display = "block";
+        } else {
+            hiddenDiv.style.display = "none";
+        }
+    }
+
+    $("#roles").on("change", function(){
+        var role = $(this).text();
+        if(role == 'Project Director' || role == 'Project Manager'){
+            //$("#brand_div").css('display', 'none');
+            $("#region_div").css('display', 'none');
+            $("#branch_div").css('display', 'none');
+        }else{
+           // $("#brand_div").css('display', 'block');
+            $("#region_div").css('display', 'block');
+            $("#branch_div").css('display', 'block');
+        }
+    })
+
+
+
+
+    $("#brands").on("change", function(){
+        var id = $(this).val();
+        var type = 'brand';
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands_task') }}',
+            data: {
+                id: id,  // Add a key for the id parameter
+                type: type
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $('#region_div').html('');
+                    $("#region_div").html(data.regions);
+                    select2();
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+
+    $(document).on("change", "#region_id" ,function(){
+        var id = $(this).val();
+        var type = 'region';
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands_task') }}',
+            data: {
+                id: id,  // Add a key for the id parameter
+                type: type
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    if(type == 'region'){
+                        $('#branch_div').html('');
+                        $("#branch_div").html(data.branches);
+                        select2();
+                    }
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+</script>
+
+<script>
+
+    $(".brand_id").on("change", function(){
+        var id = $(this).val();
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('lead_companyemployees') }}',
+            data: {
+                id: id  // Add a key for the id parameter
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $("#assign_to_div").html(data.employees);
+                    select2();
+                    $("#branch_div").html(data.branches);
+                    select2(); // Assuming this is a function to initialize or update a select2 dropdown
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+</script>

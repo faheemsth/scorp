@@ -943,7 +943,7 @@ class OrganizationController extends Controller
             }else if(\Auth::user()->type == 'super admin'){
                 $employees =  User::pluck('name', 'id')->toArray();
             }
-            $Region=Region::pluck('name', 'id')->toArray();
+            $Region=Region::whereRaw('FIND_IN_SET(?, brands)', [$task->brand_id])->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             return view('organizations.task_edit', compact('Region','task', 'users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'related_to', 'companies', 'employees'));
         } else {
@@ -1004,6 +1004,7 @@ class OrganizationController extends Controller
             if(isset($request->assigned_to)){
                 $dealTask->assigned_to = $request->assigned_to;
             }
+            $dealTask->brand_id = $request->brand_id;
             $dealTask->assigned_type = $request->assign_type;
             $dealTask->region_id = $request->region_id;
             // $dealTask->deal_stage_id = $request->stage_id;
