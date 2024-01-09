@@ -149,7 +149,7 @@
                                                     <table>
                                                         <tbody>
                                                             <tr>
-                                                                <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Record ID') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
@@ -158,7 +158,7 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Name') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
@@ -175,15 +175,54 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Brands') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
                                                                     {{ optional(App\Models\User::find(str_replace(['["', '"]'], '', $employee->brands)))->name }}
                                                                 </td>
                                                             </tr>
+
                                                             <tr>
-                                                                <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Email') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $employee->email }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Phone') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $employee->phone }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Location') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $employee->location }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Regional Manager') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $users[$employee->region_manager_id] ?? '' }}
+                                                                </td>
+                                                            </tr>
+
+
+                                                            
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Created at') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
@@ -192,7 +231,7 @@
                                                             </tr>
 
                                                             <tr>
-                                                                <td class="" style="width: 100px; text-align: right; font-size: 14px;">
+                                                                <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Update at') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">

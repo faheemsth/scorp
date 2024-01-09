@@ -16,9 +16,21 @@
                 </div>
 
                 <div class="col-md-6">
-                    <div class="form-group">
+                    <div class="form-group" id="brands_div">
+                        <label for="region_id">{{ __('Brands') }}</label>
+                        <select name="brands[]" id="brands" id="brands-1" class="form-control select2">
+                            <option value="">Select Brands</option>
+                            @foreach($brands as $key => $brand)
+                            <option value="{{$key}}"> {{$brand}} </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group" id="region_div">
                         <label for="region_id">{{ __('Region') }}</label>
-                        <select name="region_id" id="region_id" class="form-control">
+                        <select name="region_id" id="region_id" class="form-control select2">
                             <option value="">Select Region</option>
                             @if (!empty($regions))
                                 @foreach ($regions as $region)
@@ -33,18 +45,11 @@
                         @enderror
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group" id="brands_div">
-                        <label for="region_id">{{ __('Brands') }}</label>
-                        <select name="brands[]" id="brands" class="form-control select2">
-                            <option value="">Select Brands</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="col-md-6">
+                
+                <div class="col-md-6 d-none">
                     <div class="form-group">
                         <label for="branch_manager_id">{{ __('Branch Manager') }}</label>
-                        <select name="branch_manager_id" id="" class="form-control">
+                        <select name="branch_manager_id" id="branch-manager-1" class="form-control select2">
                             <option value="">Select Branch Manager</option>
                             @if (!empty($branchmanager))
                                 @foreach ($branchmanager as $branchmanage)
@@ -122,22 +127,32 @@
 <script>
     $(document).ready(function() {
 
-        $("#region_id").on("change", function(){
+        $("#brands").on("change", function(){
             var id = $(this).val();
+            var type = 'brand';
 
             $.ajax({
                 type: 'GET',
                 url: '{{ route('region_brands') }}',
                 data: {
-                    id: id  // Add a key for the id parameter
+                    id: id,  // Add a key for the id parameter
+                    type: type
                 },
                 success: function(data){
                     data = JSON.parse(data);
 
                     if (data.status === 'success') {
-                        $('#brands').remove();
-                        $("#brands_div").html(data.brands);
-                        select2();
+                        if(type == 'brand'){
+                            $('#region_div').html('');
+                            $("#region_div").html(data.regions);
+                            select2();
+                        }else{
+                            $('#brands').remove();
+                            $("#brands_div").html(data.brands);
+                            select2();
+                        }
+
+                       
                     } else {
                         console.error('Server returned an error:', data.message);
                     }
@@ -148,9 +163,36 @@
             });
         });
 
+        $("#region_id").on("change", function(){
+            var id = $(this).val();
+            var type = 'region';
 
 
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id,  // Add a key for the id parameter
+                    type: type
+                },
+                success: function(data){
+                    data = JSON.parse(data);
 
+                    if (data.status === 'success') {
+                        if(type == 'region'){
+                            $('#branch_div').html('');
+                            $("#branch_div").html(data.branch);
+                            select2();
+                        }
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
 
     })
 </script>

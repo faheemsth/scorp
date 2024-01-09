@@ -53,11 +53,14 @@ class BranchController extends Controller
 
     public function create()
     {
-        $branchmanager=User::where('type','')->get();
+        $companies = FiltersBrands();
+        $brand_ids = array_keys($companies);
+        $brands = User::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
+        $branchmanager=User::where('type','Branch Manager')->get();
         $regions=Region::all();
         if(\Auth::user()->can('create branch'))
         {
-            return view('branch.create',compact('branchmanager','regions'));
+            return view('branch.create',compact('branchmanager','regions', 'brands'));
         }
         else
         {
