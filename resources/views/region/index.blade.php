@@ -311,27 +311,39 @@
                                         <th>{{ __('Location') }}</th>
 
                                         <th class="text-align: left;">{{ __('Region\'s Manager') }}</th>
+                                        <th>{{ __('Brand') }}</th>
                                         <th width="300px" class="d-none">{{ __('Action') }}</th>
                                     </tr>
                                 </thead>
                                 <tbody id="deals_tbody">
                                     @if (!empty($regions))
-                                        @foreach ($regions as $deal)
+                                        @foreach ($regions as $region)
                                             <tr>
                                                 <td>
-                                                    <input type="checkbox" name="deals[]" value="{{ $deal->id }}"
+                                                    <input type="checkbox" name="deals[]" value="{{ $region->id }}"
                                                         class="sub-check">
                                                 </td>
                                                 <td>
                                                     <span style="cursor:pointer" class="hyper-link"
-                                                           @can('view region') onclick="openSidebar('/regions/{{ $deal->id }}/show')" @endcan >
-                                                            {{ $deal->name }}
+                                                           @can('view region') onclick="openSidebar('/regions/{{ $region->id }}/show')" @endcan >
+                                                            {{ $region->name }}
                                                     </span>
                                                 </td>
-                                                <td><a href="mailto:{{ $deal->email }}">{{ $deal->email }}</a></td>
-                                                <td>{{ $deal->phone }}</td>
-                                                <td>{{ $deal->location }}</td>
-                                                <td>{{ $users[$deal->region_manager_id] ?? '' }}</td>
+                                                <td><a href="mailto:{{ $region->email }}">{{ $region->email }}</a></td>
+                                                <td>{{ $region->phone }}</td>
+                                                <td>{{ $region->location }}</td>
+                                                
+                                                <td>{{ $users[$region->region_manager_id] ?? '' }}</td>
+
+                                                <td>
+                                                    @php 
+                                                       $brands = explode(',', $region->brands);
+                                                    @endphp 
+
+                                                    @foreach($brands as $brand_id)
+                                                        {{ $users[$brand_id] ?? '' }}
+                                                    @endforeach
+                                                </td>
 
                                                 <td class="Action d-none">
                                                     <div class="dropdown">
@@ -348,12 +360,12 @@
                                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                             @can('edit region')
                                                             <li><a class="dropdown-item"
-                                                                    href="#" data-size="lg" data-url="{{ url('region/update?id=').$deal->id }}" title="{{ __('Update Origin') }}"
+                                                                    href="#" data-size="lg" data-url="{{ url('region/update?id=').$region->id }}" title="{{ __('Update Origin') }}"
                                                                     data-ajax-popup="true" data-bs-toggle="tooltip">Edit</a></li>
                                                             @endcan
                                                             @can('delete region')
                                                                     <li><a class="dropdown-item"
-                                                                    href="{{ url('region/delete?id=').$deal->id }}">Delete</a>
+                                                                    href="{{ url('region/delete?id=').$region->id }}">Delete</a>
                                                             </li>
                                                             @endcan
                                                         </ul>

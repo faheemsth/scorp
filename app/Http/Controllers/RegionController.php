@@ -117,19 +117,6 @@ class RegionController extends Controller
     {
 
         if (!empty($request->id)) {
-<<<<<<< HEAD
-           // Region::find($request->id)->update($request->all());
-            
-            $region = Region::findOrFail($request->id);
-            $region->name = $request->name;
-            $region->region_manager_id = $request->region_manager_id;
-            $region->location = $request->location;
-            $region->phone = $request->phone;
-            $region->email = $request->email;
-            $region->brands =implode(',',$request->brands);
-            $region->update();
-            
-=======
             
            // Region::find($request->id)->update($request->all());
            $region = Region::findOrFail($request->id);
@@ -142,7 +129,6 @@ class RegionController extends Controller
            $region->update();
 
 
->>>>>>> 647c85d537a798e71c45f8e212271f8eebf426d3
         } else {
           
             
