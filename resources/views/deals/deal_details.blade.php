@@ -700,7 +700,7 @@
                                                                     </span>
                                                                 </td>
                                                                 <td>{{ $app->application_key }}</td>
-                                                                <td>{{ $universities[$app->university_id] }}</td>
+                                                                <td>{{ $universities[$app->university_id] ?? '' }}</td>
                                                                 <td>{{ $app->intake }}</td>
                                                                 <td>{{ $stages[$app->stage_id] }}</td>
                                                                 <td>
