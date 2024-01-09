@@ -187,6 +187,49 @@ if (!function_exists('FiltersBrands')) {
     }
 }
 
+if (!function_exists('FiltersRegions')){
+    function FiltersRegions($id){
+        $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
+        $html = ' <select class="form form-control region_id select2" id="region_id" name="region_id" required> <option value="">Select Region</option> ';
+        foreach ($regions as $key => $region) {
+            $html .= '<option value="' . $key . '">' . $region . '</option> ';
+        }
+        $html .= '</select>';
+
+        return $html;
+    }
+}
+
+if (!function_exists('FiltersBranches')){
+    function FiltersBranches($id){
+        $branches = Branch::where('region_id', $id)->pluck('name', 'id')->toArray();
+        $html = ' <select class="form form-control branch_id select2" id="branch_id" name="lead_branch" required> <option value="">Select Region</option> ';
+        foreach ($branches as $key => $branch) {
+            $html .= '<option value="' . $key . '">' . $branch . '</option> ';
+        }
+        $html .= '</select>';
+
+        return $html;
+    }
+}
+
+
+if (!function_exists('FiltersBranchUsers')){
+    function FiltersBranchUsers($id){
+        $users = User::where('branch_id', $id)->pluck('name', 'id')->toArray();
+        $html = ' <select class="form form-control user_id select2" id="user_id" name="lead_assgigned_user" required> <option value="">Select User</option> ';
+        foreach ($users as $key => $user) {
+            $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        }
+        $html .= '</select>';
+
+        return $html;
+    }
+}
+
+
+
+
 
 
 ?>
