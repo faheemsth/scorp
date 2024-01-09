@@ -873,9 +873,17 @@ class UserController extends Controller
         } else {
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', $brand_ids)->pluck('name', 'id');
-            $branches = [0 => 'Select Branches'] + $branches->toArray();
             $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+        
+            $branch_query = Branch::query();
+
+            foreach ($brand_ids as $brandId) {
+                $branch_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+            }
+            $branches = $branch_query->pluck('name', 'id');
+            $branches = [0 => 'Select Branches'] + $branches->toArray();
+           
         }
 
 

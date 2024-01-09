@@ -34,10 +34,19 @@ class BranchController extends Controller
                 $total_records = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->count();
                 $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }else{
-                 $companies = FiltersBrands();
-                 $brand_ids = array_keys($companies);
-                 $total_records = Branch::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->count();
-                 $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+               // $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->get();
+                
+                
+                $branch_query = Branch::query();
+
+               foreach ($brand_ids as $brandId) {
+                   $branch_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+               }
+               $total_records = $branch_query->count();
+   
+               $branches = $branch_query->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }
 
 
