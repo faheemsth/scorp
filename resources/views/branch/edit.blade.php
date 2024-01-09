@@ -1,4 +1,5 @@
-{{ Form::model($branch, ['route' => ['branch.update', $branch->id], 'method' => 'PUT']) }}
+{{ Form::model($branch, ['route' => ['branch.update', $branch->id], 'method' => 'PUT', 'novalidate' => 'novalidate']) }}
+
 <div class="modal-body" style="min-height: 35vh;">
 
     <div class="row">
@@ -51,7 +52,7 @@
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-6 d-none">
             <div class="form-group">
                 <label for="branch_manager_id">{{ __('Branch Manager') }}</label>
                 <select name="branch_manager_id" id="" class="form-control">

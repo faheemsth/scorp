@@ -54,7 +54,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{Form::label('name',__('Project Director'),['class'=>'form-label']) }}
-                {{Form::select('project_director', $projectDirectors, null, array('class'=>'form-control select2','id' => 'projectDirectors' , 'required'=>'required'))}}
+                {{Form::select('project_director', $projectDirectors, null, array('class'=>'form-control select2','id' => 'projectDirectors1' , 'required'=>'required'))}}
                 @error('project_director')
                 <small class="invalid-name" role="alert">
                     <strong class="text-danger">{{ $message }}</strong>

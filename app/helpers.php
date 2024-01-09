@@ -162,6 +162,7 @@ if (!function_exists('FiltersBrands')) {
         }else{
             $user_brand = !empty(\Auth::user()->brand_id) ? \Auth::user()->brand_id : 0;
         }
+        
 
         if(\Auth::user()->type == 'super admin'){
 
