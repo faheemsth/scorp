@@ -116,9 +116,11 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     <div class="col-md-4"> <label for="">Brands</label>
                         <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple style="width: 95%;">
                             <option value="">Select Brand</option>
-                            @foreach ($brands as $brand)
-                            <option value="{{ $brand->id }}" <?= isset($_GET['created_by']) && in_array($brand->id, $_GET['created_by']) ? 'selected' : '' ?> class="">{{ $brand->name }}</option>
-                            @endforeach
+                            @if (FiltersBrands())
+                                @foreach (FiltersBrands() as $key => $brand)
+                                   <option value="{{ $key }}" <?= isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' ?> class="">{{ $brand }}</option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
                     @endif

@@ -5,7 +5,7 @@
     @php
         $com_permissions = [];
         $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
-        
+
     @endphp
 @endif
 
@@ -263,9 +263,11 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         <select class="form form-control select2" id="choices-multiple555"
                                             name="created_by[]" multiple style="width: 95%;">
                                             <option value="">Select Brand</option>
-                                            @foreach ($brands as $key => $brand)
+                                    @if (FiltersBrands())
+                                            @foreach (FiltersBrands() as $key => $brand)
                                             <option value="{{ $key }}" {{ isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' }}>{{ $brand }}</option>
-                                          @endforeach
+                                           @endforeach
+                                    @endif
                                         </select>
                                     </div>
                                     @endif
@@ -419,7 +421,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                 </td>
                                                 @if (\Auth::user()->type == 'super admin')
                                                     <td>{{ $users[$lead->brand_id] }}</td>
-                                                    <td>{{ isset( $branches[$lead->branch_id]) ?  $branches[$lead->branch_id] : '' }}</td> 
+                                                    <td>{{ isset( $branches[$lead->branch_id]) ?  $branches[$lead->branch_id] : '' }}</td>
                                                 @endif
 
                                                 @if (Auth::user()->type != 'client')
@@ -583,16 +585,16 @@ if (isset($lead->is_active) && $lead->is_active) {
         </div>
     </div>
 
-    
+
 
 @endsection
 
 @push('script-page')
     <script>
-        
+
         $(document).ready(function() {
             let curr_url = window.location.href;
-        
+
             if(curr_url.includes('?')){
                 $('#save-filter-btn').css('display','inline-block');
             }
@@ -625,7 +627,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
         });
 
-        
+
 
         function massUpdate() {
             if (selectedArr.length > 0) {
