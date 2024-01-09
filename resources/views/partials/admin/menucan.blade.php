@@ -158,7 +158,7 @@
         {{-- //// --}}
         {{-- //// --}}
         @can('show account dashboard')
-            <li class="nav-item ">
+            <li class="d-none nav-item ">
                 <a class="nav-link {{ Request::segment(1) == 'account-dashboard' ? ' ' : 'collapsed' }}" href="#"
                     data-toggle="collapse" data-target="#collapsesaccount" aria-expanded="true"
                     aria-controls="collapsesaccount">
@@ -445,7 +445,7 @@
 
         @can('show project dashboard')
             @if (Gate::check('manage project'))
-                <li class="nav-item">
+                <li class="d-none nav-item">
 
                     <a class="nav-link  {{ Request::segment(1) == 'project' ||
                     Request::segment(1) == 'bugs-report' ||
@@ -607,7 +607,7 @@
                     Gate::check('manage pos') ||
                     Gate::check('manage print settings'))
                 {{-- //// --}}
-                <li class="nav-item ">
+                <li class="d-none nav-item ">
                     <a class="nav-link {{ Request::segment(1) == 'warehouse' || Request::segment(1) == 'purchase' || Request::segment(2) == 'pos.barcode' || Request::segment(1) == 'pos.print' || Request::segment(1) == 'pos.show' ? ' ' : 'collapsed' }}"
                         href="#" data-toggle="collapse" data-target="#collapsepos" aria-expanded="true"
                         aria-controls="collapsepos">
@@ -847,30 +847,30 @@
                             @endcan
 
                             @can('manage order')
-                                <li class=" {{ Request::segment(1) == 'order' ? 'active' : '' }}">
+                                <li class="d-none emp nav-item  {{ Request::segment(1) == 'order' ? 'active' : '' }}">
                                     <a href="{{ route('order.index') }}" class="collapse-item"
                                         style="color: white; font-size: 13px;">{{ __('Order') }}</a>
                                 </li>
                             @endcan
                             {{-- ///// --}}
                             @can('manage system settings')
-                                <li class="emp nav-item {{ Request::segment(1) == 'systems' ? 'active' : '' }}">
+                                <li class="d-none emp nav-item {{ Request::segment(1) == 'systems' ? 'active' : '' }}">
                                     <a href="{{ route('systems.index') }}" class="collapse-item"
                                         style="color:white; font-size: 13px;">{{ __('General Settings') }}</a>
                                 </li>
                             @endcan
                             @can('manage plan')
-                                <li class="nav-item {{ Request::segment(1) == 'plans' ? 'active' : '' }}">
+                                <li class="d-none  emp nav-item {{ Request::segment(1) == 'plans' ? 'active' : '' }}">
                                     <a href="{{ route('plans.index') }}" class="collapse-item"
                                         style="color:white; font-size: 13px;">{{ __('Plan') }}</a>
                                 </li>
-                                <li class="emp nav-item {{ Request::segment(1) == 'plan_request' ? 'active' : '' }}">
+                                <li class="d-none emp nav-item {{ Request::segment(1) == 'plan_request' ? 'active' : '' }}">
                                     <a href="{{ route('plan_request.index') }}" class="collapse-item"
                                         style="color:white; font-size: 13px;">{{ __('Plan Request') }}</a>
                                 </li>
                             @endcan
                             @can('manage coupon')
-                                <li class="emp nav-item {{ Request::segment(1) == 'coupons' ? 'active' : '' }}">
+                                <li class="d-none emp nav-item {{ Request::segment(1) == 'coupons' ? 'active' : '' }}">
                                     <a href="{{ route('coupons.index') }}" class="collapse-item"
                                         style="color:white; font-size: 13px;">{{ __('Coupon') }}</a>
                                 </li>
