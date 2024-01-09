@@ -287,8 +287,10 @@ class InvoiceController extends Controller
                 Utility::starting_number( $invoice->invoice_id + 1, 'invoice');
                 // CustomField::saveData($invoice, $request->customField);
                 $products = $request->items;
+                // dd($products);
                 InvoiceProduct::where('invoice_id',$invoice->id)->delete();
-                for ($i = 0; $i < count($products); $i++) {
+
+                for ($i = 0; $i < sizeof($products); $i++) {
 
                     $invoiceProduct              = new InvoiceProduct();
                     $invoiceProduct->invoice_id  = $invoice->id;
