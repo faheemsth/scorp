@@ -31,7 +31,7 @@
             @enderror
         </div>
 
-        <div class="form-group col-md-6 {{ $user->type == 'Project Director' || $user->type == 'Project Manager' ? 'd-none' : ''}}" id="brand_div" >
+        <div class="form-group col-md-6" id="brand_div" >
             {{ Form::label('brand', __('Brand'), ['class' => 'form-label']) }}
             {!! Form::select('companies', $companies, $user->brand_id, [
                 'class' => 'form-control select2',
@@ -130,9 +130,9 @@
     $(document).on("change", "#roles" ,function(){
         var role = $(this).text();
         if (role == 'Project Director' || role == 'Project Manager') {
-            $("#brand_div, #region_div, #branch_div").addClass('d-none');
+            $("#region_div, #branch_div").addClass('d-none');
         } else {
-            $("#brand_div, #region_div, #branch_div").removeClass('d-none');
+            $("#region_div, #branch_div").removeClass('d-none');
         }
 
     })

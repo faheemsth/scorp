@@ -51,7 +51,7 @@
         </div>
 
 
-        <div class="col-md-6">
+        <div class="col-md-6 d-none">
             <div class="form-group">
                 {{Form::label('name',__('Project Director'),['class'=>'form-label']) }}
                 {{Form::select('project_director', $projectDirectors, $user->project_director_id, array('class'=>'form-control select2','id' => 'projectDirectors' , 'required'=>'required'))}}
