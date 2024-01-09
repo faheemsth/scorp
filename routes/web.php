@@ -1809,3 +1809,7 @@ Route::get('/region/regionBrands', [RegionController::class, 'getRegionBrands'])
 Route::post("/save-filter", [SavedFilterController::class, 'save'])->name('save-filter');
 Route::post("/delete-filter", [SavedFilterController::class, 'deleteFilter'])->name('delete-filter');
 
+/////////////////////////////////////////////////////////////////////////////////
+Route::get('/region/filter-regions', [RegionController::class, 'getFilterRegions'])->name('filter-regions');
+Route::get('/region/filter-branches', [RegionController::class, 'getFilterBranches'])->name('filter-branches');
+Route::get('/region/filter-branch-users', [RegionController::class, 'getFilterBranchUsers'])->name('filter-branch-users');

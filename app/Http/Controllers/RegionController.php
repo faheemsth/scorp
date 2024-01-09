@@ -172,5 +172,30 @@ class RegionController extends Controller
         ]);
     }
 
+    public function getFilterRegions(){
+        $html = FiltersRegions($_GET['id']);
+        return json_encode([
+            'html' => $html,
+            'status' => 'success'
+        ]);
+    }
+
+    public function getFilterBranches(){
+        $html = FiltersBranches($_GET['id']);
+        return json_encode([
+            'html' => $html,
+            'status' => 'success'
+        ]);
+    }   
+
+
+    public function getFilterBranchUsers(){
+        $html = FiltersBranchUsers($_GET['id']);
+        return json_encode([
+            'html' => $html,
+            'status' => 'success'
+        ]);
+    }   
+
 
 }
