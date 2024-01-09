@@ -218,7 +218,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' ? 'd-none' : ''}}">
+                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' || $employee->type == 'Region Manager'? 'd-none' : ''}}">
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Branch') }}
                                                                 </td>

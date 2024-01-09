@@ -141,6 +141,8 @@
                 //$("#brand_div").css('display', 'none');
                 $("#region_div").css('display', 'none');
                 $("#branch_div").css('display', 'none');
+            }else if(role == 'Region Manager') {
+                $("#branch_div").css('display', 'none');
             }else{
                // $("#brand_div").css('display', 'block');
                 $("#region_div").css('display', 'block');
