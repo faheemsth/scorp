@@ -222,9 +222,21 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <form action="{{ url('leads/import-csv') }}" method="POST"
                                         enctype="multipart/form-data">
                                         @csrf
-                                        <div class="modal-body" style="height: 40vh;">
+                                        <div class="modal-body pt-0" style="height: 80vh;" >
+                                            <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
+                                                <div class="card-body px-2 py-0">
                                             <div class="row">
-                                                <div class="col-md-12">
+                                                <div class="col-md-6">
+                                                    <div class="form-groups mt-2">
+                                                        <label for="extension"
+                                                            class="form-label">Extension</label>
+                                                        <select type="file" class="form-control" name="extension" id="extension">
+                                                            <option value="csv">CSV</option>
+                                                            <option value="excel">Excel</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
                                                     <div class="form-groups mt-2">
                                                         <label for="lead-file"
                                                             class="form-label">{{ __('Column') }}</label>
@@ -237,6 +249,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             <div class="col-md-12">
                                                 <div class="mt-2 columns-matching">
                                                     <!-- Put any additional form elements here, if needed -->
+                                                </div>
+                                            </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -808,6 +822,22 @@ if (isset($lead->is_active) && $lead->is_active) {
         })
 
         $(document).on("change", "#lead-file", function() {
+
+            var extension = $('#lead-file').val().split('.').pop().toLowerCase();
+            var ext = $('#extension').val();
+            
+            if(ext == 'csv'){
+                if($.inArray(extension, ['csv']) == -1) {
+                    alert('Sorry, file extension does not match with selected extension.');
+                    return false;
+                }
+            }else{
+                if($.inArray(extension, ['xlsx']) == -1) {
+                    alert('Sorry, file extension does not match with selected extension.');
+                    return false;
+                }
+            }
+            
             var form = $(this).closest('form')[0]; // Get the form element
             var formData = new FormData(form); // Pass the form element to FormData constructor
             $.ajax({
@@ -864,14 +894,14 @@ if (isset($lead->is_active) && $lead->is_active) {
         })
 
 
-        $(document).on("submit", "#import_csv", function() {
-            var assigned_to = $("#assigned_to").val();
+        // $(document).on("submit", "#import_csv", function() {
+        //     var assigned_to = $("#assigned_to").val();
 
-            if (assigned_to == undefined || assigned_to == '') {
-                show_toastr('error', 'Please assigned the leads', 'error');
-                return false;
-            }
-        })
+        //     if (assigned_to == undefined || assigned_to == '') {
+        //         show_toastr('error', 'Please assigned the leads', 'error');
+        //         return false;
+        //     }
+        // })
 
 
         // new lead form submitting...
