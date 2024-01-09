@@ -405,4 +405,37 @@
             }
         });
     });
+
+    // create task
+    $(document).on("submit", "#create-task", function(e) {
+
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var id = $('.org-id').val();
+
+        $(".create-task-btn").val('Processing...');
+        $('.create-task-btn').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: "/organization/" + id + "/task",
+            data: formData,
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status == 'success') {
+                    show_toastr('Success', data.message, 'success');
+                    $('#commonModal').modal('hide');
+                    $(".modal-backdrop").removeClass("modal-backdrop");
+                    $(".block-screen").css('display', 'none');
+                    openSidebar('/get-task-detail?task_id=' + data.task_id);
+                    return false;
+                } else {
+                    show_toastr('Error', data.message, 'error');
+                    $(".create-task-btn").val('Create');
+                    $('.create-task-btn').removeAttr('disabled');
+                }
+            }
+        });
+    });
 </script>
