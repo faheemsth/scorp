@@ -386,7 +386,7 @@
                                             <h5>
                                                 @can('view application')
                                                 <a href="javascript:void(0)" onclick="openSidebar('deals/{{ $deal->id }}/detail-application')"
-                                                    style="font-size: 14px;">{{ $deal->name }}</a>
+                                                    style="font-size: 14px;">{{ \Illuminate\Support\Str::limit($deal->name, 15) }}</a>
                                                     @endcan
                                                 <span style="cursor:pointer" onclick="openNav(<?= $deal->deal_id ?>)"
                                                     data-deal-id="{{ $deal->deal_id }}"
@@ -444,7 +444,7 @@
                                         ?>
                                         <div class="card-body">
                                             <div class="d-flex align-items-center justify-content-between mb-2">
-                                                <ul class="list-inline mb-0">
+                                                {{-- <ul class="list-inline mb-0">
                                                     <li class="list-inline-item d-inline-flex align-items-center"
                                                         data-bs-toggle="tooltip" title="{{ __('Tasks') }}">
                                                         <i class="f-16 text-primary ti ti-list"></i>
@@ -454,12 +454,12 @@
                                                 <div class="user-group">
                                                     <i class="text-primary ti ti-report-money"></i>
                                                     {{ \Auth::user()->priceFormat($deal->price) }}
-                                                </div>
+                                                </div> --}}
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <ul class="list-inline mb-0">
 
-                                                    <li class="list-inline-item d-inline-flex align-items-center"
+                                                    {{-- <li class="list-inline-item d-inline-flex align-items-center"
                                                         data-bs-toggle="tooltip" title="{{ __('Product') }}">
                                                         <i class="f-16 text-primary ti ti-shopping-cart"></i>
                                                         {{ count($products) }}
@@ -469,7 +469,7 @@
                                                         data-bs-toggle="tooltip" title="{{ __('Source') }}">
                                                         <i
                                                             class="f-16 text-primary ti ti-social"></i>{{ count($sources) }}
-                                                    </li>
+                                                    </li> --}}
                                                 </ul>
                                                 <div class="user-group">
 

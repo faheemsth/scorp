@@ -466,7 +466,7 @@
                                                 <div class="d-flex align-items-center justify-content-between">
                                                     <ul class="list-inline mb-0">
 
-                                                        <li class="list-inline-item d-inline-flex align-items-center"
+                                                        {{-- <li class="list-inline-item d-inline-flex align-items-center"
                                                             data-bs-toggle="tooltip" title="{{ __('Product') }}">
                                                             <i class="f-16 text-primary ti ti-shopping-cart d-none"></i>
                                                             {{ count($products) }}
@@ -476,7 +476,7 @@
                                                             data-bs-toggle="tooltip" title="{{ __('Source') }}">
                                                             <i
                                                                 class="f-16 text-primary ti ti-social d-none"></i>{{ count($sources) }}
-                                                        </li>
+                                                        </li> --}}
                                                     </ul>
                                                     <div class="user-group">
                                                         @foreach ($lead->users as $user)
