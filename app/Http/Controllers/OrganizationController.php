@@ -730,6 +730,7 @@ class OrganizationController extends Controller
             $priorities = DealTask::$priorities;
             $status     = DealTask::$status;
             $users = User::get()->pluck('name', 'id')->toArray();
+<<<<<<< HEAD
     
             if(\Auth::user()->type == 'super admin'){
            $branches = Branch::pluck('name', 'id')->toArray();
@@ -739,6 +740,20 @@ class OrganizationController extends Controller
            $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', $brand_ids)->pluck('name', 'id')->toArray();
             }
           
+=======
+
+
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', $brand_ids)->pluck('name', 'id')->toArray();
+
+
+            if (\Auth::user()->type == 'super admin') {
+                $branches = Branch::get()->pluck('name', 'id')->toArray();
+            }else{
+                $branches = Branch::get()->pluck('name', 'id')->toArray();
+            }
+>>>>>>> 7ba940318c60bd7ccb40af079baf15784a73e50e
 
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
@@ -1117,6 +1132,7 @@ class OrganizationController extends Controller
     public function getTaskUsers(Request $request)
     {
         $type = $request->type;
+        $branch_id = $request->branch_id;
 
         // if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director') {
 
@@ -1149,6 +1165,10 @@ class OrganizationController extends Controller
         //     $html .= '</select>';
         // } else {
             $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+<<<<<<< HEAD
+=======
+                ->where('branch_id', $branch_id)
+>>>>>>> 7ba940318c60bd7ccb40af079baf15784a73e50e
                 ->pluck('name', 'id');
             $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
             foreach ($users as $key => $user) {
