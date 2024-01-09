@@ -35,9 +35,9 @@
                     <div
                         class="d-flex align-items-center justify-content-between">
                         <div class="mb-3 mb-sm-0">
-                            <h5 class="mb-0">
-                                {{ $note->description }}
-                            </h5>
+                              <p class="">
+                              {{ $note->description }}
+                              </p>
                             <span
                                 class="text-muted text-sm">{{ $note->created_at }}
                             </span><br>

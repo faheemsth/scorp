@@ -753,8 +753,14 @@ class UserController extends Controller
 
                 //IF Role is Project Director ya Project Manager
                 // IF Role is Region Manager or Branch Manager
-                if($request->role == 'Project Director' || $request->role == 'Project Manager'){
-
+                if($request->role == 'Project Director'){
+                    User::where('id', $request->companies)->update([
+                        'project_director_id' => $user->id
+                    ]);
+                }else if($request->role == 'Project Manager') {
+                    User::where('id', $request->companies)->update([
+                        'project_manager_id' => $user->id
+                    ]);
                 } else if($request->role == 'Region Manager'){
                     Region::where('id', $request->region_id)->update([
                         'region_manager_id' => $user->id
