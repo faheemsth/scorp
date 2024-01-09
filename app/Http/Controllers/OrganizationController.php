@@ -730,17 +730,6 @@ class OrganizationController extends Controller
             $priorities = DealTask::$priorities;
             $status     = DealTask::$status;
             $users = User::get()->pluck('name', 'id')->toArray();
-<<<<<<< HEAD
-    
-            if(\Auth::user()->type == 'super admin'){
-           $branches = Branch::pluck('name', 'id')->toArray();
-            }else{
-                      $companies = FiltersBrands();
-            $brand_ids = array_keys($companies);
-           $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', $brand_ids)->pluck('name', 'id')->toArray();
-            }
-          
-=======
 
 
             $companies = FiltersBrands();
@@ -753,7 +742,6 @@ class OrganizationController extends Controller
             }else{
                 $branches = Branch::get()->pluck('name', 'id')->toArray();
             }
->>>>>>> 7ba940318c60bd7ccb40af079baf15784a73e50e
 
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
@@ -870,7 +858,7 @@ class OrganizationController extends Controller
             //         'remark' => json_encode(['title' => $dealTask->name]),
             //     ]
             // );
-            
+
 
             //store Activity Log
             $remarks = [
@@ -905,7 +893,7 @@ class OrganizationController extends Controller
     {
 
         if (\Auth::user()->can('edit task')) {
-           
+
 
             $task = DealTask::where('id', $id)->first();
 
@@ -928,7 +916,7 @@ class OrganizationController extends Controller
                 $users = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();
             }
 
-             
+
             $related_to = [];
             if ($task->related_type == 'organization') {
                 $related_to = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
@@ -1165,10 +1153,7 @@ class OrganizationController extends Controller
         //     $html .= '</select>';
         // } else {
             $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
-<<<<<<< HEAD
-=======
                 ->where('branch_id', $branch_id)
->>>>>>> 7ba940318c60bd7ccb40af079baf15784a73e50e
                 ->pluck('name', 'id');
             $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
             foreach ($users as $key => $user) {
@@ -1195,7 +1180,7 @@ class OrganizationController extends Controller
         } else if ($type == 'lead') {
             // $users = \App\Models\Lead::where(['created_by' => \Auth::user()->id])->get()->pluck('name', 'id')->toArray();
              $users = \App\Models\Lead::where(['brand_id' => $request->brand_id])->get()->pluck('name', 'id')->toArray();
-            
+
         } else if ($type == 'deal') {
             $users = Deal::where(['created_by' => \Auth::user()->id])->get()->pluck('name', 'id')->toArray();
         }
