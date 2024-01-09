@@ -730,7 +730,7 @@ class OrganizationController extends Controller
             $priorities = DealTask::$priorities;
             $status     = DealTask::$status;
             $users = User::get()->pluck('name', 'id')->toArray();
-    
+
             if(\Auth::user()->type == 'super admin'){
            $branches = Branch::pluck('name', 'id')->toArray();
             }else{
@@ -738,7 +738,7 @@ class OrganizationController extends Controller
             $brand_ids = array_keys($companies);
            $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', $brand_ids)->pluck('name', 'id')->toArray();
             }
-          
+
 
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
@@ -783,8 +783,9 @@ class OrganizationController extends Controller
                     $relateds = Deal::get()->pluck('name', 'id')->toArray();
                 }
             }
+            $Region= ['0' => 'Select Region'];
 
-            return view('organizations.tasks', compact('users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds'));
+            return view('organizations.tasks', compact('Region','users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -855,7 +856,7 @@ class OrganizationController extends Controller
             //         'remark' => json_encode(['title' => $dealTask->name]),
             //     ]
             // );
-            
+
 
             //store Activity Log
             $remarks = [
@@ -890,7 +891,7 @@ class OrganizationController extends Controller
     {
 
         if (\Auth::user()->can('edit task')) {
-           
+
 
             $task = DealTask::where('id', $id)->first();
 
@@ -913,7 +914,7 @@ class OrganizationController extends Controller
                 $users = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();
             }
 
-             
+
             $related_to = [];
             if ($task->related_type == 'organization') {
                 $related_to = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
@@ -1113,41 +1114,10 @@ class OrganizationController extends Controller
         }
     }
 
-
     public function getTaskUsers(Request $request)
     {
-        $type = $request->type;
-
-        // if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director') {
-
-        //     $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
-        // } else if (\Auth::user()->type == 'super admin') {
-        //     $currentUserCompany = \App\Models\User::where('type', 'company')->first();
-        // } else {
-        //     $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->id);
-        // }
-
-        // $com_permissions = \App\Models\CompanyPermission::where('company_id', $currentUserCompany->id)->where('active', 'true')->get();
-
-
         $html = '';
-        // if ($type == 'company') {
-        //     $users = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
-        //     $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
 
-        //     foreach ($users as $key => $user) {
-        //         if ($key == $currentUserCompany->id) {
-        //             $html .= '<option value="' . $key . '">' . $user . '</option> ';
-        //         }
-
-        //         foreach ($com_permissions as $com_permission) {
-        //             if ($key == $com_permission->permitted_company_id) {
-        //                 $html .= '<option value="' . $key . '">' . $user . '</option> ';
-        //             }
-        //         }
-        //     }
-        //     $html .= '</select>';
-        // } else {
             $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
                 ->pluck('name', 'id');
             $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
@@ -1155,10 +1125,6 @@ class OrganizationController extends Controller
                 $html .= '<option value="' . $key . '">' . $user . '</option> ';
             }
             $html .= '</select>';
-        // }
-
-
-
         return json_encode([
             'status' => 'success',
             'html' => $html
@@ -1175,7 +1141,7 @@ class OrganizationController extends Controller
         } else if ($type == 'lead') {
             // $users = \App\Models\Lead::where(['created_by' => \Auth::user()->id])->get()->pluck('name', 'id')->toArray();
              $users = \App\Models\Lead::where(['brand_id' => $request->brand_id])->get()->pluck('name', 'id')->toArray();
-            
+
         } else if ($type == 'deal') {
             $users = Deal::where(['created_by' => \Auth::user()->id])->get()->pluck('name', 'id')->toArray();
         }
