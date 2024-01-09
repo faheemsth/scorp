@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use App\Models\CompanyPermission;
+use App\Models\Region;
 
 class OrganizationController extends Controller
 {
@@ -942,9 +943,9 @@ class OrganizationController extends Controller
             }else if(\Auth::user()->type == 'super admin'){
                 $employees =  User::pluck('name', 'id')->toArray();
             }
-
+            $Region=Region::pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
-            return view('organizations.task_edit', compact('task', 'users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'related_to', 'companies', 'employees'));
+            return view('organizations.task_edit', compact('Region','task', 'users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'related_to', 'companies', 'employees'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -1004,7 +1005,7 @@ class OrganizationController extends Controller
                 $dealTask->assigned_to = $request->assigned_to;
             }
             $dealTask->assigned_type = $request->assign_type;
-
+            $dealTask->region_id = $request->region_id;
             // $dealTask->deal_stage_id = $request->stage_id;
             $dealTask->due_date = isset($request->due_date) ? $request->due_date : '';
             $dealTask->start_date = $request->start_date;

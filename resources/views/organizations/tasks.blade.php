@@ -60,7 +60,7 @@
                         <div class="form-group row ">
                             <label for="branches" class="col-sm-3 col-form-label">Region</label>
                             <div class="form-group col-md-6" id="region_div">
-                                {!! Form::select('region', $Region, null, [
+                                {!! Form::select('region_id', $Region, null, [
                                     'class' => 'form-control select2',
                                     'id' => 'region_id'
                                 ]) !!}

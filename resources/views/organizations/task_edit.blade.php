@@ -47,9 +47,39 @@
                             </div>
                         </div>
 
+                        @if (
+                            \Auth::user()->type == 'super admin' ||
+                                \Auth::user()->type == 'project director' ||
+                                \Auth::user()->type == 'project manager')
+                            <div class="form-group row ">
+                                <label for="branches" class="col-sm-3 col-form-label">Brands</label>
+                                <div class="col-sm-6">
+                                    <select class="form form-control select2 brand_id" id="choices-multiple0"
+                                        name="brand_id" {{ !\Auth::user()->can('edit brand task') ? 'disabled' : '' }}>
+                                        <option value="">Select Brands</option>
+                                        @foreach ($companies as $key => $brand)
+                                            <option value="{{ $key }}" {{ $task->brand_id == $key ? 'selected' : ''  }}>{{ $brand }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                        <div class="form-group row ">
+                            <label for="branches" class="col-sm-3 col-form-label">Region</label>
+                            <div class="form-group col-md-6" id="region_div">
+                                {!! Form::select('region_id', $Region, $task->region_id, [
+                                    'class' => 'form-control select2',
+                                    'id' => 'region_id'
+                                ]) !!}
+                            </div>
+                        </div>
+                        @endif
+
                         <div class="form-group row ">
                             <label for="branches" class="col-sm-3 col-form-label">
-                                Office
+                                Branch
 
                                 <span class="text-danger">*</span>
                             </label>
@@ -86,23 +116,7 @@
                             </div>
                         </div>
 
-                        @if (
-                            \Auth::user()->type == 'super admin' ||
-                                \Auth::user()->type == 'project director' ||
-                                \Auth::user()->type == 'project manager')
-                            <div class="form-group row ">
-                                <label for="branches" class="col-sm-3 col-form-label">Brands</label>
-                                <div class="col-sm-6">
-                                    <select class="form form-control select2 brand_id" id="choices-multiple0"
-                                        name="brand_id" {{ !\Auth::user()->can('edit brand task') ? 'disabled' : '' }}>
-                                        <option value="">Select Brands</option>
-                                        @foreach ($companies as $key => $brand)
-                                            <option value="{{ $key }}" {{ $task->brand_id == $key ? 'selected' : ''  }}>{{ $brand }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        @endif
+
 
                         <div class="form-group row d-none">
                             <label for="type" class="col-sm-3 col-form-label">Assign Type <span
