@@ -54,7 +54,7 @@
                             <div class="form-group row ">
                                 <label for="branches" class="col-sm-3 col-form-label">Brands</label>
                                 <div class="col-sm-6">
-                                    <select class="form form-control select2 brand_id" id="choices-multiple0"
+                                    <select class="form form-control select2 brand_id" id="brands"
                                         name="brand_id" {{ !\Auth::user()->can('edit brand task') ? 'disabled' : '' }}>
                                         <option value="">Select Brands</option>
                                         @foreach ($companies as $key => $brand)
@@ -83,9 +83,9 @@
 
                                 <span class="text-danger">*</span>
                             </label>
-                            <div class="col-sm-6">
-                                <select class="form form-control select2" {{ !\Auth::user()->can('edit branch task') ? 'disabled' : '' }} id="choices-multiple1" name="branch_id">
-                                    <option value="">Select Office</option>
+                            <div class="col-sm-6" id="branch_div">
+                                <select class="form form-control select2" {{ !\Auth::user()->can('edit branch task') ? 'disabled' : '' }} id="branch_id" name="branch_id">
+                                    <option value="">Select Branch</option>
                                     @foreach ($branches as $key => $branch)
                                         <option value="{{ $key }}"
                                             {{ $task->branch_id == $key ? 'selected' : '' }}>{{ $branch }}
@@ -95,7 +95,7 @@
                             </div>
                         </div>
 
-
+                       {{--
                         <div class="form-group row d-none">
                             <label for="organization" class="col-sm-3 col-form-label">
                                 Agency
@@ -115,9 +115,6 @@
                                 </select>
                             </div>
                         </div>
-
-
-
                         <div class="form-group row d-none">
                             <label for="type" class="col-sm-3 col-form-label">Assign Type <span
                                     class="text-danger">*</span></label>
@@ -132,13 +129,13 @@
                                     </option>
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
 
 
                         <div class="form-group row ">
                             <label for="organization" class="col-sm-3 col-form-label">Assigned to <span
                                     class="text-danger">*</span></label>
-                            <div class="col-sm-6" id="assigned_to_div">
+                            <div class="col-sm-6" id="assign_to_div">
                                 <select class="form form-control select2 assigned_to" id="choices-multiple4" name="assigned_to" {{ !\Auth::user()->can('edit assign to task') ? 'disabled' : '' }}>
                                     <option value="">Assign to</option>
                                     @foreach ($employees as $key => $user)
