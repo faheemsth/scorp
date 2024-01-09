@@ -205,6 +205,22 @@
             }
         })
     </script>
+<script>
+    $(document).ready(function () {
+        $("#searchIcon").on("click", function () {
+            var searchText = $("#searchInput").val().toLowerCase();
+            $(".kanban-box .card").each(function () {
+                var cardText = $(this).text().toLowerCase();
+                if (cardText.indexOf(searchText) === -1) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+        });
+    });
+</script>
+
 @endpush
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
@@ -257,10 +273,9 @@
                     <div class="col-8 d-flex justify-content-end gap-2">
                         <div class="input-group w-25">
                             <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
-                                <i class="ti ti-search" style="font-size: 18px"></i>
+                                <i class="ti ti-search" style="font-size: 18px" id="searchIcon"></i>
                             </span>
-                            <input type="Search" class="form-control border-0 bg-transparent ps-0"
-                                placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="search" class="form-control border-0 bg-transparent ps-0" id="searchInput" placeholder="Search this list..." aria-label="Search" aria-describedby="basic-addon1">
                         </div>
                         <div>
                             <button class="btn btn-dark px-2 pb-2 pt-2">
