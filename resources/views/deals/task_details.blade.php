@@ -40,7 +40,7 @@
                         <i class="ti ti-pencil"></i>
                     </button>
                     @endcan
-                
+
                     @can('delete task')
                     <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-danger text-white"  title="{{ __('Delete') }}">
                         <i class="ti ti-trash"></i>
@@ -395,9 +395,9 @@
                                                                     @php
 
                                                                         if ($task->related_type == 'organization') {
-                                                                            echo \App\Models\User::where('id', $task->related_to)->first()->name;
+                                                                            echo optional(\App\Models\User::where('id', $task->related_to)->first())->name;
                                                                         } elseif ($task->related_type == 'lead') {
-                                                                            echo \App\Models\Lead::where('id', $task->related_to)->first()->name;
+                                                                            echo optional(\App\Models\Lead::where('id', $task->related_to)->first())->name;
                                                                         } elseif ($task->related_type == 'deal') {
                                                                             echo \App\Models\Deal::findOrFail($task->related_to)->name;
                                                                         }
