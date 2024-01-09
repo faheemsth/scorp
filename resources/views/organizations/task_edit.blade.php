@@ -88,48 +88,12 @@
                                     <option value="">Select Branch</option>
                                     @foreach ($branches as $key => $branch)
                                         <option value="{{ $key }}"
-                                            {{ $task->branch_id == $key ? 'selected' : '' }}>{{ $branch }}
+                                            {{ App\Models\Branch::where('brands',$task->brand_id)->first()->id == $key ? 'selected' : '' }}>{{ $branch }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-
-                       {{--
-                        <div class="form-group row d-none">
-                            <label for="organization" class="col-sm-3 col-form-label">
-                                Agency
-                                <span class="text-danger">*</span>
-                            </label>
-                            <div class="col-sm-6">
-                                <select class="form form-control select2 organization_id" id="choices-multiple2"
-                                    name="organization_id">
-                                    <option value="">Select Agency</option>
-                                    @foreach ($orgs as $key => $org)
-                                        <option value="{{ $key }}"
-                                            {{ $key == $task->organization_id ? 'selected' : '' }}>
-
-                                            {{ $org }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row d-none">
-                            <label for="type" class="col-sm-3 col-form-label">Assign Type <span
-                                    class="text-danger">*</span></label>
-                            <div class="col-sm-6">
-                                <select class="form form-control select2 assign_type" id="choices-multiple3"
-                                    name="assign_type">
-                                    <option value="">Select Assign type</option>
-                                    <option value="company" {{ $task->assigned_type == 'company' ? 'selected' : '' }}>
-                                        Company</option>
-                                    <option value="individual"
-                                        {{ $task->assigned_type == 'individual' ? 'selected' : '' }}>individual
-                                    </option>
-                                </select>
-                            </div>
-                        </div> --}}
 
 
                         <div class="form-group row ">
@@ -405,106 +369,27 @@
     })
 </script>
 <script>
-    $(document).ready(function() {
-        // $.ajax({
-        //     type: 'GET',
-        //     url: '{{ route('organization.assign_to', 3) }}',
-        //     data: {
-        //         type: ''
-        //     },
-        //     success: function(data) {
-        //         data = JSON.parse(data);
-        //         if (data.status == 'success') {
-        //             $("#assign_to_div").html(data.html);
-        //             select2();
-        //         }
-        //     }
-        // });
-        $(".related_type").on('change', function() {
-            var type = $(this).val();
-            var brand_id  = $('.brand_id').val();
+    // change branch for assign
+    function Change(selectedBranch) {
+        var id = selectedBranch.value;
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('lead_companyemployees') }}',
+            data: {
+                id: id
+            },
+            success: function(data) {
+                data = JSON.parse(data);
 
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('organization.task.related_to', 1) }}',
-                data: {
-                    type:type,
-                    brand_id:brand_id,
-                },
-                success: function(data) {
-                    data = JSON.parse(data);
-                    if (data.status == 'success') {
-                        //console.log(data.html);
-                        $("#related_to_div").html(data.html);
-                        select2();
-                    }
+                if (data.status === 'success') {
+                    $("#assign_to_div").html(data.employees);
+                    select2();
                 }
-            })
-
-        })
-
-
-        $(document).on("submit", "#create-task", function(e) {
-
-            e.preventDefault();
-            var formData = $(this).serialize();
-            var id = $('.org-id').val();
-
-            $(".create-task-btn").val('Processing...');
-            $('.create-task-btn').attr('disabled', 'disabled');
-
-            $.ajax({
-                type: "POST",
-                url: "/organization/" + id + "/task",
-                data: formData,
-                success: function(data) {
-                    data = JSON.parse(data);
-
-                    if (data.status == 'success') {
-                        show_toastr('Success', data.message, 'success');
-                        $('#commonModal').modal('hide');
-                        $(".modal-backdrop").removeClass("modal-backdrop");
-                        $(".block-screen").css('display', 'none');
-                        openSidebar('/get-task-detail?task_id=' + data.task_id);
-                        return false;
-                    } else {
-                        show_toastr('Error', data.message, 'error');
-                        $(".create-task-btn").val('Create');
-                        $('.create-task-btn').removeAttr('disabled');
-                    }
-                }
-            });
+            }
         });
-    })
-</script>
-<script>
-    function toggleDiv() {
-        var branchSelect = document.getElementById("branch_id");
-        var hiddenDiv = document.getElementById("roleID");
-        if (branchSelect.value !== "") {
-            hiddenDiv.style.display = "block";
-        } else {
-            hiddenDiv.style.display = "none";
-        }
     }
-
-    $("#roles").on("change", function(){
-        var role = $(this).text();
-        if(role == 'Project Director' || role == 'Project Manager'){
-            //$("#brand_div").css('display', 'none');
-            $("#region_div").css('display', 'none');
-            $("#branch_div").css('display', 'none');
-        }else{
-           // $("#brand_div").css('display', 'block');
-            $("#region_div").css('display', 'block');
-            $("#branch_div").css('display', 'block');
-        }
-    })
-
-
-
-
-    $("#brands").on("change", function(){
+    // change brand for region
+    $("#brands").on("change", function() {
         var id = $(this).val();
         var type = 'brand';
 
@@ -512,10 +397,10 @@
             type: 'GET',
             url: '{{ route('region_brands_task') }}',
             data: {
-                id: id,  // Add a key for the id parameter
+                id: id,
                 type: type
             },
-            success: function(data){
+            success: function(data) {
                 data = JSON.parse(data);
 
                 if (data.status === 'success') {
@@ -531,23 +416,22 @@
             }
         });
     });
-
-
-    $(document).on("change", "#region_id" ,function(){
+    // change region for branch
+    $(document).on("change", "#region_id", function() {
         var id = $(this).val();
         var type = 'region';
         $.ajax({
             type: 'GET',
             url: '{{ route('region_brands_task') }}',
             data: {
-                id: id,  // Add a key for the id parameter
+                id: id,
                 type: type
             },
-            success: function(data){
+            success: function(data) {
                 data = JSON.parse(data);
 
                 if (data.status === 'success') {
-                    if(type == 'region'){
+                    if (type == 'region') {
                         $('#branch_div').html('');
                         $("#branch_div").html(data.branches);
                         select2();
@@ -563,33 +447,3 @@
     });
 </script>
 
-<script>
-
-    $(".brand_id").on("change", function(){
-        var id = $(this).val();
-
-        $.ajax({
-            type: 'GET',
-            url: '{{ route('lead_companyemployees') }}',
-            data: {
-                id: id  // Add a key for the id parameter
-            },
-            success: function(data){
-                data = JSON.parse(data);
-
-                if (data.status === 'success') {
-                    $("#assign_to_div").html(data.employees);
-                    select2();
-                    $("#branch_div").html(data.branches);
-                    select2(); // Assuming this is a function to initialize or update a select2 dropdown
-                } else {
-                    console.error('Server returned an error:', data.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX request failed:', status, error);
-            }
-        });
-    });
-
-</script>

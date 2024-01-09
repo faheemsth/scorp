@@ -279,7 +279,7 @@ class LeadController extends Controller
 
             $branches = $query->pluck('name', 'id')->toArray();
             $regions = $query->pluck('name', 'id')->toArray();
-         
+
             $users = allUsers();
             $companies = FiltersBrands();
 
@@ -300,7 +300,7 @@ class LeadController extends Controller
     public function getCompanyEmployees(){
         $id = $_GET['id'];
 
-        $employees =  User::where('brand_id', $id)->pluck('name', 'id')->toArray();
+        $employees =  User::where('brand_id', Branch::find($id)->brands)->pluck('name', 'id')->toArray();
         $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
 
 
