@@ -61,9 +61,15 @@ class ApplicationsController extends Controller
          if ($usr->can('view application') || $usr->type == 'super admin' || $usr->type == 'company') {
 
             $app_query = DealApplication::select(['deal_applications.*']);
-            $companies = FiltersBrands();
+            
+            if(\Auth::user()->type == 'super admin'){
+            $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
+            }else{
+                 $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->whereIn('deal_applications.brand_id', $brand_ids);
+            }
+           
             $total_records = $app_query->count();
             //$filters
             $app_for_filer = $app_query->get();
@@ -90,6 +96,7 @@ class ApplicationsController extends Controller
             }
 
             $applications = $app_query->get();
+         
             $universities = University::get()->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             $brands = User::where('type', 'company')->get();
@@ -234,7 +241,7 @@ class ApplicationsController extends Controller
 
         if ($usr->can('move application')) {
             $post       = $request->all();
-            $deal       = DealApplication::where('deal_id',$post['deal_id'])->first();
+            $deal       = DealApplication::where('id',$post['app'])->where('deal_id',$post['deal_id'])->first();
             $clients    = ClientDeal::select('client_id')->where('deal_id', '=', $deal->deal_id)->get()->pluck('client_id')->toArray();
             $deal_users = $deal->users->pluck('id')->toArray();
             $usrs       = User::whereIN('id', array_merge($deal_users, $clients))->get()->pluck('email', 'id')->toArray();
@@ -292,7 +299,7 @@ class ApplicationsController extends Controller
                 Utility::sendEmailTemplate('Move Deal', $usrs, $dArr);
             }
             foreach ($post['order'] as $key => $item) {
-                $deal           = DealApplication::where('deal_id',$item)->first();
+                $deal           = DealApplication::where('id',$post['app'])->where('deal_id',$item)->first();
                 $deal->order    = $key;
                 $deal->stage_id = $post['stage_id'];
                 $deal->save();

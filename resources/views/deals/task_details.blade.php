@@ -36,7 +36,7 @@
 
                     @can('edit task')
                     <button href="#" data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}"
-                        data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"class="btn px-2 btn-dark text-white">
+                        data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit Task') }}"class="btn px-2 btn-dark text-white">
                         <i class="ti ti-pencil"></i>
                     </button>
                     @endcan

@@ -22,9 +22,9 @@
     // dd(Session::get('auth_type_created_by'));
     $com_permissions = [];
     if ($currentUserCompany != null) {
-        $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
+        $com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', \Auth::user()->id)->get();
     }
-
+    
     $all_companies = App\Models\User::where('type', 'company')
         ->pluck('name', 'id')
         ->toArray();
@@ -80,10 +80,10 @@
                 onChange="loginWithCompany();">
                 <option value="">Select Companies</option>
                 @foreach ($all_companies as $key => $comp)
-                    @if ($key == $currentUserCompany->id)
-                        <option value="{{ $key }}" selected><a
-                                href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a></option>
-                    @endif
+                    <!--@if ($key == $currentUserCompany->id)-->
+                    <!--    <option value="{{ $key }}" selected><a-->
+                    <!--            href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a></option>-->
+                    <!--@endif-->
                     @foreach ($com_permissions as $com_per)
                         @if ($com_per->permitted_company_id == $key)
                             <option value="{{ $key }}"><a

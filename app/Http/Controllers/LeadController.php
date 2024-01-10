@@ -11,6 +11,7 @@ use App\Models\Label;
 use App\Models\Stage;
 use App\Models\Branch;
 use App\Models\Course;
+use App\Models\Region;
 use App\Models\Source;
 use App\Models\Utility;
 use App\Models\DealCall;
@@ -22,7 +23,6 @@ use App\Models\Pipeline;
 use App\Models\UserDeal;
 use App\Models\UserLead;
 use App\Models\DealEmail;
-use App\Models\LogActivity;
 use App\Models\LeadEmail;
 use App\Models\LeadStage;
 use Illuminate\View\View;
@@ -30,6 +30,7 @@ use App\Models\ClientDeal;
 use App\Models\LeadToDeal;
 use App\Models\University;
 use App\Mail\SendLeadEmail;
+use App\Models\LogActivity;
 use App\Models\Organization;
 use App\Models\StageHistory;
 use Illuminate\Http\Request;
@@ -38,11 +39,11 @@ use App\Models\LeadDiscussion;
 use App\Models\ProductService;
 use App\Models\DealApplication;
 use App\Models\LeadActivityLog;
+use App\Models\CompanyPermission;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use App\Models\CompanyPermission;
 
 class LeadController extends Controller
 {
@@ -184,7 +185,7 @@ class LeadController extends Controller
             $brand_ids = array_keys($companies);
 
             $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id');
-            $leads_query->whereIn('brand_id', $brand_ids);
+            $leads_query->whereIn('brand_id', $brand_ids)->where('is_converted',0);
 
             // Add the dynamic filters
             foreach ($filters as $column => $value) {
@@ -263,10 +264,24 @@ class LeadController extends Controller
     {
 
         if (\Auth::user()->can('create lead') || \Auth::user()->type == 'super admin') {
-            $branches = Branch::get()->pluck('name', 'id');
+
+
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+
+            $query = Branch::query();
+            $region_query = Region::query();
+
+            foreach ($brand_ids as $brandId) {
+                $query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+                $region_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+            }
+
+            $branches = $query->pluck('name', 'id')->toArray();
+            $regions = $query->pluck('name', 'id')->toArray();
+         
             $users = allUsers();
             $companies = FiltersBrands();
-
 
             //leads stages
             $stages = LeadStage::get()->pluck('name', 'id');
@@ -276,7 +291,7 @@ class LeadController extends Controller
             $sources = Source::get()->pluck('name', 'id');
             $countries = countries();
 
-            return view('leads.create', compact('users','companies' ,'stages', 'branches', 'organizations', 'sources', 'countries'));
+            return view('leads.create', compact('users','companies' ,'stages', 'branches', 'organizations', 'sources', 'countries', 'regions'));
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
         }
@@ -544,13 +559,14 @@ class LeadController extends Controller
                 $lead->sources  = explode(',', $lead->sources);
                 $lead->products = explode(',', $lead->products);
                 $stages = LeadStage::get()->pluck('name', 'id');
+                $regions = Region::pluck('name', 'id')->toArray();
                 $branches = Branch::get()->pluck('name', 'id');
                 $organizations = User::where('type', 'organization')->get()->pluck('name', 'id');
                 $sources = Source::get()->pluck('name', 'id');
                 $countries = $this->countries_list();
 
                 $companies = FiltersBrands();
-                return view('leads.edit', compact('companies','lead', 'pipelines', 'sources', 'products', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries'));
+                return view('leads.edit', compact('companies','lead', 'pipelines', 'sources', 'products', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'regions'));
             } else if (\Auth::user()->can('edit lead') || $lead->created_by == \Auth::user()->creatorId()) {
 
                 // $pipelines = Pipeline::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -581,13 +597,26 @@ class LeadController extends Controller
                 // } else {
                 //     $branch_creator_id = User::where('id', \Auth::user()->created_by)->first()->id;
                 // }
-                $branches = Branch::pluck('name', 'id')->toArray();
                 $organizations = User::where('type', 'organization')->get()->pluck('name', 'id');
                 $sources = Source::get()->pluck('name', 'id');
                 $countries = countries();
-                $companies = FiltersBrands();
 
-                return view('leads.edit', compact('lead', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'companies'));
+
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+
+                $query = Branch::query();
+                $region_query = Region::query();
+
+                foreach ($brand_ids as $brandId) {
+                    $query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+                    $region_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+                }
+
+                $branches = $query->pluck('name', 'id')->toArray();
+                $regions = $query->pluck('name', 'id')->toArray();
+
+                return view('leads.edit', compact('lead', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'companies', 'regions'));
                 // return view('leads.edit', compact('lead', 'pipelines', 'sources', 'products', 'users'));
             } else {
                 return response()->json(['error' => __('Permission Denied.')], 401);
@@ -701,7 +730,7 @@ class LeadController extends Controller
                 $lead->phone       = $request->lead_phone;
                 $lead->mobile_phone = $request->lead_mobile_phone;
 
-                if(isset($request->branch_id)){
+                if(isset($request->lead_branch)){
                     $lead->branch_id      = $request->lead_branch;
                 }
 

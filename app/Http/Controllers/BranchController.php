@@ -14,18 +14,51 @@ class BranchController extends Controller
     {
         if(\Auth::user()->can('manage branch'))
         {
-            // if(\Auth::user()->type == 'super admin'){
-            //     $branches = Branch::get();
-            // }else{
-            //     $branches = Branch::where('created_by', '=', \Auth::user()->creatorId())->get();
-            // }
-            $branches = Branch::get();
+        $num_results_on_page = 25;
+
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = ($page - 1) * $num_results_on_page;
+        } else {
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = 0;
+        }
+
+
+
+            if(\Auth::user()->type == 'super admin'){
+                $total_records = Branch::count();
+                $branches = Branch::skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+            }else if(\Auth::user()->type == 'company'){
+                $total_records = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->count();
+                $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+            }else{
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+               // $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->get();
+                
+                
+                $branch_query = Branch::query();
+
+               foreach ($brand_ids as $brandId) {
+                   $branch_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+               }
+               $total_records = $branch_query->count();
+   
+               $branches = $branch_query->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+            }
+
+
+
+
             $users = allUsers();
             $regions = allRegions();
             $data = [
                 'branches' => $branches,
                 'users' => $users,
-                'regions' => $regions
+                'regions' => $regions,
+                'total_records' => $total_records
             ];
             return view('branch.index', $data);
         }
@@ -37,11 +70,14 @@ class BranchController extends Controller
 
     public function create()
     {
-        $branchmanager=User::where('type','')->get();
+        $companies = FiltersBrands();
+        $brand_ids = array_keys($companies);
+        $brands = User::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
+        $branchmanager=User::where('type','Branch Manager')->get();
         $regions=Region::all();
         if(\Auth::user()->can('create branch'))
         {
-            return view('branch.create',compact('branchmanager','regions'));
+            return view('branch.create',compact('branchmanager','regions', 'brands'));
         }
         else
         {

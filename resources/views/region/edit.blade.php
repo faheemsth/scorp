@@ -63,6 +63,7 @@
                         <div class="accordion-body">
 
                             <div class="mt-1" style="margin-left: 10px; width: 65%;">
+                                <input type="hidden" value="{{ optional($regions)->id ?? '' }}" name="id">
                                 <table class="w-100">
                                     <tbody>
                                         <tr>
@@ -72,7 +73,7 @@
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="text" class="form-control" placeholder="Name"
-                                                    value="" name="name">
+                                                    value="{{ optional($regions)->name ?? '' }}" name="name">
                                             </td>
                                         </tr>
                                         <tr>
@@ -81,12 +82,20 @@
                                                 {{ __('Brands') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
+                                                @php 
+                                                    if(isset($regions)){
+                                                        $brand_ids =  $regions->brands ?? '';
                                                 
+                                                        if(!empty($brand_ids)){
+                                                            $brand_ids = explode(',', $brand_ids);
+                                                        }
+                                                    }
+                                                @endphp 
                                                 <select class="form form-control select2" id="choices-multiple55"
                                                     name="brands[]" style="width: 100% !important;" required>
                                                     <option value="">Select Brand</option>
                                                         @foreach ($brands as $key => $brand)
-                                                        <option value="{{ $key }}">{{ $brand }}</option>
+                                                        <option value="{{ $key }}" {{ in_array($key, $brand_ids) ? 'selected' : ''}}>{{ $brand }}</option>
                                                         @endforeach
                                                 </select>
                                             </td>
@@ -98,7 +107,7 @@
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="text" class="form-control" placeholder="Enter Location"
-                                                    value="" name="location">
+                                                    value="{{ optional($regions)->location ?? '' }}" name="location">
                                             </td>
                                         </tr>
 
@@ -110,7 +119,7 @@
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="text" class="form-control" placeholder="Enter Phone"
-                                                    value="" name="phone">
+                                                    value="{{ optional($regions)->phone ?? '' }}" name="phone">
                                             </td>
                                         </tr>
 
@@ -121,7 +130,7 @@
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="email" class="form-control" placeholder="Enter Email"
-                                                    value="" name="email">
+                                                    value="{{ optional($regions)->email ?? '' }}" name="email">
                                             </td>
                                         </tr>
                                         <tr class="d-none">
@@ -133,10 +142,14 @@
                                                     name="region_manager_id" >
                                                     <option value="">Select Region Manager</option>
                                                     @if(!empty($regionmanager))
-                                                        @foreach ($regionmanager as $regionmanage)
-                                                        <option value="{{$regionmanage->id }}">{{$regionmanage->name }}</option>
-                                                        @endforeach
-                                                    @endif
+                                                    @foreach ($regionmanager as $regionmanage)
+                                                        @if(!empty($regions->region_manager_id) && $regions->region_manager_id == $regionmanage->id)
+                                                            <option value="{{$regionmanage->id }}" selected>{{$regionmanage->name }}</option>
+                                                        @else
+                                                            <option value="{{$regionmanage->id }}">{{$regionmanage->name }}</option>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
                                                 </select>
                                             </td>
                                         </tr>
@@ -154,11 +167,7 @@
 
 <div class="modal-footer">
     <input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{ __('Create') }}" class="btn  btn-dark px-2 new-lead-btn">
+    <input type="submit" value="{{ __('Update') }}" class="btn  btn-dark px-2">
 </div>
 
 {{ Form::close() }}
-
-
-
-

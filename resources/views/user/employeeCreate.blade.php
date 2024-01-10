@@ -14,189 +14,45 @@
                 @enderror
             </div>
         </div>
-     {{-- ////////////////////////////////////////////// FOR ADMIN ///////////////////////////////////////////////// --}}
-        @if (\Auth::user()->type == 'super admin')
 
-            {{-- companies --}}
-            @if (
-                \Auth::user()->type == 'super admin' ||
-                    \Auth::user()->type == 'company' ||
-                    \Auth::user()->type == 'team' ||
-                    \Auth::user()->type == 'Project Director' ||
-                    \Auth::user()->type == 'Project Manager')
-                <div class="form-group col-md-6">
-                    {{ Form::label('role', __('Brand'), ['class' => 'form-label']) }}
-                    {!! Form::select('companies', $companies, null, [
-                        'class' => 'form-control select2',
-                        'id' => 'companies',
-                        'required' => 'required',
-                    ]) !!}
-                    @error('role')
-                        <small class="invalid-role" role="alert">
-                            <strong class="text-danger">{{ $message }}</strong>
-                        </small>
-                    @enderror
-                </div>
-            @elseif(\Auth::user()->type == 'super admin')
-            @endif
-            {{-- region_id --}}
-            @if (
-                \Auth::user()->type == 'super admin' ||
-                    \Auth::user()->type == 'company' ||
-                    \Auth::user()->type == 'team' ||
-                    \Auth::user()->type == 'Project Director' ||
-                    \Auth::user()->type == 'Project Manager')
-                <div class="form-group col-md-6">
-                    {{ Form::label('role', __('Region'), ['class' => 'form-label']) }}
-                    {!! Form::select('region_id', $Region, null, [
-                        'class' => 'form-control select2',
-                        'id' => 'region_id',
-                        'required' => 'required',
-                    ]) !!}
-                    @error('role')
-                        <small class="invalid-role" role="alert">
-                            <strong class="text-danger">{{ $message }}</strong>
-                        </small>
-                    @enderror
-                </div>
-            @elseif(\Auth::user()->type == 'super admin')
-            @endif
+        <div class="form-group col-md-6">
+            {{ Form::label('role', __('User Role'), ['class' => 'form-label']) }}
+            {!! Form::select('role', $roles, null, [
+                'class' => 'form-control select2',
+                'id' => 'roles',
+                'required' => 'required',
+            ]) !!}
+            @error('role')
+                <small class="invalid-role" role="alert">
+                    <strong class="text-danger">{{ $message }}</strong>
+                </small>
+            @enderror
+        </div>
 
-            {{-- branch_id --}}
-            @if (
-                \Auth::user()->type == 'super admin' ||
-                    \Auth::user()->type == 'company' ||
-                    \Auth::user()->type == 'team' ||
-                    \Auth::user()->type == 'Project Director' ||
-                    \Auth::user()->type == 'Project Manager')
-                <div class="form-group col-md-6">
-                    <label for="region_id">{{ __('Branch') }}</label>
-                    <div id="branch_div">
-                        <select name="branch_id" id="branch_id" class="form-control select2">
-                            <option value="">Select Branch</option>
-                        </select>
-                    </div>
-                    @error('branch_id')
-                        <small class="invalid-branch" branch="alert">
-                            <strong class="text-danger">{{ $message }}</strong>
-                        </small>
-                    @enderror
-                </div>
-            @endif
-            {{-- role --}}
-            @if (
-                \Auth::user()->type == 'super admin' ||
-                    \Auth::user()->type == 'company' ||
-                    \Auth::user()->type == 'team' ||
-                    \Auth::user()->type == 'Project Director' ||
-                    \Auth::user()->type == 'Project Manager')
-                <div class="form-group col-md-6">
-                    {{ Form::label('role', __('User Role'), ['class' => 'form-label']) }}
-                    {!! Form::select('role', $roles, null, [
-                        'class' => 'form-control select2',
-                        'id' => 'roles',
-                        'required' => 'required',
-                    ]) !!}
-                    @error('role')
-                        <small class="invalid-role" role="alert">
-                            <strong class="text-danger">{{ $message }}</strong>
-                        </small>
-                    @enderror
-                </div>
-            @elseif(\Auth::user()->type == 'super admin')
-                {!! Form::hidden('role', 'company', null, ['class' => 'form-control select2', 'required' => 'required']) !!}
-            @endif
-        {{-- ////////////////////////////////////////////// FOR COMPANY ///////////////////////////////////////////////// --}}
-        @else
-            {{-- companies --}}
-            @if (
-                \Auth::user()->type == 'super admin' ||
-                    \Auth::user()->type == 'company' ||
-                    \Auth::user()->type == 'team' ||
-                    \Auth::user()->type == 'Project Director' ||
-                    \Auth::user()->type == 'Project Manager')
-                <div class="form-group col-md-6"  >
-                    {{ Form::label('role', __('Brand'), ['class' => 'form-label']) }}
-                    {!! Form::select('companies', $companies, null, [
-                        'class' => 'form-control select2',
-                        'id' => 'companies',
-                        'required' => 'required',
-                    ]) !!}
-                    @error('role')
-                        <small class="invalid-role" role="alert">
-                            <strong class="text-danger">{{ $message }}</strong>
-                        </small>
-                    @enderror
-                </div>
-            @elseif(\Auth::user()->type == 'super admin')
-            @endif
-            {{-- region_id --}}
-            @if (
-                \Auth::user()->type == 'super admin' ||
-                    \Auth::user()->type == 'company' ||
-                    \Auth::user()->type == 'team' ||
-                    \Auth::user()->type == 'Project Director' ||
-                    \Auth::user()->type == 'Project Manager')
-                <div class="form-group col-md-6" id="RegionID" style="display: none">
-                    {{ Form::label('role', __('Region'), ['class' => 'form-label']) }}
-                    {!! Form::select('region_id', $Region, null, [
-                        'class' => 'form-control select2',
-                        'id' => 'region_id',
-                        'required' => 'required',
-                    ]) !!}
-                    @error('role')
-                        <small class="invalid-role" role="alert">
-                            <strong class="text-danger">{{ $message }}</strong>
-                        </small>
-                    @enderror
-                </div>
-            @elseif(\Auth::user()->type == 'super admin')
-            @endif
-            {{-- branch_id --}}
-            @if (
-                \Auth::user()->type == 'super admin' ||
-                    \Auth::user()->type == 'company' ||
-                    \Auth::user()->type == 'team' ||
-                    \Auth::user()->type == 'Project Director' ||
-                    \Auth::user()->type == 'Project Manager')
-                <div class="form-group col-md-6" id="branchID" style="display: none">
-                    <label for="region_id">{{ __('Branch') }}</label>
-                    <div id="branch_div">
-                        <select name="branch_id" id="branch_id" class="form-control select2" onchange="toggleDiv()">
-                            <option value="">Select Branch</option>
-                        </select>
-                    </div>
-                    @error('branch_id')
-                        <small class="invalid-branch" branch="alert">
-                            <strong class="text-danger">{{ $message }}</strong>
-                        </small>
-                    @enderror
-                </div>
-            @endif
-            {{-- role --}}
-            @if (
-                \Auth::user()->type == 'super admin' ||
-                    \Auth::user()->type == 'company' ||
-                    \Auth::user()->type == 'team' ||
-                    \Auth::user()->type == 'Project Director' ||
-                    \Auth::user()->type == 'Project Manager')
-                <div class="form-group col-md-6" id="roleID" style="display: none">
-                    {{ Form::label('role', __('User Role'), ['class' => 'form-label']) }}
-                    {!! Form::select('role', $roles, null, [
-                        'class' => 'form-control select2',
-                        'id' => 'roles',
-                        'required' => 'required',
-                    ]) !!}
-                    @error('role')
-                        <small class="invalid-role" role="alert">
-                            <strong class="text-danger">{{ $message }}</strong>
-                        </small>
-                    @enderror
-                </div>
-            @elseif(\Auth::user()->type == 'super admin')
-                {!! Form::hidden('role', 'company', null, ['class' => 'form-control select2', 'required' => 'required']) !!}
-            @endif
-        @endif
+        <div class="form-group col-md-6" id="brand_div">
+            {{ Form::label('brand', __('Brand'), ['class' => 'form-label']) }}
+            {!! Form::select('companies', $companies, null, [
+                'class' => 'form-control select2',
+                'id' => 'brands'
+            ]) !!}
+        </div>
+
+        <div class="form-group col-md-6" id="region_div">
+            {{ Form::label('role', __('Region'), ['class' => 'form-label']) }}
+            {!! Form::select('region', $Region, null, [
+                'class' => 'form-control select2',
+                'id' => 'region_id'
+            ]) !!}
+        </div>
+
+
+        <div class="form-group col-md-6" id="branch_div">
+            <label for="branch">{{ __('Branch') }}</label>
+            <select name="branch_id" id="branch_id" class="form-control select2">
+                <option value="">Select Branch</option>
+            </select>
+        </div>
+
         <div class="col-md-6">
             <div class="form-group">
                 {{ Form::label('email', __('Email'), ['class' => 'form-label']) }}
@@ -237,7 +93,7 @@
 
 
 
-        <div class="col-md-6">
+        <div class="col-md-6 d-none">
             <div class="form-group">
                 {{ Form::label('dob', __('Date of Birth'), ['class' => 'form-label']) }}
                 {{ Form::date('dob', null, ['class' => 'form-control', 'required' => 'required']) }}
@@ -269,38 +125,6 @@
 {{ Form::close() }}
 
 <script>
-    $("#region_id").on("change", function() {
-        $('#branchID').show();
-    });
-    $("#companies").on("change", function() {
-        var id = $(this).val();
-        $('#RegionID').show();
-        $.ajax({
-            type: 'GET',
-            url: '{{ route('deal_companyemployees') }}',
-            data: {
-                id: id // Add a key for the id parameter
-            },
-            success: function(data) {
-                data = JSON.parse(data);
-
-                if (data.status === 'success') {
-                    $("#branch_div").html(data.branches);
-                    select2();
-                } else {
-                    console.error('Server returned an error:', data.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX request failed:', status, error);
-            }
-        });
-    });
-    $("#branch_id").on("change", function() {
-        $('#roleID').show();
-    });
-</script>
-<script>
         function toggleDiv() {
             var branchSelect = document.getElementById("branch_id");
             var hiddenDiv = document.getElementById("roleID");
@@ -310,5 +134,106 @@
                 hiddenDiv.style.display = "none";
             }
         }
+
+        $("#roles").on("change", function(){
+            var role = $(this).text();
+            if(role == 'Project Director' || role == 'Project Manager'){
+                //$("#brand_div").css('display', 'none');
+                $("#region_div").css('display', 'none');
+                $("#branch_div").css('display', 'none');
+            }else if(role == 'Region Manager') {
+                $("#branch_div").css('display', 'none');
+            }else{
+               // $("#brand_div").css('display', 'block');
+                $("#region_div").css('display', 'block');
+                $("#branch_div").css('display', 'block');
+            }
+        })
+
+
+
+
+        $("#brands").on("change", function(){
+            var id = $(this).val();
+            var type = 'brand';
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id,  // Add a key for the id parameter
+                    type: type
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#region_div').html('');
+                        $("#region_div").html(data.regions);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+
+        $(document).on("change", "#region_id" ,function(){
+            var id = $(this).val();
+            var type = 'region';
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id,  // Add a key for the id parameter
+                    type: type
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        if(type == 'region'){
+                            $('#branch_div').html('');
+                            $("#branch_div").html(data.branches);
+                            select2();
+                        }
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+        function toggleDiv() {
+    var brandSelect = document.getElementById("brand");
+    var hiddenDiv = document.getElementById("roleID");
+    if (brandSelect && brandSelect.value !== "") {
+        hiddenDiv.style.display = "block";
+    } else {
+        hiddenDiv.style.display = "none";
+    }
+}
+
+$("#roles").on("change", function(){
+    var role = $(this).val();
+    if(role == 'Project Director' || role == 'Admin Team'){
+        $("#region_div").css('display', 'none');
+        $("#branch_div").css('display', 'none');
+        $("#brand_div").css('display', 'none');
+    } else if(role == 'Region Manager') {
+        $("#branch_div").css('display', 'none');
+    } else {
+        $("#region_div").css('display', 'block');
+        $("#branch_div").css('display', 'block');
+        $("#brand_div").css('display', 'block');
+    }
+});
 
 </script>

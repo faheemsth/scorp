@@ -135,6 +135,7 @@ use App\Http\Controllers\InstituteCategoryController;
 use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\SavedFilterController;
 use App\Http\Controllers\AppStageController;
+use App\Http\Controllers\VisaChartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -147,18 +148,34 @@ use App\Http\Controllers\AppStageController;
 |
 */
 
-Route::get('/welcome', function () {
-    return view('chartOfAccount.TestChart');
-});
+
+// ChartGranted
+Route::get('/ChartGranted', [VisaChartController::class, 'TestChartGranted']);
+Route::get('/GrantedByCountry', [VisaChartController::class, 'GrantedByCountry']);
+Route::get('/GrantedByUniversty', [VisaChartController::class, 'GrantedByUniversty']);
+
+// ChartGranted
+Route::get('/ChartDeposited', [VisaChartController::class, 'ChartDeposited']);
+Route::get('/DepositedByCountry', [VisaChartController::class, 'DepositedByCountry']);
+Route::get('/DepositedByUniversty', [VisaChartController::class, 'DepositedByUniversty']);
+
+// ChartGranted
+Route::get('/ChartApplication', [VisaChartController::class, 'ChartApplication']);
+Route::get('/ApplicationByCountry', [VisaChartController::class, 'ApplicationByCountry']);
+Route::get('/ApplicationByUniversty', [VisaChartController::class, 'ApplicationByUniversty']);
+
 Route::get('/', function () {
     return view('welcome');
  });
 
- Route::get('/dashboard', function () {
-     return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
 require __DIR__ . '/auth.php';
+
+ Route::get('/dashboard', function () {
+     return redirect('/crm-dashboard');
+
+})->middleware(['auth'])->name('dashboard');
+
 
 
 Route::get('/', ['as' => 'home','uses' =>'HomeController@index'])->middleware(['XSS']);
@@ -1788,7 +1805,12 @@ Route::get('/global-search', [GlobalSearchController::class, 'index'])->name('gl
 Route::get('/lead/companyEmployees', [LeadController::class, 'getCompanyEmployees'])->name('lead_companyemployees');
 Route::get('/deal/companyEmployees', [DealController::class, 'getCompanyEmployees'])->name('deal_companyemployees');
 Route::get('/region/regionBrands', [RegionController::class, 'getRegionBrands'])->name('region_brands');
+Route::get('/region/regionBrands/task', [RegionController::class, 'getRegionBrandsTask'])->name('region_brands_task');
 
 Route::post("/save-filter", [SavedFilterController::class, 'save'])->name('save-filter');
 Route::post("/delete-filter", [SavedFilterController::class, 'deleteFilter'])->name('delete-filter');
 
+/////////////////////////////////////////////////////////////////////////////////
+Route::get('/region/filter-regions', [RegionController::class, 'getFilterRegions'])->name('filter-regions');
+Route::get('/region/filter-branches', [RegionController::class, 'getFilterBranches'])->name('filter-branches');
+Route::get('/region/filter-branch-users', [RegionController::class, 'getFilterBranchUsers'])->name('filter-branch-users');

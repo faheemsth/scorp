@@ -400,9 +400,11 @@
                                 <div class="col-md-4"> <label for="">Brands</label>
                                     <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple style="width: 95%;">
                                         <option value="">Select Brand</option>
-                                        @foreach ($brands as $key => $brand)
-                                        <option value="{{ $key }}" <?= isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' ?> class="">{{ $brand }}</option>
-                                        @endforeach
+                                        @if (FiltersBrands())
+                                            @foreach (FiltersBrands() as $key => $brand)
+                                               <option value="{{ $key }}" <?= isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' ?> class="">{{ $brand }}</option>
+                                            @endforeach
+                                        @endif
                                     </select>
                                 </div>
                                 @endif
@@ -472,11 +474,11 @@
                                 @if (count($deals) > 0)
                                 @foreach ($deals as $deal)
 
-                                @php 
+                                @php
                                 $client = \App\Models\User::join('client_deals', 'client_deals.client_id', 'users.id')->where('client_deals.deal_id', $deal->id)->first();
                                 $passport_number = isset($client->passport_number) ? $client->passport_number : '';
-                                @endphp 
-                                
+                                @endphp
+
                                 <tr>
                                     <td>
                                         <input type="checkbox" name="deals[]" value="{{$deal->id}}" class="sub-check">
@@ -659,7 +661,7 @@
     <script>
         $(document).ready(function() {
             let curr_url = window.location.href;
-        
+
             if(curr_url.includes('?')){
                 $('#save-filter-btn').css('display','inline-block');
             }

@@ -4,9 +4,9 @@
         padding-top: 0px;
     }
 
-    .col-form-label {
+    /* .col-form-label {
         text-align: center;
-    }
+    } */
 
     .space {
         padding: 3px 3px;
@@ -15,7 +15,7 @@
 {{ Form::model(\Auth::user(), ['route' => ['organization.tasks.update', $task->id], 'method' => 'POST', 'id' => 'update-task', 'style' => 'z-index: 9999999 !important;']) }}
 
 <div class="modal-body  pt-0" style="min-height: 80vh">
-    <div class="lead-content my-2" style="max-height: 400px; overflow-y: scroll;">
+    <div class="lead-content my-2" style="max-height: 79vh; overflow-y: scroll;">
         <div class="card-body px-2 py-0" >
 
         {{-- ACCORDION --}}
@@ -97,14 +97,14 @@
                                         name="brand_id" {{ !\Auth::user()->can('edit brand task') ? 'disabled' : '' }}>
                                         <option value="">Select Brands</option>
                                         @foreach ($companies as $key => $brand)
-                                            <option value="{{ $key }}">{{ $brand }}</option>
+                                            <option value="{{ $key }}" {{ $task->brand_id == $key ? 'selected' : ''  }}>{{ $brand }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                         @endif
 
-                        <div class="form-group row">
+                        <div class="form-group row d-none">
                             <label for="type" class="col-sm-3 col-form-label">Assign Type <span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-6">

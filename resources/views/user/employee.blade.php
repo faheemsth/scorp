@@ -53,7 +53,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 <input type="Search" class="form-control border-0 bg-transparent ps-0" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                             </div>
 
-                            <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="tooltip" aria-expanded="false" title="{{ __('Filter') }}">
                                 <i class="ti ti-filter" style="font-size:18px"></i>
                             </button>
 
@@ -64,7 +64,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             @endcan
                         </div>
                     </div>
-                    
+
                     <script>
                         $(document).ready(function() {
                             $("#dropdownMenuButton3").click(function() {
@@ -176,7 +176,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                         <tr>
                                             <th>S.No</th>
                                             <th>Name</th>
-                                            <th>Company</th>
+                                            <th>Email</th>
                                             <th>Designation</th>
                                             <th>Phone</th>
                                             <th>Region</th>
@@ -197,7 +197,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                             <td><a href="mailto:{{ $employee->email }}">{{ $employee->email }}</a></td>
                                             <td>{{ $employee->type }}</td>
                                             <td>{{ $employee->phone }}</td>
-                                            <td>{{ $Region[$employee->region_id] ?? '' }}</td>
+                                            <td>{{ $Regions[$employee->region_id] ?? '' }}</td>
                                             <td>{{ !empty($employee->last_login_at) ? $employee->last_login_at : '' }}
                                             </td>
 
@@ -212,7 +212,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 @if ($total_records > 0)
                                 @include('layouts.pagination', [
                                 'total_pages' => $total_records,
-                                'num_results_on_page' => 50,
+                                'num_results_on_page' => 25,
                                 ])
                                 @endif
                             </div>

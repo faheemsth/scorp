@@ -95,9 +95,11 @@ $setting = \App\Models\Utility::colorset();
                             <div class="col-md-4"> <label for="">Brands</label>
                                 <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
                                     <option value="">Select Brand</option>
-                                    @foreach ($brands as $key => $brand)
-                                      <option value="{{ $key }}" {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }}>{{ $brand }}</option>
-                                    @endforeach
+                                    @if (FiltersBrands())
+                                        @foreach (FiltersBrands() as $key => $brand)
+                                          <option value="{{ $key }}" {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }}>{{ $brand }}</option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
 
@@ -375,7 +377,7 @@ $setting = \App\Models\Utility::colorset();
 
     $(document).ready(function() {
         let curr_url = window.location.href;
-    
+
         if(curr_url.includes('?')){
             $('#save-filter-btn').css('display','inline-block');
         }

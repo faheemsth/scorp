@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 @section('page-title')
-    {{ __('Manage Leads') }}
+    {{ __('Visas Analysis') }}
 @endsection
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
-    <li class="breadcrumb-item">{{ __('Leads') }}</li>
+    <li class="breadcrumb-item">{{ __('Visas Analysis') }}</li>
 @endsection
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <style>
@@ -60,7 +60,7 @@
 
             <div class="container">
                 <div class="row justify-content-center align-items-center my-4">
-                    <div class="col-3">
+                    <a class="col-3 py-5 text-decoration-none" href="{{ url('ChartGranted') }}" style="background-color: #B3CDE1; border-radius: 5%;">
                         <div class="row justify-content-center align-items-center">
                             <div class="col-auto d-flex flex-column gap-2 justify-content-center align-items-center">
                                 <div style="border: 2px solid black; border-radius: 50%;text-align: center;width: 25px;height: 25px;"
@@ -70,8 +70,8 @@
                                 <h6 class="fw-bold">Visas Analysis</h6>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-3">
+                    </a>
+                    <a class="col-3 py-5 text-decoration-none" href="{{ url('ChartDeposited') }}">
                         <div class="row justify-content-center align-items-center">
                             <div class="col-auto d-flex flex-column gap-2 justify-content-center align-items-center">
                                 <div style="border: 2px solid black; border-radius: 50%;text-align: center;width: 25px;height: 25px;"
@@ -81,9 +81,9 @@
                                 <h6 class="fw-bold">Deposits Analysis</h6>
                             </div>
                         </div>
-                    </div>
+                    </a>
 
-                    <div class="col-3">
+                    <a class="col-3 py-5 text-decoration-none" href="{{ url('ChartApplication') }}">
                         <div class="row justify-content-center align-items-center">
                             <div class="col-auto d-flex flex-column gap-2 justify-content-center align-items-center">
                                 <div style="border: 2px solid black; border-radius: 50%;text-align: center;width: 25px;height: 25px;"
@@ -93,7 +93,7 @@
                                 <h6 class="fw-bold">Application Analysis</h6>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
 
             </div>
@@ -169,42 +169,45 @@
                     </div>
                 </div>
             </div>
-            <div class="card mt-3">
-                <div class="card-body table-border-style" style="padding: 25px 3px;">
-                    <div class="row align-items-center justify-content-center ps-0 ms-0 pe-4 my-2">
-                        <div class="col-12">
-                            <canvas id="FirstChart" style="width:100%;max-width:600px"></canvas>
+            <div class="row">
+                <div class="col-6">
+                    <div class="card mt-3">
+                        <div class="card-body table-border-style" style="padding: 25px 3px;">
+                            <div class="row align-items-center justify-content-center ps-0 ms-0 pe-4 my-2">
+                                <div class="col-12">
+                                    <canvas id="GrantedByCountry" style="width:100%;max-width:600px"></canvas>
 
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card mt-3">
+                        <div class="card-body table-border-style" style="padding: 25px 3px;">
+                            <div class="row align-items-center justify-content-center ps-0 ms-0 pe-4 my-2">
+                                <div class="col-12">
+                                    <canvas id="GrantedByUniversty" style="width:100%;max-width:600px"></canvas>
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card mt-3">
-                <div class="card-body table-border-style" style="padding: 25px 3px;">
-                    <div class="row align-items-center justify-content-center ps-0 ms-0 pe-4 my-2">
-                        <div class="col-12">
-                            <canvas id="SecondChart" style="width:100%;max-width:600px"></canvas>
 
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 @endsection
 @push('script-page')
     <script>
-        const xValFirst = ["Italy", "France", "Spain", "USA", "Argentina", "France", "Spain", "USA", "Argentina"];
-        const yValFirst = [55, 49, 44, 24, 15, 24, 15, 25, 105, 35];
-        const barColorFirst = ["#1F2735", "#1F2735", "#1F2735", "#1F2735", "#1F2735"];
-
-        new Chart("FirstChart", {
+        const chartConfig = {
             type: "bar",
             data: {
-                labels: xValFirst,
+                labels: [],
                 datasets: [{
-                    backgroundColor: barColorFirst,
-                    data: yValFirst
+                    backgroundColor: [],
+                    data: []
                 }]
             },
             options: {
@@ -213,23 +216,31 @@
                 },
                 title: {
                     display: true,
-                    text: "World Wine Production 2018"
+                    text: ""
                 }
             }
+        };
+        const myChart = new Chart("GrantedByCountry", chartConfig);
+        $.ajax({
+            url: '/GrantedByCountry',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                myChart.data.labels = data.labels;
+                myChart.data.datasets[0].data = data.values;
+                myChart.data.datasets[0].backgroundColor = data.backgroundColor;
+                myChart.update();
+            },
         });
     </script>
     <script>
-        const xValues = ["Italy", "France", "Spain", "USA", "Argentina", "Argentina", "Argentina", "Argentina"];
-        const yValues = [55, 49, 44, 24, 15, 25, 105, 35];
-        const barColors = ["#1F2735", "#1F2735", "#1F2735", "#1F2735", "#1F2735", "#1F2735", "#1F2735", "#1F2735"];
-
-        new Chart("SecondChart", {
+        const chartConfigDynamic = {
             type: "horizontalBar",
             data: {
-                labels: xValues,
+                labels: [],
                 datasets: [{
-                    backgroundColor: barColors,
-                    data: yValues
+                    backgroundColor: [],
+                    data: []
                 }]
             },
             options: {
@@ -238,7 +249,7 @@
                 },
                 title: {
                     display: true,
-                    text: "World Wine Production 2018"
+                    text: ""
                 },
                 scales: {
                     xAxes: [{
@@ -254,7 +265,7 @@
                 },
                 layout: {
                     padding: {
-                        left: 50, // Adjust left padding to make space for bar colors
+                        left: 50,
                         right: 50,
                         top: 0,
                         bottom: 0
@@ -262,12 +273,24 @@
                 },
                 plugins: {
                     datalabels: {
-                        anchor: 'end', // Anchor labels at the end of bars
+                        anchor: 'end',
                         align: 'end',
-                        color: 'black' // Color of the labels
+                        color: 'black'
                     }
                 }
             }
+        };
+        const myDynamicChart = new Chart("GrantedByUniversty", chartConfigDynamic);
+        $.ajax({
+            url: '/GrantedByUniversty',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                myDynamicChart.data.labels = data.labels;
+                myDynamicChart.data.datasets[0].backgroundColor = data.backgroundColor;
+                myDynamicChart.data.datasets[0].data = data.values;
+                myDynamicChart.update();
+            },
         });
     </script>
 @endpush
