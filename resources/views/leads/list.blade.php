@@ -222,7 +222,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <form action="{{ url('leads/import-csv') }}" method="POST"
                                         enctype="multipart/form-data">
                                         @csrf
-                                        <div class="modal-body pt-0" style="height: 80vh;" >
+                                        <div class="modal-body pt-0" >
                                             <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
                                                 <div class="card-body px-2 py-0">
                                             <div class="row">
@@ -230,7 +230,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                     <div class="form-groups mt-2">
                                                         <label for="extension"
                                                             class="form-label">Extension</label>
-                                                        <select type="file" class="form-control" name="extension" id="extension">
+                                                        <select type="file" class="form-control" name="extension" id="extension" required>
+                                                            <option value="">Select type</option>
                                                             <option value="csv">CSV</option>
                                                             <option value="excel">Excel</option>
                                                         </select>
@@ -259,7 +260,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             <button type="button" class="btn btn-light"
                                                 data-bs-dismiss="modal">{{ __('Cancel') }}</button>
                                             <button type="submit"
-                                                class="btn btn-primary submit_btn">{{ __('Create') }}</button>
+                                                class="btn btn-dark submit_btn">{{ __('Create') }}</button>
                                         </div>
                                     </form>
 

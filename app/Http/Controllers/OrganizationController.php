@@ -849,7 +849,7 @@ class OrganizationController extends Controller
             $dealTask->branch_id = $request->branch_id;
             $dealTask->region_id = $request->region_id;
 
-            $dealTask->brand_id = $request->brand_id;
+            $dealTask->brand_id = Session::get('auth_type_id') != null ? Session::get('auth_type_id') : \Auth::user()->id;
             $dealTask->created_by = Session::get('auth_type_id') != null ? Session::get('auth_type_id') : \Auth::user()->id;
 
             $dealTask->assigned_to = $request->lead_assgigned_user;
@@ -1025,7 +1025,10 @@ class OrganizationController extends Controller
             }
             $dealTask->brand_id = $request->brand_id;
             $dealTask->assigned_type = $request->assign_type;
-            $dealTask->region_id = $request->region_id;
+            if(isset($request->region_id)){
+                $dealTask->region_id = $request->region_id;
+            }
+           
             // $dealTask->deal_stage_id = $request->stage_id;
             $dealTask->due_date = isset($request->due_date) ? $request->due_date : '';
             $dealTask->start_date = $request->start_date;

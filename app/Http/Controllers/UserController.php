@@ -974,7 +974,7 @@ class UserController extends Controller
                 );
 
 
-                $role          =  Role::findById($request->role);
+                $role = Role::findByName($request->role);
                 $input         = $request->all();
                 $input['type'] = $role->name;
                 $user->fill($input)->save();
@@ -988,7 +988,7 @@ class UserController extends Controller
                 Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId());
                 CustomField::saveData($user, $request->customField);
 
-                $roles[] = $request->role;
+                $roles[] = $role->id;
                 $user->roles()->sync($roles);
 
                 return redirect()->route('user.employees')->with(
