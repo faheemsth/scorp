@@ -417,7 +417,7 @@
 
 
         @if(isset($organizations))
-          <div class="card">
+          {{-- <div class="card">
             <div class="card-body">
                 <h3>Organizations</h3>
 
@@ -462,8 +462,205 @@
                     </table>
                 </div>
             </div>
-          </div>
+          </div> --}}
+          
 
+        @endif
+        @if(isset($brands))
+        <div class="card">
+            <div class="card-body">
+                <h3>Brands</h3>
+                <div class=" mt-3">
+                <div class="table-responsive mt-3">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Name</th>
+                                <th>Website Link</th>
+                                <th>Project Director</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @forelse($brands as $key => $user)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>
+
+                                        <span style="cursor:pointer" class="hyper-link">
+                                            
+                                            {{ $user->name }}
+                                        </span>
+                                    </td>
+                                    <td><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
+                                    <td>{{ !empty($user->project_director_id) && isset($projectDirectors[$user->project_director_id]) ? $projectDirectors[$user->project_director_id] : '' }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4">No brands found</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+
+                    </table>
+                  
+                </div>
+                </div>
+            </div>
+        </div>
+        @endif
+        @if(isset($regions))
+        <div class="card">
+            <div class="card-body">
+                <h3>Regions</h3>
+                <div class=" mt-3">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px !important;">
+                                    <input type="checkbox" class="main-check">
+                                </th>
+                                <th>{{ __('Name') }}</th>
+                                <th>{{ __('Email') }}</th>
+                                <th>{{ __('Phone') }}</th>
+                                <th>{{ __('Location') }}</th>
+
+                                <th class="text-align: left;">{{ __('Region\'s Manager') }}</th>
+                                <th>{{ __('Brand') }}</th>
+                                <!-- <th width="300px" class="d-none">{{ __('Action') }}</th> -->
+                            </tr>
+                        </thead>
+                        <tbody id="deals_tbody">
+                            @if (!empty($regions))
+                                @foreach ($regions as $region)
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="deals[]" value="{{ $region->id }}"
+                                                class="sub-check">
+                                        </td>
+                                        <td>
+                                            <span style="cursor:pointer" class="hyper-link" >
+                                                    {{ $region->name }}
+                                            </span>
+                                        </td>
+                                        <td><a href="mailto:{{ $region->email }}">{{ $region->email }}</a></td>
+                                        <td>{{ $region->phone }}</td>
+                                        <td>{{ $region->location }}</td>
+                                        
+                                        <td>{{ $users[$region->region_manager_id] ?? '' }}</td>
+
+                                        <td>
+                                            @php 
+                                                $brands = explode(',', $region->brands);
+                                            @endphp 
+
+                                            @foreach($brands as $brand_id)
+                                                {{ $users[$brand_id] ?? '' }}
+                                            @endforeach
+                                        </td>
+
+                                    </tr>
+                                @endforeach
+                            @else
+                                <tr class="font-style">
+                                    <td colspan="6" class="text-center">
+                                        {{ __('No data available in table') }}
+                                    </td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @endif
+
+        @if(isset($branches))
+        <div class="card">
+            <div class="card-body">
+                <h3>Branches</h3>
+                <div class=" mt-3">
+                    <table class="table ">
+                        <thead>
+                            <tr>
+                                <th>{{ __('Branch') }}</th>
+                                <th>{{ __('Region') }}</th>
+                                <th>{{ __('Branch Manager') }}</th>
+                                <th>{{ __('Phone') }}</th>
+                                <th>{{ __('Email') }}</th>
+                                <th>{{ __('Google Link') }}</th>
+                                <th>{{ __('Social Media Link') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-style">
+                            @foreach ($branches as $branch)
+                                <tr>
+                                    <td>
+                                        <span style="cursor:pointer" class="hyper-link">
+                                                {{ $branch->name }}
+                                        </span>
+                                    </td>
+                                    <td>{{ !empty($regions[$branch->region_id]) ? $regions[$branch->region_id] : '' }}</td>
+                                    <td>{{ !empty($branch->branch_manager_id) && isset($users[$branch->branch_manager_id]) ? $users[$branch->branch_manager_id] : '' }}</td>
+                                    <td>{{ $branch->phone }}</td>
+                                    <td><a href="mailto:{{ $branch->email }}">{{ $branch->email }}</a></td>
+                                    <td><a href="{{ $branch->google_link }}">{{ $branch->google_link }}</a></td>
+                                    <td><a href="{{ $branch->social_media_link }}">{{ $branch->social_media_link }}</a></td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @endif
+        @if(isset($branches))
+        <div class="card">
+            <div class="card-body">
+                <h3>Employees</h3>
+                <div class=" mt-3">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Designation</th>
+                                <th>Phone</th>
+                                <th>Region</th>
+                                <th>Last Login</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @forelse($employees as $key => $employee)
+                            <tr>
+                                <td>{{ $key + 1 }}</td>
+                                <td>
+
+                                    <span style="cursor:pointer" class="hyper-link" >
+                                        {{ $employee->name }}
+                                    </span>
+                                </td>
+                                <td><a href="mailto:{{ $employee->email }}">{{ $employee->email }}</a></td>
+                                <td>{{ $employee->type }}</td>
+                                <td>{{ $employee->phone }}</td>
+                                <td>{{ $Regions[$employee->region_id] ?? '' }}</td>
+                                <td>{{ !empty($employee->last_login_at) ? $employee->last_login_at : '' }}
+                                </td>
+
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="6">No employees found</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         @endif
 
     </div>
