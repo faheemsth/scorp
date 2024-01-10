@@ -22,9 +22,16 @@
     // dd(Session::get('auth_type_created_by'));
     $com_permissions = [];
     if ($currentUserCompany != null) {
-        $com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', \Auth::user()->id)->get();
+
+        if (Session::get('auth_type') == \Auth::user()->type ||
+                Session::get('auth_type') == 'Project Director' ||
+                Session::get('auth_type') == 'Project Manager'){
+                    $com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', Session::get('auth_type_id'))->get();
+                }else{
+                    $com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', \Auth::user()->id)->get();
+                }
     }
-    
+
     $all_companies = App\Models\User::where('type', 'company')
         ->pluck('name', 'id')
         ->toArray();

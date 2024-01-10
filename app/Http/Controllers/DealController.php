@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\CompanyPermission;
 use App\Models\Region;
 use App\Models\ApplicationStage;
+use Session;
 
 class DealController extends Controller
 {
@@ -2498,7 +2499,7 @@ class DealController extends Controller
                 'external_app_id' => $request->application_key,
                 'intake' =>$request->intake_month,
                 'name' => $deal->name . '-' . $request->course . '-' . $university_name . '-' . $request->application_key,
-                'created_by' => \Auth::user()->id
+                'created_by' => Session::get('auth_type_id') != null ? Session::get('auth_type_id') : \Auth::user()->id,
             ]);
 
 

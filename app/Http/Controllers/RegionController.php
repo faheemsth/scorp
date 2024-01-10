@@ -31,10 +31,10 @@ class RegionController extends Controller
             $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);;
        }else{
 
-       
+
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-          
+
             $region_query = Region::query();
 
            foreach ($brand_ids as $brandId) {
@@ -95,7 +95,7 @@ class RegionController extends Controller
         }else if($type == 'region'){
 
             $branches = Branch::where('region_id', $id)->pluck('name', 'id')->toArray();
-            $html = '<select class="form form-control select2" id="branch_id" name="branch_id" required> <option value="">Select Branch</option> ';
+            $html = '<select class="form form-control select2" id="branch_id" name="branchs" onchange="Change(this)" required> <option value="">Select Branch</option> ';
             foreach ($branches as $key => $branch) {
                 $html .= '<option value="' . $key . '">' . $branch . '</option> ';
             }
@@ -269,7 +269,7 @@ class RegionController extends Controller
             'html' => $html,
             'status' => 'success'
         ]);
-    }   
+    }
 
 
     public function getFilterBranchUsers(){
@@ -278,7 +278,7 @@ class RegionController extends Controller
             'html' => $html,
             'status' => 'success'
         ]);
-    }   
+    }
 
 
 }

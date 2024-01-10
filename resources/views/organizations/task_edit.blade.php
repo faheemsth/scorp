@@ -47,45 +47,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group row ">
-                            <label for="branches" class="col-sm-3 col-form-label">
-                                Office
-
-                                <span class="text-danger">*</span>
-                            </label>
-                            <div class="col-sm-6">
-                                <select class="form form-control select2" {{ !\Auth::user()->can('edit branch task') ? 'disabled' : '' }} id="choices-multiple1" name="branch_id">
-                                    <option value="">Select Office</option>
-                                    @foreach ($branches as $key => $branch)
-                                        <option value="{{ $key }}"
-                                            {{ $task->branch_id == $key ? 'selected' : '' }}>{{ $branch }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-
-                        <div class="form-group row d-none">
-                            <label for="organization" class="col-sm-3 col-form-label">
-                                Agency
-                                <span class="text-danger">*</span>
-                            </label>
-                            <div class="col-sm-6">
-                                <select class="form form-control select2 organization_id" id="choices-multiple2"
-                                    name="organization_id">
-                                    <option value="">Select Agency</option>
-                                    @foreach ($orgs as $key => $org)
-                                        <option value="{{ $key }}"
-                                            {{ $key == $task->organization_id ? 'selected' : '' }}>
-
-                                            {{ $org }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
                         @if (
                             \Auth::user()->type == 'super admin' ||
                                 \Auth::user()->type == 'project director' ||
@@ -93,7 +54,7 @@
                             <div class="form-group row ">
                                 <label for="branches" class="col-sm-3 col-form-label">Brands</label>
                                 <div class="col-sm-6">
-                                    <select class="form form-control select2 brand_id" id="choices-multiple0"
+                                    <select class="form form-control select2 brand_id" id="brands"
                                         name="brand_id" {{ !\Auth::user()->can('edit brand task') ? 'disabled' : '' }}>
                                         <option value="">Select Brands</option>
                                         @foreach ($companies as $key => $brand)
@@ -104,18 +65,32 @@
                             </div>
                         @endif
 
-                        <div class="form-group row d-none">
-                            <label for="type" class="col-sm-3 col-form-label">Assign Type <span
-                                    class="text-danger">*</span></label>
-                            <div class="col-sm-6">
-                                <select class="form form-control select2 assign_type" id="choices-multiple3"
-                                    name="assign_type">
-                                    <option value="">Select Assign type</option>
-                                    <option value="company" {{ $task->assigned_type == 'company' ? 'selected' : '' }}>
-                                        Company</option>
-                                    <option value="individual"
-                                        {{ $task->assigned_type == 'individual' ? 'selected' : '' }}>individual
-                                    </option>
+                        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                        <div class="form-group row ">
+                            <label for="branches" class="col-sm-3 col-form-label">Region</label>
+                            <div class="form-group col-md-6" id="region_div">
+                                {!! Form::select('region_id', $Region, $task->region_id, [
+                                    'class' => 'form-control select2',
+                                    'id' => 'region_id'
+                                ]) !!}
+                            </div>
+                        </div>
+                        @endif
+
+                        <div class="form-group row ">
+                            <label for="branches" class="col-sm-3 col-form-label">
+                                Branch
+
+                                <span class="text-danger">*</span>
+                            </label>
+                            <div class="col-sm-6" id="branch_div">
+                                <select class="form form-control select2" {{ !\Auth::user()->can('edit branch task') ? 'disabled' : '' }} id="branch_id" name="branch_id">
+                                    <option value="">Select Branch</option>
+                                    @foreach ($branches as $key => $branch)
+                                        <option value="{{ $key }}"
+                                            {{ App\Models\Branch::where('brands',$task->brand_id)->first()->id == $key ? 'selected' : '' }}>{{ $branch }}
+                                        </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -124,7 +99,7 @@
                         <div class="form-group row ">
                             <label for="organization" class="col-sm-3 col-form-label">Assigned to <span
                                     class="text-danger">*</span></label>
-                            <div class="col-sm-6" id="assigned_to_div">
+                            <div class="col-sm-6" id="assign_to_div">
                                 <select class="form form-control select2 assigned_to" id="choices-multiple4" name="assigned_to" {{ !\Auth::user()->can('edit assign to task') ? 'disabled' : '' }}>
                                     <option value="">Assign to</option>
                                     @foreach ($employees as $key => $user)
@@ -393,3 +368,82 @@
         });
     })
 </script>
+<script>
+    // change branch for assign
+    function Change(selectedBranch) {
+        var id = selectedBranch.value;
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('lead_companyemployees') }}',
+            data: {
+                id: id
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $("#assign_to_div").html(data.employees);
+                    select2();
+                }
+            }
+        });
+    }
+    // change brand for region
+    $("#brands").on("change", function() {
+        var id = $(this).val();
+        var type = 'brand';
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands_task') }}',
+            data: {
+                id: id,
+                type: type
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $('#region_div').html('');
+                    $("#region_div").html(data.regions);
+                    select2();
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+    // change region for branch
+    $(document).on("change", "#region_id", function() {
+        var id = $(this).val();
+        var type = 'region';
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands_task') }}',
+            data: {
+                id: id,
+                type: type
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    if (type == 'region') {
+                        $('#branch_div').html('');
+                        $("#branch_div").html(data.branches);
+                        select2();
+                    }
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+</script>
+

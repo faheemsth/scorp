@@ -44,6 +44,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Session;
 
 class LeadController extends Controller
 {
@@ -279,7 +280,7 @@ class LeadController extends Controller
 
             $branches = $query->pluck('name', 'id')->toArray();
             $regions = $query->pluck('name', 'id')->toArray();
-         
+
             $users = allUsers();
             $companies = FiltersBrands();
 
@@ -300,7 +301,7 @@ class LeadController extends Controller
     public function getCompanyEmployees(){
         $id = $_GET['id'];
 
-        $employees =  User::where('brand_id', $id)->pluck('name', 'id')->toArray();
+        $employees =  User::where('brand_id', Branch::find($id)->brands)->pluck('name', 'id')->toArray();
         $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
 
 
@@ -969,7 +970,7 @@ class LeadController extends Controller
             $lead->branch_id     = $request->branch_id;
 
             $lead->pipeline_id = $pipeline->id;
-            
+
             if (!isset($stage->id)) {
                 return redirect()->back()->with('error', 'Please create lead stage first');
             }
@@ -1141,7 +1142,7 @@ class LeadController extends Controller
     public function importCsv(Request $request)
     {
         $usr = \Auth::user();
-        
+
         if ($usr->can('edit lead')) {
             $file = $request->file('leads_file');
 
