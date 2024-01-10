@@ -856,6 +856,7 @@ class OrganizationController extends Controller
                     'branch_id' => 'required',
                     'assign_type' => 'required',
                     'lead_assgigned_user' => 'required',
+                    'assigned_to' => 'required',
                     'due_date' => 'required',
                     'start_date' => 'required',
                 ]
@@ -1193,7 +1194,7 @@ class OrganizationController extends Controller
             $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
                 ->where('branch_id', $branch_id)
                 ->pluck('name', 'id');
-            $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
+            $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Select Employee</option> ';
             foreach ($users as $key => $user) {
                 $html .= '<option value="' . $key . '">' . $user . '</option> ';
             }

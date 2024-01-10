@@ -52,7 +52,8 @@
                                 \Auth::user()->type == 'project director' ||
                                 \Auth::user()->type == 'project manager')
                             <div class="form-group row ">
-                                <label for="branches" class="col-sm-3 col-form-label">Brands</label>
+                                <label for="branches" class="col-sm-3 col-form-label">Brands <span
+                                    class="text-danger">*</span></label>
                                 <div class="col-sm-6">
                                     <select class="form form-control select2 brand_id" id="brands"
                                         name="brand_id" {{ !\Auth::user()->can('edit brand task') ? 'disabled' : '' }}>
@@ -65,7 +66,8 @@
                             </div>
                         @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
                             <div class="form-group row ">
-                                <label for="branches" class="col-sm-3 col-form-label">Brands</label>
+                                <label for="branches" class="col-sm-3 col-form-label">Brands <span
+                                    class="text-danger">*</span></label>
                                 <div class="form-group col-md-6" id="brand_div">
                                     <select class='form-control select2 brand_id' name="brands" id="brand_id">
                                         <option value="{{ Auth::id() }}" selected>{{ Auth::user()->name }}</option>
@@ -76,7 +78,8 @@
 
                         @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                         <div class="form-group row ">
-                            <label for="branches" class="col-sm-3 col-form-label">Region</label>
+                            <label for="branches" class="col-sm-3 col-form-label">Region <span
+                                class="text-danger">*</span></label>
                             <div class="form-group col-md-6" id="region_div">
                                 {!! Form::select('region_id', $Region, $task->region_id, [
                                     'class' => 'form-control select2',
@@ -88,9 +91,7 @@
 
                         <div class="form-group row ">
                             <label for="branches" class="col-sm-3 col-form-label">
-                                Branch
-
-                                <span class="text-danger">*</span>
+                                Branch <span class="text-danger">*</span>
                             </label>
                             <div class="col-sm-6" id="branch_div">
                                 <select class="form form-control select2" {{ !\Auth::user()->can('edit branch task') ? 'disabled' : '' }} id="branch_id" name="branch_id">
@@ -122,7 +123,8 @@
 
 
                         <div class="form-group row">
-                            <label for="type" class="col-sm-3 col-form-label">Task Status</label>
+                            <label for="type" class="col-sm-3 col-form-label">Task Status <span
+                                class="text-danger">*</span></label>
                             <div class="col-sm-6">
                                 <select class="form form-control select2" id="choices-multiple5" name="status" {{ !\Auth::user()->can('edit assign to task') ? 'disabled' : '' }}>
                                     <option value="">Select Status</option>
@@ -136,7 +138,8 @@
                         </div>
 
                         <div class="form-group row ">
-                            <label for="organization" class="col-sm-3 col-form-label">Due Date</label>
+                            <label for="organization" class="col-sm-3 col-form-label">Due Date <span
+                                class="text-danger">*</span></label>
                             <div class="col-sm-6">
                                 <input type="date" class="form form-control" value="{{ $task->due_date }}"
                                     name="due_date">
@@ -160,7 +163,8 @@
                     aria-labelledby="panelsStayOpen-headingTwo">
                     <div class="accordion-body">
                         <div class="form-group row ">
-                            <label for="organization" class="col-sm-3 col-form-label">Start Date</label>
+                            <label for="organization" class="col-sm-3 col-form-label">Start Date <span
+                                class="text-danger">*</span></label>
                             <div class="col-sm-6">
                                 <input type="date" class="form form-control" value="{{ $task->start_date }}"
                                     name="start_date">
@@ -170,7 +174,8 @@
 
 
                         <div class="form-group row">
-                            <label for="website" class="col-sm-3 col-form-label">Remainder Date</label>
+                            <label for="website" class="col-sm-3 col-form-label">Remainder Date <span
+                                class="text-danger">*</span></label>
                             <div class="col-sm-6 d-flex">
                                 <input type="date" class="form form-control" value="{{ $task->remainder_date }}"
                                     name="remainder_date">
@@ -198,9 +203,7 @@
 
                         <div class="form-group row">
                             <label for="website" class="col-sm-3 col-form-label">
-                                Related Type
-
-                                <span class="text-danger">*</span>
+                                Related Type <span class="text-danger">*</span>
                             </label>
                             <div class="col-sm-6">
 
@@ -270,7 +273,8 @@
                     aria-labelledby="panelsStayOpen-headingThree">
                     <div class="accordion-body">
                         <div class="form-group row">
-                            <label for="website" class="col-sm-3 col-form-label">Task Visibility</label>
+                            <label for="website" class="col-sm-3 col-form-label">Task Visibility <span
+                                class="text-danger">*</span></label>
                             <div class="col-sm-6">
                                 <select class="form form-control select2" id="choices-multiple8" name="visibility">
                                     <option value="">Select Visibility</option>
