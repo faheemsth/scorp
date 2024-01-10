@@ -378,6 +378,31 @@
     })
 </script>
 <script>
+
+$(document).ready(function() {
+var id = {{ $task->related_type }};
+var type = {{ $task->related_to }};
+
+    $.ajax({
+            type: 'GET',
+            url: '{{ route('GetBranchByType') }}',
+            data: {
+                id: id,
+                type: type
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                    if (data.status === 'success') {
+                        $('#related_to_div').html('');
+                        $("#related_to_div").html(data.branches);
+                        select2();
+                    }
+                }
+
+        });
+});
+
+
     // change branch for assign
     function Change(selectedBranch) {
         var id = selectedBranch.value;

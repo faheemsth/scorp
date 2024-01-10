@@ -722,6 +722,38 @@ class OrganizationController extends Controller
     }
 
 
+
+    public function GetBranchByType()
+    {
+        $type=$_GET['type'];
+        $BranchId=$_GET['id'];
+        if ($type == 'lead') {
+            $branches =\App\Models\Lead::where('branch_id',$BranchId)->get()->pluck('name', 'id')->toArray();
+            $html = '<select class="form form-control select2" id="branch_id" name="related_to" > <option value="">Related To</option> ';
+            foreach ($branches as $key => $branch) {
+                $html .= '<option value="' . $key . '">' . $branch . '</option> ';
+            }
+            $html .= '</select>';
+            return json_encode([
+                'status' => 'success',
+                'branches' => $html,
+            ]);
+
+
+        }else{
+            $branches = User::where('branch_id',$BranchId)->where('type', 'organization')->pluck('name', 'id')->toArray();
+            $html = '<select class="form form-control select2" id="branch_id" name="related_to" > <option value="">Related To</option> ';
+            foreach ($branches as $key => $branch) {
+                $html .= '<option value="' . $key . '">' . $branch . '</option> ';
+            }
+            $html .= '</select>';
+            return json_encode([
+                'status' => 'success',
+                'branches' => $html,
+            ]);
+        }
+
+    }
     public function taskCreate($id)
     {
 
@@ -819,19 +851,13 @@ class OrganizationController extends Controller
                 $request->all(),
                 [
                     'task_name' => 'required',
-                    'brands' => 'required',
+                    'brand_id' => 'required',
                     'region_id' => 'required',
                     'branch_id' => 'required',
                     'assign_type' => 'required',
                     'lead_assgigned_user' => 'required',
                     'due_date' => 'required',
                     'start_date' => 'required',
-                    'remainder_time' => 'required',
-                    'related_type' => 'required',
-                    'description' => 'required',
-                    'visibility' => 'required',
-
-
                 ]
             );
 
@@ -855,7 +881,7 @@ class OrganizationController extends Controller
             $dealTask->branch_id = $request->branch_id;
             $dealTask->region_id = $request->region_id;
 
-            $dealTask->brand_id = Session::get('auth_type_id') != null ? Session::get('auth_type_id') : \Auth::user()->id;
+            $dealTask->brand_id = Session::get('auth_type_id') != null ? \Auth::user()->id : $request->brand_id;
             $dealTask->created_by = Session::get('auth_type_id') != null ? Session::get('auth_type_id') : \Auth::user()->id;
 
             $dealTask->assigned_to = $request->lead_assgigned_user;
