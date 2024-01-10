@@ -1012,7 +1012,7 @@ class OrganizationController extends Controller
                 $request->all(),
                 [
                     'task_name' => 'required',
-                    //'branch_id' => 'required',
+                    'brand_id' => 'required',
                     //'assigned_to' => 'required',
                     // 'assign_type' => 'required',
                     'due_date' => 'required',
@@ -1054,7 +1054,7 @@ class OrganizationController extends Controller
             if(isset($request->assigned_to)){
                 $dealTask->assigned_to = $request->assigned_to;
             }
-            $dealTask->brand_id = $request->brands;
+            $dealTask->brand_id = $request->brand_id;
             $dealTask->assigned_type = $request->assign_type;
             if(isset($request->region_id)){
                 $dealTask->region_id = $request->region_id;
