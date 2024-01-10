@@ -10,9 +10,12 @@ use App\Models\LeadStage;
 use App\Models\Source;
 use App\Models\Stage;
 use App\Models\Task;
+use App\Models\Branch;
+use App\Models\Region;
 use App\Models\University;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GlobalSearchController extends Controller
 {
@@ -36,7 +39,11 @@ class GlobalSearchController extends Controller
         $data['deal_stages'] = Stage::pluck('name', 'id')->toArray();
         $data['applications'] = $this->getApplications($searchString);
         $data['organizations'] = $this->getOrganizations($searchString);
-
+        $data['brands'] = $this->getBrands($searchString);
+        $data['regions'] = $this->getRegions($searchString);
+        $data['branches'] = $this->getBranches($searchString);
+        $data['employees'] = $this->getEmployees($searchString);
+        
        }else if($type == 'tasks'){
            $data['tasks'] = $this->getTasks($searchString);
        }else if($type == 'universities'){
@@ -251,9 +258,6 @@ class GlobalSearchController extends Controller
         
     }
 
-    private function getBranches($search){
-    
-    }
 
     private function getOrganizations($search){
         $org_query = User::select(['users.*'])->join('organizations', 'organizations.user_id', '=', 'users.id')->where('users.type', 'organization');
@@ -267,6 +271,42 @@ class GlobalSearchController extends Controller
         return $organizations;
     }   
 
+    private function getBrands($search){
+
+        $brand_query = User::where('type', 'company');
+        $brand_query->orwhere('name', 'LIKE', "%$search%");
+        $brand_query->orwhere('email', 'LIKE', "%$search%");
+        $brands = $brand_query->get();
+
+        return $brands;
+    }
+
+    private function getBranches($search){
+
+        $branch_query = Branch::where('name', 'LIKE', "%$search%");
+        $branches = $branch_query->get();
+
+        return $branches;
+    }
+
+    private function getRegions($search){
+
+        $region_query = Region::where('name', 'LIKE', "%$search%");
+        $regions = $region_query->get();
+
+        return $regions;
+    }
+
+    private function getEmployees($search){
+        $excludedTypes = ['super admin', 'company', 'team', 'client'];
+
+        $usersQuery = User::whereNotIn('type', $excludedTypes);
+        $usersQuery->where('name', 'LIKE', "%$search%");
+
+        $employees = $usersQuery->get();
+
+        return $employees;
+    }
 
     private function companyEmployees($id)
     {

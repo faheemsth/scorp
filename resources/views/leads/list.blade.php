@@ -241,7 +241,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                         <label for="lead-file"
                                                             class="form-label">{{ __('Column') }}</label>
                                                         <input type="file" name="leads_file" id="lead-file"
-                                                            class="form-control" accept=".csv" />
+                                                            class="form-control" accept=".csv,.xls" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -832,7 +832,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     return false;
                 }
             }else{
-                if($.inArray(extension, ['xlsx']) == -1) {
+                if($.inArray(extension, ['xls','xlsx']) == -1) {
                     alert('Sorry, file extension does not match with selected extension.');
                     return false;
                 }
