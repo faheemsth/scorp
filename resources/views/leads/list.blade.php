@@ -225,33 +225,33 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         <div class="modal-body pt-0" >
                                             <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
                                                 <div class="card-body px-2 py-0">
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-groups mt-2">
-                                                        <label for="extension"
-                                                            class="form-label">Extension</label>
-                                                        <select type="file" class="form-control" name="extension" id="extension" required>
-                                                            <option value="">Select type</option>
-                                                            <option value="csv">CSV</option>
-                                                            <option value="excel">Excel</option>
-                                                        </select>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-groups mt-2">
+                                                                <label for="extension"
+                                                                    class="form-label">Extension</label>
+                                                                <select type="file" class="form-control" name="extension" id="extension" required>
+                                                                    <option value="">Select type</option>
+                                                                    <option value="csv">CSV</option>
+                                                                    <option value="excel">Excel</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-groups mt-2">
+                                                                <label for="lead-file"
+                                                                    class="form-label">{{ __('Column') }}</label>
+                                                                <input type="file" name="leads_file" id="lead-file"
+                                                                    class="form-control" accept=".csv,.xls" />
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-groups mt-2">
-                                                        <label for="lead-file"
-                                                            class="form-label">{{ __('Column') }}</label>
-                                                        <input type="file" name="leads_file" id="lead-file"
-                                                            class="form-control" accept=".csv,.xls" />
-                                                    </div>
-                                                </div>
-                                            </div>
 
-                                            <div class="col-md-12">
-                                                <div class="mt-2 columns-matching">
-                                                    <!-- Put any additional form elements here, if needed -->
-                                                </div>
-                                            </div>
+                                                    <div class="col-md-12">
+                                                        <div class="mt-2 columns-matching">
+                                                            <!-- Put any additional form elements here, if needed -->
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
