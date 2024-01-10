@@ -957,8 +957,12 @@ class LeadController extends Controller
                 $lead->subject = '';
             }
 
-            $lead->user_id     = $request->assigned_to;
+            $lead->user_id     = $request->lead_assgigned_user;
+            $lead->brand_id     = $request->brand_id;
+            $lead->branch_id     = $request->branch_id;
+
             $lead->pipeline_id = $pipeline->id;
+            
             if (!isset($stage->id)) {
                 return redirect()->back()->with('error', 'Please create lead stage first');
             }
@@ -975,13 +979,13 @@ class LeadController extends Controller
                     ]
                 );
 
-                $usrEmail = User::find($request->assigned_to);
+                $usrEmail = User::find($request->lead_assgigned_user);
 
                 // Send Email
                 $setings = Utility::settings();
                 if ($setings['lead_assigned'] == 1) {
 
-                    $usrEmail = User::find($request->assigned_to);
+                    $usrEmail = User::find($request->lead_assgigned_user);
                     $leadAssignArr = [
                         'lead_name' => $lead->name,
                         'lead_email' => $lead->email,
@@ -1018,6 +1022,7 @@ class LeadController extends Controller
 
     private function csvSheetDataSaved($request, $file, $pipeline, $stage)
     {
+        // dd($request);
         $usr = \Auth::user();
         $column_arr = [];
         $handle = fopen($file->getPathname(), 'r');
@@ -1059,7 +1064,10 @@ class LeadController extends Controller
                 $lead->subject = 'Default Subject';
             }
 
-            $lead->user_id     = $request->assigned_to;
+            $lead->user_id     = $request->lead_assgigned_user;
+            $lead->brand_id     = $request->brand_id;
+            $lead->branch_id     = $request->branch_id;
+
             $lead->pipeline_id = $pipeline->id;
             if (!isset($stage->id)) {
                 return redirect()->back()->with('error', 'Please create lead stage first');
@@ -1078,13 +1086,13 @@ class LeadController extends Controller
                     ]
                 );
 
-                $usrEmail = User::find($request->assigned_to);
+                $usrEmail = User::find($request->lead_assgigned_user);
 
                 // Send Email
                 $setings = Utility::settings();
                 if ($setings['lead_assigned'] == 1) {
 
-                    $usrEmail = User::find($request->assigned_to);
+                    $usrEmail = User::find($request->lead_assgigned_user);
                     $leadAssignArr = [
                         'lead_name' => $lead->name,
                         'lead_email' => $lead->email,
@@ -1126,7 +1134,7 @@ class LeadController extends Controller
     public function importCsv(Request $request)
     {
         $usr = \Auth::user();
-
+        
         if ($usr->can('edit lead')) {
             $file = $request->file('leads_file');
 
@@ -1331,9 +1339,10 @@ class LeadController extends Controller
             $users = User::where('created_by', '=', \Auth::user()->creatorId())->where('type', '!=', 'client')->where('type', '!=', 'company')->where('id', '!=', \Auth::user()->id)->get()->pluck('name', 'id');
 
             $pipelines = Pipeline::get()->pluck('name', 'id');
+            $companies = FiltersBrands();
 
             // Render the getDiscussions partial view and store the HTML in $returnHTML
-            $returnHTML = view('leads.fetchColumns')->with(['first_row' => $first_row, 'users' => $users, 'pipelines' => $pipelines])->render();
+            $returnHTML = view('leads.fetchColumns')->with(['first_row' => $first_row, 'users' => $users, 'pipelines' => $pipelines , 'companies' => $companies])->render();
 
 
             return response()->json(['status' => 'success', 'data' => $returnHTML]);
