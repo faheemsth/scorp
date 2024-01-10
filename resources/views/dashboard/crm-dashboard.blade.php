@@ -10,6 +10,15 @@
 <!-- Top 3 Brands of SCORP Chart -->
 
 
+
+@php
+    $Unqualified = App\Models\Lead::whereIn('leads.stage_id', [6])->count();
+    $Qualified = App\Models\Lead::whereIn('leads.stage_id', [8])->count();
+    $Assigned = App\Models\Lead::whereNotNull('user_id')->count();
+    $Unassigned = App\Models\Lead::whereNull('user_id')->count();
+
+
+@endphp
 <script>
     var data = [];
 
@@ -215,11 +224,222 @@
                     <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"><span class="counter-value" data-target="0">{{ $total_visas }}</span>
                         </h2>
                         <a href="" class="text-decoration-none text-muted">Total Number of Visas</a>
-                    
+
                 </div>
             </div><!-- end card body -->
         </div><!-- end card -->
     </div><!-- end col -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="col-xl-3 col-md-6">
+        <!-- card -->
+        <div class="card card-animate my-card" style="min-height: 202px; ">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                        <img src="{{ asset('assets/images/visa.png') }}" alt="" style="width: 52px;">
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-1">
+                    <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"><span class="counter-value" data-target="0">{{ $Assigned }}</span>
+                        </h2>
+                        <a href="" class="text-decoration-none text-muted">Total Number of Assigned</a>
+
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="col-xl-3 col-md-6">
+        <!-- card -->
+        <div class="card card-animate my-card" style="min-height: 202px; ">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                        <img src="{{ asset('assets/images/visa.png') }}" alt="" style="width: 52px;">
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-1">
+                    <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"><span class="counter-value" data-target="0">{{ $Unassigned }}</span>
+                        </h2>
+                        <a href="" class="text-decoration-none text-muted">Total Number of Unassigned</a>
+
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="col-xl-3 col-md-6">
+        <!-- card -->
+        <div class="card card-animate my-card" style="min-height: 202px; ">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                        <img src="{{ asset('assets/images/visa.png') }}" alt="" style="width: 52px;">
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-1">
+                    <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"><span class="counter-value" data-target="0">{{ $Qualified }}</span>
+                        </h2>
+                        <a href="" class="text-decoration-none text-muted">Total Number of Qualified</a>
+
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="col-xl-3 col-md-6">
+        <!-- card -->
+        <div class="card card-animate my-card" style="min-height: 202px; ">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="flex-grow-1 overflow-hidden">
+                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">
+                        <img src="{{ asset('assets/images/visa.png') }}" alt="" style="width: 52px;">
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-1">
+                    <h2 class="fs-22 fw-semibold ff-secondary mb-4 fw-bold"><span class="counter-value" data-target="0">{{ $Unqualified }}</span>
+                        </h2>
+                        <a href="" class="text-decoration-none text-muted">Total Number of Unqualified</a>
+
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </div>
 
 <div class="row justify-content-between">
@@ -261,7 +481,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="col-3">
         <div class="card my-card" style="min-height: 95% !important;">
             <div class="card-body">
