@@ -537,7 +537,7 @@ class DashboardController extends Controller
         }else if(Auth::user()->type == 'company'){
 
             $id = Auth::user()->id;
-          
+
             $total_admissions = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
             ->whereIn('deals.stage_id', [1, 2, 3])
             ->where('s.id', '<', 4)
@@ -562,7 +562,7 @@ class DashboardController extends Controller
             ->count();
 
         }
-        
+
 
         $totalValues3 = ['total_applications' => $total_app];
 
@@ -608,7 +608,12 @@ class DashboardController extends Controller
             $area_chart = $this->GetTop3Brands();
         }
 
-        return view('dashboard.crm-dashboard', compact('total_admissions', 'total_deposits', 'total_visas', 'total_app', 'top_brands',  'spline_chart', 'area_chart'));
+        $Unqualified = Lead::where('created_by',Auth::id())->whereIn('leads.stage_id', [6])->count();
+        $Qualified = Lead::where('created_by',Auth::id())->whereIn('leads.stage_id', [8])->count();
+        $Assigned = Lead::where('created_by',Auth::id())->whereNotNull('user_id')->count();
+        $Unassigned = Lead::where('created_by',Auth::id())->whereNull('user_id')->count();
+
+        return view('dashboard.crm-dashboard', compact('Unassigned','Assigned','Qualified','Unqualified','total_admissions', 'total_deposits', 'total_visas', 'total_app', 'top_brands',  'spline_chart', 'area_chart'));
     }
 
 
@@ -1046,7 +1051,7 @@ class DashboardController extends Controller
     }
 
     public function clientView()
-    {   
+    {
         return redirect('/crm-dashboard');
 
         if (Auth::check()) {
@@ -1245,7 +1250,7 @@ class DashboardController extends Controller
                 }
             }
 
-            
+
             // if(auth()->user()->type == 'Project Manager' || auth()->user()->type == 'Project Director'){
             //     Session::put('ProjectController', auth()->user()->type);
             // }
@@ -1253,7 +1258,7 @@ class DashboardController extends Controller
             if($user){
                 // session()->put('action_clicked_admin',$user->email);
                 \Auth::loginUsingId($user->id);
-                return redirect()->intended(RouteServiceProvider::HOME);
+                return redirect('crm-dashboard');
             }else{
                 return redirect()->back()->with('error','User Not Found');
             }
@@ -1280,7 +1285,7 @@ class DashboardController extends Controller
             if($user){
                 // session()->put('action_clicked_admin',$user->email);
                 \Auth::loginUsingId($user->id);
-                return redirect()->intended(RouteServiceProvider::HOME);
+                return redirect('crm-dashboard');
             }else{
                 return redirect()->back()->with('error','User Not Found');
             }
