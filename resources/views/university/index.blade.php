@@ -89,8 +89,8 @@
                         <div class="col-10 d-flex justify-content-end gap-2">
                             <div class="input-group w-25">
                                 <button class="btn btn-sm list-global-search-btn">
-                                    <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
-                                        <i class="ti ti-search" style="font-size: 18px"></i>
+                                    <span class="input-group-text bg-transparent border-0  px-0 py-1" id="basic-addon1">
+                                        <i class="ti ti-search" style="font-size: 15px"></i>
                                     </span>
                                 </button>
                                 <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search"
