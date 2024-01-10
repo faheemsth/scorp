@@ -71,16 +71,17 @@
 
         <input type="hidden" class="" name="global_search" value="all">
     </form>
-
+{{--    //////////////////////////////////////////////// when admin login ////////////////////////////////////////////////////// --}}
     @if (\Auth::user()->type == 'super admin')
         <select name="company" id="company" class="form form-select" style="width:15% !important"
             onChange="loginWithCompany();">
             <option value="">Select Companies</option>
-            <option value="{{ Auth::id() }}" {{ Auth::id() == 1? 'selected':'' }}>{{ Auth::user()->name }}</option>
+            {{-- <option value="{{ Auth::id() }}" {{ Auth::id() == 1? 'selected':'' }}>{{ Auth::user()->name }}</option> --}}
             @foreach ($all_companies as $key => $comp)
                 <option value="{{ $key }}" >{{ $comp }}</option>
             @endforeach
         </select>
+{{--    //////////////////////////////////////////////// when Project Director or Manager login ////////////////////////////////////////////////////// --}}
     @elseif(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
         @if ($currentUserCompany != null)
             <select name="company" id="company" class="form form-select" style="width:15% !important"
@@ -101,26 +102,26 @@
             </select>
         @endif
     @else
+{{--    //////////////////////////////////////////////// when admin Switch to Company //////////////////////////////////////////////// --}}
         @if (Session::get('is_company_login') == true && Session::get('auth_type') == 'super admin')
             <select name="company" id="company" class="form form-select" style="width:15% !important"
                 onChange="loginWithCompany();">
                 <option value="">Select Companies</option>
-                @if (!empty($adminOption))
+                {{-- @if (!empty($adminOption))
                     <option value="{{ $adminOption->id }}">{{ $adminOption->name }}</option>
-                @endif
+                @endif --}}
                 @foreach ($all_companies as $key => $comp)
                     <option value="{{ $key }}" {{ Auth::id() == $key? 'selected':'' }}>{{ $comp }}</option>
                 @endforeach
             </select>
+{{--    //////////////////////////////////////////// when Project Manager or Director Switch to Company ///////////////////////////// --}}
         @elseif (Session::get('auth_type') == \Auth::user()->type ||
                 Session::get('auth_type') == 'Project Director' ||
                 Session::get('auth_type') == 'Project Manager')
             <select name="company" id="company" class="form form-select" style="width:15% !important"
                 onChange="loginWithCompany();">
                 <option value="">Select Companies</option>
-
-                <option value="{{ Session::get('auth_type_id') }}">{{Session::get('auth_type')}}</option>
-
+                {{-- <option value="{{ Session::get('auth_type_id') }}">{{Session::get('auth_type')}}</option> --}}
                 @foreach ($all_companies as $key => $comp)
                     @foreach ($com_permissions as $com_per)
                         @if ($com_per->permitted_company_id == $key)
@@ -133,7 +134,11 @@
             </select>
         @endif
     @endif
+{{--    //////////////////////////////////////////// when Project Admin Manager or Director want to Switch his/her dashboard ///////////////////////////// --}}
 
+    @if (Session::get('is_company_login') == true)
+        <a href="javascript::void(0)" onclick="LoginBack({{ Session::get('auth_type_id') }})" data-toggle="tooltip" title="Back To Your Account!" class="btn btn-dark mx-1">Go Back</a>
+    @endif
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
 
@@ -300,4 +305,9 @@
             window.location.href = "{{ url('logged_in_as_user') }}/" + value;
         }
     </script>
+    <script>
+        $(document).ready(function(){
+          $('[data-toggle="tooltip"]').tooltip();
+        });
+        </script>
 @endpush
