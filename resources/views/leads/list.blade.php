@@ -222,7 +222,9 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <form action="{{ url('leads/import-csv') }}" method="POST"
                                         enctype="multipart/form-data">
                                         @csrf
-                                        <div class="modal-body" style="height: 40vh;">
+                                        <div class="modal-body pt-0" style="height: auto;" >
+                                            <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
+                                                <div class="card-body px-2 py-0">
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-groups mt-2">
@@ -237,6 +239,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             <div class="col-md-12">
                                                 <div class="mt-2 columns-matching">
                                                     <!-- Put any additional form elements here, if needed -->
+                                                </div>
+                                            </div>
                                                 </div>
                                             </div>
                                         </div>
