@@ -348,16 +348,6 @@
                                                                     {{ optional(App\Models\Branch::find($lead->branch_id))->name }}
                                                                 </td>
                                                             </tr>
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 200px; font-size: 14px;">
-                                                                    {{ __('Location') }}
-                                                                </td>
-                                                                <td class=""
-                                                                    style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ isset($branches[$lead->branch_id]) ? $branches[$lead->branch_id] : '' }}
-                                                                </td>
-                                                            </tr>
 
                                                             <tr>
                                                                 <td class=""

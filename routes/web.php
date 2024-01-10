@@ -1805,7 +1805,12 @@ Route::get('/global-search', [GlobalSearchController::class, 'index'])->name('gl
 Route::get('/lead/companyEmployees', [LeadController::class, 'getCompanyEmployees'])->name('lead_companyemployees');
 Route::get('/deal/companyEmployees', [DealController::class, 'getCompanyEmployees'])->name('deal_companyemployees');
 Route::get('/region/regionBrands', [RegionController::class, 'getRegionBrands'])->name('region_brands');
+Route::get('/region/regionBrands/task', [RegionController::class, 'getRegionBrandsTask'])->name('region_brands_task');
 
 Route::post("/save-filter", [SavedFilterController::class, 'save'])->name('save-filter');
 Route::post("/delete-filter", [SavedFilterController::class, 'deleteFilter'])->name('delete-filter');
 
+/////////////////////////////////////////////////////////////////////////////////
+Route::get('/region/filter-regions', [RegionController::class, 'getFilterRegions'])->name('filter-regions');
+Route::get('/region/filter-branches', [RegionController::class, 'getFilterBranches'])->name('filter-branches');
+Route::get('/region/filter-branch-users', [RegionController::class, 'getFilterBranchUsers'])->name('filter-branch-users');

@@ -212,7 +212,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 @if ($total_records > 0)
                                 @include('layouts.pagination', [
                                 'total_pages' => $total_records,
-                                'num_results_on_page' => 50,
+                                'num_results_on_page' => 25,
                                 ])
                                 @endif
                             </div>

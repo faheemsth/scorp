@@ -97,14 +97,14 @@
                                         name="brand_id" {{ !\Auth::user()->can('edit brand task') ? 'disabled' : '' }}>
                                         <option value="">Select Brands</option>
                                         @foreach ($companies as $key => $brand)
-                                            <option value="{{ $key }}">{{ $brand }}</option>
+                                            <option value="{{ $key }}" {{ $task->brand_id == $key ? 'selected' : ''  }}>{{ $brand }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
                         @endif
 
-                        <div class="form-group row">
+                        <div class="form-group row d-none">
                             <label for="type" class="col-sm-3 col-form-label">Assign Type <span
                                     class="text-danger">*</span></label>
                             <div class="col-sm-6">

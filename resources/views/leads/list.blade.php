@@ -270,9 +270,11 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         <select class="form form-control select2" id="choices-multiple555"
                                             name="created_by[]" multiple style="width: 95%;">
                                             <option value="">Select Brand</option>
-                                            @foreach ($brands as $key => $brand)
+                                    @if (FiltersBrands())
+                                            @foreach (FiltersBrands() as $key => $brand)
                                             <option value="{{ $key }}" {{ isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' }}>{{ $brand }}</option>
-                                          @endforeach
+                                           @endforeach
+                                    @endif
                                         </select>
                                     </div>
                                     @endif

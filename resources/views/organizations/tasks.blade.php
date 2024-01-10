@@ -47,26 +47,32 @@
                         @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                         <div class="form-group row ">
                             <label for="branches" class="col-sm-3 col-form-label">Brands</label>
-                            <div class="col-sm-6">
-                                <select class="form form-control select2 brand_id" id="choices-multiple0" name="brand_id">
-                                    <option value="">Select Brands</option>
-                                    @foreach ($companies as $key => $brand)
-                                        <option value="{{ $key }}">{{ $brand }}</option>
-                                    @endforeach
-                                </select>
+                            <div class="form-group col-md-6" id="brand_div">
+                                {!! Form::select('brand_id', $companies, null, [
+                                    'class' => 'form-control select2 brand_id',
+                                    'id' => 'brands'
+                                ]) !!}
                             </div>
                         </div>
                         @endif
 
-                        
+                        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                         <div class="form-group row ">
-                            <label for="branches" class="col-sm-3 col-form-label">Office</label>
-                            <div class="col-sm-6" id="branch_div">
-                                <select class="form form-control select2 branch_id" id="choices-multiple1" name="branch_id">
-                                    <option value="">Select Office</option>
-                                    @foreach ($branches as $key => $branch)
-                                        <option value="{{ $key }}">{{ $branch }}</option>
-                                    @endforeach 
+                            <label for="branches" class="col-sm-3 col-form-label">Region</label>
+                            <div class="form-group col-md-6" id="region_div">
+                                {!! Form::select('region', $Region, null, [
+                                    'class' => 'form-control select2',
+                                    'id' => 'region_id'
+                                ]) !!}
+                            </div>
+                        </div>
+                        @endif
+
+                        <div class="form-group row ">
+                            <label for="branches" class="col-sm-3 col-form-label">Branch</label>
+                            <div class="form-group col-md-6" id="branch_div">
+                                <select name="branch_id" id="branch_id" class="form-control select2">
+                                    <option value="">Select Branch</option>
                                 </select>
                             </div>
                         </div>
@@ -77,8 +83,6 @@
                             <div class="col-sm-6">
                                 <select class="form form-control select2 assign_type" id="choices-multiple3"
                                     name="assign_type">
-                                    {{-- <option value="">Select Assign type</option> --}}
-                                    {{-- <option value="company">Company</option> --}}
                                     <option value="individual">individual</option>
                                 </select>
                             </div>
@@ -91,11 +95,7 @@
                             <div class="col-sm-6 " id="assign_to_div">
                                 <select class="form form-control assigned_to select2" id="choices-multiple4"
                                     name="assigned_to">
-
                                     <option value="">Select Employee</option>
-                                     {{-- @foreach($employees as $key => $emp)
-                                        <option value="{{ $key }}">{{ $emp }}</option>
-                                    @endforeach --}}
                                 </select>
                             </div>
                         </div>
@@ -318,72 +318,20 @@
 
 <script>
     $(document).ready(function() {
-        $.ajax({
-            type: 'GET',
-            url: '{{ route('organization.assign_to', 1) }}',
-            data: {
-                type: ''
-            },
-            success: function(data) {
-                data = JSON.parse(data);
-                if (data.status == 'success') {
-                    $("#assign_to_div").html(data.html);
-                    select2();
-                }
-            }
-        });
-
-        $(".brand_id").on("change", function(){
-            var id = $(this).val();
-
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('deal_companyemployees') }}',
-                data: {
-                    id: id  // Add a key for the id parameter
-                },
-                success: function(data){
-                    data = JSON.parse(data);
-
-                    if (data.status === 'success') {
-                        $("#assign_to_div").html(data.employees);
-                        select2();
-                        $("#branch_div").html(data.branches);
-                        select2();
-
-                        select2(); // Assuming this is a function to initialize or update a select2 dropdown
-                    } else {
-                        console.error('Server returned an error:', data.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX request failed:', status, error);
-                }
-            });
-        });
-
-
-        // $(".assign_type").on("change", function() {
-        //     var type = $(this).val();
-        //     var current = $(this);
-        //     $.ajax({
-        //         type: 'GET',
-        //         url: '{{ route('organization.assign_to', 1) }}',
-        //         data: {
-        //             type
-        //         },
-        //         success: function(data) {
-        //             data = JSON.parse(data);
-        //             if (data.status == 'success') {
-        //                 $("#assign_to_div").html(data.html);
-        //                 select2();
-        //             }
+        // $.ajax({
+        //     type: 'GET',
+        //     url: '{{ route('organization.assign_to', 3) }}',
+        //     data: {
+        //         type: ''
+        //     },
+        //     success: function(data) {
+        //         data = JSON.parse(data);
+        //         if (data.status == 'success') {
+        //             $("#assign_to_div").html(data.html);
+        //             select2();
         //         }
-        //     })
-
-        // })
-
-
+        //     }
+        // });
         $(".related_type").on('change', function() {
             var type = $(this).val();
             var brand_id  = $('.brand_id').val();
@@ -440,4 +388,120 @@
             });
         });
     })
+</script>
+<script>
+    function toggleDiv() {
+        var branchSelect = document.getElementById("branch_id");
+        var hiddenDiv = document.getElementById("roleID");
+        if (branchSelect.value !== "") {
+            hiddenDiv.style.display = "block";
+        } else {
+            hiddenDiv.style.display = "none";
+        }
+    }
+
+    $("#roles").on("change", function(){
+        var role = $(this).text();
+        if(role == 'Project Director' || role == 'Project Manager'){
+            //$("#brand_div").css('display', 'none');
+            $("#region_div").css('display', 'none');
+            $("#branch_div").css('display', 'none');
+        }else{
+           // $("#brand_div").css('display', 'block');
+            $("#region_div").css('display', 'block');
+            $("#branch_div").css('display', 'block');
+        }
+    })
+
+
+
+
+    $("#brands").on("change", function(){
+        var id = $(this).val();
+        var type = 'brand';
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands_task') }}',
+            data: {
+                id: id,  // Add a key for the id parameter
+                type: type
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $('#region_div').html('');
+                    $("#region_div").html(data.regions);
+                    select2();
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+
+    $(document).on("change", "#region_id" ,function(){
+        var id = $(this).val();
+        var type = 'region';
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands_task') }}',
+            data: {
+                id: id,  // Add a key for the id parameter
+                type: type
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    if(type == 'region'){
+                        $('#branch_div').html('');
+                        $("#branch_div").html(data.branches);
+                        select2();
+                    }
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+</script>
+
+<script>
+
+    $(".brand_id").on("change", function(){
+        var id = $(this).val();
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('lead_companyemployees') }}',
+            data: {
+                id: id  // Add a key for the id parameter
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $("#assign_to_div").html(data.employees);
+                    select2();
+                    $("#branch_div").html(data.branches);
+                    select2(); // Assuming this is a function to initialize or update a select2 dropdown
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
 </script>

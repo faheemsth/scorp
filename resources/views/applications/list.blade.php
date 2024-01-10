@@ -42,7 +42,7 @@
                         });
 
                         var id = $(el).attr('data-id');
-
+                        var app = $(el).attr('data-app');
                         var old_status = $("#" + source.id).data('status');
                         var new_status = $("#" + target.id).data('status');
                         var stage_id = $(target).attr('data-id');
@@ -62,6 +62,7 @@
                                 new_status: new_status,
                                 old_status: old_status,
                                 pipeline_id: pipeline_id,
+                                app:app,
                                 "_token": $('meta[name="csrf-token"]').attr('content')
                             },
                             success: function(data) {
@@ -69,8 +70,9 @@
                             },
                             error: function(data) {
                                 data = data.responseJSON;
-                                show_toastr('error', data.error, 'error')
+                                show_toastr('error', 'Data Not Move', 'error');
                             }
+
                         });
                     });
                 })
@@ -162,6 +164,23 @@
             }
         })
     </script>
+
+<script>
+    $(document).ready(function () {
+        $("#searchIcon").on("click", function () {
+            var searchText = $("#searchInput").val().toLowerCase();
+            $(".kanban-box .card").each(function () {
+                var cardText = $(this).text().toLowerCase();
+                if (cardText.indexOf(searchText) === -1) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+        });
+    });
+</script>
+
 @endpush
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
@@ -301,9 +320,12 @@
                     </div>
                     <div class="col-8 d-flex justify-content-end gap-2">
 
-                            {{-- {{ Form::open(['route' => 'deals.change.pipeline', 'id' => 'change-pipeline', 'class' => 'btn btn-sm ']) }}
-                            {{ Form::select('default_pipeline_id', $pipelines, $pipeline->id, ['class' => 'form-control select', 'id' => 'default_pipeline_id']) }}
-                            {{ Form::close() }} --}}
+                        <div class="input-group w-25">
+                            <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                                <i class="ti ti-search" style="font-size: 18px" id="searchIcon"></i>
+                            </span>
+                            <input type="search" class="form-control border-0 bg-transparent ps-0" id="searchInput" placeholder="Search this list..." aria-label="Search" aria-describedby="basic-addon1">
+                        </div>
 
                             @can('show deals stats')
                             <a href="{{ route('applications.index') }}" data-size="lg" data-bs-toggle="tooltip" title="{{ __('List View') }}"
@@ -350,7 +372,7 @@
                             <div class="card-body kanban-box" id="task-list-{{ $stage->id }}"
                                 data-id="{{ $stage->id }}">
                                 @foreach ($deals as $deal)
-                                    <div class="card lazy" data-id="{{ $deal->deal_id }}">
+                                    <div class="card lazy" data-app="{{ $deal->id }}" data-id="{{ $deal->deal_id }}">
                                         <div class="pt-3 ps-3">
                                             @php($labels = $deal->labels())
                                             @if ($labels)
@@ -364,7 +386,7 @@
                                             <h5>
                                                 @can('view application')
                                                 <a href="javascript:void(0)" onclick="openSidebar('deals/{{ $deal->id }}/detail-application')"
-                                                    style="font-size: 14px;">{{ $deal->name }}</a>
+                                                    style="font-size: 14px;">{{ \Illuminate\Support\Str::limit($deal->name, 15) }}</a>
                                                     @endcan
                                                 <span style="cursor:pointer" onclick="openNav(<?= $deal->deal_id ?>)"
                                                     data-deal-id="{{ $deal->deal_id }}"
@@ -422,7 +444,7 @@
                                         ?>
                                         <div class="card-body">
                                             <div class="d-flex align-items-center justify-content-between mb-2">
-                                                <ul class="list-inline mb-0">
+                                                {{-- <ul class="list-inline mb-0">
                                                     <li class="list-inline-item d-inline-flex align-items-center"
                                                         data-bs-toggle="tooltip" title="{{ __('Tasks') }}">
                                                         <i class="f-16 text-primary ti ti-list"></i>
@@ -432,12 +454,12 @@
                                                 <div class="user-group">
                                                     <i class="text-primary ti ti-report-money"></i>
                                                     {{ \Auth::user()->priceFormat($deal->price) }}
-                                                </div>
+                                                </div> --}}
                                             </div>
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <ul class="list-inline mb-0">
 
-                                                    <li class="list-inline-item d-inline-flex align-items-center"
+                                                    {{-- <li class="list-inline-item d-inline-flex align-items-center"
                                                         data-bs-toggle="tooltip" title="{{ __('Product') }}">
                                                         <i class="f-16 text-primary ti ti-shopping-cart"></i>
                                                         {{ count($products) }}
@@ -447,7 +469,7 @@
                                                         data-bs-toggle="tooltip" title="{{ __('Source') }}">
                                                         <i
                                                             class="f-16 text-primary ti ti-social"></i>{{ count($sources) }}
-                                                    </li>
+                                                    </li> --}}
                                                 </ul>
                                                 <div class="user-group">
 

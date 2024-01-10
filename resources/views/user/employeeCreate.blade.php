@@ -141,6 +141,8 @@
                 //$("#brand_div").css('display', 'none');
                 $("#region_div").css('display', 'none');
                 $("#branch_div").css('display', 'none');
+            }else if(role == 'Region Manager') {
+                $("#branch_div").css('display', 'none');
             }else{
                // $("#brand_div").css('display', 'block');
                 $("#region_div").css('display', 'block');
@@ -168,7 +170,7 @@
                     if (data.status === 'success') {
                         $('#region_div').html('');
                         $("#region_div").html(data.regions);
-                        select2();                       
+                        select2();
                     } else {
                         console.error('Server returned an error:', data.message);
                     }

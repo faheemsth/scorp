@@ -14,9 +14,9 @@
     <script>
         var selector = "body";
         if ($(selector + " .repeater").length) {
-            var $dragAndDrop = $("body .repeater tbody").sortable({
-                handle: '.sort-handler'
-            });
+            // var $dragAndDrop = $("body .repeater tbody").sortable({
+            //     handle: '.sort-handler'
+            // });
             var $repeater = $(selector + ' .repeater').repeater({
                 // initEmpty: true,
                 defaultValues: {
@@ -85,7 +85,7 @@
 
                 },
                 ready: function(setIndexes) {
-                    $dragAndDrop.on('drop', setIndexes);
+                    // $dragAndDrop.on('drop', setIndexes);
                 },
                 isFirstItemUndeletable: true
             });
@@ -369,7 +369,7 @@
 
         // })
         $(document).on('keyup', '.price, .quantity, .discount, .taxamount', function() {
-            var el = $(this).parent().parent().parent().parent();
+            var el = $(this).parent().parent().parent();
             // var price = $(this).val();
             // var price = $('td .price').val();
             var price = $(el.find('.price')).val();
@@ -386,7 +386,8 @@
             // alert(amount)
             console.log(el)
             console.log(el.find('.amount'))
-            console.log(amount)
+            console.log('amount',amount)
+            // console.log(el.find('.amount'))
 
             $(el.find('.amount').first()).html(amount);
 
@@ -397,7 +398,7 @@
             console.log(totaltex)
             var itemTaxPrice = parseFloat((totaltex / 100) * (totalItemPrice));
             
-            $(el.find('.itemTaxPrice')).val(itemTaxPrice.toFixed(2));
+            $(el.find('.itemTaxPrice').first()).val(itemTaxPrice.toFixed(2));
 
 
             var totalItemTaxPrice = 0;
@@ -458,7 +459,7 @@
         })
 
         $(document).on('keyup', '.discount', function() {
-            var el = $(this).parent().parent().parent().parent();
+            var el = $(this).parent().parent().parent();
             var discount = $(this).val();
             var price = $(el.find('.price')).val();
 
@@ -496,7 +497,8 @@
             }
 
             var amount = (totalItemPrice);
-            $(el.find('.amount')).html(amount);
+            console.log(el.find('.amount'))
+            $(el.find('.amount').first()).html(amount);
 
             var inputs = $(".amount");
             var subTotal = 0;
@@ -511,13 +513,21 @@
                 totalItemTaxPrice)).toFixed(2));
         })
 
-        // $(document).on('click', '[data-repeater-create]', function() {
+        $(document).on('click', '[data-repeater-create]', function() {
             
-        //     $('.item :selected').each(function() {
-        //         var id = $(this).val();
-        //         $(".item option[value=" + id + "]").prop("disabled", true);
-        //     });
-        // })
+            $(".amount").last().text('0.00')
+            let item = document.querySelectorAll('.item').length;
+            item = item-1;
+
+            $('.ui-sortable').append(`<tr >
+                                        <td colspan="2">
+                                            <div class="form-group">
+                                                {{ Form::textarea('description', null, ['name' => 'items[`+item+`][description]','class' => 'form-control', 'rows' => '2', 'placeholder' => __('Description')]) }}
+                                            </div>
+                                        </td>
+                                        <td colspan="5"></td>
+                                    </tr>`);
+        })
 
         $(document).on('click', '[data-repeater-delete]', function() {
             // $('.delete_item').click(function () {
@@ -525,21 +535,12 @@
                 var el = $(this).parent().parent();
                 var id = $(el.find('.id')).val();
 
-                $.ajax({
-                    url: '{{ route('invoice.product.destroy') }}',
-                    type: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': jQuery('#token').val()
-                    },
-                    data: {
-                        'id': id
-                    },
-                    cache: false,
-                    success: function(data) {
-
-                    },
-                });
-
+                let item = document.querySelectorAll('.item').length;
+                console.log(item)
+                item = item;
+                let name = 'items['+item+'][description]';
+                $("textarea[name='"+name+"']").remove();
+                console.log(name)
             }
         });
         $(document).ready(function() {
@@ -677,7 +678,7 @@
                 </div>
                 <div class="card-body table-border-style">
                     <div class="table-responsive">
-                        <table class="table mb-0 table-custom-style" data-repeater-list="items" id="sortable-table">
+                        <table class="table mb-0 table-custom-style"  id="sortable-table">
                             <thead>
                                 <tr>
                                     <th>{{ __('Items') }}</th>
@@ -689,7 +690,7 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody class="ui-sortable" data-repeater-item>
+                            <tbody class="ui-sortable" data-repeater-list="items">
                                 @php
                                     $totalQuantity=0;
                                     $totalRate=0;
@@ -709,65 +710,67 @@
                                         $amount = $item->quantity * $item->price;
                                         $tax = ($item->tax/$amount)*100;
                                     @endphp
-                                <tr>
-                                   {{-- {{ Form::hidden('id', null, ['class' => 'form-control id']) }} --}}
-                                    <td >
-                                        <div class="form-group price-input input-group search-form">
-                                            {{ Form::text('item', $item->product_name, ['class' => 'form-control item', 'required' => 'required', 'placeholder' => __('Item')]) }}
-                                            <span class="unit input-group-text bg-transparent"></span>
-                                        </div>
-
-                                    </td>
-                                    <td>
-
-                                        <div class="form-group price-input input-group search-form">
-                                            {{ Form::text('quantity',$item->quantity , ['class' => 'form-control quantity', 'required' => 'required', 'placeholder' => __('Qty'), 'required' => 'required']) }}
-                                            <span class="unit input-group-text bg-transparent"></span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-group price-input input-group search-form">
-                                            {{ Form::text('price', $item->price, ['class' => 'form-control price', 'required' => 'required', 'placeholder' => __('Price'), 'required' => 'required']) }}
-                                            <span
-                                                class="input-group-text bg-transparent">{{ \Auth::user()->currencySymbol() }}</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-group">
-                                            <div class="input-group colorpickerinput">
-                                                <div class="taxes"></div>
-                                                {{ Form::text('tax', $tax, ['class' => 'form-control taxamount', 'required' => 'required', 'placeholder' => __('Tax')]) }}</div>
-                                                {{ Form::hidden('tax', '', ['class' => 'form-control tax']) }}
-                                                {{ Form::hidden('itemTaxPrice', $item->tax, ['class' => 'form-control itemTaxPrice']) }}
-                                                {{ Form::hidden('itemTaxRate', '', ['class' => 'form-control itemTaxRate']) }}
+                               
+                                    <tr data-repeater-item>
+                                    {{-- {{ Form::hidden('id', null, ['class' => 'form-control id']) }} --}}
+                                        <td >
+                                            <div class="form-group price-input input-group search-form">
+                                                {{ Form::text('item', $item->product_name, ['class' => 'form-control item', 'required' => 'required', 'placeholder' => __('Item')]) }}
+                                                <span class="unit input-group-text bg-transparent"></span>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-group price-input input-group search-form">
-                                            {{ Form::text('discount', $item->discount, ['class' => 'form-control discount', 'required' => 'required', 'placeholder' => __('Discount')]) }}
-                                            <span
-                                                class="input-group-text bg-transparent">{{ \Auth::user()->currencySymbol() }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-end amount">{{$amount}}</td>
 
-                                    <td>
-                                        @can('delete invoice product')
-                                            <a href="#" class="ti ti-trash text-white text-danger delete_item"
-                                                data-repeater-delete></a>
-                                        @endcan
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2">
-                                        <div class="form-group">
-                                            {{ Form::textarea('description', null, ['class' => 'form-control pro_description', 'rows' => '2', 'placeholder' => __('Description')]) }}
-                                        </div>
-                                    </td>
-                                    <td colspan="5"></td>
-                                </tr>
+                                        </td>
+                                        <td>
+
+                                            <div class="form-group price-input input-group search-form">
+                                                {{ Form::text('quantity',$item->quantity , ['class' => 'form-control quantity', 'required' => 'required', 'placeholder' => __('Qty'), 'required' => 'required']) }}
+                                                <span class="unit input-group-text bg-transparent"></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group price-input input-group search-form">
+                                                {{ Form::text('price', $item->price, ['class' => 'form-control price', 'required' => 'required', 'placeholder' => __('Price'), 'required' => 'required']) }}
+                                                <span
+                                                    class="input-group-text bg-transparent">{{ \Auth::user()->currencySymbol() }}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <!-- <div class="input-group colorpickerinput"> -->
+                                                    
+                                                    {{ Form::text('tax', $tax, ['class' => 'form-control taxamount', 'required' => 'required', 'placeholder' => __('Tax')]) }}</div>
+                                                    {{ Form::hidden('tax', '', ['class' => 'form-control tax']) }}
+                                                    {{ Form::hidden('itemTaxPrice', $item->tax, ['class' => 'form-control itemTaxPrice']) }}
+                                                    {{ Form::hidden('itemTaxRate', '', ['class' => 'form-control itemTaxRate']) }}
+                                                <!-- </div> -->
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group price-input input-group search-form">
+                                                {{ Form::text('discount', $item->discount, ['class' => 'form-control discount', 'required' => 'required', 'placeholder' => __('Discount')]) }}
+                                                <span
+                                                    class="input-group-text bg-transparent">{{ \Auth::user()->currencySymbol() }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-end amount">{{$amount}}</td>
+
+                                        <td>
+                                            @can('delete invoice product')
+                                                <a href="#" class="ti ti-trash text-white text-danger delete_item"
+                                                    data-repeater-delete></a>
+                                            @endcan
+                                        </td>
+                                    </tr>
+                                    <tr >
+                                        <td colspan="2">
+                                            <div class="form-group">
+                                                {{ Form::textarea('description', $item->description, ['name' => 'items['.$key.'][description]','class' => 'form-control', 'rows' => '2', 'placeholder' => __('Description')]) }}
+                                            </div>
+                                        </td>
+                                        <td colspan="5"></td>
+                                    </tr>
                                 @endforeach
+                             
                             </tbody>
                             <tfoot>
                                 <tr>

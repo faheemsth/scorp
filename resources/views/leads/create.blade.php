@@ -100,6 +100,22 @@
                                             </td>
                                         </tr>
 
+                                        
+
+                                        <tr>
+                                            <td class="" style="width: 100px; font-size: 13px;">
+                                                {{ __('Region') }}
+                                            </td>
+                                            <td class="" style="padding-left: 10px; font-size: 13px;" id="region_div">
+                                                <select class="form-control select2 region_id" id="choices-10112" name="region_id">
+                                                    <option value="" >Select Region</option>
+                                                    @foreach($regions as $key => $region)
+                                                    <option value="{{$key}}">{{$region}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                        </tr>
+
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Location') }}
@@ -107,6 +123,9 @@
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="branch_div">
                                                 <select class="form-control select2" id="choice-3" name="lead_branch">
                                                     <option selected>Select Branch</option>
+                                                    @foreach($branches as $key => $branch)
+                                                    <option value="{{$key}}">{{$branch}}</option>
+                                                    @endforeach
                                                 </select>
                                             </td>
                                         </tr>
@@ -374,22 +393,47 @@
 <script>
 
     $(".brand_id").on("change", function(){
+        // var id = $(this).val();
+
+        // $.ajax({
+        //     type: 'GET',
+        //     url: '{{ route('lead_companyemployees') }}',
+        //     data: {
+        //         id: id  // Add a key for the id parameter
+        //     },
+        //     success: function(data){
+        //         data = JSON.parse(data);
+
+        //         if (data.status === 'success') {
+        //             $("#assign_to_div").html(data.employees);
+        //             select2();
+        //             $("#branch_div").html(data.branches);
+        //             select2(); // Assuming this is a function to initialize or update a select2 dropdown
+        //         } else {
+        //             console.error('Server returned an error:', data.message);
+        //         }
+        //     },
+        //     error: function(xhr, status, error) {
+        //         console.error('AJAX request failed:', status, error);
+        //     }
+        // });
+
+
         var id = $(this).val();
 
         $.ajax({
             type: 'GET',
-            url: '{{ route('lead_companyemployees') }}',
+            url: '{{ route('filter-regions') }}',
             data: {
-                id: id  // Add a key for the id parameter
+                id: id
             },
             success: function(data){
                 data = JSON.parse(data);
 
                 if (data.status === 'success') {
-                    $("#assign_to_div").html(data.employees);
-                    select2();
-                    $("#branch_div").html(data.branches);
-                    select2(); // Assuming this is a function to initialize or update a select2 dropdown
+                    $('#region_div').html('');
+                    $("#region_div").html(data.html);
+                    select2();                       
                 } else {
                     console.error('Server returned an error:', data.message);
                 }
@@ -399,5 +443,63 @@
             }
         });
     });
+
+
+    $(document).on("change", ".region_id", function(){
+        var id = $(this).val();
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('filter-branches') }}',
+            data: {
+                id: id
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $('#branch_div').html('');
+                    $("#branch_div").html(data.html);
+                    select2();                       
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+    $(document).on("change", ".branch_id", function(){
+        var id = $(this).val();
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('filter-branch-users') }}',
+            data: {
+                id: id
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $('#assign_to_div').html('');
+                    $("#assign_to_div").html(data.html);
+                    select2();                       
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+
+
+
+
 
 </script>
