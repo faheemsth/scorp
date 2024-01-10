@@ -2062,7 +2062,12 @@ class LeadController extends Controller
         $note = new LeadNote;
         // $note->title = $request->input('title');
         $note->description = $request->input('description');
-        $note->created_by = \Auth::user()->id;
+        $session_id = Session::get('auth_type_id');
+        if($session_id != null){
+            $note->created_by  = $session_id;
+        }else{
+            $note->created_by  = \Auth::user()->id;
+        }
         $note->lead_id = $id;
         $note->save();
 
