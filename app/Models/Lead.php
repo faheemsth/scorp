@@ -14,6 +14,7 @@ class Lead extends Model
         'pipeline_id',
         'stage_id',
         'brand_id',
+        'branch_id',
         'sources',
         'products',
         'notes',
