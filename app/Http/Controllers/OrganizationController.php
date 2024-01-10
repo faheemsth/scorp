@@ -855,7 +855,6 @@ class OrganizationController extends Controller
                     'region_id' => 'required',
                     'branch_id' => 'required',
                     'assign_type' => 'required',
-                    'lead_assgigned_user' => 'required',
                     'assigned_to' => 'required',
                     'due_date' => 'required',
                     'start_date' => 'required',
@@ -885,7 +884,7 @@ class OrganizationController extends Controller
             $dealTask->brand_id = Session::get('auth_type_id') != null ? \Auth::user()->id : $request->brand_id;
             $dealTask->created_by = Session::get('auth_type_id') != null ? Session::get('auth_type_id') : \Auth::user()->id;
 
-            $dealTask->assigned_to = $request->lead_assgigned_user;
+            $dealTask->assigned_to = $request->assigned_to;
             $dealTask->assigned_type = $request->assign_type;
 
             $dealTask->due_date = isset($request->due_date) ? $request->due_date : '';

@@ -305,13 +305,13 @@ class LeadController extends Controller
         $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
 
 
-        $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="lead_assgigned_user" > <option value="">Select User</option> ';
+        $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="assigned_to" > <option value="">Select User</option> ';
         foreach ($employees as $key => $user) {
             $html .= '<option value="' . $key . '">' . $user . '</option> ';
         }
         $html .= '</select>';
 
-        $html1 = ' <select class="form form-control lead_branch select2" id="choices-multiple4" name="lead_branch" required> <option value="">Select Branch</option> ';
+        $html1 = ' <select class="form form-control lead_branch select2" id="choices-multiple4" name="lead_branch"> <option value="">Select Branch</option> ';
         foreach ($branches as $key => $branch) {
             $html1 .= '<option value="' . $key . '">' . $branch . '</option> ';
         }
