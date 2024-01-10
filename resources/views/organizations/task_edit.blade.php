@@ -63,6 +63,15 @@
                                     </select>
                                 </div>
                             </div>
+                        @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
+                            <div class="form-group row ">
+                                <label for="branches" class="col-sm-3 col-form-label">Brands</label>
+                                <div class="form-group col-md-6" id="brand_div">
+                                    <select class='form-control select2 brand_id' name="brands" id="brand_id">
+                                        <option value="{{ Auth::id() }}" selected>{{ Auth::user()->name }}</option>
+                                    </select>
+                                </div>
+                            </div>
                         @endif
 
                         @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')

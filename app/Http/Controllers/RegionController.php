@@ -82,7 +82,7 @@ class RegionController extends Controller
 
         if($type == 'brand'){
             $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
-            $html = ' <select class="form form-control select2" id="region_id" name="region_id" required> <option value="">Select Region</option> ';
+            $html = ' <select class="form form-control select2" id="region_id" name="region_id"> <option value="">Select Region</option> ';
             foreach ($regions as $key => $region) {
                 $html .= '<option value="' . $key . '">' . $region . '</option> ';
             }
@@ -95,7 +95,7 @@ class RegionController extends Controller
         }else if($type == 'region'){
 
             $branches = Branch::where('region_id', $id)->pluck('name', 'id')->toArray();
-            $html = '<select class="form form-control select2" id="branch_id" name="branchs" onchange="Change(this)" required> <option value="">Select Branch</option> ';
+            $html = '<select class="form form-control select2" id="branch_id" name="branch_id" onchange="Change(this)"> <option value="">Select Branch</option> ';
             foreach ($branches as $key => $branch) {
                 $html .= '<option value="' . $key . '">' . $branch . '</option> ';
             }
@@ -114,7 +114,7 @@ class RegionController extends Controller
                 $ids = explode(',',$region->brands);
                 $brands = User::whereIn('id',$ids)->where('type', 'company')->pluck('name', 'id')->toArray();
 
-                $html = ' <label for="region_id">Brands</label><select class="form form-control brands select2" id="brands" name="brands[]" multiple required> <option value="">Select Brands</option> ';
+                $html = ' <label for="region_id">Brands</label><select class="form form-control brands select2" id="brands" name="brands" multiple required> <option value="">Select Brands</option> ';
                 foreach ($brands as $key => $brand) {
                     $html .= '<option value="' . $key . '">' . $brand . '</option> ';
                 }

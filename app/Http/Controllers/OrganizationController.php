@@ -761,7 +761,7 @@ class OrganizationController extends Controller
             // $companies = User::where('type', 'company')->whereIn('id', $test)->orwhere('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             // dd($companies);
 
-                $companies = ['0' => 'Select Brand'] + FiltersBrands();
+                $companies = ['' => 'Select Brand'] + FiltersBrands();
                 // if(\Auth::user()->type == 'super admin'){
                 //     $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
                 // }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
@@ -797,9 +797,9 @@ class OrganizationController extends Controller
 
             if(\Auth::user()->type == 'company'){
                 $Region = Region::where('brands', \Auth::user()->id)->pluck('name', 'id');
-                $Region= ['0' => 'Select Region'] + $Region->toArray();
+                $Region= ['' => 'Select Region'] + $Region->toArray();
             }else{
-                $Region= ['0' => 'Select Region'];
+                $Region= ['' => 'Select Region'];
             }
 
 
@@ -811,7 +811,6 @@ class OrganizationController extends Controller
 
     public function taskStore($id, Request $request)
     {
-
         $usr = \Auth::user();
 
         if (\Auth::user()->can('create task')) {
@@ -820,16 +819,23 @@ class OrganizationController extends Controller
                 $request->all(),
                 [
                     'task_name' => 'required',
-                    // 'branch_id' => 'required',
-                    // 'assigned_to' => 'required',
+                    'brands' => 'required',
+                    'region_id' => 'required',
+                    'branch_id' => 'required',
                     'assign_type' => 'required',
+                    'lead_assgigned_user' => 'required',
                     'due_date' => 'required',
                     'start_date' => 'required',
-                   // 'related_type' => 'required',
-                   // 'related_to' => 'required',
+                    'remainder_time' => 'required',
+                    'related_type' => 'required',
+                    'description' => 'required',
                     'visibility' => 'required',
+
+
                 ]
             );
+
+
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
                 return json_encode([
@@ -1008,7 +1014,6 @@ class OrganizationController extends Controller
             if ($dealTask->status != $request->status) {
                 $is_status_change = true;
             }
-
             // $dealTask->deal_id = $request->related_to;
             //$dealTask->related_to = $request->related_to;
             //$dealTask->related_type = $request->related_type;
@@ -1023,12 +1028,12 @@ class OrganizationController extends Controller
             if(isset($request->assigned_to)){
                 $dealTask->assigned_to = $request->assigned_to;
             }
-            $dealTask->brand_id = $request->brand_id;
+            $dealTask->brand_id = $request->brands;
             $dealTask->assigned_type = $request->assign_type;
             if(isset($request->region_id)){
                 $dealTask->region_id = $request->region_id;
             }
-           
+
             // $dealTask->deal_stage_id = $request->stage_id;
             $dealTask->due_date = isset($request->due_date) ? $request->due_date : '';
             $dealTask->start_date = $request->start_date;
