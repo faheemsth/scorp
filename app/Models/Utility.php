@@ -1800,10 +1800,31 @@ class Utility extends Model
         return $latest->employee_id + 1;
     }
 
-    public static function employeeDetails($user_id, $created_by)
+    public static function employeeDetails($user_id, $created_by , $req = NULL)
     {
         $user = User::where('id', $user_id)->first();
 
+        $gender = NULL;
+        $address = NULL;
+        $acc_holder = NULL;
+        $acc_num = NULL;
+        $bank_name = NULL;
+        $bank_code = NULL;
+        $branch_loc = NULL;
+        $tax_id = NULL;
+        $salary = NULL;
+
+        if($req != NULL){
+            $gender = $req->gender;
+            $address = $req->address;
+            $acc_holder = $req->account_holder_name;
+            $acc_num = $req->account_number;
+            $bank_name = $req->bank_name;
+            $bank_code = $req->bank_identifier_code;
+            $branch_loc = $req->branch_location;
+            $tax_id = $req->tax_payer_id;
+            $salary = $req->salary;
+        }
         $employee = Employee::create(
             [
                 'user_id' => $user->id,
@@ -1811,20 +1832,69 @@ class Utility extends Model
                 'email' => $user->email,
                 'password' => $user->password,
                 'branch_id' => $user->branch_id,
+                'phone' => $user->phone,
+                'dob' => $user->date_of_birth,
+
+                'gender' => $gender,
+                'address' => $address,
+                'account_holder_name' => $acc_holder,
+                'account_number' => $acc_num,
+                'bank_name' => $bank_name,
+                'bank_identifier_code' => $bank_code,
+                'branch_location' =>$branch_loc,
+                'tax_payer_id' => $tax_id,
+                'salary' => $salary,
+
+
                 'employee_id' => Utility::employeeNumber($created_by),
                 'created_by' => $created_by,
             ]
         );
     }
 
-    public static function employeeDetailsUpdate($user_id, $created_by)
+    public static function employeeDetailsUpdate($user_id, $created_by,$req = NULL)
     {
         $user = User::where('id', $user_id)->first();
+
+        $gender = NULL;
+        $address = NULL;
+        $acc_holder = NULL;
+        $acc_num = NULL;
+        $bank_name = NULL;
+        $bank_code = NULL;
+        $branch_loc = NULL;
+        $tax_id = NULL;
+        $salary = NULL;
+
+        if($req != NULL){
+            $gender = $req->gender;
+            $address = $req->address;
+            $acc_holder = $req->account_holder_name;
+            $acc_num = $req->account_number;
+            $bank_name = $req->bank_name;
+            $bank_code = $req->bank_identifier_code;
+            $branch_loc = $req->branch_location;
+            $tax_id = $req->tax_payer_id;
+            $salary = $req->salary;
+        }
 
         $employee = Employee::where('user_id', $user->id)->update(
             [
                 'name' => $user->name,
                 'email' => $user->email,
+                'branch_id' => $user->branch_id,
+                'phone' => $user->phone,
+                'dob' => $user->date_of_birth,
+
+                'gender' => $gender,
+                'address' => $address,
+                'account_holder_name' => $acc_holder,
+                'account_number' => $acc_num,
+                'bank_name' => $bank_name,
+                'bank_identifier_code' => $bank_code,
+                'branch_location' =>$branch_loc,
+                'tax_payer_id' => $tax_id,
+                'salary' => $salary,
             ]
         );
 
