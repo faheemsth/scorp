@@ -142,7 +142,7 @@ class RegionController extends Controller
 
         if($type == 'brand'){
             $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
-            $html = ' <label for="region_id">Regions</label><select class="form form-control select2" id="region_id" name="region_id" required> <option value="">Select Region</option> ';
+            $html = ' <label for="region_id">Regions</label><select class="form form-control select2" id="region_id" name="region_id" > <option value="">Select Region</option> ';
             foreach ($regions as $key => $region) {
                 $html .= '<option value="' . $key . '">' . $region . '</option> ';
             }
@@ -155,7 +155,7 @@ class RegionController extends Controller
         }else if($type == 'region'){
 
             $branches = Branch::where('region_id', $id)->pluck('name', 'id')->toArray();
-            $html = ' <label for="branch_id">Branch</label><select class="form form-control select2" id="branch_id" name="branch_id" required> <option value="">Select Branch</option> ';
+            $html = ' <label for="branch_id">Branch</label><select class="form form-control select2" id="branch_id" name="branch_id" > <option value="">Select Branch</option> ';
             foreach ($branches as $key => $branch) {
                 $html .= '<option value="' . $key . '">' . $branch . '</option> ';
             }

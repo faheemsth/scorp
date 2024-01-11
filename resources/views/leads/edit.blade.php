@@ -424,7 +424,59 @@
 
 {{ Form::close() }}
 
+<script>
+    $(document).ready(function() {
+var id = {{ $lead->brand_id }};
+$.ajax({
+            type: 'GET',
+            url: '{{ route('filter-regions') }}',
+            data: {
+                id: id
+            },
+            success: function(data){
+                data = JSON.parse(data);
 
+                if (data.status === 'success') {
+                    $('#region_div').html('');
+                    $("#region_div").html(data.html);
+                    select2();
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+
+
+
+        var id = {{ $lead->region_id }};
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('filter-branches') }}',
+                data: {
+                    id: id
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#branch_div').html('');
+                        $("#branch_div").html(data.html);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+
+});
+</script>
 <script>
     $(".brand_id").on("change", function(){
         // var id = $(this).val();
@@ -467,7 +519,7 @@
                 if (data.status === 'success') {
                     $('#region_div').html('');
                     $("#region_div").html(data.html);
-                    select2();                       
+                    select2();
                 } else {
                     console.error('Server returned an error:', data.message);
                 }
@@ -494,7 +546,7 @@
                 if (data.status === 'success') {
                     $('#branch_div').html('');
                     $("#branch_div").html(data.html);
-                    select2();                       
+                    select2();
                 } else {
                     console.error('Server returned an error:', data.message);
                 }
@@ -520,7 +572,7 @@
                 if (data.status === 'success') {
                     $('#assign_to_div').html('');
                     $("#assign_to_div").html(data.html);
-                    select2();                       
+                    select2();
                 } else {
                     console.error('Server returned an error:', data.message);
                 }
