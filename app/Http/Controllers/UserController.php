@@ -212,6 +212,28 @@ class UserController extends Controller
                     $user['phone'] = $request->phone;
 
                     $user->assignRole($role_r);
+
+                    //                $user->userDefaultData();
+                    $user->userDefaultDataRegister($user->id);
+                    $user->userWarehouseRegister($user->id);
+    
+                    //default bank account for new company
+                    $user->userDefaultBankAccount($user->id);
+    
+                    Utility::chartOfAccountTypeData($user->id);
+                    Utility::chartOfAccountData($user);
+                    // default chart of account for new company
+                    Utility::chartOfAccountData1($user->id);
+    
+                    Utility::pipeline_lead_deal_Stage($user->id);
+                    Utility::project_task_stages($user->id);
+                    Utility::labels($user->id);
+                    Utility::sources($user->id);
+                    Utility::jobStage($user->id);
+                    GenerateOfferLetter::defaultOfferLetterRegister($user->id);
+                    ExperienceCertificate::defaultExpCertificatRegister($user->id);
+                    JoiningLetter::defaultJoiningLetterRegister($user->id);
+                    NOC::defaultNocCertificateRegister($user->id);
                     if ($request['type'] != 'client')
                         \App\Models\Utility::employeeDetails($user->id, \Auth::user()->creatorId());
                 } else {
@@ -220,20 +242,20 @@ class UserController extends Controller
             }
 
             // Send Email
-            // $setings = Utility::settings();
-            // if ($setings['new_user'] == 1) {
-            //     $user->password = $psw;
-            //     $user->type = $role_r->name;
+            $setings = Utility::settings();
+            if ($setings['new_user'] == 1) {
+                $user->password = $psw;
+                $user->type = $role_r->name;
 
-            //     $userArr = [
-            //         'email' => $user->email,
-            //         'password' => $user->password,
-            //     ];
-            //     $resp = Utility::sendEmailTemplate('new_user', [$user->id => $user->email], $userArr);
+                $userArr = [
+                    'email' => $user->email,
+                    'password' => $user->password,
+                ];
+                $resp = Utility::sendEmailTemplate('new_user', [$user->id => $user->email], $userArr);
 
 
-            //     return redirect()->route('users.index')->with('success', __('User successfully created.') . ((!empty($resp) && $resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
-            // }
+                return redirect()->route('users.index')->with('success', __('User successfully created.') . ((!empty($resp) && $resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
+            }
             return redirect()->route('users.index')->with('success', __('User successfully created.'));
         } else {
             return redirect()->back();
@@ -309,7 +331,7 @@ class UserController extends Controller
                 $user->update();
 
 
-               // Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId());
+               Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId());
                // CustomField::saveData($user, $request->customField);
 
                 $roles[] = $request->role;
