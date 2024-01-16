@@ -27,7 +27,7 @@ class CompanyPermissionController extends Controller
             }
 
 
-            $companies = User::where('type', 'company')->get();
+            $companies = User::where('type', 'company')->orderBy('name', 'ASC')->get();
             $permission_arr = [];
 
             foreach ($employees as $com) {

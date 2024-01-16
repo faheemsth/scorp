@@ -193,7 +193,8 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
                 {{-- @foreach($notifications as $notification)
                     {!! $notification->data !!}
                 @endforeach --}}
-                <ul>
+                <ul style="max-height: 300px; overflow-y: scroll;">
+                      
                     @foreach($notifications as $notification)
                     {!! $notification->data !!}
                     @endforeach

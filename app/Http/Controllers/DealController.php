@@ -2849,10 +2849,7 @@ class DealController extends Controller
                             <h6 class="mb-0">Task Notification</h6>
                             <p class="mb-1" style="color: gray">'.$text.'</p>
                             <div class="d-flex justify-content-between align-items-center">
-                                <span style="color:#b2b2b2;font-size: 13px;">12-27-2023</span>
-                                <a href="!#" class="text-decoration-none">
-                                    Clear
-                                </a>
+                                <span style="color:#b2b2b2;font-size: 13px;">'.$task->created_at.'</span>
                             </div>
                             <hr style="color: #dddddd00;" class="my-1">
                         </li>';
