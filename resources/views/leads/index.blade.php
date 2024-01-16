@@ -226,7 +226,9 @@
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
     <li class="breadcrumb-item">{{ __('Lead') }}</li>
 @endsection
-<div id="mySidenav" class=" sidenav <?= $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>">
+
+@section('content')
+<div id="mySidenav" class="sidenav <?= $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
     <div class="d-flex justify-content-between px-3">
@@ -251,7 +253,8 @@
         </div>
     </div>
 </div>
-@section('content')
+
+
     <div class="col-xl-12">
         <div class="card my-card" style="max-width: 98%;border-radius:0px; min-height: 250px !important;">
             <div class="card-body table-border-style" style="padding: 25px 3px;">
@@ -404,15 +407,13 @@
                                                 @endif
                                             </div>
                                             <div class="card-header border-0 pb-0 position-relative">
-                                                <h5 style="font-size: 14px;"><a
-                                                        href="@can('view lead') @if ($lead->is_active)
-                                                    {{ route('leads.show', $lead->id) }}@else#
-                            @endif @else#
-                            @endcan">{{ $lead->name }}</a>
-                                                    <span style="cursor:pointer" onclick="openNav(<?= $lead->id ?>)"
-                                                        data-lead-id="{{ $lead->id }}"
-                                                        class="ti ti-brand-hipchat"></span>
+                                                <h5 style="font-size: 14px;">
+                                                    <a href="javascript:void(0)" @can('view lead') onclick="openSidebar('/get-lead-detail?lead_id=' + {{ $lead->id }})" @endcan>
+                                                        {{ $lead->name }}
+                                                    </a>
+                                                    <span style="cursor:pointer" onclick="openNav(<?= $lead->id ?>)" data-lead-id="{{ $lead->id }}" class="ti ti-brand-hipchat"></span>
                                                 </h5>
+
                                                 <div class="card-header-right">
                                                     @if (Auth::user()->type != 'client')
                                                         <div class="btn-group card-option">

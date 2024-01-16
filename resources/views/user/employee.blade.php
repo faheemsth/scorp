@@ -181,9 +181,17 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 </thead>
 
                                 <tbody>
+                                    <?php 
+                                         if(isset($_GET['page']) && !empty($_GET['page'])){
+                                             $count = (($_GET['page'] - 1) * $_GET['num_results_on_page']) + 1;
+                                         }else{
+                                             $count = 1;
+                                         }
+                                        
+                                        ?>
                                     @forelse($users as $key => $employee)
                                     <tr>
-                                        <td>{{ $key + 1 }}</td>
+                                        <td>{{ $count++ }}</td>
                                         <td>
 
                                             <span style="cursor:pointer" class="hyper-link" @can('view employee') onclick="openSidebar('/user/employee/{{ $employee->id }}/show')" @endcan>

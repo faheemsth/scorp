@@ -53,7 +53,7 @@
             </li>
         @endforeach
     </ul>
-    <button data-bs-toggle="tooltip" title="" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" data-original-title="Refresh"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+    <!-- <button data-bs-toggle="tooltip" title="" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" data-original-title="Refresh"><i class="ti ti-refresh" style="font-size: 18px"></i></button> -->
     </div>
     <div class="modal" id="save-filter-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg my-0" role="document">

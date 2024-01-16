@@ -66,7 +66,7 @@ class UserController extends Controller
                         $users->where('project_director_id', $directorId);
                         }
 
-                $users = $users->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $users = $users->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
             } else {
 
 
@@ -85,7 +85,7 @@ class UserController extends Controller
                   }
 
 
-                $users = $users->whereIn('id', $brand_ids)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);;
+                $users = $users->whereIn('id', $brand_ids)->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);;
 
             }
             $total_records = $users->total();
@@ -212,6 +212,28 @@ class UserController extends Controller
                     $user['phone'] = $request->phone;
 
                     $user->assignRole($role_r);
+
+                    //                $user->userDefaultData();
+                    $user->userDefaultDataRegister($user->id);
+                    $user->userWarehouseRegister($user->id);
+    
+                    //default bank account for new company
+                    $user->userDefaultBankAccount($user->id);
+    
+                    Utility::chartOfAccountTypeData($user->id);
+                    Utility::chartOfAccountData($user);
+                    // default chart of account for new company
+                    Utility::chartOfAccountData1($user->id);
+    
+                    Utility::pipeline_lead_deal_Stage($user->id);
+                    Utility::project_task_stages($user->id);
+                    Utility::labels($user->id);
+                    Utility::sources($user->id);
+                    Utility::jobStage($user->id);
+                    GenerateOfferLetter::defaultOfferLetterRegister($user->id);
+                    ExperienceCertificate::defaultExpCertificatRegister($user->id);
+                    JoiningLetter::defaultJoiningLetterRegister($user->id);
+                    NOC::defaultNocCertificateRegister($user->id);
                     if ($request['type'] != 'client')
                         \App\Models\Utility::employeeDetails($user->id, \Auth::user()->creatorId());
                 } else {
@@ -220,20 +242,20 @@ class UserController extends Controller
             }
 
             // Send Email
-            // $setings = Utility::settings();
-            // if ($setings['new_user'] == 1) {
-            //     $user->password = $psw;
-            //     $user->type = $role_r->name;
+            $setings = Utility::settings();
+            if ($setings['new_user'] == 1) {
+                $user->password = $psw;
+                $user->type = $role_r->name;
 
-            //     $userArr = [
-            //         'email' => $user->email,
-            //         'password' => $user->password,
-            //     ];
-            //     $resp = Utility::sendEmailTemplate('new_user', [$user->id => $user->email], $userArr);
+                $userArr = [
+                    'email' => $user->email,
+                    'password' => $user->password,
+                ];
+                $resp = Utility::sendEmailTemplate('new_user', [$user->id => $user->email], $userArr);
 
 
-            //     return redirect()->route('users.index')->with('success', __('User successfully created.') . ((!empty($resp) && $resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
-            // }
+                return redirect()->route('users.index')->with('success', __('User successfully created.') . ((!empty($resp) && $resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
+            }
             return redirect()->route('users.index')->with('success', __('User successfully created.'));
         } else {
             return redirect()->back();
@@ -309,7 +331,7 @@ class UserController extends Controller
                 $user->update();
 
 
-               // Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId());
+               Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId());
                // CustomField::saveData($user, $request->customField);
 
                 $roles[] = $request->role;
@@ -667,12 +689,67 @@ class UserController extends Controller
                 }
 
                 $users = $usersQuery->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
-            } else {
-                $users = User::where('created_by', '=', $user->creatorId())->whereNotIn('type', $excludedTypes)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+            } else if($user->type == 'company') {
+                $usersQuery = User::whereNotIn('type', $excludedTypes);
+
+                if (!empty($_GET['brand'])) {
+                    $usersQuery->where('brand_id', $_GET['brand']);
+                }
+                if (!empty($_GET['Region'])) {
+                    $usersQuery->where('region_id', $_GET['Region']);
+                }
+
+                if (!empty($_GET['Branch'])) {
+                    $usersQuery->where('branch_id', $_GET['Branch']);
+                }
+
+                if (!empty($_GET['Name'])) {
+                    $usersQuery->where('name', 'like', '%' . $_GET['Name'] . '%');
+                }
+
+                if (!empty($_GET['Designation'])) {
+                    $usersQuery->where('type', 'like', '%' . $_GET['Designation'] . '%');
+                }
+
+
+                if (!empty($_GET['phone'])) {
+                    $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
+                }
+
+                $users = $usersQuery->where('brand_id', $user->id)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+            }else {
+                $usersQuery = User::whereNotIn('type', $excludedTypes);
+
+                if (!empty($_GET['brand'])) {
+                    $usersQuery->where('brand_id', $_GET['brand']);
+                }
+                if (!empty($_GET['Region'])) {
+                    $usersQuery->where('region_id', $_GET['Region']);
+                }
+
+                if (!empty($_GET['Branch'])) {
+                    $usersQuery->where('branch_id', $_GET['Branch']);
+                }
+
+                if (!empty($_GET['Name'])) {
+                    $usersQuery->where('name', 'like', '%' . $_GET['Name'] . '%');
+                }
+
+                if (!empty($_GET['Designation'])) {
+                    $usersQuery->where('type', 'like', '%' . $_GET['Designation'] . '%');
+                }
+
+
+                if (!empty($_GET['phone'])) {
+                    $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
+                }
+
+                $users = $usersQuery->where('brand_id', $user->brand_id)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }
-            $brands = User::whereNotIn('type', $excludedTypes)->get();
-            $brandss = User::where('type', 'company')->pluck('name', 'id')->toArray();
-            $Regions = Region::pluck('name', 'id')->toArray();
+
+            $brands = User::whereNotIn('type', $excludedTypes)->orderBy('name', 'ASC')->get();
+            $brandss = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            $Regions = Region::orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $RegionForLocation = Region::pluck('location', 'id')->toArray();
             $Branchs = Branch::pluck('name', 'id')->toArray();
             $Designations = Role::where('name', '!=', 'super admin')->pluck('name', 'id')->toArray();

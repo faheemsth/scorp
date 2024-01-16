@@ -350,11 +350,16 @@
 
 
 
-                            <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
                         <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
+
+                        <a  href="{{ url('/deals') }}" data-bs-toggle="tooltip" title="{{ __('Deals View') }}" class="btn px-2 btn-dark d-flex align-items-center">
+                            {{-- <i class="ti ti-plus" style="font-size:18px"></i> --}}
+                            <i class="fa-solid fa-border-all" style="font-size:18px"></i>
+                        </a>
 
                         {{-- <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}" class="btn p-2 btn-dark">
                             <i class="ti ti-plus"></i>

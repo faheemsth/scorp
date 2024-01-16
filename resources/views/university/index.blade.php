@@ -96,15 +96,16 @@
                                 <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search"
                                     placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                             </div>
+                            
+                            <button class="btn p-2 refresh-list btn-dark" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()"><i class="ti ti-refresh"
+                                style="font-size: 18px"></i></button>
 
 
                             <button class="btn filter-btn-show p-2 btn-dark" style="color:white;" type="button"
-                            data-bs-toggle="tooltip" title="{{__('Filter')}}">
+                                data-bs-toggle="tooltip" title="{{__('Filter')}}">
                                 <i class="ti ti-filter" style="font-size:18px"></i>
                             </button>
 
-                            <button class="btn p-2 refresh-list btn-dark" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()"><i class="ti ti-refresh"
-                                style="font-size: 18px"></i></button>
                             @can('create university')
                                 <button data-size="lg" data-url="{{ route('university.create') }}"
                                     data-ajax-popup="true" data-bs-toggle="tooltip" data-size="lg"

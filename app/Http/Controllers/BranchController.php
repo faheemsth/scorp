@@ -29,10 +29,10 @@ class BranchController extends Controller
 
             if(\Auth::user()->type == 'super admin'){
                 $total_records = Branch::count();
-                $branches = Branch::skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $branches = Branch::skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
             }else if(\Auth::user()->type == 'company'){
                 $total_records = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->count();
-                $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
             }else{
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
@@ -46,7 +46,7 @@ class BranchController extends Controller
                }
                $total_records = $branch_query->count();
    
-               $branches = $branch_query->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+               $branches = $branch_query->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
             }
 
 
