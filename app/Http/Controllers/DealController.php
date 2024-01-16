@@ -2779,18 +2779,29 @@ class DealController extends Controller
                 $icon_color = 'bg-primary';
 
                 $date = \Carbon\Carbon::now()->diffForHumans();
-                $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
-                                    </div>
-                                    <div class="flex-fill ml-3">
-                                        <div class="h6 text-sm mb-0">' . $text . '</div>
-                                        <small class="text-muted ">' . $date . '</small>
-                                    </div>
-                                </div>
-                            </a>';
+                // $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                //                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                //                 <div class="d-flex align-items-center">
+                //                     <div>
+                //                         <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
+                //                     </div>
+                //                     <div class="flex-fill ml-3">
+                //                         <div class="h6 text-sm mb-0">' . $text . '</div>
+                //                         <small class="text-muted ">' . $date . '</small>
+                //                     </div>
+                //                 </div>
+                //             </a>';
+                $html = '<li class="px-2">
+                            <h6 class="mb-0">Task Notification</h6>
+                            <p class="mb-1" style="color: gray">'.$text.'</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span style="color:#b2b2b2;font-size: 13px;">12-27-2023</span>
+                                <a href="!#" class="text-decoration-none">
+                                    Clear
+                                </a>
+                            </div>
+                            <hr style="color: #dddddd00;" class="my-1">
+                        </li>';
 
                 $notification = new Notification;
                 $notification->user_id = 0;
@@ -2813,18 +2824,29 @@ class DealController extends Controller
                 $icon_color = 'bg-primary';
 
                 $date = \Carbon\Carbon::now()->diffForHumans();
-                $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
-                                    </div>
-                                    <div class="flex-fill ml-3">
-                                        <div class="h6 text-sm mb-0">' . $text . '</div>
-                                        <small class="text-muted ">' . $date . '</small>
-                                    </div>
-                                </div>
-                            </a>';
+                // $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                // data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                //                 <div class="d-flex align-items-center">
+                //                     <div>
+                //                         <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
+                //                     </div>
+                //                     <div class="flex-fill ml-3">
+                //                         <div class="h6 text-sm mb-0">' . $text . '</div>
+                //                         <small class="text-muted ">' . $date . '</small>
+                //                     </div>
+                //                 </div>
+                //             </a>';
+                $html = '<li class="px-2">
+                            <h6 class="mb-0">Task Notification</h6>
+                            <p class="mb-1" style="color: gray">'.$text.'</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span style="color:#b2b2b2;font-size: 13px;">12-27-2023</span>
+                                <a href="!#" class="text-decoration-none">
+                                    Clear
+                                </a>
+                            </div>
+                            <hr style="color: #dddddd00;" class="my-1">
+                        </li>';
 
                 $notification = new Notification;
                 $notification->user_id = 0;
