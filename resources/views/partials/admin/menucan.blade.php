@@ -104,19 +104,20 @@
         {{-- /// --}}
 
 
-            <li class="nav-item">
-                <a class="nav-link {{ Request::segment(1) == 'hrm-dashboard' || Request::segment(1) == 'reports-payroll' || Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave'  ? '' : 'collapsed' }} "
-                    href="#" data-toggle="collapse"  data-target="#collapsehrmsys" aria-expanded="true"
-                    aria-controls="collapsehrmsys ">
-                    <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px"
-                        style="margin-top:-10px" alt="" srcset="">
-                    <span>{{ __('HRM System') }}</span>
-                </a>
 
-            <div id="collapsehrmsys"
-                    class="collapse {{ Request::segment(1) == 'hrm-dashboard' || Request::segment(1) == 'reports-payroll' || Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave' ? 'show' : '' }}"
-                    aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-                <div class="  collapse-inner rounded">
+        <li class="nav-item">
+            <a class="nav-link {{ Request::segment(1) == 'hrm-dashboard' || Request::segment(1) == 'reports-payroll' || Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave' ? '' : 'collapsed' }}"
+                href="#" data-toggle="collapse" data-target="#collapse-hrmsys" aria-expanded="true"
+                aria-controls="collapse-hrmsys">
+                <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px"
+                    style="margin-top:-10px" alt="" srcset="">
+                <span>{{ __('HRM System') }}</span>
+            </a>
+
+            <div id="collapse-hrmsys"
+                class="collapse {{ Request::segment(1) == 'hrm-dashboard' || Request::segment(1) == 'reports-payroll' || Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave' ? 'show' : '' }}"
+                aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                <div class="collapse-inner rounded">
                     <ul>
                         @can('show hrm dashboard')
                             <li class="emp {{  Request::segment(1) == 'hrm-dashboard' ? ' active' : '' }}">
@@ -125,21 +126,20 @@
                             </li>
                         @endcan
                         @can('manage report')
-                                <li class="nav-item">
-                                    <a class="nav-link {{ Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave' || Request::segment(1) == 'reports-payroll'  ? '' : 'collapsed' }} "
-                                        href="#" data-toggle="collapse" data-target="#collapsehrmsys" aria-expanded="true"
-                                        aria-controls="collapsehrmsys" style="padding-left: 0px !important;
-                                        padding-right: 35px !important;">
-                                        <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px"
-                                            style="margin-top:-10px" alt="" srcset="">
-                                        <span>{{ __('Reports') }}</span>
-                                    </a>
-                                <div id="collapsehrmsys"
-                                        class="collapse {{ Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave' || Request::segment(1) == 'reports-payroll'  ? 'show' : '' }}"
-                                        aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave' || Request::segment(1) == 'reports-payroll' ? '' : 'collapsed' }}"
+                                    href="#" data-toggle="collapse" data-target="#collapse-hrmsys" aria-expanded="true"
+                                    aria-controls="collapse-hrmsys" style="padding-left: 0px !important;
+                                    padding-right: 35px !important;">
+                                    <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px"
+                                        style="margin-top:-10px" alt="" srcset="">
+                                    <span>{{ __('Reports') }}</span>
+                                </a>
+                                <div id="collapse-hrmsys"
+                                    class="collapse {{ Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave' || Request::segment(1) == 'reports-payroll' ? 'show' : '' }}"
+                                    aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                                     <div class="  collapse-inner rounded">
                                         <ul>
-
                                             <li class="emp {{ Request::segment(1) =='reports-payroll' ? 'active' : '' }}">
                                                 <a class="collapse-item" href="{{ route('report.payroll') }}"
                                                     style="color:white; font-size: 13px;">{{ __(' Payroll') }}</a>
@@ -161,6 +161,7 @@
                 </div>
             </div>
         </li>
+
         {{-- //// --}}
         {{-- //// --}}
         @can('show account dashboard')
