@@ -141,7 +141,7 @@
 
 
 <div class="row">
-    <div class="col-xl-3 col-md-6">
+    <div class="col-xl-2 col-md-6">
         <!-- card -->
         <div class="card card-animate my-card" style="min-height: 202px;">
             <div class="card-body pl-3">
@@ -165,7 +165,7 @@
             </div><!-- end card body -->
         </div><!-- end card -->
     </div><!-- end col -->
-    <div class="col-xl-3 col-md-6">
+    <div class="col-xl-2 col-md-6">
         <!-- card -->
         <div class="card card-animate my-card" style="min-height: 202px; ">
             <div class="card-body">
@@ -189,7 +189,7 @@
         </div><!-- end card -->
     </div><!-- end col -->
 
-    <div class="col-xl-3 col-md-6">
+    <div class="col-xl-2 col-md-6">
         <!-- card -->
         <div class="card card-animate my-card" style="min-height: 202px; ">
             <div class="card-body">
@@ -209,7 +209,7 @@
         </div><!-- end card -->
     </div><!-- end col -->
 
-    <div class="col-xl-3 col-md-6">
+    <div class="col-xl-2 col-md-6">
         <!-- card -->
         <div class="card card-animate my-card" style="min-height: 202px; ">
             <div class="card-body">
@@ -230,37 +230,7 @@
         </div><!-- end card -->
     </div><!-- end col -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class="col-xl-3 col-md-6">
+    <div class="col-xl-2 col-md-6">
         <!-- card -->
         <div class="card card-animate my-card" style="min-height: 202px; ">
             <div class="card-body">
@@ -281,33 +251,7 @@
         </div><!-- end card -->
     </div><!-- end col -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class="col-xl-3 col-md-6">
+    <div class="col-xl-2 col-md-6">
         <!-- card -->
         <div class="card card-animate my-card" style="min-height: 202px; ">
             <div class="card-body">
@@ -328,30 +272,7 @@
         </div><!-- end card -->
     </div><!-- end col -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class="col-xl-3 col-md-6">
+    <div class="col-xl-2 col-md-6">
         <!-- card -->
         <div class="card card-animate my-card" style="min-height: 202px; ">
             <div class="card-body">
@@ -373,31 +294,7 @@
     </div><!-- end col -->
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="col-xl-3 col-md-6">
+<div class="col-xl-2 col-md-6">
         <!-- card -->
         <div class="card card-animate my-card" style="min-height: 202px; ">
             <div class="card-body">
