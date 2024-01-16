@@ -102,49 +102,53 @@
         </li>
         {{-- dashboard end li  --}}
         {{-- /// --}}
-        <li
-            class="d-none nav-item {{ Request::segment(1) == 'hrm-dashboard' || Request::segment(1) == 'reports-payroll' ? ' active dash-trigger' : '' }}">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsesys"
-                aria-expanded="true" aria-controls="collapsesys">
 
-                <span>{{ __('HRM') }}</span>
-            </a>
-            <div id="collapsesys" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+
+            <li class="nav-item">
+                <a class="nav-link {{ Request::segment(1) == 'hrm-dashboard' || Request::segment(1) == 'reports-payroll' || Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave'  ? '' : 'collapsed' }} "
+                    href="#" data-toggle="collapse"  data-target="#collapsehrmsys" aria-expanded="true"
+                    aria-controls="collapsehrmsys ">
+                    <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px"
+                        style="margin-top:-10px" alt="" srcset="">
+                    <span>{{ __('HRM System') }}</span>
+                </a>
+
+            <div id="collapsehrmsys"
+                    class="collapse {{ Request::segment(1) == 'hrm-dashboard' || Request::segment(1) == 'reports-payroll' || Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave' ? 'show' : '' }}"
+                    aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                 <div class="  collapse-inner rounded">
                     <ul>
                         @can('show hrm dashboard')
-                            <li class="{{ \Request::route()->getName() == 'hrm.dashboard' ? ' active' : '' }}">
+                            <li class="emp {{  Request::segment(1) == 'hrm-dashboard' ? ' active' : '' }}">
                                 <a class="collapse-item" href="{{ route('hrm.dashboard') }}"
                                     style="color:white; font-size: 13px;">{{ __(' Overview') }}</a>
                             </li>
                         @endcan
                         @can('manage report')
-                            <li class="nav-item    {{ Request::segment(1) == 'reports-monthly-attendance' ||
-                            Request::segment(1) == 'reports-leave' ||
-                            Request::segment(1) == 'reports-payroll'
-                                ? 'active dash-trigger'
-                                : '' }}"
-                                href="#hr-report"
-                                aria-expanded="{{ Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave' || Request::segment(1) == 'reports-payroll' ? 'true' : 'false' }}">
-                                <a class="nav-link collapsed" href="#" data-toggle="collapse"
-                                    data-target="#collapsesys" aria-expanded="true" aria-controls="collapsesys">
-
-                                    <span>{{ __('Reports') }}</span>
-                                </a>
-                                <div id="collapsesys" class="collapse" aria-labelledby="headingTwo"
-                                    data-parent="#accordionSidebar">
+                                <li class="nav-item">
+                                    <a class="nav-link {{ Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave' || Request::segment(1) == 'reports-payroll'  ? '' : 'collapsed' }} "
+                                        href="#" data-toggle="collapse" data-target="#collapsehrmsys" aria-expanded="true"
+                                        aria-controls="collapsehrmsys" style="padding-left: 0px !important;
+                                        padding-right: 35px !important;">
+                                        <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px"
+                                            style="margin-top:-10px" alt="" srcset="">
+                                        <span>{{ __('Reports') }}</span>
+                                    </a>
+                                <div id="collapsehrmsys"
+                                        class="collapse {{ Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave' || Request::segment(1) == 'reports-payroll'  ? 'show' : '' }}"
+                                        aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                                     <div class="  collapse-inner rounded">
                                         <ul>
 
-                                            <li class="{{ request()->is('reports-payroll') ? 'active' : '' }}">
+                                            <li class="emp {{ Request::segment(1) =='reports-payroll' ? 'active' : '' }}">
                                                 <a class="collapse-item" href="{{ route('report.payroll') }}"
                                                     style="color:white; font-size: 13px;">{{ __(' Payroll') }}</a>
                                             </li>
-                                            <li class="{{ request()->is('reports-leave') ? 'active' : '' }}">
+                                            <li class="emp {{ Request::segment(1) =='reports-leave' ? 'active' : '' }}">
                                                 <a class="collapse-item" href="{{ route('report.leave') }}"
                                                     style="color:white; font-size: 13px;">{{ __(' Leave') }}</a>
                                             </li>
-                                            <li class="{{ request()->is('reports-monthly-attendance') ? 'active' : '' }}">
+                                            <li class="emp {{ Request::segment(1) == 'reports-monthly-attendance' ? 'active' : '' }}">
                                                 <a class="collapse-item" href="{{ route('report.monthly.attendance') }}"
                                                     style="color:white; font-size: 13px;">{{ __(' Monthly Attendance') }}</a>
                                             </li>
