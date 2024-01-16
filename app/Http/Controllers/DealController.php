@@ -2766,10 +2766,10 @@ class DealController extends Controller
 
     public function tasksCron(){
         $date = \Carbon\Carbon::now();
-        $date = $date->format('Y-m-d');
+        $a_date = $date->format('Y-m-d');
 
-        $remainder_date_tasks = DealTask::where('remainder_date','=',$date)->get();
-        $due_date_tasks = DealTask::where('due_date','=',$date)->get();
+        $remainder_date_tasks = DealTask::where('remainder_date','=',$a_date)->get();
+        $due_date_tasks = DealTask::where('due_date','=',$a_date)->get();
 
         if(sizeof($remainder_date_tasks) > 0){
             foreach($remainder_date_tasks as $task){
@@ -2780,25 +2780,44 @@ class DealController extends Controller
                 $icon_color = 'bg-primary';
 
                 $date = \Carbon\Carbon::now()->diffForHumans();
-                $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
-                                    </div>
-                                    <div class="flex-fill ml-3">
-                                        <div class="h6 text-sm mb-0">' . $text . '</div>
-                                        <small class="text-muted ">' . $date . '</small>
-                                    </div>
-                                </div>
-                            </a>';
+                // $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                //                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                //                 <div class="d-flex align-items-center">
+                //                     <div>
+                //                         <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
+                //                     </div>
+                //                     <div class="flex-fill ml-3">
+                //                         <div class="h6 text-sm mb-0">' . $text . '</div>
+                //                         <small class="text-muted ">' . $date . '</small>
+                //                     </div>
+                //                 </div>
+                //             </a>';
+                $html = '<li class="px-2">
+                            <h6 class="mb-0">Task Notification</h6>
+                            <p class="mb-1" style="color: gray">'.$text.'</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span style="color:#b2b2b2;font-size: 13px;">12-27-2023</span>
+                                <a href="!#" class="text-decoration-none">
+                                    Clear
+                                </a>
+                            </div>
+                            <hr style="color: #dddddd00;" class="my-1">
+                        </li>';
+                $ext_not = Notification::where('task_id',$task->id)->where('remainder_date',$a_date)->first();
+                if($ext_not){
 
-                $notification = new Notification;
-                $notification->user_id = 0;
-                $notification->type = 'Task Remainder';
-                $notification->data = $html;
-                $notification->is_read = 0;
-                $notification->save();
+                }else{
+                    $notification = new Notification;
+                    $notification->user_id = 0;
+                    $notification->type = 'Task Remainder';
+                    $notification->data = $html;
+                    $notification->is_read = 0;
+                    $notification->task_id = $task->id;
+                    $notification->remainder_date = $a_date;
+    
+                    $notification->save();
+                }
+                
 
             }
 
@@ -2814,25 +2833,45 @@ class DealController extends Controller
                 $icon_color = 'bg-primary';
 
                 $date = \Carbon\Carbon::now()->diffForHumans();
-                $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
-                                    </div>
-                                    <div class="flex-fill ml-3">
-                                        <div class="h6 text-sm mb-0">' . $text . '</div>
-                                        <small class="text-muted ">' . $date . '</small>
-                                    </div>
-                                </div>
-                            </a>';
+                // $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                // data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                //                 <div class="d-flex align-items-center">
+                //                     <div>
+                //                         <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
+                //                     </div>
+                //                     <div class="flex-fill ml-3">
+                //                         <div class="h6 text-sm mb-0">' . $text . '</div>
+                //                         <small class="text-muted ">' . $date . '</small>
+                //                     </div>
+                //                 </div>
+                //             </a>';
+                $html = '<li class="px-2">
+                            <h6 class="mb-0">Task Notification</h6>
+                            <p class="mb-1" style="color: gray">'.$text.'</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span style="color:#b2b2b2;font-size: 13px;">12-27-2023</span>
+                                <a href="!#" class="text-decoration-none">
+                                    Clear
+                                </a>
+                            </div>
+                            <hr style="color: #dddddd00;" class="my-1">
+                        </li>';
 
-                $notification = new Notification;
-                $notification->user_id = 0;
-                $notification->type = 'Task Due Date';
-                $notification->data = $html;
-                $notification->is_read = 0;
-                $notification->save();
+                        $ext_not = Notification::where('task_id',$task->id)->where('due_date',$a_date)->first();
+                        if($ext_not){
+        
+                        }else{
+                            $notification = new Notification;
+                            $notification->user_id = 0;
+                            $notification->type = 'Task Due Date';
+                            $notification->data = $html;
+                            $notification->is_read = 0;
+                            $notification->task_id = $task->id;
+                            $notification->due_date = $a_date;
+
+                            $notification->save();
+                        }
+                
 
             }
 

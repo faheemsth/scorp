@@ -194,28 +194,9 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
                     {!! $notification->data !!}
                 @endforeach --}}
                 <ul>
-                    <li class="px-2">
-                        <h6 class="mb-0">title</h6>
-                        <p class="mb-1" style="color: gray">Discription</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span style="color:#b2b2b2;font-size: 13px;">12-27-2023</span>
-                            <a href="!#" class="text-decoration-none">
-                                Clear
-                            </a>
-                        </div>
-                        <hr style="color: #dddddd00;" class="my-1">
-                    </li>
-                    <li class="px-2">
-                        <h6 class="mb-0">title</h6>
-                        <p class="mb-1" style="color: gray">Discription</p>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <span style="color:#b2b2b2;font-size: 13px;">12-27-2023</span>
-                            <a href="!#" class="text-decoration-none">
-                                Clear
-                            </a>
-                        </div>
-                        <hr style="color: #dddddd00;" class="my-1">
-                    </li>
+                    @foreach($notifications as $notification)
+                    {!! $notification->data !!}
+                    @endforeach
                 </ul>
             </div>
         </li>
