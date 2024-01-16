@@ -17,8 +17,11 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
-// use Laravel\Socialite\Facades\Socialite;
+//use Laravel\Socialite\Facades\Socialite;
+//use Laravel\Socialite\SocialiteServiceProvider;
 
+//use Socialite;
+use Laravel\Socialite\Facades\Socialite;
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -74,7 +77,10 @@ class AuthenticatedSessionController extends Controller
         // dd($request->email);
         $user = User::where('email',$request->email)->first();
         
-        $environment = env('APP_ENV', 'local');
+        //dd($user);
+        
+        $environment = env('APP_ENV');
+        
         if($environment == 'production'){
             if($user){
                 return Socialite::driver('google')->redirect();
@@ -157,6 +163,9 @@ class AuthenticatedSessionController extends Controller
 
     public function handleGoogleCallback()
     {
+        // echo "<pre>";
+        // print_r($_GET);
+        // die();
         // $timestamp = mktime(9, 39, 22, 10, 9, 2023);
 
         $dateString = Carbon::now();
@@ -164,7 +173,6 @@ class AuthenticatedSessionController extends Controller
             $user = Socialite::driver('google')->user();
             
             $finduser = User::where('email', $user->email)->first();
-            // dd($finduser);
             if($finduser){
 
                 Auth::login($finduser);

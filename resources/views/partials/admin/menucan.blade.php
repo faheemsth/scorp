@@ -828,7 +828,7 @@
                                     class="emp nav-item {{ Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
 
                                     <a class="collapse-item" style="color:white; font-size: 13px;"
-                                        href="{{ route('pipelines.index') }}   ">
+                                        href="{{ route('stages.index') }}   ">
                                         <img src="{{ asset('assets/cs-theme/icons/administrator-developer-icon 1.png') }}"
                                             id="icon1" width="15px" height="15px" style="margin-top:-10px"
                                             alt="" srcset="">

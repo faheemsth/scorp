@@ -61,10 +61,10 @@
                                 <select name="role" class="form form-control select2" style="width: 23%;">
                                     <option value="">Select Role</option>
                                     <option value="Project Director"
-                                        <?= isset($_GET['stages']) && $_GET['stages'] == 'Project Director' ? 'selected' : '' ?>>
+                                        <?=!isset($_GET['role']) ||  isset($_GET['role']) && $_GET['role'] == 'Project Director' ? 'selected' : '' ?>>
                                         Project Director</option>
                                     <option value="Project Manager"
-                                        <?= isset($_GET['stages']) && $_GET['stages'] == 'Project Manager' ? 'selected' : '' ?>>
+                                        <?= isset($_GET['role']) && $_GET['role'] == 'Project Manager' ? 'selected' : '' ?>>
                                         Project Manager</option>
                                 </select>
                                 <button class="btn btn-dark" type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}">Submit</button>

@@ -66,7 +66,7 @@ class UserController extends Controller
                         $users->where('project_director_id', $directorId);
                         }
 
-                $users = $users->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $users = $users->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
             } else {
 
 
@@ -85,7 +85,7 @@ class UserController extends Controller
                   }
 
 
-                $users = $users->whereIn('id', $brand_ids)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);;
+                $users = $users->whereIn('id', $brand_ids)->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);;
 
             }
             $total_records = $users->total();

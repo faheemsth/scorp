@@ -762,12 +762,12 @@ class OrganizationController extends Controller
             $orgs = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
             $priorities = DealTask::$priorities;
             $status     = DealTask::$status;
-            $users = User::get()->pluck('name', 'id')->toArray();
+            $users = User::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
 
             if(\Auth::user()->type == 'super admin'){
-                $branches = Branch::pluck('name', 'id')->toArray();
+                $branches = Branch::orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             }else if(\Auth::user()->type == 'company'){
-                $branches = Branch::where('brands', \Auth::user()->id)->pluck('name', 'id')->toArray();
+                $branches = Branch::where('brands', \Auth::user()->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             }else{
                     $companies = FiltersBrands();
                     $brand_ids = array_keys($companies);
@@ -777,8 +777,7 @@ class OrganizationController extends Controller
                     foreach ($brand_ids as $brandId) {
                         $branch_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
                     }
-                    $branches = $branch_query->pluck('name', 'id')->toArray();
-
+                    $branches = $branch_query->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             }
 
 
@@ -805,7 +804,7 @@ class OrganizationController extends Controller
 
                 $employees = [];
                 if(\Auth::user()->type == 'company'){
-                   $employees =  User::where('created_by', $id)->pluck('name', 'id')->toArray();
+                   $employees =  User::where('created_by', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 }
 
 
@@ -823,12 +822,12 @@ class OrganizationController extends Controller
                 } else if ($type == 'organization') {
                     $relateds = User::where('type', 'organization')->pluck('name', 'id')->toArray();
                 } else if ($type == 'deal') {
-                    $relateds = Deal::get()->pluck('name', 'id')->toArray();
+                    $relateds = Deal::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
                 }
             }
 
             if(\Auth::user()->type == 'company'){
-                $Region = Region::where('brands', \Auth::user()->id)->pluck('name', 'id');
+                $Region = Region::where('brands', \Auth::user()->id)->orderBy('name', 'ASC')->pluck('name', 'id');
                 $Region= ['' => 'Select Region'] + $Region->toArray();
             }else{
                 $Region= ['' => 'Select Region'];
@@ -946,8 +945,8 @@ class OrganizationController extends Controller
 
             $task = DealTask::where('id', $id)->first();
 
-            $deals = Deal::get()->pluck('name', 'id')->toArray();
-            $orgs = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
+            $deals = Deal::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+            $orgs = User::where('type', 'organization')->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
 
             $priorities = DealTask::$priorities;
             $status     = DealTask::$status;
@@ -956,25 +955,27 @@ class OrganizationController extends Controller
             if (\Auth::user()->type == 'super admin') {
                 $branches = Branch::where('brands',DealTask::where('id', $id)->first()->brand_id)->get()->pluck('name', 'id')->toArray();
             } else {
+               
                 $branches = Branch::where('brands',DealTask::where('id', $id)->first()->brand_id)->where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             }
+
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
 
             if ($task->assigned_type == 'company') {
-                $users = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+                $users = User::where('type', 'company')->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
             } else {
-                $users = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();
+                $users = User::where('type', 'employee')->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
             }
 
 
             $related_to = [];
             if ($task->related_type == 'organization') {
-                $related_to = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
+                $related_to = User::where('type', 'organization')->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
             } else if ($task->related_type == 'lead') {
-                $related_to = \App\Models\Lead::get()->pluck('name', 'id')->toArray();
+                $related_to = \App\Models\Lead::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
             } else if ($task->related_type == 'deal') {
-                $related_to = Deal::get()->pluck('name', 'id')->toArray();
+                $related_to = Deal::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
             }
 
             // if(\Auth::user()->type == 'super admin'){
@@ -993,7 +994,8 @@ class OrganizationController extends Controller
             }else if(\Auth::user()->type == 'super admin'){
                 $employees =  User::where('brand_id', DealTask::where('id', $id)->first()->brand_id)->pluck('name', 'id')->toArray();
             }
-            $Region=Region::whereRaw('FIND_IN_SET(?, brands)', [$task->brand_id])->pluck('name', 'id')->toArray();
+            
+            $Region=Region::whereRaw('FIND_IN_SET(?, brands)', [$task->brand_id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             // dd($branches);
             return view('organizations.task_edit', compact('Region','task', 'users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'related_to', 'companies', 'employees'));

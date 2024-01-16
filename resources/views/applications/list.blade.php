@@ -212,9 +212,7 @@
 @endsection
 
 
-
-
-
+@section('content')
 <div id="mySidenav" class="sidenav <?= $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>">
     <a href="javascript:void(0)" class="closebtn" onclick="closeSidbar()">&times;</a>
 
@@ -245,7 +243,6 @@
     </div>
 </div>
 
-@section('content')
     <div class="row">
         {{-- <div class="col-sm-12">
             <div class="my-4 mx-4">

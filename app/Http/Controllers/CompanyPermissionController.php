@@ -21,7 +21,9 @@ class CompanyPermissionController extends Controller
         $user = \Auth::user();
         if (\Auth::user()->type == 'super admin') {
             if (isset($_GET['role']) && !empty($_GET['role'])) {
-                $employees = User::where('type', '=', $_GET['role'])->get();
+                $employees = User::where('type', '=', $_GET['role'])->orderBy('name', 'ASC')->get();
+            }else{
+                $employees = User::where('type', '=', 'Project Director')->orderBy('name', 'ASC')->get();
             }
 
 

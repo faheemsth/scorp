@@ -63,9 +63,9 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                 </div>
 
-                <a href="{{ url('application') }}" class="btn filter-btn-show p-2 btn-dark" type="button">
+                <!-- <a href="{{ url('application') }}" class="btn filter-btn-show p-2 btn-dark" type="button">
                     <i class="ti ti-file" style="font-size:18px,color:white"></i>
-                </a>
+                </a> -->
 
                 <div>
                     <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark"><i class="ti ti-refresh" style="font-size: 18px"></i></button>

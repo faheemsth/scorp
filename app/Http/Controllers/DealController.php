@@ -2727,14 +2727,15 @@ class DealController extends Controller
             $tasks = $tasks->orderBy('created_at', 'DESC')->skip($start)->take($num_results_on_page)->get();
             $priorities = DealTask::$priorities;
             $user_type = User::get()->pluck('type', 'id')->toArray();
-            $users = User::get()->pluck('name', 'id')->toArray();
-            $brands = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+            $users = User::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+            $brands = User::where('type', 'company')->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
             $branches = array();
-            $branches = Branch::get();
+            $branches = Branch::orderBy('name', 'ASC')->get();
 
             $assign_to = array();
             if(\Auth::user()->type == 'super admin'){
                 $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+                ->orderBy('name', 'ASC')
                 ->pluck('name', 'id')->toArray();
             }else{
                 $companies = FiltersBrands();
