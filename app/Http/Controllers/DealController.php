@@ -2765,10 +2765,10 @@ class DealController extends Controller
 
     public function tasksCron(){
         $date = \Carbon\Carbon::now();
-        $date = $date->format('Y-m-d');
+        $a_date = $date->format('Y-m-d');
 
-        $remainder_date_tasks = DealTask::where('remainder_date','=',$date)->get();
-        $due_date_tasks = DealTask::where('due_date','=',$date)->get();
+        $remainder_date_tasks = DealTask::where('remainder_date','=',$a_date)->get();
+        $due_date_tasks = DealTask::where('due_date','=',$a_date)->get();
 
         if(sizeof($remainder_date_tasks) > 0){
             foreach($remainder_date_tasks as $task){
@@ -2802,13 +2802,21 @@ class DealController extends Controller
                             </div>
                             <hr style="color: #dddddd00;" class="my-1">
                         </li>';
+                $ext_not = Notification::where('task_id',$task->id)->where('remainder_date',$a_date)->first();
+                if($ext_not){
 
-                $notification = new Notification;
-                $notification->user_id = 0;
-                $notification->type = 'Task Remainder';
-                $notification->data = $html;
-                $notification->is_read = 0;
-                $notification->save();
+                }else{
+                    $notification = new Notification;
+                    $notification->user_id = 0;
+                    $notification->type = 'Task Remainder';
+                    $notification->data = $html;
+                    $notification->is_read = 0;
+                    $notification->task_id = $task->id;
+                    $notification->remainder_date = $a_date;
+    
+                    $notification->save();
+                }
+                
 
             }
 
@@ -2848,12 +2856,21 @@ class DealController extends Controller
                             <hr style="color: #dddddd00;" class="my-1">
                         </li>';
 
-                $notification = new Notification;
-                $notification->user_id = 0;
-                $notification->type = 'Task Due Date';
-                $notification->data = $html;
-                $notification->is_read = 0;
-                $notification->save();
+                        $ext_not = Notification::where('task_id',$task->id)->where('due_date',$a_date)->first();
+                        if($ext_not){
+        
+                        }else{
+                            $notification = new Notification;
+                            $notification->user_id = 0;
+                            $notification->type = 'Task Due Date';
+                            $notification->data = $html;
+                            $notification->is_read = 0;
+                            $notification->task_id = $task->id;
+                            $notification->due_date = $a_date;
+
+                            $notification->save();
+                        }
+                
 
             }
 

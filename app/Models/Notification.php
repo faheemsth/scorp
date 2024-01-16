@@ -11,6 +11,9 @@ class Notification extends Model
         'type',
         'data',
         'is_read',
+        'task_id',
+        'remainder_date',
+        'due_date'
     ];
 
     public function toHtml()
