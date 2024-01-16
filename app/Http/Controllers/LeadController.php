@@ -305,13 +305,13 @@ class LeadController extends Controller
         $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
 
 
-        $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="lead_assgigned_user" required> <option value="">Select User</option> ';
+        $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="assigned_to" > <option value="">Select User</option> ';
         foreach ($employees as $key => $user) {
             $html .= '<option value="' . $key . '">' . $user . '</option> ';
         }
         $html .= '</select>';
 
-        $html1 = ' <select class="form form-control lead_branch select2" id="choices-multiple4" name="lead_branch" required> <option value="">Select Branch</option> ';
+        $html1 = ' <select class="form form-control lead_branch select2" id="choices-multiple4" name="lead_branch"> <option value="">Select Branch</option> ';
         foreach ($branches as $key => $branch) {
             $html1 .= '<option value="' . $key . '">' . $branch . '</option> ';
         }
@@ -333,20 +333,19 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+        // dd($request->all());
         $usr = \Auth::user();
         if ($usr->can('create lead') ||  \Auth::user()->type == 'super admin') {
             $validator = \Validator::make(
                 $request->all(),
                 [
-                    //'lead_prefix' => 'required',
                     'lead_first_name' => 'required',
                     'lead_last_name' => 'required',
                     'lead_stage' => 'required',
-                    //'lead_assgigned_user' => 'required',
-                    //'lead_branch' => 'required',
-                    //'lead_organization' => 'required',
-                    //'lead_source' => 'required',
+                    'brand_id' => 'required',
+                    'region_id' => 'required',
+                    'lead_branch' => 'required',
+                    'lead_assgigned_user' => 'required',
                     'lead_phone' => 'required',
                     'lead_email' => 'required|unique:leads,email',
                 ]

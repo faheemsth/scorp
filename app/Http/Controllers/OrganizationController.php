@@ -722,6 +722,38 @@ class OrganizationController extends Controller
     }
 
 
+
+    public function GetBranchByType()
+    {
+        $type=$_GET['type'];
+        $BranchId=$_GET['id'];
+        if ($type == 'lead') {
+            $branches =\App\Models\Lead::where('branch_id',$BranchId)->get()->pluck('name', 'id')->toArray();
+            $html = '<select class="form form-control select2" id="branch_id" name="related_to" > <option value="">Related To</option> ';
+            foreach ($branches as $key => $branch) {
+                $html .= '<option value="' . $key . '">' . $branch . '</option> ';
+            }
+            $html .= '</select>';
+            return json_encode([
+                'status' => 'success',
+                'branches' => $html,
+            ]);
+
+
+        }else{
+            $branches = User::where('branch_id',$BranchId)->where('type', 'organization')->pluck('name', 'id')->toArray();
+            $html = '<select class="form form-control select2" id="branch_id" name="related_to" > <option value="">Related To</option> ';
+            foreach ($branches as $key => $branch) {
+                $html .= '<option value="' . $key . '">' . $branch . '</option> ';
+            }
+            $html .= '</select>';
+            return json_encode([
+                'status' => 'success',
+                'branches' => $html,
+            ]);
+        }
+
+    }
     public function taskCreate($id)
     {
 
@@ -761,7 +793,7 @@ class OrganizationController extends Controller
             // $companies = User::where('type', 'company')->whereIn('id', $test)->orwhere('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             // dd($companies);
 
-                $companies = ['0' => 'Select Brand'] + FiltersBrands();
+                $companies = ['' => 'Select Brand'] + FiltersBrands();
                 // if(\Auth::user()->type == 'super admin'){
                 //     $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
                 // }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
@@ -797,9 +829,9 @@ class OrganizationController extends Controller
 
             if(\Auth::user()->type == 'company'){
                 $Region = Region::where('brands', \Auth::user()->id)->pluck('name', 'id');
-                $Region= ['0' => 'Select Region'] + $Region->toArray();
+                $Region= ['' => 'Select Region'] + $Region->toArray();
             }else{
-                $Region= ['0' => 'Select Region'];
+                $Region= ['' => 'Select Region'];
             }
 
 
@@ -811,7 +843,6 @@ class OrganizationController extends Controller
 
     public function taskStore($id, Request $request)
     {
-
         $usr = \Auth::user();
 
         if (\Auth::user()->can('create task')) {
@@ -820,16 +851,17 @@ class OrganizationController extends Controller
                 $request->all(),
                 [
                     'task_name' => 'required',
-                    // 'branch_id' => 'required',
-                    // 'assigned_to' => 'required',
+                    'brand_id' => 'required',
+                    'region_id' => 'required',
+                    'branch_id' => 'required',
                     'assign_type' => 'required',
+                    'assigned_to' => 'required',
                     'due_date' => 'required',
                     'start_date' => 'required',
-                   // 'related_type' => 'required',
-                   // 'related_to' => 'required',
-                    'visibility' => 'required',
                 ]
             );
+
+
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
                 return json_encode([
@@ -849,10 +881,10 @@ class OrganizationController extends Controller
             $dealTask->branch_id = $request->branch_id;
             $dealTask->region_id = $request->region_id;
 
-            $dealTask->brand_id = Session::get('auth_type_id') != null ? Session::get('auth_type_id') : \Auth::user()->id;
+            $dealTask->brand_id = Session::get('auth_type_id') != null ? \Auth::user()->id : $request->brand_id;
             $dealTask->created_by = Session::get('auth_type_id') != null ? Session::get('auth_type_id') : \Auth::user()->id;
 
-            $dealTask->assigned_to = $request->lead_assgigned_user;
+            $dealTask->assigned_to = $request->assigned_to;
             $dealTask->assigned_type = $request->assign_type;
 
             $dealTask->due_date = isset($request->due_date) ? $request->due_date : '';
@@ -980,7 +1012,7 @@ class OrganizationController extends Controller
                 $request->all(),
                 [
                     'task_name' => 'required',
-                    //'branch_id' => 'required',
+                    'brand_id' => 'required',
                     //'assigned_to' => 'required',
                     // 'assign_type' => 'required',
                     'due_date' => 'required',
@@ -1008,7 +1040,6 @@ class OrganizationController extends Controller
             if ($dealTask->status != $request->status) {
                 $is_status_change = true;
             }
-
             // $dealTask->deal_id = $request->related_to;
             //$dealTask->related_to = $request->related_to;
             //$dealTask->related_type = $request->related_type;
@@ -1028,7 +1059,7 @@ class OrganizationController extends Controller
             if(isset($request->region_id)){
                 $dealTask->region_id = $request->region_id;
             }
-           
+
             // $dealTask->deal_stage_id = $request->stage_id;
             $dealTask->due_date = isset($request->due_date) ? $request->due_date : '';
             $dealTask->start_date = $request->start_date;
@@ -1162,7 +1193,7 @@ class OrganizationController extends Controller
             $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
                 ->where('branch_id', $branch_id)
                 ->pluck('name', 'id');
-            $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
+            $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Select Employee</option> ';
             foreach ($users as $key => $user) {
                 $html .= '<option value="' . $key . '">' . $user . '</option> ';
             }

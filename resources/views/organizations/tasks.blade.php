@@ -49,7 +49,8 @@
                                     \Auth::user()->type == 'Project Director' ||
                                     \Auth::user()->type == 'Project Manager')
                                 <div class="form-group row ">
-                                    <label for="branches" class="col-sm-3 col-form-label">Brands</label>
+                                    <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                                        class="text-danger">*</span></label>
                                     <div class="form-group col-md-6" id="brand_div">
                                         {!! Form::select('brand_id', $companies, null, [
                                             'class' => 'form-control select2 brand_id',
@@ -57,6 +58,16 @@
                                         ]) !!}
                                     </div>
                                 </div>
+                            @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
+                            <div class="form-group row ">
+                                <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                                    class="text-danger">*</span></label>
+                                <div class="form-group col-md-6" id="brand_div">
+                                    <select class='form-control select2 brand_id' name="brands" id="brand_id">
+                                        <option value="{{ Auth::id() }}" selected>{{ Auth::user()->name }}</option>
+                                    </select>
+                                </div>
+                            </div>
                             @endif
 
                             @if (
@@ -65,7 +76,8 @@
                                     \Auth::user()->type == 'Project Manager' ||
                                     \Auth::user()->type == 'company')
                                 <div class="form-group row ">
-                                    <label for="branches" class="col-sm-3 col-form-label">Region</label>
+                                    <label for="branches" class="col-sm-3 col-form-label">Region<span
+                                        class="text-danger">*</span></label>
                                     <div class="form-group col-md-6" id="region_div">
                                         {!! Form::select('region_id', $Region, null, [
                                             'class' => 'form-control select2',
@@ -76,7 +88,8 @@
                             @endif
 
                             <div class="form-group row ">
-                                <label for="branches" class="col-sm-3 col-form-label">Branch</label>
+                                <label for="branches" class="col-sm-3 col-form-label">Branch<span
+                                    class="text-danger">*</span></label>
                                 <div class="form-group col-md-6" id="branch_div">
                                     <select name="branch_id" id="branchs" class="form-control select2 branchs"
                                         onchange="Change(this)">
@@ -101,17 +114,28 @@
                                 <label for="organization" class="col-sm-3 col-form-label">Assigned to <span
                                         class="text-danger">*</span></label>
                                 <div class="col-sm-6 " id="assign_to_div">
-                                    <select class="form form-control assigned_to select2" id="choices-multiple4"
-                                        name="assigned_to">
+                                    <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to">
                                         <option value="">Select Employee</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group row">
+                                <label for="type" class="col-sm-3 col-form-label">Task Status<span
+                                    class="text-danger">*</span></label>
+                                <div class="col-sm-6">
+                                    <select class="form form-control select2" id="choices-multiple5" name="status" {{ !\Auth::user()->can('edit assign to task') ? 'disabled' : '' }}>
+                                        <option value="">Select Status</option>
+                                        <option value="0" selected>On Going</option>
+                                        <option value="1">Completed
+                                        </option>
                                     </select>
                                 </div>
                             </div>
 
                             <div class="form-group row d-none">
                                 <label for="organization" class="col-sm-3 col-form-label">Agency
-
-                                    <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-sm-6">
                                     <select class="form form-control select2 organization_id" id="choices-multiple2"
@@ -138,7 +162,7 @@
 
                             <div class="form-group row ">
                                 <label for="organization" class="col-sm-3 col-form-label">Due Date <span
-                                        class="text-danger">*</span></label>
+                                    class="text-danger">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="date" class="form form-control" value="" name="due_date">
                                 </div>
@@ -162,7 +186,8 @@
                         aria-labelledby="panelsStayOpen-headingTwo">
                         <div class="accordion-body">
                             <div class="form-group row ">
-                                <label for="organization" class="col-sm-3 col-form-label">Start Date</label>
+                                <label for="organization" class="col-sm-3 col-form-label">Start Date<span
+                                    class="text-danger">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="date" class="form form-control" value="{{ date('Y-m-d') }}"
                                         name="start_date">
@@ -200,15 +225,15 @@
                         <div class="accordion-body">
                             <div class="form-group row">
                                 <label for="website" class="col-sm-3 col-form-label">Related Type
-                                    <span class="text-danger"></span></label>
+                                    </label>
                                 <div class="col-sm-6">
                                     @if (isset($type) && !empty($type))
-                                        <select class="form form-control select2 related_type" disabled
+                                        <select class="form form-control select2 related_type" disabled onchange="ChangeRelated(this)"
                                             id="choices-multiple6" name="related_type">
                                             <option value="">Select type</option>
-                                            <option value="organization"
+                                            {{-- <option value="organization"
                                                 {{ $type == 'organization' ? 'selected' : '' }}>
-                                                Organization</option>
+                                                Organization</option> --}}
                                             <option value="lead" {{ $type == 'lead' ? 'selected' : '' }}>Lead
                                             </option>
                                             <option value="deal" {{ $type == 'deal' ? 'selected' : '' }}>Admission
@@ -216,12 +241,12 @@
                                         </select>
                                         <input type="hidden" value="{{ $type }}" name="related_type">
                                     @else
-                                        <select class="form form-control select2 related_type" id="choices-multiple6"
+                                        <select class="form form-control select2 related_type" id="choices-multiple6" onchange="ChangeRelated(this)"
                                             name="related_type">
                                             <option value="">Select type</option>
-                                            <option value="organization"
+                                            {{-- <option value="organization"
                                                 {{ $type == 'organization' ? 'selected' : '' }}>
-                                                Organization</option>
+                                                Organization</option> --}}
                                             <option value="lead" {{ $type == 'lead' ? 'selected' : '' }}>Lead
                                             </option>
                                             <option value="deal" {{ $type == 'deal' ? 'selected' : '' }}>Admission
@@ -233,35 +258,12 @@
 
                             <div class="form-group row">
                                 <label for="website" class="col-sm-3 col-form-label">Related To
-                                    <span class="text-danger"></span></label>
+                                   </label>
                                 <div class="col-sm-6" id="related_to_div">
-
-                                    @if (isset($typeId) && !empty($typeId))
-                                        <select class="form form-control related_to select2" disabled
+                                    <select class="form form-control related_to select2"
                                             id="choices-multiple7" name="related_to">
-                                            <option value="">Related To</option>
-                                            @forelse ($relateds as $key => $related)
-                                                <option value="{{ $key }}"
-                                                    {{ $key == $typeId ? 'selected' : '' }}>
-                                                    {{ $related }}</option>
-                                            @empty
-                                            @endforelse
-                                        </select>
-
-                                        <input type="hidden" value="{{ $typeId }}" name="related_to">
-                                    @else
-                                        <select class="form form-control related_to select2" id="choices-multiple7"
-                                            name="related_to">
-                                            <option value="">Related To</option>
-                                            @forelse ($relateds as $key => $related)
-                                                <option value="{{ $key }}"
-                                                    {{ $key == $typeId ? 'selected' : '' }}>
-                                                    {{ $related }}</option>
-                                            @empty
-                                            @endforelse
-
-                                        </select>
-                                    @endif
+                                            <option value="">Related To</option></option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -301,7 +303,7 @@
                         aria-labelledby="panelsStayOpen-headingfour">
                         <div class="accordion-body">
                             <div class="form-group row">
-                                <label for="website" class="col-sm-3 col-form-label">Task Visibility</label>
+                                <label for="website" class="col-sm-3 col-form-label">Task Visibility </label>
                                 <div class="col-sm-6">
                                     <select class="form form-control select2" id="choices-multiple8"
                                         name="visibility">
@@ -329,9 +331,33 @@
 
 
 <script>
+var BranchId = '';
+    $("#choices-multiple6").on("change", function() {
+        var type = $(this).val();
+        Id = BranchId
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('GetBranchByType') }}',
+            data: {
+                id: Id,
+                type: type
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                    if (data.status === 'success') {
+                        $('#related_to_div').html('');
+                        $("#related_to_div").html(data.branches);
+                        select2();
+                    }
+                }
+
+        });
+    });
+
     // change branch for assign
     function Change(selectedBranch) {
         var id = selectedBranch.value;
+        BranchId = id;
         $.ajax({
             type: 'GET',
             url: '{{ route('lead_companyemployees') }}',

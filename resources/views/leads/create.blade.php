@@ -62,9 +62,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Name') }}
-
-                                                <span class="text-danger">*</span>
+                                                {{ __('Name') }} <span class="text-danger">*</span>
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="text" class="form-control d-none" placeholder="Prefix" name="lead_prefix">
@@ -75,7 +73,8 @@
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Lead Status') }}
+                                                {{ __('Lead Status') }} <span
+                                                class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choices-1" name="lead_stage">
@@ -88,7 +87,8 @@
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Brand') }}
+                                                {{ __('Brand') }} <span
+                                                class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2 brand_id" id="choices-1011" name="brand_id">
@@ -100,11 +100,12 @@
                                             </td>
                                         </tr>
 
-                                        
+
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Region') }}
+                                                {{ __('Region') }} <span
+                                                class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="region_div">
                                                 <select class="form-control select2 region_id" id="choices-10112" name="region_id">
@@ -118,7 +119,8 @@
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Location') }}
+                                                {{ __('Branch') }} <span
+                                                class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="branch_div">
                                                 <select class="form-control select2" id="choice-3" name="lead_branch">
@@ -132,7 +134,8 @@
 
                                         <tr>
                                             <td class="" style="width: 110px; font-size: 13px;">
-                                                {{ __('User Responsible') }}
+                                                {{ __('User Responsible') }} <span
+                                                class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="assign_to_div">
                                                 <select class="form-control select2" id="choice-2" name="lead_assgigned_user">
@@ -143,7 +146,8 @@
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Agency') }}
+                                                {{ __('Agency') }} <span
+                                                class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choice-7" name="lead_organization">
@@ -172,7 +176,8 @@
                                         </tr> --}}
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Lead Source') }}
+                                                {{ __('Lead Source') }} <span
+                                                class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choice-4" name="lead_source">
@@ -186,7 +191,8 @@
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Drive Link') }}
+                                                {{ __('Drive Link') }} <span
+                                                class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="text" class="form form-control" name="drive_link" value="">
@@ -214,9 +220,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Email Address') }}
-
-                                                <span class="text-danger">*</span>
+                                                {{ __('Email Address') }} <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="email" class="form-control" name="lead_email" required>
@@ -225,7 +229,8 @@
 
                                         <tr class="d-none">
                                             <td class="" style="width: 153px; font-size: 13px;">
-                                                {{ __('Email Address (Referrer)') }}
+                                                {{ __('Email Address (Referrer)') }} <span
+                                                class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="email" class="form-control" name="referrer_email">
@@ -234,9 +239,7 @@
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Mobile Phone') }}
-
-                                                <span class="text-danger">*</span>
+                                                {{ __('Mobile Phone') }} <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="text" class="form-control" name="lead_phone" required>
@@ -245,7 +248,8 @@
 
                                         <tr class="d-none">
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Mobile Phone') }}
+                                                {{ __('Mobile Phone') }} <span
+                                                class="text-danger">*</span>
 
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
@@ -285,7 +289,8 @@
                                     <tbody>
                                         <tr>
                                             <td class="" style="width: 115PX; font-size: 13px;padding-right: 20px;">
-                                                Address
+                                                Address <span
+                                                class="text-danger">*</span>
                                             </td>
                                             <td class="" style="width: 350PX; font-size: 13px; bg-danger">
                                                 <div class="form-floating">
@@ -332,7 +337,8 @@
                                     <tbody>
                                         <tr>
                                             <td class="" style="width: 100px;  font-size: 13px;">
-                                                Description
+                                                Description <span
+                                                class="text-danger">*</span>
                                             </td>
                                             <td style="width: 374px; text-align: right; font-size: 13px;">
                                                 <div class="" style="margin-left: 14px;">
@@ -360,7 +366,8 @@
                                     <tbody>
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Tag List') }}
+                                                {{ __('Tag List') }} <span
+                                                class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px;">
                                                 <select name="lead_tags_list" id="choice-6" class="form form-control select2">
@@ -433,7 +440,7 @@
                 if (data.status === 'success') {
                     $('#region_div').html('');
                     $("#region_div").html(data.html);
-                    select2();                       
+                    select2();
                 } else {
                     console.error('Server returned an error:', data.message);
                 }
@@ -460,7 +467,7 @@
                 if (data.status === 'success') {
                     $('#branch_div').html('');
                     $("#branch_div").html(data.html);
-                    select2();                       
+                    select2();
                 } else {
                     console.error('Server returned an error:', data.message);
                 }
@@ -486,7 +493,7 @@
                 if (data.status === 'success') {
                     $('#assign_to_div').html('');
                     $("#assign_to_div").html(data.html);
-                    select2();                       
+                    select2();
                 } else {
                     console.error('Server returned an error:', data.message);
                 }

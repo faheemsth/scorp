@@ -214,15 +214,15 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
         </li>
         <!-- Nav Item - Messages -->
         <li class="nav-item dropdown no-arrow mx-1">
-                <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa-regular fa-circle-question" style="font-size: 19px; color: #000;"></i>
-                    <!-- Counter - Messages -->
-                    <span class="badge badge-danger badge-counter"></span>
-                </a>
-                <!-- Dropdown - Messages -->
-                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
-                    <!-- Content for Messages Dropdown -->
-                </div>
+            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa-regular fa-circle-question" style="font-size: 19px; color: #000;"></i>
+                <!-- Counter - Messages -->
+                <span class="badge badge-danger badge-counter"></span>
+            </a>
+            <!-- Dropdown - Messages -->
+            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+                <!-- Content for Messages Dropdown -->
+            </div>
             </li>
 
             <li class="nav-item dropdown no-arrow">

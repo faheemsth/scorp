@@ -3558,13 +3558,13 @@ class DealController extends Controller
         $employees =  User::where('brand_id', $id)->pluck('name', 'id')->toArray();
         $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
 
-        $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to" required> <option value="">Assign to</option> ';
+        $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Assign to</option> ';
         foreach ($employees as $key => $user) {
             $html .= '<option value="' . $key . '">' . $user . '</option> ';
         }
         $html .= '</select>';
 
-        $html1 = ' <select onchange="toggleDiv()" class="form form-control branch_id select2" id="branch_id" name="branch_id" required> <option value="">Select Branch</option> ';
+        $html1 = ' <select onchange="toggleDiv()" class="form form-control branch_id select2" id="branch_id" name="branch_id"> <option value="">Select Branch</option> ';
         foreach ($branches as $key => $branch) {
             $html1 .= '<option value="' . $key . '">' . $branch . '</option> ';
         }

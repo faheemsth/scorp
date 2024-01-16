@@ -692,7 +692,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                         options += '<option value="' + keyName + '">' + keyValue + '</option>';
                     });
 
-                    let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_assgigned_user" required>
+                    let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_assgigned_user">
                                     <option value="">Select User</option>
                                     ` + options + `
                                 </select>`;
@@ -826,7 +826,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
             var extension = $('#lead-file').val().split('.').pop().toLowerCase();
             var ext = $('#extension').val();
-            
+
             if(ext == 'csv'){
                 if($.inArray(extension, ['csv']) == -1) {
                     alert('Sorry, file extension does not match with selected extension.');
@@ -838,7 +838,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     return false;
                 }
             }
-            
+
             var form = $(this).closest('form')[0]; // Get the form element
             var formData = new FormData(form); // Pass the form element to FormData constructor
             $.ajax({

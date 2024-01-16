@@ -1759,6 +1759,9 @@ Route::get('/organiation/{id}/task-edit', [OrganizationController::class, 'taskE
 Route::post('/organization/{id}/task-update', [OrganizationController::class, 'taskUpdate'])->name('organization.tasks.update')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/task-delete', [OrganizationController::class, 'taskDelete'])->name('organization.task.delete')->middleware(['auth', 'XSS']);
 
+Route::get('/get_branch_by_type', [OrganizationController::class, 'GetBranchByType'])->name('GetBranchByType')->middleware(['auth', 'XSS']);
+
+
 
 Route::get('applications/', [ApplicationsController::class, 'index'])->name('applications.index')->middleware(['auth', 'XSS']);
 Route::get('application/', [ApplicationsController::class, 'application'])->name('application')->middleware(['auth', 'XSS']);
