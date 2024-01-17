@@ -9,30 +9,67 @@
 @endsection
 
 
-@section('action-btn')
-    <div class="float-end">
-    @can('create announcement')
-            <a href="#" data-url="{{ route('announcement.create') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create New Announcement')}}" data-bs-toggle="tooltip" title="{{__('Create')}}"  class="btn btn-sm btn-primary">
-                <i class="ti ti-plus"></i>
-            </a>
-        @endcan
-    </div>
-@endsection
 
 
 @section('content')
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-            <div class="card-body table-border-style">
-                    <div class="table-responsive">
-                    <table class="table datatable">
+            <div class="card-body ">
+                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
+                    <div class="col-4">
+                        <p class="mb-0 pb-0 ps-1">Announcement</p>
+                        <div class="dropdown">
+                            <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                ALL announcement
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                {{-- <li><a class="dropdown-item assigned_to" href="javascript:void(0)">Assigned to</a></li>
+                                <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
+                                <li><a class="dropdown-item" href="#">Brand Change</a></li>--}}
+                                <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li>
+                                {{-- <li id="actions_div" style="display:none"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li> --}}
+                            </ul>
+                        </div>
+                    </div>
+
+
+                    <div class="col-8 d-flex justify-content-end gap-2 pe-0">
+                        <div class="input-group w-25">
+                            <button class="btn btn-sm list-global-search-btn">
+                                <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                                    <i class="ti ti-search" style="font-size: 18px"></i>
+                                </span>
+                            </button>
+                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search..." aria-label="Username" aria-describedby="basic-addon1">
+                        </div>
+
+                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+
+                        <button class="btn filter-btn-show p-2 btn-dark d-none"  type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
+                            <i class="ti ti-filter" style="font-size:18px"></i>
+                        </button>
+
+                        @can('create task')
+                        <button data-size="lg" data-url="{{ route('announcement.create') }}" data-ajax-popup="true" data-title="{{__('Create New Announcement')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" class="btn px-2 btn-dark">
+                            <i class="ti ti-plus" style="font-size:18px"></i>
+                        </button>
+                        @endcan
+                        <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+
+                    </div>
+                </div>
+                    <div class="table-responsive mt-3">
+                    <table class="table ">
                             <thead>
                             <tr>
                                 <th>{{__('Title')}}</th>
+                                <th>{{__('Brand')}}</th>
+                                <th>{{__('Region')}}</th>
+                                <th>{{__('Branch')}}</th>
+                                <th>{{__('description')}}</th>
                                 <th>{{__('Start Date')}}</th>
                                 <th>{{__('End Date')}}</th>
-                                <th>{{__('description')}}</th>
                                 @if(Gate::check('edit announcement') || Gate::check('delete announcement'))
                                     <th>{{__('Action')}}</th>
                                 @endif
@@ -42,9 +79,19 @@
                             @foreach ($announcements as $announcement)
                                 <tr>
                                     <td>{{ $announcement->title }}</td>
+                                    <td>
+                                        {{ optional(App\Models\User::find(str_replace(['["', '"]'], '',  $announcement->brand_id)))->name }}
+                                    </td>
+                                    <td>
+                                        {{ optional(App\Models\Region::find(str_replace(['["', '"]'], '',  $announcement->region_id)))->name }}
+                                    </td>
+                                    <td>
+                                        {{ optional(App\Models\Branch::find(str_replace(['["', '"]'], '',  $announcement->branch_id)))->name }}
+                                    </td>
+
+                                    <td>{{ $announcement->description }}</td>
                                     <td>{{  \Auth::user()->dateFormat($announcement->start_date) }}</td>
                                     <td>{{  \Auth::user()->dateFormat($announcement->end_date) }}</td>
-                                    <td>{{ $announcement->description }}</td>
                                     @if(Gate::check('edit announcement') || Gate::check('delete announcement'))
                                         <td>
 

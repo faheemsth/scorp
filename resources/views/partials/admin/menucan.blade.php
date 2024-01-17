@@ -126,16 +126,16 @@
                             </li>
                         @endcan
                         @can('manage report')
-                            <li class="nav-item">
+                            <li class="nav-item" id="reporthrm">
                                 <a class="nav-link {{ Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave' || Request::segment(1) == 'reports-payroll' ? '' : 'collapsed' }}"
-                                    href="#" data-toggle="collapse" data-target="#collapse-hrmsys" aria-expanded="true"
-                                    aria-controls="collapse-hrmsys" style="padding-left: 0px !important;
+                                    href="#" data-toggle="collapse" data-target="#collapse-hrmreport" aria-expanded="true"
+                                    aria-controls="collapse-hrmreport" style="padding-left: 0px !important;
                                     padding-right: 35px !important;">
                                     <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px"
                                         style="margin-top:-10px" alt="" srcset="">
                                     <span>{{ __('Reports') }}</span>
                                 </a>
-                                <div id="collapse-hrmsys"
+                                <div id="subhrmreport"
                                     class="collapse {{ Request::segment(1) == 'reports-monthly-attendance' || Request::segment(1) == 'reports-leave' || Request::segment(1) == 'reports-payroll' ? 'show' : '' }}"
                                     aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                                     <div class="  collapse-inner rounded">
@@ -911,6 +911,19 @@
         @endif
         {{-- end setting  --}}
 
+        {{-- announcement  --}}
+        <li class=" nav-item {{ Request::segment(1) == 'announcement' ? 'active' : '' }}">
+            <a href="{{ url('announcement') }}" class="nav-link">
+                <img src="{{ asset('assets/cs-theme/icons/Layer_1 (4).png') }}" id="icon1" width="15px"
+                    height="15px" style="margin-top:-6px" alt="" srcset="">
+                <img src="{{ asset('assets/cs-theme/icons/Layer_1(4.1).svg') }}" id="icon2" width="15px"
+                    height="15px" style="margin-top:-6px" alt="" srcset="">
+
+                <span>{{ __('Announcement') }}</span>
+            </a>
+        </li>
+        {{-- end announcement  --}}
+
         {{-- support  --}}
         <li class=" nav-item {{ Request::segment(1) == 'support' ? 'active' : '' }}">
             <a href="{{ route('support.index') }}" class="nav-link">
@@ -926,6 +939,17 @@
 
 
 
+
+
     </ul>
 
 </div>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Toggle the div on button click
+        $("#reporthrm").click(function() {
+            $("#subhrmreport").toggle();
+        });
+    });
+</script>

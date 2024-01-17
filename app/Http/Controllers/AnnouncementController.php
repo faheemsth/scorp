@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Announcement;
-use App\Models\AnnouncementEmployee;
+use App\Models\User;
 use App\Models\Branch;
-use App\Models\Department;
-use App\Models\Employee;
+use App\Models\Region;
 use App\Models\Utility;
+use App\Models\Employee;
+use App\Models\Department;
+use App\Models\Announcement;
 use Illuminate\Http\Request;
+use App\Models\AnnouncementEmployee;
 use Illuminate\Support\Facades\Auth;
 
 class AnnouncementController extends Controller
@@ -23,7 +25,7 @@ class AnnouncementController extends Controller
                 $current_employee = Employee::where('user_id', '=', \Auth::user()->id)->first();
                 $announcements    = Announcement::orderBy('announcements.id', 'desc')->leftjoin('announcement_employees', 'announcements.id', '=', 'announcement_employees.announcement_id')->where('announcement_employees.employee_id', '=', $current_employee->id)->orWhere(
                     function ($q){
-                        $q->where('announcements.department_id', '["0"]')->where('announcements.employee_id', '["0"]');
+                        $q->where('announcements.region_id', '["0"]')->where('announcements.employee_id', '["0"]');
                     }
                 )->get();
             }
@@ -45,11 +47,12 @@ class AnnouncementController extends Controller
     {
         if(\Auth::user()->can('create announcement'))
         {
-            $employees   = Employee::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $branch      = Branch::where('created_by', '=', Auth::user()->creatorId())->get();
-            $departments = Department::where('created_by', '=', Auth::user()->creatorId())->get();
 
-            return view('announcement.create', compact('employees', 'branch', 'departments'));
+
+            $companies = FiltersBrands();
+
+
+            return view('announcement.create', compact('companies'));
         }
         else
         {
@@ -59,6 +62,7 @@ class AnnouncementController extends Controller
 
     public function store(Request $request)
     {
+
         if(\Auth::user()->can('create announcement'))
         {
             $validator = \Validator::make(
@@ -66,8 +70,9 @@ class AnnouncementController extends Controller
                                    'title' => 'required',
                                    'start_date' => 'required',
                                    'end_date' => 'required',
-                                   'branch_id' => 'required',
-                                   'department_id' => 'required',
+                                   'lead_branch' => 'required',
+                                   'region_id' => 'required',
+                                   'brand_id' => 'required',
                                    'employee_id' => 'required',
                                ]
             );
@@ -82,31 +87,30 @@ class AnnouncementController extends Controller
             $announcement->title         = $request->title;
             $announcement->start_date    = $request->start_date;
             $announcement->end_date      = $request->end_date;
-            $announcement->branch_id     = $request->branch_id;
-            $announcement->department_id = json_encode($request->department_id);
-            $announcement->employee_id   = json_encode($request->employee_id);
+            $announcement->branch_id     = $request->lead_branch;
+            $announcement->brand_id     = $request->brand_id;
+            $announcement->region_id =$request->region_id;
+            $announcement->employee_id   = $request->employee_id;
             $announcement->description   = $request->description;
             $announcement->created_by    = \Auth::user()->creatorId();
             $announcement->save();
 
-            if(in_array('0', $request->employee_id))
-            {
-                $departmentEmployee = Employee::whereIn('department_id', $request->department_id)->get()->pluck('id');
-                $departmentEmployee = $departmentEmployee;
-
-            }
-            else
-            {
+            // if(in_array('0', $request->employee_id))
+            // {
+            //     $departmentEmployee = Region::whereIn('region_id', $request->region_id)->get()->pluck('id');
+            // }
+            // else
+            // {
                 $departmentEmployee = $request->employee_id;
-            }
-            foreach($departmentEmployee as $employee)
-            {
+            // }
+            // foreach($departmentEmployee as $employee)
+            // {
                 $announcementEmployee                  = new AnnouncementEmployee();
                 $announcementEmployee->announcement_id = $announcement->id;
-                $announcementEmployee->employee_id     = $employee;
+                $announcementEmployee->employee_id     = $request->employee_id;
                 $announcementEmployee->created_by      = \Auth::user()->creatorId();
                 $announcementEmployee->save();
-            }
+            // }
 
 
             //Slack Notification
@@ -147,10 +151,11 @@ class AnnouncementController extends Controller
             $announcement = Announcement::find($announcement);
             if($announcement->created_by == Auth::user()->creatorId())
             {
-                $branch      = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-                $departments = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-
-                return view('announcement.edit', compact('announcement', 'branch', 'departments'));
+                $companies = FiltersBrands();
+                $regions = Region::where('brands', $announcement->brand_id )->get();
+                $branchs = Branch::where('region_id', $announcement->region_id )->get();
+                $employees = User::where('branch_id',$announcement->branch_id)->get();
+                return view('announcement.edit', compact('announcement','companies','regions','branchs','employees' ));
             }
             else
             {
@@ -176,7 +181,7 @@ class AnnouncementController extends Controller
                                        'start_date' => 'required',
                                        'end_date' => 'required',
                                        'branch_id' => 'required',
-                                       'department_id' => 'required',
+                                       'region_id' => 'required',
                                    ]
                 );
                 if($validator->fails())
@@ -190,7 +195,7 @@ class AnnouncementController extends Controller
                 $announcement->start_date    = $request->start_date;
                 $announcement->end_date      = $request->end_date;
                 $announcement->branch_id     = $request->branch_id;
-                $announcement->department_id = $request->department_id;
+                $announcement->region_id = $request->region_id;
                 $announcement->description   = $request->description;
                 $announcement->save();
 
@@ -261,13 +266,13 @@ class AnnouncementController extends Controller
     public function getemployee(Request $request)
     {
         // dd(department_id);
-        if(!$request->department_id )
+        if(!$request->region_id )
         {
             $employees = Employee::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id')->toArray();
         }
         else
         {
-            $employees = Employee::where('created_by', '=', \Auth::user()->creatorId())->where('department_id', $request->department_id)->get()->pluck('name', 'id')->toArray();
+            $employees = Employee::where('created_by', '=', \Auth::user()->creatorId())->where('region_id', $request->region_id)->get()->pluck('name', 'id')->toArray();
         }
 
         return response()->json($employees);
