@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\RegionController;
 use App\Models\Utility;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\JobController;
@@ -25,6 +24,7 @@ use App\Http\Controllers\BudgetController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\PaypalController;
+use App\Http\Controllers\RegionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SourceController;
 use App\Http\Controllers\SystemController;
@@ -41,6 +41,8 @@ use App\Http\Controllers\RevenueController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\WarningController;
+use App\Http\Controllers\AnalysisController;
+use App\Http\Controllers\AppStageController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DocumentController;
@@ -67,12 +69,14 @@ use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\SetSalaryController;
 use App\Http\Controllers\TaskStageController;
 use App\Http\Controllers\TimesheetController;
+use App\Http\Controllers\VisaChartController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\CreditNoteController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\LoanOptionController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\UniversityController;
 use App\Http\Controllers\BankAccountController;
 use App\Http\Controllers\CustomFieldController;
 use App\Http\Controllers\DesignationController;
@@ -83,16 +87,20 @@ use App\Http\Controllers\PayslipTypeController;
 use App\Http\Controllers\PlanRequestController;
 use App\Http\Controllers\ProjectTaskController;
 use App\Http\Controllers\ResignationController;
+use App\Http\Controllers\SavedFilterController;
 use App\Http\Controllers\TerminationController;
 use App\Http\Controllers\TimeTrackerController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ZoomMeetingController;
 use App\Http\Controllers\AnnouncementController;
+use App\Http\Controllers\ApplicationsController;
 use App\Http\Controllers\BankTransferController;
 use App\Http\Controllers\CompetenciesController;
 use App\Http\Controllers\ContractTypeController;
+use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\GoalTrackingController;
 use App\Http\Controllers\JournalEntryController;
+use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\OtherPaymentController;
 use App\Http\Controllers\PaytmPaymentController;
 use App\Http\Controllers\ProductStockController;
@@ -116,7 +124,9 @@ use App\Http\Controllers\PaystackPaymentController;
 use App\Http\Controllers\PerformanceTypeController;
 use App\Http\Controllers\RazorpayPaymentController;
 use App\Http\Controllers\TerminationTypeController;
+use App\Http\Controllers\OrganizationTypeController;
 use App\Http\Controllers\CompanyPermissionController;
+use App\Http\Controllers\InstituteCategoryController;
 use App\Http\Controllers\InterviewScheduleController;
 use App\Http\Controllers\AttendanceEmployeeController;
 use App\Http\Controllers\FlutterwavePaymentController;
@@ -127,15 +137,6 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\SaturationDeductionController;
 use App\Http\Controllers\ProductServiceCategoryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\OrganizationController;
-use App\Http\Controllers\OrganizationTypeController;
-use App\Http\Controllers\UniversityController;
-use App\Http\Controllers\ApplicationsController;
-use App\Http\Controllers\InstituteCategoryController;
-use App\Http\Controllers\GlobalSearchController;
-use App\Http\Controllers\SavedFilterController;
-use App\Http\Controllers\AppStageController;
-use App\Http\Controllers\VisaChartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -1817,3 +1818,7 @@ Route::post("/delete-filter", [SavedFilterController::class, 'deleteFilter'])->n
 Route::get('/region/filter-regions', [RegionController::class, 'getFilterRegions'])->name('filter-regions');
 Route::get('/region/filter-branches', [RegionController::class, 'getFilterBranches'])->name('filter-branches');
 Route::get('/region/filter-branch-users', [RegionController::class, 'getFilterBranchUsers'])->name('filter-branch-users');
+
+
+/////////////////////////////////////////////////////////////Analysis Controller
+Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.index')->middleware(['auth', 'XSS']);;

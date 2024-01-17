@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Branch;
 use App\Models\Region;
+use App\Models\University;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -79,6 +80,8 @@ class RegionController extends Controller
     public function getRegionBrandsTask(Request $request){
         $id = $_GET['id'];
         $type = $request->type;
+
+        dd($type);
 
         if($type == 'brand'){
             $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
@@ -163,6 +166,22 @@ class RegionController extends Controller
             return json_encode([
                 'status' => 'success',
                 'branches' => $html,
+            ]);
+
+        }else if($type == 'institute'){
+
+            $institute = University::where('id', $id)->first();
+            $intake_months = $institute->intake_months ?? '';
+            $intake_months = explode(',', $intake_months);
+
+            $html = '<label for="intake_month">Intake Month</label><select class="form form-control select2" id="intake_month" name="intake_month"> <option value="">Select Institute</option> ';
+            foreach ($intake_months as $key => $month) {
+                $html .= '<option value="' . $month . '">' . $month . '</option> ';
+            }
+            $html .= '</select>';
+            return json_encode([
+                'status' => 'success',
+                'insitute' => $html,
             ]);
 
         }else{

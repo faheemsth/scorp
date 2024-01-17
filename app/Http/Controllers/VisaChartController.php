@@ -51,10 +51,6 @@ class VisaChartController extends Controller
     }
 
 
-
-
-
-
     ////////////////////////////////////   Deposited  ///////////////////////////////////////////////////
 
     public function ChartDeposited(){
