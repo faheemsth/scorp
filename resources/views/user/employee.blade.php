@@ -72,8 +72,6 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             });
                         });
                     </script>
-
-                    <div class="row mt-5">
                         {{-- Filters --}}
                         <div class="filter-data px-3" id="filterToggle" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                             <form action="/user/employees" method="GET" class="">
@@ -82,8 +80,8 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
                                     <div class="col-md-4 mt-2">
                                         <label for="">Brand</label>
-                                        <select name="brand" class="form form-control" style="width: 95%; border-color:#aaa">
-                                            <option value="">Select User</option>
+                                        <select name="brand" class="form form-control select2" id="brand_id" style="width: 95%; border-color:#aaa">
+                                            <option value="">Select Brand</option>
                                             @if (!empty($brandss))
                                             @foreach ($brandss as $key=>$brand)
                                             <option value="{{ $key }}" <?= isset($key) && isset($_GET['brand']) && $_GET['brand'] == $key ? "selected" : '' ?>> {{ $brand }}</option>
@@ -95,7 +93,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
                                     <div class="col-md-4 mt-2">
                                         <label for="">Region</label>
-                                        <select name="Region" class="form form-control" style="width: 95%; border-color:#aaa">
+                                        <select name="Region" class="form form-control select2" id="region_id" style="width: 95%; border-color:#aaa">
                                             <option value="">Select Region</option>
 
                                             @if (!empty($Regions))
@@ -108,7 +106,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
                                     <div class="col-md-4 mt-2">
                                         <label for="">Branch</label>
-                                        <select name="Branch" class="form form-control" style="width: 95%; border-color:#aaa">
+                                        <select name="Branch" class="form form-control select2" id="branch_id" style="width: 95%; border-color:#aaa">
                                             <option value="">Select Branch</option>
 
                                             @if (!empty($Branchs))
@@ -125,7 +123,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     </div>
                                     <div class="col-md-4 mt-2">
                                         <label for="">Designation</label>
-                                        <select name="Designation" class="form form-control" style="width: 95%; border-color:#aaa">
+                                        <select name="Designation" class="form form-control select2" id="designation_id" style="width: 95%; border-color:#aaa">
                                             <option value="">Select Designation</option>
                                             @if (!empty($Designations))
                                             @foreach ($Designations as $Designation)
@@ -168,24 +166,22 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             </form>
                         </div>
 
+                        <div class="table-responsive mt-3">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>S.No</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Designation</th>
+                                        <th>Phone</th>
+                                        <th>Region</th>
+                                        <th>Last Login</th>
+                                    </tr>
+                                </thead>
 
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>S.No</th>
-                                            <th>Name</th>
-                                            <th>Email</th>
-                                            <th>Designation</th>
-                                            <th>Phone</th>
-                                            <th>Region</th>
-                                            <th>Last Login</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        <?php 
+                                <tbody>
+                                    <?php 
                                          if(isset($_GET['page']) && !empty($_GET['page'])){
                                              $count = (($_GET['page'] - 1) * $_GET['num_results_on_page']) + 1;
                                          }else{
@@ -193,39 +189,38 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                          }
                                         
                                         ?>
-                                        @forelse($users as $key => $employee)
-                                        <tr>
-                                            <td>{{ $count++ }}</td>
-                                            <td>
+                                    @forelse($users as $key => $employee)
+                                    <tr>
+                                        <td>{{ $count++ }}</td>
+                                        <td>
 
-                                                <span style="cursor:pointer" class="hyper-link" @can('view employee') onclick="openSidebar('/user/employee/{{ $employee->id }}/show')" @endcan>
-                                                    {{ $employee->name }}
-                                                </span>
-                                            </td>
-                                            <td><a href="mailto:{{ $employee->email }}">{{ $employee->email }}</a></td>
-                                            <td>{{ $employee->type }}</td>
-                                            <td>{{ $employee->phone }}</td>
-                                            <td>{{ $Regions[$employee->region_id] ?? '' }}</td>
-                                            <td>{{ !empty($employee->last_login_at) ? $employee->last_login_at : '' }}
-                                            </td>
+                                            <span style="cursor:pointer" class="hyper-link" @can('view employee') onclick="openSidebar('/user/employee/{{ $employee->id }}/show')" @endcan>
+                                                {{ $employee->name }}
+                                            </span>
+                                        </td>
+                                        <td><a href="mailto:{{ $employee->email }}">{{ $employee->email }}</a></td>
+                                        <td>{{ $employee->type }}</td>
+                                        <td>{{ $employee->phone }}</td>
+                                        <td>{{ $Regions[$employee->region_id] ?? '' }}</td>
+                                        <td>{{ !empty($employee->last_login_at) ? $employee->last_login_at : '' }}
+                                        </td>
 
-                                        </tr>
-                                        @empty
-                                        <tr>
-                                            <td colspan="6">No employees found</td>
-                                        </tr>
-                                        @endforelse
-                                    </tbody>
-                                </table>
-                                @if ($total_records > 0)
-                                @include('layouts.pagination', [
-                                'total_pages' => $total_records,
-                                'num_results_on_page' => 25,
-                                ])
-                                @endif
-                            </div>
+                                    </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="6">No employees found</td>
+                                    </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                            @if ($total_records > 0)
+                            @include('layouts.pagination', [
+                            'total_pages' => $total_records,
+                            'num_results_on_page' => 25,
+                            ])
+                            @endif
                         </div>
-                    </div>
+                        
                 </div>
             </div>
         </div>
