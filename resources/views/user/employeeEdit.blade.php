@@ -99,7 +99,7 @@
 
                 <div class="form-group col-md-6" >
                             {{ Form::label('role', __('Gender'), ['class' => 'form-label']) }}
-                            <select class="form-control select2" name="gender">
+                            <select class="form-control select2" id="gender" name="gender">
                                 <option value="male" {{ $employee ? $employee->gender == 'male' ? 'selected' : '' : ''}}>Male</option>
                                 <option value="female" {{ $employee ? $employee->gender == 'female' ? 'selected' : '' : ''}}>Female</option>
                             </select>
@@ -177,10 +177,10 @@
         var role = $(this).text();
         if (role == 'Project Director' || role == 'Project Manager') {
             $("#region_div, #branch_div").addClass('d-none');
+            
         } else {
             $("#region_div, #branch_div").removeClass('d-none');
         }
-
     })
 
 

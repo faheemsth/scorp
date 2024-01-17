@@ -15,12 +15,25 @@
             </div>
         </div>
 
+        
+        <div class="col-md-6">
+            <div class="form-group" id="brands_div">
+                <label for="brand_id">{{ __('Brands') }}</label>
+                <select name="brands[]" id="brand_id" class="form-control select2">
+                    <option value="">Select Brands</option>
+                    @foreach ($brands as $key => $brand)
+                        <option value="{{ $key }}" <?= $branch->brands == $key ? 'selected' : '' ?> >{{ $brand }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+
 
 
         <div class="col-md-6">
-            <div class="form-group">
-                <label for="region_id">{{ __('Region') }}</label>
-                <select name="region_id" id="" class="form-control">
+            <div class="form-group" id="region_div">
+                <label for="region_id">{{ __('Regions') }}</label>
+                <select name="region_id" id="region_id" class="form-control select2">
                     <option value="">Select Region</option>
                     @if (!empty($regions))
                         @foreach ($regions as $region)
@@ -35,22 +48,7 @@
                     </span>
                 @enderror
             </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="form-group" id="brands_div">
-                <label for="region_id">{{ __('Brands') }}</label>
-                <select name="brands[]" multiple id="brands" class="form-control select2">
-                    <option value="">Select Brands</option>
-                    @php
-                        $brd = explode(',',$branch->brands);
-                    @endphp
-                    @foreach ($brands as $key => $brand)
-                        <option value="{{ $key }}" @if (in_array($key, $brd)) selected @endif>{{ $brand }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
+        </div>  
 
         <div class="col-md-6 d-none">
             <div class="form-group">
@@ -136,30 +134,101 @@
 <script>
     $(document).ready(function() {
         select2();
-        $("#region_id").on("change", function(){
-            var id = $(this).val();
+        // $("#region_id").on("change", function(){
+        //     var id = $(this).val();
 
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('region_brands') }}',
-                data: {
-                    id: id  // Add a key for the id parameter
-                },
-                success: function(data){
-                    data = JSON.parse(data);
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: '{{ route('region_brands') }}',
+        //         data: {
+        //             id: id  // Add a key for the id parameter
+        //         },
+        //         success: function(data){
+        //             data = JSON.parse(data);
 
-                    if (data.status === 'success') {
+        //             if (data.status === 'success') {
+        //                 $('#brands').remove();
+        //                 $("#brands_div").html(data.brands);
+        //                 select2();
+        //             } else {
+        //                 console.error('Server returned an error:', data.message);
+        //             }
+        //         },
+        //         error: function(xhr, status, error) {
+        //             console.error('AJAX request failed:', status, error);
+        //         }
+        //     });
+        // });        
+    })
+
+    $(document).ready(function() {
+
+    $("#brand_id").on("change", function(){
+        var id = $(this).val();
+        var type = 'brand';
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands') }}',
+            data: {
+                id: id,  // Add a key for the id parameter
+                type: type
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    if(type == 'brand'){
+                        $('#region_div').html('');
+                        $("#region_div").html(data.regions);
+                        select2();
+                    }else{
                         $('#brands').remove();
                         $("#brands_div").html(data.brands);
                         select2();
-                    } else {
-                        console.error('Server returned an error:', data.message);
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX request failed:', status, error);
+
+                
+                } else {
+                    console.error('Server returned an error:', data.message);
                 }
-            });
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
         });
-    })
+    });
+
+    $("#region_id").on("change", function(){
+        var id = $(this).val();
+        var type = 'region';
+
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands') }}',
+            data: {
+                id: id,  // Add a key for the id parameter
+                type: type
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    if(type == 'region'){
+                        $('#branch_div').html('');
+                        $("#branch_div").html(data.branch);
+                        select2();
+                    }
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+})
 </script>
