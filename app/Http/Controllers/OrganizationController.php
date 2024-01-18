@@ -126,50 +126,55 @@ class OrganizationController extends Controller
         //$organizations = Organization::get();
         // if (\Auth::user()->type == 'super admin') {
 
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('manage organization')) {
 
-        $org_query = User::select(['users.*'])->join('organizations', 'organizations.user_id', '=', 'users.id')->where('users.type', 'organization');
-        $filters = $this->organizationsFilter();
-        foreach ($filters as $column => $value) {
-            if ($column === 'name') {
-                $org_query->whereIn('name', $value);
-            } elseif ($column === 'phone') {
-                $org_query->where('organizations.phone', 'LIKE', '%' . $value . '%');
-            } elseif ($column === 'street') {
-                $org_query->where('organizations.billing_street', 'LIKE', '%' . $value . '%');
-            } elseif ($column == 'city') {
-                $org_query->where('organizations.billing_city', 'LIKE', '%' . $value . '%');
-            } elseif ($column == 'state') {
-                $org_query->where('organizations.billing_state', 'LIKE', '%' . $value . '%');
-            } elseif ($column === 'country') {
-                $org_query->whereIn('organizations.billing_country', $value);
+            $org_query = User::select(['users.*'])->join('organizations', 'organizations.user_id', '=', 'users.id')->where('users.type', 'organization');
+            $filters = $this->organizationsFilter();
+            foreach ($filters as $column => $value) {
+                if ($column === 'name') {
+                    $org_query->whereIn('name', $value);
+                } elseif ($column === 'phone') {
+                    $org_query->where('organizations.phone', 'LIKE', '%' . $value . '%');
+                } elseif ($column === 'street') {
+                    $org_query->where('organizations.billing_street', 'LIKE', '%' . $value . '%');
+                } elseif ($column == 'city') {
+                    $org_query->where('organizations.billing_city', 'LIKE', '%' . $value . '%');
+                } elseif ($column == 'state') {
+                    $org_query->where('organizations.billing_state', 'LIKE', '%' . $value . '%');
+                } elseif ($column === 'country') {
+                    $org_query->whereIn('organizations.billing_country', $value);
+                }
             }
-        }
 
-        //if list global search
-        if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
-            $g_search = $_GET['search'];
-            $org_query->Where('users.name', 'like', '%' . $g_search . '%');
-            $org_query->orWhere('organizations.billing_street', 'like', '%' . $g_search . '%');
-            $org_query->orWhere('organizations.billing_city', 'like', '%' . $g_search . '%');
-            $org_query->orWhere('organizations.billing_state', 'like', '%' . $g_search . '%');
-            $org_query->orWhere('organizations.billing_country', 'like', '%' . $g_search . '%');
-        }
+            //if list global search
+            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
+                $g_search = $_GET['search'];
+                $org_query->Where('users.name', 'like', '%' . $g_search . '%');
+                $org_query->orWhere('organizations.billing_street', 'like', '%' . $g_search . '%');
+                $org_query->orWhere('organizations.billing_city', 'like', '%' . $g_search . '%');
+                $org_query->orWhere('organizations.billing_state', 'like', '%' . $g_search . '%');
+                $org_query->orWhere('organizations.billing_country', 'like', '%' . $g_search . '%');
+            }
 
-        $organizations = $org_query->get();
+            $organizations = $org_query->get();
 
 
-        $org_types = OrganizationType::get()->pluck('name', 'id');
-        $countries = $this->countries_list();
-        $user_type = User::get()->pluck('type', 'id')->toArray();
+            $org_types = OrganizationType::get()->pluck('name', 'id');
+            $countries = $this->countries_list();
+            $user_type = User::get()->pluck('type', 'id')->toArray();
 
-        if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-            $html = view('organizations.organization_list', compact('organizations', 'org_types', 'countries', 'user_type'))->render();
-            return json_encode([
-                'status' => 'success',
-                'html' => $html
-            ]);
-        } else {
-            return view('organizations.index', compact('organizations', 'org_types', 'countries', 'user_type'));
+            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+                $html = view('organizations.organization_list', compact('organizations', 'org_types', 'countries', 'user_type'))->render();
+                return json_encode([
+                    'status' => 'success',
+                    'html' => $html
+                ]);
+            } else {
+                return view('organizations.index', compact('organizations', 'org_types', 'countries', 'user_type'));
+            }
+
+        }else{
+            return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
 
@@ -181,16 +186,27 @@ class OrganizationController extends Controller
     public function create()
     {
         //
-        $org_types = OrganizationType::get()->pluck('name', 'id');
-        $countries = $this->countries_list();
-        $user_type = User::get()->pluck('type', 'id')->toArray();
 
-        $data = [
-            'org_types' => $org_types,
-            'countries' => $countries,
-            'user_type' => $user_type
-        ];
-        return view('organizations.organization_create',  $data);
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('create organization')) {
+
+            $org_types = OrganizationType::get()->pluck('name', 'id');
+            $countries = $this->countries_list();
+            $user_type = User::get()->pluck('type', 'id')->toArray();
+
+            $data = [
+                'org_types' => $org_types,
+                'countries' => $countries,
+                'user_type' => $user_type
+            ];
+            return view('organizations.organization_create',  $data);
+        }else{
+            // return json_encode([
+            //     'status' => 'error',
+            //     'message' =>  'Permission Denied.'
+            // ]);
+
+            return response()->json(['error' => __('Permission Denied.')], 401);
+        }
     }
 
     /**
@@ -201,6 +217,9 @@ class OrganizationController extends Controller
      */
     public function store(Request $request)
     {
+     
+     if (\Auth::user()->type == 'super admin' || \Auth::user()->can('create organization')) {
+
         //
         $validator = \Validator::make(
             $request->all(),
@@ -276,6 +295,12 @@ class OrganizationController extends Controller
             'org' => $user
         ]);
         // return redirect()->back()->with('success', 'Organization created successfully!.');
+        }else{
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Permission Denied.'
+            ]);
+        }
     }
 
     /**
@@ -298,11 +323,17 @@ class OrganizationController extends Controller
     public function edit($id)
     {
         //
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit organization')) {
+
         $org = User::where('id', $id)->first();
         $org_detail = Organization::where('user_id', $org->id)->first();
         $org_types = OrganizationType::get()->pluck('name', 'id');
         $countries = $this->countries_list();
         return view('organizations.organization_edit', ['org' => $org, 'org_detail' => $org_detail, 'org_types' => $org_types, 'countries' => $countries]);
+        }else{
+            return response()->json(['error' => __('Permission Denied.')], 401);
+
+        }
     }
 
     /**
@@ -365,6 +396,7 @@ class OrganizationController extends Controller
     public function destroy($id)
     {
 
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('delete organization')) {
         //
         // if (\Auth::user()->type == 'company' || \Auth::user()->type == 'super admin') {
         $org = User::find($id);
@@ -383,6 +415,10 @@ class OrganizationController extends Controller
         // } else {
         //     return redirect()->back()->with('error', __('Permission Denied.'));
         // }
+        }else{
+            return response()->json(['error' => __('Permission Denied.')], 401);
+
+        }
     }
 
 
@@ -781,8 +817,12 @@ class OrganizationController extends Controller
                     }
                     $branches = $branch_query->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             }
-         
+            
+            if(isset($_GET['typeid'])){
             $organization = User::where('id',$_GET['typeid'])->first();
+            }else{
+                $organization = '';
+            }
           
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();

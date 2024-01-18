@@ -138,12 +138,15 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-1 me-3">
+                    @can('edit organization')
                     <a href="#" data-size="lg" data-url="{{ route('organization.edit', $org->id) }}"
                         data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"
                         class="btn px-2 btn-dark text-white">
                         <i class="ti ti-pencil"></i>
                     </a>
+                    @endcan
 
+                    @can('delete organization')
                     {!! Form::open([
                         'method' => 'DELETE',
                         'route' => ['organization.destroy', $org->id],
@@ -158,6 +161,7 @@
                             class="ti ti-trash text-white"></i></a>
 
                     {!! Form::close() !!}
+                    @endcan
                 </div>
 
 

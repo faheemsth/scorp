@@ -137,12 +137,15 @@
 
                         <button class="btn px-2 pb-2 pt-2 refresh-list bg-dark" style=" color:white;"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
-                        <button class="btn filter-btn-show px-2 btn-dark" style="color:white;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn filter-btn-show px-2 btn-dark" style="color:white;" type="button">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
+
+                        @can('create organization')
                         <a href="#" data-size="lg" data-url="{{ route('organization.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Organization') }}" class="btn p-2 btn-dark">
                             <i class="ti ti-plus"></i>
                         </a>
+                        @endcan
 
                         <!-- <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModal" data-bs-toggle="tooltip" title="{{ __('Create New Organization') }}">
                               <i class="ti ti-plus"></i>
@@ -226,8 +229,8 @@
                                 <td style="border-left: 1px solid #fff;">Billing City</td>
                                 <td style="border-left: 1px solid #fff;">Billing State</td>
                                 <td style="border-left: 1px solid #fff;">Billing Country</td>
-                                <td style="border-left: 1px solid #fff;"></td>
-                                <td style="border-left: 1px solid #fff;">Action</td>
+                                
+                                <td style="border-left: 1px solid #fff; display: none;">Action</td>
                             </tr>
                         </thead>
                         <tbody class="organization_tbody" style="color:rgb(0, 0, 0); font-size: 14px;" class="new-organization-list-tbody">
@@ -245,16 +248,16 @@
                                 <td>
                                     <input type="checkbox" name="organizations[]" value="{{ $org->id }}" class="sub-check">
                                 </td>
+
                                 <td>
-                                    <span style="cursor:pointer" class="org-name hyper-link" onclick="openNav(<?= $org->id ?>)" data-org-id="{{ $org->id }}">{{ $org->name }}</span>
+                                    <span style="cursor:pointer" class="org-name hyper-link" @can('show organization') onclick="openNav(<?= $org->id ?>)" @endcan data-org-id="{{ $org->id }}">{{ $org->name }}</span>
                                 </td>
                                 <td>{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
                                 <td>{{ isset($org_data->billing_street) ? $org_data->billing_street : '' }}</td>
                                 <td>{{ isset($org_data->billing_city) ? $org_data->billing_city : '' }}</td>
                                 <td>{{ isset($org_data->billing_state) ? $org_data->billing_state : '' }}</td>
                                 <td>{{ isset($org_data->billing_country) ? $org_data->billing_country : '' }}</td>
-                                <td></td>
-                                <td>
+                                <td class="d-none">
                                     <div class="dropdown">
                                         <button class="btn bg-transparents" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
@@ -291,7 +294,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="9" class="py-1">
+                                <td colspan="9" class="py-1 text-center">
                                     No Organizations found
                                 </td>
                             </tr>
