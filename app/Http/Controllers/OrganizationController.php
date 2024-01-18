@@ -782,7 +782,6 @@ class OrganizationController extends Controller
                     $branches = $branch_query->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             }
          
-            $organization = User::where('id',$_GET['typeid'])->first();
           
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
@@ -815,6 +814,12 @@ class OrganizationController extends Controller
             $typeId = '';
 
             $relateds = [];
+            $organization = null;
+            if(isset($_GET['typeid'])){
+                $organization = User::where('id',$_GET['typeid'])->first();
+            }else{
+
+            }
 
             if (isset($_GET['type']) && isset($_GET['typeid'])) {
                 $type = $_GET['type'];
@@ -829,7 +834,9 @@ class OrganizationController extends Controller
                 }
             }
             if(\Auth::user()->type == 'company'){
-                $Region = Region::where('brands', \Auth::user()->id)->orderBy('name', 'ASC')->pluck('name', 'id');
+                // $Region = Region::where('brands', \Auth::user()->id)->orderBy('name', 'ASC')->pluck('name', 'id');
+                $Region = DB::table('regions')->whereRaw('FIND_IN_SET('.\Auth::user()->id.', brands)')->orderBy('name', 'ASC')->pluck('name', 'id');
+                // dd($Region);
                 $Region= ['' => 'Select Region'] + $Region->toArray();
             }else{
                 $Region= ['' => 'Select Region'];
