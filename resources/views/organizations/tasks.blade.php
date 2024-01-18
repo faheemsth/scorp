@@ -231,9 +231,9 @@
                                         <select class="form form-control select2 related_type" disabled onchange="ChangeRelated(this)"
                                             id="choices-multiple6" name="related_type">
                                             <option value="">Select type</option>
-                                            {{-- <option value="organization"
-                                                {{ $type == 'organization' ? 'selected' : '' }}>
-                                                Organization</option> --}}
+                                            <option value="organization"
+                                                 $type == 'organization' ? 'selected' : ''>
+                                                Organization</option>
                                             <option value="lead" {{ $type == 'lead' ? 'selected' : '' }}>Lead
                                             </option>
                                             <option value="deal" {{ $type == 'deal' ? 'selected' : '' }}>Admission
@@ -244,9 +244,9 @@
                                         <select class="form form-control select2 related_type" id="choices-multiple6" onchange="ChangeRelated(this)"
                                             name="related_type">
                                             <option value="">Select type</option>
-                                            {{-- <option value="organization"
-                                                {{ $type == 'organization' ? 'selected' : '' }}>
-                                                Organization</option> --}}
+                                             <option value="organization"
+                                                 $type == 'organization' ? 'selected' : '' }}>
+                                                Organization</option>
                                             <option value="lead" {{ $type == 'lead' ? 'selected' : '' }}>Lead
                                             </option>
                                             <option value="deal" {{ $type == 'deal' ? 'selected' : '' }}>Admission

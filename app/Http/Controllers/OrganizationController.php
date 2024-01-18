@@ -181,6 +181,16 @@ class OrganizationController extends Controller
     public function create()
     {
         //
+        $org_types = OrganizationType::get()->pluck('name', 'id');
+        $countries = $this->countries_list();
+        $user_type = User::get()->pluck('type', 'id')->toArray();
+
+        $data = [
+            'org_types' => $org_types,
+            'countries' => $countries,
+            'user_type' => $user_type
+        ];
+        return view('organizations.organization_create',  $data);
     }
 
     /**
@@ -197,7 +207,7 @@ class OrganizationController extends Controller
             [
                 'organization_name' => 'required',
                 'organization_type' => 'required',
-                'organization_email' => 'required|unique:users,email,',
+                'organization_email' => 'required|unique:users,email',
                 'organization_phone' => 'required',
                 'organization_website' => 'required',
                 'organization_linkedin' => 'required',
@@ -208,9 +218,11 @@ class OrganizationController extends Controller
                 'organization_billing_state' => 'required',
                 'organization_billing_postal_code' => 'required',
                 'organization_billing_country' => 'required',
-                'organization_description' => 'required'
+               // 'organization_description' => 'required'
             ]
         );
+
+     
 
         if ($validator->fails()) {
             $messages = $validator->getMessageBag();
@@ -220,7 +232,7 @@ class OrganizationController extends Controller
             ]);
         }
 
-
+       
 
         //Creating users
         $user = new User();
@@ -234,22 +246,6 @@ class OrganizationController extends Controller
         $user->created_by = \Auth::user()->id;
         //$user->passport_number = '';
         $user->save();
-
-        $arr = [
-            'user_id' => $user->id,
-            'type' => $request->organization_type,
-            'phone' =>  $request->organization_phone,
-            'website' => $request->organization_website,
-            'linkedin' => $request->organization_linkedin,
-            'facebook' => $request->organization_facebook,
-            'twitter' => $request->organization_twitter,
-            'billing_street' => $request->organization_billing_street,
-            'billing_city' => $request->organization_billing_city,
-            'billing_state' => $request->organization_billing_state,
-            'billing_postal_code' => $request->organization_billing_postal_code,
-            'billing_country' => $request->organization_billing_country,
-            'description' => $request->organization_description,
-        ];
 
         $org =  Organization::create([
             'type' => $request->organization_type,
@@ -270,13 +266,13 @@ class OrganizationController extends Controller
         $org->save();
 
 
-        $org_data = Organization::where('user_id', $user->id)->first();
-        $html = view('organizations.new_organization', ['org' => $user, 'org_data' => $org_data])->render();
+        //$org_data = Organization::where('user_id', $user->id)->first();
+        //$html = view('organizations.new_organization', ['org' => $user, 'org_data' => $org_data])->render();
 
         return json_encode([
             'status' => 'success',
             'message' => 'Organization created successfully!.',
-            'html' => $html,
+           // 'html' => $html,
             'org' => $user
         ]);
         // return redirect()->back()->with('success', 'Organization created successfully!.');
@@ -351,7 +347,13 @@ class OrganizationController extends Controller
             'description' => $request->organization_description,
         ]);
 
-        return redirect()->back()->with('success', 'Organization updated successfully!.');
+        return json_encode([
+            'status' => 'success',
+            'org_id' => $user->id,
+            'message' =>  __('Organization successfully updated!')
+        ]);
+
+        ///return redirect()->back()->with('success', 'Organization updated successfully!.');
     }
 
     /**
@@ -825,7 +827,6 @@ class OrganizationController extends Controller
                     $relateds = Deal::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
                 }
             }
-
             if(\Auth::user()->type == 'company'){
                 $Region = Region::where('brands', \Auth::user()->id)->orderBy('name', 'ASC')->pluck('name', 'id');
                 $Region= ['' => 'Select Region'] + $Region->toArray();

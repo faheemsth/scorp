@@ -1105,12 +1105,12 @@
                                                                                    @endphp
                                                                                     @foreach($tasks as $task)
                                                                                     @if ($task->status == 1)
-                                                                                    <div class="ps-3 py-2 d-flex gap-2 align-items-baseline" style="border-bottom: 1px solid rgb(192, 192, 192);">
-                                                                                        <i class="fa-regular fa-square-check" style="color: #000000;"></i>
-                                                                                        <h6 class="fw-bold">
-                                                                                            {{ $section == 1 ? 'Closed Activity': '' }}
-                                                                                        </h6>
-                                                                                    </div>
+                                                                                        <div class="ps-3 py-2 d-flex gap-2 align-items-baseline" style="border-bottom: 1px solid rgb(192, 192, 192);">
+                                                                                            <i class="fa-regular fa-square-check" style="color: #000000;"></i>
+                                                                                            <h6 class="fw-bold">
+                                                                                                {{ $section == 1 ? 'Closed Activity': '' }}
+                                                                                            </h6>
+                                                                                        </div>
                                                                                         <li class="list-group-item px-3"
                                                                                             id="lihover">
                                                                                             <div class="d-block d-sm-flex align-items-start">
@@ -1362,9 +1362,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
-
                                         </div>
                                     </div>
                                 </div>
