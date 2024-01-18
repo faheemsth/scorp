@@ -520,25 +520,30 @@ class InvoiceController extends Controller
                 if($invoice->customer_id != null){
 
                     $customer         = Customer::where('id', $invoice->customer_id)->first();
-                    $invoice->name    = !empty($customer) ? $customer->name : '';
-                    $invoice->invoice = \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
-
-                    $invoiceId    = Crypt::encrypt($invoice->id);
-                    $invoice->url = route('invoice.pdf', $invoiceId);
-
-                    Utility::userBalances('customer', $customer->id, $invoice->getTotal(), 'credit');
-
-                    $customerArr = [
-
-                        'customer_name'=> $customer->name,
-                        'customer_email' => $customer->email,
-                        'invoice_name' => $customer->name,
-                        'invoice_number' => $invoice->invoice,
-                        'invoice_url' => $invoice->url,
-
-                    ];
-                    $resp = Utility::sendEmailTemplate('customer_invoice_sent', [$customer->id => $customer->email], $customerArr);
-                    return redirect()->back()->with('success', __('Invoice successfully sent.') .(($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
+                    if($customer){
+                        $invoice->name    = !empty($customer) ? $customer->name : '';
+                        $invoice->invoice = \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
+    
+                        $invoiceId    = Crypt::encrypt($invoice->id);
+                        $invoice->url = route('invoice.pdf', $invoiceId);
+    
+                        Utility::userBalances('customer', $customer->id, $invoice->getTotal(), 'credit');
+    
+                        $customerArr = [
+    
+                            'customer_name'=> $customer->name,
+                            'customer_email' => $customer->email,
+                            'invoice_name' => $customer->name,
+                            'invoice_number' => $invoice->invoice,
+                            'invoice_url' => $invoice->url,
+    
+                        ];
+                        $resp = Utility::sendEmailTemplate('customer_invoice_sent', [$customer->id => $customer->email], $customerArr);
+                        return redirect()->back()->with('success', __('Invoice successfully sent.') .(($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
+    
+                    }else{
+                        return redirect()->back()->with('success', __('Invoice successfully sent.'));
+                    }
 
                 }elseif($invoice->user_name != null){
 

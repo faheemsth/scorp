@@ -140,46 +140,11 @@
                                                             <tr>
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
-                                                                    {{ __('University Owner') }}
-                                                                </td>
-                                                                <td class="created_by-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ isset($users[$university->created_by]) ? $users[$university->created_by] : '' }}
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
-                                            <button class="accordion-button p-2" type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#panelsStayOpen-collapsekeytwo">
-                                                {{ __('ADDRESS INFORMATION') }}
-                                            </button>
-                                        </h2>
-
-                                        <div id="panelsStayOpen-collapsekeytwo" class="accordion-collapse collapse show"
-                                            aria-labelledby="panelsStayOpen-headingkeyone">
-                                            <div class="accordion-body">
-
-                                                <div class="table-responsive mt-1" style="margin-left: 10px;">
-
-                                                    <table>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td class=""
-                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Country') }}
                                                                 </td>
-                                                                <td class=""
+                                                                <td class="name-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
+
                                                                     {{ $university->country }}
                                                                 </td>
                                                             </tr>
@@ -187,11 +152,95 @@
                                                             <tr>
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
-                                                                    {{ __('City') }}
+                                                                    {{ __('Campus') }}
                                                                 </td>
                                                                 <td class="name-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    {{$university->city }}
+
+                                                                    {{ $university->campuses }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Intake Months') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                    {{ $university->intake_months }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Territory') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                    {{ $university->territory }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Brand') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                    {{ $users[$university->company_id] ?? '' }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Phone') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                    {{ $university->phone }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Resource') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    <a href="{{ $university->resource_drive_link }}" class="" target="_blank">{{ $university->resource_drive_link }}</a>
+                                                                </td>
+                                                            </tr>
+
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Application Method') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    <a href="{{ $university->application_method_drive_link }}" class="" target="_blank">{{ $university->application_method_drive_link }}</a>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Note') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                    {{ $university->note }}
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -226,7 +275,7 @@
                                                             <tr>
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
-                                                                    {{ __('University Created') }}
+                                                                    {{ __('Created at') }}
                                                                 </td>
                                                                 <td class=""
                                                                     style="padding-left: 10px; font-size: 14px;">
@@ -238,7 +287,7 @@
                                                             <tr>
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
-                                                                    {{ __('University Updated') }}
+                                                                    {{ __('Updated at') }}
                                                                 </td>
                                                                 <td class=""
                                                                     style="padding-left: 10px; font-size: 14px;">

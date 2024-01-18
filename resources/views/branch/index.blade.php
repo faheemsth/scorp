@@ -166,6 +166,7 @@
                             <thead>
                                 <tr>
                                     <th>{{ __('Branch') }}</th>
+                                    <th>{{ __('Brand') }}</th>
                                     <th>{{ __('Region') }}</th>
                                     <th>{{ __('Branch Manager') }}</th>
                                     <th>{{ __('Phone') }}</th>
@@ -183,6 +184,7 @@
                                                     {{ $branch->name }}
                                             </span>
                                         </td>
+                                        <td>{{ isset($branch->brands) ? \App\Models\User::where('id', $branch->brands)->first()->name : '' }}</td>
                                         <td>{{ !empty($regions[$branch->region_id]) ? $regions[$branch->region_id] : '' }}</td>
                                         <td>{{ !empty($branch->branch_manager_id) && isset($users[$branch->branch_manager_id]) ? $users[$branch->branch_manager_id] : '' }}</td>
                                         <td>{{ $branch->phone }}</td>

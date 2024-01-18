@@ -142,11 +142,7 @@ class BranchController extends Controller
 
         $region = Region::where('id', $branch->region_id)->first();
 
-
-       $ids = explode(',', $region->brands ?? '');
-
-        $brands = User::whereIn('id',$ids)->where('type', 'company')->pluck('name', 'id')->toArray();
-
+        $brands = User::where('id',$branch->brands)->where('type', 'company')->pluck('name', 'id')->toArray();
         if(\Auth::user()->can('edit branch'))
         {
             // if($branch->created_by == \Auth::user()->creatorId())

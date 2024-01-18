@@ -135,6 +135,7 @@
                         </div>
                     </div>
                     <div class="col-10 d-flex justify-content-end gap-2">
+                        
                         <div class="input-group w-25">
                             <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
                                 <i class="ti ti-search" style="font-size: 18px"></i>
@@ -143,9 +144,13 @@
                                 placeholder="Search this list..." aria-label="Username"
                                 aria-describedby="basic-addon1">
                         </div>
-                        @can('create ')
+                        <a href="#" data-size="lg" data-url="{{ route('support.create') }}" data-ajax-popup="true"
+                            data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Support')}}" class="btn btn-dark py-2 px-2">
+                                <i class="ti ti-plus" style="font-size:18px"></i>
+                            </a>
+                        <!-- @can('create support') -->
 
-                        <div class="float-end">
+                        <!-- <div class="float-end"> -->
                             <a href="{{ route('support.grid') }}" class="btn btn-dark py-2 px-2" data-bs-toggle="tooltip" title="{{__('Grid View')}}">
                                 <i class="ti ti-layout-grid text-white" style="font-size:18px"></i>
                             </a>
@@ -155,8 +160,8 @@
                                 <i class="ti ti-plus" style="font-size:18px"></i>
                             </a>
                     
-                        </div>
-                        @endcan 
+                        <!-- </div> -->
+                        <!-- @endcan  -->
                     </div>
                 </div>
                 <script>

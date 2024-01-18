@@ -91,12 +91,23 @@
                                                 class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-                                                <select class="form-control select2 brand_id" id="choices-1011" name="brand_id">
-                                                    <option value="" >Select Brand</option>
-                                                    @foreach($companies as $key => $company)
-                                                    <option value="{{$key}}" {{ $key == 1 ? 'selected' : ''}}>{{$company}}</option>
-                                                    @endforeach
-                                                </select>
+                                                @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' ||
+                                                    \Auth::user()->type == 'Project Manager'
+                                                )
+                                                    <select class="form-control select2 brand_id" id="choices-1011" name="brand_id">
+                                                        <option value="" >Select Brand</option>
+                                                        @foreach($companies as $key => $company)
+                                                        <option value="{{$key}}" >{{$company}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                @elseif(Session::get('is_company_login') == true || \Auth::user()->type == 'company')
+                                                    <select class="form-control select2 brand_id" id="choices-1011" name="brand_id">
+                                                        <option value="" >Select Brand</option>
+                                                        @foreach($companies as $key => $company)
+                                                        <option value="{{$key}}" selected>{{$company}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                @endif
                                             </td>
                                         </tr>
 

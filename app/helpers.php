@@ -228,6 +228,19 @@ if (!function_exists('FiltersBranchUsers')){
 }
 
 
+//returning stages ranges like visa fall in 1,2,3 and deposit fall in 4,5,6
+if (!function_exists('stagesRange')){
+    function stagesRange($type){
+         if($type == 'visas'){
+            return [4, 5, 6];
+         }else if($type == 'deposit'){
+            return [7, 8, 9];
+         }else{
+            return [1, 2, 3];
+         }
+    }
+}
+
 
 
 

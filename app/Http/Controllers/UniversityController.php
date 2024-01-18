@@ -110,7 +110,7 @@ class UniversityController extends Controller
             $months = months();
 
             //getting companies
-            $companies = companies();
+            $companies = FiltersBrands();
 
             $categories = InstituteCategory::pluck('name', 'id');
             $categories->prepend('', 'Select Category');
@@ -148,16 +148,22 @@ class UniversityController extends Controller
                     'name' => 'required|max:20',
                     'country' => 'required|max:20',
                     'city' => 'required|max:20',
-                    'phone' => 'required|max:20',
-                    'note' => 'required',
+                  //  'phone' => 'required|max:20',
+                   // 'note' => 'required',
+                   'months' => 'required',
+                   'territory' => 'required',
+                   'company_id' => 'required',
                     'category_id' => 'required'
                 ]
             );
 
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
-
-                return redirect()->route('university.index')->with('error', $messages->first());
+                return json_encode([
+                    'status' => 'error',
+                    'message' => $messages->first()
+                ]);
+                //return redirect()->route('university.index')->with('error', $messages->first());
             }
 
             $university              = new University();
@@ -193,10 +199,18 @@ class UniversityController extends Controller
             addLogActivity($data);
 
 
-
-            return redirect()->route('university.index')->with('success', __('University successfully created!'));
+            return json_encode([
+                'status' => 'success',
+                'id' => $university->id,
+                'message' => 'University created successfully.'
+            ]);
+           // return redirect()->route('university.index')->with('success', __('University successfully created!'));
         } else {
-            return redirect()->back()->with('error', __('Permission Denied.'));
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Permission Denied.'
+            ]);
+            //return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
 
@@ -269,15 +283,22 @@ class UniversityController extends Controller
                     'name' => 'required|max:20',
                     'country' => 'required|max:20',
                     'city' => 'required|max:20',
-                    'phone' => 'required|max:20',
-                    'note' => 'required'
+                    'months' => 'required',
+                    'territory' => 'required',
+                    'company_id' => 'required',
+                    'category_id' => 'required'
+                    //'phone' => 'required|max:20',
+                    //'note' => 'required'
                 ]
             );
 
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
-
-                return redirect()->route('users')->with('error', $messages->first());
+                return json_encode([
+                    'status' => 'error',
+                    'message' => $messages->first()
+                ]);
+               // return redirect()->route('users')->with('error', $messages->first());
             }
 
             $university->name        = $request->name;
@@ -305,9 +326,19 @@ class UniversityController extends Controller
             ];
             addLogActivity($data);
 
-            return redirect()->route('university.index')->with('success', __('University successfully updated!'));
+            return json_encode([
+                'status' => 'success',
+                'id'  => $university->id,
+                'message' => 'University updated successfully.'
+            ]);
+
+            //return redirect()->route('university.index')->with('success', __('University successfully updated!'));
         } else {
-            return redirect()->back()->with('error', __('Permission Denied.'));
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Permission Denied.'
+            ]);
+            //return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
 

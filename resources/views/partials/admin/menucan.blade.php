@@ -327,7 +327,7 @@
                             @endcan
                             @can('manage organization')
                                 <li
-                                    class="d-none emp nav-item {{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
+                                    class="emp nav-item {{ Request::route()->getName() == 'organizaiton.list' || Request::route()->getName() == 'organization.index' || Request::route()->getName() == 'organization.show' ? ' active' : '' }}">
                                     <a class="collapse-item" style="color: white; font-size: 13px;"
                                         href="{{ route('organization.index') }}">
                                         <img src="{{ asset('assets/cs-theme/icons/organization-01-1 1.png') }}"

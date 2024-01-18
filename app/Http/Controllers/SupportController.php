@@ -15,7 +15,16 @@ class SupportController extends Controller
 {
     public function index()
     {
-        if(\Auth::user()->type == 'company')
+        
+        if(\Auth::user()->type == 'super admin')
+        {
+            $supports = Support::get();
+            $countTicket      = Support::count();
+            $countOpenTicket  = Support::where('status', '=', 'open')->count();
+            $countonholdTicket  = Support::where('status', '=', 'on hold')->count();
+            $countCloseTicket = Support::where('status', '=', 'close')->count();
+            return view('support.index', compact('supports','countTicket','countOpenTicket','countonholdTicket','countCloseTicket'));
+        }else if(\Auth::user()->type == 'company')
         {
             $supports = Support::where('created_by', \Auth::user()->creatorId())->get();
             $countTicket      = Support::where('created_by', '=', \Auth::user()->creatorId())->count();
