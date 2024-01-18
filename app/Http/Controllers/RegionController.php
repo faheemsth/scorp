@@ -81,7 +81,7 @@ class RegionController extends Controller
         $id = $_GET['id'];
         $type = $request->type;
 
-        dd($type);
+        // dd($type);
 
         if($type == 'brand'){
             $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
