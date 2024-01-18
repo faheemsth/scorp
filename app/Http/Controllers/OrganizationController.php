@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ActivityLog;
+use Session;
+use App\Models\Deal;
+use App\Models\Lead;
+use App\Models\User;
+use App\Models\Stage;
 use App\Models\Branch;
+use App\Models\Region;
+use App\Models\DealTask;
+use App\Models\ActivityLog;
 use App\Models\Organization;
-use App\Models\OrganizationDiscussion;
+use Illuminate\Http\Request;
 use App\Models\OrganizationNote;
 use App\Models\OrganizationType;
-use App\Models\User;
-use App\Models\Deal;
-use App\Models\DealTask;
-use App\Models\Stage;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
 use App\Models\CompanyPermission;
-use App\Models\Region;
-use Session;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use App\Models\OrganizationDiscussion;
+use Illuminate\Support\Facades\Validator;
+
 class OrganizationController extends Controller
 {
 
@@ -850,11 +852,22 @@ class OrganizationController extends Controller
 
             $relateds = [];
             $organization = null;
-            if(isset($_GET['typeid'])){
+            if(isset($_GET['typeid']) && $_GET['type'] == 'organization'){
                 $organization = User::where('id',$_GET['typeid'])->first();
-            }else{
-
             }
+
+            $lead = null;
+            if(isset($_GET['typeid']) && $_GET['type'] == 'lead'){
+                $lead = Lead::where('id',$_GET['typeid'])->first();
+            }
+
+
+            $deal = null;
+            if(isset($_GET['typeid']) && $_GET['type'] == 'deal'){
+                $deal = Deal::where('id',$_GET['typeid'])->first();
+            }
+
+
 
             if (isset($_GET['type']) && isset($_GET['typeid'])) {
                 $type = $_GET['type'];
@@ -877,7 +890,7 @@ class OrganizationController extends Controller
                 $Region= ['' => 'Select Region'];
             }
 
-            return view('organizations.tasks', compact('Region','users', 'deals','organization', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds'));
+            return view('organizations.tasks', compact('Region','users', 'deals','organization', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds', 'lead', 'deal'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }

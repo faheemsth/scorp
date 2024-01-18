@@ -1143,7 +1143,7 @@
                                                                                                         <a href="javascript:void(0)"
                                                                                                             class="btn"
                                                                                                             id="editable"
-                                                                                                            onclick="deleteTask({{ $task->id }}, {{ $lead->id }}, 'lead');">
+                                                                                                            onclick="deleteTask({{ $task->id }}, {{ $org->id }}, 'lead');">
                                                                                                             <i class="ti ti-trash " style="font-size: 20px;"></i>
                                                                                                         </a>
 
@@ -1220,7 +1220,7 @@
                                                                                                         <a href="javascript:void(0)"
                                                                                                             class="btn"
                                                                                                             id="editable"
-                                                                                                            onclick="deleteTask({{ $task->id }}, {{ $lead->id }}, 'lead');">
+                                                                                                            onclick="deleteTask({{ $task->id }}, {{ $org->id }}, 'lead');">
                                                                                                             <i class="ti ti-trash " style="font-size: 20px;"></i>
                                                                                                         </a>
 

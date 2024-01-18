@@ -228,11 +228,11 @@
                                     </label>
                                 <div class="col-sm-6">
                                     @if (isset($type) && !empty($type))
-                                        <select class="form form-control select2 related_type" disabled onchange="ChangeRelated(this)"
+                                        <select class="form form-control select2 related_type" disabled onchange="ChangeRelated()"
                                             id="choices-multiple6" name="related_type">
                                             <option value="">Select type</option>
                                             <option value="organization"
-                                                 selected>
+                                            {{ $type == 'organization' ? 'selected' : '' }}>
                                                 Organization</option>
                                             <option value="lead" {{ $type == 'lead' ? 'selected' : '' }}>Lead
                                             </option>
@@ -241,10 +241,10 @@
                                         </select>
                                         <input type="hidden" value="{{ $type }}" name="related_type">
                                     @else
-                                        <select class="form form-control select2 related_type" id="choices-multiple6" onchange="ChangeRelated(this)"
+                                        <select class="form form-control select2 related_type" id="choices-multiple6" onchange="ChangeRelated()"
                                             name="related_type">
                                             <option value="">Select type</option>
-                                             <option value="organization"  {{ $type == 'organization' ? 'selected' : '' }} >
+                                             <option value="organization"  {{ $type == 'organi' ? 'selected' : '' }} >
                                                 Organization</option>
                                             <option value="lead" {{ $type == 'lead' ? 'selected' : '' }}>Lead
                                             </option>
@@ -262,8 +262,16 @@
                                     <select class="form form-control related_to select2"
                                             id="choices-multiple7" name="related_to" readonly>
                                             <option value="">Related To</option>
-                                            @if($organization != null)
+                                            @if(!empty($organization))
                                                 <option value="{{$organization->id}}" selected>{{$organization->name}}</option>
+                                            @endif
+
+                                            @if(!empty($lead))
+                                                <option value="{{$lead->id}}" selected>{{$lead->name}}</option>
+                                            @endif
+
+                                            @if(!empty($deal))
+                                                <option value="{{$deal->id}}" selected>{{$deal->name}}</option>
                                             @endif
                                     </select>
                                 </div>
