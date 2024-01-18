@@ -155,11 +155,19 @@
                 font-size: 14px;
             }
         }
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body{
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
     </style>
 </head>
 
 <body class="{{ $color }}">
-    <div class="container-fluid px-0">
+    <div class="container-fluid px-0 loginpagescroll">
         <nav class="navbar navbar-expand-md navbar-light " style="background-color: #B3CDE1;">
             <div class="container-fluid px-md-5 mx-lg-5">
                 <a class="navbar-brand w-50" href="#">
