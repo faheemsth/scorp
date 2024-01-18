@@ -197,7 +197,8 @@
                 if (data.status === 'success') {
                     $('#employee_div').html('');
                     $("#employee_div").html(data.html);
-                    $('#user_id').attr('name', 'employee_id');
+                    $('#user_id').attr('name', 'employee_id[]');
+                    $('#user_id').attr('multiple','multiple');
                     select2();
                 } else {
                     console.error('Server returned an error:', data.message);

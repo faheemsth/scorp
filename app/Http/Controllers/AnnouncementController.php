@@ -90,27 +90,27 @@ class AnnouncementController extends Controller
             $announcement->branch_id     = $request->lead_branch;
             $announcement->brand_id     = $request->brand_id;
             $announcement->region_id =$request->region_id;
-            $announcement->employee_id   = $request->employee_id;
+            $announcement->employee_id   = json_encode($request->employee_id);
             $announcement->description   = $request->description;
             $announcement->created_by    = \Auth::user()->creatorId();
             $announcement->save();
 
-            // if(in_array('0', $request->employee_id))
-            // {
-            //     $departmentEmployee = Region::whereIn('region_id', $request->region_id)->get()->pluck('id');
-            // }
-            // else
-            // {
+            if(in_array('0', $request->employee_id))
+            {
+                $departmentEmployee = Region::whereIn('region_id', $request->region_id)->get()->pluck('id');
+            }
+            else
+            {
                 $departmentEmployee = $request->employee_id;
-            // }
-            // foreach($departmentEmployee as $employee)
-            // {
+            }
+            foreach($departmentEmployee as $employee)
+            {
                 $announcementEmployee                  = new AnnouncementEmployee();
                 $announcementEmployee->announcement_id = $announcement->id;
                 $announcementEmployee->employee_id     = $request->employee_id;
                 $announcementEmployee->created_by      = \Auth::user()->creatorId();
                 $announcementEmployee->save();
-            // }
+            }
 
 
             //Slack Notification
