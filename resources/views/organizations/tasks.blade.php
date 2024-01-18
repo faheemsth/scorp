@@ -244,8 +244,7 @@
                                         <select class="form form-control select2 related_type" id="choices-multiple6" onchange="ChangeRelated(this)"
                                             name="related_type">
                                             <option value="">Select type</option>
-                                             <option value="organization"
-                                                 selected }}>
+                                             <option value="organization"  {{ $type == 'organization' ? 'selected' : '' }} >
                                                 Organization</option>
                                             <option value="lead" {{ $type == 'lead' ? 'selected' : '' }}>Lead
                                             </option>
@@ -263,7 +262,9 @@
                                     <select class="form form-control related_to select2"
                                             id="choices-multiple7" name="related_to" readonly>
                                             <option value="">Related To</option>
-                                            <option value="{{$organization->id}}" selected>{{$organization->name}}</option>
+                                            @if($organization != null)
+                                                <option value="{{$organization->id}}" selected>{{$organization->name}}</option>
+                                            @endif
                                     </select>
                                 </div>
                             </div>

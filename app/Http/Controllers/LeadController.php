@@ -279,7 +279,7 @@ class LeadController extends Controller
             }
 
             $branches = $query->pluck('name', 'id')->toArray();
-            $regions = $query->pluck('name', 'id')->toArray();
+            $regions = $region_query->pluck('name', 'id')->toArray();
 
             $users = allUsers();
             $companies = FiltersBrands();
