@@ -143,6 +143,7 @@ class InvoiceController extends Controller
             $invoice->due_date       = $request->due_date;
             $invoice->category_id    = $request->category_id;
             $invoice->ref_number     = $request->ref_number;
+            $invoice->shipping_display = 0;
 //            $invoice->discount_apply = isset($request->discount_apply) ? 1 : 0;
             $invoice->created_by     = \Auth::user()->creatorId();
             $invoice->save();
@@ -509,7 +510,7 @@ class InvoiceController extends Controller
         {
             // Send Email
             $setings = Utility::settings();
-
+            
             if($setings['customer_invoice_sent'] == 1)
             {
                 $invoice            = Invoice::where('id', $id)->first();
@@ -519,13 +520,15 @@ class InvoiceController extends Controller
 
                 if($invoice->customer_id != null){
 
-                    $customer         = Customer::where('id', $invoice->customer_id)->first();
+                    //$customer         = Customer::where('id', $invoice->customer_id)->first();
+                    $customer         = User::where('id', $invoice->customer_id)->first();
                     if($customer){
                         $invoice->name    = !empty($customer) ? $customer->name : '';
                         $invoice->invoice = \Auth::user()->invoiceNumberFormat($invoice->invoice_id);
     
                         $invoiceId    = Crypt::encrypt($invoice->id);
                         $invoice->url = route('invoice.pdf', $invoiceId);
+                        
     
                         Utility::userBalances('customer', $customer->id, $invoice->getTotal(), 'credit');
     
@@ -678,7 +681,8 @@ class InvoiceController extends Controller
             $invoicePayment->account    = $request->account_id;
 
             Transaction::addTransaction($invoicePayment);
-            $customer = Customer::where('id', $invoice->customer_id)->first();
+           // $customer = Customer::where('id', $invoice->customer_id)->first();
+           $customer = User::where('id', $invoice->customer_id)->first();
 
 
             $payment            = new InvoicePayment();
@@ -696,7 +700,7 @@ class InvoiceController extends Controller
             $setings = Utility::settings();
             if($setings['new_invoice_payment'] == 1)
             {
-                $customer = Customer::where('id', $invoice->customer_id)->first();
+               // $customer = Customer::where('id', $invoice->customer_id)->first();
                 $invoicePaymentArr = [
                     'invoice_payment_name'   => $customer->name,
                     'invoice_payment_amount'   => $payment->amount,
@@ -1044,12 +1048,14 @@ class InvoiceController extends Controller
             $totalDiscount += $item->discount;
 
             $taxes = Utility::tax($product->tax);
-
             $itemTaxes = [];
             if(!empty($item->tax))
             {
                 foreach($taxes as $tax)
                 {
+                    if(empty($tax))
+                    continue;
+
                     $taxPrice      = Utility::taxRate($tax->rate, $item->price, $item->quantity);
                     $totalTaxPrice += $taxPrice;
 

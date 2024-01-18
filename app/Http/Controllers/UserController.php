@@ -744,7 +744,7 @@ class UserController extends Controller
                     $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
                 }
 
-                $users = $usersQuery->orderBy('name', 'ASC')->where('brand_id', $user->brand_id)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $users = $usersQuery->where('brand_id', $user->brand_id)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }
 
             $brands = User::whereNotIn('type', $excludedTypes)->orderBy('name', 'ASC')->get();
