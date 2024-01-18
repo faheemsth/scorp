@@ -781,8 +781,9 @@ class OrganizationController extends Controller
                     }
                     $branches = $branch_query->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             }
-
-
+         
+            $organization = User::where('id',$_GET['typeid'])->first();
+          
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
@@ -834,8 +835,7 @@ class OrganizationController extends Controller
                 $Region= ['' => 'Select Region'];
             }
 
-
-            return view('organizations.tasks', compact('Region','users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds'));
+            return view('organizations.tasks', compact('Region','users', 'deals','organization', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
