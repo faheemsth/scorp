@@ -688,7 +688,7 @@ class UserController extends Controller
                     $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
                 }
 
-                $users = $usersQuery->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $users = $usersQuery->orderBy('name', 'ASC')->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             } else if($user->type == 'company') {
                 $usersQuery = User::whereNotIn('type', $excludedTypes);
 
@@ -716,7 +716,7 @@ class UserController extends Controller
                     $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
                 }
 
-                $users = $usersQuery->where('brand_id', $user->id)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $users = $usersQuery->where('brand_id', $user->id)->orderBy('name', 'ASC')->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }else {
                 $usersQuery = User::whereNotIn('type', $excludedTypes);
 
@@ -744,7 +744,7 @@ class UserController extends Controller
                     $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
                 }
 
-                $users = $usersQuery->where('brand_id', $user->brand_id)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $users = $usersQuery->orderBy('name', 'ASC')->where('brand_id', $user->brand_id)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }
 
             $brands = User::whereNotIn('type', $excludedTypes)->orderBy('name', 'ASC')->get();
