@@ -14,7 +14,7 @@
 @endsection
 @section('content')
     <div class="">
-        <h2 class="mb-3 f-w-600">{{__('Reset Password')}}</h2>
+        {{-- <h2 class="mb-3 f-w-600">{{__('Reset Password')}}</h2> --}}
         @if(session('status'))
             <p class="mb-4 text-muted">
                 {{ session('status') }}
@@ -26,7 +26,7 @@
         @csrf
         <div class="">
             <div class="form-group mb-3">
-                <label for="email" class="form-label">{{ __('E-Mail') }}</label>
+                <label for="email" class="form-label text-white">{{ __('E-Mail') }}</label>
                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                 @error('email')
                 <span class="invalid-feedback" role="alert">
@@ -49,7 +49,7 @@
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary btn-block mt-2">{{ __('Send Password Reset Link') }}</button>
             </div>
-            <p class="my-4 text-center">{{__("Back to")}} <a href="{{ route('login') }}" class="text-primary">{{__('Sign In')}}</a></p>
+            <p class="my-4 text-center text-white">{{__("Back to")}} <a href="{{ route('login') }}" class="text-primary">{{__('Sign In')}}</a></p>
 
         </div>
     </form>

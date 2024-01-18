@@ -19,7 +19,7 @@
 
 @section('auth-topbar')
     <li class="nav-item ">
-        <select class="btn btn-primary my-1 me-2 " onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" id="language">
+        <select class="  btn btn-primary px-3 " style="border: none;box-shadow: none;background-color: #1F2635;color: white;" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" id="language">
             @foreach(Utility::languages() as $language)
                 <option class="" @if($lang == $language) selected @endif value="{{ route('login',$language) }}">{{Str::upper($language)}}</option>
             @endforeach
@@ -27,16 +27,15 @@
     </li>
 @endsection
 @section('content')
-    <div class="">
-        <h2 class="mb-3 f-w-600">{{__('Login')}}</h2>
+{{Form::open(array('class'=>'mainlogindiv','route'=>'login','method'=>'post','id'=>'loginForm' ))}}
+@csrf
+    <div class="text-center">
+        <i class="fa-solid fa-circle-user mb-4 " style=" font-size:90px ; color: #A6A6A6; "></i>
     </div>
-    {{Form::open(array('route'=>'login','method'=>'post','id'=>'loginForm' ))}}
-    @csrf
-    <div class="">
-        <div class="form-group mb-3">
-            <label for="email" class="form-label">{{__('Email')}}</label>
-            <input class="form-control @error('email') is-invalid @enderror" id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-           {{-- @error('email')
+    <div class="input-group mb-3 border-0">
+        <span class="input-group-text bg-white ps-2 pe-0" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
+        <input type="email" class="form-control border-0 @error('email') is-invalid @enderror" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1">
+         {{-- @error('email')
             <div class="invalid-feedback" role="alert" style="display:block !important">{{ $message }}</div>
             @enderror --}}
             @if (session('error'))
@@ -44,45 +43,41 @@
                     {{ session('error') }}
                 </div>
             @endif
-        </div>
-        @if(env('APP_ENV') == 'local')
-            <div class="form-group mb-3">
-                <label for="password" class="form-label">{{__('Password')}}</label>
-                <input class="form-control @error('password') is-invalid @enderror" id="password" type="password" name="password" required autocomplete="current-password">
-                @error('password')
-                <div class="invalid-feedback" role="alert">{{ $message }}</div>
-                @enderror
+    </div>
+    @if(env('APP_ENV') == 'local')
+      <div class="input-group mb-3 border-0">
+        <span class="input-group-text bg-white ps-2 pe-0" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
+        <input type="text" class="form-control border-0 @error('password') is-invalid @enderror" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1">
+        @error('password')
+        <div class="invalid-feedback" role="alert">{{ $message }}</div>
+        @enderror
+    </div>
+    @endif
+    @if(env('RECAPTCHA_MODULE') == 'on')
+    <div class="form-group mb-3">
+        {!! NoCaptcha::display() !!}
+        @error('g-recaptcha-response')
+        <span class="small text-danger" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+        @enderror
+    </div>
+@endif
+    <div class="mb-3 form-check d-flex justify-content-between align-items-baseline">
+     <div>
+        <input type="checkbox" class="form-check-input">
+        <label class="form-check-label rempass " for="exampleCheck1" style="color: #A6A6A6;">Remember me</label>
 
-            </div> 
-        @endif
-
-        @if(env('RECAPTCHA_MODULE') == 'on')
-            <div class="form-group mb-3">
-                {!! NoCaptcha::display() !!}
-                @error('g-recaptcha-response')
-                <span class="small text-danger" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                @enderror
-            </div>
-        @endif
-        @if(env('APP_ENV') == 'local')
-         <div class="form-group mb-4">
-
-                @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}" class="">{{ __('Forgot Your Password?') }}</a>
-                @endif
-
-        </div> 
-        @endif
-        <div class="d-grid">
-            <button type="submit" class="btn-login btn btn-primary btn-block mt-2" id="login_button">{{__('Login')}}</button>
-        </div>
-        @if($settings['enable_signup'] == 'on')
-
-        <p class="my-4 text-center">{{__("Don't have an account?")}} <a href="{{ route('register',!empty(\Auth::user()->lang)?\Auth::user()->lang:'en') }}" class="text-primary">{{__('Register')}}</a></p>
-        @endif
-
+     </div>
+     @if(env('APP_ENV') == 'local')
+     @if (Route::has('password.request'))
+        <a href="{{ route('password.request') }}" style="text-decoration: none; color:#A6A6A6;" class="rempass">Forgotpassword?</a>
+     @endif
+     @endif
+    </div>
+    <div class="text-center">
+        <button type="submit" id="login_button" class=" w-50 p-2  mt-3 "
+            style="background-color: #000000; color:#FFFFFF ;">Login</button>
     </div>
     {{Form::close()}}
 @endsection
