@@ -263,7 +263,9 @@
                                     <select class="form form-control related_to select2"
                                             id="choices-multiple7" name="related_to" readonly>
                                             <option value="">Related To</option>
-                                            <option value="{{$organization->id}}" selected>{{$organization->name}}</option>
+                                            @if($organization != null)
+                                                <option value="{{$organization->id}}" selected>{{$organization->name}}</option>
+                                            @endif
                                     </select>
                                 </div>
                             </div>
