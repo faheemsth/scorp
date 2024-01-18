@@ -232,7 +232,7 @@
                                             id="choices-multiple6" name="related_type">
                                             <option value="">Select type</option>
                                             <option value="organization"
-                                                 $type == 'organization' ? 'selected' : ''>
+                                                 selected>
                                                 Organization</option>
                                             <option value="lead" {{ $type == 'lead' ? 'selected' : '' }}>Lead
                                             </option>
@@ -245,7 +245,7 @@
                                             name="related_type">
                                             <option value="">Select type</option>
                                              <option value="organization"
-                                                 $type == 'organization' ? 'selected' : '' }}>
+                                                 selected }}>
                                                 Organization</option>
                                             <option value="lead" {{ $type == 'lead' ? 'selected' : '' }}>Lead
                                             </option>
@@ -261,8 +261,9 @@
                                    </label>
                                 <div class="col-sm-6" id="related_to_div">
                                     <select class="form form-control related_to select2"
-                                            id="choices-multiple7" name="related_to">
-                                            <option value="">Related To</option></option>
+                                            id="choices-multiple7" name="related_to" readonly>
+                                            <option value="">Related To</option>
+                                            <option value="{{$organization->id}}" selected>{{$organization->name}}</option>
                                     </select>
                                 </div>
                             </div>
