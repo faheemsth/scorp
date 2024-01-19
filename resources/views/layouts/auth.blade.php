@@ -122,7 +122,7 @@
         }
         @media only screen and (max-width: 768px) {
             .mainlogindiv {
-                width: 90%;
+                width: 95%;
             }
 
             .logosite {
@@ -139,6 +139,9 @@
 
             .textper {
                 font-size: 1.4rem;
+            }
+            .rempass {
+                font-size: 14px;
             }
         }
 
@@ -223,7 +226,7 @@ body{
 
             <!-- SECond section -->
 
-            <div class="col-12 col-md-4  d-flex align-items-center justify-content-center py-5 py-lg-0"
+            <div class="col-12 col-md-4  d-flex align-items-center justify-content-center py-5 py-lg-0 px-0"
                 style="background-color: #1F2635;">
                 @yield('content')
             </div>
