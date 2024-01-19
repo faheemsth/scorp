@@ -4,16 +4,18 @@
     <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
         <div class="card-body px-2 py-0" >
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
             <div class="form-group">
                 {{Form::label('title',__('Announcement Title'),['class'=>'form-label'])}}
+                <span class="text-danger">*</span>
                 {{ Form::text('title', null, array('class' => 'form-control', 'placeholder' => __('Enter Announcement Title'))) }}
 
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                {{Form::label('branch_id',__('Branch'),['class'=>'form-label'])}}
+                {{Form::label('branch_id',__('Brand'),['class'=>'form-label'])}}
+                
                 <select class="form-control select2 brand_id" id="choices-1011" name="brand_id">
                     <option value="" >Select Brand</option>
                     @foreach($companies as $key => $company)
@@ -62,12 +64,14 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{Form::label('start_date',__('Announcement start Date'),['class'=>'form-label'])}}
+                <span class="text-danger">*</span>
                 {{Form::date('start_date',null,array('class'=>'form-control '))}}
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 {{Form::label('end_date',__('Announcement End Date'),['class'=>'form-label'])}}
+                <span class="text-danger">*</span>
                 {{Form::date('end_date',null,array('class'=>'form-control '))}}
             </div>
         </div>

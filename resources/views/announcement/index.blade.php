@@ -50,13 +50,13 @@
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
-                        @can('create task')
-                        <button data-size="lg" data-url="{{ route('announcement.create') }}" data-ajax-popup="true" data-title="{{__('Create New Announcement')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" class="btn px-2 btn-dark">
+                        @can('create announcement')
+                        <button data-size="lg" data-url="{{ route('announcement.create') }}" data-ajax-popup="true" data-title="{{__('Create New Announcement')}}" data-bs-toggle="tooltip" title="{{__('Create Announcement')}}" class="btn px-2 btn-dark">
                             <i class="ti ti-plus" style="font-size:18px"></i>
                         </button>
                         @endcan
-                        <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
 
+                        <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
                     </div>
                 </div>
                     <div class="table-responsive mt-3">
@@ -64,9 +64,9 @@
                             <thead>
                             <tr>
                                 <th>{{__('Title')}}</th>
-                                <th>{{__('Brand')}}</th>
-                                <th>{{__('Region')}}</th>
-                                <th>{{__('Branch')}}</th>
+                                <th class="d-none">{{__('Brand')}}</th>
+                                <th class="d-none">{{__('Region')}}</th>
+                                <th class="d-none">{{__('Branch')}}</th>
                                 <th>{{__('description')}}</th>
                                 <th>{{__('Start Date')}}</th>
                                 <th>{{__('End Date')}}</th>
@@ -79,17 +79,17 @@
                             @foreach ($announcements as $announcement)
                                 <tr>
                                     <td>{{ $announcement->title }}</td>
-                                    <td>
+                                    <td class="d-none">
                                         {{ optional(App\Models\User::find(str_replace(['["', '"]'], '',  $announcement->brand_id)))->name }}
                                     </td>
-                                    <td>
+                                    <td class="d-none">
                                         {{ optional(App\Models\Region::find(str_replace(['["', '"]'], '',  $announcement->region_id)))->name }}
                                     </td>
-                                    <td>
+                                    <td class="d-none">
                                         {{ optional(App\Models\Branch::find(str_replace(['["', '"]'], '',  $announcement->branch_id)))->name }}
                                     </td>
 
-                                    <td>{{ $announcement->description }}</td>
+                                    <td>{{ strlen($announcement->description) > 20 ? substr($announcement->description, 0, 20) . '...' : $announcement->description }}</td>
                                     <td>{{  \Auth::user()->dateFormat($announcement->start_date) }}</td>
                                     <td>{{  \Auth::user()->dateFormat($announcement->end_date) }}</td>
                                     @if(Gate::check('edit announcement') || Gate::check('delete announcement'))
@@ -97,8 +97,6 @@
 
                                             @can('edit announcement')
                                                 <div class="action-btn bg-primary ms-2">
-
-
                                                     <a href="#" data-url="{{ URL::to('announcement/'.$announcement->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Announcement')}}" class="x-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
                                                         <i class="ti ti-pencil text-white"></i>
                                                     </a>
