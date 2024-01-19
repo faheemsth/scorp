@@ -767,11 +767,12 @@ class OrganizationController extends Controller
     {
         $type=$_GET['type'];
         $BranchId=$_GET['id'];
+
         if ($type == 'lead') {
-            $branches =\App\Models\Lead::where('branch_id',$BranchId)->get()->pluck('name', 'id')->toArray();
-            $html = '<select class="form form-control select2" id="branch_id" name="related_to" > <option value="">Related To</option> ';
-            foreach ($branches as $key => $branch) {
-                $html .= '<option value="' . $key . '">' . $branch . '</option> ';
+            $leads =\App\Models\Lead::where('branch_id',$BranchId)->get()->pluck('name', 'id')->toArray();
+            $html = '<select class="form form-control select2" id="choices-multiple8" name="related_to" > <option value="">Related To</option> ';
+            foreach ($leads as $key => $lead) {
+                $html .= '<option value="' . $key . '">' . $lead . '</option> ';
             }
             $html .= '</select>';
             return json_encode([

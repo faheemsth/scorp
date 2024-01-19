@@ -410,11 +410,14 @@ var type = {{ $task->related_to }};
     // change branch for assign
     function Change(selectedBranch) {
         var id = selectedBranch.value;
+        var type = 'branch';
+
         $.ajax({
             type: 'GET',
-            url: '{{ route('lead_companyemployees') }}',
+            url: '{{ route('region_brands_task') }}',
             data: {
-                id: id
+                id: id,
+                type: type
             },
             success: function(data) {
                 data = JSON.parse(data);
