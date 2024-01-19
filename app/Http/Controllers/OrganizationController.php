@@ -666,7 +666,7 @@ class OrganizationController extends Controller
         $validator = \Validator::make(
             $request->all(),
             [
-                'title' => 'required',
+               // 'title' => 'required',
                 'description' => 'required'
             ]
         );
