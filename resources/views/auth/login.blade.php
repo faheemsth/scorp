@@ -34,7 +34,7 @@
     </div>
     <div class="input-group mb-3 border-0">
         <span class="input-group-text bg-white ps-2 pe-0" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-        <input type="email" class="form-control border-0 @error('email') is-invalid @enderror" placeholder="Email" aria-label="Email" aria-describedby="basic-addon1">
+        <input class="form-control border-0 @error('email') is-invalid @enderror" placeholder="Email" aria-label="Email" id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
          {{-- @error('email')
             <div class="invalid-feedback" role="alert" style="display:block !important">{{ $message }}</div>
             @enderror --}}
@@ -47,7 +47,7 @@
     @if(env('APP_ENV') == 'local')
       <div class="input-group mb-3 border-0">
         <span class="input-group-text bg-white ps-2 pe-0" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
-        <input type="text" class="form-control border-0 @error('password') is-invalid @enderror" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1">
+        <input class="form-control border-0 @error('password') is-invalid @enderror" id="password" type="password" name="password" required autocomplete="current-password" >
         @error('password')
         <div class="invalid-feedback" role="alert">{{ $message }}</div>
         @enderror
@@ -64,8 +64,8 @@
     </div>
 @endif
     <div class="mb-3 form-check d-flex justify-content-between align-items-baseline">
-     <div>
-        <input type="checkbox" class="form-check-input">
+     <div class="">
+        <input type="checkbox" class="form-check-input" required>
         <label class="form-check-label rempass " for="exampleCheck1" style="color: #A6A6A6;">Remember me</label>
 
      </div>
