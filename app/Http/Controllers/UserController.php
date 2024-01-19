@@ -667,12 +667,12 @@ class UserController extends Controller
                 if (!empty($_GET['brand'])) {
                     $usersQuery->where('brand_id', $_GET['brand']);
                 }
-                if (!empty($_GET['Region'])) {
-                    $usersQuery->where('region_id', $_GET['Region']);
+                if (!empty($_GET['region_id'])) {
+                    $usersQuery->where('region_id', $_GET['region_id']);
                 }
 
-                if (!empty($_GET['Branch'])) {
-                    $usersQuery->where('branch_id', $_GET['Branch']);
+                if (!empty($_GET['branch_id'])) {
+                    $usersQuery->where('branch_id', $_GET['branch_id']);
                 }
 
                 if (!empty($_GET['Name'])) {
@@ -695,12 +695,12 @@ class UserController extends Controller
                 if (!empty($_GET['brand'])) {
                     $usersQuery->where('brand_id', $_GET['brand']);
                 }
-                if (!empty($_GET['Region'])) {
-                    $usersQuery->where('region_id', $_GET['Region']);
+                if (!empty($_GET['region_id'])) {
+                    $usersQuery->where('region_id', $_GET['region_id']);
                 }
 
-                if (!empty($_GET['Branch'])) {
-                    $usersQuery->where('branch_id', $_GET['Branch']);
+                if (!empty($_GET['branch_id'])) {
+                    $usersQuery->where('branch_id', $_GET['branch_id']);
                 }
 
                 if (!empty($_GET['Name'])) {
@@ -723,12 +723,12 @@ class UserController extends Controller
                 if (!empty($_GET['brand'])) {
                     $usersQuery->where('brand_id', $_GET['brand']);
                 }
-                if (!empty($_GET['Region'])) {
-                    $usersQuery->where('region_id', $_GET['Region']);
+                if (!empty($_GET['region_id'])) {
+                    $usersQuery->where('region_id', $_GET['region_id']);
                 }
 
-                if (!empty($_GET['Branch'])) {
-                    $usersQuery->where('branch_id', $_GET['Branch']);
+                if (!empty($_GET['branch_id'])) {
+                    $usersQuery->where('branch_id', $_GET['branch_id']);
                 }
 
                 if (!empty($_GET['Name'])) {
@@ -744,7 +744,7 @@ class UserController extends Controller
                     $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
                 }
 
-                $users = $usersQuery->orderBy('name', 'ASC')->where('brand_id', $user->brand_id)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $users = $usersQuery->where('brand_id', $user->brand_id)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             }
 
             $brands = User::whereNotIn('type', $excludedTypes)->orderBy('name', 'ASC')->get();

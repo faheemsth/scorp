@@ -108,6 +108,24 @@ class RegionController extends Controller
                 'branches' => $html,
             ]);
 
+        }else if($type == 'branch'){
+
+            $employees = User::where('branch_id', $id)
+            ->where('type', '!=', 'company')
+            ->pluck('name', 'id')
+            ->toArray();
+
+            $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="assigned_to" > <option value="">Select User</option> ';
+            foreach ($employees as $key => $user) {
+                $html .= '<option value="' . $key . '">' . $user . '</option> ';
+            }
+            $html .= '</select>';
+
+            return json_encode([
+                'status' => 'success',
+                'employees' => $html,
+            ]);
+
         }else{
 
             $region = Region::where('id', $id)->first();

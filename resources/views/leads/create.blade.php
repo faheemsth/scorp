@@ -157,8 +157,7 @@
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Agency') }} <span
-                                                class="text-danger">*</span>
+                                                {{ __('Agency') }} 
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choice-7" name="lead_organization">
@@ -187,8 +186,7 @@
                                         </tr> --}}
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Lead Source') }} <span
-                                                class="text-danger">*</span>
+                                                {{ __('Lead Source') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choice-4" name="lead_source">
@@ -202,8 +200,7 @@
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Drive Link') }} <span
-                                                class="text-danger">*</span>
+                                                {{ __('Drive Link') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="text" class="form form-control" name="drive_link" value="">
@@ -240,8 +237,7 @@
 
                                         <tr class="d-none">
                                             <td class="" style="width: 153px; font-size: 13px;">
-                                                {{ __('Email Address (Referrer)') }} <span
-                                                class="text-danger">*</span>
+                                                {{ __('Email Address (Referrer)') }} 
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="email" class="form-control" name="referrer_email">
@@ -300,8 +296,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="" style="width: 115PX; font-size: 13px;padding-right: 20px;">
-                                                Address <span
-                                                class="text-danger">*</span>
+                                                Address 
                                             </td>
                                             <td class="" style="width: 350PX; font-size: 13px; bg-danger">
                                                 <div class="form-floating">
@@ -348,8 +343,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="" style="width: 100px;  font-size: 13px;">
-                                                Description <span
-                                                class="text-danger">*</span>
+                                                Description
                                             </td>
                                             <td style="width: 374px; text-align: right; font-size: 13px;">
                                                 <div class="" style="margin-left: 14px;">
@@ -377,8 +371,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Tag List') }} <span
-                                                class="text-danger">*</span>
+                                                {{ __('Tag List') }} 
                                             </td>
                                             <td class="" style="padding-left: 10px;">
                                                 <select name="lead_tags_list" id="choice-6" class="form form-control select2">

@@ -91,7 +91,7 @@
                                 <label for="branches" class="col-sm-3 col-form-label">Branch<span
                                     class="text-danger">*</span></label>
                                 <div class="form-group col-md-6" id="branch_div">
-                                    <select name="branch_id" id="branchs" class="form-control select2 branchs"
+                                    <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
                                         onchange="Change(this)">
                                         <option value="">Select Branch</option>
                                     </select>
@@ -228,7 +228,7 @@
                                     </label>
                                 <div class="col-sm-6">
                                     @if (isset($type) && !empty($type))
-                                        <select class="form form-control select2 related_type" disabled onchange="ChangeRelated()"
+                                        <select class="form form-control select2 related_type" disabled 
                                             id="choices-multiple6" name="related_type">
                                             <option value="">Select type</option>
                                             <option value="organization"
@@ -241,7 +241,7 @@
                                         </select>
                                         <input type="hidden" value="{{ $type }}" name="related_type">
                                     @else
-                                        <select class="form form-control select2 related_type" id="choices-multiple6" onchange="ChangeRelated()"
+                                        <select class="form form-control select2 related_type" id="choices-multiple6" 
                                             name="related_type">
                                             <option value="">Select type</option>
                                              <option value="organization"  {{ $type == 'organi' ? 'selected' : '' }} >
@@ -343,13 +343,17 @@
 <script>
 var BranchId = '';
     $("#choices-multiple6").on("change", function() {
+        // var type = $(this).val();
+        // Id = BranchId
+
+        var id = $("#branch_id").val();
         var type = $(this).val();
-        Id = BranchId
+
         $.ajax({
             type: 'GET',
             url: '{{ route('GetBranchByType') }}',
             data: {
-                id: Id,
+                id: id,
                 type: type
             },
             success: function(data) {
@@ -367,12 +371,14 @@ var BranchId = '';
     // change branch for assign
     function Change(selectedBranch) {
         var id = selectedBranch.value;
-        BranchId = id;
+        var type = 'branch';
+
         $.ajax({
             type: 'GET',
-            url: '{{ route('lead_companyemployees') }}',
+            url: '{{ route('region_brands_task') }}',
             data: {
-                id: id
+                id: id,
+                type: type
             },
             success: function(data) {
                 data = JSON.parse(data);
@@ -384,6 +390,8 @@ var BranchId = '';
             }
         });
     }
+
+   
     // change brand for region
     $("#brands").on("change", function() {
         var id = $(this).val();

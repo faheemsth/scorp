@@ -110,7 +110,7 @@
                                             @if (!empty($Regions))
                                                 @foreach ($Regions as $key => $Region)
                                                     <option value="{{ $key }}"
-                                                        <?= isset($_GET['Region']) && isset($key) && $_GET['Region'] == $key ? 'selected' : '' ?>>
+                                                        <?= isset($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : '' ?>>
                                                         {{ $Region }}</option>
                                                 @endforeach
                                             @endif
@@ -126,7 +126,7 @@
                                             @if (!empty($Branchs))
                                                 @foreach ($Branchs as $key => $Branch)
                                                     <option value="{{ $key }}"
-                                                        <?= isset($_GET['Branch']) && isset($key) && $_GET['Branch'] == $key ? 'selected' : '' ?>>
+                                                        <?= isset($_GET['branch_id']) && isset($key) && $_GET['branch_id'] == $key ? 'selected' : '' ?>>
                                                         {{ $Branch }}</option>
                                                 @endforeach
                                             @endif

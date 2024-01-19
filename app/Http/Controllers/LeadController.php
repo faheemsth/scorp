@@ -301,7 +301,10 @@ class LeadController extends Controller
     public function getCompanyEmployees(){
         $id = $_GET['id'];
 
-        $employees =  User::where('brand_id', Branch::find($id)->brands)->pluck('name', 'id')->toArray();
+        $employees = User::where('brand_id', Branch::find($id)->brands)
+                    ->where('type', '!=', 'company')
+                    ->pluck('name', 'id')
+                    ->toArray();
         $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
 
 
