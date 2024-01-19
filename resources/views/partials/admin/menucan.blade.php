@@ -357,6 +357,23 @@
             </li>
         @endif
     @endcan
+
+    @can('manage invoice')
+        {{-- announcement  --}}
+        <li class=" nav-item {{ Request::segment(1) == 'invoice' ? 'active' : '' }}">
+            <a href="{{ url('invoice') }}" class="nav-link">
+                <img src="{{ asset('assets/cs-theme/icons/Group 138.png') }}" id="icon1" width="15px"
+                    height="15px" style="margin-top:-6px" alt="" srcset="">
+                <img src="{{ asset('assets/cs-theme/icons/Group 138.png') }}" id="icon2" width="15px"
+                    height="15px" style="margin-top:-6px" alt="" srcset="">
+
+                <span>{{ __('Invoice') }}</span>
+            </a>
+        </li>
+        {{-- end announcement  --}}
+        @endcan
+
+        
     <!--------------------- End CRM ----------------------------------->
         {{--  --}}
         @can('manage report')
@@ -909,7 +926,9 @@
                 </div>
             </li>
         @endif
-        {{-- end setting  --}}
+        {{-- end setting  --}}   
+
+
 
         {{-- announcement  --}}
         <li class=" nav-item {{ Request::segment(1) == 'announcement' ? 'active' : '' }}">
