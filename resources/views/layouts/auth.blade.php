@@ -202,9 +202,9 @@ body{
                 </div>
             </div>
         </nav>
-        <div class="row px-0 mx-0" style="min-height:calc( 100vh - 10vh);">
+        <div class="row px-0 mx-0 justify-content-end" style="min-height:calc( 100vh - 9.4vh);">
             <div
-                class="col-lg-7 col-md-7  d-none d-md-flex justify-content-center align-items-center py-5 py-lg-0 mt-3 mt-lg-0">
+                class="col-lg-8 col-md-7  d-none d-md-flex justify-content-center align-items-center py-5 py-lg-0 mt-3 mt-lg-0">
                 <div class="mainlogindiv text-center">
 
                     <img src="{{ asset('assets/cs-theme/assets/images/Frame.png') }}" alt="" class="loginimg">
@@ -223,7 +223,7 @@ body{
 
             <!-- SECond section -->
 
-            <div class="col-12 col-md-5 col-lg-4 d-flex align-items-center justify-content-center py-5 py-lg-0"
+            <div class="col-12 col-md-4  d-flex align-items-center justify-content-center py-5 py-lg-0"
                 style="background-color: #1F2635;">
                 @yield('content')
             </div>

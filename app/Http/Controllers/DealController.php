@@ -2814,10 +2814,10 @@ class DealController extends Controller
                     $notification->is_read = 0;
                     $notification->task_id = $task->id;
                     $notification->remainder_date = $a_date;
-    
+
                     $notification->save();
                 }
-                
+
 
             }
 
@@ -2856,7 +2856,7 @@ class DealController extends Controller
 
                         $ext_not = Notification::where('task_id',$task->id)->where('due_date',$a_date)->first();
                         if($ext_not){
-        
+
                         }else{
                             $notification = new Notification;
                             $notification->user_id = 0;
@@ -2868,7 +2868,7 @@ class DealController extends Controller
 
                             $notification->save();
                         }
-                
+
 
             }
 

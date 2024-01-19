@@ -47,7 +47,7 @@
     @if(env('APP_ENV') == 'local')
       <div class="input-group mb-3 border-0">
         <span class="input-group-text bg-white ps-2 pe-0" id="basic-addon1"><i class="fa-solid fa-key"></i></span>
-        <input class="form-control border-0 @error('password') is-invalid @enderror" id="password" type="password" name="password" required autocomplete="current-password" >
+        <input class="form-control border-0 @error('password') is-invalid @enderror" id="password" type="password" name="password" placeholder="Password" required autocomplete="current-password" >
         @error('password')
         <div class="invalid-feedback" role="alert">{{ $message }}</div>
         @enderror

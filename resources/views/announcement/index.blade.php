@@ -23,7 +23,7 @@
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL announcement
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <ul class="dropdown-menu d-none" aria-labelledby="dropdownMenuButton1">
                                 {{-- <li><a class="dropdown-item assigned_to" href="javascript:void(0)">Assigned to</a></li>
                                 <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
                                 <li><a class="dropdown-item" href="#">Brand Change</a></li>--}}
@@ -59,7 +59,7 @@
                         <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
                     </div>
                 </div>
-                    <div class="table-responsive mt-3">
+                    <div class="table mt-3">
                     <table class="table ">
                             <thead>
                             <tr>
@@ -70,15 +70,16 @@
                                 <th>{{__('description')}}</th>
                                 <th>{{__('Start Date')}}</th>
                                 <th>{{__('End Date')}}</th>
-                                @if(Gate::check('edit announcement') || Gate::check('delete announcement'))
-                                    <th>{{__('Action')}}</th>
-                                @endif
+
                             </tr>
                             </thead>
                             <tbody class="font-style">
                             @foreach ($announcements as $announcement)
                                 <tr>
-                                    <td>{{ $announcement->title }}</td>
+                                    <td>
+
+                                        <span style="cursor:pointer" class="task-name hyper-link" onclick="openSidebar('/announcement_details?id='+{{ $announcement->id }})" data-task-id="{{ $announcement->id }}">{{ $announcement->title }}</span>
+
                                     <td class="d-none">
                                         {{ optional(App\Models\User::find(str_replace(['["', '"]'], '',  $announcement->brand_id)))->name }}
                                     </td>
@@ -92,30 +93,7 @@
                                     <td>{{ strlen($announcement->description) > 20 ? substr($announcement->description, 0, 20) . '...' : $announcement->description }}</td>
                                     <td>{{  \Auth::user()->dateFormat($announcement->start_date) }}</td>
                                     <td>{{  \Auth::user()->dateFormat($announcement->end_date) }}</td>
-                                    @if(Gate::check('edit announcement') || Gate::check('delete announcement'))
-                                        <td>
 
-                                            @can('edit announcement')
-                                                <div class="action-btn bg-primary ms-2">
-                                                    <a href="#" data-url="{{ URL::to('announcement/'.$announcement->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Announcement')}}" class="x-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
-                                                        <i class="ti ti-pencil text-white"></i>
-                                                    </a>
-
-                                                </div>
-                                            @endcan
-
-                                            @can('delete announcement')
-                                                <div class="action-btn bg-danger ms-2">
-                                                {!! Form::open(['method' => 'DELETE', 'route' => ['announcement.destroy', $announcement->id],'id'=>'delete-form-'.$announcement->id]) !!}
-                                                        <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$announcement->id}}').submit();">
-                                                            <i class="ti ti-trash text-white text-white"></i>
-                                                        </a>
-                                                    {!! Form::close() !!}
-                                                </div>
-                                            @endcan
-
-                                        </td>
-                                    @endif
                                 </tr>
                             @endforeach
                             </tbody>
@@ -129,7 +107,64 @@
 
 @push('script-page')
     <script>
+        function openNav(announcement_id) {
+        var ww = $(window).width()
 
+        $.ajax({
+            type: 'GET',
+            url: "{{ route('announcement-detail') }}",
+            data: {
+                announcement_id: announcement_id
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status == 'success') {
+                    $("#mySidenav").html(data.html);
+                    $(".block-screen").css('display', 'none');
+                }
+            }
+        });
+
+
+        if (ww < 500) {
+            $("#mySidenav").css('width', ww + 'px');
+            $("#main").css('margin-right', ww + 'px');
+        } else {
+            $("#mySidenav").css('width', '850px');;
+            $("#main").css('margin-right', "850px");
+        }
+
+        $("#modal-discussion-add").attr('data-org-id', announcement_id);
+        $('.modal-discussion-add-span').removeClass('ti-minus');
+        $('.modal-discussion-add-span').addClass('ti-plus');
+        $(".add-discussion-div").addClass('d-none');
+        $(".block-screen").css('display', 'block');
+        $("#body").css('overflow', 'hidden');
+
+        // var csrf_token = $('meta[name="csrf-token"]').attr('content');
+
+        // $.ajax({
+        //     url: "/leads/getDiscussions",
+        //     data: {
+        //         lead_id,
+        //         _token: csrf_token,
+        //     },
+        //     type: "POST",
+        //     cache: false,
+        //     success: function(data) {
+        //         data = JSON.parse(data);
+        //         //console.log(data);
+
+        //         if (data.status) {
+        //             $(".discussion-list-group").html(data.content);
+        //             $(".lead_id").val(lead_id);
+
+
+        //         }
+        //     }
+        // });
+
+    }
         //Branch Wise Deapartment Get
         $(document).ready(function () {
             var b_id = $('#branch_id').val();

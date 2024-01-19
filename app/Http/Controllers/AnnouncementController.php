@@ -57,7 +57,15 @@ class AnnouncementController extends Controller
             return response()->json(['error' => __('Permission denied.')], 401);
         }
     }
+    public function announcement_detail(Request $request){
+        $announcement = Announcement::find( $request->id );
+        $html = view('announcement.announcement_details',compact('announcement'))->render();
 
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
+    }
     public function store(Request $request)
     {
 
@@ -122,7 +130,7 @@ class AnnouncementController extends Controller
                 }
             }else{
                 $brand_id = $request->brand_id;
-                
+
                 //now check regions, if empty get all the region employee else go to check branch
                 if(empty($request->region_id)){
 

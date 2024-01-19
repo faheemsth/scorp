@@ -914,11 +914,8 @@
         {{-- announcement  --}}
         <li class=" nav-item {{ Request::segment(1) == 'announcement' ? 'active' : '' }}">
             <a href="{{ url('announcement') }}" class="nav-link">
-                <img src="{{ asset('assets/cs-theme/icons/Layer_1 (4).png') }}" id="icon1" width="15px"
-                    height="15px" style="margin-top:-6px" alt="" srcset="">
-                <img src="{{ asset('assets/cs-theme/icons/Layer_1(4.1).svg') }}" id="icon2" width="15px"
-                    height="15px" style="margin-top:-6px" alt="" srcset="">
-
+                    <i class="fa fa-solid fa-bullhorn" id="icon1"  style="color: #ffff;font-size: 15px;"></i>
+                    <i class="fa fa-solid fa-bullhorn" id="icon2"  style="color: #2e82d0;font-size: 15px;"></i>
                 <span>{{ __('Announcement') }}</span>
             </a>
         </li>
