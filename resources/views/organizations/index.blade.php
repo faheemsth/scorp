@@ -349,10 +349,6 @@
                         padding-top: 0px;
                     }
 
-                    .col-form-label {
-                        text-align: center;
-                    }
-
                     .space {
                         padding: 3px 3px;
                     }

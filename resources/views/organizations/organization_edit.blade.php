@@ -9,10 +9,6 @@
                     padding-top: 0px;
                 }
 
-                .col-form-label {
-                    text-align: center;
-                }
-
                 .space {
                     padding: 3px 3px;
                 }
@@ -36,16 +32,14 @@
                                     <div class="accordion-body">
 
                                         <div class="form-group row">
-                                            <label for="organization-name" class="col-sm-3 col-form-label">Organization
-                                                Name</label>
+                                            <label for="organization-name" class="col-sm-3 col-form-label">Name</label>
                                             <div class="col-sm-6">
                                                 <input type="text" class="form-control" id="organization-name" value="{{ $org->name }}" placeholder="Organization Name" name='organization_name'>
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            <label for="type-of-organization" class="col-sm-3 col-form-label">Type Of
-                                                Organization</label>
+                                            <label for="type-of-organization" class="col-sm-3 col-form-label">Type</label>
                                             <div class="col-sm-6">
                                                 <select name="organization_type" id="" class="form form-select">
                                                     <option value="">Select Type</option>
