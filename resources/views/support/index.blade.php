@@ -144,21 +144,23 @@
                                 placeholder="Search this list..." aria-label="Username"
                                 aria-describedby="basic-addon1">
                         </div>
+
                         <a href="#" data-size="lg" data-url="{{ route('support.create') }}" data-ajax-popup="true"
                             data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Support')}}" class="btn btn-dark py-2 px-2">
                                 <i class="ti ti-plus" style="font-size:18px"></i>
                             </a>
+                       
                         <!-- @can('create support') -->
 
                         <!-- <div class="float-end"> -->
-                            <a href="{{ route('support.grid') }}" class="btn btn-dark py-2 px-2" data-bs-toggle="tooltip" title="{{__('Grid View')}}">
+                            <!-- <a href="{{ route('support.grid') }}" class="btn btn-dark py-2 px-2" data-bs-toggle="tooltip" title="{{__('Grid View')}}">
                                 <i class="ti ti-layout-grid text-white" style="font-size:18px"></i>
-                            </a>
+                            </a> -->
                     
-                           <a href="#" data-size="lg" data-url="{{ route('support.create') }}" data-ajax-popup="true"
+                           <!-- <a href="#" data-size="lg" data-url="{{ route('support.create') }}" data-ajax-popup="true"
                             data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Support')}}" class="btn btn-dark py-2 px-2">
                                 <i class="ti ti-plus" style="font-size:18px"></i>
-                            </a>
+                            </a> -->
                     
                         <!-- </div> -->
                         <!-- @endcan  -->
@@ -356,7 +358,7 @@
                                             <i class="ti ti-corner-up-left text-white"></i>
                                         </a>
                                     </div>
-                                    @if(\Auth::user()->type=='company' || \Auth::user()->id==$support->ticket_created)
+                                    @if(\Auth::user()->type=='super admin')
                                         <div class="action-btn bg-primary ms-2">
                                             <a href="#" data-size="lg" data-url="{{ route('support.edit',$support->id) }}" data-ajax-popup="true" data-title="{{__('Edit Support')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
                                                 <i class="ti ti-pencil text-white"></i>

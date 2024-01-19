@@ -41,6 +41,14 @@ class SupportController extends Controller
             $countonholdTicket  = Support::where('status', '=', 'on hold')->where('created_by', '=', \Auth::user()->creatorId())->count();
             $countCloseTicket = Support::where('status', '=', 'close')->where('created_by', '=', \Auth::user()->creatorId())->count();
             return view('support.index', compact('supports','countTicket','countOpenTicket','countonholdTicket','countCloseTicket'));
+        } elseif(\Auth::user()->type == 'sth_team')
+        {
+            $supports = Support::where('user', \Auth::user()->id)->get();
+            $countTicket      = Support::where('created_by', '=', \Auth::user()->creatorId())->count();
+            $countOpenTicket  = Support::where('status', '=', 'open')->where('created_by', '=', \Auth::user()->creatorId())->count();
+            $countonholdTicket  = Support::where('status', '=', 'on hold')->where('created_by', '=', \Auth::user()->creatorId())->count();
+            $countCloseTicket = Support::where('status', '=', 'close')->where('created_by', '=', \Auth::user()->creatorId())->count();
+            return view('support.index', compact('supports','countTicket','countOpenTicket','countonholdTicket','countCloseTicket'));
         }
         else
         {
@@ -66,7 +74,7 @@ class SupportController extends Controller
         ];
         //$status = Support::$status;
         $status = Support::status();
-        $users = User::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        $users = User::where('type', 'sth_team')->get()->pluck('name', 'id')->toArray();
         return view('support.create', compact('priority', 'users','status'));
     }
 
@@ -187,8 +195,9 @@ class SupportController extends Controller
         ];
         //$status = Support::$status;
         $status = Support::status();
-        $users = User::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+       // $users = User::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
 
+        $users = User::where('type', 'sth_team')->get()->pluck('name', 'id')->toArray();
         return view('support.edit', compact('priority', 'users', 'support','status'));
     }
 
