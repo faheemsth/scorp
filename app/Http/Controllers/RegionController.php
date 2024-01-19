@@ -162,18 +162,22 @@ class RegionController extends Controller
         $type = $request->type;
 
         if($type == 'brand'){
-            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+          //  $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+
+            $regions = Region::where('brands', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+           
             $html = ' <label for="region_id">Regions</label><select class="form form-control select2" id="region_id" name="region_id" > <option value="">Select Region</option> ';
             foreach ($regions as $key => $region) {
                 $html .= '<option value="' . $key . '">' . $region . '</option> ';
             }
             $html .= '</select>';
+    
+
             return json_encode([
                 'status' => 'success',
                 'regions' => $html,
             ]);
-
-        }else if($type == 'region'){
+        } else if($type == 'region'){
 
             $branches = Branch::where('region_id', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $html = ' <label for="branch_id">Branch</label><select class="form form-control select2" id="branch_id" name="branch_id" > <option value="">Select Branch</option> ';

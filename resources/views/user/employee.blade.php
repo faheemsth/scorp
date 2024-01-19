@@ -101,9 +101,9 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-4 mt-2" id="region_div">
+                                    <div class="col-md-4 mt-2" id="region_filter_div">
                                         <label for="">Region</label>
-                                        <select name="Region" class="form form-control select2" id="region_id"
+                                        <select name="Region" class="form form-control select2" id="region_filter_id"
                                             style="width: 95%; border-color:#aaa">
                                             <option value="">Select Region</option>
 
@@ -117,9 +117,9 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-4 mt-2" id="branch_div">
+                                    <div class="col-md-4 mt-2" id="branch_filter_div">
                                         <label for="">Branch</label>
-                                        <select name="Branch" class="form form-control select2" id="branch_id"
+                                        <select name="Branch" class="form form-control select2" id="branch_filter_id"
                                             style="width: 95%; border-color:#aaa">
                                             <option value="">Select Branch</option>
 
@@ -286,8 +286,8 @@
                 data = JSON.parse(data);
 
                 if (data.status === 'success') {
-                    $('#region_div').html('');
-                    $("#region_div").html(data.regions);
+                    $('#region_filter_div').html('');
+                    $("#region_filter_div").html(data.regions);
                     select2();
                 } else {
                     console.error('Server returned an error:', data.message);
@@ -300,7 +300,7 @@
     });
 
 
-    $(document).on("change", "#region_id", function() {
+    $(document).on("change", "#region_filter_div #region_id", function() {
         var id = $(this).val();
         var type = 'region';
         $.ajax({
@@ -314,11 +314,9 @@
                 data = JSON.parse(data);
 
                 if (data.status === 'success') {
-                    if (type == 'region') {
-                        $('#branch_div').html('');
-                        $("#branch_div").html(data.branches);
+                        $('#branch_filter_div').html('');
+                        $("#branch_filter_div").html(data.branches);
                         select2();
-                    }
                 } else {
                     console.error('Server returned an error:', data.message);
                 }

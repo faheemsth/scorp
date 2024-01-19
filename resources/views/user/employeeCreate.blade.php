@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="form-group col-md-6" id="region_div">
-                    {{ Form::label('role', __('Region'), ['class' => 'form-label']) }}
+                    {{ Form::label('role', __('Regions'), ['class' => 'form-label']) }}
                     {!! Form::select('region', $Region, null, [
                         'class' => 'form-control select2',
                         'id' => 'region_id'
@@ -227,7 +227,7 @@
         });
 
 
-        $(document).on("change", "#region_id" ,function(){
+        $(document).on("change", "#region_div #region_id" ,function(){
             var id = $(this).val();
             var type = 'region';
             $.ajax({
