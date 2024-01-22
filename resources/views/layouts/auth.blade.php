@@ -169,7 +169,7 @@ body{
     </style>
 </head>
 
-<body class="{{ $color }}">
+<body class="{{ $color }}"  style="overflow: hidden;">
     <div class="container-fluid px-0 loginpagescroll">
         <nav class="navbar navbar-expand-md navbar-light " style="background-color: #B3CDE1;">
             <div class="container-fluid px-md-5 mx-lg-5">
@@ -205,7 +205,7 @@ body{
                 </div>
             </div>
         </nav>
-        <div class="row px-0 mx-0 justify-content-end" style="min-height:calc( 100vh - 9.4vh);">
+        <div class="row px-0 mx-0 justify-content-end" style="min-height:100vh;">
             <div
                 class="col-lg-8 col-md-7  d-none d-md-flex justify-content-center align-items-center py-5 py-lg-0 mt-3 mt-lg-0">
                 <div class="mainlogindiv text-center">
