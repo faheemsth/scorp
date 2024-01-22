@@ -50,21 +50,24 @@ class UserController extends Controller
 
         if (\Auth::user()->can('manage user')) {
             if (\Auth::user()->type == 'super admin') {
-                $users = User::where('created_by', '=', $user->creatorId())
-                    ->where(function ($query) {
-                        $query->where('type', '=', 'company')
-                            ->orWhere('type', '=', 'team');
-                    });
+                // $users = User::where('created_by', '=', $user->creatorId())
+                //     ->where(function ($query) {
+                //         $query->where('type', '=', 'company')
+                //             ->orWhere('type', '=', 'team');
+                //     });
 
-                    if (isset($_GET['Brand']) && !empty($_GET['Brand'])) {
-                        $brandId = intval($_GET['Brand']); // Assuming it's an integer, adjust accordingly
-                        $users->where('id', $brandId);
-                        }
 
-                        if (isset($_GET['Director']) && !empty($_GET['Director'])) {
-                        $directorId = intval($_GET['Director']); // Assuming it's an integer, adjust accordingly
-                        $users->where('project_director_id', $directorId);
-                        }
+                $users = User::where('type', 'company');  
+
+                if (isset($_GET['Brand']) && !empty($_GET['Brand'])) {
+                    $brandId = intval($_GET['Brand']); // Assuming it's an integer, adjust accordingly
+                    $users->where('id', $brandId);
+                }
+
+                if (isset($_GET['Director']) && !empty($_GET['Director'])) {
+                    $directorId = intval($_GET['Director']); // Assuming it's an integer, adjust accordingly
+                    $users->where('project_director_id', $directorId);
+                }
 
                 $users = $users->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
             } else {
@@ -75,26 +78,25 @@ class UserController extends Controller
 
                 $users = User::query();
                 if (isset($_GET['Brand']) && !empty($_GET['Brand'])) {
-                      $brandId = intval($_GET['Brand']); // Assuming it's an integer, adjust accordingly
-                      $users->where('id', $brandId);
-                  }
-  
-                  if (isset($_GET['Director']) && !empty($_GET['Director'])) {
-                      $directorId = intval($_GET['Director']); // Assuming it's an integer, adjust accordingly
-                      $users->where('project_director_id', $directorId);
-                  }
+                    $brandId = intval($_GET['Brand']); // Assuming it's an integer, adjust accordingly
+                    $users->where('id', $brandId);
+                }
+
+                if (isset($_GET['Director']) && !empty($_GET['Director'])) {
+                    $directorId = intval($_GET['Director']); // Assuming it's an integer, adjust accordingly
+                    $users->where('project_director_id', $directorId);
+                }
 
 
                 $users = $users->whereIn('id', $brand_ids)->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);;
-
             }
             $total_records = $users->total();
 
             $projectDirectors = allUsers();
             // return view('user.index-Old')->with('users', $users);
-            $Brands = User::where('type','company')->pluck('name', 'id')->toArray();
+            $Brands = User::where('type', 'company')->pluck('name', 'id')->toArray();
             $ProjectDirector = User::where('type', 'Project Director')->pluck('name', 'id')->toArray();
-            return view('user.index', compact('total_records', 'projectDirectors','Brands','ProjectDirector'))->with('users', $users);
+            return view('user.index', compact('total_records', 'projectDirectors', 'Brands', 'ProjectDirector'))->with('users', $users);
         } else {
             return redirect()->back();
         }
@@ -121,7 +123,6 @@ class UserController extends Controller
 
             // Check if the email already exists in the user table
             $existingUser = User::where('email', $uniqueEmail)->first();
-
         } while ($existingUser);
 
         return $uniqueEmail;
@@ -159,12 +160,12 @@ class UserController extends Controller
                 $user['default_pipeline'] = 1;
                 $user['plan'] = 1;
                 $user['lang']       = !empty($default_language) ? $default_language->value : '';
-               $user['created_by'] = \Auth::user()->creatorId();
-               $user['plan']       = Plan::first()->id;
-               $user['domain_link'] = $request->domain_link;
-               $user['website_link'] = $request->website_link;
-               $user['drive_link'] = $request->drive_link;
-               $user['project_director_id'] = $request->project_director;
+                $user['created_by'] = \Auth::user()->creatorId();
+                $user['plan']       = Plan::first()->id;
+                $user['domain_link'] = $request->domain_link;
+                $user['website_link'] = $request->website_link;
+                $user['drive_link'] = $request->drive_link;
+                $user['project_director_id'] = $request->project_director;
 
                 $user->save();
 
@@ -216,15 +217,15 @@ class UserController extends Controller
                     //                $user->userDefaultData();
                     $user->userDefaultDataRegister($user->id);
                     $user->userWarehouseRegister($user->id);
-    
+
                     //default bank account for new company
                     $user->userDefaultBankAccount($user->id);
-    
+
                     Utility::chartOfAccountTypeData($user->id);
                     Utility::chartOfAccountData($user);
                     // default chart of account for new company
                     Utility::chartOfAccountData1($user->id);
-    
+
                     Utility::pipeline_lead_deal_Stage($user->id);
                     Utility::project_task_stages($user->id);
                     Utility::labels($user->id);
@@ -331,8 +332,8 @@ class UserController extends Controller
                 $user->update();
 
 
-               Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId());
-               // CustomField::saveData($user, $request->customField);
+                Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId());
+                // CustomField::saveData($user, $request->customField);
 
                 $roles[] = $request->role;
                 $user->roles()->sync($roles);
@@ -416,7 +417,7 @@ class UserController extends Controller
             $settings = Utility::getStorageSetting();
             if ($settings['storage_setting'] == 'local') {
                 $dir        = '/uploads/avatar/';
-               // $dir        = 'storage/';
+                // $dir        = 'storage/';
             } else {
                 $dir        = 'uploads/avatar/';
             }
@@ -689,7 +690,7 @@ class UserController extends Controller
                 }
 
                 $users = $usersQuery->orderBy('name', 'ASC')->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
-            } else if($user->type == 'company') {
+            } else if ($user->type == 'company') {
                 $usersQuery = User::whereNotIn('type', $excludedTypes);
 
                 if (!empty($_GET['brand'])) {
@@ -717,7 +718,7 @@ class UserController extends Controller
                 }
 
                 $users = $usersQuery->where('brand_id', $user->id)->orderBy('name', 'ASC')->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
-            }else {
+            } else {
                 $usersQuery = User::whereNotIn('type', $excludedTypes);
 
                 if (!empty($_GET['brand'])) {
@@ -755,7 +756,7 @@ class UserController extends Controller
             $Designations = Role::where('name', '!=', 'super admin')->pluck('name', 'id')->toArray();
             $total_records = $users->total();
 
-            return view('user.employee', compact('total_records', 'users', 'brands','Regions','brandss','Branchs','Designations'));
+            return view('user.employee', compact('total_records', 'users', 'brands', 'Regions', 'brandss', 'Branchs', 'Designations'));
         } else {
             return redirect()->back();
         }
@@ -790,16 +791,16 @@ class UserController extends Controller
         // Now $roles is an array with the desired structure
 
 
-        $Region= ['0' => 'Select Region'];
+        $Region = ['0' => 'Select Region'];
 
         if (\Auth::user()->can('create employee')) {
             $autoGeneratedPassword = Str::random(10);
-            return view('user.employeeCreate', compact('Region','roles', 'customFields', 'branches', 'autoGeneratedPassword', 'companies'));
+            return view('user.employeeCreate', compact('Region', 'roles', 'customFields', 'branches', 'autoGeneratedPassword', 'companies'));
         } else {
             return json_encode([
                 'status' => 'error',
                 'message' => 'Permission Denied'
-               ]);
+            ]);
         }
     }
 
@@ -807,93 +808,93 @@ class UserController extends Controller
     {
         if (\Auth::user()->can('create employee')) {
             $default_language = DB::table('settings')->select('value')->where('name', 'default_language')->first();
-           // if (\Auth::user()->type == 'super admin') {
-                $validator = \Validator::make(
-                    $request->all(),
-                    [
-                        'name' => 'required|max:120',
-                        'email' => 'required|email|unique:users',
-                        'password' => 'required|min:6',
-                        //'dob' => 'required',
-                        'phone' => 'required'
-                    ]
-                );
-                if ($validator->fails()) {
-                    $messages = $validator->getMessageBag();
+            // if (\Auth::user()->type == 'super admin') {
+            $validator = \Validator::make(
+                $request->all(),
+                [
+                    'name' => 'required|max:120',
+                    'email' => 'required|email|unique:users',
+                    'password' => 'required|min:6',
+                    //'dob' => 'required',
+                    'phone' => 'required'
+                ]
+            );
+            if ($validator->fails()) {
+                $messages = $validator->getMessageBag();
 
-                    return redirect()->back()->with('error', $messages->first());
-                }
-                $user               = new User();
-                $user['name']       = $request->name;
-                $user['email']      = $request->email;
-                $psw                = $request->password;
-                $user['password']   = Hash::make($request->password);
-                $user['type']       =  $request->role;
-                $user['branch_id'] = $request->branch_id;
-                $user['region_id'] = $request->region_id;
-                $user['brand_id'] = isset($request->companies) ? $request->companies : \Auth::user()->brand_id;
-                $user['default_pipeline'] = 1;
-                $user['plan'] = 1;
-                $user['lang']       = !empty($default_language) ? $default_language->value : '';
+                return redirect()->back()->with('error', $messages->first());
+            }
+            $user               = new User();
+            $user['name']       = $request->name;
+            $user['email']      = $request->email;
+            $psw                = $request->password;
+            $user['password']   = Hash::make($request->password);
+            $user['type']       =  $request->role;
+            $user['branch_id'] = $request->branch_id;
+            $user['region_id'] = $request->region_id;
+            $user['brand_id'] = isset($request->companies) ? $request->companies : \Auth::user()->brand_id;
+            $user['default_pipeline'] = 1;
+            $user['plan'] = 1;
+            $user['lang']       = !empty($default_language) ? $default_language->value : '';
 
-                $user['created_by'] = $request->companies;
-                $user['plan']       = Plan::first()->id;
-                $user['date_of_birth'] = $request->dob;
-                $user['phone'] = $request->phone;
+            $user['created_by'] = $request->companies;
+            $user['plan']       = Plan::first()->id;
+            $user['date_of_birth'] = $request->dob;
+            $user['phone'] = $request->phone;
 
-                $user->save();
-
-
-                $role_r = Role::findByName($request->role);
-
-                //IF Role is Project Director ya Project Manager
-                // IF Role is Region Manager or Branch Manager
-                if($request->role == 'Project Director'){
-                    User::where('id', $request->companies)->update([
-                        'project_director_id' => $user->id
-                    ]);
-                }else if($request->role == 'Project Manager') {
-                    User::where('id', $request->companies)->update([
-                        'project_manager_id' => $user->id
-                    ]);
-                } else if($request->role == 'Region Manager'){
-                    Region::where('id', $request->region_id)->update([
-                        'region_manager_id' => $user->id
-                    ]);
-                }else if($request->role == 'Branch Manager'){
-                    Branch::where('id', $request->branch_id)->update([
-                        'branch_manager_id' => $user->id
-                    ]);
-                }
+            $user->save();
 
 
-                $user->assignRole($role_r);
-                //                $user->userDefaultData();
-                $user->userDefaultDataRegister($user->id);
-                $user->userWarehouseRegister($user->id);
+            $role_r = Role::findByName($request->role);
 
-                //default bank account for new company
-                $user->userDefaultBankAccount($user->id);
+            //IF Role is Project Director ya Project Manager
+            // IF Role is Region Manager or Branch Manager
+            if ($request->role == 'Project Director') {
+                User::where('id', $request->companies)->update([
+                    'project_director_id' => $user->id
+                ]);
+            } else if ($request->role == 'Project Manager') {
+                User::where('id', $request->companies)->update([
+                    'project_manager_id' => $user->id
+                ]);
+            } else if ($request->role == 'Region Manager') {
+                Region::where('id', $request->region_id)->update([
+                    'region_manager_id' => $user->id
+                ]);
+            } else if ($request->role == 'Branch Manager') {
+                Branch::where('id', $request->branch_id)->update([
+                    'branch_manager_id' => $user->id
+                ]);
+            }
 
-                Utility::chartOfAccountTypeData($user->id);
-                Utility::chartOfAccountData($user);
-                // default chart of account for new company
-                Utility::chartOfAccountData1($user->id);
 
-                Utility::pipeline_lead_deal_Stage($user->id);
-                Utility::project_task_stages($user->id);
-                Utility::labels($user->id);
-                Utility::sources($user->id);
-                Utility::jobStage($user->id);
-                GenerateOfferLetter::defaultOfferLetterRegister($user->id);
-                ExperienceCertificate::defaultExpCertificatRegister($user->id);
-                JoiningLetter::defaultJoiningLetterRegister($user->id);
-                NOC::defaultNocCertificateRegister($user->id);
+            $user->assignRole($role_r);
+            //                $user->userDefaultData();
+            $user->userDefaultDataRegister($user->id);
+            $user->userWarehouseRegister($user->id);
 
-                // To add entry in employees table
-                \App\Models\Utility::employeeDetails($user->id, \Auth::user()->creatorId(), $request);
+            //default bank account for new company
+            $user->userDefaultBankAccount($user->id);
 
-           /*
+            Utility::chartOfAccountTypeData($user->id);
+            Utility::chartOfAccountData($user);
+            // default chart of account for new company
+            Utility::chartOfAccountData1($user->id);
+
+            Utility::pipeline_lead_deal_Stage($user->id);
+            Utility::project_task_stages($user->id);
+            Utility::labels($user->id);
+            Utility::sources($user->id);
+            Utility::jobStage($user->id);
+            GenerateOfferLetter::defaultOfferLetterRegister($user->id);
+            ExperienceCertificate::defaultExpCertificatRegister($user->id);
+            JoiningLetter::defaultJoiningLetterRegister($user->id);
+            NOC::defaultNocCertificateRegister($user->id);
+
+            // To add entry in employees table
+            \App\Models\Utility::employeeDetails($user->id, \Auth::user()->creatorId(), $request);
+
+            /*
             } else {
                 $validator = \Validator::make(
                     $request->all(),
@@ -973,7 +974,7 @@ class UserController extends Controller
             $brand_ids = array_keys($companies);
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-        
+
             $branch_query = Branch::query();
 
             foreach ($brand_ids as $brandId) {
@@ -981,7 +982,6 @@ class UserController extends Controller
             }
             $branches = $branch_query->pluck('name', 'id');
             $branches = [0 => 'Select Branches'] + $branches->toArray();
-           
         }
 
 
@@ -993,11 +993,11 @@ class UserController extends Controller
 
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
             $roles = Role::whereNotIn('name', $excludedTypes)->get()->unique('name')->pluck('name', 'id');
-            $Region=Region::get()->pluck('name', 'id')->toArray();
-        // $autoGeneratedPassword = Str::random(10);
-            $employee = Employee::where('user_id',$user->id)->first();
+            $Region = Region::get()->pluck('name', 'id')->toArray();
+            // $autoGeneratedPassword = Str::random(10);
+            $employee = Employee::where('user_id', $user->id)->first();
             // dd($employee);
-            return view('user.employeeEdit', compact('user','employee', 'roles', 'customFields', 'branches', 'companies','Region'));
+            return view('user.employeeEdit', compact('user', 'employee', 'roles', 'customFields', 'branches', 'companies', 'Region'));
         } else {
             return redirect()->back();
         }
@@ -1039,7 +1039,7 @@ class UserController extends Controller
 
                 $roles[] = $role->id;
                 $user->roles()->sync($roles);
-                Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId(),$request);
+                Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId(), $request);
 
                 return redirect()->route('user.employees')->with(
                     'success',
@@ -1068,7 +1068,7 @@ class UserController extends Controller
                 $user['region_id'] = $request->region_id;
                 $user->type = $role->name;
                 $user->update();
-                Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId(),$request);
+                Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId(), $request);
                 CustomField::saveData($user, $request->customField);
 
                 $roles[] = $role->id;
@@ -1087,10 +1087,10 @@ class UserController extends Controller
     public function employeeShow($id)
     {
         $employee = User::findOrFail($id);
-        $Region=Region::get()->pluck('name', 'id')->toArray();
+        $Region = Region::get()->pluck('name', 'id')->toArray();
         $branches = Branch::pluck('name', 'id')->toArray();
         $allUsers = allUsers();
-        $html = view('user.employeeDetail', compact('employee','Region', 'branches', 'allUsers'))->render();
+        $html = view('user.employeeDetail', compact('employee', 'Region', 'branches', 'allUsers'))->render();
         return json_encode([
             'status' => 'success',
             'html' => $html

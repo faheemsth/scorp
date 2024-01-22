@@ -13,7 +13,7 @@ class AnalysisController extends Controller
 
     //
     public function index(){
-        
+
         //by defaul we will fetch visa stages deals
         $type = $_GET['type'] ?? 'visas';
 
@@ -28,6 +28,9 @@ class AnalysisController extends Controller
         //filters dropdown
         $filter_companies = FiltersBrands();
         $filter_companies = [0 => 'Select Brand'] + $filter_companies;
+
+
+        
 
 
 

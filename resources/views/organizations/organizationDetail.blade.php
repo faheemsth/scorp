@@ -726,7 +726,7 @@
 
 
                                 <div class="block-items">
-                                    <div class="block-item large-block" id="con-stats" title="1 Linked Contacts"
+                                    <div class="block-item large-block d-none" id="con-stats" title="1 Linked Contacts"
                                         data-bs-target="#contacts-grid-container">
                                         <div class="top-label">Contacts</div>
                                         <div class="block-item-count">{{ $org->organizationLeadContacts($org->id) }}
@@ -790,7 +790,7 @@
                                     <div id="discussion_note">
                                         <div class="row">
 
-                                            <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            <div class="accordion d-none" id="accordionPanelsStayOpenExample">
                                                 <!-- Open Accordion Item -->
                                                 <div class="accordion-item">
                                                     <h2 class="accordion-header" id="panelsStayOpen-headingcontact">
@@ -870,62 +870,151 @@
                                                         aria-labelledby="panelsStayOpen-headingdisc">
                                                         <div class="accordion-body">
                                                             <div class="">
+                                                             
+
+
+
                                                                 <div class="col-12">
                                                                     <div class="card">
-                                                                        <div class="card-header"
-                                                                            style="padding-bottom: 18px;">
-                                                                            <div class="d-flex justify-content-end">
-                                                                                <div class="float-end">
-                                                                                    <a data-size="lg"
-                                                                                        data-url="{{ route('organization.discussions.create', $org->id) }}"
-                                                                                        data-ajax-popup="true"
-                                                                                        data-bs-toggle="tooltip"
-                                                                                        title="{{ __('Add Message') }}"
-                                                                                        class="btn px-2 btn-dark text-white"
-                                                                                        >
-                                                                                        <i class="ti ti-plus"></i>
-                                                                                    </a>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
+                                                                                <textarea name="" id="" cols="95" class="form-control @can('create notes') textareaClass @endcan " readonly style="cursor: pointer"></textarea>
+                                                                                <span id="textareaID" style="display: none;">
+                                                                                    <div class="card-header px-0 pt-0"
+                                                                                        style="padding-bottom: 18px;">
+                                                                                        {{ Form::model($org, array('route' => array('organization.notes.store', $org->id), 'method' => 'POST', 'id' => 'create-notes' ,'style' => 'z-index: 9999999 !important;')) }}
+                                                                                        <textarea name="description" id="description" class="form form-control" cols="10" rows="1"></textarea>
+                                                                                        <input type="hidden" id="note_id" name="note_id">
+                                                                                        <div class="d-flex justify-content-end mt-2">
+                                                                                            <button type="button" id="cancelNote" class="btn btn-secondary mx-2">Cancel</button>
+                                                                                            <button type="submit" class="btn btn-secondary">Save</button>
+                                                                                        </div>
+                                                                                        {{ Form::close() }}
+                                                                                    </div>
+                                                                                </span>
+
+                                                                                <div class="card-body px-0 py-0">
+                                                                                @php
+                                                                                    $notes = \App\Models\OrganizationNote::where('organization_id', $org->id)
+                                                                                        ->orderBy('created_at', 'DESC')
+                                                                                        ->get();
+                                                                                @endphp
+
+                                                                                    <ul class="list-group list-group-flush mt-2 note-tbody">
+
+                                                                                    @foreach ($notes as $note)
 
 
-                                                                        <div class="card-body px-0">
-                                                                            <ul
-                                                                                class="list-group list-group-flush mt-2">
-                                                                                @foreach ($discussions as $discussion)
-                                                                                    <li class="list-group-item px-3">
-                                                                                        <div
-                                                                                            class="d-block d-sm-flex align-items-start">
-                                                                                            <img src="@if ($discussion['avatar'] && $discussion['avatar'] != '') {{ asset('/storage/uploads/avatar/' . $discussion['avatar']) }} @else {{ asset('/storage/uploads/avatar/avatar.png') }} @endif"
-                                                                                                class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
-                                                                                                alt="image">
-                                                                                            <div class="w-100">
-                                                                                                <div
-                                                                                                    class="d-flex align-items-center justify-content-between">
+                                                                                        <li class="list-group-item px-3 pb-0"
+                                                                                            id="lihover">
+
+                                                                                            <div class="d-block d-sm-flex align-items-start">
+                                                                                                <div class="w-100">
                                                                                                     <div
-                                                                                                        class="mb-3 mb-sm-0">
-                                                                                                        <h5
-                                                                                                            class="mb-0">
-                                                                                                            {{ $discussion['comment'] }}
-                                                                                                        </h5>
-                                                                                                        <span
-                                                                                                            class="text-muted text-sm">{{ $discussion['name'] }}</span>
-                                                                                                    </div>
-                                                                                                    <div
-                                                                                                        class=" form-switch form-switch-right mb-4">
-                                                                                                        {{ $discussion['created_at'] }}
+                                                                                                        class="d-flex align-items-center justify-content-between w-100">
+                                                                                                        <div class="mb-3 mb-sm-0 w-50 pb-3">
+                                                                                                            <p class="mb-0">
+                                                                                                                {{ $note->description }}
+                                                                                                            </p>
+                                                                                                            <span
+                                                                                                                class="text-muted text-sm">{{ $note->created_at }}
+                                                                                                            </span><br>
+                                                                                                            <span
+                                                                                                                class="text-muted text-sm"><i class="step__icon fa fa-user me-2" aria-hidden="true"></i>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
+                                                                                                            </span>
+                                                                                                        </div>
+
+                                                                                                        <style>
+                                                                                                            #editable {
+                                                                                                                display: none;
+                                                                                                            }
+
+                                                                                                            #lihover:hover #editable {
+                                                                                                                display: flex;
+                                                                                                            }
+                                                                                                        </style>
+                                                                                                        <div class="d-flex gap-3"
+                                                                                                            id="dellhover">
+                                                                                                            <i class="ti ti-pencil textareaClassedit"
+                                                                                                                data-note="{{ $note->description }}"
+                                                                                                                data-note-id="{{ $note->id }}"
+                                                                                                                id="editable"
+                                                                                                                style="font-size: 20px;cursor:pointer;"></i>
+                                                                                                            <script></script>
+                                                                                                            <i class="ti ti-trash delete-notes"
+                                                                                                                id="editable"
+                                                                                                                data-note-id="{{ $note->id }}"
+                                                                                                                style="font-size: 20px;cursor:pointer;"></i>
+                                                                                                        </div>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                @endforeach
-                                                                            </ul>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+                                                                                        </li>
+                                                                                    @endforeach
 
+                                                                                    </ul>
+                                                                                {{-- <table class="table">
+                                                                                        <thead class="table-bordered">
+                                                                                            <tr>
+                                                                                                <!-- <th scope="col">Title</th> -->
+                                                                                                <th scope="col">Description
+                                                                                                </th>
+                                                                                                <th scope="col">Date Added
+                                                                                                </th>
+                                                                                                <th scope="col">Added By
+                                                                                                </th>
+                                                                                                <th scope="col">Action</th>
+
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody class="notes-tbody">
+
+
+                                                                                            @forelse($notes as $note)
+                                                                                                <tr>
+
+
+                                                                                                    <!-- <td>{{ $note->title }}
+                                                                                                    </td> -->
+                                                                                                    <td
+                                                                                                        style="white-space: normal;">
+                                                                                                        {{ $note->description }}
+                                                                                                    </td>
+                                                                                                    <td>{{ $note->created_at }}
+                                                                                                    </td>
+                                                                                                    <td>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
+                                                                                                    </td>
+                                                                                                    <td
+                                                                                                        style="text-align: -webkit-center;">
+                                                                                                        @can('edit notes')
+                                                                                                            <a data-url="{{ route('leads.notes.edit', $note->id) }}"
+                                                                                                                data-ajax-popup="true"
+                                                                                                                data-bs-toggle="tooltip"
+                                                                                                                title="{{ __('Drive Link') }}"
+                                                                                                                class="btn btn-sm text-white mx-2"
+                                                                                                                style="background-color: #313949;">
+                                                                                                                <i
+                                                                                                                    class="ti ti-pencil "></i>
+                                                                                                            </a>
+                                                                                                        @endcan
+                                                                                                        @can('delete notes')
+                                                                                                            <a href="javascript:void(0)"
+                                                                                                                class="btn btn-sm text-white"
+                                                                                                                data-note-id="{{ $note->id }}"
+                                                                                                                style="background-color: #313949;">
+                                                                                                                <i
+                                                                                                                    class="ti ti-trash "></i>
+                                                                                                            </a>
+                                                                                                        @endcan
+                                                                                                    </td>
+
+                                                                                                </tr>
+                                                                                            @empty
+                                                                                            @endforelse
+
+                                                                                        </tbody>
+                                                                                    </table> --}}
+                                                                                </div>
+                                                                            </div>
+                                                                    </div>
                                                             </div>
                                                         </div>
                                                     </div>

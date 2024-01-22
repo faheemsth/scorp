@@ -349,10 +349,6 @@
                         padding-top: 0px;
                     }
 
-                    .col-form-label {
-                        text-align: center;
-                    }
-
                     .space {
                         padding: 3px 3px;
                     }
@@ -553,6 +549,36 @@
     $(document).on('change', '.main-check', function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));
     });
+
+
+
+    $(document).on("click", ".textareaClass", function(){
+        $('#textareaID, .textareaClass').toggle("slide");
+    })
+        
+
+    $('#create-notes').submit(function(event) {
+        event.preventDefault(); // Prevents the default form submission
+        $('#textareaID, .textareaClass').toggle("slide");
+    });
+
+    $('#cancelNote').click(function() {
+        $('textarea[name="description"]').val('');
+        $('#note_id').val('');
+        $('#textareaID, .textareaClass').toggle("slide");
+    });
+
+    
+    $('.textareaClassedit').click(function() {
+        var dataId = $(this).data('note-id');
+        var dataNote = $(this).data('note');
+        $('textarea[name="description"]').val(dataNote);
+        $('#note_id').val(dataId);
+        $('#textareaID, #dellhover, .textareaClass').show();
+        $('.textareaClass').toggle("slide");
+    });
+
+
 
     $(document).on("submit", "#organization-creating-form", function(e) {
 

@@ -215,7 +215,7 @@
     });
 
 
-    $(document).on("change", "#region_id" ,function(){
+    $(document).on("change", "#region_div #region_id" ,function(){
         var id = $(this).val();
         var type = 'region';
         $.ajax({

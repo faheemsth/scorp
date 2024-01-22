@@ -82,7 +82,7 @@
 
 
                                 <div class="form-group row">
-                                    <label for="website" class="col-sm-3 col-form-label">Website <span class="text-danger">*</span></label>
+                                    <label for="website" class="col-sm-3 col-form-label">Website</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" id="website" value="" name="organization_website">
                                     </div>
@@ -90,7 +90,7 @@
 
 
                                 <div class="form-group row">
-                                    <label for="linkedin" class="col-sm-3 col-form-label">Linkedin <span class="text-danger">*</span></label>
+                                    <label for="linkedin" class="col-sm-3 col-form-label">Linkedin</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" id="linkedin" value="" name="organization_linkedin">
                                     </div>
@@ -98,7 +98,7 @@
 
 
                                 <div class="form-group row">
-                                    <label for="facebook" class="col-sm-3 col-form-label">Facebook <span class="text-danger">*</span></label>
+                                    <label for="facebook" class="col-sm-3 col-form-label">Facebook</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" id="facebook" value="" name="organization_facebook">
                                     </div>
@@ -106,7 +106,7 @@
 
 
                                 <div class="form-group row">
-                                    <label for="twitter" class="col-sm-3 col-form-label">Twitter <span class="text-danger">*</span></label>
+                                    <label for="twitter" class="col-sm-3 col-form-label">Twitter</label>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control" id="twitter" value="" name="organization_twitter">
                                     </div>
@@ -129,7 +129,7 @@
 
                                 <div class="form-group row">
                                     <label for="billing-addres" class="col-sm-3 col-form-label">Billing
-                                        Address      <span style="color:red;">*</span> </label>
+                                        Address</label>
                                     <div class="col-sm-6">
                                         <div class="col-12">
                                             <textarea name="organization_billing_street" class="form form-control" id="" cols="30" rows="3"></textarea>

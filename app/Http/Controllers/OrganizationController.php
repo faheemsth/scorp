@@ -230,15 +230,15 @@ class OrganizationController extends Controller
                 'organization_type' => 'required',
                 'organization_email' => 'required|unique:users,email',
                 'organization_phone' => 'required',
-                'organization_website' => 'required',
-                'organization_linkedin' => 'required',
-                'organization_facebook' => 'required',
-                'organization_twitter' => 'required',
-                'organization_billing_street' => 'required',
-                'organization_billing_city' => 'required',
-                'organization_billing_state' => 'required',
-                'organization_billing_postal_code' => 'required',
-                'organization_billing_country' => 'required',
+                //'organization_website' => 'required',
+                //'organization_linkedin' => 'required',
+                //'organization_facebook' => 'required',
+                //'organization_twitter' => 'required',
+                //'organization_billing_street' => 'required',
+                //'organization_billing_city' => 'required',
+                //'organization_billing_state' => 'required',
+                //'organization_billing_postal_code' => 'required',
+                //'organization_billing_country' => 'required',
                // 'organization_description' => 'required'
             ]
         );
@@ -666,7 +666,7 @@ class OrganizationController extends Controller
         $validator = \Validator::make(
             $request->all(),
             [
-                'title' => 'required',
+               // 'title' => 'required',
                 'description' => 'required'
             ]
         );
@@ -781,6 +781,30 @@ class OrganizationController extends Controller
             ]);
 
 
+        }else if ($type == 'organization') {
+            $users = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
+            $html = '<select class="form form-control select2" id="choices-multiple8" name="related_to" > <option value="">Related To</option> ';
+            foreach ($users as $key => $user) {
+                $html .= '<option value="' . $key . '">' . $user . '</option> ';
+            }
+            $html .= '</select>';
+            return json_encode([
+                'status' => 'success',
+                'branches' => $html,
+            ]);
+
+
+        }else if ($type == 'deal') {
+            $users = Deal::where('branch_id', $BranchId)->get()->pluck('name', 'id')->toArray();
+            $html = '<select class="form form-control select2" id="choices-multiple8" name="related_to" > <option value="">Related To</option> ';
+            foreach ($users as $key => $user) {
+                $html .= '<option value="' . $key . '">' . $user . '</option> ';
+            }
+            $html .= '</select>';
+            return json_encode([
+                'status' => 'success',
+                'branches' => $html,
+            ]);
         }else{
             $branches = User::where('branch_id',$BranchId)->where('type', 'organization')->pluck('name', 'id')->toArray();
             $html = '<select class="form form-control select2" id="branch_id" name="related_to" > <option value="">Related To</option> ';
