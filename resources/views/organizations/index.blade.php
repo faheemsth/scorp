@@ -229,7 +229,7 @@
                                 <td style="border-left: 1px solid #fff;">Billing City</td>
                                 <td style="border-left: 1px solid #fff;">Billing State</td>
                                 <td style="border-left: 1px solid #fff;">Billing Country</td>
-                                
+
                                 <td style="border-left: 1px solid #fff; display: none;">Action</td>
                             </tr>
                         </thead>
@@ -546,30 +546,61 @@
     $('.filter-btn-show').click(function() {
         $("#filter-show").toggle();
     });
+
     $(document).on('change', '.main-check', function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));
     });
 
-
-
-    $(document).on("click", ".textareaClass", function(){
+    $(document).on("click", ".textareaClass", function() {
         $('#textareaID, .textareaClass').toggle("slide");
     })
-        
 
-    $('#create-notes').submit(function(event) {
+    $(document).on("submit", '#create-notes', function(event) {
         event.preventDefault(); // Prevents the default form submission
         $('#textareaID, .textareaClass').toggle("slide");
     });
 
-    $('#cancelNote').click(function() {
+    $(document).on("submit", "#create-notes", function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var id = $('#org_id').val();
+
+        $(".create-notes-btn").val('Processing...');
+        $('.create-notes-btn').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: "/organization/" + id + "/notes",
+            data: formData,
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status == 'success') {
+                    show_toastr('Success', data.message, 'success');
+                    $('#commonModal').modal('hide');
+                    $('.note-tbody').html(data.html);
+                    $('#note_id').val('');
+                    $('#description').val('');
+
+                    // openNav(data.lead.id);
+                    // return false;
+                } else {
+                    show_toastr('Error', data.message, 'error');
+                    $(".create-notes-btn").val('Create');
+                    $('.create-notes-btn').removeAttr('disabled');
+                }
+            }
+        });
+    })
+
+    $(document).on("click", '#cancelNote', function() {
         $('textarea[name="description"]').val('');
         $('#note_id').val('');
         $('#textareaID, .textareaClass').toggle("slide");
     });
 
-    
-    $('.textareaClassedit').click(function() {
+
+    $(document).on('click', '.textareaClassedit', function() {
         var dataId = $(this).data('note-id');
         var dataNote = $(this).data('note');
         $('textarea[name="description"]').val(dataNote);
@@ -598,7 +629,7 @@
                 if (data.status == 'success') {
                     show_toastr('Success', data.message, 'success');
                     $("#commonModal").modal('hide');
-                   // $("#commonModal").removeClass('show');
+                    // $("#commonModal").removeClass('show');
                     openSidebar('/get-organization-detail?org_id=' + data.org.id);
                     return false;
                 } else {
@@ -619,7 +650,7 @@
 
         $.ajax({
             type: "POST",
-            url: "/organization/"+id,
+            url: "/organization/" + id,
             data: formData,
             success: function(data) {
                 data = JSON.parse(data);
