@@ -680,13 +680,67 @@ class OrganizationController extends Controller
         }
 
 
+        // $id = $request->id;
+        // $note = new OrganizationNote();
+        // $note->title = $request->input('title');
+        // $note->description = $request->input('description');
+        // $note->created_by = \Auth::user()->id;
+        // $note->organization_id = $id;
+        // $note->save();
+
+
         $id = $request->id;
-        $note = new OrganizationNote();
-        $note->title = $request->input('title');
+
+        if($request->note_id != null && $request->note_id != ''){
+            $note = OrganizationNote::where('id', $request->note_id)->first();
+            // $note->title = $request->input('title');
+            $note->description = $request->input('description');
+            $note->update();
+
+            $data = [
+                'type' => 'info',
+                'note' => json_encode([
+                                'title' => 'Lead Notes Updated',
+                                'message' => 'Lead notes updated successfully'
+                            ]),
+                'module_id' => $request->id,
+                'module_type' => 'lead',
+            ];
+            addLogActivity($data);
+
+
+            $notes = OrganizationNote::where('organization_id', $id)->orderBy('created_at', 'DESC')->get();
+            $html = view('leads.getNotes', compact('notes'))->render();
+
+            return json_encode([
+                'status' => 'success',
+                'html' => $html,
+                'message' =>  __('Notes updated successfully')
+            ]);
+        }
+        $note = new OrganizationNote;
+        // $note->title = $request->input('title');
         $note->description = $request->input('description');
-        $note->created_by = \Auth::user()->id;
+        $session_id = Session::get('auth_type_id');
+        if($session_id != null){
+            $note->created_by  = $session_id;
+        }else{
+            $note->created_by  = \Auth::user()->id;
+        }
         $note->organization_id = $id;
         $note->save();
+
+
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Notes created',
+                            'message' => 'Noted created successfully'
+                        ]),
+            'module_id' => $id,
+            'module_type' => 'lead',
+        ];
+        addLogActivity($data);
 
         $notes = OrganizationNote::where('organization_id', $id)->orderBy('created_at', 'DESC')->get();
         $html = view('organizations.getNotes', compact('notes'))->render();
