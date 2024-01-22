@@ -124,7 +124,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <tr>
+                                                            <tr class="d-none">
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
                                                                     {{ __('Brand') }}
@@ -136,7 +136,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <tr>
+                                                            <tr class="d-none">
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
                                                                     {{ __('Region') }}
@@ -148,7 +148,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <tr>
+                                                            <tr class="d-none">
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
                                                                     {{ __('Branch') }}
@@ -158,6 +158,42 @@
 
                                                                  {{ optional(App\Models\Branch::find(str_replace(['["', '"]'], '',  $announcement->branch_id)))->name }}
 
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Description') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                 {{-- {{ optional(App\Models\Branch::find(str_replace(['["', '"]'], '',  $announcement->branch_id)))->name }} --}}
+                                                                 {{ $announcement->description }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Start Date') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                 {{-- {{ optional(App\Models\Branch::find(str_replace(['["', '"]'], '',  $announcement->branch_id)))->name }} --}}
+                                                                 {{ $announcement->start_date }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('End Date') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                 {{-- {{ optional(App\Models\Branch::find(str_replace(['["', '"]'], '',  $announcement->branch_id)))->name }} --}}
+                                                                 {{ $announcement->end_date }}
                                                                 </td>
                                                             </tr>
 
