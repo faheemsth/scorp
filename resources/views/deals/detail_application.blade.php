@@ -184,7 +184,7 @@
                                                                     {{ __('University') }}
                                                                 </td>
                                                                 <td class="university_name-td" style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $universities[$application->university_id] }}
+                                                                    {{ $universities[$application->university_id] ?? '' }}
                                                                 </td>
                                                             </tr>
                                                             <tr>

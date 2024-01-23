@@ -57,7 +57,7 @@ class UserController extends Controller
                 //     });
 
 
-                $users = User::where('type', 'company');  
+                $users = User::where('type', 'company');
 
                 if (isset($_GET['Brand']) && !empty($_GET['Brand'])) {
                     $brandId = intval($_GET['Brand']); // Assuming it's an integer, adjust accordingly
@@ -96,6 +96,35 @@ class UserController extends Controller
             // return view('user.index-Old')->with('users', $users);
             $Brands = User::where('type', 'company')->pluck('name', 'id')->toArray();
             $ProjectDirector = User::where('type', 'Project Director')->pluck('name', 'id')->toArray();
+
+            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
+                $g_search = $_GET['search'];
+                $user_query = User::select([
+                        'users.*',
+                    ])->where('type', 'company')
+                    ->where(function ($query) use ($g_search) {
+                        $query->where('users.name', 'like', '%' . $g_search . '%')
+                            ->orWhere('users.website_link', 'like', '%' . $g_search . '%')
+                            ->orWhere(DB::raw('(SELECT name FROM users p WHERE p.id = users.project_director_id)'), 'like', '%' . $g_search . '%');
+                    });
+                
+                $users = $user_query
+                    ->skip($start)
+                    ->take($num_results_on_page)
+                    ->orderBy('users.name', 'ASC')
+                    ->paginate($num_results_on_page);
+                
+            }
+
+            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+                $html = view('user.brandsAjax', compact('total_records', 'projectDirectors', 'Brands', 'ProjectDirector'))->with('users', $users)->render();
+
+                return json_encode([
+                    'status' => 'success',
+                    'html' => $html
+                ]);
+            }
+
             return view('user.index', compact('total_records', 'projectDirectors', 'Brands', 'ProjectDirector'))->with('users', $users);
         } else {
             return redirect()->back();
