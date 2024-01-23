@@ -164,7 +164,6 @@ class OrganizationController extends Controller
             $org_types = OrganizationType::get()->pluck('name', 'id');
             $countries = $this->countries_list();
             $user_type = User::get()->pluck('type', 'id')->toArray();
-
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('organizations.organization_list', compact('organizations', 'org_types', 'countries', 'user_type'))->render();
                 return json_encode([
@@ -287,6 +286,19 @@ class OrganizationController extends Controller
         $org->save();
 
 
+        //Log
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Organization Created',
+                            'message' => 'Organization created successfully'
+                        ]),
+            'module_id' => $user->id,
+            'module_type' => 'organization',
+        ];
+        addLogActivity($data);
+
+
         //$org_data = Organization::where('user_id', $user->id)->first();
         //$html = view('organizations.new_organization', ['org' => $user, 'org_data' => $org_data])->render();
 
@@ -380,6 +392,18 @@ class OrganizationController extends Controller
             'description' => $request->organization_description,
         ]);
 
+        //Log
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                            'title' => 'Organization Updated',
+                            'message' => 'Organization updated successfully'
+                        ]),
+            'module_id' => $user->id,
+            'module_type' => 'organization',
+        ];
+        addLogActivity($data);
+
         return json_encode([
             'status' => 'success',
             'org_id' => $user->id,
@@ -439,8 +463,9 @@ class OrganizationController extends Controller
         $types = OrganizationType::get()->pluck('name', 'id')->toArray();
         $discussions = OrganizationDiscussion::select('organization_discussions.id', 'organization_discussions.comment', 'organization_discussions.created_at', 'users.name', 'users.avatar')->join('users', 'organization_discussions.created_by', 'users.id')->where(['organization_discussions.organization_id' => $org->id])->orderBy('organization_discussions.created_at', 'DESC')->get()->toArray();
         $tasks = \App\Models\DealTask::where(['related_to' => $org->id, 'related_type' => 'organization'])->get();
+        $log_activities = getLogActivity($org->id, 'organization');
 
-        $html = view('organizations.organizationDetail', compact('org', 'org_detail', 'types', 'discussions', 'tasks'))->render();
+        $html = view('organizations.organizationDetail', compact('org', 'org_detail', 'types', 'discussions', 'tasks', 'log_activities'))->render();
 
         return json_encode([
             'status' => 'success',

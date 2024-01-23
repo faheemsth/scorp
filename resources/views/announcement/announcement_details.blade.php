@@ -166,7 +166,7 @@
                                                                     {{ __('Description') }}
                                                                 </td>
                                                                 <td class="name-td"
-                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    style="padding-left: 10px; font-size: 14px; width: 400px;">
 
                                                                  {{-- {{ optional(App\Models\Branch::find(str_replace(['["', '"]'], '',  $announcement->branch_id)))->name }} --}}
                                                                  {{ $announcement->description }}
