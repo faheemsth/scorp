@@ -691,91 +691,67 @@ class UserController extends Controller
 
         if (\Auth::user()->can('manage employee')) {
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
+            $usersQuery = User::select(['users.*'])->whereNotIn('type', $excludedTypes);
+            
+            
+            //Filters
+            if (!empty($_GET['brand'])) {
+                $usersQuery->where('brand_id', $_GET['brand']);
+            }
+            if (!empty($_GET['region_id'])) {
+                $usersQuery->where('region_id', $_GET['region_id']);
+            }
+
+            if (!empty($_GET['branch_id'])) {
+                $usersQuery->where('branch_id', $_GET['branch_id']);
+            }
+
+            if (!empty($_GET['Name'])) {
+                $usersQuery->where('name', 'like', '%' . $_GET['Name'] . '%');
+            }
+
+            if (!empty($_GET['Designation'])) {
+                $usersQuery->where('type', 'like', '%' . $_GET['Designation'] . '%');
+            }
+
+
+            if (!empty($_GET['phone'])) {
+                $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
+            }
+
+           
             if (\Auth::user()->type == 'super admin') {
                 $usersQuery = User::whereNotIn('type', $excludedTypes);
-
-                if (!empty($_GET['brand'])) {
-                    $usersQuery->where('brand_id', $_GET['brand']);
-                }
-                if (!empty($_GET['region_id'])) {
-                    $usersQuery->where('region_id', $_GET['region_id']);
-                }
-
-                if (!empty($_GET['branch_id'])) {
-                    $usersQuery->where('branch_id', $_GET['branch_id']);
-                }
-
-                if (!empty($_GET['Name'])) {
-                    $usersQuery->where('name', 'like', '%' . $_GET['Name'] . '%');
-                }
-
-                if (!empty($_GET['Designation'])) {
-                    $usersQuery->where('type', 'like', '%' . $_GET['Designation'] . '%');
-                }
-
-
-                if (!empty($_GET['phone'])) {
-                    $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
-                }
-
-                $users = $usersQuery->orderBy('name', 'ASC')->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
             } else if ($user->type == 'company') {
-                $usersQuery = User::whereNotIn('type', $excludedTypes);
-
-                if (!empty($_GET['brand'])) {
-                    $usersQuery->where('brand_id', $_GET['brand']);
-                }
-                if (!empty($_GET['region_id'])) {
-                    $usersQuery->where('region_id', $_GET['region_id']);
-                }
-
-                if (!empty($_GET['branch_id'])) {
-                    $usersQuery->where('branch_id', $_GET['branch_id']);
-                }
-
-                if (!empty($_GET['Name'])) {
-                    $usersQuery->where('name', 'like', '%' . $_GET['Name'] . '%');
-                }
-
-                if (!empty($_GET['Designation'])) {
-                    $usersQuery->where('type', 'like', '%' . $_GET['Designation'] . '%');
-                }
-
-
-                if (!empty($_GET['phone'])) {
-                    $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
-                }
-
-                $users = $usersQuery->where('brand_id', $user->id)->orderBy('name', 'ASC')->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $usersQuery->where('brand_id', $user->id);
             } else {
-                $usersQuery = User::whereNotIn('type', $excludedTypes);
-
-                if (!empty($_GET['brand'])) {
-                    $usersQuery->where('brand_id', $_GET['brand']);
-                }
-                if (!empty($_GET['region_id'])) {
-                    $usersQuery->where('region_id', $_GET['region_id']);
-                }
-
-                if (!empty($_GET['branch_id'])) {
-                    $usersQuery->where('branch_id', $_GET['branch_id']);
-                }
-
-                if (!empty($_GET['Name'])) {
-                    $usersQuery->where('name', 'like', '%' . $_GET['Name'] . '%');
-                }
-
-                if (!empty($_GET['Designation'])) {
-                    $usersQuery->where('type', 'like', '%' . $_GET['Designation'] . '%');
-                }
-
-
-                if (!empty($_GET['phone'])) {
-                    $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
-                }
-
-                $users = $usersQuery->where('brand_id', $user->brand_id)->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                $usersQuery->where('brand_id', $user->brand_id);
             }
+
+
+            // if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
+            //     $g_search = $_GET['search'];
+            //     $usersQuery->where(function ($query) use ($g_search) {
+            //             $query->where('users.name', 'like', '%' . $g_search . '%')
+            //                 ->orWhere('users.website_link', 'like', '%' . $g_search . '%')
+            //                 ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%');
+            //         });                
+            // }
+
+            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
+                $g_search = $_GET['search'];
+                $usersQuery->where('users.name', 'like', '%' . $g_search . '%')
+                            ->orWhere('users.email', 'like', '%' . $g_search . '%')
+                            ->orWhere('users.type', 'like', '%' . $g_search . '%')
+                            ->orWhere('users.phone', 'like', '%' . $g_search . '%')
+                            ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%');                   
+            }
+
+            $users = $usersQuery
+                    ->skip($start)
+                    ->take($num_results_on_page)
+                    ->orderBy('users.name', 'ASC')
+                    ->paginate($num_results_on_page);
 
             $brands = User::whereNotIn('type', $excludedTypes)->orderBy('name', 'ASC')->get();
             $brandss = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
@@ -785,7 +761,25 @@ class UserController extends Controller
             $Designations = Role::where('name', '!=', 'super admin')->pluck('name', 'id')->toArray();
             $total_records = $users->total();
 
-            return view('user.employee', compact('total_records', 'users', 'brands', 'Regions', 'brandss', 'Branchs', 'Designations'));
+            $data = [
+                'total_records' => $total_records,
+                'users' => $users,
+                'brands' => $brands,
+                'Regions' => $Regions,
+                'brandss' => $brandss,
+                'Branchs' => $Branchs,
+                'Designations' => $Designations
+            ];
+
+            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+                $html = view('user.employeeAjax', $data)->render();
+                return json_encode([
+                    'status' => 'success',
+                    'html' => $html
+                ]);
+            } else {
+                return view('user.employee', $data);
+            }
         } else {
             return redirect()->back();
         }
