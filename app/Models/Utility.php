@@ -1323,7 +1323,17 @@ class Utility extends Model
                         try
                         {
 
-
+                            config([
+                                'mail.driver' => env('MAIL_DRIVER'),
+                                'mail.host' => env('MAIL_HOST'),
+                                'mail.port' => env('MAIL_PORT'),
+                                'mail.encryption' => env('MAIL_ENCRYPTION'),
+                                'mail.username' => env('MAIL_USERNAME'),
+                                'mail.password' => env('MAIL_PASSWORD'),
+                                'mail.from.address' => env('MAIL_FROM_ADDRESS'),
+                                'mail.from.name' => env('MAIL_FROM_NAME'),
+                            ]);
+                            
                             Mail::to($mailTo)->send(new CommonEmailTemplate($content, $settings));
 
                         }
