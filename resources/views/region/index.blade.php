@@ -279,11 +279,10 @@
                             </div>
 
                             @can('create region')
-                            <a href="#" data-size="lg" data-url="{{ route('region.create') }}"
-                                data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Region') }}"
-                                class="btn p-2 btn-dark">
-                                <i class="ti ti-plus"></i>
-                            </a>
+                                <a href="#" data-size="lg" data-url="{{ route('region.create') }}" data-ajax-popup="true"
+                                    data-bs-toggle="tooltip" title="{{ __('Create New Region') }}" class="btn p-2 btn-dark">
+                                    <i class="ti ti-plus"></i>
+                                </a>
                             @endcan
 
                         </div>
@@ -294,10 +293,7 @@
 
 
                     <div class="table-responsive mt-2">
-
                         {{-- Filters --}}
-
-
                         <div class="card-body table-responsive">
                             <table class="table">
                                 <thead>
@@ -315,7 +311,7 @@
                                         <th width="300px" class="d-none">{{ __('Action') }}</th>
                                     </tr>
                                 </thead>
-                                <tbody id="deals_tbody">
+                                <tbody id="deals_tbody" class="list-div">
                                     @if (!empty($regions))
                                         @foreach ($regions as $region)
                                             <tr>
@@ -325,22 +321,22 @@
                                                 </td>
                                                 <td>
                                                     <span style="cursor:pointer" class="hyper-link"
-                                                           @can('view region') onclick="openSidebar('/regions/{{ $region->id }}/show')" @endcan >
-                                                            {{ $region->name }}
+                                                        @can('view region') onclick="openSidebar('/regions/{{ $region->id }}/show')" @endcan>
+                                                        {{ $region->name }}
                                                     </span>
                                                 </td>
                                                 <td><a href="mailto:{{ $region->email }}">{{ $region->email }}</a></td>
                                                 <td>{{ $region->phone }}</td>
                                                 <td>{{ $region->location }}</td>
-                                                
+
                                                 <td>{{ $users[$region->region_manager_id] ?? '' }}</td>
 
                                                 <td>
-                                                    @php 
-                                                       $brands = explode(',', $region->brands);
-                                                    @endphp 
+                                                    @php
+                                                        $brands = explode(',', $region->brands);
+                                                    @endphp
 
-                                                    @foreach($brands as $brand_id)
+                                                    @foreach ($brands as $brand_id)
                                                         {{ $users[$brand_id] ?? '' }}
                                                     @endforeach
                                                 </td>
@@ -359,14 +355,16 @@
                                                         </button>
                                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                             @can('edit region')
-                                                            <li><a class="dropdown-item"
-                                                                    href="#" data-size="lg" data-url="{{ url('region/update?id=').$region->id }}" title="{{ __('Update Origin') }}"
-                                                                    data-ajax-popup="true" data-bs-toggle="tooltip">Edit</a></li>
+                                                                <li><a class="dropdown-item" href="#" data-size="lg"
+                                                                        data-url="{{ url('region/update?id=') . $region->id }}"
+                                                                        title="{{ __('Update Origin') }}"
+                                                                        data-ajax-popup="true" data-bs-toggle="tooltip">Edit</a>
+                                                                </li>
                                                             @endcan
                                                             @can('delete region')
-                                                                    <li><a class="dropdown-item"
-                                                                    href="{{ url('region/delete?id=').$region->id }}">Delete</a>
-                                                            </li>
+                                                                <li><a class="dropdown-item"
+                                                                        href="{{ url('region/delete?id=') . $region->id }}">Delete</a>
+                                                                </li>
                                                             @endcan
                                                         </ul>
                                                 </td>
@@ -383,10 +381,10 @@
                             </table>
                             @if ($total_records > 0)
                                 @include('layouts.pagination', [
-                                'total_pages' => $total_records,
-                                'num_results_on_page' => 25,
+                                    'total_pages' => $total_records,
+                                    'num_results_on_page' => 25,
                                 ])
-                                @endif
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -398,4 +396,57 @@
         </div>
     @endsection
 
- 
+    @push('script-page')
+        <script>
+            // Attach an event listener to the input field
+            $('.list-global-search').keypress(function(e) {
+            
+                // Check if the pressed key is Enter (key code 13)
+                if (e.which === 13) {
+                    var search = $(".list-global-search").val();
+                    var ajaxCall = 'true';
+                    $(".list-div").html('Loading...');
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ route('region.index') }}",
+                        data: {
+                            search: search,
+                            ajaxCall: ajaxCall
+                        },
+                        success: function(data) {
+                            data = JSON.parse(data);
+                            if (data.status == 'success') {
+                                console.log(data.html);
+                                $(".list-div").html(data.html);
+                            }
+                        }
+                    })
+                }
+            });
+
+
+            // Attach an event listener to the input field
+            $('.list-global-search-btn').click(function(e) {
+
+                var search = $(".list-global-search").val();
+                var ajaxCall = 'true';
+                $(".list-div").html('Loading...');
+
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ route('region.index') }}",
+                    data: {
+                        search: search,
+                        ajaxCall: ajaxCall
+                    },
+                    success: function(data) {
+                        data = JSON.parse(data);
+                        if (data.status == 'success') {
+                            console.log(data.html);
+                            $(".list-div").html(data.html);
+                        }
+                    }
+                })
+            });
+        </script>
+    @endpush

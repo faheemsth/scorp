@@ -48,12 +48,12 @@
                             </div>
                             <div class="col-10 d-flex justify-content-end gap-2">
                                 <div class="input-group w-25">
-                                    <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
-                                        <i class="ti ti-search" style="font-size: 18px"></i>
-                                    </span>
-                                    <input type="Search" class="form-control border-0 bg-transparent ps-0"
-                                        placeholder="Search this list..." aria-label="Username"
-                                        aria-describedby="basic-addon1">
+                                    <button class="btn list-global-search-btn">
+                                        <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                                            <i class="ti ti-search" style="font-size: 18px"></i>
+                                        </span>
+                                    </button>
+                                    <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                                 </div>
 
                                 <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3"
@@ -218,15 +218,15 @@
                                         <th>Last Login</th>
                                     </tr>
                                 </thead>
+                                
 
-                                <tbody>
+                                <tbody class="list-div">
                                     <?php
                                     if (isset($_GET['page']) && !empty($_GET['page'])) {
                                         $count = ($_GET['page'] - 1) * $_GET['num_results_on_page'] + 1;
                                     } else {
                                         $count = 1;
                                     }
-                                    
                                     ?>
                                     @forelse($users as $key => $employee)
                                         <tr>
@@ -269,65 +269,112 @@
 @endsection
 
 @push('script-page')
-<script>
+    <script>
+        $("#brand_id").on("change", function() {
+            var id = $(this).val();
+            var type = 'brand';
 
-    $("#brand_id").on("change", function() {
-        var id = $(this).val();
-        var type = 'brand';
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
 
-        $.ajax({
-            type: 'GET',
-            url: '{{ route('region_brands') }}',
-            data: {
-                id: id, // Add a key for the id parameter
-                type: type
-            },
-            success: function(data) {
-                data = JSON.parse(data);
-
-                if (data.status === 'success') {
-                    $('#region_filter_div').html('');
-                    $("#region_filter_div").html(data.regions);
-                    select2();
-                } else {
-                    console.error('Server returned an error:', data.message);
+                    if (data.status === 'success') {
+                        $('#region_filter_div').html('');
+                        $("#region_filter_div").html(data.regions);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX request failed:', status, error);
-            }
+            });
         });
-    });
 
 
-    $(document).on("change", "#region_filter_div #region_id", function() {
-        var id = $(this).val();
-        var type = 'region';
-        $.ajax({
-            type: 'GET',
-            url: '{{ route('region_brands') }}',
-            data: {
-                id: id, // Add a key for the id parameter
-                type: type
-            },
-            success: function(data) {
-                data = JSON.parse(data);
+        $(document).on("change", "#region_filter_div #region_id", function() {
+            var id = $(this).val();
+            var type = 'region';
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
 
-                if (data.status === 'success') {
+                    if (data.status === 'success') {
                         $('#branch_filter_div').html('');
                         $("#branch_filter_div").html(data.branches);
                         select2();
-                } else {
-                    console.error('Server returned an error:', data.message);
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX request failed:', status, error);
+            });
+        });
+
+
+        // Attach an event listener to the input field
+        $('.list-global-search').keypress(function(e) {
+            // Check if the pressed key is Enter (key code 13)
+            if (e.which === 13) {
+                var search = $(".list-global-search").val();
+                var ajaxCall = 'true';
+                $(".list-div").html('Loading...');
+                $.ajax({
+                    type: 'GET',
+                    url: "{{ route('user.employees') }}",
+                    data: {
+                        search: search,
+                        ajaxCall: ajaxCall
+                    },
+                    success: function(data) {
+                        data = JSON.parse(data);
+                        if (data.status == 'success') {
+                            console.log(data.html);
+                            $(".list-div").html(data.html);
+                        }
+                    }
+                })
             }
         });
-    });
 
 
-    
-</script>
+        // Attach an event listener to the input field
+        $('.list-global-search-btn').click(function(e) {
+
+            var search = $(".list-global-search").val();
+            var ajaxCall = 'true';
+            $(".list-div").html('Loading...');
+
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('user.employees') }}",
+                data: {
+                    search: search,
+                    ajaxCall: ajaxCall
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if (data.status == 'success') {
+                        console.log(data.html);
+                        $(".list-div").html(data.html);
+                    }
+                }
+            })
+        });
+    </script>
 @endpush
