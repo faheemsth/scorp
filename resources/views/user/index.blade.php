@@ -157,12 +157,15 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             
 
                         </table>
-                        @if ($total_records > 0)
-                        @include('layouts.pagination', [
-                        'total_pages' => $total_records,
-                        'num_results_on_page' => 25,
-                        ])
+
+                        <div class="pagination_div">
+                            @if ($total_records > 0)
+                            @include('layouts.pagination', [
+                            'total_pages' => $total_records,
+                            'num_results_on_page' => 25,
+                            ])
                         @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -196,6 +199,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                     if (data.status == 'success') {
                         console.log(data.html);
                         $(".list-div").html(data.html);
+                        $(".pagination_div").html(data.pagination_html);
                     }
                 }
             })

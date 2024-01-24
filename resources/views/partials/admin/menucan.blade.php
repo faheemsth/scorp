@@ -367,10 +367,6 @@
                                         href="{{ route('contract.index') }}">{{ __('Contract') }}</a>
                                 </li>
                             @endcan
-
-
-
-
                         </ul>
                     </div>
                 </div>
