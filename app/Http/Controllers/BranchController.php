@@ -25,29 +25,48 @@ class BranchController extends Controller
             $start = 0;
         }
 
-
+        $branch_query = Branch::select(['branches.*']);
+        if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+            $g_search = $_GET['search'];
+            $branch_query->leftjoin('regions', 'regions.id', '=', 'branches.region_id')
+                        ->leftjoin('users as brand', 'brand.id', '=', 'branches.brands')
+                        ->leftjoin('users as manager', 'manager.id', '=', 'branches.branch_manager_id')
+                        ->where('branches.name', 'like', '%' . $g_search . '%')
+                        ->orwhere('branches.email', 'like', '%'.$g_search.'%')
+                        ->orwhere('branches.google_link', 'like', '%'.$g_search.'%')
+                        ->orwhere('branches.social_media_link', 'like', '%'.$g_search.'%')
+                        ->orwhere('branches.phone', 'like', '%'.$g_search.'%')
+                        ->orwhere('regions.name', 'like', '%'.$g_search.'%')
+                        ->orwhere('manager.name', 'like', '%'.$g_search.'%')
+                        ->orwhere('brand.name', 'like', '%'.$g_search.'%');
+        }
 
             if(\Auth::user()->type == 'super admin'){
-                $total_records = Branch::count();
-                $branches = Branch::skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
+                //$total_records = Branch::count();
+               // $branches = Branch::skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
             }else if(\Auth::user()->type == 'company'){
-                $total_records = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->count();
-                $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
+              //  $total_records = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->count();
+               // $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
+               $branch_query->whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id]);
             }else{
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
                // $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->get();
                 
                 
-                $branch_query = Branch::query();
+                //$branch_query = Branch::query();
 
                foreach ($brand_ids as $brandId) {
                    $branch_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
                }
-               $total_records = $branch_query->count();
+               //$total_records = $branch_query->count();
    
-               $branches = $branch_query->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
+               //$branches = $branch_query->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
             }
+
+
+            $total_records = $branch_query->count();
+            $branches = $branch_query->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
 
 
 
@@ -60,7 +79,16 @@ class BranchController extends Controller
                 'regions' => $regions,
                 'total_records' => $total_records
             ];
-            return view('branch.index', $data);
+
+            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+                $html = view('branch.BranchAjax', $data)->render();
+                return json_encode([
+                    'status' => 'success',
+                    'html' => $html
+                ]);
+            } else {
+                return view('branch.index', $data);
+            }
         }
         else
         {

@@ -175,7 +175,7 @@
                                     <th>{{ __('Social Media Link') }}</th>
                                 </tr>
                             </thead>
-                            <tbody class="font-style">
+                            <tbody class="font-style list-div">
                                 @foreach ($branches as $branch)
                                     <tr>
                                         <td>
@@ -207,3 +207,59 @@
         </div>
     </div>
 @endsection
+
+
+@push('script-page')
+<script>
+    // Attach an event listener to the input field
+    $('.list-global-search').keypress(function(e) {
+    
+        // Check if the pressed key is Enter (key code 13)
+        if (e.which === 13) {
+            var search = $(".list-global-search").val();
+            var ajaxCall = 'true';
+            $(".list-div").html('Loading...');
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('branch.index') }}",
+                data: {
+                    search: search,
+                    ajaxCall: ajaxCall
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if (data.status == 'success') {
+                        console.log(data.html);
+                        $(".list-div").html(data.html);
+                    }
+                }
+            })
+        }
+    });
+
+
+    // Attach an event listener to the input field
+    $('.list-global-search-btn').click(function(e) {
+
+        var search = $(".list-global-search").val();
+        var ajaxCall = 'true';
+        $(".list-div").html('Loading...');
+
+        $.ajax({
+            type: 'GET',
+            url: "{{ route('branch.index') }}",
+            data: {
+                search: search,
+                ajaxCall: ajaxCall
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status == 'success') {
+                    console.log(data.html);
+                    $(".list-div").html(data.html);
+                }
+            }
+        })
+    });
+</script>
+@endpush
