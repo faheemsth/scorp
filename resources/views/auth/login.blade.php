@@ -29,12 +29,16 @@
 @section('content')
 {{Form::open(array('class'=>'mainlogindiv','route'=>'login','method'=>'post','id'=>'loginForm' ))}}
 @csrf
-    <div class="text-center">
-        <i class="fa-solid fa-circle-user mb-4 " style=" font-size:90px ; color: #A6A6A6; "></i>
+<div class= "border  border-3  p-4" style = "border-radius : 25px ; background: linear-gradient(to bottom right,rgb(122 122 122 / 24%),#cac9c987,rgb(71 71 71)); ">
+
+
+    <div class="text-center mb-3">
+        <img src="{{asset('assets/cs-theme/assets/images/Group.png')}} " alt="" style = "width : 50%;">
+        <!-- <i class="fa-solid fa-circle-user mb-4 " style=" font-size:90px ; color: #A6A6A6; "></i> -->
     </div>
-    <div class="input-group mb-3 border-0">
-        <span class="input-group-text bg-white ps-2 pe-0" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-        <input class="form-control border-0 @error('email') is-invalid @enderror" placeholder="Email" aria-label="Email" id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+    <div class="input-group mb-3 border-0 py-1">
+        <span class="input-group-text bg-white ps-2 pe-2 " id="basic-addon1"><i class="fa-solid fa-user "></i></span>
+        <input class="form-control border-0 @error('email') is-invalid @enderror" placeholder="Email ID" aria-label="Email" id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus style="background-color: rgb(204, 204, 204) ;">
          {{-- @error('email')
             <div class="invalid-feedback" role="alert" style="display:block !important">{{ $message }}</div>
             @enderror --}}
@@ -63,9 +67,9 @@
         @enderror
     </div>
 @endif
-    <div class="mb-3 form-check d-flex justify-content-between align-items-baseline">
+    <div class="d-none mb-3 form-check d-flex justify-content-between align-items-baseline">
      <div class="">
-        <input type="checkbox" class="form-check-input" required>
+        <input type="checkbox" class="form-check-input " required>
         <label class="form-check-label rempass " for="exampleCheck1" style="color: #A6A6A6;">Remember me</label>
 
      </div>
@@ -77,7 +81,10 @@
     </div>
     <div class="text-center">
         <button type="submit" id="login_button" class=" w-50 p-2  mt-3 "
-            style="background-color: #000000; color:#FFFFFF ;">Login</button>
+            style="background-color: #000000; color:#FFFFFF ;">LOGIN</button>
+    </div>
+
+
     </div>
     {{Form::close()}}
 @endsection
