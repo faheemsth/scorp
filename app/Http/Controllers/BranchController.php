@@ -82,9 +82,14 @@ class BranchController extends Controller
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('branch.BranchAjax', $data)->render();
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' => 25,
+                ])->render();
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => $html,
+                    'pagination_html' => $pagination_html
                 ]);
             } else {
                 return view('branch.index', $data);

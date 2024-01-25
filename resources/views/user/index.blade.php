@@ -65,7 +65,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                         });
                     </script>
                     {{-- Filters --}}
-                    <div class="filter-data px-3" id="filterToggle" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+                    <div class="filter-data px-3" id="filterToggle" <?= isset($_GET['Brand']) || isset($_GET['Director']) ? '' : 'style="display: none;"' ?>>
                         <form action="/users" method="GET" class="">
                             <div class="row my-3">
                                 <div class="col-md-4 mt-2">
