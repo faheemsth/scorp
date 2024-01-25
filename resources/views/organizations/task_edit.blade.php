@@ -98,7 +98,7 @@
                                     <option value="">Select Branch</option>
                                     @foreach ($branches as $key => $branch)
                                         <option value="{{ $key }}"
-                                            {{ App\Models\Branch::where('brands',$task->brand_id)->first()->id == $key ? 'selected' : '' }}>{{ $branch }}
+                                            {{ $task->branch_id == $key ? 'selected' : '' }}>{{ $branch }}
                                         </option>
                                     @endforeach
                                 </select>

@@ -52,9 +52,11 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="ti ti-filter" style="font-size:18px"></i>
                             </button>
+                            @can('create user')
                             <a href="#" data-size="lg" data-url="{{ route('users.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create') }}" class="btn btn-dark px-2 py-2">
                                 <i class="ti ti-plus "></i>
                             </a>
+                            @endcan
                         </div>
                     </div>
                     <script>

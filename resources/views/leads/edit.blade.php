@@ -125,7 +125,7 @@
                                                 <select class="form-control select2 region_id" id="choices-10112" name="region_id">
                                                     <option value="" >Select Region</option>
                                                     @foreach($regions as $key => $region)
-                                                    <option value="{{$key}}">{{$region}}</option>
+                                                    <option value="{{$key}}" {{ $key == $lead->region_id ? 'selected' : '' }}>{{$region}}</option>
                                                     @endforeach
                                                 </select>
                                             </td>
@@ -133,7 +133,7 @@
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Location') }}
+                                                {{ __('Branch') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="branch_div">
                                                 <select class="form-control select2" id="choice-3" name="lead_branch" {{ !\Auth::user()->can('edit branch lead') ? 'disabled' : '' }}>
@@ -426,54 +426,55 @@
 
 <script>
     $(document).ready(function() {
-var id = {{ $lead->brand_id }};
-$.ajax({
-            type: 'GET',
-            url: '{{ route('filter-regions') }}',
-            data: {
-                id: id
-            },
-            success: function(data){
-                data = JSON.parse(data);
+        
+        // var id = {{ $lead->brand_id }};
+        // $.ajax({
+        //     type: 'GET',
+        //     url: '{{ route('filter-regions') }}',
+        //     data: {
+        //         id: id
+        //     },
+        //     success: function(data){
+        //         data = JSON.parse(data);
 
-                if (data.status === 'success') {
-                    $('#region_div').html('');
-                    $("#region_div").html(data.html);
-                    select2();
-                } else {
-                    console.error('Server returned an error:', data.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX request failed:', status, error);
-            }
-        });
+        //         if (data.status === 'success') {
+        //             $('#region_div').html('');
+        //             $("#region_div").html(data.html);
+        //             select2();
+        //         } else {
+        //             console.error('Server returned an error:', data.message);
+        //         }
+        //     },
+        //     error: function(xhr, status, error) {
+        //         console.error('AJAX request failed:', status, error);
+        //     }
+        // });
 
 
 
-        var id = {{ $lead->region_id }};
+        // var id = {{ $lead->region_id }};
 
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('filter-branches') }}',
-                data: {
-                    id: id
-                },
-                success: function(data){
-                    data = JSON.parse(data);
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: '{{ route('filter-branches') }}',
+        //         data: {
+        //             id: id
+        //         },
+        //         success: function(data){
+        //             data = JSON.parse(data);
 
-                    if (data.status === 'success') {
-                        $('#branch_div').html('');
-                        $("#branch_div").html(data.html);
-                        select2();
-                    } else {
-                        console.error('Server returned an error:', data.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX request failed:', status, error);
-                }
-            });
+        //             if (data.status === 'success') {
+        //                 $('#branch_div').html('');
+        //                 $("#branch_div").html(data.html);
+        //                 select2();
+        //             } else {
+        //                 console.error('Server returned an error:', data.message);
+        //             }
+        //         },
+        //         error: function(xhr, status, error) {
+        //             console.error('AJAX request failed:', status, error);
+        //         }
+        //     });
 
 });
 </script>

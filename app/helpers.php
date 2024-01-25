@@ -203,7 +203,7 @@ if (!function_exists('FiltersRegions')){
 if (!function_exists('FiltersBranches')){
     function FiltersBranches($id){
         $branches = Branch::where('region_id', $id)->pluck('name', 'id')->toArray();
-        $html = ' <select class="form form-control branch_id select2" id="branch_id" name="lead_branch"> <option value="">Select Region</option> ';
+        $html = ' <select class="form form-control branch_id select2" id="branch_id" name="lead_branch"> <option value="">Select Branch</option> ';
         foreach ($branches as $key => $branch) {
             $html .= '<option value="' . $key . '">' . $branch . '</option> ';
         }

@@ -165,7 +165,6 @@ class LeadController extends Controller
         /////////////////end pagination calculation
 
         $filters = $this->leadsFilter();
-
         if ($usr->can('manage lead') || \Auth::user()->type == 'super admin') {
 
             if (\Auth::user()->type == 'super admin') {
@@ -186,7 +185,25 @@ class LeadController extends Controller
             $brand_ids = array_keys($companies);
 
             $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id');
-            $leads_query->whereIn('brand_id', $brand_ids)->where('is_converted',0);
+            if(\Auth::user()->type == 'super admin'){
+                
+            }else if(\Auth::user()->type == 'company'){
+                $leads_query->where('brand_id', \Auth::user()->id);
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                $leads_query->whereIn('brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'Regional Manager' || !empty(\Auth::user()->region_id)){
+                $leads_query->where('region_id', \Auth::user()->region_id);
+            }else if(\Auth::user()->type == 'Branch Manager' && !empty(\Auth::user()->branch_id)){
+                $leads_query->where('branch_id', \Auth::user()->branch_id);
+            }else{
+                $leads_query->where('user_id', \Auth::user()->id);
+            }
+           
+           
+           
+           
+           
+          //  $leads_query->whereIn('brand_id', $brand_ids)->where('is_converted',0);
 
             // Add the dynamic filters
             foreach ($filters as $column => $value) {
@@ -391,6 +408,7 @@ class LeadController extends Controller
                 $lead->mobile_phone = $request->lead_mobile_phone;
                 $lead->branch_id      = $request->lead_branch;
                 $lead->brand_id      = $request->brand_id;
+                $lead->region_id      = $request->region_id;
                 $lead->organization_id = gettype($request->lead_organization) == 'string' ? 0 : $request->lead_organization;
                 $lead->organization_link = $request->lead_organization_link;
                 $lead->sources = $request->lead_sources;
@@ -569,12 +587,13 @@ class LeadController extends Controller
                 $lead->sources  = explode(',', $lead->sources);
                 $lead->products = explode(',', $lead->products);
                 $stages = LeadStage::get()->pluck('name', 'id');
-                $regions = Region::pluck('name', 'id')->toArray();
-                $branches = Branch::get()->pluck('name', 'id');
+                $regions =  Region::where('id', $lead->region_id)->pluck('name', 'id')->toArray();
+                $branches =  Branch::where('id', $lead->branch_id)->get()->pluck('name', 'id')->toArray();
                 $organizations = User::where('type', 'organization')->get()->pluck('name', 'id');
                 $sources = Source::get()->pluck('name', 'id');
                 $countries = $this->countries_list();
 
+                
                 $companies = FiltersBrands();
                 return view('leads.edit', compact('companies','lead', 'pipelines', 'sources', 'products', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'regions'));
             } else if (\Auth::user()->can('edit lead') || $lead->created_by == \Auth::user()->creatorId()) {
@@ -610,22 +629,22 @@ class LeadController extends Controller
                 $organizations = User::where('type', 'organization')->get()->pluck('name', 'id');
                 $sources = Source::get()->pluck('name', 'id');
                 $countries = countries();
-
-
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
 
-                $query = Branch::query();
-                $region_query = Region::query();
+                // $query = Branch::query();
+                // $region_query = Region::query();
 
-                foreach ($brand_ids as $brandId) {
-                    $query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
-                    $region_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
-                }
+                // foreach ($brand_ids as $brandId) {
+                //     $query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+                //     $region_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+                // }
 
-                $branches = $query->pluck('name', 'id')->toArray();
-                $regions = $query->pluck('name', 'id')->toArray();
-
+                // $branches = $query->pluck('name', 'id')->toArray();
+                // $regions = $query->pluck('name', 'id')->toArray();
+                $regions =  Region::where('id', $lead->region_id)->pluck('name', 'id')->toArray();
+                $branches =  Branch::where('id', $lead->branch_id)->get()->pluck('name', 'id')->toArray();
+                
                 return view('leads.edit', compact('lead', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'companies', 'regions'));
                 // return view('leads.edit', compact('lead', 'pipelines', 'sources', 'products', 'users'));
             } else {
@@ -742,6 +761,10 @@ class LeadController extends Controller
 
                 if(isset($request->lead_branch)){
                     $lead->branch_id      = $request->lead_branch;
+                }
+
+                if(isset($request->region_id)){
+                    $lead->region_id      = $request->region_id;
                 }
 
                 if(isset($request->brand_id)){
