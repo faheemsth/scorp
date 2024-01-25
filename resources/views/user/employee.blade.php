@@ -80,7 +80,7 @@
                         </script>
                         {{-- Filters --}}
                         <div class="filter-data px-3" id="filterToggle"
-                            <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+                            <?= isset($_GET['brand']) ? '' : 'style="display: none;"' ?>>
                             <form action="/user/employees" method="GET" class="">
                                 <div class="row my-3">
 
@@ -253,12 +253,14 @@
                                     @endforelse
                                 </tbody>
                             </table>
+                            <div class="pagination_div">
                             @if ($total_records > 0)
                                 @include('layouts.pagination', [
                                     'total_pages' => $total_records,
                                     'num_results_on_page' => 25,
                                 ])
                             @endif
+                            </div>
                         </div>
 
                     </div>
@@ -346,6 +348,7 @@
                         if (data.status == 'success') {
                             console.log(data.html);
                             $(".list-div").html(data.html);
+                            $(".pagination_div").html(data.pagination_html);
                         }
                     }
                 })
@@ -372,6 +375,7 @@
                     if (data.status == 'success') {
                         console.log(data.html);
                         $(".list-div").html(data.html);
+                        $(".pagination_div").html(data.pagination_html);
                     }
                 }
             })
