@@ -233,7 +233,7 @@
                                 <td style="border-left: 1px solid #fff; display: none;">Action</td>
                             </tr>
                         </thead>
-                        <tbody class="organization_tbody" style="color:rgb(0, 0, 0); font-size: 14px;" class="new-organization-list-tbody">
+                        <tbody class="organization_tbody" style="; font-size: 14px;" class="new-organization-list-tbody">
 
                             @forelse($organizations as $org)
                             @php
