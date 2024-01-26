@@ -33,29 +33,96 @@
                 </div>
 
                 <div class="form-group col-md-6" id="brand_div" >
-                    {{ Form::label('brand', __('Brand'), ['class' => 'form-label']) }}
-                    {!! Form::select('companies', $companies, $user->brand_id, [
-                        'class' => 'form-control select2',
-                        'id' => 'brands'
-                    ]) !!}
+                    @if (
+                        \Auth::user()->type == 'super admin' ||
+                            \Auth::user()->type == 'Project Director' ||
+                            \Auth::user()->type == 'Project Manager')
+                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                                class="text-danger">*</span></label>
+                        {!! Form::select('companies', $companies, $user->brand_id, [
+                            'class' => 'form-control select2 brand_id',
+                            'id' => 'brands',
+                        ]) !!}
+                    @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
+                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                                class="text-danger">*</span></label>
+                        <input type="hidden" name="companies" value="{{ $user->brand_id }}">
+                        <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                            @foreach ($companies as $key => $comp)
+                                <option value="{{ $key }}" {{ $key == $user->brand_id ? 'selected' : '' }}>
+                                    {{ $comp }}</option>
+                            @endforeach
+                        </select>
+                    @else
+                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                                class="text-danger">*</span></label>
+                        <input type="hidden" name="companies" value="{{ $user->brand_id }}">
+                        <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                            @foreach ($companies as $key => $comp)
+                                <option value="{{ $key }}"
+                                    {{ $key == $user->brand_id ? 'selected' : '' }}>{{ $comp }}
+                                </option>
+                            @endforeach
+                        </select>
+                    @endif
                 </div>
 
                 <div class="form-group col-md-6 {{ $user->type == 'Project Director' || $user->type == 'Project Manager' ? 'd-none' : ''}}" id="region_div">
-                    {{ Form::label('region', __('Region'), ['class' => 'form-label']) }}
-                    {!! Form::select('region', $Region, $user->region_id, [
-                        'class' => 'form-control select2',
-                        'id' => 'region_id'
-                    ]) !!}
+                                     @if (
+                        \Auth::user()->type == 'super admin' ||
+                            \Auth::user()->type == 'Project Director' ||
+                            \Auth::user()->type == 'Project Manager' ||
+                            \Auth::user()->type == 'company' ||
+                            \Auth::user()->type == 'Regional Manager')
+                        <label for="branches" class="col-sm-3 col-form-label">Region<span
+                                class="text-danger">*</span></label>
+                        {!! Form::select('region_id', $Region, $user->region_id, [
+                            'class' => 'form-control select2',
+                            'id' => 'region_id',
+                        ]) !!}
+                    @else
+                        <label for="branches" class="col-sm-3 col-form-label">Region<span
+                                class="text-danger">*</span></label>
+                        <input type="hidden" name="region_id" value="{{ $user->region_id }}">
+                        {!! Form::select('region_id', $Region, $user->region_id, [
+                            'class' => 'form-control select2',
+                            'disabled' => 'disabled',
+                            'id' => 'region_id',
+                        ]) !!}
+                    @endif
                 </div>
 
 
                 <div class="form-group col-md-6 {{ $user->type == 'Project Director' || $user->type == 'Project Manager' ? 'd-none' : ''}}" id="branch_div">
-                    <label for="branch">{{ __('Branch') }}</label>
-                    <select name="branch_id" id="branch_id" class="form-control select2">
-                        @foreach($branches as $key => $branch)
-                            <option value="{{$key}}">{{$branch}}</option>
-                        @endforeach
-                    </select>
+                    
+                    @if (
+                        \Auth::user()->type == 'super admin' ||
+                            \Auth::user()->type == 'Project Director' ||
+                            \Auth::user()->type == 'Project Manager' ||
+                            \Auth::user()->type == 'company' ||
+                            \Auth::user()->type == 'Regional Manager' ||
+                            \Auth::user()->type == 'Branch Manager')
+                        <label for="branches" class="col-sm-3 col-form-label">Branch<span
+                                class="text-danger">*</span></label>
+                        <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
+                            onchange="Change(this)">
+                            @foreach ($branches as $key => $branch)
+                                <option value="{{ $key }}" {{ $user->branch_id == $key ? 'selected' : ''}}>{{ $branch }}</option>
+                            @endforeach
+                        </select>
+                    @else
+                        <label for="branches" class="col-sm-3 col-form-label">Branch<span
+                                class="text-danger">*</span></label>
+                        <input type="hidden" name="branch_id" value="{{ $user->branch_id }}">
+                        <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
+                            onchange="Change(this)">
+                            @foreach ($branches as $key => $branch)
+                                <option value="{{ $key }}"
+                                    {{ $user->branch_id == $key ? 'selected' : '' }}>{{ $branch }}
+                                </option>
+                            @endforeach
+                        </select>
+                    @endif
                 </div>
 
                 <div class="col-md-6">

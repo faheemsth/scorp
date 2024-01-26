@@ -63,18 +63,38 @@
                                 <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                     class="text-danger">*</span></label>
                                 <div class="form-group col-md-6" id="brand_div">
-                                    <select class='form-control select2 brand_id' name="brands" id="brand_id">
-                                        <option value="{{ Auth::id() }}">{{ Auth::user()->name }}</option>
+                                    <input type="hidden" name="brand_id" value="{{\Auth::user()->id}}">
+                                    <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                        @foreach($companies as $key => $comp)
+                                         <option value="{{$key}}" {{ $key == \Auth::user()->id ? 'selected' : ''}}>{{$comp}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            @else 
+                            <div class="form-group row ">
+                                <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                                    class="text-danger">*</span></label>
+                                <div class="form-group col-md-6" id="brand_div">
+                                    <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}">
+                                    <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                        @foreach($companies as $key => $comp)
+                                         <option value="{{$key}}" {{ $key == \Auth::user()->brand_id ? 'selected' : ''}}>{{$comp}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             @endif
 
-                            @if (
-                                \Auth::user()->type == 'super admin' ||
+
+
+
+                            @if (\Auth::user()->type == 'super admin' ||
                                     \Auth::user()->type == 'Project Director' ||
                                     \Auth::user()->type == 'Project Manager' ||
-                                    \Auth::user()->type == 'company')
+                                    \Auth::user()->type == 'company' ||
+                                    \Auth::user()->type == 'Regional Manager')
+                        
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Region<span
                                         class="text-danger">*</span></label>
@@ -85,18 +105,57 @@
                                         ]) !!}
                                     </div>
                                 </div>
+
+                            @else 
+                                <div class="form-group row ">
+                                    <label for="branches" class="col-sm-3 col-form-label">Region<span
+                                        class="text-danger">*</span></label>
+                                    <div class="form-group col-md-6" id="region_div">
+                                        <input type="hidden" name="region_id" value="{{ \Auth::user()->region_id }}">
+                                        {!! Form::select('region_id', $Region, \Auth::user()->region_id, [
+                                            'class' => 'form-control select2',
+                                            'disabled' => 'disabled',
+                                            'id' => 'region_id',
+                                        ]) !!}
+                                    </div>
+                                </div>
                             @endif
 
-                            <div class="form-group row ">
-                                <label for="branches" class="col-sm-3 col-form-label">Branch<span
-                                    class="text-danger">*</span></label>
-                                <div class="form-group col-md-6" id="branch_div">
-                                    <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
-                                        onchange="Change(this)">
-                                        <option value="">Select Branch</option>
-                                    </select>
+                            @if (\Auth::user()->type == 'super admin' ||
+                                    \Auth::user()->type == 'Project Director' ||
+                                    \Auth::user()->type == 'Project Manager' ||
+                                    \Auth::user()->type == 'company' ||
+                                    \Auth::user()->type == 'Regional Manager' ||
+                                    \Auth::user()->type == 'Branch Manager')
+
+                                        <div class="form-group row ">
+                                            <label for="branches" class="col-sm-3 col-form-label">Branch<span
+                                                class="text-danger">*</span></label>
+                                            <div class="form-group col-md-6" id="branch_div">
+                                                <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
+                                                    onchange="Change(this)">
+                                                        @foreach($branches as $key => $branch)
+                                                            <option value="{{$key}}">{{$branch}}</option>
+                                                        @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                            @else 
+                                <div class="form-group row ">
+                                    <label for="branches" class="col-sm-3 col-form-label">Branch<span
+                                        class="text-danger">*</span></label>
+                                    <div class="form-group col-md-6" id="branch_div">
+                                        <input type="hidden" name="branch_id" value="{{ \Auth::user()->branch_id }}">
+                                        <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
+                                            onchange="Change(this)">
+                                                @foreach($branches as $key => $branch)
+                                                    <option value="{{$key}}" {{ \Auth::user()->branch_id == $key ? 'selected' : '' }}>{{$branch}}</option>
+                                                @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
+                            
 
                             <div class="form-group row d-none">
                                 <label for="type" class="col-sm-3 col-form-label">Assign Type <span
@@ -115,7 +174,9 @@
                                         class="text-danger">*</span></label>
                                 <div class="col-sm-6 " id="assign_to_div">
                                     <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to">
-                                        <option value="">Select Employee</option>
+                                        @foreach($employees as $key => $employee)
+                                        <option value="{{$key}}">{{$employee}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
