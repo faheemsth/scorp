@@ -91,23 +91,33 @@
                                                 class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-                                                @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' ||
-                                                    \Auth::user()->type == 'Project Manager'
-                                                )
-                                                    <select class="form-control select2 brand_id" id="choices-1011" name="brand_id">
-                                                        <option value="" >Select Brand</option>
-                                                        @foreach($companies as $key => $company)
-                                                        <option value="{{$key}}" >{{$company}}</option>
+                    
+                                                {{-- Brand Dropdown --}}
+                                                @if (
+                                                    \Auth::user()->type == 'super admin' ||
+                                                        \Auth::user()->type == 'Project Director' ||
+                                                        \Auth::user()->type == 'Project Manager')
+                                                            {!! Form::select('brand_id', $companies, 0, [
+                                                                'class' => 'form-control select2 brand_id',
+                                                                'id' => 'brands',
+                                                            ]) !!}
+                                                @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
+                                                     <input type="hidden" name="brand_id" value="{{\Auth::user()->id}}">
+                                                    <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                                        @foreach($companies as $key => $comp)
+                                                            <option value="{{$key}}" {{ $key == \Auth::user()->id ? 'selected' : ''}}>{{$comp}}</option>
                                                         @endforeach
                                                     </select>
-                                                @elseif(Session::get('is_company_login') == true || \Auth::user()->type == 'company')
-                                                    <select class="form-control select2 brand_id" id="choices-1011" name="brand_id">
-                                                        <option value="" >Select Brand</option>
-                                                        @foreach($companies as $key => $company)
-                                                        <option value="{{$key}}" selected>{{$company}}</option>
-                                                        @endforeach
-                                                    </select>
+                                                @else 
+                                                    <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}">
+                                                        <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                                            @foreach($companies as $key => $comp)
+                                                             <option value="{{$key}}" {{ $key == \Auth::user()->brand_id ? 'selected' : ''}}>{{$comp}}</option>
+                                                            @endforeach
+                                                        </select>
                                                 @endif
+
+                                                {{-- End Brand Dropdown --}}
                                             </td>
                                         </tr>
 
@@ -119,12 +129,26 @@
                                                 class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="region_div">
-                                                <select class="form-control select2 region_id" id="choices-10112" name="region_id">
-                                                    <option value="" >Select Region</option>
-                                                    @foreach($regions as $key => $region)
-                                                    <option value="{{$key}}">{{$region}}</option>
-                                                    @endforeach
-                                                </select>
+
+                                                @if (\Auth::user()->type == 'super admin' ||
+                                                        \Auth::user()->type == 'Project Director' ||
+                                                        \Auth::user()->type == 'Project Manager' ||
+                                                        \Auth::user()->type == 'company' ||
+                                                        \Auth::user()->type == 'Regional Manager')
+
+                                                            {!! Form::select('region_id', $regions, null, [
+                                                                'class' => 'form-control select2',
+                                                                'id' => 'region_id',
+                                                            ]) !!}
+
+                                                @else 
+                                                     <input type="hidden" name="region_id" value="{{ \Auth::user()->region_id }}">
+                                                        {!! Form::select('region_id', $regions, \Auth::user()->region_id, [
+                                                            'class' => 'form-control select2',
+                                                            'disabled' => 'disabled',
+                                                            'id' => 'region_id',
+                                                        ]) !!}
+                                                @endif
                                             </td>
                                         </tr>
 
@@ -134,12 +158,28 @@
                                                 class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="branch_div">
-                                                <select class="form-control select2" id="choice-3" name="lead_branch">
-                                                    <option selected>Select Branch</option>
-                                                    @foreach($branches as $key => $branch)
-                                                    <option value="{{$key}}">{{$branch}}</option>
-                                                    @endforeach
-                                                </select>
+                                                
+                                                @if (\Auth::user()->type == 'super admin' ||
+                                                        \Auth::user()->type == 'Project Director' ||
+                                                        \Auth::user()->type == 'Project Manager' ||
+                                                        \Auth::user()->type == 'company' ||
+                                                        \Auth::user()->type == 'Regional Manager' ||
+                                                        \Auth::user()->type == 'Branch Manager')
+                                                            <select name="lead_branch" id="branch_id" class="form-control select2 branch_id"
+                                                                onchange="Change(this)">
+                                                                    @foreach($branches as $key => $branch)
+                                                                        <option value="{{$key}}">{{$branch}}</option>
+                                                                    @endforeach
+                                                            </select>
+                                                @else 
+                                                         <input type="hidden" name="lead_branch" value="{{ \Auth::user()->branch_id }}">
+                                                            <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
+                                                                onchange="Change(this)">
+                                                                    @foreach($branches as $key => $branch)
+                                                                        <option value="{{$key}}" {{ \Auth::user()->branch_id == $key ? 'selected' : '' }}>{{$branch}}</option>
+                                                                    @endforeach
+                                                            </select>
+                                                @endif
                                             </td>
                                         </tr>
 
@@ -150,7 +190,9 @@
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="assign_to_div">
                                                 <select class="form-control select2" id="choice-2" name="lead_assgigned_user">
-                                                    <option value=""> Select User</option>
+                                                    @foreach($employees as $key => $employee)
+                                                    <option value="{{$key}}">{{$employee}}</option>
+                                                    @endforeach
                                                 </select>
                                             </td>
                                         </tr>

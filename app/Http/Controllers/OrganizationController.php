@@ -901,6 +901,11 @@ class OrganizationController extends Controller
     public function taskCreate($id)
     {
 
+        
+
+
+
+
         if (\Auth::user()->can('create task')) {
             $deals = Deal::get()->pluck('name', 'id')->toArray();
             $orgs = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
@@ -926,7 +931,7 @@ class OrganizationController extends Controller
                   
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
-            $branches = ['' => 'Select Branch'];
+           /// $branches = ['' => 'Select Branch'];
            // $employees = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();
             $teams = User::where('type', 'team')->get()->pluck('name', 'id')->toArray();
             $user_type = User::get()->pluck('type', 'id')->toArray();
@@ -935,7 +940,7 @@ class OrganizationController extends Controller
             // $companies = User::where('type', 'company')->whereIn('id', $test)->orwhere('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             // dd($companies);
 
-                $companies = [0 => 'Select Brand'] + FiltersBrands();
+                //$companies = [0 => 'Select Brand'] + FiltersBrands();
                 // if(\Auth::user()->type == 'super admin'){
                 //     $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
                 // }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
@@ -994,8 +999,16 @@ class OrganizationController extends Controller
             //     $Region= ['' => 'Select Region'];
             // }
             
-            $Region= ['' => 'Select Region'];
-            return view('organizations.tasks', compact('Region','users', 'deals','organization', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds', 'lead', 'deal'));
+            //$Region= ['' => 'Select Region'];
+
+            //function will return all the relevent brands, regions,leads
+            $filter = BrandsRegionsBranches();
+            $companies = $filter['brands'];
+            $Region = $filter['regions'];
+            $branches = $filter['branches'];
+            $employees = $filter['employees'];
+
+            return view('organizations.tasks', compact('Region','users', 'deals','organization', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds', 'lead', 'deal', 'branches'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -1120,7 +1133,7 @@ class OrganizationController extends Controller
             //     $branches = Branch::where('brands',DealTask::where('id', $id)->first()->brand_id)->where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             // }
 
-            $branches = Branch::where('id',DealTask::where('id', $id)->first()->branch_id)->get()->pluck('name', 'id')->toArray();
+           // $branches = Branch::where('id',DealTask::where('id', $id)->first()->branch_id)->get()->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
 
@@ -1148,7 +1161,7 @@ class OrganizationController extends Controller
             // }else if(\Auth::user()->type == 'company'){
             //     $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             // }
-            $companies = FiltersBrands();
+           // $companies = FiltersBrands();
 
             $employees = [];
             // if(\Auth::user()->type == 'company'){
@@ -1157,11 +1170,17 @@ class OrganizationController extends Controller
             //     $employees =  User::where('brand_id', DealTask::where('id', $id)->first()->brand_id)->pluck('name', 'id')->toArray();
             // }
 
-            $employees =  User::where('id', $task->assigned_to)->pluck('name', 'id')->toArray();
-            
-            $Region=Region::whereRaw('FIND_IN_SET(?, brands)', [$task->brand_id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            //$employees =  User::where('branch_id', $task->branch_id)->pluck('name', 'id')->toArray(); 
+            //$Region=Region::whereRaw('FIND_IN_SET(?, brands)', [$task->brand_id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             // dd($branches);
+
+            $filter = BrandsRegionsBranchesForEdit($task->brand_id, $task->region_id, $task->branch_id);
+            $companies = $filter['brands'];
+            $Region = $filter['regions'];
+            $branches = $filter['branches'];
+            $employees = $filter['employees'];
+
             return view('organizations.task_edit', compact('Region','task', 'users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'related_to', 'companies', 'employees'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));

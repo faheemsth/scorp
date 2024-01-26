@@ -287,16 +287,19 @@ class LeadController extends Controller
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
 
-            $query = Branch::query();
-            $region_query = Region::query();
+            // $query = Branch::query();
+            // $region_query = Region::query();
 
-            foreach ($brand_ids as $brandId) {
-                $query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
-                $region_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
-            }
+            // foreach ($brand_ids as $brandId) {
+            //     $query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+            //     $region_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+            // }
 
-            $branches = $query->pluck('name', 'id')->toArray();
-            $regions = $region_query->pluck('name', 'id')->toArray();
+            // $branches = $query->pluck('name', 'id')->toArray();
+            // $regions = $region_query->pluck('name', 'id')->toArray();
+
+            $regions = [];
+            $branches = [];
 
             $users = allUsers();
             $companies = FiltersBrands();
@@ -309,7 +312,14 @@ class LeadController extends Controller
             $sources = Source::get()->pluck('name', 'id');
             $countries = countries();
 
-            return view('leads.create', compact('users','companies' ,'stages', 'branches', 'organizations', 'sources', 'countries', 'regions'));
+
+            $filter = BrandsRegionsBranches();
+            $companies = $filter['brands'];
+            $regions = $filter['regions'];
+            $branches = $filter['branches'];
+            $employees = $filter['employees'];
+
+            return view('leads.create', compact('users','companies' ,'stages', 'branches', 'organizations', 'sources', 'countries', 'regions', 'employees'));
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
         }
@@ -411,7 +421,7 @@ class LeadController extends Controller
                 $lead->region_id      = $request->region_id;
                 $lead->organization_id = gettype($request->lead_organization) == 'string' ? 0 : $request->lead_organization;
                 $lead->organization_link = $request->lead_organization_link;
-                $lead->sources = $request->lead_sources;
+                $lead->sources = $request->lead_source;
                 $lead->referrer_email = $request->referrer_email;
                 $lead->street = $request->lead_street;
                 $lead->city = $request->lead_city;
@@ -575,6 +585,7 @@ class LeadController extends Controller
      */
     public function edit(Lead $lead)
     {
+
         if (\Auth::user()->can('edit lead') || \Auth::user()->type == 'super admin') {
 
 
@@ -584,7 +595,7 @@ class LeadController extends Controller
                 $sources        = Source::get()->pluck('name', 'id');
                 $products       = ProductService::get()->pluck('name', 'id');
                 $users          = User::where('type', '!=', 'client')->where('type', '!=', 'company')->where('id', '!=', \Auth::user()->id)->get()->pluck('name', 'id');
-                $lead->sources  = explode(',', $lead->sources);
+                $lead->sources  = $lead->sources;
                 $lead->products = explode(',', $lead->products);
                 $stages = LeadStage::get()->pluck('name', 'id');
                 $regions =  Region::where('id', $lead->region_id)->pluck('name', 'id')->toArray();
@@ -595,7 +606,15 @@ class LeadController extends Controller
 
                 
                 $companies = FiltersBrands();
-                return view('leads.edit', compact('companies','lead', 'pipelines', 'sources', 'products', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'regions'));
+
+
+                $filter = BrandsRegionsBranchesForEdit($lead->brand_id, $lead->region_id, $lead->branch_id);
+                $companies = $filter['brands'];
+                $Region = $filter['regions'];
+                $branches = $filter['branches'];
+                $employees = $filter['employees'];
+                
+                return view('leads.edit', compact('companies','lead', 'pipelines', 'sources', 'products', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'regions', 'employees'));
             } else if (\Auth::user()->can('edit lead') || $lead->created_by == \Auth::user()->creatorId()) {
 
                 // $pipelines = Pipeline::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -645,7 +664,13 @@ class LeadController extends Controller
                 $regions =  Region::where('id', $lead->region_id)->pluck('name', 'id')->toArray();
                 $branches =  Branch::where('id', $lead->branch_id)->get()->pluck('name', 'id')->toArray();
                 
-                return view('leads.edit', compact('lead', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'companies', 'regions'));
+
+                $filter = BrandsRegionsBranchesForEdit($lead->brand_id, $lead->region_id, $lead->branch_id);
+                $companies = $filter['brands'];
+                $Region = $filter['regions'];
+                $branches = $filter['branches'];
+                $employees = $filter['employees'];
+                return view('leads.edit', compact('lead', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'companies', 'regions', 'employees'));
                 // return view('leads.edit', compact('lead', 'pipelines', 'sources', 'products', 'users'));
             } else {
                 return response()->json(['error' => __('Permission Denied.')], 401);
@@ -777,7 +802,7 @@ class LeadController extends Controller
 
                 $lead->organization_id =gettype($request->lead_organization) == 'string' ? 0 : $request->lead_organization;;
                 $lead->organization_link = $request->lead_organization_link;
-                $lead->sources = $request->lead_sources;
+                $lead->sources = $request->lead_source;
                 $lead->referrer_email = $request->referrer_email;
                 $lead->street = $request->lead_street;
                 $lead->city = $request->lead_city;
@@ -1374,8 +1399,14 @@ class LeadController extends Controller
             $pipelines = Pipeline::get()->pluck('name', 'id');
             $companies = FiltersBrands();
 
+            $filter = BrandsRegionsBranches();
+            $companies = $filter['brands'];
+            $regions = $filter['regions'];
+            $branches = $filter['branches'];
+            $employees = $filter['employees'];
+
             // Render the getDiscussions partial view and store the HTML in $returnHTML
-            $returnHTML = view('leads.fetchColumns')->with(['first_row' => $first_row, 'users' => $users, 'pipelines' => $pipelines , 'companies' => $companies])->render();
+            $returnHTML = view('leads.fetchColumns')->with(['first_row' => $first_row, 'users' => $users, 'pipelines' => $pipelines , 'companies' => $companies, 'regions' => $regions, 'branches' => $branches, 'employees' => $employees])->render();
 
 
             return response()->json(['status' => 'success', 'data' => $returnHTML]);
@@ -2486,6 +2517,7 @@ class LeadController extends Controller
         $deal->status      = 'Active';
         $deal->created_by  = $lead->created_by;
         $deal->branch_id = $lead->branch_id;
+        $deal->region_id = $lead->region_id;
         $deal->drive_link = $lead->drive_link;
         $deal->university_id = $request->university_id;
         $deal->assigned_to = $lead->user_id;

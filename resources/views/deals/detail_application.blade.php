@@ -223,13 +223,7 @@
                                                                     {{ __('Brand') }}
                                                                 </td>
                                                                 <td class="status-td" style="padding-left: 10px; font-size: 14px;">
-                                                                    @if (App\Models\Deal::find($application->deal_id)->brand_id < 0)
-                                                                    {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->brand_id)->name }}
-                                                                    @else
-                                                                    {{__(" ")}}
-                                                                    @endif
-
-
+                                                                   {{  App\Models\User::find(App\Models\Deal::find($application->deal_id)->brand_id)->name ?? ''}}
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -237,13 +231,7 @@
                                                                     {{ __('Branch') }}
                                                                 </td>
                                                                 <td class="status-td" style="padding-left: 10px; font-size: 14px;">
-                                                                    @if (App\Models\Deal::find($application->deal_id)->branch_id)
-                                                                    {{ App\Models\Branch::find(App\Models\Deal::find($application->deal_id)->branch_id)->name }}
-                                                                    @else
-                                                                    {{__(" ")}}
-                                                                    @endif
-
-
+                                                                   {{ App\Models\Branch::find(App\Models\Deal::find($application->deal_id)->branch_id)->name  ?? ''}}
                                                                 </td>
                                                             </tr>
 
