@@ -191,9 +191,9 @@ class LeadController extends Controller
                 $leads_query->where('brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
                 $leads_query->whereIn('brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Regional Manager' || !empty(\Auth::user()->region_id)){
+            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
                 $leads_query->where('region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' && !empty(\Auth::user()->branch_id)){
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' && !empty(\Auth::user()->branch_id)){
                 $leads_query->where('branch_id', \Auth::user()->branch_id);
             }else{
                 $leads_query->where('user_id', \Auth::user()->id);
@@ -800,7 +800,7 @@ class LeadController extends Controller
                     $lead->user_id     = $request->lead_assgigned_user;
                 }
 
-                $lead->organization_id =gettype($request->lead_organization) == 'string' ? 0 : $request->lead_organization;;
+                $lead->organization_id = $request->lead_organization;;
                 $lead->organization_link = $request->lead_organization_link;
                 $lead->sources = $request->lead_source;
                 $lead->referrer_email = $request->referrer_email;

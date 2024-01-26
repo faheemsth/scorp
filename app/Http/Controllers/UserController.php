@@ -696,12 +696,28 @@ class UserController extends Controller
             }
 
            
-            if (\Auth::user()->type == 'super admin') {
-                $usersQuery = User::whereNotIn('type', $excludedTypes);
-            } else if ($user->type == 'company') {
-                $usersQuery->where('brand_id', $user->id);
-            } else {
-                $usersQuery->where('brand_id', $user->brand_id);
+            // if (\Auth::user()->type == 'super admin') {
+            //     $usersQuery = User::whereNotIn('type', $excludedTypes);
+            // } else if ($user->type == 'company') {
+            //     $usersQuery->where('brand_id', $user->id);
+            // } else {
+            //     $usersQuery->where('brand_id', $user->brand_id);
+            // }
+
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            if(\Auth::user()->type == 'super admin'){
+                
+            }else if(\Auth::user()->type == 'company'){
+                $usersQuery->where('brand_id', \Auth::user()->id);
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                $usersQuery->whereIn('brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+                $usersQuery->where('region_id', \Auth::user()->region_id);
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' && !empty(\Auth::user()->branch_id)){
+                $usersQuery->where('branch_id', \Auth::user()->branch_id);
+            }else{
+                $usersQuery->where('id', \Auth::user()->id);
             }
 
 

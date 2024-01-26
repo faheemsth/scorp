@@ -1283,7 +1283,7 @@ class OrganizationController extends Controller
             $data = [
                 'type' => 'info',
                 'note' => json_encode($remarks),
-                'module_id' => 1,
+                'module_id' => $dealTask->id,
                 'module_type' => 'task',
             ];
             addLogActivity($data);
@@ -1300,7 +1300,7 @@ class OrganizationController extends Controller
                 $data = [
                     'type' => 'info',
                     'note' => json_encode($remarks),
-                    'module_id' => 1,
+                    'module_id' => $dealTask->id,
                     'module_type' => 'task',
                 ];
                 addLogActivity($data);

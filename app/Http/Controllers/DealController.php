@@ -272,9 +272,9 @@ class DealController extends Controller
                 $deals_query->where('brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
                 $deals_query->whereIn('brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Regional Manager' || !empty(\Auth::user()->region_id)){
+            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
                 $deals_query->where('region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' && !empty(\Auth::user()->branch_id)){
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' && !empty(\Auth::user()->branch_id)){
                 $deals_query->where('branch_id', \Auth::user()->branch_id);
             }else{
                 $deals_query->where('assigned_to', \Auth::user()->id);
@@ -2714,8 +2714,23 @@ class DealController extends Controller
 
         if (\Auth::user()->can('manage task') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company') {
             $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to');
+            
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
+            if(\Auth::user()->type == 'super admin'){
+                
+            }else if(\Auth::user()->type == 'company'){
+                $tasks->where('deal_tasks.brand_id', \Auth::user()->id);
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+                $tasks->where('deal_tasks.region_id', \Auth::user()->region_id);
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' && !empty(\Auth::user()->branch_id)){
+                $tasks->where('deal_tasks.branch_id', \Auth::user()->branch_id);
+            }else{
+                $tasks->where('deal_tasks.assigned_to', \Auth::user()->id);
+            }
+           
             $filters = $this->TasksFilter();
 
             foreach ($filters as $column => $value) {
@@ -2735,11 +2750,6 @@ class DealController extends Controller
             if(!isset($_GET['status'])){
                 $tasks->where('status', 0);
             }
-
-            $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
-            $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
-
-
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];

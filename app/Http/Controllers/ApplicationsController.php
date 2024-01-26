@@ -69,9 +69,9 @@ class ApplicationsController extends Controller
                 $app_query->where('deals.brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
                 $app_query->whereIn('deals.brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Regional Manager' || !empty(\Auth::user()->region_id)){
+            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
                 $app_query->where('deals.region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' && !empty(\Auth::user()->branch_id)){
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' && !empty(\Auth::user()->branch_id)){
                 $app_query->where('deals.branch_id', \Auth::user()->branch_id);
             }else{
                 $app_query->where('deals.assigned_to', \Auth::user()->id);
