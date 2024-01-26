@@ -52,7 +52,7 @@
                                     <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                         class="text-danger">*</span></label>
                                     <div class="form-group col-md-6" id="brand_div">
-                                        {!! Form::select('brand_id', $companies, null, [
+                                        {!! Form::select('brand_id', $companies, 0, [
                                             'class' => 'form-control select2 brand_id',
                                             'id' => 'brands',
                                         ]) !!}
@@ -64,7 +64,7 @@
                                     class="text-danger">*</span></label>
                                 <div class="form-group col-md-6" id="brand_div">
                                     <select class='form-control select2 brand_id' name="brands" id="brand_id">
-                                        <option value="{{ Auth::id() }}" selected>{{ Auth::user()->name }}</option>
+                                        <option value="{{ Auth::id() }}">{{ Auth::user()->name }}</option>
                                     </select>
                                 </div>
                             </div>

@@ -98,6 +98,8 @@
         </li>
         {{-- dashboard end li  --}}
         {{-- /// --}}
+
+        @if (Gate::check('manage user') || Gate::check('manage region') || Gate::check('manage branch') || Gate::check('manage employee'))
         <li class="nav-item">
             <a class="nav-link {{Request::segment(1) == 'branch' || Request::segment(1) == 'users' || (Request::segment(1) == 'user' && Request::segment(2) == 'employees') || Request::segment(1) == 'region' ? '' : 'collapsed' }}"
             href="#" data-toggle="collapse" data-target="#collapsehrm"
@@ -125,7 +127,8 @@
                                 Brands</a>
                         </li>
                     @endcan
-                    {{-- @can('manage region') --}}
+
+                    @can('manage region')
                     <li class="emp nav-item {{ Request::segment(1) == 'region' ? ' active' : '' }}">
                         <a class="collapse-item" style="color:white; font-size: 13px;"
                             href="{{ url('/region/index') }}">
@@ -138,7 +141,7 @@
 
                             {{ __('Region') }}</a>
                     </li>
-                    {{-- @endcan --}}
+                    @endcan
                     @can('manage branch')
                         <li class="emp nav-item {{ Request::segment(1) == 'branch' ? ' active' : '' }}">
                             <a class="collapse-item" style="color:white; font-size: 13px;"
@@ -153,7 +156,7 @@
                                 {{ __('Branches') }}</a>
                         </li>
                     @endcan
-                    @can('manage user')
+                    @can('manage employee')
                         <li class="emp nav-item {{ Request::segment(2) == 'employees' ? ' active' : '' }}">
                             <a class="collapse-item " style="color:white; font-size: 13px;"
                                 href="{{ route('user.employees') }}">
@@ -230,6 +233,7 @@
                 </div>
             </div>
         </li>
+        @endif
 
 
 

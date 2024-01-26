@@ -40,7 +40,7 @@
 
                 <div class="form-group col-md-6" id="region_div">
                     {{ Form::label('role', __('Regions'), ['class' => 'form-label']) }}
-                    {!! Form::select('region', $Region, null, [
+                    {!! Form::select('region_id', $Region, null, [
                         'class' => 'form-control select2',
                         'id' => 'region_id'
                     ]) !!}
