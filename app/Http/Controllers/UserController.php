@@ -714,7 +714,7 @@ class UserController extends Controller
                 $usersQuery->whereIn('brand_id', $brand_ids);
             }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
                 $usersQuery->where('region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' && !empty(\Auth::user()->branch_id)){
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
                 $usersQuery->where('branch_id', \Auth::user()->branch_id);
             }else{
                 $usersQuery->where('id', \Auth::user()->id);

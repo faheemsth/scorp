@@ -193,7 +193,7 @@ class LeadController extends Controller
                 $leads_query->whereIn('brand_id', $brand_ids);
             }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
                 $leads_query->where('region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' && !empty(\Auth::user()->branch_id)){
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
                 $leads_query->where('branch_id', \Auth::user()->branch_id);
             }else{
                 $leads_query->where('user_id', \Auth::user()->id);

@@ -274,7 +274,7 @@ class DealController extends Controller
                 $deals_query->whereIn('brand_id', $brand_ids);
             }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
                 $deals_query->where('region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' && !empty(\Auth::user()->branch_id)){
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
                 $deals_query->where('branch_id', \Auth::user()->branch_id);
             }else{
                 $deals_query->where('assigned_to', \Auth::user()->id);
@@ -2725,7 +2725,7 @@ class DealController extends Controller
                 $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
             }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
                 $tasks->where('deal_tasks.region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' && !empty(\Auth::user()->branch_id)){
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
                 $tasks->where('deal_tasks.branch_id', \Auth::user()->branch_id);
             }else{
                 $tasks->where('deal_tasks.assigned_to', \Auth::user()->id);
