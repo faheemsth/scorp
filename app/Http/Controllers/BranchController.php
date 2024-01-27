@@ -125,6 +125,17 @@ class BranchController extends Controller
         $brands = User::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
         $branchmanager=User::where('type','Branch Manager')->get();
         $regions=Region::all();
+
+
+
+
+
+
+        $filter = BrandsRegionsBranches();
+        $brands = $filter['brands'];
+        $regions = $filter['regions'];
+        $branches = $filter['branches'];
+        
         if(\Auth::user()->can('create branch'))
         {
             return view('branch.create',compact('branchmanager','regions', 'brands'));
@@ -152,14 +163,9 @@ class BranchController extends Controller
                 return redirect()->back()->with('error', $messages->first());
             }
 
-            $brands = null;
-            if($request->brands != null && sizeof($request->brands) > 0){
-                $brands = implode(',',$request->brands);
-            }
-
             $branch             = new Branch();
             $branch->name       = $request->name;
-            $branch->brands       = $brands;
+            $branch->brands       = $request->brands;
 
             $branch->region_id       = $request->region_id;
             $branch->branch_manager_id       = $request->branch_manager_id;
@@ -190,9 +196,14 @@ class BranchController extends Controller
         $branchmanager=User::where('type','')->get();
         $regions=Region::all();
 
-        $region = Region::where('id', $branch->region_id)->first();
+      //  $region = Region::where('id', $branch->region_id)->first();
 
-        $brands = User::where('id',$branch->brands)->where('type', 'company')->pluck('name', 'id')->toArray();
+    //    $brands = User::where('id',$branch->brands)->where('type', 'company')->pluck('name', 'id')->toArray();
+        
+        $filter = BrandsRegionsBranchesForEdit($branch->brands, $branch->region_id, 0);
+        $brands = $filter['brands'];
+        $regions = $filter['regions'];
+        
         if(\Auth::user()->can('edit branch'))
         {
             // if($branch->created_by == \Auth::user()->creatorId())
@@ -229,14 +240,14 @@ class BranchController extends Controller
                     return redirect()->back()->with('error', $messages->first());
                 }
 
-                $brands = null;
-                if($request->brands != null && sizeof($request->brands) > 0){
-                    $brands = implode(',',$request->brands);
-                }
+                // $brands = null;
+                // if($request->brands != null && sizeof($request->brands) > 0){
+                //     $brands = implode(',',$request->brands);
+                // }
 
                 $branch->name = $request->name;
                 $branch->region_id       = $request->region_id;
-                $branch->brands       = $brands;
+                $branch->brands       = $request->brands;
                 if(isset($request->branch_manager_id)){
                     $branch->branch_manager_id       = $request->branch_manager_id;
                 }
