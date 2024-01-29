@@ -1822,3 +1822,7 @@ Route::get('/region/filter-branch-users', [RegionController::class, 'getFilterBr
 
 /////////////////////////////////////////////////////////////Analysis Controller
 Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.index')->middleware(['auth', 'XSS']);;
+
+
+//////////////////////////////////////////////Exports Urls
+Route::get('/university-download', [UniversityController::class, 'download'])->name('university.download');

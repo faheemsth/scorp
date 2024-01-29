@@ -6,8 +6,7 @@
     <div class="row">
         <div class="form-group col-md-6 py-0">
             {{ Form::label('name', __('Institute Category'),['class'=>'form-label']) }}
-            <span class="text-danger">*</span>
-            {{ Form::select('category_id', $categories, null, ['class' => 'form-control select2', 'id' => 'categories' ,'required' => 'required']) }}
+            {{ Form::select('category_id', $categories, null, ['class' => 'form-control select2', 'id' => 'categories']) }}
         </div>
 
         <div class="form-group col-md-6 py-0">
@@ -23,11 +22,11 @@
         <div class="form-group col-md-6 py-0">
             {{ Form::label('name', __('Country'),['class'=>'form-label']) }}
             <span class="text-danger">*</span>
-            {{ Form::select('country', $countries, null, ['class' => 'form-control select2', 'id' => 'countries' ,'required' => 'required']) }}
+            {{ Form::select('country', ['' => 'Select Country']+$countries, null, ['class' => 'form-control select2', 'id' => 'countries' ,'required' => 'required']) }}
         </div>
 
         <div class="form-group col-md-6 py-0">
-            {{ Form::label('name', __('Campuses'),['class'=>'form-label']) }}
+            {{ Form::label('name', __('Campuse'),['class'=>'form-label']) }}
             <span class="text-danger">*</span>
             {{ Form::text('city', '', array('class' => 'form-control','required'=>'required')) }}
         </div>

@@ -348,6 +348,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         <a href="/leads/list" class="btn form-btn bg-dark" style="color:white;">Reset</a>
                                     </div>
                                 </div>
+
+                                
                                 <div class="row my-4 d-none">
                                     <div class="enries_per_page" style="max-width: 300px; display: flex;">
 

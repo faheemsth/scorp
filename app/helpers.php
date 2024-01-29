@@ -339,6 +339,29 @@ if (!function_exists('BrandsRegionsBranches')){
 }
 
 
+function downloadCSV($headers, $data, $filename = 'data.csv') {
+    // Set headers for CSV download
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+    // Open output stream
+    $output = fopen('php://output', 'w');
+
+    // Write headers to CSV
+    fputcsv($output, $headers);
+
+    // Write data to CSV
+    foreach ($data as $row) {
+        fputcsv($output, $row);
+    }
+
+    // Close output stream
+    fclose($output);
+
+    // Stop further execution
+    exit;
+}
+
 
 
 
