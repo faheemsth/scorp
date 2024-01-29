@@ -305,7 +305,7 @@ class DashboardController extends Controller
             } elseif (Auth::user()->type == 'super admin') {
                 ///////////////////////////////////////////////////Chart of Lead Stages
                 $data = $this->superAdminCrmDashboarData();
-                return view('dashboard.crm-dashboard', $data);
+                return view('crm.dashboard', $data);
             } elseif (Auth::user()->type == 'team') {
 
                 $data = $this->superAdminCrmDashboarData();

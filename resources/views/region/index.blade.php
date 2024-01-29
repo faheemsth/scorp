@@ -269,7 +269,7 @@
 
                         <div class="col-8 d-flex justify-content-end gap-2">
                             <div class="input-group w-25">
-                                <button class="btn btn-sm list-global-search-btn">
+                                <button class="btn btn-sm list-global-search-btn px-0">
                                     <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
                                         <i class="ti ti-search" style="font-size: 18px"></i>
                                     </span>

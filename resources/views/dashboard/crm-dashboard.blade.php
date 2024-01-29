@@ -118,6 +118,7 @@
         position: relative;
         margin: auto;
         height: 60%;
+
     }
 </style>
 
@@ -126,7 +127,7 @@
     <div class="row">
         <div class="col-xl-2 col-md-6">
             <!-- card -->
-            <div class="card card-animate my-card" style="min-height: 202px;">
+            <div class="card card-animate my-card" style="height: 220px;  max-height: 100%;">
                 <div class="card-body pl-3">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 overflow-hidden">
@@ -151,7 +152,7 @@
         </div><!-- end col -->
         <div class="col-xl-2 col-md-6">
             <!-- card -->
-            <div class="card card-animate my-card" style="min-height: 202px; ">
+            <div class="card card-animate my-card" style="height: 220px;  max-height: 100%;">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 overflow-hidden">
@@ -176,7 +177,7 @@
 
         <div class="col-xl-2 col-md-6">
             <!-- card -->
-            <div class="card card-animate my-card" style="min-height: 202px; ">
+            <div class="card card-animate my-card" style="height: 220px;  max-height: 100%;">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 overflow-hidden">
@@ -196,7 +197,7 @@
 
         <div class="col-xl-2 col-md-6">
             <!-- card -->
-            <div class="card card-animate my-card" style="min-height: 202px; ">
+            <div class="card card-animate my-card" style="height: 220px;  max-height: 100%;">
                 <div class="card-body ">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 overflow-hidden">
@@ -219,7 +220,7 @@
         </div><!-- end col -->
         <div class="col-xl-2 col-md-6">
             <!-- card -->
-            <div class="card card-animate my-card" style="min-height: 202px; ">
+            <div class="card card-animate my-card" style="height: 220px;  max-height: 100%;">
                 <div class="card-body ">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 overflow-hidden">
@@ -241,7 +242,7 @@
         </div><!-- end col -->
         <div class="col-xl-2 col-md-6">
             <!-- card -->
-            <div class="card card-animate my-card" style="min-height: 202px; ">
+            <div class="card card-animate my-card" style="height: 220px;  max-height: 100%;">
                 <div class="card-body ">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 overflow-hidden">
@@ -261,7 +262,7 @@
         </div><!-- end col -->
         <div class="col-xl-2 col-md-6">
             <!-- card -->
-            <div class="card card-animate my-card" style="min-height: 202px; ">
+            <div class="card card-animate my-card" style="height: 220px;  max-height: 100%;">
                 <div class="card-body ">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 overflow-hidden">
@@ -284,7 +285,7 @@
 
         <div class="col-xl-2 col-md-6">
             <!-- card -->
-            <div class="card card-animate my-card" style="min-height: 202px; ">
+            <div class="card card-animate my-card " style="height: 220px;  max-height: 100%;">
                 <div class="card-body ">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1 overflow-hidden">
@@ -305,7 +306,7 @@
     </div>
 
     <div class="row justify-content-between">
-        <div class="col-9">
+        <div class="col-12 col-md-12 col-lg-9">
             <div class="card my-card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
@@ -352,7 +353,7 @@
             </div>
         </div>
 
-        <div class="col-3">
+        <div class="col-12 col-md-12 col-lg-3">
             <div class="card my-card" style="min-height: 95% !important;">
                 <div class="card-body">
                     <div class="d-flex justify-content-between mt-3 mb-2 align-items-center">
