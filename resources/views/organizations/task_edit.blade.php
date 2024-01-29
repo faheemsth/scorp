@@ -47,92 +47,132 @@
                             </div>
                         </div>
 
+                        {{-- Brands Filter --}}
                         @if (
                             \Auth::user()->type == 'super admin' ||
-                                \Auth::user()->type == 'project director' ||
-                                \Auth::user()->type == 'project manager')
+                                \Auth::user()->type == 'Project Director' ||
+                                \Auth::user()->type == 'Project Manager')
                             <div class="form-group row ">
-                                <label for="branches" class="col-sm-3 col-form-label">Brands <span
+                                <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                     class="text-danger">*</span></label>
-                                <div class="col-sm-6">
-                                    <select class="form form-control select2 brand_id" id="brands"
-                                        name="brand_id" {{ !\Auth::user()->can('edit brand task') ? 'disabled' : '' }}>
-                                        <option value="">Select Brands</option>
-                                        @foreach ($companies as $key => $brand)
-                                            <option value="{{ $key }}" {{ $task->brand_id == $key ? 'selected' : ''  }}>{{ $brand }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="form-group col-md-6" id="brand_div">
+                                    {!! Form::select('brand_id', $companies, $task->brand_id, [
+                                        'class' => 'form-control select2 brand_id',
+                                        'id' => 'brands',
+                                    ]) !!}
                                 </div>
                             </div>
                         @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
-                            <div class="form-group row ">
-                                <label for="branches" class="col-sm-3 col-form-label">Brands <span
-                                    class="text-danger">*</span></label>
-                                <div class="form-group col-md-6" id="brand_div">
-                                    <select class='form-control select2 brand_id' name="brands" id="brand_id">
-                                        <option value="{{ Auth::id() }}" selected>{{ Auth::user()->name }}</option>
-                                    </select>
-                                </div>
-                            </div>
-                        @endif
-
-                        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                         <div class="form-group row ">
-                            <label for="branches" class="col-sm-3 col-form-label">Region <span
+                            <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                 class="text-danger">*</span></label>
-                            <div class="form-group col-md-6" id="region_div">
-                                {!! Form::select('region_id', $Region, $task->region_id, [
-                                    'class' => 'form-control select2',
-                                    'id' => 'region_id'
-                                ]) !!}
-                            </div>
-                        </div>
-                        @endif
-
-                        <div class="form-group row ">
-                            <label for="branches" class="col-sm-3 col-form-label">
-                                Branch <span class="text-danger">*</span>
-                            </label>
-                            <div class="col-sm-6" id="branch_div">
-                                <select class="form form-control select2" {{ !\Auth::user()->can('edit branch task') ? 'disabled' : '' }} id="branch_id" name="branch_id">
-                                    <option value="">Select Branch</option>
-                                    @foreach ($branches as $key => $branch)
-                                        <option value="{{ $key }}"
-                                            {{ App\Models\Branch::where('brands',$task->brand_id)->first()->id == $key ? 'selected' : '' }}>{{ $branch }}
-                                        </option>
+                            <div class="form-group col-md-6" id="brand_div">
+                                <input type="hidden" name="brand_id" value="{{\Auth::user()->id}}">
+                                <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                    @foreach($companies as $key => $comp)
+                                     <option value="{{$key}}" {{ $key == \Auth::user()->id ? 'selected' : ''}}>{{$comp}}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
+                        @else 
+                        <div class="form-group row ">
+                            <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                                class="text-danger">*</span></label>
+                            <div class="form-group col-md-6" id="brand_div">
+                                <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}">
+                                <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                    @foreach($companies as $key => $comp)
+                                     <option value="{{$key}}" {{ $key == \Auth::user()->brand_id ? 'selected' : ''}}>{{$comp}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @endif
+                        {{-- End Brand Filter --}}
+
+
+                        {{-- Region Filter --}}
+                        @if (\Auth::user()->type == 'super admin' ||
+                                    \Auth::user()->type == 'Project Director' ||
+                                    \Auth::user()->type == 'Project Manager' ||
+                                    \Auth::user()->type == 'company' ||
+                                    \Auth::user()->type == 'Regional Manager')
+                        
+                                <div class="form-group row ">
+                                    <label for="branches" class="col-sm-3 col-form-label">Region<span
+                                        class="text-danger">*</span></label>
+                                    <div class="form-group col-md-6" id="region_div">
+                                        {!! Form::select('region_id', $Region, $task->region_id, [
+                                            'class' => 'form-control select2',
+                                            'id' => 'region_id',
+                                        ]) !!}
+                                    </div>
+                                </div>
+                            @else 
+                                <div class="form-group row ">
+                                    <label for="branches" class="col-sm-3 col-form-label">Region<span
+                                        class="text-danger">*</span></label>
+                                    <div class="form-group col-md-6" id="region_div">
+                                        <input type="hidden" name="region_id" value="{{ \Auth::user()->region_id }}">
+                                        {!! Form::select('region_id', $Region, $task->region_id, [
+                                            'class' => 'form-control select2',
+                                            'disabled' => 'disabled',
+                                            'id' => 'region_id',
+                                        ]) !!}
+                                    </div>
+                                </div>
+                            @endif
+                        {{-- End Region Filter --}}
+
+
+                        {{-- Branch Dropdown --}}
+                        @if (\Auth::user()->type == 'super admin' ||
+                        \Auth::user()->type == 'Project Director' ||
+                        \Auth::user()->type == 'Project Manager' ||
+                        \Auth::user()->type == 'company' ||
+                        \Auth::user()->type == 'Regional Manager' ||
+                        \Auth::user()->type == 'Branch Manager')
+
+                            <div class="form-group row ">
+                                <label for="branches" class="col-sm-3 col-form-label">Branch<span
+                                    class="text-danger">*</span></label>
+                                <div class="form-group col-md-6" id="branch_div">
+                                    <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
+                                        onchange="Change(this)">
+                                            @foreach($branches as $key => $branch)
+                                                <option value="{{$key}}" {{ $task->branch_id == $key ? 'selected' : ''}}>{{$branch}}</option>
+                                            @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @else 
+                            <div class="form-group row ">
+                                <label for="branches" class="col-sm-3 col-form-label">Branch<span
+                                    class="text-danger">*</span></label>
+                                <div class="form-group col-md-6" id="branch_div">
+                                    <input type="hidden" name="branch_id" value="{{ \Auth::user()->branch_id }}">
+                                    <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
+                                        onchange="Change(this)">
+                                            @foreach($branches as $key => $branch)
+                                                <option value="{{$key}}" {{ $task->branch_id == $key ? 'selected' : '' }}>{{$branch}}</option>
+                                            @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endif
+
+                        {{-- End Branch Dropdown --}}
 
 
                         <div class="form-group row ">
                             <label for="organization" class="col-sm-3 col-form-label">Assigned to <span
                                     class="text-danger">*</span></label>
-                            <div class="col-sm-6" id="assign_to_div">
-                                <select class="form form-control select2 assigned_to" id="choices-multiple4" name="assigned_to" {{ !\Auth::user()->can('edit assign to task') ? 'disabled' : '' }}>
-                                    <option value="">Assign to</option>
-                                    @foreach ($employees as $key => $user)
-                                        <option value="{{ $key }}"
-                                            {{ $key == $task->assigned_to ? 'selected' : '' }}>{{ $user }}
-                                        </option>
+                            <div class="col-sm-6 " id="assign_to_div">
+                                <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to" {{ !\Auth::user()->can('edit assign to task') ? 'disabled' : '' }}>
+                                    @foreach($employees as $key => $employee)
+                                    <option value="{{$key}}" {{ $key == $task->assigned_to ? 'selected' : '' }}>{{$employee}}</option>
                                     @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-
-                        <div class="form-group row">
-                            <label for="type" class="col-sm-3 col-form-label">Task Status <span
-                                class="text-danger">*</span></label>
-                            <div class="col-sm-6">
-                                <select class="form form-control select2" id="choices-multiple5" name="status" {{ !\Auth::user()->can('edit assign to task') ? 'disabled' : '' }}>
-                                    <option value="">Select Status</option>
-                                    <option value="0"
-                                        {{ empty($task->status) || $task->status == '0' ? 'selected' : '' }}>On Going
-                                    </option>
-                                    <option value="1" {{ $task->status == '1' ? 'selected' : '' }}>Completed
-                                    </option>
                                 </select>
                             </div>
                         </div>

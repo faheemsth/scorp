@@ -98,6 +98,8 @@
         </li>
         {{-- dashboard end li  --}}
         {{-- /// --}}
+
+        @if (Gate::check('manage user') || Gate::check('manage region') || Gate::check('manage branch') || Gate::check('manage employee'))
         <li class="nav-item">
             <a class="nav-link {{Request::segment(1) == 'branch' || Request::segment(1) == 'users' || (Request::segment(1) == 'user' && Request::segment(2) == 'employees') || Request::segment(1) == 'region' ? '' : 'collapsed' }}"
             href="#" data-toggle="collapse" data-target="#collapsehrm"
@@ -125,7 +127,8 @@
                                 Brands</a>
                         </li>
                     @endcan
-                    {{-- @can('manage region') --}}
+
+                    @can('manage region')
                     <li class="emp nav-item {{ Request::segment(1) == 'region' ? ' active' : '' }}">
                         <a class="collapse-item" style="color:white; font-size: 13px;"
                             href="{{ url('/region/index') }}">
@@ -138,7 +141,7 @@
 
                             {{ __('Region') }}</a>
                     </li>
-                    {{-- @endcan --}}
+                    @endcan
                     @can('manage branch')
                         <li class="emp nav-item {{ Request::segment(1) == 'branch' ? ' active' : '' }}">
                             <a class="collapse-item" style="color:white; font-size: 13px;"
@@ -153,7 +156,7 @@
                                 {{ __('Branches') }}</a>
                         </li>
                     @endcan
-                    @can('manage user')
+                    @can('manage employee')
                         <li class="emp nav-item {{ Request::segment(2) == 'employees' ? ' active' : '' }}">
                             <a class="collapse-item " style="color:white; font-size: 13px;"
                                 href="{{ route('user.employees') }}">
@@ -230,6 +233,7 @@
                 </div>
             </div>
         </li>
+        @endif
 
 
 
@@ -419,10 +423,6 @@
                                         href="{{ route('contract.index') }}">{{ __('Contract') }}</a>
                                 </li>
                             @endcan
-
-
-
-
                         </ul>
                     </div>
                 </div>
@@ -847,7 +847,8 @@
                                         {{ __('Company Permission') }}</a>
                                 </li>
                             @endcan
-                            @if (Gate::check('super admin'))
+                           
+                            @can('manage crm settings')
                                 <li style=""
                                     class="emp nav-item {{ Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
 
@@ -863,7 +864,8 @@
                                         {{ __('CRM System Setup') }}
                                     </a>
                                 </li>
-                            @endif
+                            @endcan 
+                            
                             @can('manage company settings')
                                 <li class="emp {{ Request::segment(1) == 'settings' ? ' active show' : '' }}">
                                     <a href="{{ route('settings') }}" class="collapse-item"

@@ -52,9 +52,11 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="ti ti-filter" style="font-size:18px"></i>
                             </button>
+                            @can('create user')
                             <a href="#" data-size="lg" data-url="{{ route('users.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create') }}" class="btn btn-dark px-2 py-2">
                                 <i class="ti ti-plus "></i>
                             </a>
+                            @endcan
                         </div>
                     </div>
                     <script>
@@ -65,7 +67,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                         });
                     </script>
                     {{-- Filters --}}
-                    <div class="filter-data px-3" id="filterToggle" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+                    <div class="filter-data px-3" id="filterToggle" <?= isset($_GET['Brand']) || isset($_GET['Director']) ? '' : 'style="display: none;"' ?>>
                         <form action="/users" method="GET" class="">
                             <div class="row my-3">
                                 <div class="col-md-4 mt-2">
@@ -157,12 +159,15 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             
 
                         </table>
-                        @if ($total_records > 0)
-                        @include('layouts.pagination', [
-                        'total_pages' => $total_records,
-                        'num_results_on_page' => 25,
-                        ])
+
+                        <div class="pagination_div">
+                            @if ($total_records > 0)
+                            @include('layouts.pagination', [
+                            'total_pages' => $total_records,
+                            'num_results_on_page' => 25,
+                            ])
                         @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -196,6 +201,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                     if (data.status == 'success') {
                         console.log(data.html);
                         $(".list-div").html(data.html);
+                        $(".pagination_div").html(data.pagination_html);
                     }
                 }
             })

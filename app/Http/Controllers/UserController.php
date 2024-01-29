@@ -48,84 +48,60 @@ class UserController extends Controller
             $start = 0;
         }
 
+        $users = User::where('type', 'company');
+        if (isset($_GET['Brand']) && !empty($_GET['Brand'])) {
+            $brandId = intval($_GET['Brand']); // Assuming it's an integer, adjust accordingly
+            $users->where('id', $brandId);
+        }
+
+        if (isset($_GET['Director']) && !empty($_GET['Director'])) {
+            $directorId = intval($_GET['Director']); // Assuming it's an integer, adjust accordingly
+            $users->where('project_director_id', $directorId);
+        }
+
+
         if (\Auth::user()->can('manage user')) {
             if (\Auth::user()->type == 'super admin') {
-                // $users = User::where('created_by', '=', $user->creatorId())
-                //     ->where(function ($query) {
-                //         $query->where('type', '=', 'company')
-                //             ->orWhere('type', '=', 'team');
-                //     });
-
-
-                $users = User::where('type', 'company');
-
-                if (isset($_GET['Brand']) && !empty($_GET['Brand'])) {
-                    $brandId = intval($_GET['Brand']); // Assuming it's an integer, adjust accordingly
-                    $users->where('id', $brandId);
-                }
-
-                if (isset($_GET['Director']) && !empty($_GET['Director'])) {
-                    $directorId = intval($_GET['Director']); // Assuming it's an integer, adjust accordingly
-                    $users->where('project_director_id', $directorId);
-                }
-
-                $users = $users->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
             } else {
-
-
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
-
-                $users = User::query();
-                if (isset($_GET['Brand']) && !empty($_GET['Brand'])) {
-                    $brandId = intval($_GET['Brand']); // Assuming it's an integer, adjust accordingly
-                    $users->where('id', $brandId);
-                }
-
-                if (isset($_GET['Director']) && !empty($_GET['Director'])) {
-                    $directorId = intval($_GET['Director']); // Assuming it's an integer, adjust accordingly
-                    $users->where('project_director_id', $directorId);
-                }
-
-
-                $users = $users->whereIn('id', $brand_ids)->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);;
+                $users = $users->whereIn('id', $brand_ids);
             }
-            $total_records = $users->total();
+
+            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
+                $g_search = $_GET['search'];
+                $users->where('type', 'company')
+                ->where('users.name', 'like', '%' . $g_search . '%')
+                ->orWhere('users.website_link', 'like', '%' . $g_search . '%')
+                ->orWhere(DB::raw('(SELECT name FROM users p WHERE p.id = users.project_director_id)'), 'like', '%' . $g_search . '%');
+            }
+
+
+            $total_records = $users->count();
+            $users = $users->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
 
             $projectDirectors = allUsers();
             // return view('user.index-Old')->with('users', $users);
             $Brands = User::where('type', 'company')->pluck('name', 'id')->toArray();
             $ProjectDirector = User::where('type', 'Project Director')->pluck('name', 'id')->toArray();
 
-            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
-                $g_search = $_GET['search'];
-                $user_query = User::select([
-                        'users.*',
-                    ])->where('type', 'company')
-                    ->where(function ($query) use ($g_search) {
-                        $query->where('users.name', 'like', '%' . $g_search . '%')
-                            ->orWhere('users.website_link', 'like', '%' . $g_search . '%')
-                            ->orWhere(DB::raw('(SELECT name FROM users p WHERE p.id = users.project_director_id)'), 'like', '%' . $g_search . '%');
-                    });
-                
-                $users = $user_query
-                    ->skip($start)
-                    ->take($num_results_on_page)
-                    ->orderBy('users.name', 'ASC')
-                    ->paginate($num_results_on_page);
-                
-            }
+            
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('user.brandsAjax', compact('total_records', 'projectDirectors', 'Brands', 'ProjectDirector'))->with('users', $users)->render();
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' => 25,
+                ])->render();
 
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => $html,
+                    'pagination_html' => $pagination_html
                 ]);
+            }else{
+                return view('user.index', compact('total_records', 'projectDirectors', 'Brands', 'ProjectDirector'))->with('users', $users);
             }
-
-            return view('user.index', compact('total_records', 'projectDirectors', 'Brands', 'ProjectDirector'))->with('users', $users);
         } else {
             return redirect()->back();
         }
@@ -720,12 +696,28 @@ class UserController extends Controller
             }
 
            
-            if (\Auth::user()->type == 'super admin') {
-                $usersQuery = User::whereNotIn('type', $excludedTypes);
-            } else if ($user->type == 'company') {
-                $usersQuery->where('brand_id', $user->id);
-            } else {
-                $usersQuery->where('brand_id', $user->brand_id);
+            // if (\Auth::user()->type == 'super admin') {
+            //     $usersQuery = User::whereNotIn('type', $excludedTypes);
+            // } else if ($user->type == 'company') {
+            //     $usersQuery->where('brand_id', $user->id);
+            // } else {
+            //     $usersQuery->where('brand_id', $user->brand_id);
+            // }
+
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            if(\Auth::user()->type == 'super admin'){
+                
+            }else if(\Auth::user()->type == 'company'){
+                $usersQuery->where('brand_id', \Auth::user()->id);
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                $usersQuery->whereIn('brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+                $usersQuery->where('region_id', \Auth::user()->region_id);
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+                $usersQuery->where('branch_id', \Auth::user()->branch_id);
+            }else{
+                $usersQuery->where('id', \Auth::user()->id);
             }
 
 
@@ -773,9 +765,14 @@ class UserController extends Controller
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('user.employeeAjax', $data)->render();
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' => 25,
+                ])->render();
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => $html,
+                    'pagination_html' => $pagination_html
                 ]);
             } else {
                 return view('user.employee', $data);
@@ -815,6 +812,13 @@ class UserController extends Controller
 
 
         $Region = ['0' => 'Select Region'];
+
+
+        //function will return all the relevent brands, regions,leads
+        $filter = BrandsRegionsBranches();
+        $companies = $filter['brands'];
+        $Region = $filter['regions'];
+        $branches = $filter['branches'];
 
         if (\Auth::user()->can('create employee')) {
             $autoGeneratedPassword = Str::random(10);
@@ -864,7 +868,6 @@ class UserController extends Controller
             $user['plan']       = Plan::first()->id;
             $user['date_of_birth'] = $request->dob;
             $user['phone'] = $request->phone;
-
             $user->save();
 
 
@@ -990,20 +993,22 @@ class UserController extends Controller
 
         $user  = \Auth::user();
         if (\Auth::user()->type == 'super admin') {
-            $branches = \App\Models\Branch::get()->pluck('name', 'id');
-            $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+            $companies = ['' => 'Select Brand'] + User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
         } else {
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             $companies = FiltersBrands();
+            $companies[] = 'Select Brand'; 
             $brand_ids = array_keys($companies);
+
+
 
             $branch_query = Branch::query();
 
-            foreach ($brand_ids as $brandId) {
-                $branch_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
-            }
-            $branches = $branch_query->pluck('name', 'id');
+            // foreach ($brand_ids as $brandId) {
+            //     $branch_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+            // }
+            $branches = $branch_query->where('id', $user->branch_id)->pluck('name', 'id');
             $branches = [0 => 'Select Branches'] + $branches->toArray();
         }
 
@@ -1013,13 +1018,22 @@ class UserController extends Controller
             $user->customField = CustomField::getData($user, 'user');
             $customFields      = CustomField::where('created_by', '=', \Auth::user()->creatorId())->where('module', '=', 'user')->get();
 
-
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
             $roles = Role::whereNotIn('name', $excludedTypes)->get()->unique('name')->pluck('name', 'id');
-            $Region = Region::get()->pluck('name', 'id')->toArray();
+            $Region = Region::where('id', $user->region_id)->get()->pluck('name', 'id')->toArray();
+            $branch_query = Branch::query();
+            $branches = $branch_query->where('id', $user->branch_id)->pluck('name', 'id');
+            $branches = $branches->toArray();
             // $autoGeneratedPassword = Str::random(10);
             $employee = Employee::where('user_id', $user->id)->first();
             // dd($employee);
+
+            $filter = BrandsRegionsBranchesForEdit($user->brand_id, $user->region_id, $user->branch_id);
+            $companies = $filter['brands'];
+            $Region = $filter['regions'];
+            $branches = $filter['branches'];
+            $employees = $filter['employees'];
+
             return view('user.employeeEdit', compact('user', 'employee', 'roles', 'customFields', 'branches', 'companies', 'Region'));
         } else {
             return redirect()->back();
@@ -1055,8 +1069,27 @@ class UserController extends Controller
                 //$user->branch_id = $request->branch_id;
                 $user['region_id'] = $request->region_id;
                 $user->type = $role->name;
+                $user->brand_id = isset($request->companies) ? $request->companies : \Auth::user()->brand_id;
                 $user->update();
-
+              
+                //  $user['brand_id'] = isset($request->companies) ? $request->companies : \Auth::user()->brand_id;
+                if ($request->role == 'Project Director') {
+                    User::where('id', $request->companies)->update([
+                        'project_director_id' => $user->id
+                    ]);
+                } else if ($request->role == 'Project Manager') {
+                    User::where('id', $request->companies)->update([
+                        'project_manager_id' => $user->id
+                    ]);
+                } else if ($request->role == 'Region Manager') {
+                    Region::where('id', $request->region_id)->update([
+                        'region_manager_id' => $user->id
+                    ]);
+                } else if ($request->role == 'Branch Manager') {
+                    Branch::where('id', $request->branch_id)->update([
+                        'branch_manager_id' => $user->id
+                    ]);
+                }                
 
                 CustomField::saveData($user, $request->customField);
 
@@ -1091,6 +1124,26 @@ class UserController extends Controller
                 $user['region_id'] = $request->region_id;
                 $user->type = $role->name;
                 $user->update();
+
+                if ($request->role == 'Project Director') {
+                    User::where('id', $request->companies)->update([
+                        'project_director_id' => $user->id
+                    ]);
+                } else if ($request->role == 'Project Manager') {
+                    User::where('id', $request->companies)->update([
+                        'project_manager_id' => $user->id
+                    ]);
+                } else if ($request->role == 'Region Manager') {
+                    Region::where('id', $request->region_id)->update([
+                        'region_manager_id' => $user->id
+                    ]);
+                } else if ($request->role == 'Branch Manager') {
+                    Branch::where('id', $request->branch_id)->update([
+                        'branch_manager_id' => $user->id
+                    ]);
+                }
+
+
                 Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId(), $request);
                 CustomField::saveData($user, $request->customField);
 
@@ -1110,10 +1163,18 @@ class UserController extends Controller
     public function employeeShow($id)
     {
         $employee = User::findOrFail($id);
-        $Region = Region::get()->pluck('name', 'id')->toArray();
-        $branches = Branch::pluck('name', 'id')->toArray();
+       // $Region = Region::get()->pluck('name', 'id')->toArray();
+        //$branches = Branch::pluck('name', 'id')->toArray();
         $allUsers = allUsers();
-        $html = view('user.employeeDetail', compact('employee', 'Region', 'branches', 'allUsers'))->render();
+
+        $filter = BrandsRegionsBranchesForEdit($employee->brand_id, $employee->region_id, $employee->branch_id);
+        $companies = $filter['brands'];
+        $regions = $filter['regions'];
+        $branches = $filter['branches'];
+        //$employees = $filter['employees'];
+
+
+        $html = view('user.employeeDetail', compact('employee', 'regions', 'branches', 'allUsers'))->render();
         return json_encode([
             'status' => 'success',
             'html' => $html

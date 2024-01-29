@@ -59,16 +59,36 @@ class ApplicationsController extends Controller
          /////////////////end pagination calculation
 
          if ($usr->can('view application') || $usr->type == 'super admin' || $usr->type == 'company') {
-
-            $app_query = DealApplication::select(['deal_applications.*']);
-            
-            if(\Auth::user()->type == 'super admin'){
-            $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
-            }else{
-                 $companies = FiltersBrands();
+            $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->whereIn('deal_applications.brand_id', $brand_ids);
+            $app_query = DealApplication::select(['deal_applications.*']);
+            $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
+            if(\Auth::user()->type == 'super admin'){
+                
+            }else if(\Auth::user()->type == 'company'){
+                $app_query->where('deals.brand_id', \Auth::user()->id);
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                $app_query->whereIn('deals.brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+                $app_query->where('deals.region_id', \Auth::user()->region_id);
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+                $app_query->where('deals.branch_id', \Auth::user()->branch_id);
+            }else{
+                $app_query->where('deals.assigned_to', \Auth::user()->id);
             }
+
+
+
+
+
+
+            // if(\Auth::user()->type == 'super admin'){
+            //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
+            // }else{
+                //  $companies = FiltersBrands();
+                // $brand_ids = array_keys($companies);
+            //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->whereIn('deal_applications.brand_id', $brand_ids);
+            // }
            
             $total_records = $app_query->count();
             //$filters

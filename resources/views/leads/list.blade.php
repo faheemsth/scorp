@@ -197,19 +197,20 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <i class="ti ti-plus" style="font-size:18px"></i>
                                 </button>
                                 @endcan
-
+                                @can('create lead')
                                 <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}"
                                     class="btn px-2 btn-dark" id="import_csv_modal_btn" data-bs-toggle="modal"
                                     data-bs-target="#import_csv">
                                     <i class="fa fa-file-csv"></i>
                                 </button>
+                                @endcan
                                 <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
 
                             </div>
                         </div>
 
 
-                        <div class="modal fade" style="z-index: 9999999;" id="import_csv" tabindex="-1"
+                        <div class="modal fade" style="z-index: 9999999; overflow: scroll;" id="import_csv" tabindex="-1"
                             aria-labelledby="import_csv Label" aria-hidden="true">
                             <div class="modal-dialog  modal-lg">
                                 <div class="modal-content">
@@ -438,7 +439,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                     @endif
                                                 </td>
                                                 @if (\Auth::user()->type == 'super admin')
-                                                    <td>{{ $users[$lead->brand_id] }}</td>
+                                                    <td>{{ $users[$lead->brand_id] ?? '' }}</td>
                                                     <td>{{ isset( $branches[$lead->branch_id]) ?  $branches[$lead->branch_id] : '' }}</td>
                                                 @endif
 

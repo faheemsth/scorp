@@ -203,7 +203,7 @@ if (!function_exists('FiltersRegions')){
 if (!function_exists('FiltersBranches')){
     function FiltersBranches($id){
         $branches = Branch::where('region_id', $id)->pluck('name', 'id')->toArray();
-        $html = ' <select class="form form-control branch_id select2" id="branch_id" name="lead_branch"> <option value="">Select Region</option> ';
+        $html = ' <select class="form form-control branch_id select2" id="branch_id" name="lead_branch"> <option value="">Select Branch</option> ';
         foreach ($branches as $key => $branch) {
             $html .= '<option value="' . $key . '">' . $branch . '</option> ';
         }
@@ -238,6 +238,103 @@ if (!function_exists('stagesRange')){
          }else{
             return [1, 2, 3];
          }
+    }
+}
+
+
+
+
+if (!function_exists('BrandsRegionsBranches')){
+    function BrandsRegionsBranches(){
+        $brands = [];
+        $regions = [];
+        $branches = [];
+        $employees = [];
+
+        $user = \Auth::user();
+        $type = $user->type;
+
+        if($type == 'super admin'){
+              $brands = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();  
+        }else if($type == 'company'){
+            $brands = User::where('type', 'company')->where('id', $user->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            $regions = Region::where('brands', $user->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+        }else if($type == 'Project Director' || $type == 'Project Manager') {
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $brands = User::where('type', 'company')->whereIn('id', $brand_ids)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+        }else if($type == 'Regional Manager'){
+            $brands = User::where('type', 'company')->where('id', $user->brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            $regions = Region::where('id', $user->region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+        }else if($type == 'Branch Manager' || $type == 'Admissions Officer' || $type == 'Admissions Manager' || $type == 'Marketing Officer'){
+            $brands = User::where('type', 'company')->where('id', $user->brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            $regions = Region::where('id', $user->region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            $branches = Branch::where('id', $user->branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            $employees = User::where('branch_id', $user->branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+        }
+
+
+
+        return [
+            'brands' => [0 => 'Select Brand']+$brands,
+            'regions' => [0 => 'Select Region'] + $regions,
+            'branches' => [0 => 'Select Branch'] + $branches,
+            'employees' => [0 => 'Select Employee'] + $employees
+        ];
+    }
+
+
+
+
+    if (!function_exists('BrandsRegionsBranchesForEdit')){
+        function BrandsRegionsBranchesForEdit($brand_id = 0, $region_id = 0, $branch_id = 0){
+            $brands = [];
+            $regions = [];
+            $branches = [];
+            $employees = [];
+    
+            $user = \Auth::user();
+            $type = $user->type;
+
+            //dd($brand_id.' '.$region_id.' '.$branch_id);
+    
+            if($type == 'super admin'){
+                  $brands = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray(); 
+                  $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                  $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                  $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();    
+            }else if($type == 'company'){
+                $brands = User::where('type', 'company')->where('id', $user->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            }else if($type == 'Project Director' || $type == 'Project Manager') {
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+                $brands = User::where('type', 'company')->whereIn('id', $brand_ids)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                  $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                  $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            }else if($type == 'Regional Manager'){
+                $brands = User::where('type', 'company')->where('id', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                  $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                  $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            }else if($type == 'Branch Manager' || $type == 'Admissions Officer' || $type == 'Admissions Manager' || $type == 'Marketing Officer'){
+                $brands = User::where('type', 'company')->where('id', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $regions = Region::where('id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            }
+
+    
+            return [
+                'brands' => [0 => 'Select Brand']+$brands,
+                'regions' => [0 => 'Select Region'] + $regions,
+                'branches' => [0 => 'Select Branch'] + $branches,
+                'employees' => [0 => 'Select Employee'] + $employees
+            ];
+        }
     }
 }
 

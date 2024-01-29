@@ -24,13 +24,13 @@ $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->
 $com_permissions = [];
 if ($currentUserCompany != null) {
 
-if (Session::get('auth_type') == \Auth::user()->type ||
-Session::get('auth_type') == 'Project Director' ||
-Session::get('auth_type') == 'Project Manager'){
-$com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', Session::get('auth_type_id'))->get();
-}else{
-$com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', \Auth::user()->id)->get();
-}
+    if (Session::get('auth_type') == \Auth::user()->type ||
+    Session::get('auth_type') == 'Project Director' ||
+    Session::get('auth_type') == 'Project Manager'){
+      $com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', Session::get('auth_type_id'))->get();
+    }else{
+       $com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', \Auth::user()->id)->get();
+    }
 }
 
 $all_companies = App\Models\User::orderBy('name', 'asc')->where('type', 'company')
@@ -151,9 +151,6 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
         Session::get('auth_type') == 'Project Manager')
         <select name="company" id="company" class="form form-select select2" style="width:100% !important" onChange="loginWithCompany();">
             <option value="">Select Companies</option>
-
-            <option value="{{ Session::get('auth_type_id') }}">{{Session::get('auth_type')}}</option>
-
             @foreach ($all_companies as $key => $comp)
             @foreach ($com_permissions as $com_per)
             @if ($com_per->permitted_company_id == $key)

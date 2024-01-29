@@ -901,6 +901,11 @@ class OrganizationController extends Controller
     public function taskCreate($id)
     {
 
+        
+
+
+
+
         if (\Auth::user()->can('create task')) {
             $deals = Deal::get()->pluck('name', 'id')->toArray();
             $orgs = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
@@ -908,25 +913,25 @@ class OrganizationController extends Controller
             $status     = DealTask::$status;
             $users = User::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
 
-            if(\Auth::user()->type == 'super admin'){
-                $branches = Branch::orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            }else if(\Auth::user()->type == 'company'){
-                $branches = Branch::where('brands', \Auth::user()->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            }else{
-                    $companies = FiltersBrands();
-                    $brand_ids = array_keys($companies);
+            // if(\Auth::user()->type == 'super admin'){
+            //     $branches = Branch::orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            // }else if(\Auth::user()->type == 'company'){
+            //     $branches = Branch::where('brands', \Auth::user()->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            // }else{
+            //         $companies = FiltersBrands();
+            //         $brand_ids = array_keys($companies);
 
-                    $branch_query = Branch::query();
+            //         $branch_query = Branch::query();
 
-                    foreach ($brand_ids as $brandId) {
-                        $branch_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
-                    }
-                    $branches = $branch_query->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            }
+            //         foreach ($brand_ids as $brandId) {
+            //             $branch_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+            //         }
+            //         $branches = $branch_query->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            // }
                   
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
-
+           /// $branches = ['' => 'Select Branch'];
            // $employees = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();
             $teams = User::where('type', 'team')->get()->pluck('name', 'id')->toArray();
             $user_type = User::get()->pluck('type', 'id')->toArray();
@@ -935,7 +940,7 @@ class OrganizationController extends Controller
             // $companies = User::where('type', 'company')->whereIn('id', $test)->orwhere('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             // dd($companies);
 
-                $companies = ['' => 'Select Brand'] + FiltersBrands();
+                //$companies = [0 => 'Select Brand'] + FiltersBrands();
                 // if(\Auth::user()->type == 'super admin'){
                 //     $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
                 // }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
@@ -985,16 +990,25 @@ class OrganizationController extends Controller
                     $relateds = Deal::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
                 }
             }
-            if(\Auth::user()->type == 'company'){
-                // $Region = Region::where('brands', \Auth::user()->id)->orderBy('name', 'ASC')->pluck('name', 'id');
-                $Region = DB::table('regions')->whereRaw('FIND_IN_SET('.\Auth::user()->id.', brands)')->orderBy('name', 'ASC')->pluck('name', 'id');
-                // dd($Region);
-                $Region= ['' => 'Select Region'] + $Region->toArray();
-            }else{
-                $Region= ['' => 'Select Region'];
-            }
+            // if(\Auth::user()->type == 'company'){
+            //     // $Region = Region::where('brands', \Auth::user()->id)->orderBy('name', 'ASC')->pluck('name', 'id');
+            //     $Region = DB::table('regions')->whereRaw('FIND_IN_SET('.\Auth::user()->id.', brands)')->orderBy('name', 'ASC')->pluck('name', 'id');
+            //     // dd($Region);
+            //     $Region= ['' => 'Select Region'] + $Region->toArray();
+            // }else{
+            //     $Region= ['' => 'Select Region'];
+            // }
+            
+            //$Region= ['' => 'Select Region'];
 
-            return view('organizations.tasks', compact('Region','users', 'deals','organization', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds', 'lead', 'deal'));
+            //function will return all the relevent brands, regions,leads
+            $filter = BrandsRegionsBranches();
+            $companies = $filter['brands'];
+            $Region = $filter['regions'];
+            $branches = $filter['branches'];
+            $employees = $filter['employees'];
+
+            return view('organizations.tasks', compact('Region','users', 'deals','organization', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds', 'lead', 'deal', 'branches'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -1112,13 +1126,14 @@ class OrganizationController extends Controller
             $status     = DealTask::$status;
 
 
-            if (\Auth::user()->type == 'super admin') {
-                $branches = Branch::where('brands',DealTask::where('id', $id)->first()->brand_id)->get()->pluck('name', 'id')->toArray();
-            } else {
+            // if (\Auth::user()->type == 'super admin') {
+            //     $branches = Branch::where('brands',DealTask::where('id', $id)->first()->brand_id)->get()->pluck('name', 'id')->toArray();
+            // } else {
                
-                $branches = Branch::where('brands',DealTask::where('id', $id)->first()->brand_id)->where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
-            }
+            //     $branches = Branch::where('brands',DealTask::where('id', $id)->first()->brand_id)->where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+            // }
 
+           // $branches = Branch::where('id',DealTask::where('id', $id)->first()->branch_id)->get()->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
 
@@ -1146,18 +1161,26 @@ class OrganizationController extends Controller
             // }else if(\Auth::user()->type == 'company'){
             //     $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             // }
-            $companies = FiltersBrands();
+           // $companies = FiltersBrands();
 
             $employees = [];
-            if(\Auth::user()->type == 'company'){
-               $employees =  User::where('brand_id', DealTask::where('id', $id)->first()->brand_id)->where('created_by', $id)->pluck('name', 'id')->toArray();
-            }else if(\Auth::user()->type == 'super admin'){
-                $employees =  User::where('brand_id', DealTask::where('id', $id)->first()->brand_id)->pluck('name', 'id')->toArray();
-            }
-            
-            $Region=Region::whereRaw('FIND_IN_SET(?, brands)', [$task->brand_id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            // if(\Auth::user()->type == 'company'){
+            //    $employees =  User::where('brand_id', DealTask::where('id', $id)->first()->brand_id)->where('created_by', $id)->pluck('name', 'id')->toArray();
+            // }else if(\Auth::user()->type == 'super admin'){
+            //     $employees =  User::where('brand_id', DealTask::where('id', $id)->first()->brand_id)->pluck('name', 'id')->toArray();
+            // }
+
+            //$employees =  User::where('branch_id', $task->branch_id)->pluck('name', 'id')->toArray(); 
+            //$Region=Region::whereRaw('FIND_IN_SET(?, brands)', [$task->brand_id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             // dd($branches);
+
+            $filter = BrandsRegionsBranchesForEdit($task->brand_id, $task->region_id, $task->branch_id);
+            $companies = $filter['brands'];
+            $Region = $filter['regions'];
+            $branches = $filter['branches'];
+            $employees = $filter['employees'];
+
             return view('organizations.task_edit', compact('Region','task', 'users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'related_to', 'companies', 'employees'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
@@ -1174,7 +1197,7 @@ class OrganizationController extends Controller
                 $request->all(),
                 [
                     'task_name' => 'required',
-                    'brand_id' => 'required',
+                    //'brand_id' => 'required',
                     //'assigned_to' => 'required',
                     // 'assign_type' => 'required',
                     'due_date' => 'required',
@@ -1216,7 +1239,10 @@ class OrganizationController extends Controller
             if(isset($request->assigned_to)){
                 $dealTask->assigned_to = $request->assigned_to;
             }
-            $dealTask->brand_id = $request->brand_id;
+            if(isset($request->brand_id)){
+                $dealTask->brand_id = $request->brand_id;
+            }
+           
             $dealTask->assigned_type = $request->assign_type;
             if(isset($request->region_id)){
                 $dealTask->region_id = $request->region_id;
@@ -1257,7 +1283,7 @@ class OrganizationController extends Controller
             $data = [
                 'type' => 'info',
                 'note' => json_encode($remarks),
-                'module_id' => 1,
+                'module_id' => $dealTask->id,
                 'module_type' => 'task',
             ];
             addLogActivity($data);
@@ -1274,7 +1300,7 @@ class OrganizationController extends Controller
                 $data = [
                     'type' => 'info',
                     'note' => json_encode($remarks),
-                    'module_id' => 1,
+                    'module_id' => $dealTask->id,
                     'module_type' => 'task',
                 ];
                 addLogActivity($data);

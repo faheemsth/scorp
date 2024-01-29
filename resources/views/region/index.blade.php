@@ -379,12 +379,14 @@
                                     @endif
                                 </tbody>
                             </table>
+                            <div class="pagination_div">
                             @if ($total_records > 0)
                                 @include('layouts.pagination', [
                                     'total_pages' => $total_records,
                                     'num_results_on_page' => 25,
                                 ])
                             @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -418,6 +420,7 @@
                             if (data.status == 'success') {
                                 console.log(data.html);
                                 $(".list-div").html(data.html);
+                                $(".pagination_div").html(data.pagination_html);
                             }
                         }
                     })
@@ -444,6 +447,7 @@
                         if (data.status == 'success') {
                             console.log(data.html);
                             $(".list-div").html(data.html);
+                            $(".pagination_div").html(data.pagination_html);
                         }
                     }
                 })

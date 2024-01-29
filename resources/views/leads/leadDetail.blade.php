@@ -112,13 +112,13 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-1 me-3">
-                    @can('View Deal')
+                    {{-- @can('view lead') --}}
                     <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949;">
                         <i class="fa-brands fa-whatsapp"></i>
                     </a>
+                    {{-- @endcan --}}
 
 
-                    @endcan
                     @can('edit lead')
 
                         @if (!empty($deal))

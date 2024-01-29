@@ -105,15 +105,37 @@
                                                 {{ __('Brand') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="">
-                                                <select class="form-control select2 brand_id" id="choices-1011"
-                                                    name="brand_id" {{ !\Auth::user()->can('edit brand lead') ? 'disabled' : '' }}>
-                                                    <option value="">Select Brand</option>
-                                                    @foreach ($companies as $key => $company)
-                                                        <option value="{{ $key }}"
-                                                            {{ $key == $lead->brand_id ? 'selected' : '' }}>
-                                                            {{ $company }}</option>
-                                                    @endforeach
-                                                </select>
+                                               {{-- Brand Dropdown --}}
+                                                @if (
+                                                    \Auth::user()->type == 'super admin' ||
+                                                        \Auth::user()->type == 'Project Director' ||
+                                                        \Auth::user()->type == 'Project Manager')
+                                                            
+                                                    <select class="form-control select2 brand_id" id="choices-1011"
+                                                        name="brand_id" {{ !\Auth::user()->can('edit brand lead') ? 'disabled' : '' }}>
+                                                        <option value="">Select Brand</option>
+                                                        @foreach ($companies as $key => $company)
+                                                            <option value="{{ $key }}"
+                                                                {{ $key == $lead->brand_id ? 'selected' : '' }}>
+                                                                {{ $company }}</option>
+                                                        @endforeach
+                                                    </select>
+
+                                                @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
+                                                    <input type="hidden" name="brand_id" value="{{\Auth::user()->id}}">
+                                                    <select class='form-control select2 brand_id' disabled ="brands" id="brand_id" >
+                                                        @foreach($companies as $key => $comp)
+                                                            <option value="{{$key}}" {{ $key == \Auth::user()->id ? 'selected' : ''}}>{{$comp}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                @else 
+                                                    <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}">
+                                                        <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                                            @foreach($companies as $key => $comp)
+                                                            <option value="{{$key}}" {{ $key == \Auth::user()->brand_id ? 'selected' : ''}}>{{$comp}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                @endif
                                             </td>
                                         </tr>
 
@@ -122,28 +144,57 @@
                                                 {{ __('Region') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="region_div">
-                                                <select class="form-control select2 region_id" id="choices-10112" name="region_id">
-                                                    <option value="" >Select Region</option>
-                                                    @foreach($regions as $key => $region)
-                                                    <option value="{{$key}}">{{$region}}</option>
-                                                    @endforeach
-                                                </select>
+                                        
+                                                @if (\Auth::user()->type == 'super admin' ||
+                                                        \Auth::user()->type == 'Project Director' ||
+                                                        \Auth::user()->type == 'Project Manager' ||
+                                                        \Auth::user()->type == 'company' ||
+                                                        \Auth::user()->type == 'Regional Manager')
+
+                                                            {!! Form::select('region_id', $regions, $lead->region_id, [
+                                                                'class' => 'form-control select2',
+                                                                'id' => 'region_id',
+                                                            ]) !!}
+
+                                                @else 
+                                                     <input type="hidden" name="region_id" value="{{ $lead->region_id }}">
+                                                        {!! Form::select('region_id', $regions, $lead->region_id, [
+                                                            'class' => 'form-control select2',
+                                                            'disabled' => 'disabled',
+                                                            'id' => 'region_id',
+                                                        ]) !!}
+                                                @endif
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Location') }}
+                                                {{ __('Branch') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="branch_div">
-                                                <select class="form-control select2" id="choice-3" name="lead_branch" {{ !\Auth::user()->can('edit branch lead') ? 'disabled' : '' }}>
-                                                    <option selected>Select Branch</option>
-                                                    @foreach ($branches as $key => $branch)
-                                                        <option value="{{ $key }}"
-                                                            <?= $lead->branch_id == $key ? 'selected' : '' ?>>
-                                                            {{ $branch }}</option>
-                                                    @endforeach
-                                                </select>
+                                                
+
+                                                @if (\Auth::user()->type == 'super admin' ||
+                                                        \Auth::user()->type == 'Project Director' ||
+                                                        \Auth::user()->type == 'Project Manager' ||
+                                                        \Auth::user()->type == 'company' ||
+                                                        \Auth::user()->type == 'Regional Manager' ||
+                                                        \Auth::user()->type == 'Branch Manager')
+                                                            <select name="lead_branch" id="branch_id" class="form-control select2 branch_id"
+                                                                onchange="Change(this)" {{ !\Auth::user()->can('edit branch lead') ? 'disabled' : '' }}>
+                                                                    @foreach($branches as $key => $branch)
+                                                                        <option value="{{$key}}" {{ $lead->branch_id == $key ? 'selected' : '' }}>{{$branch}}</option>
+                                                                    @endforeach
+                                                            </select>
+                                                @else 
+                                                         <input type="hidden" name="lead_branch" value="{{ \Auth::user()->branch_id }}">
+                                                            <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
+                                                                onchange="Change(this)" {{ !\Auth::user()->can('edit branch lead') ? 'disabled' : '' }}>
+                                                                    @foreach($branches as $key => $branch)
+                                                                        <option value="{{$key}}" {{ $lead->branch_id == $key ? 'selected' : '' }}>{{$branch}}</option>
+                                                                    @endforeach
+                                                            </select>
+                                                @endif
                                             </td>
                                         </tr>
 
@@ -426,54 +477,55 @@
 
 <script>
     $(document).ready(function() {
-var id = {{ $lead->brand_id }};
-$.ajax({
-            type: 'GET',
-            url: '{{ route('filter-regions') }}',
-            data: {
-                id: id
-            },
-            success: function(data){
-                data = JSON.parse(data);
+        
+        // var id = {{ $lead->brand_id }};
+        // $.ajax({
+        //     type: 'GET',
+        //     url: '{{ route('filter-regions') }}',
+        //     data: {
+        //         id: id
+        //     },
+        //     success: function(data){
+        //         data = JSON.parse(data);
 
-                if (data.status === 'success') {
-                    $('#region_div').html('');
-                    $("#region_div").html(data.html);
-                    select2();
-                } else {
-                    console.error('Server returned an error:', data.message);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX request failed:', status, error);
-            }
-        });
+        //         if (data.status === 'success') {
+        //             $('#region_div').html('');
+        //             $("#region_div").html(data.html);
+        //             select2();
+        //         } else {
+        //             console.error('Server returned an error:', data.message);
+        //         }
+        //     },
+        //     error: function(xhr, status, error) {
+        //         console.error('AJAX request failed:', status, error);
+        //     }
+        // });
 
 
 
-        var id = {{ $lead->region_id }};
+        // var id = {{ $lead->region_id }};
 
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('filter-branches') }}',
-                data: {
-                    id: id
-                },
-                success: function(data){
-                    data = JSON.parse(data);
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: '{{ route('filter-branches') }}',
+        //         data: {
+        //             id: id
+        //         },
+        //         success: function(data){
+        //             data = JSON.parse(data);
 
-                    if (data.status === 'success') {
-                        $('#branch_div').html('');
-                        $("#branch_div").html(data.html);
-                        select2();
-                    } else {
-                        console.error('Server returned an error:', data.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX request failed:', status, error);
-                }
-            });
+        //             if (data.status === 'success') {
+        //                 $('#branch_div').html('');
+        //                 $("#branch_div").html(data.html);
+        //                 select2();
+        //             } else {
+        //                 console.error('Server returned an error:', data.message);
+        //             }
+        //         },
+        //         error: function(xhr, status, error) {
+        //             console.error('AJAX request failed:', status, error);
+        //         }
+        //     });
 
 });
 </script>
