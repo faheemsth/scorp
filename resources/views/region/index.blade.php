@@ -295,7 +295,7 @@
                     <div class="table-responsive mt-2">
                         {{-- Filters --}}
                         <div class="card-body table-responsive">
-                            <table class="table">
+                            <table class="table" >
                                 <thead>
                                     <tr>
                                         <th style="width: 50px !important;">

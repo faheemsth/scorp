@@ -211,7 +211,7 @@ Route::post('register', [RegisteredUserController::class, 'store'])->name('regis
 Route::get('/login/{lang?}', [AuthenticatedSessionController::class, 'showLoginForm'])->name('login');
 Route::get('auth/google/callback', [AuthenticatedSessionController::class, 'handleGoogleCallback']);
 
-Route::get('/', [DashboardController::class, 'crm_dashboard_index'])->name('crm.dashboard')->middleware(['XSS', 'revalidate',]);
+Route::get('/', [DashboardController::class, 'crm_dashboard_index'])->name('c')->middleware(['XSS', 'revalidate',]);
 
 Route::get('/crm-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('crm.dashboard')->middleware(['XSS', 'revalidate',]);
 

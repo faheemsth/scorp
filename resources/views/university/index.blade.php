@@ -18,7 +18,7 @@
                 color: red;
             } */
     .boximg {
-        margin: auto
+        margin: auto;
     }
 </style>
 
@@ -26,9 +26,9 @@
 <div class="row">
     <div class="col-xl-12">
         <div class="card my-card">
-            <div class="card-body table-border-style" style="">
+            <div class="card-body table-border-style" >
                 <?php $i = 0; ?>
-                <div class="row justify-evenly">
+                <div class="d-flex" style="  flex-wrap: wrap;">
                     @forelse($statuses as $key => $status)
                     @php
                     $countryFound = false;
@@ -36,7 +36,7 @@
 
                     @foreach (App\Models\University::all() as $university)
                     @if ($university->country == $key && !$countryFound)
-                    @if ($i <= 4) <?php $i++; ?> <div class="col-xl-2 col-md-6 ">
+                    @if ($i <= 4) <?php $i++; ?> <div class="">
                         <div class="card shadow py-2" style="width: 100%; height: 70%;border-radius: 22px;">
                             <div class="card-body" style="display: flex;
                             flex-direction: column;
@@ -55,35 +55,35 @@
                         </div>
                 </div>
                 @php
-                if ($i < 5) { echo '<div style="border-left: 3px solid black; height: 80px; width: 5px;margin-top: 1.9rem;margin-left: 2rem"></div>' ; } $countryFound=true; @endphp @endif @endif @endforeach @empty @endforelse </div>
+                if ($i < 5) { echo '<div style="border-left: 3px solid black; height: 80px; width: 5px;margin-top: 1.9rem; " class = "mx-4"></div>' ; } $countryFound=true; @endphp @endif @endif @endforeach @empty @endforelse </div>
 
-                    <style>
+                    <!-- <style>
                         .form-control:focus {
                             border: 1px solid rgb(209, 209, 209) !important;
                         }
-                    </style>
+                    </style> -->
 
                     <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                        <div class="col-2">
+                        <div class="col-3">
                             <p class="mb-0 pb-0 ps-1">Institutes</p>
-                            <div class="dropdown">
-                                <button class="All-leads" type="button">
-                                    ALL Institutes
+                            <div class="dropdown" >
+                                <button class="All-leads p-2" type="button">
+                                  <span> ALL INSTITUTES </span>
                                 </button>
                             </div>
                         </div>
 
-                        <div class="col-10 d-flex justify-content-end gap-2">
-                            <div class="input-group w-25">
-                                <button class="btn btn-sm list-global-search-btn px-0">
-                                    <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                        <div class="col-9 d-flex justify-content-end gap-2" >
+                            <div class="input-group w-25 rounded " >
+                                <button class="btn btn-sm list-global-search-btn px-0 ">
+                                    <span class="input-group-text bg-transparent border-0  px-1 py-1" id="basic-addon1">
                                         <i class="ti ti-search" style="font-size: 18px"></i>
                                     </span>
                                 </button>
-                                <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
+                                <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list ..." aria-label="Username" aria-describedby="basic-addon1">
                             </div>
 
-                            <button class="btn p-2 refresh-list btn-dark" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                            <button class="btn p-2 refresh-list btn-dark d-none" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
 
                             <button class="btn filter-btn-show p-2 btn-dark" style="color:white;" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
@@ -103,34 +103,34 @@
                     <div class="filter-data px-3" id="filter-show" <?= isset($_GET['name']) ? '' : 'style="display: none;"' ?>>
                         <form action="/university" method="GET" class="">
                             <div class="row my-3">
-                                <div class="col-md-4 mt-2">
+                                <div class="col-md-3 mt-2">
                                     <label for="">Name</label>
                                     <input type="text" class="form form-control" placeholder="Search Name" name="name" value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>" style="width: 95%; border-color:#aaa">
                                 </div>
 
-                                <div class="col-md-4 mt-2">
+                                <div class="col-md-3 mt-2">
                                     <label for="">Country</label>
                                     <input type="text" class="form form-control" placeholder="Search Country" name="country" value="<?= isset($_GET['country']) ? $_GET['country'] : '' ?>" style="width: 95%; border-color:#aaa">
                                 </div>
 
-                                <div class="col-md-4 mt-2">
+                                <div class="col-md-3 mt-2">
                                     <label for="">City</label>
                                     <input type="text" class="form form-control" placeholder="Search City" name="city" value="<?= isset($_GET['city']) ? $_GET['city'] : '' ?>" style="width: 95%; border-color:#aaa">
                                 </div>
 
-                                <div class="col-md-4 mt-2">
+                                <div class="col-md-3 mt-2">
                                     <label for="">Phone</label>
                                     <input type="text" class="form form-control" placeholder="Search Phone" name="phone" value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>" style="width: 95%; border-color:#aaa">
                                 </div>
 
-                                <div class="col-md-4 mt-2">
+                                <div class="col-md-3 mt-2">
                                     <label for="">Note</label>
                                     <input type="text" class="form form-control" placeholder="Search Note" name="note" value="<?= isset($_GET['note']) ? $_GET['note'] : '' ?>" style="width: 95%; border-color:#aaa">
                                 </div>
 
-                                <div class="col-md-4 mt-2">
+                                <div class="col-md-3 mt-2">
                                     <label for="">Note</label>
-                                    <select name="created_by" class="form form-control">
+                                    <select name="created_by" class="form form-control" style="width: 95%; border-color:#aaa">
                                         @if (!empty($users))
                                         @foreach ($users as $key => $user)
                                         <option value="{{ $key }}" <?= isset($_GET['created_by']) && $_GET['created_by'] == $key ? 'selected' : '' ?>>
@@ -147,7 +147,7 @@
                                     <a href="/university" class="btn bg-dark" style="color:white;">Reset</a>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row d-none">
                                 <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
                                     <?php
@@ -201,32 +201,36 @@
                                     <td>
                                         {{ $key + 1 }}
                                     </td>
-                                    <td>
+                                    <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $university->name }}">
                                         @if (!empty($university->name))
                                         <span style="cursor:pointer" class="hyper-link" @can('show university') onclick="openSidebar('/university/'+{{ $university->id }}+'/university_detail')" @endcan>
-                                            {{ !empty($university->name) ? $university->name : '' }}
+                                        {{ !empty($university->name) ? (strlen($university->name) > 10 ? substr($university->name, 0, 10) . '...' : $university->name) : '' }}
                                         </span>
                                         @endif
 
                                     </td>
-                                    {{-- <td>{{ !empty($university->Institutes) ? $university->Institutes: '' }}</td> --}}
-                                    <td>{{ !empty($university->campuses) ? $university->campuses : '' }}</td>
-                                    <td>{{ !empty($university->intake_months) ? $university->intake_months : '' }}</td>
-                                    <td>{{ !empty($university->territory) ? $university->territory : '' }}</td>
-                                    <td>{{ $users[$university->company_id]  ?? ''  }}</td>
-                                    <td>
-                                        <a href="{{ !empty($university->resource_drive_link) ? $university->resource_drive_link : '' }}">
+                                    {{-- <td >{{ !empty($university->Institutes) ? $university->Institutes: '' }}</td> --}}
+
+                                    
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($university->campuses) ? $university->campuses : '' }}</td>
+
+                                    <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($university->intake_months) ? $university->intake_months : '' }}</td>
+                                    <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($university->territory) ? $university->territory : '' }}</td>
+                                    <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $users[$university->company_id]  ?? ''  }}</td>
+                                    <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                        <a href="{{ !empty($university->resource_drive_link) ? $university->resource_drive_link : '' }}" >
                                             Click to view
                                         </a>
                                     </td>
-                                    <td>
+                                    <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         <a href="{{ !empty($university->application_method_drive_link) ? $university->application_method_drive_link : '' }}">
                                             {{ !empty($university->name) ? $university->name : '' }}
                                         </a>
                                     </td>
 
                                     @if (\Auth::user()->type == 'super admin')
-                                    <td>{{ isset($users[$university->created_by]) ? $users[$university->created_by] : '' }}
+                                    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                        {{ isset($users[$university->created_by]) ? $users[$university->created_by] : '' }}
                                     </td>
                                     @endif
 

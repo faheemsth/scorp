@@ -152,9 +152,9 @@
                                         aria-labelledby="panelsStayOpen-headinginfo">
                                         <div class="accordion-body">
 
-                                            <div class="table-responsive mt-1" style="margin-left: 10px;">
+                                            <div class="table-responsive mt-1 " style="margin-left: 10px;">
 
-                                                <table>
+                                                <table style="" >
                                                     <tbody>
                                                         <tr>
                                                             <td class=""

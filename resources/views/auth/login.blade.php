@@ -21,7 +21,7 @@
     <li class="nav-item ">
         <select class="  btn btn-primary px-3 " style="border: none;box-shadow: none;background-color: #1F2635;color: white;" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);" id="language">
             @foreach(Utility::languages() as $language)
-                <option class="" @if($lang == $language) selected @endif value="{{ route('login',$language) }}">{{Str::upper($language)}}</option>
+            <option class="" @if($lang == $language) selected @endif value="{{ route('login',$language) }}">{{Str::upper($language)}}</option>
             @endforeach
         </select>
     </li>
@@ -34,11 +34,11 @@
 
     <div class="text-center mb-3">
         <img src="{{asset('assets/cs-theme/assets/images/Group.png')}} " alt="" style = "width : 50%;">
-        <!-- <i class="fa-solid fa-circle-user mb-4 " style=" font-size:90px ; color: #A6A6A6; "></i> -->
+       
     </div>
     <div class="input-group mb-3 border-0 py-1">
         <span class="input-group-text bg-white ps-2 pe-2 " id="basic-addon1"><i class="fa-solid fa-user "></i></span>
-        <input class="form-control border-0 @error('email') is-invalid @enderror" placeholder="Email ID" aria-label="Email" id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus style="background-color: rgb(204, 204, 204) ;">
+        <input class="form-control border-0  @error('email') is-invalid @enderror" placeholder="Email ID" aria-label="Email" id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus style="background-color: rgb(204, 204, 204) ;">
          {{-- @error('email')
             <div class="invalid-feedback" role="alert" style="display:block !important">{{ $message }}</div>
             @enderror --}}
@@ -67,11 +67,10 @@
         @enderror
     </div>
 @endif
-    <div class="d-none mb-3 form-check d-flex justify-content-between align-items-baseline">
+    <div class=" d-none mb-3 form-check d-flex justify-content-between align-items-baseline">
      <div class="">
         <input type="checkbox" class="form-check-input">
         <label class="form-check-label rempass " for="exampleCheck1" style="color: #A6A6A6;">Remember me</label>
-
      </div>
      @if(env('APP_ENV') == 'local')
      @if (Route::has('password.request'))
