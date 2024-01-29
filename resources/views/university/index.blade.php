@@ -196,10 +196,17 @@
                                 </tr>
                             </thead>
                             <tbody id="">
+                            <?php
+                                    if (isset($_GET['page']) && !empty($_GET['page'])) {
+                                        $count = ($_GET['page'] - 1) * $_GET['num_results_on_page'] + 1;
+                                    } else {
+                                        $count = 1;
+                                    }
+                                    ?>
                                 @foreach ($universities as $key => $university)
                                 <tr class="font-style">
                                     <td>
-                                        {{ $key + 1 }}
+                                        {{ $count++ }}
                                     </td>
                                     <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $university->name }}">
                                         @if (!empty($university->name))
