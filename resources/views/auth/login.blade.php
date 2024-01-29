@@ -69,7 +69,7 @@
 @endif
     <div class=" d-none mb-3 form-check d-flex justify-content-between align-items-baseline">
      <div class="">
-        <input type="checkbox" class="form-check-input ">
+        <input type="checkbox" class="form-check-input">
         <label class="form-check-label rempass " for="exampleCheck1" style="color: #A6A6A6;">Remember me</label>
      </div>
      @if(env('APP_ENV') == 'local')
