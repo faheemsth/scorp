@@ -521,11 +521,11 @@
                                                                             $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
                                                                         @endphp
                                                                         <tr>
-                                                                            <td>{{ $universities[$app->university_id] }}</td>
+                                                                            <td>{{ $universities[$app->university_id] ?? '' }}</td>
                                                                             <td> {{ $app->intake }} </td>
                                                                             <td> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }}  </td>
                                                                             <td> {{ isset($branch->name) ? $branch->name : ''  }} </td>
-                                                                            <td> {{ $users[$deal->assigned_to] }} </td>
+                                                                            <td> {{ $users[$deal->assigned_to] ?? ''}} </td>
                                                                             <td><span class="badge {{ $app->status != 'Approved' ? 'bg-warning-scorp' : 'bg-success-scorp' }}"> {{ $app->status }}</span></td>
                                                                         </tr>
                                                                     @empty

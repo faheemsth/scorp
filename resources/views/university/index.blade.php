@@ -100,7 +100,7 @@
                     </div>
 
                     {{-- Filters --}}
-                    <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+                    <div class="filter-data px-3" id="filter-show" <?= isset($_GET['name']) ? '' : 'style="display: none;"' ?>>
                         <form action="/university" method="GET" class="">
                             <div class="row my-3">
                                 <div class="col-md-3 mt-2">

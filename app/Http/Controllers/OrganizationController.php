@@ -128,6 +128,16 @@ class OrganizationController extends Controller
         //$organizations = Organization::get();
         // if (\Auth::user()->type == 'super admin') {
 
+        $start = 0;
+        $num_results_on_page = 50;
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = ($page - 1) * $num_results_on_page;
+        } else {
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+        }
+
         if (\Auth::user()->type == 'super admin' || \Auth::user()->can('manage organization')) {
 
             $org_query = User::select(['users.*'])->join('organizations', 'organizations.user_id', '=', 'users.id')->where('users.type', 'organization');
@@ -158,7 +168,7 @@ class OrganizationController extends Controller
                 $org_query->orWhere('organizations.billing_country', 'like', '%' . $g_search . '%');
             }
 
-            $organizations = $org_query->get();
+            $organizations = $org_query->orderBy('organizations.created_at', 'desc')->skip($start)->take($num_results_on_page)->get();
 
 
             $org_types = OrganizationType::get()->pluck('name', 'id');

@@ -19,6 +19,6 @@ class University extends Model
         
         $country = $this->country;
         $ct = Country::where('name',$country)->first();
-        return strtolower($ct->country_code);
+        return strtolower($ct->country_code ?? '');
     }
 }

@@ -177,7 +177,7 @@ $(document).on('change', '.sub-check', function() {
                                 <input type="checkbox" class="main-check">
                             </th>
                             <th style="border-left: 1px solid #fff;">Contact Name</th>
-                            <th style="border-left: 1px solid #fff;">Contact Email</th>
+                            <th class="d-none" style="border-left: 1px solid #fff;">Contact Email</th>
                             <th style="border-left: 1px solid #fff;">Admissions</th>
                             <th style="border-left: 1px solid #fff;">Applications</th>
                             <th style="border-left: 1px solid #fff; display: none;">Action</th>
@@ -197,7 +197,7 @@ $(document).on('change', '.sub-check', function() {
                                     </span>
 
                                 </td>
-                                <td>{{$client->email}}</td>
+                                <td class="d-none">{{$client->email}}</td>
                                 <td>{{$client->clientDeals->count()}}</td>
                                 <td>{{$client->clientApplications($client->id)}}</td>
                                 <td class="d-none">
