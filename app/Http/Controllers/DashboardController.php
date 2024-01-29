@@ -807,6 +807,7 @@ class DashboardController extends Controller
         $topUsers = DB::table('deals as d')
                     ->join('users as u', 'd.created_by', '=', 'u.id')
                     ->join('stages as s', 'd.stage_id', '=', 's.id')
+                    ->where('u.type', '!=', 'super admin')
                     ->whereIn('s.id', $filter)
                     ->groupBy('u.id', 'u.name')
                     ->select('u.id as user_id', 'u.name', DB::raw('COUNT(d.id) as total'))

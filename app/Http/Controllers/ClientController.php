@@ -2,23 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClientDeal;
-use App\Models\ClientPermission;
-use App\Models\Contract;
-use App\Models\CustomField;
-use App\Models\Estimation;
-use App\Models\Invoice;
-use App\Models\Plan;
-use App\Models\University;
-use App\Models\User;
-use App\Models\Utility;
 use http\Client;
+use App\Models\Deal;
+use App\Models\Lead;
+use App\Models\Plan;
+use App\Models\User;
+use App\Models\Stage;
+use App\Models\Invoice;
+use App\Models\Utility;
+use App\Models\Contract;
+use App\Models\ClientDeal;
+use App\Models\Estimation;
+use App\Models\University;
+use App\Models\CustomField;
 use Illuminate\Http\Request;
+use App\Models\ClientPermission;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
@@ -407,13 +410,19 @@ class ClientController extends Controller
 
     public function clientDetail($id){
         $client = User::findOrFail($id);
-        $deal = \App\Models\Deal::join('client_deals', 'client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->first();
-        $lead = \App\Models\Lead::join('client_deals', 'client_deals.client_id', 'leads.is_converted')->where('client_deals.client_id', $id)->first();
+        $deal = Deal::join('client_deals', 'client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->first();
+        
+        $lead = Lead::select('leads.*')
+                        ->join('deals as d', 'leads.is_converted', '=', 'd.id')
+                        ->join('client_deals as cd', 'cd.deal_id', '=', 'd.id')
+                        ->where('cd.client_id', $id)
+                        ->first();
+
         $organizations = User::get()->pluck('name', 'id')->toArray();
 
-        $deals = \App\Models\Deal::join('client_deals', 'client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->get();
-        $applications = \App\Models\Deal::select(['deal_applications.*'])->join('deal_applications', 'deal_applications.deal_id', 'deals.id')->join('client_deals','client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->get();
-        $stages = \App\Models\Stage::get()->pluck('name', 'id')->toArray();
+        $deals = Deal::join('client_deals', 'client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->get();
+        $applications = Deal::select(['deal_applications.*'])->join('deal_applications', 'deal_applications.deal_id', 'deals.id')->join('client_deals','client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->get();
+        $stages = Stage::get()->pluck('name', 'id')->toArray();
         $universities = University::get()->pluck('name', 'id')->toArray();
 
         $html = view('clients.clientDetail', compact('client', 'deal', 'lead', 'organizations', 'deals', 'applications', 'stages', 'universities'))->render();

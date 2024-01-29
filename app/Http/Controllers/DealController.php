@@ -2793,9 +2793,13 @@ class DealController extends Controller
             }
 
 
+            $filter = BrandsRegionsBranches();
+            // $companies = $filter['brands'];
+            // $regions = $filter['regions'];
+            // $branches = $filter['branches'];
+            // $employees = $filter['employees'];
 
-
-            return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands'));
+            return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'filter'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
