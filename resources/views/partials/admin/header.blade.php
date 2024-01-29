@@ -60,7 +60,7 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
 
 
     <!-- Topbar Navbar -->
-    <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav ml-auto align-items-center">
 
         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
         <li class="nav-item dropdown no-arrow d-sm-none">
@@ -104,11 +104,11 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
 
         <li>
         @if (Session::get('is_company_login') == true)
-            <a href="javascript::void(0)" onclick="LoginBack({{ Session::get('auth_type_id') }})" data-toggle="tooltip" title="Back To Your Account!" class="btn btn-dark mx-1" style="width: 100px; height: 45px; margin-top: 1rem;">Go Back</a>
+            <a href="javascript::void(0)" onclick="LoginBack({{ Session::get('auth_type_id') }})" data-toggle="tooltip" title="Back To Your Account!" class="btn btn-dark mx-1" style="width: 100px; height: 42px;">Go Back</a>
         @endif
         </li>
 
-        <div class="" style="width: 300px; margin-top: 1rem; margin-right: 10px;">
+        <div class="" style="width: 300px; margin-right: 10px;">
         
         @if (\Auth::user()->type == 'super admin')
         <select name="company" id="company" class="form form-select select2" style="width:100% !important" onChange="loginWithCompany();">

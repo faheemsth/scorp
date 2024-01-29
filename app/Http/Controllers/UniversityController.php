@@ -365,7 +365,7 @@ class UniversityController extends Controller
             ];
             addLogActivity($data);
 
-            return redirect()->route('university.index')->with('success', __('University successfully deleted!'));
+            return redirect()->route('')->with('success', __('University successfully deleted!'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
