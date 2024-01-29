@@ -847,7 +847,8 @@
                                         {{ __('Company Permission') }}</a>
                                 </li>
                             @endcan
-                            @if (Gate::check('super admin'))
+                           
+                            @can('manage crm settings')
                                 <li style=""
                                     class="emp nav-item {{ Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
 
@@ -863,7 +864,8 @@
                                         {{ __('CRM System Setup') }}
                                     </a>
                                 </li>
-                            @endif
+                            @endcan 
+                            
                             @can('manage company settings')
                                 <li class="emp {{ Request::segment(1) == 'settings' ? ' active show' : '' }}">
                                     <a href="{{ route('settings') }}" class="collapse-item"
