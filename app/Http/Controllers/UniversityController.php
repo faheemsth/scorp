@@ -21,7 +21,7 @@ class UniversityController extends Controller
      */
         public function index()
     {
-        $num_results_on_page = 50;
+        $num_results_on_page = 25;
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
