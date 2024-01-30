@@ -118,7 +118,6 @@
                                             </ul>
                                         </li>
                                         </ul>
-
                                     </li>
                                     @endforeach
 
