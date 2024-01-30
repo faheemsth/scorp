@@ -37,12 +37,15 @@
   display: none;
   position: absolute;
   top: 3%;
-  left: 160px;
+  left: 154px;
   width: 100%;
   background-color: #fafafa;
   font-weight:600;
   list-style-type: none;
 
+}
+.dropdown-item:hover{
+    background-color: white !important;
 }
 </style>
 
@@ -91,7 +94,38 @@
                     <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                         <div class="col-3">
                             <p class="mb-0 pb-0 ps-1">Institutes</p>
-                            <div class="dropdown" >
+                            <div class="dropdown">
+                                <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span> ALL INSTITUTES </span>
+                                </button>
+                                @if(sizeof($saved_filters) > 0)
+                                <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton1">
+
+                                    @foreach($saved_filters as $filter)
+                                    <li class="d-flex align-items-center justify-content-between ps-2">
+                                        <div  class="col-10">
+                                            <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                            <span class="text-dark"> ({{$filter->count}})</span>
+                                        </div>
+                                        <ul class="w-25" style="list-style: none;">
+                                        <li class="fil fw-bolder">
+                                            <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                            <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                            box-shadow: 0px 0px 1px #e9e9e9;">
+                                              <li><a class="dropdown-item" href="#">Rename</a></li>
+                                              <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                            </ul>
+                                        </li>
+                                        </ul>
+
+                                    </li>
+                                    @endforeach
+
+                                </ul>
+                                @endif
+                            </div>
+                            {{-- <div class="dropdown" >
                                 <button class="All-leads dropdown-toggle p-2" type="button" id="dropdownMenuButton1"
                                 data-bs-toggle="dropdown">
                                   <span> ALL INSTITUTES </span>
@@ -111,7 +145,7 @@
                                             </ul>
                                         </li>
 
-                                            {{-- <div class="dropdown">
+                                            <div class="dropdown">
                                                 <button class="btn bg-transparent dropdown-toggle filter" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
                                                 </button>
@@ -119,13 +153,13 @@
                                                     <li><a class="dropdown-item" href="#">Rename</a></li>
                                                     <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
                                                 </ul>
-                                            </div> --}}
+                                            </div>
 
                                     </li>
                                     @endforeach
                                 </ul>
                                 @endif
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="col-9 d-flex justify-content-end gap-2" >
