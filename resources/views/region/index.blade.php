@@ -391,7 +391,7 @@
                             @foreach ($regions as $region)
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="deals[]" value="{{ $region->id }}" class="sub-check">
+                                    <input type="checkbox" name="region_ids[]" value="{{ $region->id }}" class="sub-check">
                                 </td>
                                 <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                     <span style="cursor:pointer" class="hyper-link" @can('view region') onclick="openSidebar('/regions/{{ $region->id }}/show')" @endcan>

@@ -1,6 +1,8 @@
 @forelse($users as $key => $user)
 <tr>
-    <td>{{ $key + 1 }}</td>
+    <td>
+        <input type="checkbox" name="brand_ids[]" value="{{ $user->id }}" class="sub-check">
+    </td>
     <td>
 
         <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/{{ $user->id }}/user_detail')">

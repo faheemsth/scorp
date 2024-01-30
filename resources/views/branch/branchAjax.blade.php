@@ -1,5 +1,8 @@
 @foreach ($branches as $branch)
     <tr>
+    <td>
+                                            <input type="checkbox" name="branch_ids[]" value="{{ $branch->id }}" class="sub-check">
+                                        </td>
         <td>
             <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/branch/{{ $branch->id }}/show')">
                 {{ $branch->name }}
