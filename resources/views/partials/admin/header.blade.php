@@ -37,19 +37,9 @@ $all_companies = App\Models\User::orderBy('name', 'asc')->where('type', 'company
 ->pluck('name', 'id')
 ->toArray();
 
-<<<<<<< HEAD
-    $all_companies = App\Models\User::orderBy('name', 'asc')->where('type', 'company')
-        ->pluck('name', 'id')
-        ->toArray();
-
-    $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
-        ->where('seen', 0)
-        ->count();
-=======
 $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
 ->where('seen', 0)
 ->count();
->>>>>>> 7dc3732c6dd79a1e5056cecfb8e01bb9676690e0
 @endphp
 
 <nav class="navbar navbar-expand navbar-light topbar  static-top shadow" style="background-color: #B3CDE1;">
@@ -119,7 +109,7 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
         </li>
 
         <div class="" style="width: 300px; margin-right: 10px;">
-        
+
         @if (\Auth::user()->type == 'super admin')
         <select name="company" id="company" class="form form-select select2" style="width:100% !important" onChange="loginWithCompany();">
             <option value="">Select Companies</option>
@@ -202,7 +192,7 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
                     {!! $notification->data !!}
                 @endforeach --}}
                 <ul style="max-height: 300px; overflow-y: scroll;">
-                      
+
                     @foreach($notifications as $notification)
                     {!! $notification->data !!}
                     @endforeach
