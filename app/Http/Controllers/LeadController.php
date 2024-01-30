@@ -363,9 +363,18 @@ class LeadController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
+
         $usr = \Auth::user();
         if ($usr->can('create lead') ||  \Auth::user()->type == 'super admin') {
+
+            if($request->lead_assgigned_user == 0){
+
+                    return json_encode([
+                        'status' => 'error',
+                        'message' => 'User Responsible Is Required',
+                    ]);
+
+            }
             $validator = \Validator::make(
                 $request->all(),
                 [
