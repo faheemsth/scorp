@@ -240,17 +240,19 @@
         <div class="card my-card">
             <div class="card-body table-border-style">
 
-                {{-- topbar --}}
-                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                    <div class="col-2">
-                        <p class="mb-0 pb-0 ps-1">Regions</p>
-                        <div class="dropdown">
-                            <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                All Regions
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
-                            </ul>
+                    {{-- topbar --}}
+                    <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
+                        <div class="col-2">
+                            <p class="mb-0 pb-0 ps-1">Regions</p>
+                            <div class="dropdown">
+                                <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    All REGIONS
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <div class="col-2">

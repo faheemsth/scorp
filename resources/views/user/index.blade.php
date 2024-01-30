@@ -36,7 +36,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             <p class="mb-0 pb-0">Brands</p>
                             <div class="dropdown">
                                 <button class="All-leads" type="button">
-                                    ALL Brands
+                                    ALL BRAND
                                 </button>
                             </div>
                         </div>
@@ -57,6 +57,11 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 <i class="ti ti-plus "></i>
                             </a>
                             @endcan
+                            
+                            <a href="http://127.0.0.1:8000/university-download" class="btn p-2 btn-dark" style="color:white;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv">
+                                <i class="ti ti-download" style="font-size:18px"></i>
+                            </a>
+                            
                         </div>
                     </div>
                     <script>
@@ -69,7 +74,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                     {{-- Filters --}}
                     <div class="filter-data px-3" id="filterToggle" <?= isset($_GET['Brand']) || isset($_GET['Director']) ? '' : 'style="display: none;"' ?>>
                         <form action="/users" method="GET" class="">
-                            <div class="row my-3">
+                            <div class="row my-3 align-items-end">
                                 <div class="col-md-4 mt-2">
                                     <label for="">Brand</label>
                                     <select name="Brand" class="form form-control select2" id="">
@@ -102,7 +107,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     <a href="/users" class="btn bg-dark" style="color:white;">Reset</a>
                                 </div>
                             </div>
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
                                     <?php
@@ -112,7 +117,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     }
                                     ?>
                                     <input type="hidden" value="<?= http_build_query($all_params) ?>" class="url_params">
-                                    <select name="" id="" class="enteries_per_page form form-control" style="width: 100px; margin-right: 1rem;">
+                                    <select name="" id="" class="enteries_per_page form form-control select2 " style="width: 100px; margin-right: 1rem;">
                                         <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 25 ? 'selected' : '' ?> value="25">25</option>
                                         <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 100 ? 'selected' : '' ?> value="100">100</option>
                                         <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 300 ? 'selected' : '' ?> value="300">300</option>
@@ -122,7 +127,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
                                     <span style="margin-top: 5px;">entries per page</span>
                                 </div>
-                            </div>
+                            </div> -->
                         </form>
                     </div>
 
@@ -141,14 +146,14 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 @forelse($users as $key => $user)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>
+                                    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
 
                                         <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/{{ $user->id }}/user_detail')">
                                             {{ $user->name }}
                                         </span>
                                     </td>
-                                    <td><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
-                                    <td>{{ !empty($user->project_director_id) && isset($projectDirectors[$user->project_director_id]) ? $projectDirectors[$user->project_director_id] : '' }}</td>
+                                    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
+                                    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($user->project_director_id) && isset($projectDirectors[$user->project_director_id]) ? $projectDirectors[$user->project_director_id] : '' }}</td>
                                 </tr>
                                 @empty
                                 <tr>
