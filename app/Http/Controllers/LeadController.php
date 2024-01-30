@@ -186,7 +186,7 @@ class LeadController extends Controller
 
             $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id');
             if(\Auth::user()->type == 'super admin'){
-                
+
             }else if(\Auth::user()->type == 'company'){
                 $leads_query->where('brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
@@ -198,11 +198,11 @@ class LeadController extends Controller
             }else{
                 $leads_query->where('user_id', \Auth::user()->id);
             }
-           
-           
-           
-           
-           
+
+
+
+
+
           //  $leads_query->whereIn('brand_id', $brand_ids)->where('is_converted',0);
 
             // Add the dynamic filters
@@ -604,7 +604,7 @@ class LeadController extends Controller
                 $sources = Source::get()->pluck('name', 'id');
                 $countries = $this->countries_list();
 
-                
+
                 $companies = FiltersBrands();
 
 
@@ -613,7 +613,7 @@ class LeadController extends Controller
                 $Region = $filter['regions'];
                 $branches = $filter['branches'];
                 $employees = $filter['employees'];
-                
+
                 return view('leads.edit', compact('companies','lead', 'pipelines', 'sources', 'products', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'regions', 'employees'));
             } else if (\Auth::user()->can('edit lead') || $lead->created_by == \Auth::user()->creatorId()) {
 
@@ -663,7 +663,7 @@ class LeadController extends Controller
                 // $regions = $query->pluck('name', 'id')->toArray();
                 $regions =  Region::where('id', $lead->region_id)->pluck('name', 'id')->toArray();
                 $branches =  Branch::where('id', $lead->branch_id)->get()->pluck('name', 'id')->toArray();
-                
+
 
                 $filter = BrandsRegionsBranchesForEdit($lead->brand_id, $lead->region_id, $lead->branch_id);
                 $companies = $filter['brands'];
@@ -3587,4 +3587,56 @@ class LeadController extends Controller
 
         }
     }
+
+
+    public function download(){
+        $region_query = Lead::select(['leads.*']);
+        ///////////////////Filter Data
+        if(isset($_GET['brand_id']) && !empty($_GET['brand_id'])){
+            $region_query->where('brands', $_GET['brand_id']);
+        }
+        if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
+            $region_query->where('id', $_GET['region_id']);
+        }
+        if (\Auth::user()->type == 'super admin') {
+            $leads = Region::orderBy('name', 'ASC')->get();
+        } else if (\Auth::user()->type == 'company') {
+            $region_query->where('brands', [\Auth::user()->id]);
+        } else {
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $region_query->whereIn('brands', $brand_ids);
+        }
+        $leads = $region_query->orderBy('name', 'ASC')->get();
+        $users = allUsers();
+        $branches = Branch::get()->pluck('name', 'id')->ToArray();
+        $header = [
+            'S.No.',
+            'Name',
+            'Email',
+            'Phone',
+            'Stage',
+            'Assigned To',
+            'Brand',
+            'Branch'
+        ];
+        $data = [];
+        foreach($leads as $key => $region){
+
+            $data[] = [
+                'sr' => $key+1,
+                'name' => $region->name,
+                'email' => $region->email,
+                'phone' => $region->phone,
+                'stage' => !empty($region->stage) ? $region->stage->name : '-',
+                'assigned_to' => $users[$region->user_id] ?? '',
+                'brand' => $users[$region->brand_id] ?? '',
+                'branch' => isset( $branches[$region->branch_id]) ?  $branches[$region->branch_id] : ''
+            ];
+        }
+
+        downloadCSV($header, $data, 'leads.csv');
+        return true;
+    }
+
 }

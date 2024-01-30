@@ -204,8 +204,22 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <i class="fa fa-file-csv"></i>
                                 </button>
                                 @endcan
-                                <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
 
+
+
+                                <a href="{{ route('leads.download') }}" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
+                                    <i class="ti ti-download" style="font-size:18px"></i>
+                                </a>
+
+
+
+
+                                {{-- <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> --}}
+                                @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete region'))
+                                <a class="btn p-2 btn-dark  text-white assigned_to delete-bulk-leads" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                                @endif
                             </div>
                         </div>
 
@@ -349,7 +363,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     </div>
                                 </div>
 
-                                
+
                                 <div class="row my-4 d-none">
                                     <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
@@ -628,7 +642,7 @@ if (isset($lead->is_active) && $lead->is_active) {
             $(".sub-check").prop('checked', $(this).prop('checked'));
         });
 
-        
+
         $(document).on('change', '.sub-check', function() {
             var selectedIds = $('.sub-check:checked').map(function() {
                 return this.value;
