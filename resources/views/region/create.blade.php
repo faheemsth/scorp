@@ -102,9 +102,9 @@
                                                 {{ __('Phone') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
-                                                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+                                                <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"> -->
 
-                                                <input type="text" class="form-control" placeholder="Enter Phone" value="" id="phone" name="phone">
+                                                <input type="text" class="form-control" placeholder="Enter Phone" value="" id="phones" name="phone">
 
 
                                             </td>

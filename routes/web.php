@@ -1819,9 +1819,12 @@ Route::get('/region/filter-regions', [RegionController::class, 'getFilterRegions
 Route::get('/region/filter-branches', [RegionController::class, 'getFilterBranches'])->name('filter-branches');
 Route::get('/region/filter-branch-users', [RegionController::class, 'getFilterBranchUsers'])->name('filter-branch-users');
 
+/////////////////////////////////////////////////////////////Import Employees
+Route::get('/import-employees', [UserController::class, 'importEmployees']);
+Route::post('/import-employees', [UserController::class, 'import'])->name('import.employees.csv');
 
 /////////////////////////////////////////////////////////////Analysis Controller
-Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.index')->middleware(['auth', 'XSS']);;
+Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.index')->middleware(['auth', 'XSS']);
 
 
 //////////////////////////////////////////////Exports Urls
