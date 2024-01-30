@@ -349,6 +349,7 @@
                             console.log(data.html);
                             $(".list-div").html(data.html);
                             $(".pagination_div").html(data.pagination_html);
+                            
                         }
                     }
                 })

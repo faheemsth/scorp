@@ -42,7 +42,7 @@ class UniversityController extends Controller
             })
 
             ->when(!empty($_GET['city']), function ($query) {
-                return $query->where('city', 'like', '%' . $_GET['city'] . '%');
+                return $query->where('campuses', 'like', '%' . $_GET['city'] . '%');
             })
 
             ->when(!empty($_GET['note']), function ($query) {
@@ -189,7 +189,7 @@ class UniversityController extends Controller
             //getting companies
             $companies = FiltersBrands();
 
-            $categories = InstituteCategory::pluck('name', 'id')->prepend('Select Category', '');
+            $categories = InstituteCategory::pluck('name', 'id')->prepend('Select Category', 0);
 
             $data = [
                 'countries' => $countries,
@@ -325,7 +325,7 @@ class UniversityController extends Controller
             $companies = companies();
 
             $categories = InstituteCategory::pluck('name', 'id');
-            $categories->prepend('', 'Select Category');
+            $categories->prepend('Select Category', 0);
 
             $data = [
                 'countries' => $countries,
@@ -362,7 +362,7 @@ class UniversityController extends Controller
                     'months' => 'required',
                     'territory' => 'required',
                     'company_id' => 'required',
-                    'category_id' => 'required'
+                    //'category_id' => 'required'
                     //'phone' => 'required|max:20',
                     //'note' => 'required'
                 ]

@@ -1345,4 +1345,81 @@ class UserController extends Controller
 
         die('successfully completed');
     }
+
+
+    public function download(){
+        $usersQuery = User::select(['users.*']);
+        
+        
+        //Filters
+        if (!empty($_GET['brand'])) {
+            $usersQuery->where('brand_id', $_GET['brand']);
+        }
+        if (!empty($_GET['region_id'])) {
+            $usersQuery->where('region_id', $_GET['region_id']);
+        }
+
+        if (!empty($_GET['branch_id'])) {
+            $usersQuery->where('branch_id', $_GET['branch_id']);
+        }
+
+        if (!empty($_GET['Name'])) {
+            $usersQuery->where('name', 'like', '%' . $_GET['Name'] . '%');
+        }
+
+        if (!empty($_GET['Designation'])) {
+            $usersQuery->where('type', 'like', '%' . $_GET['Designation'] . '%');
+        }
+
+
+        if (!empty($_GET['phone'])) {
+            $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
+        }
+
+        $companies = FiltersBrands();
+        $brand_ids = array_keys($companies);
+        if(\Auth::user()->type == 'super admin'){
+            
+        }else if(\Auth::user()->type == 'company'){
+            $usersQuery->where('brand_id', \Auth::user()->id);
+        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            $usersQuery->whereIn('brand_id', $brand_ids);
+        }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+            $usersQuery->where('region_id', \Auth::user()->region_id);
+        }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+            $usersQuery->where('branch_id', \Auth::user()->branch_id);
+        }else{
+            $usersQuery->where('id', \Auth::user()->id);
+        }
+
+        $users = $usersQuery
+                ->where('type', 'company')
+                ->orderBy('users.name', 'ASC')
+                ->get();
+
+        $all_users = User::pluck('name', 'id')->toArray();
+
+
+        //header 
+        $header = [
+            'Sr.No.',
+            'Name',
+            'Website Link',
+            'Project Director'
+        ];
+
+
+        $data = [];
+        foreach($users as $key => $brand){
+            $data[] = [
+                'sr_no' => $key+1,
+                'name' => $brand->name,
+                'website_link' => $brand->website_link,
+                'director' => $all_users[$brand->project_director_id] ?? ''
+            ];
+        }
+
+        downloadCSV($header, $data, 'Brand.csv');
+        return true;
+    }
 }

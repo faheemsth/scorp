@@ -81,9 +81,14 @@
     if (ceil($total_pages / $num_results_on_page) > 0) : ?>
 
 
-
+        
 
         <?php
+        // Check if 'ajax' parameter is present
+        if (isset($_GET['ajaxCall'])) {
+            unset($_GET['ajaxCall']); // Remove 'ajax' parameter if present
+        }
+
         if (isset($_GET['page'])) {
             $all_params = $_GET;
             unset($all_params['page']);

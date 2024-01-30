@@ -5,10 +5,10 @@
 
         <div class="row">
             <input type="hidden" id="university_id" value="{{ $university->id }}">
-            <div class="form-group col-12 py-0">
+            <div class="form-group col-md-6 py-0">
                 {{ Form::label('name', __('Institute Category'),['class'=>'form-label']) }}
                 <span class="text-danger">*</span>
-                {{ Form::select('category_id', $categories, $university->institute_category_id, ['class' => 'form-control select2', 'id' => 'categories' ,'required' => 'required']) }}
+                {{ Form::select('category_id', $categories, $university->institute_category_id, ['class' => 'form-control select2', 'id' => 'categories']) }}
             </div>
 
             <div class="form-group col-md-6 py-0">
@@ -26,7 +26,7 @@
             <div class="form-group col-md-6 py-0">
                 {{ Form::label('name', __('Campuses'),['class'=>'form-label']) }}
                 <span class="text-danger">*</span>
-                {{ Form::text('city', $university->city, array('class' => 'form-control','required'=>'required')) }}
+                {{ Form::text('city', $university->campuses, array('class' => 'form-control','required'=>'required')) }}
             </div>
 
             <div class="form-group col-md-6 py-0">

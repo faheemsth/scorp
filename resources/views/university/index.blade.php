@@ -205,7 +205,7 @@
                                     <th scope="col">{{ __('Resources') }}</th>
                                     <th scope="col">{{ __('Application Method') }}</th>
                                     @if (\Auth::user()->type == 'super admin')
-                                    <th scope="col">{{ __('Created By') }}</th>
+                                    <th scope="col" style="display: none;">{{ __('Created By') }}</th>
                                     @endif
 
                                     @if (\Auth::user()->type != 'super admin')
@@ -257,7 +257,7 @@
                                     </td>
 
                                     @if (\Auth::user()->type == 'super admin')
-                                    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap; display: none;">
                                         {{ isset($users[$university->created_by]) ? $users[$university->created_by] : '' }}
                                     </td>
                                     @endif

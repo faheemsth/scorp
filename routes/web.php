@@ -1829,3 +1829,4 @@ Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.in
 
 //////////////////////////////////////////////Exports Urls
 Route::get('/university-download', [UniversityController::class, 'download'])->name('university.download');
+Route::get('/brands-download', [UserController::class, 'download'])->name('users.download');
