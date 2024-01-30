@@ -66,6 +66,12 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 <i class="ti ti-download" style="font-size:18px"></i>
                             </a>
 
+                            @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete user'))
+                                <a href="javascript:void(0)" id="actions_div"  class="btn p-2 d-none delete-bulk btn-dark" style="color:white;" data-bs-toggle="tooltip" title="" data-original-title="Delete in bulk">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            @endif
+
                         </div>
                     </div>
                     <script>
@@ -151,7 +157,9 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>S.No</th>
+                                    <th style="width: 50px !important;">
+                                        <input type="checkbox" class="main-check">
+                                    </th>
                                     <th>Name</th>
                                     <th>Website Link</th>
                                     <th>Project Director</th>
@@ -161,7 +169,9 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             <tbody class="list-div">
                                 @forelse($users as $key => $user)
                                 <tr>
-                                    <td>{{ $key + 1 }}</td>
+                                    <td>
+                                        <input type="checkbox" name="brand_ids[]" value="{{ $user->id }}" class="sub-check">
+                                    </td>
                                     <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
 
                                         <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/{{ $user->id }}/user_detail')">
@@ -253,5 +263,68 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
             }
         })
     });
+
+
+    $(document).on('change', '.main-check', function() {
+        $(".sub-check").prop('checked', $(this).prop('checked'));
+
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+       // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+        }
+    });
+
+    $(document).on('change', '.sub-check', function() {
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+       // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+        }
+        let commaSeperated = selectedArr.join(",");
+        //console.log(commaSeperated)
+        //$("#region_ids").val(commaSeperated);
+
+    });
+
+
+    $(document).on("click", '.delete-bulk', function() {
+        var task_ids = $(".sub-check:checked");
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-bulk-brands?ids=' + selectedIds.join(',');
+            }
+        });
+    })
 </script>
 @endsection

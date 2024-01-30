@@ -296,7 +296,7 @@
                                     <td data-bs-toggle="tooltip" data-bs-placement="top" title="{{ $university->name }}">
                                         @if (!empty($university->name))
                                         <span style="cursor:pointer" class="hyper-link" @can('show university') onclick="openSidebar('/university/'+{{ $university->id }}+'/university_detail')" @endcan>
-                                        {{ !empty($university->name) ? (strlen($university->name) > 10 ? substr($university->name, 0, 10) . '...' : $university->name) : '' }}
+                                        {{ !empty($university->name) ? $university->name : '' }}
                                         </span>
                                         @endif
 
