@@ -97,7 +97,7 @@ class UniversityController extends Controller
                 return json_encode([
                     'status' => 'success',
                     'html' => $html,
-                    'paginization_html' => $pagination_html
+                    'pagination_html' => $pagination_html
                 ]);
             }
 

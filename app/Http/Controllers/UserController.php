@@ -802,7 +802,7 @@ class UserController extends Controller
             $regions = Region::pluck('name', 'id')->toArray();
         }
 
-
+ 
         $roles_start = ['0' => 'Select Role']; // Use an associative array for key-value pairs
         $excludedTypes = ['super admin', 'company', 'team', 'client'];
         $roles_arr = Role::whereNotIn('name', $excludedTypes)->get()->unique('name')->pluck('name', 'name')->toArray(); // Convert to array
@@ -1179,5 +1179,170 @@ class UserController extends Controller
             'status' => 'success',
             'html' => $html
         ]);
+    }
+
+    public function importEmployees(){
+        return view('user.import_employees');
+    }
+    
+    public function import(Request $request){
+        $request->validate([
+            'csv_file' => 'required|mimes:csv,txt'
+        ]);
+
+
+        $file = $request->file('csv_file');
+        $csvData = file_get_contents($file);
+
+
+        $rows = array_map('str_getcsv', explode("\n", $csvData));
+        $header = array_shift($rows);
+
+        $data = [];
+        foreach ($rows as $row) {
+            $data[] = array_combine($header, $row);
+        }
+
+        // echo "<pre>";
+        // print_r($data);
+        // die();
+
+        foreach($data as $key => $d){
+            $brand = User::where(['name' => $d['Brand'], 'type' => 'company'])->first();
+            
+            if(!$brand){
+                echo "<pre>";
+                print_r($d);
+                die();
+            }
+
+
+
+            //regions
+
+            $region = Region::where(['brands' => $brand->id])->first();
+            $region_id = isset($region->id) ? $region->id : 0;
+
+            if(!$region){
+                $new_region = new Region();
+                $new_region->name = $d['Region'];
+                $new_region->location = $d['Region'];
+                $new_region->brands = $brand->id;
+                $new_region->save();
+                $region_id = $new_region->id;
+            }
+
+
+            //Branch
+            $branch = Branch::where(['brands' => $brand->id, 'region_id' =>$region_id])->first();
+            $branch_id = isset($branch->id) ? $branch->id : 0;
+            if(!$branch){
+                $new_branch = new Branch();
+                $new_branch->name = $d['Branch'];
+                $new_branch->region_id = $region_id;
+                $new_branch->brands = $brand->id;
+                $new_branch->created_by = \Auth::user()->id;
+                $new_branch->save();
+                $branch_id = $new_branch->id;
+            }
+
+            
+            ////////////////////////////////Creating Employee
+            $is_exist = User::where('email', $d['Email'])->first();
+            if($is_exist){
+                continue;
+            }
+
+
+            $user               = new User();
+            $user['name']       = $d['Full Name'];
+            $user['email']      = $d['Email'];
+            $psw                = 'study1234';
+            $user['password']   = Hash::make($psw);
+            $user['type']       =  $d['Role'];
+            $user['branch_id'] = $branch_id;
+            $user['region_id'] = $region_id;
+            $user['brand_id'] =  $brand->id;
+            $user['default_pipeline'] = 1;
+            $user['plan'] = 1;
+            $user['lang']       = 'en';
+            $user['created_by'] = \Auth::user()->id;
+            $user['phone'] = $d['Phone'];
+            $user->save();
+
+            //working on role
+            $role_r = Role::findByName($d['Role']);
+
+            if ($d['Role'] == 'Project Director') {
+                User::where('id', $brand->id)->update([
+                    'project_director_id' => $user->id
+                ]);
+            } else if ($d['Role'] == 'Project Manager') {
+                User::where('id', $brand->id)->update([
+                    'project_manager_id' => $user->id
+                ]);
+            } else if ($d['Role'] == 'Region Manager') {
+                Region::where('id', $region_id)->update([
+                    'region_manager_id' => $user->id
+                ]);
+            } else if ($d['Role'] == 'Branch Manager') {
+                Branch::where('id', $branch_id)->update([
+                    'branch_manager_id' => $user->id
+                ]);
+            }
+
+
+            $user->assignRole($role_r);
+            //                $user->userDefaultData();
+            $user->userDefaultDataRegister($user->id);
+            $user->userWarehouseRegister($user->id);
+
+            //default bank account for new company
+            $user->userDefaultBankAccount($user->id);
+
+            Utility::chartOfAccountTypeData($user->id);
+            Utility::chartOfAccountData($user);
+            // default chart of account for new company
+            Utility::chartOfAccountData1($user->id);
+
+            Utility::pipeline_lead_deal_Stage($user->id);
+            Utility::project_task_stages($user->id);
+            Utility::labels($user->id);
+            Utility::sources($user->id);
+            Utility::jobStage($user->id);
+            GenerateOfferLetter::defaultOfferLetterRegister($user->id);
+            ExperienceCertificate::defaultExpCertificatRegister($user->id);
+            JoiningLetter::defaultJoiningLetterRegister($user->id);
+            NOC::defaultNocCertificateRegister($user->id);
+
+            $emp_det = [
+                'name' => $d['Full Name'],
+                'role' => $d['Role'],
+                'companies' => $brand->id,
+                'region_id' => $region_id,
+                'branch_id' => $branch_id,
+                'email' => $d['Email'],
+                'password' => Hash::make('study1234'),
+                'phone' => $d['Phone'],
+                'dob' => '',
+                'gender' => '',
+                'address' => '',
+                'account_holder_name' => '',
+                'account_number' => '',
+                'bank_name' => '',
+                'bank_identifier_code' => '',
+                'branch_location' => '',
+                'tax_payer_id' => '',
+                'salary' => 0
+            ];
+            $emp_detail = json_decode(json_encode($emp_det));
+
+            // To add entry in employees table
+            Utility::employeeDetails($user->id, \Auth::user()->creatorId(), $emp_detail);
+            
+            echo "Employee Create ".$key."<br>";
+        }
+
+        die('successfully completed');
     }
 }
