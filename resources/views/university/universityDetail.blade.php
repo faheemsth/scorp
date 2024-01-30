@@ -31,8 +31,8 @@
                         <div class="d-flex justify-content-end gap-1">
                             <a href="#" data-size="lg" data-url="{{ route('university.edit', $university->id) }}"
                                 data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update University') }}"
-                                class="btn p-2 btn-dark text-white">
-                                <i class="ti ti-pencil"></i>
+                                class="btn  btn-dark text-white px-0 py-1" style= "width: 36px; height: 36px;">
+                                <i class="ti ti-pencil "></i>
                             </a>
                         </div>
                     @endif
@@ -42,7 +42,7 @@
                              {!! Form::open(['method' => 'DELETE', 'route' => ['university.destroy', $university->id]]) !!}
     
                             <a href="#" data-bs-toggle="tooltip" title="{{__('Delete')}}"
-                                class="btn px-2 py-2 text-white bs-pass-para bg-danger">
+                                class="btn text-white bs-pass-para bg-danger px-0 py-1"  style= "width: 36px; height: 36px;">
                                 <i class="ti ti-trash" ></i>
                             </a>
     
