@@ -241,6 +241,9 @@
             <div class="card-body table-border-style">
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 07f4a4fa117268c4c3d633f72dcf8470eeabe7fc
                     {{-- topbar --}}
                     <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                         <div class="col-2">
@@ -254,6 +257,7 @@
                                     <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
                                 </ul>
                             </div>
+<<<<<<< HEAD
 =======
                 {{-- topbar --}}
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
@@ -267,6 +271,8 @@
                                 <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
                             </ul>
 >>>>>>> 64e50d8a0761cebdce1d74c4f30b07b3434d5b02
+=======
+>>>>>>> 07f4a4fa117268c4c3d633f72dcf8470eeabe7fc
                         </div>
                     </div>
                     <div class="col-2">
