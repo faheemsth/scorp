@@ -33,40 +33,45 @@
 
             <div class="card">
 
-                <div class="row align-items-center mx-2 my-4">
+                <div class="row align-items-center mx-2 my-4 justify-content-between">
                     <div class="col-2">
                         <p class="mb-0 pb-0 ps-1">Branches</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                ALL Branch
+                                ALL BRANCH
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li>
                             </ul>
                         </div>
                     </div>
-                    <div class="col-10 d-flex justify-content-end gap-2">
-                        <div class="input-group w-25">
-                            <button class="btn btn-sm list-global-search-btn px-0">
-                                <span class="input-group-text bg-transparent border-0 px-2 py-1" id="basic-addon1">
+                    <div class="col-8 d-flex justify-content-end gap-2">
+                        <div class="input-group w-25 rounded"  style= "width:36px; height: 36px; margin-top:10px;" >
+                            <button class="btn btn-sm list-global-search-btn p-0 pb-2">
+                                <span class="input-group-text bg-transparent border-0 px-1" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
                             </button>
-                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
 
-                        <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                        <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark d-none" style= "width:36px; height: 36px; margin-top:10px;"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
-                        <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style= "width:36px; height: 36px; margin-top:10px;">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
                         @can('create branch')
                         <!-- Modified the opening tag to match the closing tag -->
-                        <a href="#" data-size="lg" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Branch')}}" class="btn px-2 btn-dark">
+                        <a href="#" data-size="lg" data-url="{{ route('branch.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Branch')}}" class="btn px-2 btn-dark" style= "width:36px; height: 36px; margin-top:10px;">
                             <i class="ti ti-plus"></i>
                         </a>
                         @endcan
+
+                        <a href="http://127.0.0.1:8000/university-download" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv">
+                                <i class="ti ti-download" style="font-size:18px"></i>
+                            </a>
+
                         <!-- Added the missing closing div tag -->
                     </div>
                 </div>
@@ -184,13 +189,13 @@
                                                     {{ $branch->name }}
                                             </span>
                                         </td>
-                                        <td>{{ isset($branch->brands) ? \App\Models\User::where('id', $branch->brands)->first()->name : '' }}</td>
-                                        <td>{{ !empty($regions[$branch->region_id]) ? $regions[$branch->region_id] : '' }}</td>
-                                        <td>{{ !empty($branch->branch_manager_id) && isset($users[$branch->branch_manager_id]) ? $users[$branch->branch_manager_id] : '' }}</td>
-                                        <td>{{ $branch->phone }}</td>
-                                        <td><a href="mailto:{{ $branch->email }}">{{ $branch->email }}</a></td>
-                                        <td><a href="{{ $branch->google_link }}">{{ $branch->google_link }}</a></td>
-                                        <td><a href="{{ $branch->social_media_link }}">{{ $branch->social_media_link }}</a></td>
+                                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($branch->brands) ? \App\Models\User::where('id', $branch->brands)->first()->name : '' }}</td>
+                                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($regions[$branch->region_id]) ? $regions[$branch->region_id] : '' }}</td>
+                                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($branch->branch_manager_id) && isset($users[$branch->branch_manager_id]) ? $users[$branch->branch_manager_id] : '' }}</td>
+                                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $branch->phone }}</td>
+                                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="mailto:{{ $branch->email }}">{{ $branch->email }}</a></td>
+                                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $branch->google_link }}">{{ $branch->google_link }}</a></td>
+                                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $branch->social_media_link }}">{{ $branch->social_media_link }}</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>

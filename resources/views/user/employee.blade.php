@@ -31,7 +31,7 @@
             <div class="row w-100 m-0">
                 <div class="card my-card">
                     <div class="card-body">
-                        <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
+                        <div class="row align-items-center ps-0 ms-0 pe-4 my-2 justify-content-between">
                             <div class="col-2">
                                 <p class="mb-0 pb-0">Employees</p>
 
@@ -39,35 +39,40 @@
 
                                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        ALL Employees
+                                        ALL EMPLOYEES
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                         <li><a class="dropdown-item" href="#">Delete</a></li>
                                     </ul>
                                 </div>
                             </div>
-                            <div class="col-10 d-flex justify-content-end gap-2">
-                                <div class="input-group w-25">
-                                    <button class="btn list-global-search-btn px-0">
-                                        <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                            <div class="col-8 d-flex justify-content-end gap-2">
+                                <div class="input-group w-25 rounded" style= "width:36px; height: 36px; margin-top:10px;">
+                                    <button class="btn list-global-search-btn p-0 pb-2">
+                                        <span class="input-group-text bg-transparent border-0  px-1" id="basic-addon1">
                                             <i class="ti ti-search" style="font-size: 18px"></i>
                                         </span>
                                     </button>
-                                    <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
+                                    <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                                 </div>
 
                                 <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    data-bs-toggle="dropdown" aria-expanded="false" style="color:white; width:36px; height: 36px; margin-top:10px;">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                 </button>
 
                                 @can('create employee')
                                     <a href="#" data-size="lg" data-url="{{ route('user.employee.create') }}"
                                         data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Employee') }}"
-                                        class="btn btn-dark py-2 px-2">
+                                        class="btn btn-dark py-2 px-2" style="color:white; width:36px; height: 36px; margin-top:10px;">
                                         <i class="ti ti-plus"></i>
                                     </a>
                                 @endcan
+
+                                <a href="http://127.0.0.1:8000/university-download" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv">
+                                <i class="ti ti-download" style="font-size:18px"></i>
+                            </a>
+
                             </div>
                         </div>
 
@@ -238,11 +243,11 @@
                                                     {{ $employee->name }}
                                                 </span>
                                             </td>
-                                            <td><a href="mailto:{{ $employee->email }}">{{ $employee->email }}</a></td>
-                                            <td>{{ $employee->type }}</td>
-                                            <td>{{ $employee->phone }}</td>
-                                            <td>{{ $Regions[$employee->region_id] ?? '' }}</td>
-                                            <td>{{ !empty($employee->last_login_at) ? $employee->last_login_at : '' }}
+                                            <td  style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="mailto:{{ $employee->email }}">{{ $employee->email }}</a></td>
+                                            <td  style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $employee->type }}</td>
+                                            <td  style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $employee->phone }}</td>
+                                            <td  style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $Regions[$employee->region_id] ?? '' }}</td>
+                                            <td  style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($employee->last_login_at) ? $employee->last_login_at : '' }}
                                             </td>
 
                                         </tr>

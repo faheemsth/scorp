@@ -240,29 +240,8 @@
         <div class="card my-card">
             <div class="card-body table-border-style">
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 07f4a4fa117268c4c3d633f72dcf8470eeabe7fc
-                    {{-- topbar --}}
-                    <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                        <div class="col-2">
-                            <p class="mb-0 pb-0 ps-1">Regions</p>
-                            <div class="dropdown">
-                                <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    All REGIONS
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
-                                </ul>
-                            </div>
-<<<<<<< HEAD
-=======
-=======
+                    
 
->>>>>>> 0e5aa3a414dadba9e83ff65e6e959b38d26c4543
                 {{-- topbar --}}
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                     <div class="col-2">
@@ -274,12 +253,7 @@
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
                             </ul>
-<<<<<<< HEAD
->>>>>>> 64e50d8a0761cebdce1d74c4f30b07b3434d5b02
-=======
->>>>>>> 07f4a4fa117268c4c3d633f72dcf8470eeabe7fc
-=======
->>>>>>> 0e5aa3a414dadba9e83ff65e6e959b38d26c4543
+
                         </div>
                     </div>
                 
@@ -296,24 +270,28 @@
                 </div>
 
                 <div class="col-8 d-flex justify-content-end gap-2">
-                    <div class="input-group w-25">
-                        <button class="btn btn-sm list-global-search-btn px-0">
-                            <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                    <div class="input-group w-25 rounded" style= "width:36px; height: 36px; margin-top:10px;">
+                        <button class="btn btn-sm list-global-search-btn p-0 pb-2" >
+                            <span class="input-group-text bg-transparent border-0  px-1 " id="basic-addon1">
                                 <i class="ti ti-search" style="font-size: 18px"></i>
                             </span>
                         </button>
-                        <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list...">
+                        <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2  list-global-search" placeholder="Search this list...">
                     </div>
 
-                    <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="ti ti-filter" style="font-size:18px"></i>
+                    <button class="btn filter-btn-show  btn-dark px-0" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false" style= "width:36px; height: 36px; margin-top:10px;">
+                        <i class="ti ti-filter " style="font-size:18px"></i>
                     </button>
 
                     @can('create region')
-                    <a href="#" data-size="lg" data-url="{{ route('region.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Region') }}" class="btn p-2 btn-dark">
+                    <a href="#" data-size="lg" data-url="{{ route('region.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Region') }}" class="btn  btn-dark px-0" style= "width:36px; height: 36px; margin-top:10px;" >
                         <i class="ti ti-plus"></i>
                     </a>
                     @endcan
+
+                    <a href="http://127.0.0.1:8000/university-download" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0" >
+                                <i class="ti ti-download" style="font-size:18px"></i>
+                            </a>
 
                 </div>
                 </div>
@@ -337,13 +315,13 @@
                 {{-- Filters --}}
                 <div class="filter-data px-3" id="filterToggle" <?= isset($_GET['brand_id']) ? '' : 'style="display: none;"' ?>>
                     <form action="/region/index" method="GET" class="">
-                        <div class="row my-3">
+                        <div class="row my-3 align-items-end">
                             @php
                             $type = \Auth::user()->type;
                             @endphp
 
                             @if($type == 'super admin' || $type == 'Project Director' || $type == 'Project Manager')
-                            <div class="col-md-3 mt-2">
+                            <div class="col-md-4 mt-2">
                                 <label for="">Brand</label>
                                 <select name="brand_id" class="form form-control select2" id="filter_brand_id">
                                     <option value="">Select Option</option>
@@ -359,7 +337,7 @@
                             @endif
 
                             @if($type == 'super admin' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'company' || $type == 'Region Manager')
-                            <div class="col-md-3 mt-2" id="region_div">
+                            <div class="col-md-4 mt-2" id="region_div">
                                 <label for="">Region</label>
 
                                 <select name="region_id" class="form form-control select2" id="filter_region_id">
@@ -375,8 +353,7 @@
                             </div>
                             @endif
 
-                            <div class="col-md-3 mt-3">
-                                <br>
+                            <div class="col-md-3   ">
                                 <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
                                 <a href="/region/index" class="btn bg-dark" style="color:white;">Reset</a>
                             </div>
@@ -409,18 +386,18 @@
                                 <td>
                                     <input type="checkbox" name="deals[]" value="{{ $region->id }}" class="sub-check">
                                 </td>
-                                <td>
+                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                     <span style="cursor:pointer" class="hyper-link" @can('view region') onclick="openSidebar('/regions/{{ $region->id }}/show')" @endcan>
                                         {{ $region->name }}
                                     </span>
                                 </td>
-                                <td><a href="mailto:{{ $region->email }}">{{ $region->email }}</a></td>
-                                <td>{{ $region->phone }}</td>
-                                <td>{{ $region->location }}</td>
+                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="mailto:{{ $region->email }}">{{ $region->email }}</a></td>
+                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $region->phone }}</td>
+                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $region->location }}</td>
 
-                                <td>{{ $users[$region->region_manager_id] ?? '' }}</td>
+                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $users[$region->region_manager_id] ?? '' }}</td>
 
-                                <td>
+                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                     @php
                                     $brands = explode(',', $region->brands);
                                     @endphp
