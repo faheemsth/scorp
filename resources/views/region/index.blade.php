@@ -247,7 +247,7 @@
                             <div class="dropdown">
                                 <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    All Regions
+                                    All REGIONS
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
