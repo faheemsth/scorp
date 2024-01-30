@@ -32,7 +32,7 @@
                 }
     }
 
-    $all_companies = App\Models\User::where('type', 'company')
+    $all_companies = App\Models\User::orderBy('name', 'asc')->where('type', 'company')
         ->pluck('name', 'id')
         ->toArray();
 
