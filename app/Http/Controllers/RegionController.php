@@ -26,6 +26,16 @@ class RegionController extends Controller
 
         $region_query = Region::select(['regions.*']);
 
+        ///////////////////Filter Data
+        if(isset($_GET['brand_id']) && !empty($_GET['brand_id'])){
+            $region_query->where('brands', $_GET['brand_id']);
+        }
+
+
+        if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
+            $region_query->where('id', $_GET['region_id']);
+        }
+
         if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
             $g_search = $_GET['search'];
             $region_query->leftjoin('users as brand', 'brand.id', '=', 'regions.brands')
@@ -66,10 +76,14 @@ class RegionController extends Controller
         $regions = $region_query->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
         $users = allUsers();
 
+        //filter brand, region, employees
+        $filter = BrandsRegionsBranches();
+
         $data = [
             'regions' => $regions,
             'users' => $users,
-            'total_records' => $total_records
+            'total_records' => $total_records,
+            'filter' => $filter
         ];
 
 
