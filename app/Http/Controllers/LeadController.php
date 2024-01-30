@@ -3601,11 +3601,11 @@ class LeadController extends Controller
         if (\Auth::user()->type == 'super admin') {
             $leads = Region::orderBy('name', 'ASC')->get();
         } else if (\Auth::user()->type == 'company') {
-            $region_query->where('brands', [\Auth::user()->id]);
+            $region_query->where('brand_id', [\Auth::user()->id]);
         } else {
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            $region_query->whereIn('brands', $brand_ids);
+            $region_query->whereIn('brand_id', $brand_ids);
         }
         $leads = $region_query->orderBy('name', 'ASC')->get();
         $users = allUsers();
