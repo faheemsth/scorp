@@ -49,19 +49,23 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 </button>
                                 <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                             </div>
+                            
+                            @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                             <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="ti ti-filter" style="font-size:18px"></i>
                             </button>
+                            @endif
+
                             @can('create user')
                             <a href="#" data-size="lg" data-url="{{ route('users.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create') }}" class="btn btn-dark px-2 py-2">
                                 <i class="ti ti-plus "></i>
                             </a>
                             @endcan
-                            
-                            <a href="http://127.0.0.1:8000/university-download" class="btn p-2 btn-dark" style="color:white;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv">
+
+                            <a href="{{ route('users.download') }}" class="btn p-2 btn-dark" style="color:white;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv">
                                 <i class="ti ti-download" style="font-size:18px"></i>
                             </a>
-                            
+
                         </div>
                     </div>
                     <script>
@@ -72,34 +76,43 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                         });
                     </script>
                     {{-- Filters --}}
+
+
+                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                     <div class="filter-data px-3" id="filterToggle" <?= isset($_GET['Brand']) || isset($_GET['Director']) ? '' : 'style="display: none;"' ?>>
                         <form action="/users" method="GET" class="">
+                            @php
+                            $userType = \Auth::user()->type;
+                            @endphp
+
                             <div class="row my-3 align-items-end">
+                                @if($userType == 'super admin' || $userType == 'Project Director' || $userType == 'Project Manager')
                                 <div class="col-md-4 mt-2">
                                     <label for="">Brand</label>
-                                    <select name="Brand" class="form form-control select2" id="">
+                                    <select name="Brand" class="form form-control select2" id="filter_brand">
                                         <option value="">Select Option</option>
                                         @if (!empty($Brands))
                                         @foreach ($Brands as $key => $Brand)
                                         <option value="{{ $key }}" {{ !empty($_GET['Brand']) && $_GET['Brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
                                         @endforeach
                                         @endif
-
                                     </select>
                                 </div>
+                                @endif
 
+                                @if($userType == 'super admin')
                                 <div class="col-md-4 mt-2">
                                     <label for="">Project Director</label>
-                                    <select name="Director" class="form form-control select2" id="">
+                                    <select name="Director" class="form form-control select2" id="project_director">
                                         <option value="">Select Option</option>
                                         @if (!empty($ProjectDirector))
                                         @foreach ($ProjectDirector as $key => $ProjectDirect)
                                         <option value="{{ $key }}" {{ !empty($_GET['Director']) && $_GET['Director'] == $key ? "selected" : "" }}>{{ $ProjectDirect }}</option>
                                         @endforeach
                                         @endif
-
                                     </select>
                                 </div>
+                                @endif
 
                                 <div class="col-md-4 mt-2">
                                     <br>
@@ -107,9 +120,10 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     <a href="/users" class="btn bg-dark" style="color:white;">Reset</a>
                                 </div>
                             </div>
-                            <!-- <div class="row">
-                                <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
+                            <!-- Uncommented and corrected the following block -->
+                            <div class="row d-none">
+                                <div class="enries_per_page" style="max-width: 300px; display: flex;">
                                     <?php
                                     $all_params = isset($_GET) ? $_GET : '';
                                     if (isset($all_params['num_results_on_page'])) {
@@ -124,12 +138,14 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                         <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 1000 ? 'selected' : '' ?> value="1000">1000</option>
                                         <option <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == $total_records ? 'selected' : '' ?> value="{{ $total_records }}">all</option>
                                     </select>
-
                                     <span style="margin-top: 5px;">entries per page</span>
                                 </div>
-                            </div> -->
+                            </div>
+                            <!-- End of uncommented and corrected block -->
                         </form>
                     </div>
+                    @endif
+
 
                     <div class="table-responsive mt-3">
                         <table class="table">
@@ -161,7 +177,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 </tr>
                                 @endforelse
                             </tbody>
-                            
+
 
                         </table>
 
@@ -171,7 +187,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             'total_pages' => $total_records,
                             'num_results_on_page' => 25,
                             ])
-                        @endif
+                            @endif
                         </div>
                     </div>
                 </div>
