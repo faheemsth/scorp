@@ -48,7 +48,7 @@ $setting = \App\Models\Utility::colorset();
                         <p class="mb-0 pb-0 ps-1">Tasks</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                ALL Tasks
+                                All Tasks
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a class="dropdown-item assigned_to" href="javascript:void(0)">Assigned to</a></li>
@@ -63,7 +63,7 @@ $setting = \App\Models\Utility::colorset();
 
                     <div class="col-8 d-flex justify-content-end gap-2 pe-0">
                         <div class="input-group w-25">
-                            <button class="btn btn-sm list-global-search-btn">
+                            <button class="btn btn-sm list-global-search-btn px-0">
                                 <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
@@ -142,7 +142,8 @@ $setting = \App\Models\Utility::colorset();
                                 <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn px-2 py-2" style="background-color: #b5282f;color:white;">Reset</a>
                             </div>
                         </div>
-                        <div class="row my-4">
+
+                        <div class="row my-4 d-none">
                             <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
                                 <?php

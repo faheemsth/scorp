@@ -1,22 +1,22 @@
 @extends('layouts.admin')
 @section('page-title')
-    {{ __('Regions') }}
+{{ __('Regions') }}
 @endsection
 
 @push('css-page')
-    <link rel="stylesheet" href="{{ asset('css/summernote/summernote-bs4.css') }}">
+<link rel="stylesheet" href="{{ asset('css/summernote/summernote-bs4.css') }}">
 @endpush
 @push('script-page')
-    <script src="{{ asset('css/summernote/summernote-bs4.js') }}"></script>
-    <script>
-        $(document).on("change", ".change-pipeline select[name=default_pipeline_id]", function() {
-            $('#change-pipeline').submit();
-        });
+<script src="{{ asset('css/summernote/summernote-bs4.js') }}"></script>
+<script>
+    $(document).on("change", ".change-pipeline select[name=default_pipeline_id]", function() {
+        $('#change-pipeline').submit();
+    });
 
-        $(".add-filter").on("click", function() {
-            $(".filter-data").toggle();
-        })
-    </script>
+    $(".add-filter").on("click", function() {
+        $(".filter-data").toggle();
+    })
+</script>
 @endpush
 
 <style>
@@ -212,192 +212,450 @@
 </style>
 
 @section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('CRM Dashboard') }}</a></li>
-    <li class="breadcrumb-item">{{ __('Regions') }}</li>
+<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('CRM Dashboard') }}</a></li>
+<li class="breadcrumb-item">{{ __('Regions') }}</li>
 @endsection
 
 @section('content')
 
-    <style>
-        .form-controls,
-        .form-btn {
-            padding: 4px 1rem !important;
-        }
+<style>
+    .form-controls,
+    .form-btn {
+        padding: 4px 1rem !important;
+    }
 
-        /* Set custom width for specific table cells */
-        .action-btn {
-            display: inline-grid !important;
-        }
+    /* Set custom width for specific table cells */
+    .action-btn {
+        display: inline-grid !important;
+    }
 
-        .dataTable-bottom,
-        .dataTable-top {
-            display: none;
-        }
-    </style>
+    .dataTable-bottom,
+    .dataTable-top {
+        display: none;
+    }
+</style>
 
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card my-card">
-                <div class="card-body table-border-style">
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card my-card">
+            <div class="card-body table-border-style">
 
-                    {{-- topbar --}}
-                    <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                        <div class="col-2">
-                            <p class="mb-0 pb-0 ps-1">Regions</p>
-                            <div class="dropdown">
-                                <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    All Regions
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <!-- <p class="mb-0 pb-0">Tasks</p> -->
-                            <div class="dropdown" id="actions_div" style="display:none">
-                                <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    Actions
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
-                                </ul>
-                            </div>
-                        </div>
 
-                        <div class="col-8 d-flex justify-content-end gap-2">
-                            <div class="input-group w-25">
-                                <button class="btn btn-sm list-global-search-btn">
-                                    <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
-                                        <i class="ti ti-search" style="font-size: 18px"></i>
-                                    </span>
-                                </button>
-                                <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search"
-                                    placeholder="Search this list...">
-                            </div>
 
-                            @can('create region')
-                            <a href="#" data-size="lg" data-url="{{ route('region.create') }}"
-                                data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Region') }}"
-                                class="btn p-2 btn-dark">
-                                <i class="ti ti-plus"></i>
-                            </a>
-                            @endcan
+                {{-- topbar --}}
+                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
+                    <div class="col-2">
+                        <p class="mb-0 pb-0 ps-1">Regions</p>
+                        <div class="dropdown">
+                            <button class="all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                All REGIONS
+                            </button>
+                            <!-- <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
+                            </ul> -->
 
                         </div>
                     </div>
 
-
-
-
-
-                    <div class="table-responsive mt-2">
-
-                        {{-- Filters --}}
-
-
-                        <div class="card-body table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 50px !important;">
-                                            <input type="checkbox" class="main-check">
-                                        </th>
-                                        <th>{{ __('Name') }}</th>
-                                        <th>{{ __('Email') }}</th>
-                                        <th>{{ __('Phone') }}</th>
-                                        <th>{{ __('Location') }}</th>
-
-                                        <th class="text-align: left;">{{ __('Region\'s Manager') }}</th>
-                                        <th>{{ __('Brand') }}</th>
-                                        <th width="300px" class="d-none">{{ __('Action') }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="deals_tbody">
-                                    @if (!empty($regions))
-                                        @foreach ($regions as $region)
-                                            <tr>
-                                                <td>
-                                                    <input type="checkbox" name="deals[]" value="{{ $region->id }}"
-                                                        class="sub-check">
-                                                </td>
-                                                <td>
-                                                    <span style="cursor:pointer" class="hyper-link"
-                                                           @can('view region') onclick="openSidebar('/regions/{{ $region->id }}/show')" @endcan >
-                                                            {{ $region->name }}
-                                                    </span>
-                                                </td>
-                                                <td><a href="mailto:{{ $region->email }}">{{ $region->email }}</a></td>
-                                                <td>{{ $region->phone }}</td>
-                                                <td>{{ $region->location }}</td>
-                                                
-                                                <td>{{ $users[$region->region_manager_id] ?? '' }}</td>
-
-                                                <td>
-                                                    @php 
-                                                       $brands = explode(',', $region->brands);
-                                                    @endphp 
-
-                                                    @foreach($brands as $brand_id)
-                                                        {{ $users[$brand_id] ?? '' }}
-                                                    @endforeach
-                                                </td>
-
-                                                <td class="Action d-none">
-                                                    <div class="dropdown">
-                                                        <button class="btn bg-transparents" type="button"
-                                                            id="dropdownMenuButton1" data-bs-toggle="dropdown"
-                                                            aria-expanded="false">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                                                                width="18" height="18">
-                                                                <path
-                                                                    d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z">
-                                                                </path>
-                                                            </svg>
-                                                        </button>
-                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                            @can('edit region')
-                                                            <li><a class="dropdown-item"
-                                                                    href="#" data-size="lg" data-url="{{ url('region/update?id=').$region->id }}" title="{{ __('Update Origin') }}"
-                                                                    data-ajax-popup="true" data-bs-toggle="tooltip">Edit</a></li>
-                                                            @endcan
-                                                            @can('delete region')
-                                                                    <li><a class="dropdown-item"
-                                                                    href="{{ url('region/delete?id=').$region->id }}">Delete</a>
-                                                            </li>
-                                                            @endcan
-                                                        </ul>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @else
-                                        <tr class="font-style">
-                                            <td colspan="6" class="text-center">
-                                                {{ __('No data available in table') }}
-                                            </td>
-                                        </tr>
-                                    @endif
-                                </tbody>
-                            </table>
-                            @if ($total_records > 0)
-                                @include('layouts.pagination', [
-                                'total_pages' => $total_records,
-                                'num_results_on_page' => 25,
-                                ])
-                                @endif
+                    <div class="col-2">
+                        <!-- <p class="mb-0 pb-0">Tasks</p> -->
+                        <div class="dropdown" id="actions_divsss" style="display:none">
+                            <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+                            </ul>
                         </div>
+                    </div>
+
+                    <div class="col-8 d-flex justify-content-end gap-2">
+                        <div class="input-group w-25 rounded" style="width:36px; height: 36px; margin-top:10px;">
+                            <button class="btn btn-sm list-global-search-btn p-0 pb-2">
+                                <span class="input-group-text bg-transparent border-0  px-1 " id="basic-addon1">
+                                    <i class="ti ti-search" style="font-size: 18px"></i>
+                                </span>
+                            </button>
+                            <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2  list-global-search" placeholder="Search this list...">
+                        </div>
+
+                        <button class="btn filter-btn-show  btn-dark px-0" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false" style="width:36px; height: 36px; margin-top:10px;">
+                            <i class="ti ti-filter " style="font-size:18px"></i>
+                        </button>
+
+                        @can('create region')
+                        <a href="#" data-size="lg" data-url="{{ route('region.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Region') }}" class="btn  btn-dark px-0" style="width:36px; height: 36px; margin-top:10px;">
+                            <i class="ti ti-plus"></i>
+                        </a>
+                        @endcan
+
+                        <a href="{{ route('regions.download') }}" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
+                            <i class="ti ti-download" style="font-size:18px"></i>
+                        </a>
+
+                        @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete region'))
+                            <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Regions') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; margin-top:10px;">
+                                <i class="ti ti-trash"></i>
+                            </a>
+                        @endif
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="table-responsive mt-2">
+                {{-- Filters --}}
+
+                <script>
+                    $(document).ready(function() {
+                        $("#dropdownMenuButton3").click(function() {
+                            $("#filterToggle").toggle();
+                        });
+                    });
+                </script>
+
+                {{-- Filters --}}
+                <div class="filter-data px-3" id="filterToggle" <?= isset($_GET['brand_id']) ? '' : 'style="display: none;"' ?>>
+                    <form action="/region/index" method="GET" class="">
+                        <div class="row my-3 align-items-end">
+                            @php
+                            $type = \Auth::user()->type;
+                            @endphp
+
+                            @if($type == 'super admin' || $type == 'Project Director' || $type == 'Project Manager')
+                            <div class="col-md-4 mt-2">
+                                <label for="">Brand</label>
+                                <select name="brand_id" class="form form-control select2" id="filter_brand_id">
+                                    <option value="">Select Option</option>
+                                    @if (!empty($filter['brands']))
+                                    @foreach ($filter['brands'] as $key => $Brand)
+                                    <option value="{{ $key }}" {{ !empty($_GET['brand_id']) && $_GET['brand_id'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
+                                    @endforeach
+                                    @else
+                                    <option value="" disabled>No brands available</option>
+                                    @endif
+                                </select>
+                            </div>
+                            @endif
+
+                            @if($type == 'super admin' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'company' || $type == 'Region Manager')
+                            <div class="col-md-4 mt-2" id="region_div">
+                                <label for="">Region</label>
+
+                                <select name="region_id" class="form form-control select2" id="filter_region_id">
+                                    <option value="">Select Option</option>
+                                    @if (!empty($filter['regions']))
+                                    @foreach ($filter['regions'] as $key => $region)
+                                    <option value="{{ $key }}" {{ !empty($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : '' }}>{{ $region }}</option>
+                                    @endforeach
+                                    @else
+                                    <option value="" disabled>No regions available</option>
+                                    @endif
+                                </select>
+                            </div>
+                            @endif
+
+                            <div class="col-md-3   ">
+                                <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
+                                <a href="/region/index" class="btn bg-dark" style="color:white;">Reset</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+
+                <div class="card-body table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 50px !important;">
+                                    <input type="checkbox" class="main-check">
+                                </th>
+                                <th>{{ __('Name') }}</th>
+                                <th>{{ __('Email') }}</th>
+                                <th>{{ __('Phone') }}</th>
+                                <th>{{ __('Location') }}</th>
+
+                                <th class="text-align: left;">{{ __('Region\'s Manager') }}</th>
+                                <th>{{ __('Brand') }}</th>
+                                <th width="300px" class="d-none">{{ __('Action') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody id="deals_tbody" class="list-div">
+                            @if (!empty($regions))
+                            @foreach ($regions as $region)
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="region_ids[]" value="{{ $region->id }}" class="sub-check">
+                                </td>
+                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                    <span style="cursor:pointer" class="hyper-link" @can('view region') onclick="openSidebar('/regions/{{ $region->id }}/show')" @endcan>
+                                        {{ $region->name }}
+                                    </span>
+                                </td>
+                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="mailto:{{ $region->email }}">{{ $region->email }}</a></td>
+                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $region->phone }}</td>
+                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $region->location }}</td>
+
+                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $users[$region->region_manager_id] ?? '' }}</td>
+
+                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                    @php
+                                    $brands = explode(',', $region->brands);
+                                    @endphp
+
+                                    @foreach ($brands as $brand_id)
+                                    {{ $users[$brand_id] ?? '' }}
+                                    @endforeach
+                                </td>
+
+                                <td class="Action d-none">
+                                    <div class="dropdown">
+                                        <button class="btn bg-transparents" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
+                                                <path d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z">
+                                                </path>
+                                            </svg>
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            @can('edit region')
+                                            <li><a class="dropdown-item" href="#" data-size="lg" data-url="{{ url('region/update?id=') . $region->id }}" title="{{ __('Update Origin') }}" data-ajax-popup="true" data-bs-toggle="tooltip">Edit</a>
+                                            </li>
+                                            @endcan
+                                            @can('delete region')
+                                            <li><a class="dropdown-item" href="{{ url('region/delete?id=') . $region->id }}">Delete</a>
+                                            </li>
+                                            @endcan
+                                        </ul>
+                                </td>
+                            </tr>
+                            @endforeach
+                            @else
+                            <tr class="font-style">
+                                <td colspan="6" class="text-center">
+                                    {{ __('No data available in table') }}
+                                </td>
+                            </tr>
+                            @endif
+                        </tbody>
+                    </table>
+                    <div class="pagination_div">
+                        @if ($total_records > 0)
+                        @include('layouts.pagination', [
+                        'total_pages' => $total_records,
+                        'num_results_on_page' => 25,
+                        ])
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
-        <div id="mySidenav"
-            style="z-index: 1065; padding-left:5px; box-shadow:0px 4px 4px 0px rgba(0, 0, 0, 0.25);background-color: #EFF3F7;"
-            class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>">
-        </div>
-    @endsection
+    </div>
+</div>
+<div id="mySidenav" style="z-index: 1065; padding-left:5px; box-shadow:0px 4px 4px 0px rgba(0, 0, 0, 0.25);background-color: #EFF3F7;" class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>">
+</div>
 
-    @push('script-page')
-        <script></script>
-    @endpush
+<!-- Mass Update Model -->
+<div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg my-0" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mass Update</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('update-bulk-deals') }}" method="POST">
+                @csrf
+                <div class="modal-body" style="min-height: 40vh;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select name="bulk_field" id="bulk_field" class="form form-control">
+                                <option value="">Select Field</option>
+                                <option value="nm">Name</option>
+                                <option value="ldst">Lead Status</option>
+                                <!-- <option value="ast">Assign Type</option> -->
+                                <option value="user_res">User Reponsible</option>
+                                <option value="loc">Location</option>
+                                <option value="agy">Agency</option>
+                                <option value="ldsrc">Lead Source</option>
+                                <option value="email">Email Address</option>
+                                <option value="email_ref">Email Address (Referrer) </option>
+                                <option value="phone">Phone</option>
+                                <option value="m_phone">Mobile Phone</option>
+                                <!-- <option value="mail_opt">Email opt out</option> -->
+                                <option value="address">Address</option>
+                                <option value="desc">Description</option>
+                                <!-- <option value="tag_list">Tag List</option> -->
+
+                            </select>
+                        </div>
+                        <input name='region_ids' id="region_ids" hidden>
+                        <div class="col-md-6" id="field_to_update">
+
+                        </div>
+                    </div>
+
+                </div>
+                <br>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-dark px-2" value="Update">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endsection
+
+@push('script-page')
+<script>
+    // Attach an event listener to the input field
+    $('.list-global-search').keypress(function(e) {
+
+        // Check if the pressed key is Enter (key code 13)
+        if (e.which === 13) {
+            var search = $(".list-global-search").val();
+            var ajaxCall = 'true';
+            $(".list-div").html('Loading...');
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('region.index') }}",
+                data: {
+                    search: search,
+                    ajaxCall: ajaxCall
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if (data.status == 'success') {
+                        console.log(data.html);
+                        $(".list-div").html(data.html);
+                        $(".pagination_div").html(data.pagination_html);
+                    }
+                }
+            })
+        }
+    });
+
+
+    // Attach an event listener to the input field
+    $('.list-global-search-btn').click(function(e) {
+
+        var search = $(".list-global-search").val();
+        var ajaxCall = 'true';
+        $(".list-div").html('Loading...');
+
+        $.ajax({
+            type: 'GET',
+            url: "{{ route('region.index') }}",
+            data: {
+                search: search,
+                ajaxCall: ajaxCall
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status == 'success') {
+                    console.log(data.html);
+                    $(".list-div").html(data.html);
+                    $(".pagination_div").html(data.pagination_html);
+                }
+            }
+        })
+    });
+
+    $("#filter_brand_id").on("change", function() {
+        var id = $(this).val();
+        var type = 'brand';
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands') }}',
+            data: {
+                id: id, // Add a key for the id parameter
+                type: type
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $('#region_div').html('');
+                    $("#region_div").html(data.regions);
+                    select2();
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+    $(document).on('change', '.main-check', function() {
+        $(".sub-check").prop('checked', $(this).prop('checked'));
+
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+       // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+        }
+    });
+
+    $(document).on('change', '.sub-check', function() {
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+       // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+        }
+        let commaSeperated = selectedArr.join(",");
+        //console.log(commaSeperated)
+        //$("#region_ids").val(commaSeperated);
+
+    });
+
+
+    $(document).on("click", '.delete-bulk', function() {
+        var task_ids = $(".sub-check:checked");
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-bulk-regions?ids=' + selectedIds.join(',');
+            }
+        });
+    })
+</script>
+@endpush

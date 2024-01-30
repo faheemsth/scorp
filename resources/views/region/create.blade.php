@@ -37,7 +37,8 @@
     .row {
         padding: 6px
     }
-    .choices{
+
+    .choices {
         width: 100%;
     }
 </style>
@@ -58,70 +59,63 @@
                     <!--    </button>-->
                     <!--</h2>-->
 
-                    <div id="panelsStayOpen-collapseinfo" class="accordion-collapse collapse show"
-                        aria-labelledby="panelsStayOpen-headinginfo">
+                    <div id="panelsStayOpen-collapseinfo" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headinginfo">
                         <div class="accordion-body">
 
                             <div class="mt-1" style="margin-left: 10px; width: 65%;">
                                 <table class="w-100">
                                     <tbody>
                                         <tr>
-                                            <td class=""
-                                                style="width: 150px;  font-size: 13px;">
+                                            <td class="" style="width: 150px;  font-size: 13px;">
                                                 {{ __('Name') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
-                                                <input type="text" class="form-control" placeholder="Name"
-                                                    value="" name="name">
+                                                <input type="text" class="form-control" placeholder="Name" value="" name="name">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class=""
-                                                style="width: 150px;  font-size: 13px;">
+                                            <td class="" style="width: 150px;  font-size: 13px;">
                                                 {{ __('Brands') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
-                                                
-                                                <select class="form form-control select2" id="choices-multiple55"
-                                                    name="brands[]" style="width: 100% !important;" required>
+
+                                                <select class="form form-control select2" id="choices-multiple55" name="brands[]" style="width: 100% !important;" required>
                                                     <option value="">Select Brand</option>
-                                                        @foreach ($brands as $key => $brand)
-                                                        <option value="{{ $key }}">{{ $brand }}</option>
-                                                        @endforeach
+                                                    @foreach ($brands as $key => $brand)
+                                                    <option value="{{ $key }}">{{ $brand }}</option>
+                                                    @endforeach
                                                 </select>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class=""
-                                                style="width: 150px;  font-size: 13px;">
+                                            <td class="" style="width: 150px;  font-size: 13px;">
                                                 {{ __('Location') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
-                                                <input type="text" class="form-control" placeholder="Enter Location"
-                                                    value="" name="location">
+                                                <input type="text" class="form-control" placeholder="Enter Location" value="" name="location">
                                             </td>
                                         </tr>
 
 
                                         <tr>
-                                            <td class=""
-                                                style="width: 150px;  font-size: 13px;">
+                                            <td class="" style="width: 150px;  font-size: 13px;">
                                                 {{ __('Phone') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
-                                                <input type="text" class="form-control" placeholder="Enter Phone"
-                                                    value="" name="phone">
+                                                <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"> -->
+
+                                                <input type="text" class="form-control" placeholder="Enter Phone" value="" id="phones" name="phone">
+
+
                                             </td>
                                         </tr>
 
                                         <tr>
-                                            <td class=""
-                                                style="width: 150px;  font-size: 13px;">
+                                            <td class="" style="width: 150px;  font-size: 13px;">
                                                 {{ __('Email') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
-                                                <input type="email" class="form-control" placeholder="Enter Email"
-                                                    value="" name="email">
+                                                <input type="email" class="form-control" placeholder="Enter Email" value="" name="email">
                                             </td>
                                         </tr>
                                         <tr class="d-none">
@@ -129,13 +123,12 @@
                                                 {{ __('Region Manager') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
-                                                <select class="form form-control select2" id="choices-multiple555"
-                                                    name="region_manager_id" >
+                                                <select class="form form-control select2" id="choices-multiple555" name="region_manager_id">
                                                     <option value="">Select Region Manager</option>
                                                     @if(!empty($regionmanager))
-                                                        @foreach ($regionmanager as $regionmanage)
-                                                        <option value="{{$regionmanage->id }}">{{$regionmanage->name }}</option>
-                                                        @endforeach
+                                                    @foreach ($regionmanager as $regionmanage)
+                                                    <option value="{{$regionmanage->id }}">{{$regionmanage->name }}</option>
+                                                    @endforeach
                                                     @endif
                                                 </select>
                                             </td>
@@ -158,7 +151,9 @@
 </div>
 
 {{ Form::close() }}
-
-
-
-
+<script>
+    const input = document.querySelector("#phone");
+    window.intlTelInput(input, {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+    });
+</script>

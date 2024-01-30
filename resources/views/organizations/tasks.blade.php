@@ -52,7 +52,7 @@
                                     <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                         class="text-danger">*</span></label>
                                     <div class="form-group col-md-6" id="brand_div">
-                                        {!! Form::select('brand_id', $companies, null, [
+                                        {!! Form::select('brand_id', $companies, 0, [
                                             'class' => 'form-control select2 brand_id',
                                             'id' => 'brands',
                                         ]) !!}
@@ -63,18 +63,38 @@
                                 <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                     class="text-danger">*</span></label>
                                 <div class="form-group col-md-6" id="brand_div">
-                                    <select class='form-control select2 brand_id' name="brands" id="brand_id">
-                                        <option value="{{ Auth::id() }}" selected>{{ Auth::user()->name }}</option>
+                                    <input type="hidden" name="brand_id" value="{{\Auth::user()->id}}">
+                                    <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                        @foreach($companies as $key => $comp)
+                                         <option value="{{$key}}" {{ $key == \Auth::user()->id ? 'selected' : ''}}>{{$comp}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            @else 
+                            <div class="form-group row ">
+                                <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                                    class="text-danger">*</span></label>
+                                <div class="form-group col-md-6" id="brand_div">
+                                    <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}">
+                                    <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                        @foreach($companies as $key => $comp)
+                                         <option value="{{$key}}" {{ $key == \Auth::user()->brand_id ? 'selected' : ''}}>{{$comp}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             @endif
 
-                            @if (
-                                \Auth::user()->type == 'super admin' ||
+
+
+
+                            @if (\Auth::user()->type == 'super admin' ||
                                     \Auth::user()->type == 'Project Director' ||
                                     \Auth::user()->type == 'Project Manager' ||
-                                    \Auth::user()->type == 'company')
+                                    \Auth::user()->type == 'company' ||
+                                    \Auth::user()->type == 'Regional Manager')
+                        
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Region<span
                                         class="text-danger">*</span></label>
@@ -85,18 +105,57 @@
                                         ]) !!}
                                     </div>
                                 </div>
+
+                            @else 
+                                <div class="form-group row ">
+                                    <label for="branches" class="col-sm-3 col-form-label">Region<span
+                                        class="text-danger">*</span></label>
+                                    <div class="form-group col-md-6" id="region_div">
+                                        <input type="hidden" name="region_id" value="{{ \Auth::user()->region_id }}">
+                                        {!! Form::select('region_id', $Region, \Auth::user()->region_id, [
+                                            'class' => 'form-control select2',
+                                            'disabled' => 'disabled',
+                                            'id' => 'region_id',
+                                        ]) !!}
+                                    </div>
+                                </div>
                             @endif
 
-                            <div class="form-group row ">
-                                <label for="branches" class="col-sm-3 col-form-label">Branch<span
-                                    class="text-danger">*</span></label>
-                                <div class="form-group col-md-6" id="branch_div">
-                                    <select name="branch_id" id="branchs" class="form-control select2 branchs"
-                                        onchange="Change(this)">
-                                        <option value="">Select Branch</option>
-                                    </select>
+                            @if (\Auth::user()->type == 'super admin' ||
+                                    \Auth::user()->type == 'Project Director' ||
+                                    \Auth::user()->type == 'Project Manager' ||
+                                    \Auth::user()->type == 'company' ||
+                                    \Auth::user()->type == 'Regional Manager' ||
+                                    \Auth::user()->type == 'Branch Manager')
+
+                                        <div class="form-group row ">
+                                            <label for="branches" class="col-sm-3 col-form-label">Branch<span
+                                                class="text-danger">*</span></label>
+                                            <div class="form-group col-md-6" id="branch_div">
+                                                <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
+                                                    onchange="Change(this)">
+                                                        @foreach($branches as $key => $branch)
+                                                            <option value="{{$key}}">{{$branch}}</option>
+                                                        @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                            @else 
+                                <div class="form-group row ">
+                                    <label for="branches" class="col-sm-3 col-form-label">Branch<span
+                                        class="text-danger">*</span></label>
+                                    <div class="form-group col-md-6" id="branch_div">
+                                        <input type="hidden" name="branch_id" value="{{ \Auth::user()->branch_id }}">
+                                        <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
+                                            onchange="Change(this)">
+                                                @foreach($branches as $key => $branch)
+                                                    <option value="{{$key}}" {{ \Auth::user()->branch_id == $key ? 'selected' : '' }}>{{$branch}}</option>
+                                                @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
+                            
 
                             <div class="form-group row d-none">
                                 <label for="type" class="col-sm-3 col-form-label">Assign Type <span
@@ -115,7 +174,9 @@
                                         class="text-danger">*</span></label>
                                 <div class="col-sm-6 " id="assign_to_div">
                                     <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to">
-                                        <option value="">Select Employee</option>
+                                        @foreach($employees as $key => $employee)
+                                        <option value="{{$key}}">{{$employee}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -127,7 +188,7 @@
                                 <div class="col-sm-6">
                                     <select class="form form-control select2" id="choices-multiple5" name="status" {{ !\Auth::user()->can('edit assign to task') ? 'disabled' : '' }}>
                                         <option value="">Select Status</option>
-                                        <option value="0">On Going</option>
+                                        <option value="0" selected>On Going</option>
                                         <option value="1">Completed
                                         </option>
                                     </select>
@@ -136,8 +197,6 @@
 
                             <div class="form-group row d-none">
                                 <label for="organization" class="col-sm-3 col-form-label">Agency
-
-                                    <span class="text-danger">*</span>
                                 </label>
                                 <div class="col-sm-6">
                                     <select class="form form-control select2 organization_id" id="choices-multiple2"
@@ -151,8 +210,7 @@
                             </div>
 
                             <div class="form-group row d-none">
-                                <label for="organization" class="col-sm-3 col-form-label">Category<span
-                                    class="text-danger">*</span></label>
+                                <label for="organization" class="col-sm-3 col-form-label">Category</label>
                                 <div class="col-sm-6">
                                     <select class="form form-control select2" id="choices-multiple5" name="stage_id">
                                         <option value="">Select Category</option>
@@ -165,7 +223,7 @@
 
                             <div class="form-group row ">
                                 <label for="organization" class="col-sm-3 col-form-label">Due Date <span
-                                        class="text-danger">*</span></label>
+                                    class="text-danger">*</span></label>
                                 <div class="col-sm-6">
                                     <input type="date" class="form form-control" value="" name="due_date">
                                 </div>
@@ -199,8 +257,7 @@
 
 
                             <div class="form-group row">
-                                <label for="website" class="col-sm-3 col-form-label">Remainder Date<span
-                                    class="text-danger">*</span></label>
+                                <label for="website" class="col-sm-3 col-form-label">Remainder Date</label>
                                 <div class="col-sm-6 d-flex">
                                     <input type="date" class="form form-control" value=""
                                         name="remainder_date">
@@ -229,16 +286,15 @@
                         <div class="accordion-body">
                             <div class="form-group row">
                                 <label for="website" class="col-sm-3 col-form-label">Related Type
-                                    <span
-                                        class="text-danger">*</span></label>
+                                    </label>
                                 <div class="col-sm-6">
                                     @if (isset($type) && !empty($type))
-                                        <select class="form form-control select2 related_type" disabled onchange="ChangeRelated(this)"
+                                        <select class="form form-control select2 related_type" disabled 
                                             id="choices-multiple6" name="related_type">
                                             <option value="">Select type</option>
-                                            {{-- <option value="organization"
-                                                {{ $type == 'organization' ? 'selected' : '' }}>
-                                                Organization</option> --}}
+                                            <option value="organization"
+                                            {{ $type == 'organization' ? 'selected' : '' }}>
+                                                Organization</option>
                                             <option value="lead" {{ $type == 'lead' ? 'selected' : '' }}>Lead
                                             </option>
                                             <option value="deal" {{ $type == 'deal' ? 'selected' : '' }}>Admission
@@ -246,12 +302,11 @@
                                         </select>
                                         <input type="hidden" value="{{ $type }}" name="related_type">
                                     @else
-                                        <select class="form form-control select2 related_type" id="choices-multiple6" onchange="ChangeRelated(this)"
+                                        <select class="form form-control select2 related_type" id="choices-multiple6" 
                                             name="related_type">
                                             <option value="">Select type</option>
-                                            {{-- <option value="organization"
-                                                {{ $type == 'organization' ? 'selected' : '' }}>
-                                                Organization</option> --}}
+                                             <option value="organization"  {{ $type == 'organi' ? 'selected' : '' }} >
+                                                Organization</option>
                                             <option value="lead" {{ $type == 'lead' ? 'selected' : '' }}>Lead
                                             </option>
                                             <option value="deal" {{ $type == 'deal' ? 'selected' : '' }}>Admission
@@ -263,12 +318,22 @@
 
                             <div class="form-group row">
                                 <label for="website" class="col-sm-3 col-form-label">Related To
-                                    <span
-                                        class="text-danger">*</span></label>
+                                   </label>
                                 <div class="col-sm-6" id="related_to_div">
                                     <select class="form form-control related_to select2"
-                                            id="choices-multiple7" name="related_to">
-                                            <option value="">Related To</option></option>
+                                            id="choices-multiple7" name="related_to" readonly>
+                                            <option value="">Related To</option>
+                                            @if(!empty($organization))
+                                                <option value="{{$organization->id}}" selected>{{$organization->name}}</option>
+                                            @endif
+
+                                            @if(!empty($lead))
+                                                <option value="{{$lead->id}}" selected>{{$lead->name}}</option>
+                                            @endif
+
+                                            @if(!empty($deal))
+                                                <option value="{{$deal->id}}" selected>{{$deal->name}}</option>
+                                            @endif
                                     </select>
                                 </div>
                             </div>
@@ -309,8 +374,7 @@
                         aria-labelledby="panelsStayOpen-headingfour">
                         <div class="accordion-body">
                             <div class="form-group row">
-                                <label for="website" class="col-sm-3 col-form-label">Task Visibility <span
-                                    class="text-danger">*</span></label>
+                                <label for="website" class="col-sm-3 col-form-label">Task Visibility </label>
                                 <div class="col-sm-6">
                                     <select class="form form-control select2" id="choices-multiple8"
                                         name="visibility">
@@ -340,13 +404,17 @@
 <script>
 var BranchId = '';
     $("#choices-multiple6").on("change", function() {
+        // var type = $(this).val();
+        // Id = BranchId
+
+        var id = $("#branch_id").val();
         var type = $(this).val();
-        Id = BranchId
+
         $.ajax({
             type: 'GET',
             url: '{{ route('GetBranchByType') }}',
             data: {
-                id: Id,
+                id: id,
                 type: type
             },
             success: function(data) {
@@ -364,12 +432,14 @@ var BranchId = '';
     // change branch for assign
     function Change(selectedBranch) {
         var id = selectedBranch.value;
-        BranchId = id;
+        var type = 'branch';
+
         $.ajax({
             type: 'GET',
-            url: '{{ route('lead_companyemployees') }}',
+            url: '{{ route('region_brands_task') }}',
             data: {
-                id: id
+                id: id,
+                type: type
             },
             success: function(data) {
                 data = JSON.parse(data);
@@ -381,6 +451,8 @@ var BranchId = '';
             }
         });
     }
+
+   
     // change brand for region
     $("#brands").on("change", function() {
         var id = $(this).val();

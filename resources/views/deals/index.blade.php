@@ -212,6 +212,9 @@
 
 
 
+
+
+@section('content')
 <div id="mySidenav" class="sidenav <?= $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>">
     <a href="javascript:void(0)" class="closebtn" onclick="closeSidbar()">&times;</a>
 
@@ -242,7 +245,6 @@
     </div>
 </div>
 
-@section('content')
     <div class="row">
         {{-- <div class="col-sm-12">
             <div class="my-4 mx-4">
@@ -354,7 +356,7 @@
                             $json[] = 'task-list-' . $stage->id;
                         }
                     @endphp
-                    <div class="row kanban-wrapper horizontal-scroll-cards" data-containers='{!! json_encode($json) !!}'
+                    <div class="row kanban-wrapper horizontal-scroll-cards" style="flex-wrap: nowrap" data-containers='{!! json_encode($json) !!}'
                         data-plugin="dragula">
                         @foreach ($stages as $stage)
                             @php($deals = $stage->deals())
@@ -383,7 +385,8 @@
                                                     @endif
                                                 </div>
                                                 <div class="card-header border-0 pb-0 position-relative">
-                                                    <h5><a href="@can('view deal')@if ($deal->is_active){{ route('deals.show', $deal->id) }}@else#@endif @else#@endcan"
+                                                    <h5><a href="javascript:void(0)"
+                                                            @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id=' + {{ $deal->id }})" @endcan
                                                             style="font-size: 14px;">{{ $deal->name }}</a>
                                                         <span style="cursor:pointer" onclick="openNav(<?= $deal->id ?>)"
                                                             data-deal-id="{{ $deal->id }}"

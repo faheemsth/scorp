@@ -112,13 +112,13 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-1 me-3">
-                    @can('View Deal')
+                    {{-- @can('view lead') --}}
                     <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949;">
                         <i class="fa-brands fa-whatsapp"></i>
                     </a>
+                    {{-- @endcan --}}
 
 
-                    @endcan
                     @can('edit lead')
 
                         @if (!empty($deal))
@@ -1091,8 +1091,7 @@
                                                                 <div class="">
                                                                     <div class="col-12">
                                                                         <div class="card">
-                                                                            <div class="card-header "
-                                                                                >
+                                                                            <div class="card-header ">
                                                                                 <div class="d-flex justify-content-end">
 
                                                                                 </div>
@@ -1105,12 +1104,12 @@
                                                                                    @endphp
                                                                                     @foreach($tasks as $task)
                                                                                     @if ($task->status == 1)
-                                                                                    <div class="ps-3 py-2 d-flex gap-2 align-items-baseline" style="border-bottom: 1px solid rgb(192, 192, 192);">
-                                                                                        <i class="fa-regular fa-square-check" style="color: #000000;"></i>
-                                                                                        <h6 class="fw-bold">
-                                                                                            {{ $section == 1 ? 'Closed Activity': '' }}
-                                                                                        </h6>
-                                                                                    </div>
+                                                                                        <div class="ps-3 py-2 d-flex gap-2 align-items-baseline" style="border-bottom: 1px solid rgb(192, 192, 192);">
+                                                                                            <i class="fa-regular fa-square-check" style="color: #000000;"></i>
+                                                                                            <h6 class="fw-bold">
+                                                                                                {{ $section == 1 ? 'Closed Activity': '' }}
+                                                                                            </h6>
+                                                                                        </div>
                                                                                         <li class="list-group-item px-3"
                                                                                             id="lihover">
                                                                                             <div class="d-block d-sm-flex align-items-start">
@@ -1205,7 +1204,7 @@
                                                                                                             </span><br>
                                                                                                             <span
                                                                                                                 class="text-muted text-sm"><i class="step__icon fa fa-user" aria-hidden="true"></i>
-                                                                                                                {{ \App\Models\User::where('id', $task->assigned_to)->first()->name }}
+                                                                                                                {{ \App\Models\User::where('id', $task->assigned_to)->first()->name ?? '' }}
 
                                                                                                                 <span class="d-flex">
                                                                                                                     <div>Status</div>
@@ -1362,9 +1361,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
-
                                         </div>
                                     </div>
                                 </div>

@@ -234,13 +234,34 @@
                                     </div>
 
 
+                                    @php 
+                                        $type = \Auth::user()->type;
+                                        $is_show = true;
+
+                                        if($type == 'super admin'){
+
+                                        }else if($type == 'Project Director' || $type == 'Project Manager'){
+                                                $per_brands = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('permitted_company_id', $deal->brand_id)->first();
+                                                
+                                                if($per_brands){
+                                                    $is_show = true;
+                                                }
+                                        }else if($type == 'Regional Manager'){
+                                                $is_show = ($lead->region_id == \Auth::user()->region_id);
+                                        }else if($type == 'Branch Manager' || $type == 'Admissions Manager' || $type == 'Admissions Officer' || $type == 'Marketing Officer'){
+                                            $is_show = ($deal->branch_id == \Auth::user()->branch_id);
+                                        }
+
+                                    @endphp
+                                    
+                                    @if($is_show)
 
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                             <button class="accordion-button p-2" type="button"
                                                 data-bs-toggle="collapse"
                                                 data-bs-target="#panelsStayOpen-collapsekeytwo">
-                                                {{ __('CONTACT AND DETAIL') }}
+                                                {{ __('CONTACT DETAIL') }}
                                             </button>
                                         </h2>
 
@@ -280,8 +301,9 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
 
-
+                                    
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                             <button class="accordion-button p-2" type="button"
@@ -317,6 +339,8 @@
                                         </div>
                                     </div>
 
+
+                                    
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                             <button class="accordion-button p-2" type="button"
@@ -521,11 +545,12 @@
                                                                             $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
                                                                         @endphp
                                                                         <tr>
-                                                                            <td>{{ $universities[$app->university_id] }}</td>
+                                                                            <td>{{ $universities[$app->university_id] ?? '' }}</td>
                                                                             <td> {{ $app->intake }} </td>
                                                                             <td> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }}  </td>
                                                                             <td> {{ isset($branch->name) ? $branch->name : ''  }} </td>
-                                                                            <td> {{ $users[$deal->assigned_to] }} </td>
+                                                                            <td> {{ $users[$deal->assigned_to] ?? '
+                                                                                '}} </td>
                                                                             <td><span class="badge {{ $app->status != 'Approved' ? 'bg-warning-scorp' : 'bg-success-scorp' }}"> {{ $app->status }}</span></td>
                                                                         </tr>
                                                                     @empty

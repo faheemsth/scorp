@@ -43,7 +43,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body p-1" style=" overflow-x: scroll;">
-                    <form action="/company-permission" method="GET" class="">
+                    <form action="/company-permission" method="GET" class="" id="role_form">
                         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                             <div class="col-3">
                                 <p class="mb-0 pb-0 ps-1">Company Permissions</p>
@@ -58,16 +58,16 @@
                                 {{-- <button class="btn filter-btn-show px-2 btn-dark" style="color:white;" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button> --}}
-                                <select name="role" class="form form-control select2" style="width: 23%;">
-                                    <option value="">Select Role</option>
+                                <select name="role" class="form form-control select2 role_type" style="width: 23%;">
+                                 
                                     <option value="Project Director"
-                                        <?= isset($_GET['stages']) && $_GET['stages'] == 'Project Director' ? 'selected' : '' ?>>
+                                        <?=!isset($_GET['role']) ||  isset($_GET['role']) && $_GET['role'] == 'Project Director' ? 'selected' : '' ?>>
                                         Project Director</option>
                                     <option value="Project Manager"
-                                        <?= isset($_GET['stages']) && $_GET['stages'] == 'Project Manager' ? 'selected' : '' ?>>
+                                        <?= isset($_GET['role']) && $_GET['role'] == 'Project Manager' ? 'selected' : '' ?>>
                                         Project Manager</option>
                                 </select>
-                                <button class="btn btn-dark" type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}">Submit</button>
+                                <!-- <button class="btn btn-dark" type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}">Submit</button> -->
                             </div>
                         </div>
                     </form>
@@ -91,7 +91,7 @@
                                             <?php $permitted_companies = $comp->companyPermissions->pluck('permitted_company_id'); ?>
                                             <td>
                                                 <input type="checkbox" class="company-permission-checkbox"
-                                                    <?= $emp->id == $comp->id ? 'checked disabled' : (isset($permission_arr[$emp->id][$comp->id]) && $permission_arr[$emp->id][$comp->id] == 'true' ? 'checked' : '') ?>
+                                                    <?= $emp->brand_id == $comp->id ? 'checked disabled' : (isset($permission_arr[$emp->id][$comp->id]) && $permission_arr[$emp->id][$comp->id] == 'true' ? 'checked' : '') ?>
                                                     id="company-permission-checkbox" data-for-company="{{ $emp->id }}"
                                                     data-permission-company="{{ $comp->id }}">
                                             </td>
@@ -106,3 +106,11 @@
         </div>
     </div>
 @endsection
+
+@push('script-page')
+<script>
+    $('.role_type').on('change',function(){
+        $("#role_form").submit();
+    })
+</script>
+@endpush

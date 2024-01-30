@@ -15,42 +15,79 @@
             </div>
         </div>
 
+        
+        <div class="col-md-6">
+            <div class="form-group" id="brands_div">
+                @if (
+                    \Auth::user()->type == 'super admin' ||
+                        \Auth::user()->type == 'Project Director' ||
+                        \Auth::user()->type == 'Project Manager')
+                    <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                            class="text-danger">*</span></label>
+                    {!! Form::select('brands', $brands, $branch->brands, [
+                        'class' => 'form-control select2 brand_id',
+                        'id' => 'brands',
+                    ]) !!}
+
+                @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
+                    <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                            class="text-danger">*</span></label>
+                    <input type="hidden" name="brands" value="{{ $branch->brands }}">
+                    <select class='form-control select2 brand_id' disabled ="brands" id="brands">
+                        @foreach ($brands as $key => $comp)
+                            <option value="{{ $key }}" {{ $key == $branch->brands ? 'selected' : '' }}>
+                                {{ $comp }}</option>
+                        @endforeach
+                    </select>
+                @else
+                    <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                            class="text-danger">*</span></label>
+                    <input type="hidden" name="brands" value="{{ $branch->brands }}">
+                    <select class='form-control select2 brand_id' disabled  id="brands">
+                        @foreach ($brands as $key => $comp)
+                            <option value="{{ $key }}"
+                                {{ $key == $branch->brands ? 'selected' : '' }}>{{ $comp }}
+                            </option>
+                        @endforeach
+                    </select>
+                @endif
+            </div>
+        </div>
+
 
 
         <div class="col-md-6">
-            <div class="form-group">
-                <label for="region_id">{{ __('Region') }}</label>
-                <select name="region_id" id="" class="form-control">
-                    <option value="">Select Region</option>
-                    @if (!empty($regions))
-                        @foreach ($regions as $region)
-                            <option value="{{ $region->id }}"
-                                {{ $branch->region_id == $region->id ? 'selected' : '' }}>{{ $region->name }}</option>
-                        @endforeach
+            <div class="form-group" id="region_div">
+                @if (
+                        \Auth::user()->type == 'super admin' ||
+                            \Auth::user()->type == 'Project Director' ||
+                            \Auth::user()->type == 'Project Manager' ||
+                            \Auth::user()->type == 'company' ||
+                            \Auth::user()->type == 'Regional Manager')
+                        <label for="branches" class="col-sm-3 col-form-label">Region<span
+                                class="text-danger">*</span></label>
+                        {!! Form::select('region_id', $regions, $branch->region_id, [
+                            'class' => 'form-control select2',
+                            'id' => 'region_id',
+                        ]) !!}
+                    @else
+                        <label for="branches" class="col-sm-3 col-form-label">Region<span
+                                class="text-danger">*</span></label>
+                        <input type="hidden" name="region_id" value="{{ $branch->region_id }}">
+                        {!! Form::select('region_id', $regions, $branch->region_id, [
+                            'class' => 'form-control select2',
+                            'disabled' => 'disabled',
+                            'id' => 'region_id',
+                        ]) !!}
                     @endif
-                </select>
+
                 @error('region_id')
                     <span class="invalid-name" role="alert">
                         <strong class="text-danger">{{ $message }}</strong>
                     </span>
                 @enderror
             </div>
-        </div>
-
-        <div class="col-md-6">
-            <div class="form-group" id="brands_div">
-                <label for="region_id">{{ __('Brands') }}</label>
-                <select name="brands[]" multiple id="brands" class="form-control select2">
-                    <option value="">Select Brands</option>
-                    @php
-                        $brd = explode(',',$branch->brands);
-                    @endphp
-                    @foreach ($brands as $key => $brand)
-                        <option value="{{ $key }}" @if (in_array($key, $brd)) selected @endif>{{ $brand }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
+        </div>  
 
         <div class="col-md-6 d-none">
             <div class="form-group">
@@ -136,30 +173,101 @@
 <script>
     $(document).ready(function() {
         select2();
-        $("#region_id").on("change", function(){
-            var id = $(this).val();
+        // $("#region_id").on("change", function(){
+        //     var id = $(this).val();
 
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('region_brands') }}',
-                data: {
-                    id: id  // Add a key for the id parameter
-                },
-                success: function(data){
-                    data = JSON.parse(data);
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: '{{ route('region_brands') }}',
+        //         data: {
+        //             id: id  // Add a key for the id parameter
+        //         },
+        //         success: function(data){
+        //             data = JSON.parse(data);
 
-                    if (data.status === 'success') {
+        //             if (data.status === 'success') {
+        //                 $('#brands').remove();
+        //                 $("#brands_div").html(data.brands);
+        //                 select2();
+        //             } else {
+        //                 console.error('Server returned an error:', data.message);
+        //             }
+        //         },
+        //         error: function(xhr, status, error) {
+        //             console.error('AJAX request failed:', status, error);
+        //         }
+        //     });
+        // });        
+    })
+
+    $(document).ready(function() {
+
+    $("#brands").on("change", function(){
+        var id = $(this).val();
+        var type = 'brand';
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands') }}',
+            data: {
+                id: id,  // Add a key for the id parameter
+                type: type
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    if(type == 'brand'){
+                        $('#region_div').html('');
+                        $("#region_div").html(data.regions);
+                        select2();
+                    }else{
                         $('#brands').remove();
                         $("#brands_div").html(data.brands);
                         select2();
-                    } else {
-                        console.error('Server returned an error:', data.message);
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX request failed:', status, error);
+
+                
+                } else {
+                    console.error('Server returned an error:', data.message);
                 }
-            });
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
         });
-    })
+    });
+
+    $("#region_id").on("change", function(){
+        var id = $(this).val();
+        var type = 'region';
+
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands') }}',
+            data: {
+                id: id,  // Add a key for the id parameter
+                type: type
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    if(type == 'region'){
+                        $('#branch_div').html('');
+                        $("#branch_div").html(data.branch);
+                        select2();
+                    }
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+})
 </script>

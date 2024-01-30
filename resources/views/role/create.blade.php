@@ -37,7 +37,7 @@
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade show active" id="staff" role="tabpanel" aria-labelledby="pills-home-tab">
                     @php
-                        $modules=['user','role','client','product & service','constant unit','constant tax','constant category','company settings', 'system settings'];
+                        $modules=['user','role','client','product & service','constant unit','constant tax','constant category','company settings', 'system settings', 'crm settings'];
                        if(\Auth::user()->type == 'company'){
                            $modules[] = 'permission';
                        }

@@ -53,10 +53,10 @@
             </li>
         @endforeach
     </ul>
-    <button data-bs-toggle="tooltip" title="" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" data-original-title="Refresh"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+    <!-- <button data-bs-toggle="tooltip" title="" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" data-original-title="Refresh"><i class="ti ti-refresh" style="font-size: 18px"></i></button> -->
     </div>
     <div class="modal" id="save-filter-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg my-0" role="document">
+        <div class="modal-dialog my-0" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Save Filter</h5>
@@ -64,21 +64,23 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body" style="min-height: 40vh;">
+                <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-12">
                             <label for="filter_name" class="form-label text-dark">Filter Name</label>
                             <input type="text" class="form-control" id="filter_name" name="filter_name" value="" required="">
                         </div>
-                        <input type="text" hidden class="form-control" id="module" name="module" value="" >
-                        <input type="number" hidden class="form-control" id="count" name="count" value="0" >
+                        <div class="row justify-content-end">
+                            <input type="text" hidden class="form-control" id="module" name="module" value="" >
+                            <input type="number" hidden class="form-control" id="count" name="count" value="0" >
+                        </div>
 
                     </div>
 
                 </div>
                 <br>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-dark px-2" onclick="storeFilter()">Save</button>
+                <div class="modal-footer d-flex justify-content-end">
+                    <button type="button" class="btn btn-dark px-2 mx-2" onclick="storeFilter()">Save</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>

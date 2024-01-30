@@ -1,5 +1,5 @@
 {{ Form::open(['route' => ['deals.application.store', $id], 'id' => 'create-application']) }}
-<div class="modal-body" style="min-height: 65vh;">
+<div class="modal-body">
     <div class="row">
 
         <div class="col-6 form-group py-0">

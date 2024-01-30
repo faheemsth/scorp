@@ -62,7 +62,7 @@
 @endif
 
 
-
+<script src="{{ asset('js/intel_input.js') }}"></script>
 @stack('script-page')
 
 

@@ -64,7 +64,7 @@ $(document).on('change', '.sub-check', function() {
 
                 <div class="col-10 d-flex justify-content-end gap-2 pe-0">
                     <div class="input-group w-25">
-                        <button class="btn btn-sm list-global-search-btn">
+                        <button class="btn btn-sm list-global-search-btn px-0">
                             <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
                                 <i class="ti ti-search" style="font-size: 18px"></i>
                             </span>
@@ -177,7 +177,7 @@ $(document).on('change', '.sub-check', function() {
                                 <input type="checkbox" class="main-check">
                             </th>
                             <th style="border-left: 1px solid #fff;">Contact Name</th>
-                            <th style="border-left: 1px solid #fff;">Contact Email</th>
+                            <th class="d-none" style="border-left: 1px solid #fff;">Contact Email</th>
                             <th style="border-left: 1px solid #fff;">Admissions</th>
                             <th style="border-left: 1px solid #fff;">Applications</th>
                             <th style="border-left: 1px solid #fff; display: none;">Action</th>
@@ -197,7 +197,7 @@ $(document).on('change', '.sub-check', function() {
                                     </span>
 
                                 </td>
-                                <td>{{$client->email}}</td>
+                                <td class="d-none">{{$client->email}}</td>
                                 <td>{{$client->clientDeals->count()}}</td>
                                 <td>{{$client->clientApplications($client->id)}}</td>
                                 <td class="d-none">

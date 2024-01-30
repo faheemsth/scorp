@@ -72,7 +72,7 @@
                                                     </td>
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
-                                                        <select class="form-control select2" id="choice-1"  name="intake_month">
+                                                        <select class="form-control select2" id="choice-01"  name="intake_month">
                                                             <option>Select Month</option>
                                                             @foreach($months as $key => $month)
                                                                 <option value="{{$key}}" {{ $deal->intake_month == $key ? 'selected' : '' }} >{{$month}}</option>

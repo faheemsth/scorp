@@ -91,12 +91,33 @@
                                                 class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-                                                <select class="form-control select2 brand_id" id="choices-1011" name="brand_id">
-                                                    <option value="" >Select Brand</option>
-                                                    @foreach($companies as $key => $company)
-                                                    <option value="{{$key}}" {{ $key == 1 ? 'selected' : ''}}>{{$company}}</option>
-                                                    @endforeach
-                                                </select>
+                    
+                                                {{-- Brand Dropdown --}}
+                                                @if (
+                                                    \Auth::user()->type == 'super admin' ||
+                                                        \Auth::user()->type == 'Project Director' ||
+                                                        \Auth::user()->type == 'Project Manager')
+                                                            {!! Form::select('brand_id', $companies, 0, [
+                                                                'class' => 'form-control select2 brand_id',
+                                                                'id' => 'brands',
+                                                            ]) !!}
+                                                @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
+                                                     <input type="hidden" name="brand_id" value="{{\Auth::user()->id}}">
+                                                    <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                                        @foreach($companies as $key => $comp)
+                                                            <option value="{{$key}}" {{ $key == \Auth::user()->id ? 'selected' : ''}}>{{$comp}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                @else 
+                                                    <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}">
+                                                        <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                                            @foreach($companies as $key => $comp)
+                                                             <option value="{{$key}}" {{ $key == \Auth::user()->brand_id ? 'selected' : ''}}>{{$comp}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                @endif
+
+                                                {{-- End Brand Dropdown --}}
                                             </td>
                                         </tr>
 
@@ -108,12 +129,26 @@
                                                 class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="region_div">
-                                                <select class="form-control select2 region_id" id="choices-10112" name="region_id">
-                                                    <option value="" >Select Region</option>
-                                                    @foreach($regions as $key => $region)
-                                                    <option value="{{$key}}">{{$region}}</option>
-                                                    @endforeach
-                                                </select>
+
+                                                @if (\Auth::user()->type == 'super admin' ||
+                                                        \Auth::user()->type == 'Project Director' ||
+                                                        \Auth::user()->type == 'Project Manager' ||
+                                                        \Auth::user()->type == 'company' ||
+                                                        \Auth::user()->type == 'Regional Manager')
+
+                                                            {!! Form::select('region_id', $regions, null, [
+                                                                'class' => 'form-control select2',
+                                                                'id' => 'region_id',
+                                                            ]) !!}
+
+                                                @else 
+                                                     <input type="hidden" name="region_id" value="{{ \Auth::user()->region_id }}">
+                                                        {!! Form::select('region_id', $regions, \Auth::user()->region_id, [
+                                                            'class' => 'form-control select2',
+                                                            'disabled' => 'disabled',
+                                                            'id' => 'region_id',
+                                                        ]) !!}
+                                                @endif
                                             </td>
                                         </tr>
 
@@ -123,12 +158,28 @@
                                                 class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="branch_div">
-                                                <select class="form-control select2" id="choice-3" name="lead_branch">
-                                                    <option selected>Select Branch</option>
-                                                    @foreach($branches as $key => $branch)
-                                                    <option value="{{$key}}">{{$branch}}</option>
-                                                    @endforeach
-                                                </select>
+                                                
+                                                @if (\Auth::user()->type == 'super admin' ||
+                                                        \Auth::user()->type == 'Project Director' ||
+                                                        \Auth::user()->type == 'Project Manager' ||
+                                                        \Auth::user()->type == 'company' ||
+                                                        \Auth::user()->type == 'Regional Manager' ||
+                                                        \Auth::user()->type == 'Branch Manager')
+                                                            <select name="lead_branch" id="branch_id" class="form-control select2 branch_id"
+                                                                onchange="Change(this)">
+                                                                    @foreach($branches as $key => $branch)
+                                                                        <option value="{{$key}}">{{$branch}}</option>
+                                                                    @endforeach
+                                                            </select>
+                                                @else 
+                                                         <input type="hidden" name="lead_branch" value="{{ \Auth::user()->branch_id }}">
+                                                            <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
+                                                                onchange="Change(this)">
+                                                                    @foreach($branches as $key => $branch)
+                                                                        <option value="{{$key}}" {{ \Auth::user()->branch_id == $key ? 'selected' : '' }}>{{$branch}}</option>
+                                                                    @endforeach
+                                                            </select>
+                                                @endif
                                             </td>
                                         </tr>
 
@@ -139,15 +190,16 @@
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="assign_to_div">
                                                 <select class="form-control select2" id="choice-2" name="lead_assgigned_user">
-                                                    <option value=""> Select User</option>
+                                                    @foreach($employees as $key => $employee)
+                                                    <option value="{{$key}}">{{$employee}}</option>
+                                                    @endforeach
                                                 </select>
                                             </td>
                                         </tr>
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Agency') }} <span
-                                                class="text-danger">*</span>
+                                                {{ __('Agency') }} 
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choice-7" name="lead_organization">
@@ -176,8 +228,7 @@
                                         </tr> --}}
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Lead Source') }} <span
-                                                class="text-danger">*</span>
+                                                {{ __('Lead Source') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choice-4" name="lead_source">
@@ -191,8 +242,7 @@
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Drive Link') }} <span
-                                                class="text-danger">*</span>
+                                                {{ __('Drive Link') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="text" class="form form-control" name="drive_link" value="">
@@ -229,8 +279,7 @@
 
                                         <tr class="d-none">
                                             <td class="" style="width: 153px; font-size: 13px;">
-                                                {{ __('Email Address (Referrer)') }} <span
-                                                class="text-danger">*</span>
+                                                {{ __('Email Address (Referrer)') }} 
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="email" class="form-control" name="referrer_email">
@@ -289,8 +338,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="" style="width: 115PX; font-size: 13px;padding-right: 20px;">
-                                                Address <span
-                                                class="text-danger">*</span>
+                                                Address 
                                             </td>
                                             <td class="" style="width: 350PX; font-size: 13px; bg-danger">
                                                 <div class="form-floating">
@@ -337,8 +385,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="" style="width: 100px;  font-size: 13px;">
-                                                Description <span
-                                                class="text-danger">*</span>
+                                                Description
                                             </td>
                                             <td style="width: 374px; text-align: right; font-size: 13px;">
                                                 <div class="" style="margin-left: 14px;">
@@ -366,8 +413,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Tag List') }} <span
-                                                class="text-danger">*</span>
+                                                {{ __('Tag List') }} 
                                             </td>
                                             <td class="" style="padding-left: 10px;">
                                                 <select name="lead_tags_list" id="choice-6" class="form form-control select2">

@@ -25,29 +25,65 @@ class BranchController extends Controller
             $start = 0;
         }
 
-
+        $branch_query = Branch::select(['branches.*']);
+        if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+            $g_search = $_GET['search'];
+            $branch_query->leftjoin('regions', 'regions.id', '=', 'branches.region_id')
+                        ->leftjoin('users as brand', 'brand.id', '=', 'branches.brands')
+                        ->leftjoin('users as manager', 'manager.id', '=', 'branches.branch_manager_id')
+                        ->where('branches.name', 'like', '%' . $g_search . '%')
+                        ->orwhere('branches.email', 'like', '%'.$g_search.'%')
+                        ->orwhere('branches.google_link', 'like', '%'.$g_search.'%')
+                        ->orwhere('branches.social_media_link', 'like', '%'.$g_search.'%')
+                        ->orwhere('branches.phone', 'like', '%'.$g_search.'%')
+                        ->orwhere('regions.name', 'like', '%'.$g_search.'%')
+                        ->orwhere('manager.name', 'like', '%'.$g_search.'%')
+                        ->orwhere('brand.name', 'like', '%'.$g_search.'%');
+        }
 
             if(\Auth::user()->type == 'super admin'){
-                $total_records = Branch::count();
-                $branches = Branch::skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+                //$total_records = Branch::count();
+               // $branches = Branch::skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
             }else if(\Auth::user()->type == 'company'){
-                $total_records = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->count();
-                $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+              //  $total_records = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->count();
+               // $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
+               $branch_query->whereRaw('FIND_IN_SET(?, branches.brands)', [\Auth::user()->id]);
             }else{
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
                // $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->get();
                 
                 
-                $branch_query = Branch::query();
+                //$branch_query = Branch::query();
 
                foreach ($brand_ids as $brandId) {
-                   $branch_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+                   $branch_query->orWhereRaw('FIND_IN_SET(?, branches.brands)', [$brandId]);
                }
-               $total_records = $branch_query->count();
+               //$total_records = $branch_query->count();
    
-               $branches = $branch_query->skip($start)->take($num_results_on_page)->paginate($num_results_on_page);
+               //$branches = $branch_query->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
             }
+
+
+            // $companies = FiltersBrands();
+            // $brand_ids = array_keys($companies);
+            // if(\Auth::user()->type == 'super admin'){
+                
+            // }else if(\Auth::user()->type == 'company'){
+            //     $branch_query->where('brands', \Auth::user()->id);
+            // }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            //     $branch_query->whereIn('brands', $brand_ids);
+            // }else if(\Auth::user()->type == 'Regional Manager' || !empty(\Auth::user()->region_id)){
+            //     $branch_query->where('region_id', \Auth::user()->region_id);
+            // }else if(\Auth::user()->type == 'Branch Manager' && !empty(\Auth::user()->branch_id)){
+            //     $branch_query->where('branch_id', \Auth::user()->branch_id);
+            // }else{
+            //     $branch_query->where('user_id', \Auth::user()->id);
+            // }
+
+
+            $total_records = $branch_query->count();
+            $branches = $branch_query->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
 
 
 
@@ -60,7 +96,21 @@ class BranchController extends Controller
                 'regions' => $regions,
                 'total_records' => $total_records
             ];
-            return view('branch.index', $data);
+
+            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+                $html = view('branch.branchAjax', $data)->render();
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' => 25,
+                ])->render();
+                return json_encode([
+                    'status' => 'success',
+                    'html' => $html,
+                    'pagination_html' => $pagination_html
+                ]);
+            } else {
+                return view('branch.index', $data);
+            }
         }
         else
         {
@@ -75,6 +125,17 @@ class BranchController extends Controller
         $brands = User::whereIn('id', $brand_ids)->pluck('name', 'id')->toArray();
         $branchmanager=User::where('type','Branch Manager')->get();
         $regions=Region::all();
+
+
+
+
+
+
+        $filter = BrandsRegionsBranches();
+        $brands = $filter['brands'];
+        $regions = $filter['regions'];
+        $branches = $filter['branches'];
+        
         if(\Auth::user()->can('create branch'))
         {
             return view('branch.create',compact('branchmanager','regions', 'brands'));
@@ -102,14 +163,9 @@ class BranchController extends Controller
                 return redirect()->back()->with('error', $messages->first());
             }
 
-            $brands = null;
-            if($request->brands != null && sizeof($request->brands) > 0){
-                $brands = implode(',',$request->brands);
-            }
-
             $branch             = new Branch();
             $branch->name       = $request->name;
-            $branch->brands       = $brands;
+            $branch->brands       = $request->brands;
 
             $branch->region_id       = $request->region_id;
             $branch->branch_manager_id       = $request->branch_manager_id;
@@ -140,13 +196,14 @@ class BranchController extends Controller
         $branchmanager=User::where('type','')->get();
         $regions=Region::all();
 
-        $region = Region::where('id', $branch->region_id)->first();
+      //  $region = Region::where('id', $branch->region_id)->first();
 
-
-       $ids = explode(',', $region->brands ?? '');
-
-        $brands = User::whereIn('id',$ids)->where('type', 'company')->pluck('name', 'id')->toArray();
-
+    //    $brands = User::where('id',$branch->brands)->where('type', 'company')->pluck('name', 'id')->toArray();
+        
+        $filter = BrandsRegionsBranchesForEdit($branch->brands, $branch->region_id, 0);
+        $brands = $filter['brands'];
+        $regions = $filter['regions'];
+        
         if(\Auth::user()->can('edit branch'))
         {
             // if($branch->created_by == \Auth::user()->creatorId())
@@ -183,14 +240,14 @@ class BranchController extends Controller
                     return redirect()->back()->with('error', $messages->first());
                 }
 
-                $brands = null;
-                if($request->brands != null && sizeof($request->brands) > 0){
-                    $brands = implode(',',$request->brands);
-                }
+                // $brands = null;
+                // if($request->brands != null && sizeof($request->brands) > 0){
+                //     $brands = implode(',',$request->brands);
+                // }
 
                 $branch->name = $request->name;
                 $branch->region_id       = $request->region_id;
-                $branch->brands       = $brands;
+                $branch->brands       = $request->brands;
                 if(isset($request->branch_manager_id)){
                     $branch->branch_manager_id       = $request->branch_manager_id;
                 }
@@ -275,4 +332,75 @@ class BranchController extends Controller
         ]);
     }
 
+    ////////Delete bulk Regions
+    public function deleteBulkBranches(Request $request){
+
+        if (\Auth::user()->can('delete region') || \Auth::user()->type == 'super admin') {
+
+                if($request->ids != null){
+                    Branch::whereIn('id', explode(',', $request->ids))->delete();
+                    return redirect()->route('branch.index')->with('success', 'Branches deleted successfully');
+                }else{
+                    return redirect()->route('branch.index')->with('error', 'Atleast select 1 branch.');
+                }
+
+        }else{
+            return redirect()->route('branch.index')->with('error', __('Permission Denied.'));
+        }
+
+    }
+
+    public function download(){
+        $branch_query = Branch::select(['branches.*']);
+       
+
+            if(\Auth::user()->type == 'super admin'){
+           }else if(\Auth::user()->type == 'company'){
+               $branch_query->where('brands', [\Auth::user()->id]);
+            }else{
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+                $branch_query->whereIn('brands', $brand_ids);
+            }
+
+            $branches = $branch_query->orderBy('name', 'ASC')->get();
+
+
+
+
+            $users = allUsers();
+            $regions = allRegions();
+
+            $header = [
+                'Sr.No.',
+                'Branch',
+                'Brand',
+                'Region',
+                'Branch Manager',
+                'Phone',
+                'Email',
+                'Google Link',
+                'Social Media Link'
+            ];
+
+            $data = [];
+
+            foreach($branches as $key => $branch){
+                $data[] = [
+                    'sr' => $key + 1,
+                    'Branch' => $branch->name,
+                    'Brand' => $users[$branch->brands] ?? '',
+                    'Region' => $regions[$branch->region_id] ?? '',
+                    'Branch Manager' => $users[$branch->branch_manager_id] ?? '',
+                    'Phone' => $branch->phone,
+                    'Email' => $branch->email,
+                    'Google Link' => $branch->google_link,
+                    'Social media link' => $branch->social_media_link
+                ];
+            }
+
+        downloadCSV($header, $data, 'branches.csv');
+        return true;
+
+    }
 }

@@ -11,7 +11,8 @@ class Announcement extends Model
         'start_date',
         'end_date',
         'branch_id',
-        'department_id',
+        'region_id',
+        'brand_id',
         'description',
         'created_by',
     ];

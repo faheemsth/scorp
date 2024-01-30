@@ -94,8 +94,8 @@
                     @can('edit branch')
                         <a href="#!" data-size="lg" data-url="{{ url('branch/' . $Branch->id . '/edit') }}"
                             data-ajax-popup="true" class="btn px-2 py-2 btn-dark text-white"
-                            data-bs-original-title="{{ __('Edit Employee') }}" data-bs-toggle="tooltip"
-                            title="{{ __('Edit Employee') }}">
+                            data-bs-original-title="{{ __('Edit Branch') }}" data-bs-toggle="tooltip"
+                            title="{{ __('Edit Branch') }}">
                             <i class="ti ti-pencil"></i>
                         </a>
                     @endcan
@@ -152,9 +152,9 @@
                                         aria-labelledby="panelsStayOpen-headinginfo">
                                         <div class="accordion-body">
 
-                                            <div class="table-responsive mt-1" style="margin-left: 10px;">
+                                            <div class="table-responsive mt-1 " style="margin-left: 10px;">
 
-                                                <table>
+                                                <table style="" >
                                                     <tbody>
                                                         <tr>
                                                             <td class=""
@@ -195,7 +195,7 @@
                                                             </td>
                                                             <td class=""
                                                                 style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $Branch->brands ?? '' }}
+                                                                {{ isset($Branch->brands) ? \App\Models\User::where('id', $Branch->brands)->first()->name : '' }}
                                                             </td>
                                                         </tr>
                                                         <tr>

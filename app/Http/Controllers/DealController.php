@@ -263,6 +263,24 @@ class DealController extends Controller
 
             //whole query
             $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+
+            if(\Auth::user()->type == 'super admin'){
+                
+            }else if(\Auth::user()->type == 'company'){
+                $deals_query->where('brand_id', \Auth::user()->id);
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                $deals_query->whereIn('brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+                $deals_query->where('region_id', \Auth::user()->region_id);
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+                $deals_query->where('branch_id', \Auth::user()->branch_id);
+            }else{
+                $deals_query->where('assigned_to', \Auth::user()->id);
+            }
+           
+            
             foreach ($filters as $column => $value) {
                 if ($column === 'name') {
                     $deals_query->whereIn('name', $value);
@@ -275,10 +293,10 @@ class DealController extends Controller
                 }
             }
 
-            $companies = FiltersBrands();
-            $brand_ids = array_keys($companies);
-            $deals_query->whereIn('brand_id', $brand_ids);
-            $deals_query->orWhere('assigned_to', \Auth::user()->id);
+            // $companies = FiltersBrands();
+            // $brand_ids = array_keys($companies);
+            // $deals_query->whereIn('brand_id', $brand_ids);
+            // $deals_query->orWhere('assigned_to', \Auth::user()->id);
 
             //if list global search
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
@@ -792,19 +810,19 @@ class DealController extends Controller
 
 
                 if (\Auth::user()->type == 'super admin') {
-                    $branches = Branch::get()->pluck('name', 'id')->toArray();
+                  //  $branches = Branch::get()->pluck('name', 'id')->toArray();
                     $clients      = User::where('type', 'client')->get()->pluck('name', 'id');
                 } else {
-                    $branches = Branch::where('created_by', \Auth::user()->ownerId())->get()->pluck('name', 'id')->toArray();
+                    //$branches = Branch::where('created_by', \Auth::user()->ownerId())->get()->pluck('name', 'id')->toArray();
                     $clients      = User::where('created_by', '=', \Auth::user()->ownerId())->where('type', 'client')->get()->pluck('name', 'id');
                 }
 
-                $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+                //$companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
                 $universities = University::get()->pluck('name', 'id')->toArray();
                 $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
                 $pipelines = Pipeline::get()->pluck('name', 'id')->toArray();
                 $stages = Stage::get()->pluck('name', 'id')->toArray();
-                $users = User::where('type', 'employee')->get()->pluck('name', 'id');
+              //  $users = User::where('type', 'employee')->get()->pluck('name', 'id');
 
 
                 $months = months();
@@ -817,7 +835,13 @@ class DealController extends Controller
 
 
                 $contacts = ClientDeal::where('deal_id', $deal->id)->get()->pluck('client_id', 'id')->toArray();
-
+                
+                $filter = BrandsRegionsBranchesForEdit($deal->brand_id, $deal->region_id, $deal->branch_id);
+                $companies = $filter['brands'];
+                $Region = $filter['regions'];
+                $branches = $filter['branches'];
+                $users = $filter['employees'];
+                
                 return view('deals.edit', compact('deal', 'clients', 'contacts', 'months', 'years', 'companies', 'universities', 'branches', 'pipelines', 'stages', 'users', 'organizations'));
             } else {
                 return response()->json(['error' => __('Permission Denied.')], 401);
@@ -908,7 +932,7 @@ class DealController extends Controller
                                     'message' => 'Deal updated successfully.'
                                 ]),
                     'module_id' => $deal->id,
-                    'module_type' => 'lead',
+                    'module_type' => 'deal',
                 ];
                 addLogActivity($data);
 
@@ -2502,6 +2526,9 @@ class DealController extends Controller
                 'created_by' => Session::get('auth_type_id') != null ? Session::get('auth_type_id') : \Auth::user()->id,
             ]);
 
+            $new_app->brand_id = $deal->brand_id;
+            $new_app->save();
+
 
             //Add Stage History
             $data_for_stage_history = [
@@ -2687,8 +2714,23 @@ class DealController extends Controller
 
         if (\Auth::user()->can('manage task') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company') {
             $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to');
+            
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
+            if(\Auth::user()->type == 'super admin'){
+                
+            }else if(\Auth::user()->type == 'company'){
+                $tasks->where('deal_tasks.brand_id', \Auth::user()->id);
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+                $tasks->where('deal_tasks.region_id', \Auth::user()->region_id);
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+                $tasks->where('deal_tasks.branch_id', \Auth::user()->branch_id);
+            }else{
+                $tasks->where('deal_tasks.assigned_to', \Auth::user()->id);
+            }
+           
             $filters = $this->TasksFilter();
 
             foreach ($filters as $column => $value) {
@@ -2709,11 +2751,6 @@ class DealController extends Controller
                 $tasks->where('status', 0);
             }
 
-            $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
-            $tasks->orWhere('deal_tasks.assigned_to', \Auth::user()->id);
-
-
-
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
                 $tasks->Where('deal_tasks.name', 'like', '%' . $g_search . '%');
@@ -2727,14 +2764,15 @@ class DealController extends Controller
             $tasks = $tasks->orderBy('created_at', 'DESC')->skip($start)->take($num_results_on_page)->get();
             $priorities = DealTask::$priorities;
             $user_type = User::get()->pluck('type', 'id')->toArray();
-            $users = User::get()->pluck('name', 'id')->toArray();
-            $brands = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
+            $users = User::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+            $brands = User::where('type', 'company')->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
             $branches = array();
-            $branches = Branch::get();
+            $branches = Branch::orderBy('name', 'ASC')->get();
 
             $assign_to = array();
             if(\Auth::user()->type == 'super admin'){
                 $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+                ->orderBy('name', 'ASC')
                 ->pluck('name', 'id')->toArray();
             }else{
                 $companies = FiltersBrands();
@@ -2755,9 +2793,13 @@ class DealController extends Controller
             }
 
 
+            $filter = BrandsRegionsBranches();
+            // $companies = $filter['brands'];
+            // $regions = $filter['regions'];
+            // $branches = $filter['branches'];
+            // $employees = $filter['employees'];
 
-
-            return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands'));
+            return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'filter'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -2765,10 +2807,10 @@ class DealController extends Controller
 
     public function tasksCron(){
         $date = \Carbon\Carbon::now();
-        $date = $date->format('Y-m-d');
+        $a_date = $date->format('Y-m-d');
 
-        $remainder_date_tasks = DealTask::where('remainder_date','=',$date)->get();
-        $due_date_tasks = DealTask::where('due_date','=',$date)->get();
+        $remainder_date_tasks = DealTask::where('remainder_date','=',$a_date)->get();
+        $due_date_tasks = DealTask::where('due_date','=',$a_date)->get();
 
         if(sizeof($remainder_date_tasks) > 0){
             foreach($remainder_date_tasks as $task){
@@ -2779,25 +2821,44 @@ class DealController extends Controller
                 $icon_color = 'bg-primary';
 
                 $date = \Carbon\Carbon::now()->diffForHumans();
-                $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
-                                    </div>
-                                    <div class="flex-fill ml-3">
-                                        <div class="h6 text-sm mb-0">' . $text . '</div>
-                                        <small class="text-muted ">' . $date . '</small>
-                                    </div>
-                                </div>
-                            </a>';
+                // $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                //                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                //                 <div class="d-flex align-items-center">
+                //                     <div>
+                //                         <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
+                //                     </div>
+                //                     <div class="flex-fill ml-3">
+                //                         <div class="h6 text-sm mb-0">' . $text . '</div>
+                //                         <small class="text-muted ">' . $date . '</small>
+                //                     </div>
+                //                 </div>
+                //             </a>';
+                $html = '<li class="px-2">
+                            <h6 class="mb-0">Task Notification</h6>
+                            <p class="mb-1" style="color: gray">'.$text.'</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span style="color:#b2b2b2;font-size: 13px;">12-27-2023</span>
+                                <a href="!#" class="text-decoration-none">
+                                    Clear
+                                </a>
+                            </div>
+                            <hr style="color: #dddddd00;" class="my-1">
+                        </li>';
+                $ext_not = Notification::where('task_id',$task->id)->where('remainder_date',$a_date)->first();
+                if($ext_not){
 
-                $notification = new Notification;
-                $notification->user_id = 0;
-                $notification->type = 'Task Remainder';
-                $notification->data = $html;
-                $notification->is_read = 0;
-                $notification->save();
+                }else{
+                    $notification = new Notification;
+                    $notification->user_id = 0;
+                    $notification->type = 'Task Remainder';
+                    $notification->data = $html;
+                    $notification->is_read = 0;
+                    $notification->task_id = $task->id;
+                    $notification->remainder_date = $a_date;
+
+                    $notification->save();
+                }
+
 
             }
 
@@ -2813,25 +2874,42 @@ class DealController extends Controller
                 $icon_color = 'bg-primary';
 
                 $date = \Carbon\Carbon::now()->diffForHumans();
-                $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <div class="d-flex align-items-center">
-                                    <div>
-                                        <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
-                                    </div>
-                                    <div class="flex-fill ml-3">
-                                        <div class="h6 text-sm mb-0">' . $text . '</div>
-                                        <small class="text-muted ">' . $date . '</small>
-                                    </div>
-                                </div>
-                            </a>';
+                // $html = '<a href="' . $link . '" class="list-group-item list-group-item-action nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                // data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                //                 <div class="d-flex align-items-center">
+                //                     <div>
+                //                         <span class="avatar ' . $icon_color . ' text-white rounded-circle"><i class="' . $icon . '"></i></span>
+                //                     </div>
+                //                     <div class="flex-fill ml-3">
+                //                         <div class="h6 text-sm mb-0">' . $text . '</div>
+                //                         <small class="text-muted ">' . $date . '</small>
+                //                     </div>
+                //                 </div>
+                //             </a>';
+                $html = '<li class="px-2">
+                            <h6 class="mb-0">Task Notification</h6>
+                            <p class="mb-1" style="color: gray">'.$text.'</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span style="color:#b2b2b2;font-size: 13px;">'.$task->created_at.'</span>
+                            </div>
+                            <hr style="color: #dddddd00;" class="my-1">
+                        </li>';
 
-                $notification = new Notification;
-                $notification->user_id = 0;
-                $notification->type = 'Task Due Date';
-                $notification->data = $html;
-                $notification->is_read = 0;
-                $notification->save();
+                        $ext_not = Notification::where('task_id',$task->id)->where('due_date',$a_date)->first();
+                        if($ext_not){
+
+                        }else{
+                            $notification = new Notification;
+                            $notification->user_id = 0;
+                            $notification->type = 'Task Due Date';
+                            $notification->data = $html;
+                            $notification->is_read = 0;
+                            $notification->task_id = $task->id;
+                            $notification->due_date = $a_date;
+
+                            $notification->save();
+                        }
+
 
             }
 
@@ -2859,11 +2937,13 @@ class DealController extends Controller
 
         $task = DealTask::FindOrFail($taskId);
 
-        if (\Auth::user()->type == 'super admin') {
-            $branches = Branch::get()->pluck('name', 'id')->toArray();
-        } else {
-            $branches = Branch::where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
-        }
+        // if (\Auth::user()->type == 'super admin') {
+            
+        // } else {
+        //     $branches = Branch::where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
+        // }
+
+        $branches = Branch::get()->pluck('name', 'id')->toArray();
 
 
         $users = User::get()->pluck('name', 'id')->toArray();

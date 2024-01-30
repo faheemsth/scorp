@@ -12,7 +12,7 @@
             <input type="checkbox" name="organizations[]" value="{{ $org->id }}" class="sub-check">
         </td>
         <td>
-            <span style="cursor:pointer" class="org-name hyper-link" onclick="openNav(<?= $org->id ?>)"
+            <span style="cursor:pointer" class="org-name hyper-link" @can('manage organization') onclick="openNav(<?= $org->id ?>)" @endcan
                 data-org-id="{{ $org->id }}">{{ $org->name }}</span>
         </td>
         <td>{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
@@ -20,8 +20,7 @@
         <td>{{ isset($org_data->billing_city) ? $org_data->billing_city : '' }}</td>
         <td>{{ isset($org_data->billing_state) ? $org_data->billing_state : '' }}</td>
         <td>{{ isset($org_data->billing_country) ? $org_data->billing_country : '' }}</td>
-        <td></td>
-        <td>
+        <td class="d-none">
             <div class="dropdown">
                 <button class="btn bg-transparents" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
                     aria-expanded="false">

@@ -48,7 +48,7 @@ function show_toastr(type, message) {
     var f = document.getElementById('liveToast');
     var a = new bootstrap.Toast(f).show();
     if (type == 'success') {
-        $('#liveToast').addClass('bg-primary');
+        $('#liveToast').addClass('successmg');
     } else {
         $('#liveToast').addClass('bg-danger');
     }
@@ -56,7 +56,7 @@ function show_toastr(type, message) {
 }
 
 $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true"], div[data-ajax-popup="true"]', function () {
-  
+
     var data = {};
     var title1 = $(this).attr("title");
 
@@ -67,7 +67,7 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
     console.log(title)
     var size = ($(this).data('size') == '') ? 'md' : $(this).data('size');
     var url = $(this).data('url');
-    
+
     $("#commonModal .modal-title").html(title);
     $("#commonModal .modal-dialog").addClass('modal-' + size);
 
@@ -85,21 +85,21 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
 
     if($(kids[0]).hasClass('ti-pencil')){
         $(kids[0]).css('display','none');
-        $(this).append('<span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>'); 
+        $(this).append('<span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>');
     }else if($(kids[0]).hasClass('ti-plus')){
         $(kids[0]).css('display','none');
-        $(this).append('<span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>'); 
+        $(this).append('<span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>');
     }
 
     $('.spnier-updbtn').removeClass('d-none');
     // $('.ti-plus').css('display','none');
     // $('.ti-pencil').css('display','none');
-    
+
     $.ajax({
         url: url,
         data: data,
         success: function (data) {
-           
+
             $('#commonModal .body').html(data);
             $("#commonModal").modal('show');
             // $('.spnier-updbtn').addClass('d-none');
@@ -499,7 +499,7 @@ $(document).ready(function(){
 
         url = $(".lead-drive-url").val();
         var lead_id = $('.lead-id').val();
-     
+
         $.ajax({
             url: url,
             method: 'GET',
@@ -508,7 +508,7 @@ $(document).ready(function(){
                 'id' : lead_id
             },
             success: function (data) {
-              
+
             },
             error: function (data) {
             }
@@ -535,7 +535,7 @@ $(document).ready(function(){
                 'id' : lead_id
             },
             success: function (data) {
-              
+
             },
             error: function (data) {
             }
