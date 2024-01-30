@@ -1785,9 +1785,11 @@ Route::get('/get-deal-applications', [ApplicationsController::class, 'getDealApp
 ////////////////////////INSTITUTE CATEGORY
 Route::resource('/institute-category', InstituteCategoryController::class);
 
+Route::get("/delete-bulk-regions", [RegionController::class, 'deleteBulkRegions'])->name('delete-bulk-regions');
+
 Route::post("/update-bulk-task-status", [DealController::class, 'updateBulkTaskStatus'])->name('update-bulk-task-status');
 Route::post("/update-bulk-task", [DealController::class, 'updateBulkTask'])->name('update-bulk-task');
-
+Route::get("/delete-bulk-leads", [LeadController::class, 'deleteBulkLeads'])->name('delete-bulk-leads');
 Route::get("/delete-bulk-tasks", [DealController::class, 'deleteBulkTasks'])->name('delete-bulk-tasks');
 Route::get("/delete-bulk-deals", [DealController::class, 'deleteBulkDeals'])->name('delete-bulk-deals');
 Route::get("/delete-bulk-leads", [LeadController::class, 'deleteBulkLeads'])->name('delete-bulk-leads');
@@ -1830,3 +1832,4 @@ Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis.in
 //////////////////////////////////////////////Exports Urls
 Route::get('/university-download', [UniversityController::class, 'download'])->name('university.download');
 Route::get('/brands-download', [UserController::class, 'download'])->name('users.download');
+Route::get('/regions-download', [RegionController::class, 'download'])->name('regions.download');
