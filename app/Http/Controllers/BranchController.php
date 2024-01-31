@@ -332,4 +332,75 @@ class BranchController extends Controller
         ]);
     }
 
+    ////////Delete bulk Regions
+    public function deleteBulkBranches(Request $request){
+
+        if (\Auth::user()->can('delete region') || \Auth::user()->type == 'super admin') {
+
+                if($request->ids != null){
+                    Branch::whereIn('id', explode(',', $request->ids))->delete();
+                    return redirect()->route('branch.index')->with('success', 'Branches deleted successfully');
+                }else{
+                    return redirect()->route('branch.index')->with('error', 'Atleast select 1 branch.');
+                }
+
+        }else{
+            return redirect()->route('branch.index')->with('error', __('Permission Denied.'));
+        }
+
+    }
+
+    public function download(){
+        $branch_query = Branch::select(['branches.*']);
+       
+
+            if(\Auth::user()->type == 'super admin'){
+           }else if(\Auth::user()->type == 'company'){
+               $branch_query->where('brands', [\Auth::user()->id]);
+            }else{
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+                $branch_query->whereIn('brands', $brand_ids);
+            }
+
+            $branches = $branch_query->orderBy('name', 'ASC')->get();
+
+
+
+
+            $users = allUsers();
+            $regions = allRegions();
+
+            $header = [
+                'Sr.No.',
+                'Branch',
+                'Brand',
+                'Region',
+                'Branch Manager',
+                'Phone',
+                'Email',
+                'Google Link',
+                'Social Media Link'
+            ];
+
+            $data = [];
+
+            foreach($branches as $key => $branch){
+                $data[] = [
+                    'sr' => $key + 1,
+                    'Branch' => $branch->name,
+                    'Brand' => $users[$branch->brands] ?? '',
+                    'Region' => $regions[$branch->region_id] ?? '',
+                    'Branch Manager' => $users[$branch->branch_manager_id] ?? '',
+                    'Phone' => $branch->phone,
+                    'Email' => $branch->email,
+                    'Google Link' => $branch->google_link,
+                    'Social media link' => $branch->social_media_link
+                ];
+            }
+
+        downloadCSV($header, $data, 'branches.csv');
+        return true;
+
+    }
 }

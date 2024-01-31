@@ -240,60 +240,66 @@
         <div class="card my-card">
             <div class="card-body table-border-style">
 
-                    
+
 
                 {{-- topbar --}}
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                     <div class="col-2">
                         <p class="mb-0 pb-0 ps-1">Regions</p>
                         <div class="dropdown">
-                            <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 All REGIONS
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <!-- <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
-                            </ul>
+                            </ul> -->
 
                         </div>
                     </div>
-                
-                <div class="col-2">
-                    <!-- <p class="mb-0 pb-0">Tasks</p> -->
-                    <div class="dropdown" id="actions_div" style="display:none">
-                        <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                            Actions
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
-                        </ul>
-                    </div>
-                </div>
 
-                <div class="col-8 d-flex justify-content-end gap-2">
-                    <div class="input-group w-25 rounded" style= "width:36px; height: 36px; margin-top:10px;">
-                        <button class="btn btn-sm list-global-search-btn p-0 pb-2" >
-                            <span class="input-group-text bg-transparent border-0  px-1 " id="basic-addon1">
-                                <i class="ti ti-search" style="font-size: 18px"></i>
-                            </span>
-                        </button>
-                        <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2  list-global-search" placeholder="Search this list...">
+                    <div class="col-2">
+                        <!-- <p class="mb-0 pb-0">Tasks</p> -->
+                        <div class="dropdown" id="actions_divsss" style="display:none">
+                            <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                Actions
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
+                            </ul>
+                        </div>
                     </div>
 
-                    <button class="btn filter-btn-show  btn-dark px-0" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false" style= "width:36px; height: 36px; margin-top:10px;">
-                        <i class="ti ti-filter " style="font-size:18px"></i>
-                    </button>
+                    <div class="col-8 d-flex justify-content-end gap-2">
+                        <div class="input-group w-25 rounded" style="width:36px; height: 36px; margin-top:10px;">
+                            <button class="btn btn-sm list-global-search-btn p-0 pb-2">
+                                <span class="input-group-text bg-transparent border-0  px-1 " id="basic-addon1">
+                                    <i class="ti ti-search" style="font-size: 18px"></i>
+                                </span>
+                            </button>
+                            <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2  list-global-search" placeholder="Search this list...">
+                        </div>
 
-                    @can('create region')
-                    <a href="#" data-size="lg" data-url="{{ route('region.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Region') }}" class="btn  btn-dark px-0" style= "width:36px; height: 36px; margin-top:10px;" >
-                        <i class="ti ti-plus"></i>
-                    </a>
-                    @endcan
+                        <button class="btn filter-btn-show  btn-dark px-0" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false" style="width:36px; height: 36px; margin-top:10px;">
+                            <i class="ti ti-filter " style="font-size:18px"></i>
+                        </button>
 
-                    <a href="http://127.0.0.1:8000/university-download" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0" >
-                                <i class="ti ti-download" style="font-size:18px"></i>
+                        @can('create region')
+                        <a href="#" data-size="lg" data-url="{{ route('region.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Region') }}" class="btn  btn-dark px-0" style="width:36px; height: 36px; margin-top:10px;">
+                            <i class="ti ti-plus"></i>
+                        </a>
+                        @endcan
+
+                        <a href="{{ route('regions.download') }}" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
+                            <i class="ti ti-download" style="font-size:18px"></i>
+                        </a>
+
+                        @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete region'))
+                            <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Regions') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; margin-top:10px;">
+                                <i class="ti ti-trash"></i>
                             </a>
+                        @endif
 
-                </div>
+                    </div>
                 </div>
             </div>
 
@@ -312,6 +318,7 @@
                         });
                     });
                 </script>
+
                 {{-- Filters --}}
                 <div class="filter-data px-3" id="filterToggle" <?= isset($_GET['brand_id']) ? '' : 'style="display: none;"' ?>>
                     <form action="/region/index" method="GET" class="">
@@ -384,7 +391,7 @@
                             @foreach ($regions as $region)
                             <tr>
                                 <td>
-                                    <input type="checkbox" name="deals[]" value="{{ $region->id }}" class="sub-check">
+                                    <input type="checkbox" name="region_ids[]" value="{{ $region->id }}" class="sub-check">
                                 </td>
                                 <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                     <span style="cursor:pointer" class="hyper-link" @can('view region') onclick="openSidebar('/regions/{{ $region->id }}/show')" @endcan>
@@ -451,6 +458,58 @@
     </div>
 </div>
 <div id="mySidenav" style="z-index: 1065; padding-left:5px; box-shadow:0px 4px 4px 0px rgba(0, 0, 0, 0.25);background-color: #EFF3F7;" class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>">
+</div>
+
+<!-- Mass Update Model -->
+<div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg my-0" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mass Update</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('update-bulk-deals') }}" method="POST">
+                @csrf
+                <div class="modal-body" style="min-height: 40vh;">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select name="bulk_field" id="bulk_field" class="form form-control">
+                                <option value="">Select Field</option>
+                                <option value="nm">Name</option>
+                                <option value="ldst">Lead Status</option>
+                                <!-- <option value="ast">Assign Type</option> -->
+                                <option value="user_res">User Reponsible</option>
+                                <option value="loc">Location</option>
+                                <option value="agy">Agency</option>
+                                <option value="ldsrc">Lead Source</option>
+                                <option value="email">Email Address</option>
+                                <option value="email_ref">Email Address (Referrer) </option>
+                                <option value="phone">Phone</option>
+                                <option value="m_phone">Mobile Phone</option>
+                                <!-- <option value="mail_opt">Email opt out</option> -->
+                                <option value="address">Address</option>
+                                <option value="desc">Description</option>
+                                <!-- <option value="tag_list">Tag List</option> -->
+
+                            </select>
+                        </div>
+                        <input name='region_ids' id="region_ids" hidden>
+                        <div class="col-md-6" id="field_to_update">
+
+                        </div>
+                    </div>
+
+                </div>
+                <br>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-dark px-2" value="Update">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 @endsection
 
@@ -536,5 +595,67 @@
             }
         });
     });
+
+    $(document).on('change', '.main-check', function() {
+        $(".sub-check").prop('checked', $(this).prop('checked'));
+
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+       // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+        }
+    });
+
+    $(document).on('change', '.sub-check', function() {
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+       // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+        }
+        let commaSeperated = selectedArr.join(",");
+        //console.log(commaSeperated)
+        //$("#region_ids").val(commaSeperated);
+
+    });
+
+
+    $(document).on("click", '.delete-bulk', function() {
+        var task_ids = $(".sub-check:checked");
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-bulk-regions?ids=' + selectedIds.join(',');
+            }
+        });
+    })
 </script>
 @endpush

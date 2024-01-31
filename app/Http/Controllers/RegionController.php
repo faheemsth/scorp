@@ -122,7 +122,7 @@ class RegionController extends Controller
         // dd($type);
 
         if ($type == 'brand') {
-            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            $regions = Region::where('brands', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $html = ' <select class="form form-control select2" id="region_id" name="region_id"> <option value="">Select Region</option> ';
             foreach ($regions as $key => $region) {
                 $html .= '<option value="' . $key . '">' . $region . '</option> ';
@@ -146,7 +146,7 @@ class RegionController extends Controller
             ]);
         } else if ($type == 'branch') {
 
-            $employees = User::where('branch_id', $id)
+            $employees = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client'])->where('branch_id', $id)
                 ->where('type', '!=', 'company')
                 ->pluck('name', 'id')
                 ->toArray();
@@ -348,5 +348,91 @@ class RegionController extends Controller
             'html' => $html,
             'status' => 'success'
         ]);
+    }
+
+    ////////Delete bulk Regions
+    public function deleteBulkRegions(Request $request){
+
+        if (\Auth::user()->can('delete region') || \Auth::user()->type == 'super admin') {
+
+                if($request->ids != null){
+                    Region::whereIn('id', explode(',', $request->ids))->delete();
+                    return redirect()->route('region.index')->with('success', 'Regions deleted successfully');
+                }else{
+                    return redirect()->route('region.index')->with('error', 'Atleast select 1 lead.');
+                }
+
+        }else{
+            return redirect()->route('region.index')->with('error', __('Permission Denied.'));
+        }
+
+    }
+
+
+
+    public function download(){
+        $region_query = Region::select(['regions.*']);
+
+        ///////////////////Filter Data
+        if(isset($_GET['brand_id']) && !empty($_GET['brand_id'])){
+            $region_query->where('brands', $_GET['brand_id']);
+        }
+
+
+        if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
+            $region_query->where('id', $_GET['region_id']);
+        }
+        
+        if (\Auth::user()->type == 'super admin') {
+            $regions = Region::orderBy('name', 'ASC')->get();
+        } else if (\Auth::user()->type == 'company') {
+           // $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);;
+            $region_query->where('brands', [\Auth::user()->id]);
+        } else {
+
+
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $region_query->whereIn('brands', $brand_ids);
+
+           // $region_query = Region::query();
+
+            // foreach ($brand_ids as $brandId) {
+            //     $region_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+            // }
+           // $total_records = $region_query->count();
+            //$regions = $region_query->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
+        }
+
+
+        $regions = $region_query->orderBy('name', 'ASC')->get();
+        $users = allUsers();
+
+
+        $header = [
+            'S.No.',
+            'Name',
+            'Email',
+            'Phone',
+            'Location',
+            'Region Manager',
+            'Brand'
+        ];
+
+        $data = [];
+        foreach($regions as $key => $region){
+            $data[] = [
+                'sr' => $key+1,
+                'name' => $region->name,
+                'email' => $region->email,
+                'phone' => $region->phone,
+                'location' => $region->location,
+                'manager' => $users[$region->region_manager_id] ?? '',
+                'brand' => $users[$region->brands] ?? ''
+            ];
+        }   
+
+        downloadCSV($header, $data, 'regions.csv');
+        return true;
     }
 }

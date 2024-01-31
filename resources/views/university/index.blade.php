@@ -20,6 +20,30 @@
     .boximg {
         margin: auto;
     }
+    .dropdown-togglefilter:hover .dropdown-menufil {
+        display: block;
+    }
+    .choices__inner{
+        border:1px solid #ccc !important;
+        min-height: auto;
+        padding: 4px !important;
+    }
+
+    .fil:hover .submenu {
+  display: block;
+}
+
+.fil .submenu {
+  display: none;
+  position: absolute;
+  top: 3%;
+  left: 160px;
+  width: 100%;
+  background-color: #fafafa;
+  font-weight:600;
+  list-style-type: none;
+
+}
 </style>
 
 
@@ -36,7 +60,7 @@
 
                     @foreach (App\Models\University::all() as $university)
                     @if ($university->country == $key && !$countryFound)
-                    @if ($i <= 4) <?php $i++; ?> 
+                    @if ($i <= 4) <?php $i++; ?>
                     <div class="">
                         <div class="card shadow py-2" style="width: 100%; height: 70%;border-radius: 22px;">
                             <div class="card-body" style="display: flex;
@@ -73,24 +97,30 @@
                                   <span> ALL INSTITUTES </span>
                                 </button>
                                 @if(sizeof($saved_filters) > 0)
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <ul class="dropdown-menu d-flex justify-content-between align-items-center" aria-labelledby="dropdownMenuButton1">
                                     @foreach($saved_filters as $filter)
-                                    <li class="px-2 py-2 d-flex justify-content-between align-items-center" >
-                                        
-                                        <div>
-                                            <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark" >{{$filter->filter_name}}</a>
+                                    <li class=" px-2 py-2 d-flex justify-content-between align-items-center">
+                                        <div >
+                                            <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
                                             <span class="text-dark"> ({{$filter->count}})</span>
                                         </div>
-                                        
-                                        <div class="dropdown">
-                                            <button class="btn bg-transparent" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <i class="fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dright"  aria-labelledby="dropdownMenuButton1" >
+                                        <li class="fil"><i class="fa-solid fa-ellipsis-vertical me-3" style="color: #000000;"></i>
+                                            <ul class="submenu">
                                               <li><a class="dropdown-item" href="#">Rename</a></li>
-                                              <li><a class="dropdown-item"  onclick="deleteFilter(`{{$filter->id}}`)" href="#">Delete</a></li>
+                                              <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
                                             </ul>
-                                          </div>
+                                        </li>
+
+                                            {{-- <div class="dropdown">
+                                                <button class="btn bg-transparent dropdown-toggle filter" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-fil" aria-labelledby="dropdownMenuButton1">
+                                                    <li><a class="dropdown-item" href="#">Rename</a></li>
+                                                    <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                                </ul>
+                                            </div> --}}
+
                                     </li>
                                     @endforeach
                                 </ul>
@@ -123,7 +153,7 @@
 
                             <a href="{{ route('university.download') }}" class="btn p-2 btn-dark" style=" color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="{{__('Download in Csv')}}" >
                                 <i class="ti ti-download" style="font-size:18px"></i>
-                            </a>                            
+                            </a>
                         </div>
                     </div>
 
@@ -138,7 +168,7 @@
 
                                 <div class="col-md-3 mt-2">
                                     <label for="">Country</label>
-                                    <select name="country" id="country-11" class="form form-control select2">
+                                    <select name="country" id="country-11" class="form-select select2">
                                         <option value="">Select Country</option>
                                         @foreach(countries() as $key => $country)
                                          <option {{ isset($_GET['country']) && $_GET['country'] == $country ? 'selected' : '' }} value="{{$country}}">{{$country}}</option>
@@ -239,8 +269,8 @@
                                     </td>
                                     {{-- <td >{{ !empty($university->Institutes) ? $university->Institutes: '' }}</td> --}}
 
-                                    
-                                    <td style="max-width: 100px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($university->campuses) ? $university->campuses : '' }}</td>
+
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($university->campuses) ? $university->campuses : '' }}</td>
 
                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($university->intake_months) ? $university->intake_months : '' }}</td>
                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($university->territory) ? $university->territory : '' }}</td>
@@ -281,7 +311,7 @@
                                     </td>
                                     @endif
                                 </tr>
-                                @empty 
+                                @empty
                                 <tr>
                                     <td colspan="10 text-center" style="text-align: center !important;">No Record Found!!!</td>
                                 </tr>
@@ -289,7 +319,7 @@
 
                             </tbody>
                         </table>
-                        
+
                         <div class="pagination_div">
                             @if ($total_records > 0)
                         @include('layouts.pagination', [
@@ -308,7 +338,9 @@
 
 @push('script-page')
 <script>
-
+$(document).ready(function() {
+    $('.dropdown-togglefilter').dropdown();
+});
 $(document).ready(function() {
             let curr_url = window.location.href;
 

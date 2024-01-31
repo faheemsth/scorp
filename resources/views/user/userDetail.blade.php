@@ -178,7 +178,7 @@
                                                                     {{ __('Webiste Link') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $user->website_link }}
+                                                                <a href=" {{ $user->website_link }}" class="" target="_blank"> {{ $user->website_link }}</a>
                                                                 </td>
                                                             </tr>
 
@@ -187,7 +187,7 @@
                                                                     {{ __('Google Drive Link') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $user->drive_link }}
+                                                                <a href="{{ $user->drive_link }}" class="" target="_blank">{{ $user->drive_link }}</a>
                                                                 </td>
                                                             </tr>
 

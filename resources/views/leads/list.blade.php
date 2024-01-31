@@ -627,6 +627,8 @@ if (isset($lead->is_active) && $lead->is_active) {
         $(document).on('change', '.main-check', function() {
             $(".sub-check").prop('checked', $(this).prop('checked'));
         });
+
+        
         $(document).on('change', '.sub-check', function() {
             var selectedIds = $('.sub-check:checked').map(function() {
                 return this.value;

@@ -1347,6 +1347,23 @@ class UserController extends Controller
     }
 
 
+    public function deleteBulkUsers(Request $request){
+
+        if (\Auth::user()->can('delete user') || \Auth::user()->type == 'super admin') {
+
+                if($request->ids != null){
+                    User::whereIn('id', explode(',', $request->ids))->delete();
+                    return redirect()->route('user.index')->with('success', 'Brand deleted successfully');
+                }else{
+                    return redirect()->route('user.index')->with('error', 'Atleast select 1 brand.');
+                }
+
+        }else{
+            return redirect()->route('user.index')->with('error', __('Permission Denied.'));
+        }
+
+    }
+
     public function download(){
         $usersQuery = User::select(['users.*']);
         

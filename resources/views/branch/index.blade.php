@@ -68,10 +68,16 @@
                         </a>
                         @endcan
 
-                        <a href="http://127.0.0.1:8000/university-download" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv">
+                        <a href="{{ route('branches.download') }}" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv">
                                 <i class="ti ti-download" style="font-size:18px"></i>
                             </a>
 
+
+                        @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete branch'))
+                            <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Branches') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; margin-top:10px;">
+                                <i class="ti ti-trash"></i>
+                            </a>
+                        @endif
                         <!-- Added the missing closing div tag -->
                     </div>
                 </div>
@@ -141,6 +147,8 @@
                                 <a href="/deals/get-user-tasks" class="btn form-btn px-2 py-2" style="background-color: #b5282f;color:white;">Reset</a>
                             </div>
                         </div>
+
+
                         <div class="row my-4">
                             <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
@@ -170,6 +178,9 @@
                         <table class="table ">
                             <thead>
                                 <tr>
+                                    <th style="width: 50px !important;">
+                                        <input type="checkbox" class="main-check">
+                                    </th>
                                     <th>{{ __('Branch') }}</th>
                                     <th>{{ __('Brand') }}</th>
                                     <th>{{ __('Region') }}</th>
@@ -184,6 +195,10 @@
                                 @foreach ($branches as $branch)
                                     <tr>
                                         <td>
+                                            <input type="checkbox" name="branch_ids[]" value="{{ $branch->id }}" class="sub-check">
+                                        </td>
+
+                                        <td>
                                             <span style="cursor:pointer" class="hyper-link"
                                                     onclick="openSidebar('/branch/{{ $branch->id }}/show')">
                                                     {{ $branch->name }}
@@ -194,8 +209,8 @@
                                         <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($branch->branch_manager_id) && isset($users[$branch->branch_manager_id]) ? $users[$branch->branch_manager_id] : '' }}</td>
                                         <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $branch->phone }}</td>
                                         <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="mailto:{{ $branch->email }}">{{ $branch->email }}</a></td>
-                                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $branch->google_link }}">{{ $branch->google_link }}</a></td>
-                                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $branch->social_media_link }}">{{ $branch->social_media_link }}</a></td>
+                                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $branch->google_link }}" target="_blank">Click here</a></td>
+                                        <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $branch->social_media_link }}" target="_blank">Click here</a></td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -270,5 +285,70 @@
             }
         })
     });
+
+
+
+
+    $(document).on('change', '.main-check', function() {
+        $(".sub-check").prop('checked', $(this).prop('checked'));
+
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+       // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+        }
+    });
+
+    $(document).on('change', '.sub-check', function() {
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+       // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+        }
+        let commaSeperated = selectedArr.join(",");
+        //console.log(commaSeperated)
+        //$("#region_ids").val(commaSeperated);
+
+    });
+
+
+    $(document).on("click", '.delete-bulk', function() {
+        var task_ids = $(".sub-check:checked");
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-bulk-branches?ids=' + selectedIds.join(',');
+            }
+        });
+    })
 </script>
 @endpush
