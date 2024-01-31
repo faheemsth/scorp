@@ -118,7 +118,7 @@
                                                 {{ __('Phone') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
-                                                <input type="text" class="form-control" placeholder="Enter Phone"
+                                                <input type="text" class="form-control" id="phone" placeholder="Enter Phone"
                                                     value="{{ optional($regions)->phone ?? '' }}" name="phone">
                                             </td>
                                         </tr>
@@ -171,3 +171,9 @@
 </div>
 
 {{ Form::close() }}
+<script>
+    const input = document.querySelector("#phone");
+    window.intlTelInput(input, {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+    });
+</script>
