@@ -204,8 +204,22 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <i class="fa fa-file-csv"></i>
                                 </button>
                                 @endcan
-                                <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
 
+
+
+                                <a href="{{ route('leads.download') }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
+                                    <i class="ti ti-download"></i>
+                                </a>
+
+
+
+
+                                {{-- <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> --}}
+                                @if(auth()->user()->can('delete lead'))
+                                <a class="btn p-2 btn-dark  text-white assigned_to delete-bulk-leads d-none" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="font-weight: 500;">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                                @endif
                             </div>
                         </div>
 
@@ -349,7 +363,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     </div>
                                 </div>
 
-                                
+
                                 <div class="row my-4 d-none">
                                     <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
@@ -624,25 +638,39 @@ if (isset($lead->is_active) && $lead->is_active) {
             $("#import_csv").modal('show');
         })
 
-        $(document).on('change', '.main-check', function() {
-            $(".sub-check").prop('checked', $(this).prop('checked'));
+       // single check
+
+       $(document).on('change', '.main-check', function() {
+        $(".sub-check").prop('checked', $(this).prop('checked'));
+
+            var selectedIds = $('.sub-check:checked').map(function() {
+                return this.value;
+            }).get();
+
+        // console.log(selectedIds.length)
+
+            if (selectedIds.length > 0) {
+                selectedArr = selectedIds;
+                $("#actions_div").removeClass('d-none');
+            } else {
+                selectedArr = selectedIds;
+
+                $("#actions_div").addClass('d-none');
+            }
         });
 
-        
         $(document).on('change', '.sub-check', function() {
             var selectedIds = $('.sub-check:checked').map(function() {
                 return this.value;
             }).get();
 
-            console.log(selectedIds.length)
-
             if (selectedIds.length > 0) {
                 selectedArr = selectedIds;
-                $("#actions_div").css('display', 'block');
+                $("#actions_div").removeClass('d-none');
             } else {
                 selectedArr = selectedIds;
 
-                $("#actions_div").css('display', 'none');
+                $("#actions_div").addClass('d-none');
             }
             let commaSeperated = selectedArr.join(",");
             console.log(commaSeperated)

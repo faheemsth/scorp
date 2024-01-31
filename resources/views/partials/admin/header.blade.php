@@ -109,7 +109,7 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
         </li>
 
         <div class="" style="width: 300px; margin-right: 10px;">
-        
+
         @if (\Auth::user()->type == 'super admin')
         <select name="company" id="company" class="form form-select select2" style="width:100% !important" onChange="loginWithCompany();">
             <option value="">Select Companies</option>
@@ -192,7 +192,7 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
                     {!! $notification->data !!}
                 @endforeach --}}
                 <ul style="max-height: 300px; overflow-y: scroll;">
-                      
+
                     @foreach($notifications as $notification)
                     {!! $notification->data !!}
                     @endforeach
