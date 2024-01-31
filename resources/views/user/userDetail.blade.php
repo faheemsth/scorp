@@ -169,7 +169,7 @@
                                                                     {{ __('Domain Link') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $user->domain_link }}
+                                                               <a href="{{ $user->domain_link }}" target="_blank" >{{ $user->domain_link }}</a> 
                                                                 </td>
                                                             </tr>
 

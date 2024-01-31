@@ -216,7 +216,7 @@
                                                             </td>
                                                             <td class=""
                                                                 style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $Branch->google_link ?? '' }}
+                                                               <a href="{{ $Branch->google_link ?? '' }}" target="_blank"> {{ $Branch->google_link ?? '' }}</a>
                                                             </td>
                                                         </tr>
 
@@ -227,7 +227,7 @@
                                                             </td>
                                                             <td class=""
                                                                 style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $Branch->google_link ?? '' }}
+                                                                <a href="{{ $Branch->google_link ?? '' }}" target="_blank" >{{ $Branch->google_link ?? '' }}</a>
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -247,7 +247,7 @@
                                                             </td>
                                                             <td class=""
                                                                 style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $Branch->email ?? '' }}
+                                                              <a href="{{ $Branch->email ?? '' }}" target="_blank" >{{ $Branch->email ?? '' }}</a>  
                                                             </td>
                                                         </tr>
 

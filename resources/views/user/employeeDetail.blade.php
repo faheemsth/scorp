@@ -176,7 +176,7 @@
                                                                     {{ __('Email') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                     {{ $employee->email }}
+                                                                   <a href="{{ $employee->email }}" target="_blank" >{{ $employee->email }}</a>  
                                                                 </td>
                                                             </tr>
 
