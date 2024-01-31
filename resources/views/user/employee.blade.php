@@ -87,10 +87,10 @@
                         <div class="filter-data px-3" id="filterToggle"
                             <?= isset($_GET['brand']) ? '' : 'style="display: none;"' ?>>
                             <form action="/user/employees" method="GET" class="">
-                                <div class="row my-3">
+                                <div class="row my-3 align-items-end">
 
 
-                                    <div class="col-md-4 mt-2">
+                                    <div class="col-md-3 mt-2">
                                         <label for="">Brand</label>
                                         <select name="brand" class="form form-control select2" id="brand_id"
                                             style="width: 95%; border-color:#aaa">
@@ -106,7 +106,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-4 mt-2" id="region_filter_div">
+                                    <div class="col-md-3 mt-2" id="region_filter_div">
                                         <label for="">Region</label>
                                         <select name="Region" class="form form-control select2" id="region_filter_id"
                                             style="width: 95%; border-color:#aaa">
@@ -122,7 +122,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-4 mt-2" id="branch_filter_div">
+                                    <div class="col-md-3 mt-2" id="branch_filter_div">
                                         <label for="">Branch</label>
                                         <select name="Branch" class="form form-control select2" id="branch_filter_id"
                                             style="width: 95%; border-color:#aaa">
@@ -138,15 +138,10 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-md-4 mt-2">
-                                        <label for="">Name</label>
-                                        <input type="text" class="form form-control" placeholder="Search Name"
-                                            name="Name" value="<?= isset($_GET['Name']) ? $_GET['Name'] : '' ?>"
-                                            style="width: 95%; border-color:#aaa">
-                                    </div>
+                                    
 
 
-                                    <div class="col-md-4 mt-2">
+                                    <div class="col-md-3 mt-2">
                                         <label for="">Designation</label>
                                         <select name="Designation" class="form form-control select2" id="designation_id"
                                             style="width: 95%; border-color:#aaa">
@@ -160,21 +155,27 @@
                                             @endif
                                         </select>
                                     </div>
+                                    <div class="col-md-3 mt-2">
+                                        <label for="">Name</label>
+                                        <input type="text" class="form form-control" placeholder="Search Name"
+                                            name="Name" value="<?= isset($_GET['Name']) ? $_GET['Name'] : '' ?>"
+                                            style="width: 95%; border-color:#aaa">
+                                    </div>
 
-                                    <div class="col-md-4 mt-2">
+                                    <div class="col-md-3 mt-2">
                                         <label for="">Phone</label>
                                         <input type="text" class="form form-control" placeholder="Search Phone"
                                             name="phone" value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>"
                                             style="width: 95%; border-color:#aaa">
                                     </div>
 
-                                    <div class="col-md-4 mt-2">
+                                    <div class="col-md-3 mt-2">
                                         <br>
                                         <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
                                         <a href="/user/employees" class="btn bg-dark" style="color:white;">Reset</a>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
                                         <?php
@@ -206,7 +207,7 @@
 
                                         <span style="margin-top: 5px;">entries per page</span>
                                     </div>
-                                </div>
+                                </div> -->
                             </form>
                         </div>
 
