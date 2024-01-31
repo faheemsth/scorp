@@ -190,7 +190,7 @@ class RegionController extends Controller
 
             $regions = Region::where('brands', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
 
-            $html = ' <label for="region_id">Regions</label><select class="form form-control select2" id="region_id" name="region_id" > <option value="">Select Region</option> ';
+            $html = ' <label for="region_id">Region <span class="text-danger">*<span></label><select class="form form-control select2" id="region_id" name="region_id" > <option value="">Select Region</option> ';
             foreach ($regions as $key => $region) {
                 $html .= '<option value="' . $key . '">' . $region . '</option> ';
             }

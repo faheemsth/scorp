@@ -174,7 +174,7 @@ class BranchController extends Controller
             $branch->save();
 
             return json_encode([
-                'status' => 'error',
+                'status' => 'success',
                 'id' => $branch->id,
                 'msg' =>  __('Branch  successfully created.')
             ]);
@@ -241,8 +241,11 @@ class BranchController extends Controller
                 if($validator->fails())
                 {
                     $messages = $validator->getMessageBag();
-
-                    return redirect()->back()->with('error', $messages->first());
+                    return json_encode([
+                        'status' => 'error',
+                        'msg' => $messages->first()
+                    ]);
+                   // return redirect()->back()->with('error', $messages->first());
                 }
 
                 // $brands = null;
@@ -261,8 +264,13 @@ class BranchController extends Controller
                 $branch->phone       = $request->phone;
                 $branch->email       = $request->email;
                 $branch->save();
+                return json_encode([
+                    'status' => 'success',
+                    'id' => $branch->id,
+                    'msg' => 'Branch successfully updated.'
+                ]);
 
-                return redirect()->route('branch.index')->with('success', __('Branch successfully updated.'));
+               // return redirect()->route('branch.index')->with('success', __('Branch successfully updated.'));
             // }
             // else
             // {
@@ -271,7 +279,11 @@ class BranchController extends Controller
         }
         else
         {
-            return redirect()->back()->with('error', __('Permission denied.'));
+            return json_encode([
+                'status' => 'error',
+                'msg' => 'Permission denied'
+            ]);
+           // return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 
