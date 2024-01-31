@@ -113,7 +113,7 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     {{-- @can('view lead') --}}
-                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949;">
+                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
                         <i class="fa-brands fa-whatsapp"></i>
                     </a>
                     {{-- @endcan --}}
@@ -125,7 +125,7 @@
                             <a href="javascript:void(0)" @can('View Deal') @if ($deal->is_active)   onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }}) @else '' @endif @else '' @endcan"
                                 data-size="lg" data-bs-toggle="tooltip"
                                 data-bs-title=" {{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white"
-                                style="background-color: #313949">
+                                style="background-color: #313949 color:white; width:36px; height: 36px; margin-top:10px;" >
                                 <i class="ti ti-exchange"></i>
                             </a>
                         @else
@@ -133,7 +133,7 @@
                             <a href="#" data-size="lg"
                                 data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
                                 data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] To Deal') }}"
-                                class="btn px-2 py-2 btn-dark text-white">
+                                class="btn px-2 py-2 btn-dark text-white"style= "width:36px; height: 36px; margin-top:10px;">
                                 <i class="ti ti-exchange"></i>
                             </a>
                             @endcan
@@ -143,14 +143,14 @@
 
                     <a href="#" data-url="{{ URL::to('leads/' . $lead->id . '/labels') }}" data-ajax-popup="true"
                         data-size="lg" data-bs-toggle="tooltip" title="{{ __('Label') }}" class="btn px-2 py-2 text-white"
-                        style="background-color: #313949;">
+                        style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
                         <i class="ti ti-bookmark"></i>
                     </a>
 
                     @can('edit lead')
                     <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}"
                         data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Lead') }}" title="Update Lead" data-original-title="{{ __('Update Lead') }}"
-                        class="btn px-2 py-2 text-white" style="background-color: #313949;">
+                        class="btn px-2 py-2 text-white" style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
                         <i class="ti ti-pencil"></i>
                     </a>
                     @endcan
@@ -163,7 +163,7 @@
                         ]) !!}
 
                         <a href="#" data-bs-toggle="tooltip" title="{{__('Delete')}}"
-                            class="btn px-2 py-2 text-white bs-pass-para bg-danger">
+                            class="btn px-2 py-2 text-white bs-pass-para bg-danger"style= "width:36px; height: 36px; margin-top:10px;">
                             <i class="ti ti-trash" ></i>
                         </a>
 
@@ -782,7 +782,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="accordion-item">
+                                    {{-- <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeytag">
                                             <button class="accordion-button p-2" type="button"
                                                 data-bs-toggle="collapse"
@@ -814,7 +814,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="accordion-item d-none">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeydetails">
                                             <button class="accordion-button p-2" type="button"
