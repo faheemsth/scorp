@@ -114,7 +114,7 @@ class="btn btn-sm btn-primary">
                         $type = \Auth::user()->type;
                         @endphp
 
-                        @if($type == 'super admin' || $type == 'Project Director' || $type == 'Project Manager')
+                        @if($type == 'super admin' || $type == 'Admin Team' || $type == 'Project Director' || $type == 'Project Manager')
                         <div class="col-md-3">
                             <label for="">Brands</label>
                             <select name="brand_id" id="brand_id" class="form form-control select2">
@@ -127,7 +127,7 @@ class="btn btn-sm btn-primary">
                         @endif
 
 
-                        @if($type == 'super admin' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'Region Manager')
+                        @if($type == 'super admin' || $type == 'Admin Team' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'Region Manager')
                         <div class="col-md-3" id="region_div">
                             <label for="">Regions</label>
                             <select class="form form-control select2" id="filter_region_id" name="region_id" style="width: 95%;">
@@ -140,7 +140,7 @@ class="btn btn-sm btn-primary">
                         @endif
 
 
-                        @if($type == 'super admin' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'Region Manager')
+                        @if($type == 'super admin' || $type == 'Admin Team' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'Region Manager')
                         <div class="col-md-3" id="branch_div">
                             <label for="">Branches</label>
                             <select class="form form-control select2" id="filter_branch_id" name="branch_id" style="width: 95%;">

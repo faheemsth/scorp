@@ -91,7 +91,7 @@
                                             <?php $permitted_companies = $comp->companyPermissions->pluck('permitted_company_id'); ?>
                                             <td>
                                                 <input type="checkbox" class="company-permission-checkbox"
-                                                    <?= $emp->brand_id == $comp->id ? 'checked disabled' : (isset($permission_arr[$emp->id][$comp->id]) && $permission_arr[$emp->id][$comp->id] == 'true' ? 'checked' : '') ?>
+                                                    <?= $emp->brand_id == $comp->id ? 'checked' : (isset($permission_arr[$emp->id][$comp->id]) && $permission_arr[$emp->id][$comp->id] == 'true' ? 'checked' : '') ?>
                                                     id="company-permission-checkbox" data-for-company="{{ $emp->id }}"
                                                     data-permission-company="{{ $comp->id }}">
                                             </td>

@@ -49,44 +49,55 @@ class UserController extends Controller
             $start = 0;
         }
 
-        $users = User::where('type', 'company');
+        //$users = User::where('type', 'company');
+        $users = User::query()
+            ->join('company_permission', 'company_permission.permitted_company_id', '=', 'users.id')
+            ->join('users AS p', 'p.id', '=', 'company_permission.user_id')
+            ->select('users.*')
+            ->where('users.type', '=', 'company');
+
         if (isset($_GET['Brand']) && !empty($_GET['Brand'])) {
-            $brandId = intval($_GET['Brand']); // Assuming it's an integer, adjust accordingly
-            $users->where('id', $brandId);
+            $brandId = $_GET['Brand'];
+            $users->where('users.id', $brandId);
         }
 
         if (isset($_GET['Director']) && !empty($_GET['Director'])) {
-            $directorId = intval($_GET['Director']); // Assuming it's an integer, adjust accordingly
-            $users->where('project_director_id', $directorId);
+            $directorId = intval($_GET['Director']);
+            $users->where('users.project_director_id', $directorId);
         }
 
 
         if (\Auth::user()->can('manage user')) {
-            if (\Auth::user()->type == 'super admin') {
-            } else {
+            if (\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Admin Team') {
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
-                $users = $users->whereIn('id', $brand_ids);
+                $users->whereIn('users.id', $brand_ids);
             }
+
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
-                $users->where('type', 'company')
-                ->where('users.name', 'like', '%' . $g_search . '%')
-                ->orWhere('users.website_link', 'like', '%' . $g_search . '%')
-                ->orWhere(DB::raw('(SELECT name FROM users p WHERE p.id = users.project_director_id)'), 'like', '%' . $g_search . '%');
+                $users->where('users.type', 'company')
+                    ->where(function ($query) use ($g_search) {
+                        $query->where('users.name', 'like', '%' . $g_search . '%')
+                            ->orWhere('users.website_link', 'like', '%' . $g_search . '%')
+                            ->orWhere('p.name', 'like', '%' . $g_search . '%');
+                    });
             }
 
-
             $total_records = $users->count();
-            $users = $users->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
+            $users = $users->where('company_permission.active', 'true')->skip($start)
+                ->take($num_results_on_page)
+                ->orderBy('users.name', 'ASC')
+                ->groupBy('users.id')
+                ->paginate($num_results_on_page);
 
             $projectDirectors = allUsers();
             // return view('user.index-Old')->with('users', $users);
             $Brands = User::where('type', 'company')->pluck('name', 'id')->toArray();
             $ProjectDirector = User::where('type', 'Project Director')->pluck('name', 'id')->toArray();
 
-            
+
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('user.brandsAjax', compact('total_records', 'projectDirectors', 'Brands', 'ProjectDirector'))->with('users', $users)->render();
@@ -100,7 +111,7 @@ class UserController extends Controller
                     'html' => $html,
                     'pagination_html' => $pagination_html
                 ]);
-            }else{
+            } else {
                 return view('user.index', compact('total_records', 'projectDirectors', 'Brands', 'ProjectDirector'))->with('users', $users);
             }
         } else {
@@ -155,7 +166,7 @@ class UserController extends Controller
                     'status' => 'error',
                     'msg' => $messages->first()
                 ]);
-               // return redirect()->back()->with('error', $messages->first());
+                // return redirect()->back()->with('error', $messages->first());
             }
 
 
@@ -275,7 +286,7 @@ class UserController extends Controller
                     'msg' =>  __('Brand created successfully')
                 ]);
 
-               // return redirect()->route('users.index')->with('success', __('User successfully created.') . ((!empty($resp) && $resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
+                // return redirect()->route('users.index')->with('success', __('User successfully created.') . ((!empty($resp) && $resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
             }
 
             return json_encode([
@@ -283,9 +294,9 @@ class UserController extends Controller
                 'id' => $user->id,
                 'msg' =>  __('Brand created successfully')
             ]);
-           // return redirect()->route('users.index')->with('success', __('User successfully created.'));
+            // return redirect()->route('users.index')->with('success', __('User successfully created.'));
         } else {
-           // return redirect()->back();
+            // return redirect()->back();
             return json_encode([
                 'status' => 'error',
                 'msg' =>  __('Permission Denied')
@@ -328,71 +339,22 @@ class UserController extends Controller
                 //return redirect()->back()->with('error', $messages->first());
             }
 
-
-            if (\Auth::user()->type == 'super admin') {
-                $user = User::findOrFail($id);
-
-                //                $role = Role::findById($request->role);
-                $role = Role::findByName('company');
-                $input = $request->all();
-                $input['type'] = $role->name;
-                $user->fill($input)->save();
-                $user->name = $request->name;
-                $user->domain_link =  $request->domain_link;
-                $user->website_link = $request->website_link;
-                $user->drive_link = $request->drive_link;
-                $user->project_director_id = $request->project_director;
-                $user->update();
-
-                $roles[] = $role->id;
-                $user->roles()->sync($roles);
-
-                return json_encode([
-                    'status' => 'success',
-                    'id' => $user->id,
-                    'msg' => 'Brand updated successfully.'
-                ]);
-
-                // return redirect()->route('users.index')->with(
-                //     'success',
-                //     'User successfully updated.'
-                // );
-            } else {
-                $user = User::findOrFail($id);
-
-                $role          = Role::findById($request->role);
-                $input         = $request->all();
-                $input['type'] = $role->name;
-                $user->fill($input)->save();
-                $user->name = $request->name;
-                $user->domain_link =  $request->domain_link;
-                $user->website_link = $request->website_link;
-                $user->drive_link = $request->drive_link;
-                $user->project_director_id = $request->project_director;
-                $user->update();
-
-
-                Utility::employeeDetailsUpdate($user->id, \Auth::user()->creatorId());
-                // CustomField::saveData($user, $request->customField);
-
-                $roles[] = $request->role;
-                $user->roles()->sync($roles);
-                return json_encode([
-                    'status' => 'success',
-                    'id' => $user->id,
-                    'msg' => 'Brand updated successfully.'
-                ]);
-                // return redirect()->route('users.index')->with(
-                //     'success',
-                //     'User successfully updated.'
-                // );
-            }
+            $user = User::findOrFail($id);
+            $user->name = $request->name;
+            $user->website_link = $request->website_link;
+            $user->drive_link = $request->drive_link;
+            $user->save();
+            return json_encode([
+                'status' => 'success',
+                'id' => $user->id,
+                'msg' => 'Brand updated successfully.'
+            ]);
         } else {
             return json_encode([
                 'status' => 'error',
                 'msg' => 'Permission Denied'
             ]);
-           // return redirect()->back();
+            // return redirect()->back();
         }
     }
 
@@ -711,8 +673,8 @@ class UserController extends Controller
         if (\Auth::user()->can('manage employee')) {
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
             $usersQuery = User::select(['users.*'])->whereNotIn('type', $excludedTypes);
-            
-            
+
+
             //Filters
             if (!empty($_GET['brand'])) {
                 $usersQuery->where('brand_id', $_GET['brand']);
@@ -738,7 +700,7 @@ class UserController extends Controller
                 $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
             }
 
-           
+
             // if (\Auth::user()->type == 'super admin') {
             //     $usersQuery = User::whereNotIn('type', $excludedTypes);
             // } else if ($user->type == 'company') {
@@ -749,17 +711,16 @@ class UserController extends Controller
 
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            if(\Auth::user()->type == 'super admin'){
-                
-            }else if(\Auth::user()->type == 'company'){
+            if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
+            } else if (\Auth::user()->type == 'company') {
                 $usersQuery->where('brand_id', \Auth::user()->id);
-            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') {
                 $usersQuery->whereIn('brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+            } else if (\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)) {
                 $usersQuery->where('region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+            } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)) {
                 $usersQuery->where('branch_id', \Auth::user()->branch_id);
-            }else{
+            } else {
                 $usersQuery->where('id', \Auth::user()->id);
             }
 
@@ -776,17 +737,17 @@ class UserController extends Controller
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
                 $usersQuery->where('users.name', 'like', '%' . $g_search . '%')
-                            ->orWhere('users.email', 'like', '%' . $g_search . '%')
-                            ->orWhere('users.type', 'like', '%' . $g_search . '%')
-                            ->orWhere('users.phone', 'like', '%' . $g_search . '%')
-                            ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%');                   
+                    ->orWhere('users.email', 'like', '%' . $g_search . '%')
+                    ->orWhere('users.type', 'like', '%' . $g_search . '%')
+                    ->orWhere('users.phone', 'like', '%' . $g_search . '%')
+                    ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%');
             }
 
             $users = $usersQuery
-                    ->skip($start)
-                    ->take($num_results_on_page)
-                    ->orderBy('users.name', 'ASC')
-                    ->paginate($num_results_on_page);
+                ->skip($start)
+                ->take($num_results_on_page)
+                ->orderBy('users.name', 'ASC')
+                ->paginate($num_results_on_page);
 
             $brands = User::whereNotIn('type', $excludedTypes)->orderBy('name', 'ASC')->get();
             $brandss = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
@@ -801,25 +762,25 @@ class UserController extends Controller
 
 
 
-            if(isset($_GET['brand']) && count($filter['regions']) == 1){
-               // Fetch regions based on the 'brands' condition and populate the $filter['regions'] variable
+            if (isset($_GET['brand']) && count($filter['regions']) == 1) {
+                // Fetch regions based on the 'brands' condition and populate the $filter['regions'] variable
                 $filter['regions'] = Region::where('brands', $_GET['brand']) // Query regions based on the 'brands' condition
-                ->pluck('name', 'id') // Retrieve specific columns 'name' and 'id'
-                ->prepend('Select Region', '') // Prepend a default option 'Select Region'
-                ->toArray(); // Convert the collection to an associative array
+                    ->pluck('name', 'id') // Retrieve specific columns 'name' and 'id'
+                    ->prepend('Select Region', '') // Prepend a default option 'Select Region'
+                    ->toArray(); // Convert the collection to an associative array
             }
 
 
-            if(isset($_GET['brand']) && isset($_GET['region_id']) && count($filter['branches']) == 1){
-               // Fetch branches based on the 'brands' condition and populate the $filter['regions'] variable
+            if (isset($_GET['brand']) && isset($_GET['region_id']) && count($filter['branches']) == 1) {
+                // Fetch branches based on the 'brands' condition and populate the $filter['regions'] variable
                 $filter['branches'] = Branch::where('brands', $_GET['brand'])->where('region_id', $_GET['region_id']) // Query regions based on the 'brands' condition
-                ->pluck('name', 'id') // Retrieve specific columns 'name' and 'id'
-                ->prepend('Select Branch', '') // Prepend a default option 'Select Region'
-                ->toArray(); // Convert the collection to an associative array
+                    ->pluck('name', 'id') // Retrieve specific columns 'name' and 'id'
+                    ->prepend('Select Branch', '') // Prepend a default option 'Select Region'
+                    ->toArray(); // Convert the collection to an associative array
             }
 
             $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'region')->get();
-        
+
 
             $data = [
                 'total_records' => $total_records,
@@ -872,7 +833,7 @@ class UserController extends Controller
             $regions = Region::pluck('name', 'id')->toArray();
         }
 
- 
+
         $roles_start = ['0' => 'Select Role']; // Use an associative array for key-value pairs
         $excludedTypes = ['super admin', 'company', 'team', 'client'];
         $roles_arr = Role::whereNotIn('name', $excludedTypes)->get()->unique('name')->pluck('name', 'name')->toArray(); // Convert to array
@@ -1013,7 +974,7 @@ class UserController extends Controller
                     'id' => $user->id,
                     'msg' => __('Employee successfully created.')
                 ]);
-               // return redirect()->route('user.employees')->with('success', __('User successfully created.') . ((!empty($resp) && $resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
+                // return redirect()->route('user.employees')->with('success', __('User successfully created.') . ((!empty($resp) && $resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
             }
 
             return json_encode([
@@ -1024,7 +985,7 @@ class UserController extends Controller
 
             //return redirect()->route('user.employees')->with('success', __('User successfully created.'));
         } else {
-           // return redirect()->back();
+            // return redirect()->back();
 
             return json_encode([
                 'status' => 'error',
@@ -1043,7 +1004,7 @@ class UserController extends Controller
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             $companies = FiltersBrands();
-            $companies[] = 'Select Brand'; 
+            $companies[] = 'Select Brand';
             $brand_ids = array_keys($companies);
 
 
@@ -1104,7 +1065,7 @@ class UserController extends Controller
                         'status' => 'error',
                         'msg' => $messages->first()
                     ]);
-                   // return redirect()->back()->with('error', $messages->first());
+                    // return redirect()->back()->with('error', $messages->first());
                 }
 
                 $role = Role::findByName($request->role);
@@ -1120,7 +1081,7 @@ class UserController extends Controller
                 $user->type = $role->name;
                 $user->brand_id = isset($request->companies) ? $request->companies : \Auth::user()->brand_id;
                 $user->update();
-              
+
                 //  $user['brand_id'] = isset($request->companies) ? $request->companies : \Auth::user()->brand_id;
                 if ($request->role == 'Project Director') {
                     User::where('id', $request->companies)->update([
@@ -1138,7 +1099,7 @@ class UserController extends Controller
                     Branch::where('id', $request->branch_id)->update([
                         'branch_manager_id' => $user->id
                     ]);
-                }                
+                }
 
                 CustomField::saveData($user, $request->customField);
 
@@ -1221,14 +1182,14 @@ class UserController extends Controller
                 'status' => 'error',
                 'msg' => 'Permisssion Denied'
             ]);
-           // return redirect()->back();
+            // return redirect()->back();
         }
     }
 
     public function employeeShow($id)
     {
         $employee = User::findOrFail($id);
-       // $Region = Region::get()->pluck('name', 'id')->toArray();
+        // $Region = Region::get()->pluck('name', 'id')->toArray();
         //$branches = Branch::pluck('name', 'id')->toArray();
         $allUsers = allUsers();
 
@@ -1246,11 +1207,13 @@ class UserController extends Controller
         ]);
     }
 
-    public function importEmployees(){
+    public function importEmployees()
+    {
         return view('user.import_employees');
     }
-    
-    public function import(Request $request){
+
+    public function import(Request $request)
+    {
         $request->validate([
             'csv_file' => 'required|mimes:csv,txt'
         ]);
@@ -1272,10 +1235,10 @@ class UserController extends Controller
         // print_r($data);
         // die();
 
-        foreach($data as $key => $d){
+        foreach ($data as $key => $d) {
             $brand = User::where(['name' => $d['Brand'], 'type' => 'company'])->first();
-            
-            if(!$brand){
+
+            if (!$brand) {
                 echo "<pre>";
                 print_r($d);
                 die();
@@ -1288,7 +1251,7 @@ class UserController extends Controller
             $region = Region::where(['brands' => $brand->id])->first();
             $region_id = isset($region->id) ? $region->id : 0;
 
-            if(!$region){
+            if (!$region) {
                 $new_region = new Region();
                 $new_region->name = $d['Region'];
                 $new_region->location = $d['Region'];
@@ -1299,9 +1262,9 @@ class UserController extends Controller
 
 
             //Branch
-            $branch = Branch::where(['brands' => $brand->id, 'region_id' =>$region_id])->first();
+            $branch = Branch::where(['brands' => $brand->id, 'region_id' => $region_id])->first();
             $branch_id = isset($branch->id) ? $branch->id : 0;
-            if(!$branch){
+            if (!$branch) {
                 $new_branch = new Branch();
                 $new_branch->name = $d['Branch'];
                 $new_branch->region_id = $region_id;
@@ -1311,10 +1274,10 @@ class UserController extends Controller
                 $branch_id = $new_branch->id;
             }
 
-            
+
             ////////////////////////////////Creating Employee
             $is_exist = User::where('email', $d['Email'])->first();
-            if($is_exist){
+            if ($is_exist) {
                 continue;
             }
 
@@ -1404,53 +1367,52 @@ class UserController extends Controller
 
             // To add entry in employees table
             Utility::employeeDetails($user->id, \Auth::user()->creatorId(), $emp_detail);
-            
-            echo "Employee Create ".$key."<br>";
+
+            echo "Employee Create " . $key . "<br>";
         }
 
         die('successfully completed');
     }
 
 
-    public function deleteBulkUsers(Request $request){
+    public function deleteBulkUsers(Request $request)
+    {
 
         if (\Auth::user()->can('delete user') || \Auth::user()->type == 'super admin') {
 
-                if($request->ids != null){
-                    User::whereIn('id', explode(',', $request->ids))->delete();
-                    return redirect()->route('user.index')->with('success', 'Brand deleted successfully');
-                }else{
-                    return redirect()->route('user.index')->with('error', 'Atleast select 1 brand.');
-                }
-
-        }else{
+            if ($request->ids != null) {
+                User::whereIn('id', explode(',', $request->ids))->delete();
+                return redirect()->route('user.index')->with('success', 'Brand deleted successfully');
+            } else {
+                return redirect()->route('user.index')->with('error', 'Atleast select 1 brand.');
+            }
+        } else {
             return redirect()->route('user.index')->with('error', __('Permission Denied.'));
         }
-
     }
 
-    public function deleteBulkEmployees(Request $request){
+    public function deleteBulkEmployees(Request $request)
+    {
 
         if (\Auth::user()->can('delete employee') || \Auth::user()->type == 'super admin') {
 
-                if($request->ids != null){
-                    User::whereIn('id', explode(',', $request->ids))->delete();
-                    Employee::whereIn('user_id', explode(',', $request->ids))->delete();
-                    return redirect()->route('user.index')->with('success', 'Employee deleted successfully');
-                }else{
-                    return redirect()->route('user.index')->with('error', 'Atleast select 1 employee.');
-                }
-
-        }else{
+            if ($request->ids != null) {
+                User::whereIn('id', explode(',', $request->ids))->delete();
+                Employee::whereIn('user_id', explode(',', $request->ids))->delete();
+                return redirect()->route('user.index')->with('success', 'Employee deleted successfully');
+            } else {
+                return redirect()->route('user.index')->with('error', 'Atleast select 1 employee.');
+            }
+        } else {
             return redirect()->route('user.index')->with('error', __('Permission Denied.'));
         }
-
     }
 
-    public function download(){
+    public function download()
+    {
         $usersQuery = User::select(['users.*']);
-        
-        
+
+
         //Filters
         if (!empty($_GET['brand'])) {
             $usersQuery->where('brand_id', $_GET['brand']);
@@ -1478,24 +1440,23 @@ class UserController extends Controller
 
         $companies = FiltersBrands();
         $brand_ids = array_keys($companies);
-        if(\Auth::user()->type == 'super admin'){
-            
-        }else if(\Auth::user()->type == 'company'){
+        if (\Auth::user()->type == 'super admin') {
+        } else if (\Auth::user()->type == 'company') {
             $usersQuery->where('brand_id', \Auth::user()->id);
-        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+        } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') {
             $usersQuery->whereIn('brand_id', $brand_ids);
-        }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+        } else if (\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)) {
             $usersQuery->where('region_id', \Auth::user()->region_id);
-        }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+        } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)) {
             $usersQuery->where('branch_id', \Auth::user()->branch_id);
-        }else{
+        } else {
             $usersQuery->where('id', \Auth::user()->id);
         }
 
         $users = $usersQuery
-                ->where('type', 'company')
-                ->orderBy('users.name', 'ASC')
-                ->get();
+            ->where('type', 'company')
+            ->orderBy('users.name', 'ASC')
+            ->get();
 
         $all_users = User::pluck('name', 'id')->toArray();
 
@@ -1508,14 +1469,18 @@ class UserController extends Controller
             'Project Director'
         ];
 
+        $project_director = \App\Models\User::join('company_permission', 'company_permission.user_id', '=', 'users.id')
+                            ->where('company_permission.permitted_company_id', $user->id)
+                            ->first();
+       
 
         $data = [];
-        foreach($users as $key => $brand){
+        foreach ($users as $key => $brand) {
             $data[] = [
-                'sr_no' => $key+1,
+                'sr_no' => $key + 1,
                 'name' => $brand->name,
                 'website_link' => $brand->website_link,
-                'director' => $all_users[$brand->project_director_id] ?? ''
+                'director' =>  $project_director->name ?? ''
             ];
         }
 
@@ -1523,11 +1488,12 @@ class UserController extends Controller
         return true;
     }
 
-    public function downloadEmployees(){
+    public function downloadEmployees()
+    {
         $excludedTypes = ['super admin', 'company', 'team', 'client'];
         $usersQuery = User::select(['users.*'])->whereNotIn('type', $excludedTypes);
-        
-        
+
+
         //Filters
         if (!empty($_GET['brand'])) {
             $usersQuery->where('brand_id', $_GET['brand']);
@@ -1553,7 +1519,7 @@ class UserController extends Controller
             $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
         }
 
-       
+
         // if (\Auth::user()->type == 'super admin') {
         //     $usersQuery = User::whereNotIn('type', $excludedTypes);
         // } else if ($user->type == 'company') {
@@ -1564,27 +1530,26 @@ class UserController extends Controller
 
         $companies = FiltersBrands();
         $brand_ids = array_keys($companies);
-        if(\Auth::user()->type == 'super admin'){
-            
-        }else if(\Auth::user()->type == 'company'){
+        if (\Auth::user()->type == 'super admin') {
+        } else if (\Auth::user()->type == 'company') {
             $usersQuery->where('brand_id', \Auth::user()->id);
-        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+        } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') {
             $usersQuery->whereIn('brand_id', $brand_ids);
-        }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+        } else if (\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)) {
             $usersQuery->where('region_id', \Auth::user()->region_id);
-        }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+        } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)) {
             $usersQuery->where('branch_id', \Auth::user()->branch_id);
-        }else{
+        } else {
             $usersQuery->where('id', \Auth::user()->id);
         }
 
         $users = $usersQuery
-                ->orderBy('users.name', 'ASC')
-                ->get();
+            ->orderBy('users.name', 'ASC')
+            ->get();
         $all_users = allUsers();
         $branches = Branch::pluck('name', 'id')->toArray();
         $regions = Region::pluck('name', 'id')->toArray();
-    
+
         $header = [
             'Sr.No.',
             'Name',
@@ -1594,13 +1559,13 @@ class UserController extends Controller
             'Brand',
             'Region',
             'Branch'
-        ];  
+        ];
 
 
         $data = [];
-        foreach($users as $key => $emp){
+        foreach ($users as $key => $emp) {
             $data[] = [
-                'sr' => $key+1,
+                'sr' => $key + 1,
                 'name' => $emp->name,
                 'email' => $emp->email,
                 'phone' => $emp->phone,
@@ -1612,8 +1577,5 @@ class UserController extends Controller
 
         downloadCSV($header, $data, 'Employees.csv');
         return true;
-
     }
-
-
 }

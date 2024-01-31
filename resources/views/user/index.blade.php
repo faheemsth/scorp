@@ -63,7 +63,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             @endcan
 
                             @if(auth()->user()->type == 'super admin' || auth()->user()->type == 'Admin Team')
-                            <a href="{{ route('users.download') }}" class="btn p-2 btn-dark" style="color:white;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv">
+                            <a href="{{ route('users.download') }}" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
                                 <i class="ti ti-download" style="font-size:18px"></i>
                             </a>
                             @endif
@@ -100,7 +100,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     <select name="Brand" class="form form-control select2" id="filter_brand">
                                         <option value="">Select Option</option>
                                         @if (!empty($Brands))
-                                        @foreach ($Brands as $key => $Brand)
+                                        @foreach (BrandsRegionsBranches()['brands'] as $key => $Brand)
                                         <option value="{{ $key }}" {{ !empty($_GET['Brand']) && $_GET['Brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
                                         @endforeach
                                         @endif
@@ -181,7 +181,14 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                         </span>
                                     </td>
                                     <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
-                                    <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($user->project_director_id) && isset($projectDirectors[$user->project_director_id]) ? $projectDirectors[$user->project_director_id] : '' }}</td>
+                                    <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                        @php 
+                                            $project_director = \App\Models\User::join('company_permission', 'company_permission.user_id', '=', 'users.id')
+                                                                ->where('company_permission.permitted_company_id', $user->id)
+                                                                ->first();
+                                        @endphp 
+                                        {{ $project_director->name ?? '' }}
+                                    </td>
                                 </tr>
                                 @empty
                                 <tr>

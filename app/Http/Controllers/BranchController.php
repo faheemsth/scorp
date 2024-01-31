@@ -42,7 +42,7 @@ class BranchController extends Controller
                         ->orwhere('brand.name', 'like', '%'.$g_search.'%');
         }
 
-            if(\Auth::user()->type == 'super admin'){
+            if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team'){
              }else if(\Auth::user()->type == 'company'){
               $branch_query->whereRaw('brands', [\Auth::user()->id]);
             }else{

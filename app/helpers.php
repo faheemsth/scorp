@@ -164,7 +164,7 @@ if (!function_exists('FiltersBrands')) {
         }
 
 
-        if(\Auth::user()->type == 'super admin'){
+        if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team'){
 
         }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
             $permittedCompanies = allPermittedCompanies();
@@ -254,7 +254,7 @@ if (!function_exists('BrandsRegionsBranches')){
         $user = \Auth::user();
         $type = $user->type;
 
-        if($type == 'super admin'){
+        if($type == 'super admin' || $type == 'Admin Team'){
               $brands = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         }else if($type == 'company'){
             $brands = User::where('type', 'company')->where('id', $user->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();

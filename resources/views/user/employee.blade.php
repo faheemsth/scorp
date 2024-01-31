@@ -125,7 +125,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
                        
 
-                                @if($type == 'super admin' || $type == 'Project Director' || $type == 'Project Manager')
+                                @if($type == 'super admin'|| $type == 'Admin Team' || $type == 'Project Director' || $type == 'Project Manager')
                                 <div class="col-md-3 mt-2">
                                     <label for="">Brands</label>
                                     <select name="brand" class="form form-control select2" id="filter_brand_id">
@@ -144,7 +144,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
 
 
-                                @if($type == 'super admin' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'company' || $type == 'Region Manager')
+                                @if($type == 'super admin'|| $type == 'Admin Team' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'company' || $type == 'Region Manager')
                                 <div class="col-md-3 mt-2" id="region_filter_div">
                                     <label for="">Regions</label>
 
@@ -202,7 +202,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     <input type="text" class="form form-control" placeholder="Search Phone" name="phone" value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>" style="width: 95%; border-color:#aaa">
                                 </div>
 
-                                <div class="col-md-3 mt-3">
+                                <div class="col-md-5 mt-3">
                                     <br>
                                     <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
                                     <a href="/user/employees" class="btn bg-dark" style="color:white;">Reset</a>
