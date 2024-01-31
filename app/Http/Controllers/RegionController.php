@@ -122,7 +122,7 @@ class RegionController extends Controller
         // dd($type);
 
         if ($type == 'brand') {
-            $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            $regions = Region::where('brands', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $html = ' <select class="form form-control select2" id="region_id" name="region_id"> <option value="">Select Region</option> ';
             foreach ($regions as $key => $region) {
                 $html .= '<option value="' . $key . '">' . $region . '</option> ';
@@ -146,7 +146,7 @@ class RegionController extends Controller
             ]);
         } else if ($type == 'branch') {
 
-            $employees = User::where('branch_id', $id)
+            $employees = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client'])->where('branch_id', $id)
                 ->where('type', '!=', 'company')
                 ->pluck('name', 'id')
                 ->toArray();

@@ -216,7 +216,7 @@ if (!function_exists('FiltersBranches')){
 
 if (!function_exists('FiltersBranchUsers')){
     function FiltersBranchUsers($id){
-        $users = User::where('branch_id', $id)->pluck('name', 'id')->toArray();
+        $users = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client'])->where('branch_id', $id)->pluck('name', 'id')->toArray();
         $html = ' <select class="form form-control user_id select2" id="user_id" name="lead_assgigned_user"> <option value="">Select User</option> ';
         foreach ($users as $key => $user) {
             $html .= '<option value="' . $key . '">' . $user . '</option> ';
