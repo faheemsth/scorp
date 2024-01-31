@@ -54,7 +54,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
             </div>
 
             <div class="col-8 d-flex justify-content-end gap-2 pe-0">
-                <div class="input-group w-25">
+                <div class="input-group w-25 rounded" style="width:36px; height: 36px; margin-top:10px;">
                     <button class="btn btn-sm list-global-search-btn px-0">
                         <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
                             <i class="ti ti-search" style="font-size: 18px"></i>
@@ -67,14 +67,14 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     <i class="ti ti-file" style="font-size:18px,color:white"></i>
                 </a> -->
 
-                <div>
+                {{-- <div>
                     <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
-                </div>
+                </div> --}}
 
-                <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" style="width:36px; height: 36px; margin-top:10px;">
                     <i class="ti ti-filter" style="font-size:18px"></i>
                 </button>
-                <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+                <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" style="width:36px; height: 36px; margin-top:10px;" onClick="massUpdate()">Mass Update</a>
 
             </div>
         </div>
@@ -83,7 +83,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
         <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
             <form action="/applications/" method="GET" class="">
                 <div class="row my-3">
-                    <div class="col-md-4"> <label for="">Name</label>
+                    <div class="col-md-3"> <label for="">Name</label>
                         <select class="form form-control select2" id="choices-multiple110" name="applications[]" multiple style="width: 95%;">
                             <option value="">Select Application</option>
                             @foreach ($app_for_filer as $app)
@@ -93,7 +93,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     </div>
 
 
-                    <div class="col-md-4"> <label for="">University</label>
+                    <div class="col-md-3"> <label for="">University</label>
                         <select class="form form-control select2" id="choices-multiple111" name="universities[]" multiple style="width: 95%;">
                             <option value="">Select University</option>
                             @foreach ($universities as $key => $name)
@@ -103,7 +103,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     </div>
 
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="">Stages</label>
                         <select name="stages[]" id="stages" class="form form-control select2" multiple style="width: 95%;">
                             <option value="">Select Stage</option>
@@ -113,7 +113,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         </select>
                     </div>
                     @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                    <div class="col-md-4"> <label for="">Brands</label>
+                    <div class="col-md-3"> <label for="">Brands</label>
                         <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple style="width: 95%;">
                             <option value="">Select Brand</option>
                             @if (FiltersBrands())
@@ -128,14 +128,14 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
 
 
 
-                    <div class="col-md-4 mt-2">
+                    <div class="col-md-3 mt-2">
                         <br>
                         <input type="submit" class="btn form-btn me-2 btn-dark">
                         <a type="button" id="save-filter-btn" onClick="saveFilter('applications',<?= sizeof($applications) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                         <a href="/applications/" class="btn form-btn btn-danger">Reset</a>
                     </div>
                 </div>
-                <div class="row my-4">
+                {{-- <div class="row my-4">
                     <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
                         <?php
@@ -155,7 +155,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
 
                         <span style="margin-top: 5px;">entries per page</span>
                     </div>
-                </div>
+                </div> --}}
             </form>
         </div>
 

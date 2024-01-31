@@ -85,7 +85,7 @@ class UserController extends Controller
             $Brands = User::where('type', 'company')->pluck('name', 'id')->toArray();
             $ProjectDirector = User::where('type', 'Project Director')->pluck('name', 'id')->toArray();
 
-            
+
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('user.brandsAjax', compact('total_records', 'projectDirectors', 'Brands', 'ProjectDirector'))->with('users', $users)->render();
@@ -464,15 +464,63 @@ class UserController extends Controller
         }
         $user['name']  = $request['name'];
         $user['email'] = $request['email'];
+        $user['phone']  = $request['phone'];
+        $user['passport_number'] = $request['passport_number'];
+        $user['address']  = $request['address'];
+        $user['date_of_birth'] = $request['dob'];
         $user->save();
+
+        // Check if an Employee already exists for the user
+        $employee = Employee::where('user_id', $user->id)->first();
+
+        if (empty($employee)) {
+            // If no employee exists, create a new one
+            $employee = new Employee();
+            $employee->user_id = $user->id;
+        }
+
+        // Update or set attributes
+        $employee->email = $user->email;
+        $employee->name = $user->name;
+        $employee->phone = $user->phone;
+        $employee->address = $user->address;
+        $employee->dob = $user->date_of_birth;
+        $employee->created_by = \Auth::id();
+
+        // Save the employee
+        $employee->save();
+
         CustomField::saveData($user, $request->customField);
 
-        return redirect()->route('crm.dashboard')->with(
+        return redirect()->route('profile')->with(
             'success',
             'Profile successfully updated.'
         );
     }
+///
+public function editbankinfo(Request $request)
+{
+    $userDetail = \Auth::user();
+    $user       = User::findOrFail($userDetail['id']);
 
+    $employee = Employee::where('user_id', $user->id)->first();
+
+    $employee->account_holder_name = $request->account_holder_name;
+    $employee->account_number = $request->account_number;
+    $employee->bank_name = $request->bank_name;
+    $employee->branch_location = $request->branch_location;
+    $employee->created_by = \Auth::id();
+
+    $employee->save();
+
+    CustomField::saveData($user, $request->customField);
+
+    return redirect()->route('profile')->with(
+        'success',
+        'Bank Profile successfully updated.'
+    );
+}
+///
     public function updatePassword(Request $request)
     {
 
@@ -668,8 +716,8 @@ class UserController extends Controller
         if (\Auth::user()->can('manage employee')) {
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
             $usersQuery = User::select(['users.*'])->whereNotIn('type', $excludedTypes);
-            
-            
+
+
             //Filters
             if (!empty($_GET['brand'])) {
                 $usersQuery->where('brand_id', $_GET['brand']);
@@ -695,7 +743,7 @@ class UserController extends Controller
                 $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
             }
 
-           
+
             // if (\Auth::user()->type == 'super admin') {
             //     $usersQuery = User::whereNotIn('type', $excludedTypes);
             // } else if ($user->type == 'company') {
@@ -707,7 +755,7 @@ class UserController extends Controller
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             if(\Auth::user()->type == 'super admin'){
-                
+
             }else if(\Auth::user()->type == 'company'){
                 $usersQuery->where('brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
@@ -727,7 +775,7 @@ class UserController extends Controller
             //             $query->where('users.name', 'like', '%' . $g_search . '%')
             //                 ->orWhere('users.website_link', 'like', '%' . $g_search . '%')
             //                 ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%');
-            //         });                
+            //         });
             // }
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
@@ -736,7 +784,7 @@ class UserController extends Controller
                             ->orWhere('users.email', 'like', '%' . $g_search . '%')
                             ->orWhere('users.type', 'like', '%' . $g_search . '%')
                             ->orWhere('users.phone', 'like', '%' . $g_search . '%')
-                            ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%');                   
+                            ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%');
             }
 
             $users = $usersQuery
@@ -802,7 +850,7 @@ class UserController extends Controller
             $regions = Region::pluck('name', 'id')->toArray();
         }
 
- 
+
         $roles_start = ['0' => 'Select Role']; // Use an associative array for key-value pairs
         $excludedTypes = ['super admin', 'company', 'team', 'client'];
         $roles_arr = Role::whereNotIn('name', $excludedTypes)->get()->unique('name')->pluck('name', 'name')->toArray(); // Convert to array
@@ -998,7 +1046,7 @@ class UserController extends Controller
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             $companies = FiltersBrands();
-            $companies[] = 'Select Brand'; 
+            $companies[] = 'Select Brand';
             $brand_ids = array_keys($companies);
 
 
@@ -1071,7 +1119,7 @@ class UserController extends Controller
                 $user->type = $role->name;
                 $user->brand_id = isset($request->companies) ? $request->companies : \Auth::user()->brand_id;
                 $user->update();
-              
+
                 //  $user['brand_id'] = isset($request->companies) ? $request->companies : \Auth::user()->brand_id;
                 if ($request->role == 'Project Director') {
                     User::where('id', $request->companies)->update([
@@ -1089,7 +1137,7 @@ class UserController extends Controller
                     Branch::where('id', $request->branch_id)->update([
                         'branch_manager_id' => $user->id
                     ]);
-                }                
+                }
 
                 CustomField::saveData($user, $request->customField);
 
@@ -1184,7 +1232,7 @@ class UserController extends Controller
     public function importEmployees(){
         return view('user.import_employees');
     }
-    
+
     public function import(Request $request){
         $request->validate([
             'csv_file' => 'required|mimes:csv,txt'
@@ -1209,7 +1257,7 @@ class UserController extends Controller
 
         foreach($data as $key => $d){
             $brand = User::where(['name' => $d['Brand'], 'type' => 'company'])->first();
-            
+
             if(!$brand){
                 echo "<pre>";
                 print_r($d);
@@ -1246,7 +1294,7 @@ class UserController extends Controller
                 $branch_id = $new_branch->id;
             }
 
-            
+
             ////////////////////////////////Creating Employee
             $is_exist = User::where('email', $d['Email'])->first();
             if($is_exist){
@@ -1339,7 +1387,7 @@ class UserController extends Controller
 
             // To add entry in employees table
             Utility::employeeDetails($user->id, \Auth::user()->creatorId(), $emp_detail);
-            
+
             echo "Employee Create ".$key."<br>";
         }
 
@@ -1366,8 +1414,8 @@ class UserController extends Controller
 
     public function download(){
         $usersQuery = User::select(['users.*']);
-        
-        
+
+
         //Filters
         if (!empty($_GET['brand'])) {
             $usersQuery->where('brand_id', $_GET['brand']);
@@ -1396,7 +1444,7 @@ class UserController extends Controller
         $companies = FiltersBrands();
         $brand_ids = array_keys($companies);
         if(\Auth::user()->type == 'super admin'){
-            
+
         }else if(\Auth::user()->type == 'company'){
             $usersQuery->where('brand_id', \Auth::user()->id);
         }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
@@ -1417,7 +1465,7 @@ class UserController extends Controller
         $all_users = User::pluck('name', 'id')->toArray();
 
 
-        //header 
+        //header
         $header = [
             'Sr.No.',
             'Name',

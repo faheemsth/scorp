@@ -40,6 +40,9 @@
     #icon2 {
         display: none;
     }
+    .nav-item:hover{
+        background-color: #272e3b !important;
+    }
 </style>
 
 <div id="wrapper" style="position: relative">
@@ -847,7 +850,7 @@
                                         {{ __('Company Permission') }}</a>
                                 </li>
                             @endcan
-                           
+
                             @can('manage crm settings')
                                 <li style=""
                                     class="emp nav-item {{ Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
@@ -864,8 +867,8 @@
                                         {{ __('CRM System Setup') }}
                                     </a>
                                 </li>
-                            @endcan 
-                            
+                            @endcan
+
                             @can('manage company settings')
                                 <li class="emp {{ Request::segment(1) == 'settings' ? ' active show' : '' }}">
                                     <a href="{{ route('settings') }}" class="collapse-item"

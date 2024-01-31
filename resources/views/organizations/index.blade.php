@@ -112,7 +112,7 @@
         <div class="card">
             <div class="card-body">
 
-                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
+                <div class="row align-items-center justify-content-between ps-0 ms-0 pe-4 my-2">
                     <div class="col-2">
                         <p class="mb-0 pb-0 ps-1">ORGANIZATIONS</p>
                         <div class="dropdown">
@@ -125,24 +125,24 @@
                         </div>
                     </div>
 
-                    <div class="col-10 d-flex justify-content-end gap-2">
-                        <div class="input-group w-25 rounded-1" style="border:1px solid rgb(102, 102, 102);">
+                    <div class="col-8 d-flex justify-content-end gap-2">
+                        <div class="input-group w-25 rounded" style="width:36px; height: 36px; margin-top:10px;border:1px solid rgb(102, 102, 102);">
                             <button class="btn btn-sm list-global-search-btn px-0">
                                 <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
                             </button>
-                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1" style="width:36px; height: 36px; margin-top:10px;">
                         </div>
 
-                        <button class="btn px-2 pb-2 pt-2 refresh-list bg-dark" style=" color:white;"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                        {{-- <button class="btn px-2 pb-2 pt-2 refresh-list bg-dark" style=" color:white;"><i class="ti ti-refresh" style="font-size: 18px"></i></button> --}}
 
                         <button class="btn filter-btn-show px-2 btn-dark" style="color:white;" type="button">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
                         @can('create organization')
-                        <a href="#" data-size="lg" data-url="{{ route('organization.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Organization') }}" class="btn p-2 btn-dark">
+                        <a href="#" data-size="lg" data-url="{{ route('organization.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Organization') }}" class="btn p-2 btn-dark" style="width:36px; height: 36px; margin-top:10px;">
                             <i class="ti ti-plus"></i>
                         </a>
                         @endcan
@@ -166,8 +166,8 @@
 
                 <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                     <form action="/organization/" method="GET" class="">
-                        <div class="row my-3">
-                            <div class="col-md-4"> <label for="">Name</label>
+                        <div class="row my-3 align-items-end">
+                            <div class="col-md-3"> <label for="">Name</label>
                                 <select class="form form-control select2" id="choices-multiple110" name="name[]" multiple style="width: 95%;">
                                     <option value="">Select name</option>
                                     @foreach ($organizations as $org)
@@ -176,28 +176,28 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-4 mt-2">
+                            <div class="col-md-3 mt-2">
                                 <label for="">Phone</label>
                                 <input type="text" class="form form-control" name="phone" value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>" style="width: 95%; border-color:#aaa">
                             </div>
 
 
-                            <div class="col-md-4 mt-2">
+                            <div class="col-md-3 mt-2">
                                 <label for="">Billing Street</label>
                                 <input type="text" class="form form-control" name="street" value="<?= isset($_GET['street']) ? $_GET['street'] : '' ?>" style="width: 95%; border-color:#aaa">
                             </div>
 
-                            <div class="col-md-4 mt-2">
+                            <div class="col-md-3 mt-2">
                                 <label for="">Billing City</label>
                                 <input type="text" class="form form-control" name="city" value="<?= isset($_GET['city']) ? $_GET['city'] : '' ?>" style="width: 95%; border-color:#aaa">
                             </div>
 
-                            <div class="col-md-4 mt-2">
+                            <div class="col-md-3 mt-2">
                                 <label for="">Billing State</label>
                                 <input type="text" class="form form-control" name="state" value="<?= isset($_GET['state']) ? $_GET['state'] : '' ?>" style="width: 95%; border-color:#aaa">
                             </div>
 
-                            <div class="col-md-4"> <label for="">County</label>
+                            <div class="col-md-3"> <label for="">County</label>
                                 <select name="country[]" id="choices-multiple333" class="form form-control select2" multiple style="width: 95%;">
                                     <option value="">Select user</option>
                                     @foreach ($countries as $key => $country)
@@ -206,7 +206,7 @@
                                 </select>
                             </div>
 
-                            <div class="col-md-4 mt-2">
+                            <div class="col-md-3 mt-2">
                                 <br>
                                 <input type="submit" class="btn form-btn bg-dark me-2" style=" color:white;">
                                 <a href="/organization/" class="btn form-btn bg-dark" style="color:white;">Reset</a>

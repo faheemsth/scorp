@@ -257,7 +257,7 @@
                         </div>
                     </div>
 
-                    <div class="col-2">
+                    {{-- <div class="col-2">
                         <!-- <p class="mb-0 pb-0">Tasks</p> -->
                         <div class="dropdown" id="actions_divsss" style="display:none">
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -267,7 +267,7 @@
                                 <li><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
                             </ul>
                         </div>
-                    </div>
+                    </div> --}}
 
                     <div class="col-8 d-flex justify-content-end gap-2">
                         <div class="input-group w-25 rounded" style="width:36px; height: 36px; margin-top:10px;">

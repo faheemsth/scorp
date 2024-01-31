@@ -237,6 +237,10 @@ Route::get('/hrm-dashboard', [DashboardController::class, 'hrm_dashboard_index']
 Route::get('profile', [UserController::class, 'profile'])->name('profile')->middleware(['auth', 'XSS', 'revalidate']);
 
 Route::any('edit-profile', [UserController::class, 'editprofile'])->name('update.account')->middleware(['auth', 'XSS', 'revalidate']);
+Route::any('update-bank-profile', [UserController::class, 'editbankinfo'])->name('update.bankinfo')->middleware(['auth', 'XSS', 'revalidate']);
+
+
+
 
 Route::resource('users', UserController::class)->middleware(['auth', 'XSS', 'revalidate']);
 Route::get('/user/employees', [UserController::class, 'employees'])->name('user.employees')->middleware(['auth', 'XSS', 'revalidate']);

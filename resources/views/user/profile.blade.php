@@ -21,6 +21,9 @@
         h5::after{
             background-color: #313949!important
         }
+        .form-control:focus{
+            border: 1px solid gray !important;
+        }
     </style>
 @endpush
 @section('breadcrumb')
@@ -34,14 +37,17 @@
         <div class="col-xl-3">
             <div class="card sticky-top" style="top:30px">
                 <div class="list-group list-group-flush" id="useradd-sidenav">
+
                     <a href="#personal_info" class="list-group-item list-group-item-action border-0">{{__('Personal Info')}} <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
+                    <a href="#bank_info" class="list-group-item list-group-item-action border-0">{{__('Bank Info')}} <div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
 
                     <a href="#change_password" class="list-group-item list-group-item-action border-0">{{__('Change Password')}}<div class="float-end"><i class="ti ti-chevron-right"></i></div></a>
                 </div>
             </div>
         </div>
         <div class="col-xl-9">
-            <div id="personal_info" class="card" h5::after="">
+
+            <div id="personal_info" class="card" h5::after="" >
                 <div class="card-header">
                     <h5>{{__('Personal Info')}}</h5>
                 </div>
@@ -67,10 +73,47 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-md-6">
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label text-dark">{{__('Phone')}}</label>
+                                    <input class="form-control @error('phone') is-invalid @enderror" name="phone" type="text" id="phone" placeholder="{{ __('Enter Phone Number') }}" value="{{ $userDetail->phone }}" required autocomplete="phone">
+                                    @error('phone')
+                                    <span class="invalid-feedback text-danger " role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label text-dark">{{__('Date Of Birth')}}</label>
+                                    <input class="form-control @error('dob') is-invalid @enderror" name="dob" type="date" id="dob" placeholder="{{ __('Enter Your Date Of Birth') }}" value="{{ $userDetail->date_of_birth }}" required autocomplete="dob">
+                                    @error('dob')
+                                    <span class="invalid-feedback text-danger " role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label text-dark">{{__('Address')}}</label>
+                                    <input class="form-control @error('address') is-invalid @enderror" name="address" type="text" id="address" placeholder="{{ __('Enter Your Address') }}" value="{{ $userDetail->address }}" required autocomplete="address">
+                                    @error('address')
+                                    <span class="invalid-feedback text-danger " role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label text-dark">{{__('Passport Number')}}</label>
+                                    <input class="form-control @error('passport_number') is-invalid @enderror" name="passport_number" type="text" id="passport_number" placeholder="{{ __('Enter Your Passport Number') }}" value="{{ $userDetail->passport_number }}" required autocomplete="passport_number">
+                                    @error('passport_number')
+                                    <span class="invalid-feedback text-danger " role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 mt-3">
                                 <div class="form-group">
                                     <div class="choose-files">
-                                        <label for="avatar">
+                                        <label for="avatar" class="w-100">
                                             <div class=" profile_update" style="background-color: #313949 !important;border-color:#313949!important;"> <i class="ti ti-upload px-1"></i>{{__('Choose file here')}}</div>
                                             <input type="file" class="form-control file" name="profile" id="avatar" data-filename="profile_update">
                                         </label>
@@ -83,6 +126,60 @@
                                 </div>
 
                             </div>
+                            <div class="col-lg-12 text-end">
+                                <input type="submit" style="background-color: #313949 !important;border-color:#313949!important;" value="{{__('Save Changes')}}" class="btn btn-print-invoice  btn-primary m-r-10">
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+            </div>
+            <div id="bank_info" class="card" >
+                <div class="card-header">
+                    <h5>{{__('Bank Info')}}</h5>
+                </div>
+                <div class="card-body">
+                    {{Form::model($userDetail,array('route' => array('update.bankinfo'), 'method' => 'post', 'enctype' => "multipart/form-data"))}}
+                        @csrf
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    <label class="col-form-label text-dark">{{__('Bank Name')}}</label>
+                                    <input class="form-control @error('bank_name') is-invalid @enderror" name="bank_name" type="text" id="bank_name" placeholder="{{ __('Enter Your Bank Name') }}" value="" required autocomplete="bank_name">
+                                    @error('bank_name')
+                                    <span class="invalid-feedback text-danger " role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    <label  class="col-form-label text-dark">{{__('Account Holder Name')}}</label>
+                                    <input class="form-control @error('account_holder_name') is-invalid @enderror" name="account_holder_name" type="text" id="account_holder_name" placeholder="{{ __('Enter Your Account Holder Name') }}" value="" required autocomplete="account_holder_name">
+                                    @error('account_holder_name')
+                                    <span class="invalid-feedback text-danger " role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    <label  class="col-form-label text-dark">{{__('Account Number')}}</label>
+                                    <input class="form-control @error('account_number') is-invalid @enderror" name="Account Number" type="text" id="account_number" placeholder="{{ __('Enter Your Account Number') }}" value="" required autocomplete="account_number">
+                                    @error('account_number')
+                                    <span class="invalid-feedback text-danger " role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    <label  class="col-form-label text-dark">{{__('Branch Location')}}</label>
+                                    <input class="form-control @error('branch_location') is-invalid @enderror" name="branch_location" type="text" id="branch_location" placeholder="{{ __('Enter Your Branch Location') }}" value="" required autocomplete="branch_location">
+                                    @error('branch_location')
+                                    <span class="invalid-feedback text-danger " role="alert">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <div class="col-lg-12 text-end">
                                 <input type="submit" style="background-color: #313949 !important;border-color:#313949!important;" value="{{__('Save Changes')}}" class="btn btn-print-invoice  btn-primary m-r-10">
                             </div>

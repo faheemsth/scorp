@@ -51,9 +51,9 @@ $setting = \App\Models\Utility::colorset();
                                 All Tasks
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item assigned_to" href="javascript:void(0)">Assigned to</a></li>
+                                {{-- <li><a class="dropdown-item assigned_to" href="javascript:void(0)">Assigned to</a></li>
                                 <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
-                                <li><a class="dropdown-item" href="#">Brand Change</a></li>
+                                <li><a class="dropdown-item" href="#">Brand Change</a></li> --}}
                                 <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li>
                                 {{-- <li id="actions_div" style="display:none"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li> --}}
                             </ul>
