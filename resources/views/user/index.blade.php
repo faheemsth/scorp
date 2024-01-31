@@ -36,7 +36,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             <p class="mb-0 pb-0">Brands</p>
                             <div class="dropdown">
                                 <button class="All-leads" type="button">
-                                    ALL BRAND
+                                    ALL BRANDS
                                 </button>
                             </div>
                         </div>
