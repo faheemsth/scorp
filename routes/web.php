@@ -1788,6 +1788,7 @@ Route::resource('/institute-category', InstituteCategoryController::class);
 Route::get("/delete-bulk-brands", [UserController::class, 'deleteBulkUsers'])->name('delete-bulk-brands');
 Route::get("/delete-bulk-regions", [RegionController::class, 'deleteBulkRegions'])->name('delete-bulk-regions');
 Route::get("/delete-bulk-branches", [BranchController::class, 'deleteBulkBranches'])->name('delete-bulk-branches');
+Route::get('/delete-bulk-employees', [UserController::class, 'deleteBulkEmployees'])->name('delete-bulk-employees');
 
 Route::post("/update-bulk-task-status", [DealController::class, 'updateBulkTaskStatus'])->name('update-bulk-task-status');
 Route::post("/update-bulk-task", [DealController::class, 'updateBulkTask'])->name('update-bulk-task');
@@ -1816,6 +1817,7 @@ Route::get('/region/regionBrands', [RegionController::class, 'getRegionBrands'])
 Route::get('/region/regionBrands/task', [RegionController::class, 'getRegionBrandsTask'])->name('region_brands_task');
 
 Route::post("/save-filter", [SavedFilterController::class, 'save'])->name('save-filter');
+Route::post("/edit-filter", [SavedFilterController::class, 'edit'])->name('edit-filter');
 Route::post("/delete-filter", [SavedFilterController::class, 'deleteFilter'])->name('delete-filter');
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -1836,3 +1838,5 @@ Route::get('/university-download', [UniversityController::class, 'download'])->n
 Route::get('/brands-download', [UserController::class, 'download'])->name('users.download');
 Route::get('/regions-download', [RegionController::class, 'download'])->name('regions.download');
 Route::get('/branches-download', [BranchController::class, 'download'])->name('branches.download');
+Route::get('/employees-download', [UserController::class, 'downloadEmployees'])->name('employees.download');
+

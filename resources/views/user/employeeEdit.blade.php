@@ -1,13 +1,13 @@
-{{ Form::open(['url' => route('user.employee.update', $user->id), 'method' => 'post', 'novalidate' => 'novalidate']) }}
+{{ Form::open(['url' => route('user.employee.update', $user->id), 'method' => 'post', 'id' => 'employeeEdit' ,'novalidate' => 'novalidate']) }}
 
 <div class="modal-body" style="height:75vh;">
     <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
         <div class="card-body px-2 py-0">
             <div class="row">
-
                 <div class="col-md-6">
                     <div class="form-group">
                         {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}
+                        <span class="text-danger">*</span>
                         {{ Form::text('name', $user->name, ['class' => 'form-control', 'placeholder' => __('Enter User Name'), 'required' => 'required']) }}
                         @error('name')
                             <small class="invalid-name" role="alert">
@@ -19,6 +19,7 @@
 
                 <div class="form-group col-md-6">
                     {{ Form::label('role', __('User Role'), ['class' => 'form-label']) }}
+                    <span class="text-danger">*</span>
                     <select name="role" id="roles" class="form form-control select2">
                         @foreach($roles as $role)
                         <option value="{{$role}}" {{ $role == $user->type ? "selected":"" }}>{{ $role }}</option>
@@ -223,7 +224,7 @@
 
 <div class="modal-footer">
     <input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{ __('Update') }}" class="btn  btn-dark px-2">
+    <input type="submit" value="{{ __('Update') }}" class="btn  btn-dark px-2 update-employee">
 </div>
 
 {{ Form::close() }}
@@ -307,6 +308,42 @@
             },
             error: function(xhr, status, error) {
                 console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+    $(document).on("submit", "#employeeEdit", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Serialize form data
+        var formData = $(this).serialize();
+            
+        $(".update-employee").text('Updating...').prop("disabled", true);
+    
+        // AJAX request
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"), // Form action URL
+            data: formData, // Serialized form data
+            success: function(response) {
+              data = JSON.parse(response);
+
+              if(data.status == 'success'){
+                show_toastr('Success', data.msg, 'success');
+                  $('#commonModal').modal('hide');
+                  $(".modal-backdrop").removeClass("modal-backdrop");
+                  $(".block-screen").css('display', 'none');
+                  $(".update-employee").text('Update').prop("disabled", false);
+                  openSidebar('/user/employee/'+data.id+'/show');
+              }else{
+                $(".update-employee").text('Updating...').prop("disabled", true);
+                show_toastr('Error', data.msg, 'error');
+              }
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.error(xhr.responseText);
             }
         });
     });

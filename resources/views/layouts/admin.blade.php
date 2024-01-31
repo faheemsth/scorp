@@ -81,6 +81,8 @@ $lang=Utility::getValByName('default_language');
 
     <link href="{{ asset('assets/cs-theme/css/custom.css') }}" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
+
     <style>
         .All-leads {
             border: 1px solid #c3c3c363;
@@ -306,6 +308,10 @@ $lang=Utility::getValByName('default_language');
             background-color: #eee;
         }
 
+        .iti--show-flags{
+            width: 100% !important;
+        }
+        
         @media screen and (max-width: 480px) {
             .dash-header {
                 left: 0 !important;

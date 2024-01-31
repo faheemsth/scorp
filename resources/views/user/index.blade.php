@@ -49,7 +49,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 </button>
                                 <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                             </div>
-                            
+
                             @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                             <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="ti ti-filter" style="font-size:18px"></i>
@@ -62,14 +62,16 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             </a>
                             @endcan
 
+                            @if(auth()->user()->type == 'super admin' || auth()->user()->type == 'Admin Team')
                             <a href="{{ route('users.download') }}" class="btn p-2 btn-dark" style="color:white;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv">
                                 <i class="ti ti-download" style="font-size:18px"></i>
                             </a>
+                            @endif
 
                             @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete user'))
-                                <a href="javascript:void(0)" id="actions_div"  class="btn p-2 d-none delete-bulk btn-dark" style="color:white;" data-bs-toggle="tooltip" title="" data-original-title="Delete in bulk">
-                                    <i class="ti ti-trash"></i>
-                                </a>
+                            <a href="javascript:void(0)" id="actions_div" class="btn p-2 d-none delete-bulk btn-dark" style="color:white;" data-bs-toggle="tooltip" title="" data-original-title="Delete in bulk">
+                                <i class="ti ti-trash"></i>
+                            </a>
                             @endif
 
                         </div>
@@ -272,7 +274,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
             return this.value;
         }).get();
 
-       // console.log(selectedIds.length)
+        // console.log(selectedIds.length)
 
         if (selectedIds.length > 0) {
             selectedArr = selectedIds;
@@ -289,7 +291,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
             return this.value;
         }).get();
 
-       // console.log(selectedIds.length)
+        // console.log(selectedIds.length)
 
         if (selectedIds.length > 0) {
             selectedArr = selectedIds;
@@ -326,5 +328,83 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
             }
         });
     })
+
+    $(document).on("submit", "#update-brand", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Serialize form data
+        var formData = $(this).serialize();
+        
+        $(".update-brand").text('Updating...');
+        $(".update-brand").prop("disabled", true);
+    
+        // AJAX request
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"), // Form action URL
+            data: formData, // Serialized form data
+            success: function(response) {
+              data = JSON.parse(response);
+
+              if(data.status == 'success'){
+                show_toastr('Success', data.msg, 'success');
+                  $('#commonModal').modal('hide');
+                  $(".modal-backdrop").removeClass("modal-backdrop");
+                  $(".block-screen").css('display', 'none');
+                  $(".update-brand").text('Update');
+                  $(".update-brand").prop("disabled", false);
+                  openSidebar('/users/'+data.id+'/user_detail');
+              }else{
+                $(".update-brand").text('Update');
+                $(".update-brand").prop("disabled", false);
+                show_toastr('Error', data.msg, 'error');
+              }
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
+
+    $(document).on("submit", "#create-brand", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Serialize form data
+        var formData = $(this).serialize();
+
+         // Change button text and disable it
+        $(".create-brand").text('Creating...').prop("disabled", true);
+
+        // AJAX request
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"), // Form action URL
+            data: formData, // Serialized form data
+            success: function(response) {
+              data = JSON.parse(response);
+
+              if(data.status == 'success'){
+                show_toastr('Success', data.msg, 'success');
+                  $('#commonModal').modal('hide');
+                  $(".modal-backdrop").removeClass("modal-backdrop");
+                  $(".block-screen").css('display', 'none');
+                   // Change button text and disable it
+                  $(".create-brand").text('Create').prop("disabled", false);
+                  openSidebar('/users/'+data.id+'/user_detail');
+              }else{
+                $(".create-brand").text('Create').prop("disabled", false);
+                show_toastr('Error', data.msg, 'error');
+              }
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.error(xhr.responseText);
+            }
+        });
+    });
 </script>
 @endsection

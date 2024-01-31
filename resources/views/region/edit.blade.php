@@ -42,7 +42,7 @@
     }
 </style>
 
-{{ Form::open(['url' => 'region/create', 'method' => 'POST', 'id' => 'CreateRegion', 'novalidate' => 'novalidate']) }}
+{{ Form::open(['url' => 'region/create', 'method' => 'POST', 'id' => 'UpdateRegion', 'novalidate' => 'novalidate']) }}
 
 <div class="modal-body py-0">
     <div class="lead-content my-2" style="height: 100%;">
@@ -167,7 +167,7 @@
 
 <div class="modal-footer">
     <input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{ __('Update') }}" class="btn  btn-dark px-2">
+    <input type="submit" value="{{ __('Update') }}" class="btn  btn-dark px-2 update-region">
 </div>
 
 {{ Form::close() }}

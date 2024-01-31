@@ -1,4 +1,4 @@
-<form action="{{ url('branch') }}" method="post" novalidate>
+<form action="{{ url('branch') }}" id="create-branch" method="post" novalidate>
     @csrf
     <div class="modal-body" style="min-height: 35vh;">
         <div class="row">
@@ -162,7 +162,7 @@
     </div>
     <div class="modal-footer">
         <input type="button" value="{{ __('Cancel') }}" class="btn btn-light" data-bs-dismiss="modal">
-        <input type="submit" value="{{ __('Create') }}" class="btn btn-dark px-2">
+        <input type="submit" value="{{ __('Create') }}" class="btn btn-dark px-2 create-branch">
     </div>
 </form>
 
@@ -235,6 +235,80 @@
                 }
             });
         });
+
+        $(document).on("submit", "#UpdateRegion", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Serialize form data
+        var formData = $(this).serialize();
+            
+        $(".update-region").text('Updating...').prop("disabled", true);
+    
+            // AJAX request
+            $.ajax({
+                type: "POST",
+                url: $(this).attr("action"), // Form action URL
+                data: formData, // Serialized form data
+                success: function(response) {
+                data = JSON.parse(response);
+
+                if(data.status == 'success'){
+                    show_toastr('Success', data.msg, 'success');
+                    $('#commonModal').modal('hide');
+                    $(".modal-backdrop").removeClass("modal-backdrop");
+                    $(".block-screen").css('display', 'none');
+                    $(".update-region").text('Update').prop("disabled", false);
+                    openSidebar('/branch/'+data.id+'/show');
+                }else{
+                    $(".update-region").text('Updating...').prop("disabled", true);
+                    show_toastr('Error', data.msg, 'error');
+                }
+
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
+
+    $(document).on("submit", "#create-branch", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        // Serialize form data
+        var formData = $(this).serialize();
+
+         // Change button text and disable it
+        $(".create-branch").text('Creating...').prop("disabled", true);
+        
+        // AJAX request
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"), // Form action URL
+            data: formData, // Serialized form data
+            success: function(response) {
+              data = JSON.parse(response);
+
+              if(data.status == 'success'){
+                show_toastr('Success', data.msg, 'success');
+                  $('#commonModal').modal('hide');
+                  $(".modal-backdrop").removeClass("modal-backdrop");
+                  $(".block-screen").css('display', 'none');
+                   // Change button text and disable it
+                  $(".create-branch").text('Create').prop("disabled", false);
+                  openSidebar('/branch/'+data.id+'/show');
+              }else{
+                $(".create-branch").text('Create').prop("disabled", false);
+                show_toastr('Error', data.msg, 'error');
+              }
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.error(xhr.responseText);
+            }
+        });
+    });
 
     })
 </script>
