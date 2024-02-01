@@ -48,7 +48,7 @@ class RegionController extends Controller
                         ->orwhere('manager.name', 'like', '%'.$g_search.'%')
                         ->orwhere('brand.name', 'like', '%'.$g_search.'%');
         }
-        
+
         if (\Auth::user()->type == 'super admin') {
 
         } else if (\Auth::user()->type == 'company') {
@@ -197,9 +197,9 @@ class RegionController extends Controller
             if (empty($filter)) {
                 $html .= '<span class="text-danger">*</span>';
             }
-            
+
             $html .= '</label><select class="form form-control select2" id="region_id" name="region_id"><option value="">Select Region</option>';
-            
+
             foreach ($regions as $key => $region) {
                 $html .= '<option value="' . $key . '">' . $region . '</option> ';
             }
@@ -214,7 +214,7 @@ class RegionController extends Controller
             $filter = $_GET['filter'] ?? '';
 
             $branches = Branch::where('region_id', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            
+
             $html = '<label for="branch_id">Branch';
 
             // Checking if $filter is not empty and is true
@@ -223,8 +223,8 @@ class RegionController extends Controller
             }
 
             $html .= '</label><select class="form form-control select2" id="branch_id" name="branch_id" > <option value="">Select Branch</option> ';
-            
-            
+
+
             foreach ($branches as $key => $branch) {
                 $html .= '<option value="' . $key . '">' . $branch . '</option> ';
             }
@@ -335,7 +335,7 @@ class RegionController extends Controller
             ]);
         }
 
-        
+
 
         //return back();
     }
@@ -426,7 +426,7 @@ class RegionController extends Controller
         if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
             $region_query->where('id', $_GET['region_id']);
         }
-        
+
         if (\Auth::user()->type == 'super admin') {
             $regions = Region::orderBy('name', 'ASC')->get();
         } else if (\Auth::user()->type == 'company') {
@@ -474,7 +474,7 @@ class RegionController extends Controller
                 'manager' => $users[$region->region_manager_id] ?? '',
                 'brand' => $users[$region->brands] ?? ''
             ];
-        }   
+        }
 
         downloadCSV($header, $data, 'regions.csv');
         return true;

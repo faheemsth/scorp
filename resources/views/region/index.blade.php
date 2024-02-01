@@ -799,9 +799,9 @@
 
         // Serialize form data
         var formData = $(this).serialize();
-            
+
         $(".update-region").text('Updating...').prop("disabled", true);
-    
+
         // AJAX request
         $.ajax({
             type: "POST",
@@ -838,7 +838,7 @@
 
          // Change button text and disable it
         $(".create-region").text('Creating...').prop("disabled", true);
-        
+
         // AJAX request
         $.ajax({
             type: "POST",

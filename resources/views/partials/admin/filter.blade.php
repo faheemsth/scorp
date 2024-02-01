@@ -252,6 +252,7 @@ $filters = \App\Models\SavedFilter::where('created_by',\Auth::user()->id)->get()
                         _token: csrf_token,
                     },
                     success: function(data) {
+                        console.log(data.status);
                         if (data.status == 'success') {
                             show_toastr('{{__("success")}}', 'Filter deleted successfully!', 'success');
                             location.reload();
@@ -266,3 +267,4 @@ $filters = \App\Models\SavedFilter::where('created_by',\Auth::user()->id)->get()
 </script>
 
 @endpush
+

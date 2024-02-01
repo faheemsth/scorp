@@ -311,7 +311,7 @@ $lang=Utility::getValByName('default_language');
         .iti--show-flags{
             width: 100% !important;
         }
-        
+
         @media screen and (max-width: 480px) {
             .dash-header {
                 left: 0 !important;
@@ -482,18 +482,12 @@ $lang=Utility::getValByName('default_language');
        <div style="    position: fixed;
        left: 17px;
        bottom: 25px;
-       z-index: 2025;
-       width: 50px;
-       height: 50px;
-       background-color:#B3CDE1;
        border-radius: 50%;
        display: flex;
        justify-content: center;
        align-items: center;">
         </button>
-        <button data-bs-toggle="tooltip" title="{{__('Save Filter')}}" class="btn btn-white " onclick="myFunction()" title="Save Filter">
-            <i class="fa-regular fa-bookmark" style="color: #ffffff;font-size: 24px"></i>
-        </button>
+
     </div>
         <div id="mySidenav" style="z-index: 1065; padding-left:5px; box-shadow: -5px 0px 30px 0px #aaa;" class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>" style="padding-left: 5px"></div>
 

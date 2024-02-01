@@ -38,7 +38,7 @@ if (isset($lead->is_active) && $lead->is_active) {
     {{ __('Manage Leads') }}
     @if (\Auth::user()->type != 'super admin')
 
-    @if ($pipeline->isNotEmpty())
+    @if ($pipeline)
     - {{ $pipeline->first()->name }}
     @endif
 
@@ -150,7 +150,64 @@ if (isset($lead->is_active) && $lead->is_active) {
             <div class="col-xl-12">
                 <div class="card my-card" style="max-width: 98%;border-radius:0px; min-height: 250px !important;">
                     <div class="card-body table-border-style" style="padding: 25px 3px;">
+                        <style>
+                            .form-controls,
+                            .form-btn {
+                                padding: 4px 1rem !important;
+                            }
 
+                            /* Set custom width for specific table cells */
+                            .action-btn {
+                                display: inline-grid !important;
+                            }
+
+                            .dataTable-bottom,
+                            .dataTable-top {
+                                display: none;
+                            }
+                        </style>
+
+                        <style>
+                            /* .red-cross {
+                                        position: absolute;
+                                        top: 5px;
+                                        right: 5px;
+                                        color: red;
+                                    } */
+                            .boximg {
+                                margin: auto;
+                            }
+
+                            .dropdown-togglefilter:hover .dropdown-menufil {
+                                display: block;
+                            }
+
+                            .choices__inner {
+                                border: 1px solid #ccc !important;
+                                min-height: auto;
+                                padding: 4px !important;
+                            }
+
+                            .fil:hover .submenu {
+                                display: block;
+                            }
+
+                            .fil .submenu {
+                                display: none;
+                                position: absolute;
+                                top: 3%;
+                                left: 154px;
+                                width: 100%;
+                                background-color: #fafafa;
+                                font-weight: 600;
+                                list-style-type: none;
+
+                            }
+
+                            .dropdown-item:hover {
+                                background-color: white !important;
+                            }
+                        </style>
 
                         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                             <div class="col-4">
@@ -161,8 +218,34 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         ALL LEADS
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item delete-bulk-leads" href="javascript:void(0)">Delete</a>
+                                        {{-- <li><a class="dropdown-item delete-bulk-leads" href="javascript:void(0)">Delete</a>
+                                        </li> --}}
+
+
+                                        @php
+                                        $saved_filters = App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'leads')->get();
+                                         @endphp
+                                       @if(sizeof($saved_filters) > 0)
+                                        @foreach($saved_filters as $filter)
+                                        <li class="d-flex align-items-center justify-content-between ps-2">
+                                            <div class="col-10">
+                                                <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                                <span class="text-dark"> ({{$filter->count}})</span>
+                                            </div>
+                                            <ul class="w-25" style="list-style: none;">
+                                                <li class="fil fw-bolder">
+                                                    <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                                    <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                                                                box-shadow: 0px 0px 1px #e9e9e9;">
+                                                        <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name ?>', <?= $filter->id ?>)">Rename</a></li>
+                                                        <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+
                                         </li>
+                                        @endforeach
+                                        @endif
 
                                     </ul>
                                 </div>
@@ -207,18 +290,17 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 </button>
                                 @endcan
 
-
-
-                                <a href="{{ route('leads.download') }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
-                                    <i class="ti ti-download"></i>
-                                </a>
-
+                                @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
+                                    <a href="{{ route('leads.download') }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
+                                        <i class="ti ti-download"></i>
+                                    </a>
+                                @endif
 
 
 
                                 {{-- <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> --}}
                                 @if(auth()->user()->can('delete lead'))
-                                <a class="btn p-2 btn-dark  text-white assigned_to delete-bulk-leads d-none" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;">
+                                <a class="btn p-2 btn-dark  text-white assigned_to delete-bulk-leads d-none" data-bs-toggle="tooltip" title="{{__('Mass Delete')}}" id="actions_div" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;">
                                     <i class="ti ti-trash"></i>
                                 </a>
                                 @endif
@@ -360,8 +442,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <div class="col-md-4 mt-3">
                                         <br>
                                         <input type="submit" class="btn form-btn me-2 bg-dark" style=" color:white;">
-                                        <a type="button" id="save-filter-btn" onClick="saveFilter('leads',<?= sizeof($leads) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                         <a href="/leads/list" class="btn form-btn bg-dark" style="color:white;">Reset</a>
+                                        <a type="button" id="save-filter-btn" onClick="saveFilter('leads',<?= sizeof($leads) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                     </div>
                                 </div>
 
@@ -628,7 +710,9 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 @push('script-page')
     <script>
-
+    $(".add-filter").on("click", function() {
+        $(".filter-data").toggle();
+    })
         $(document).ready(function() {
             let curr_url = window.location.href;
 

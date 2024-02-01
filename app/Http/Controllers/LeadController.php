@@ -3599,6 +3599,7 @@ class LeadController extends Controller
 
 
     public function download(){
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
         $region_query = Lead::select(['leads.*']);
         ///////////////////Filter Data
         if(isset($_GET['brand_id']) && !empty($_GET['brand_id'])){
@@ -3646,6 +3647,9 @@ class LeadController extends Controller
 
         downloadCSV($header, $data, 'leads.csv');
         return true;
+    }else{
+        return redirect()->back()->with('error', __('Permission Denied.'));
+    }
     }
 
 }
