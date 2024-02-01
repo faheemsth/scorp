@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Branch;
 use App\Models\Region;
 use App\Models\University;
-use App\Models\User;
+use App\Models\SavedFilter;
 use Illuminate\Http\Request;
 
 class RegionController extends Controller
@@ -50,40 +51,30 @@ class RegionController extends Controller
         
         if (\Auth::user()->type == 'super admin') {
 
-            $regions = Region::skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
-            $total_records = Region::count();
         } else if (\Auth::user()->type == 'company') {
-            $total_records = Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->count();
-           // $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);;
-            $region_query->whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id]);
+            $region_query->where('brands', \Auth::user()->id);
         } else {
-
-
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-
-           // $region_query = Region::query();
-
-            foreach ($brand_ids as $brandId) {
-                $region_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
-            }
-           // $total_records = $region_query->count();
-            //$regions = $region_query->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
+            $region_query->whereIn('brands', $brand_ids);
         }
 
 
         $total_records = $region_query->count();
         $regions = $region_query->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
         $users = allUsers();
+        $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'region')->get();
 
         //filter brand, region, employees
         $filter = BrandsRegionsBranches();
+
 
         $data = [
             'regions' => $regions,
             'users' => $users,
             'total_records' => $total_records,
-            'filter' => $filter
+            'filter' => $filter,
+            'saved_filters' => $saved_filters
         ];
 
 
@@ -92,7 +83,7 @@ class RegionController extends Controller
             $html = view('region.regionAjax', $data)->render();
             $pagination_html = view('layouts.pagination', [
                 'total_pages' => $total_records,
-                'num_results_on_page' => 25,
+                'num_results_on_page' => $num_results_on_page,
             ])->render();
             return json_encode([
                 'status' => 'success',
@@ -199,7 +190,7 @@ class RegionController extends Controller
 
             $regions = Region::where('brands', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
 
-            $html = ' <label for="region_id">Regions</label><select class="form form-control select2" id="region_id" name="region_id" > <option value="">Select Region</option> ';
+            $html = ' <label for="region_id">Region <span class="text-danger">*<span></label><select class="form form-control select2" id="region_id" name="region_id" > <option value="">Select Region</option> ';
             foreach ($regions as $key => $region) {
                 $html .= '<option value="' . $key . '">' . $region . '</option> ';
             }
@@ -267,6 +258,22 @@ class RegionController extends Controller
 
     public function save(Request $request)
     {
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                'name' => 'required',
+                'brands' => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            $messages = $validator->getMessageBag();
+            return json_encode([
+                'status' => 'error',
+                'msg' => $messages->first()
+            ]);
+            //return redirect()->back()->with('error', $messages->first());
+        }
 
         if (!empty($request->id)) {
 
@@ -277,23 +284,37 @@ class RegionController extends Controller
             $region->location = $request->location;
             $region->phone = $request->phone;
             $region->email = $request->email;
-            $region->brands = implode(',', $request->brands);
+            $region->brands = $request->brands;
             $region->update();
+
+            return json_encode([
+                'status' => 'success',
+                'id' => $region->id,
+                'msg' => 'Region updated successfully.'
+            ]);
         } else {
 
 
             $brands = null;
             if ($request->brands != null && sizeof($request->brands) > 0) {
-                $brands = implode(',', $request->brands);
+                $brands = $request->brands;
             }
 
             $data = $request->all();
-            $data['brands'] = $brands;
+            $data['brands'] = $brands[0];
 
-            Region::create($data);
+            $region = Region::create($data);
+
+            return json_encode([
+                'status' => 'success',
+                'id' => $region->id,
+                'msg' => 'Region created successfully'
+            ]);
         }
 
-        return back();
+        
+
+        //return back();
     }
 
 

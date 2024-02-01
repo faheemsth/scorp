@@ -1,20 +1,21 @@
 @foreach ($branches as $branch)
-    <tr>
+<tr>
     <td>
-                                            <input type="checkbox" name="branch_ids[]" value="{{ $branch->id }}" class="sub-check">
-                                        </td>
-        <td>
-            <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/branch/{{ $branch->id }}/show')">
-                {{ $branch->name }}
-            </span>
-        </td>
-        <td>{{ isset($branch->brands) ? \App\Models\User::where('id', $branch->brands)->first()->name : '' }}</td>
-        <td>{{ !empty($regions[$branch->region_id]) ? $regions[$branch->region_id] : '' }}</td>
-        <td>{{ !empty($branch->branch_manager_id) && isset($users[$branch->branch_manager_id]) ? $users[$branch->branch_manager_id] : '' }}
-        </td>
-        <td>{{ $branch->phone }}</td>
-        <td><a href="mailto:{{ $branch->email }}">{{ $branch->email }}</a></td>
-        <td><a href="{{ $branch->google_link }}">{{ $branch->google_link }}</a></td>
-        <td><a href="{{ $branch->social_media_link }}">{{ $branch->social_media_link }}</a></td>
-    </tr>
+        <input type="checkbox" name="branch_ids[]" value="{{ $branch->id }}" class="sub-check">
+    </td>
+
+    <td>
+        <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/branch/{{ $branch->id }}/show')">
+            {{ $branch->name }}
+        </span>
+    </td>
+
+    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="mailto:{{ $branch->email }}">{{ $branch->email }}</a></td>
+    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $branch->phone }}</td>
+    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($branch->branch_manager_id) && isset($users[$branch->branch_manager_id]) ? $users[$branch->branch_manager_id] : '' }}</td>
+    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($regions[$branch->region_id]) ? $regions[$branch->region_id] : '' }}</td>
+
+    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($branch->brands) ? \App\Models\User::where('id', $branch->brands)->first()->name : '' }}</td>
+    
+</tr>
 @endforeach

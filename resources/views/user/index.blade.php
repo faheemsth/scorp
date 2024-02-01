@@ -31,45 +31,47 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
         <div class="row w-100 m-0">
             <div class="card my-card">
                 <div class="card-body">
-                    <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
+                    <div class="row align-items-center ps-0 ms-0 pe-4 my-2 justify-content-between">
                         <div class="col-2">
                             <p class="mb-0 pb-0">Brands</p>
                             <div class="dropdown">
                                 <button class="All-leads" type="button">
-                                    ALL BRAND
+                                    ALL BRANDS
                                 </button>
                             </div>
                         </div>
-                        <div class="col-10 d-flex justify-content-end gap-2">
-                            <div class="input-group w-25 rounded">
-                                <button class="btn list-global-search-btn px-0 ">
-                                    <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                        <div class="col-8 d-flex justify-content-end gap-2">
+                            <div class="input-group w-25 rounded"  style="width:36px; height: 36px; margin-top:10px;">
+                                <button class="btn list-global-search-btn p-0 pb-2 ">
+                                    <span class="input-group-text bg-transparent border-0  px-1" id="basic-addon1">
                                         <i class="ti ti-search" style="font-size: 18px"></i>
                                     </span>
                                 </button>
-                                <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
+                                <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                             </div>
-                            
+
                             @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                            <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false" style="width:36px; height: 36px; margin-top:10px;">
                                 <i class="ti ti-filter" style="font-size:18px"></i>
                             </button>
                             @endif
 
                             @can('create user')
-                            <a href="#" data-size="lg" data-url="{{ route('users.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create') }}" class="btn btn-dark px-2 py-2">
+                            <a href="#" data-size="lg" data-url="{{ route('users.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create') }}" class="btn btn-dark px-2 py-2" style="width:36px; height: 36px; margin-top:10px;">
                                 <i class="ti ti-plus "></i>
                             </a>
                             @endcan
 
-                            <a href="{{ route('users.download') }}" class="btn p-2 btn-dark" style="color:white;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv">
+                            @if(auth()->user()->type == 'super admin' || auth()->user()->type == 'Admin Team')
+                            <a href="{{ route('users.download') }}" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
                                 <i class="ti ti-download" style="font-size:18px"></i>
                             </a>
+                            @endif
 
                             @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete user'))
-                                <a href="javascript:void(0)" id="actions_div"  class="btn p-2 d-none delete-bulk btn-dark" style="color:white;" data-bs-toggle="tooltip" title="" data-original-title="Delete in bulk">
-                                    <i class="ti ti-trash"></i>
-                                </a>
+                            <a href="javascript:void(0)" id="actions_div" class="btn p-2 d-none delete-bulk btn-dark" style="color:white;" data-bs-toggle="tooltip" title="" data-original-title="Delete in bulk">
+                                <i class="ti ti-trash"></i>
+                            </a>
                             @endif
 
                         </div>
@@ -98,7 +100,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     <select name="Brand" class="form form-control select2" id="filter_brand">
                                         <option value="">Select Option</option>
                                         @if (!empty($Brands))
-                                        @foreach ($Brands as $key => $Brand)
+                                        @foreach (BrandsRegionsBranches()['brands'] as $key => $Brand)
                                         <option value="{{ $key }}" {{ !empty($_GET['Brand']) && $_GET['Brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
                                         @endforeach
                                         @endif
@@ -172,14 +174,21 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     <td>
                                         <input type="checkbox" name="brand_ids[]" value="{{ $user->id }}" class="sub-check">
                                     </td>
-                                    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                    <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
 
                                         <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/{{ $user->id }}/user_detail')">
                                             {{ $user->name }}
                                         </span>
                                     </td>
-                                    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
-                                    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($user->project_director_id) && isset($projectDirectors[$user->project_director_id]) ? $projectDirectors[$user->project_director_id] : '' }}</td>
+                                    <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
+                                    <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                        @php 
+                                            $project_director = \App\Models\User::join('company_permission', 'company_permission.user_id', '=', 'users.id')
+                                                                ->where('company_permission.permitted_company_id', $user->id)
+                                                                ->first();
+                                        @endphp 
+                                        {{ $project_director->name ?? '' }}
+                                    </td>
                                 </tr>
                                 @empty
                                 <tr>
@@ -272,7 +281,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
             return this.value;
         }).get();
 
-       // console.log(selectedIds.length)
+        // console.log(selectedIds.length)
 
         if (selectedIds.length > 0) {
             selectedArr = selectedIds;
@@ -289,7 +298,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
             return this.value;
         }).get();
 
-       // console.log(selectedIds.length)
+        // console.log(selectedIds.length)
 
         if (selectedIds.length > 0) {
             selectedArr = selectedIds;
@@ -326,5 +335,83 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
             }
         });
     })
+
+    $(document).on("submit", "#update-brand", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Serialize form data
+        var formData = $(this).serialize();
+        
+        $(".update-brand").text('Updating...');
+        $(".update-brand").prop("disabled", true);
+    
+        // AJAX request
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"), // Form action URL
+            data: formData, // Serialized form data
+            success: function(response) {
+              data = JSON.parse(response);
+
+              if(data.status == 'success'){
+                show_toastr('Success', data.msg, 'success');
+                  $('#commonModal').modal('hide');
+                  $(".modal-backdrop").removeClass("modal-backdrop");
+                  $(".block-screen").css('display', 'none');
+                  $(".update-brand").text('Update');
+                  $(".update-brand").prop("disabled", false);
+                  openSidebar('/users/'+data.id+'/user_detail');
+              }else{
+                $(".update-brand").text('Update');
+                $(".update-brand").prop("disabled", false);
+                show_toastr('Error', data.msg, 'error');
+              }
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
+
+    $(document).on("submit", "#create-brand", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Serialize form data
+        var formData = $(this).serialize();
+
+         // Change button text and disable it
+        $(".create-brand").text('Creating...').prop("disabled", true);
+
+        // AJAX request
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"), // Form action URL
+            data: formData, // Serialized form data
+            success: function(response) {
+              data = JSON.parse(response);
+
+              if(data.status == 'success'){
+                show_toastr('Success', data.msg, 'success');
+                  $('#commonModal').modal('hide');
+                  $(".modal-backdrop").removeClass("modal-backdrop");
+                  $(".block-screen").css('display', 'none');
+                   // Change button text and disable it
+                  $(".create-brand").text('Create').prop("disabled", false);
+                  openSidebar('/users/'+data.id+'/user_detail');
+              }else{
+                $(".create-brand").text('Create').prop("disabled", false);
+                show_toastr('Error', data.msg, 'error');
+              }
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.error(xhr.responseText);
+            }
+        });
+    });
 </script>
 @endsection

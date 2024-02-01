@@ -1,4 +1,4 @@
-{{ Form::model($branch, ['route' => ['branch.update', $branch->id], 'method' => 'PUT', 'novalidate' => 'novalidate']) }}
+{{ Form::model($branch, ['route' => ['branch.update', $branch->id], 'method' => 'PUT', 'id' => 'updateBranch', 'novalidate' => 'novalidate']) }}
 
 <div class="modal-body" style="min-height: 35vh;">
 
@@ -20,6 +20,7 @@
             <div class="form-group" id="brands_div">
                 @if (
                     \Auth::user()->type == 'super admin' ||
+                    \Auth::user()->type == 'Admin Team' ||
                         \Auth::user()->type == 'Project Director' ||
                         \Auth::user()->type == 'Project Manager')
                     <label for="branches" class="col-sm-3 col-form-label">Brands<span
@@ -60,6 +61,7 @@
             <div class="form-group" id="region_div">
                 @if (
                         \Auth::user()->type == 'super admin' ||
+                        \Auth::user()->type == 'Admin Team' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||
@@ -139,7 +141,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="phone">{{ __('Phone') }}</label>
-                <input type="text" name="phone" class="form-control" value="{{ $branch->phone }}"
+                <input type="text" name="phone" class="form-control" id="phone" value="{{ $branch->phone }}"
                     placeholder="{{ __('Enter Branch Phone') }}">
                 @error('phone')
                     <span class="invalid-name" role="alert">
@@ -173,6 +175,43 @@
 <script>
     $(document).ready(function() {
         select2();
+
+        $(document).on("submit", "#updateBranch", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Serialize form data
+        var formData = $(this).serialize();
+            
+        $(".update-branch").text('Updating...').prop("disabled", true);
+    
+            // AJAX request
+            $.ajax({
+                type: "POST",
+                url: $(this).attr("action"), // Form action URL
+                data: formData, // Serialized form data
+                success: function(response) {
+                data = JSON.parse(response);
+
+                if(data.status == 'success'){
+                    show_toastr('Success', data.msg, 'success');
+                    $('#commonModal').modal('hide');
+                    $(".modal-backdrop").removeClass("modal-backdrop");
+                    $(".block-screen").css('display', 'none');
+                    $(".update-branch").text('Update').prop("disabled", false);
+                    openSidebar('/branch/'+data.id+'/show');
+                }else{
+                    $(".update-branch").text('Update').prop("disabled", false);
+                    show_toastr('Error', data.msg, 'error');
+                }
+
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
         // $("#region_id").on("change", function(){
         //     var id = $(this).val();
 
@@ -270,4 +309,11 @@
     });
 
 })
+</script>
+
+<script>
+    const input = document.querySelector("#phone");
+    window.intlTelInput(input, {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+    });
 </script>

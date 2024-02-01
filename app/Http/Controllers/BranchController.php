@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Branch;
-use App\Models\Department;
-use App\Models\Region;
 use App\Models\User;
+use App\Models\Branch;
+use App\Models\Region;
+use App\Models\Department;
+use App\Models\SavedFilter;
 use Illuminate\Http\Request;
 
 class BranchController extends Controller
@@ -41,45 +42,27 @@ class BranchController extends Controller
                         ->orwhere('brand.name', 'like', '%'.$g_search.'%');
         }
 
-            if(\Auth::user()->type == 'super admin'){
-                //$total_records = Branch::count();
-               // $branches = Branch::skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
-            }else if(\Auth::user()->type == 'company'){
-              //  $total_records = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->count();
-               // $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
-               $branch_query->whereRaw('FIND_IN_SET(?, branches.brands)', [\Auth::user()->id]);
+            if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team'){
+             }else if(\Auth::user()->type == 'company'){
+              $branch_query->whereRaw('brands', [\Auth::user()->id]);
             }else{
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
-               // $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$brand_ids])->get();
-                
-                
-                //$branch_query = Branch::query();
-
-               foreach ($brand_ids as $brandId) {
-                   $branch_query->orWhereRaw('FIND_IN_SET(?, branches.brands)', [$brandId]);
-               }
-               //$total_records = $branch_query->count();
-   
-               //$branches = $branch_query->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
+                $branch_query->whereIn('brands', $brand_ids);
             }
 
+            ///Filter Data
+            if(isset($_GET['brand_id']) && !empty($_GET['brand_id'])){
+                $branch_query->where('brands', $_GET['brand_id']);
+            }   
 
-            // $companies = FiltersBrands();
-            // $brand_ids = array_keys($companies);
-            // if(\Auth::user()->type == 'super admin'){
+            if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
+                $branch_query->where('region_id', $_GET['region_id']);
+            }
+
+            if(isset($_GET['id']) && !empty($_GET['branch_id'])){
                 
-            // }else if(\Auth::user()->type == 'company'){
-            //     $branch_query->where('brands', \Auth::user()->id);
-            // }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
-            //     $branch_query->whereIn('brands', $brand_ids);
-            // }else if(\Auth::user()->type == 'Regional Manager' || !empty(\Auth::user()->region_id)){
-            //     $branch_query->where('region_id', \Auth::user()->region_id);
-            // }else if(\Auth::user()->type == 'Branch Manager' && !empty(\Auth::user()->branch_id)){
-            //     $branch_query->where('branch_id', \Auth::user()->branch_id);
-            // }else{
-            //     $branch_query->where('user_id', \Auth::user()->id);
-            // }
+            }
 
 
             $total_records = $branch_query->count();
@@ -90,11 +73,19 @@ class BranchController extends Controller
 
             $users = allUsers();
             $regions = allRegions();
+            $filters = BrandsRegionsBranches();
+            $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'branch')->get();
+
+            // echo "<pre>";
+            // print_r($filters);
+            // die();
             $data = [
                 'branches' => $branches,
                 'users' => $users,
                 'regions' => $regions,
-                'total_records' => $total_records
+                'total_records' => $total_records,
+                'filters' => $filters,
+                'saved_filters' => $saved_filters
             ];
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
@@ -152,21 +143,25 @@ class BranchController extends Controller
         {
 
             $validator = \Validator::make(
-                $request->all(), [
-                                   'name' => 'required',
-                               ]
+                $request->all(),  [
+                    'name' => 'required',
+                    'brands' => 'required',
+                    'region_id' => 'required'
+                ]
             );
             if($validator->fails())
             {
                 $messages = $validator->getMessageBag();
-
-                return redirect()->back()->with('error', $messages->first());
+                return json_encode([
+                    'status' => 'error',
+                    'msg' => $messages->first()
+                ]);
+                //return redirect()->back()->with('error', $messages->first());
             }
 
             $branch             = new Branch();
             $branch->name       = $request->name;
             $branch->brands       = $request->brands;
-
             $branch->region_id       = $request->region_id;
             $branch->branch_manager_id       = $request->branch_manager_id;
             $branch->google_link       = $request->google_link;
@@ -178,11 +173,21 @@ class BranchController extends Controller
             $branch->created_by = \Auth::user()->creatorId();
             $branch->save();
 
-            return redirect()->route('branch.index')->with('success', __('Branch  successfully created.'));
+            return json_encode([
+                'status' => 'success',
+                'id' => $branch->id,
+                'msg' =>  __('Branch  successfully created.')
+            ]);
+
+          //  return redirect()->route('branch.index')->with('success', __('Branch  successfully created.'));
         }
         else
         {
-            return redirect()->back()->with('error', __('Permission denied.'));
+            return json_encode([
+                'status' => 'error',
+                'msg' => __('Permission denied.')
+            ]);
+           // return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 
@@ -236,8 +241,11 @@ class BranchController extends Controller
                 if($validator->fails())
                 {
                     $messages = $validator->getMessageBag();
-
-                    return redirect()->back()->with('error', $messages->first());
+                    return json_encode([
+                        'status' => 'error',
+                        'msg' => $messages->first()
+                    ]);
+                   // return redirect()->back()->with('error', $messages->first());
                 }
 
                 // $brands = null;
@@ -256,8 +264,13 @@ class BranchController extends Controller
                 $branch->phone       = $request->phone;
                 $branch->email       = $request->email;
                 $branch->save();
+                return json_encode([
+                    'status' => 'success',
+                    'id' => $branch->id,
+                    'msg' => 'Branch successfully updated.'
+                ]);
 
-                return redirect()->route('branch.index')->with('success', __('Branch successfully updated.'));
+               // return redirect()->route('branch.index')->with('success', __('Branch successfully updated.'));
             // }
             // else
             // {
@@ -266,7 +279,11 @@ class BranchController extends Controller
         }
         else
         {
-            return redirect()->back()->with('error', __('Permission denied.'));
+            return json_encode([
+                'status' => 'error',
+                'msg' => 'Permission denied'
+            ]);
+           // return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
 

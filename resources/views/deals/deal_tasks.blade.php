@@ -43,12 +43,12 @@ $setting = \App\Models\Utility::colorset();
 
             <div class="card-body">
 
-                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
+                <div class="row align-items-center ps-0 ms-0 pe-4 my-2 ">
                     <div class="col-4">
                         <p class="mb-0 pb-0 ps-1">Tasks</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                All Tasks
+                                ALL TASKS
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a class="dropdown-item assigned_to" href="javascript:void(0)">Assigned to</a></li>
@@ -62,26 +62,31 @@ $setting = \App\Models\Utility::colorset();
 
 
                     <div class="col-8 d-flex justify-content-end gap-2 pe-0">
-                        <div class="input-group w-25">
-                            <button class="btn btn-sm list-global-search-btn px-0">
-                                <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                        <div class="input-group w-25 rounded" style="width:36px; height: 36px; margin-top:10px;">
+                            <button class="btn btn-sm list-global-search-btn  p-0 pb-2 ">
+                                <span class="input-group-text bg-transparent border-0   px-1" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
                             </button>
-                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search..." aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
 
-                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark d-none" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
-                        <button class="btn filter-btn-show p-2 btn-dark"  type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
+                        <button class="btn filter-btn-show p-2 btn-dark"  type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" style="width:36px; height: 36px; margin-top:10px;">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
                         @can('create task')
-                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark">
+                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark" style="width:36px; height: 36px; margin-top:10px;">
                             <i class="ti ti-plus" style="font-size:18px"></i>
                         </button>
                         @endcan
+
+                        <a href="{{ route('users.download') }}" class="btn p-2 btn-dark" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" >
+                                <i class="ti ti-download" style="font-size:18px"></i>
+                        </a>
+
                         <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
 
                     </div>
@@ -91,7 +96,7 @@ $setting = \App\Models\Utility::colorset();
                     <form action="/deals/get-user-tasks" method="GET" class="">
 
 
-                        <div class="row my-3">
+                        <div class="row my-3 ">
                             <div class="col-md-4"> <label for="">Brands</label>
                                 <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
                                     <option value="">Select Brand</option>
@@ -136,10 +141,10 @@ $setting = \App\Models\Utility::colorset();
                                 <input type="date" class="form form-control" name="due_date" value="<?= isset($_GET['due_date']) ? $_GET['due_date'] : '' ?>" style="width: 95%; border-color:#aaa">
                             </div>
 
-                            <div class="col-md-4 mt-4 pt-2">
+                            <div class="col-md-4 mt-4 pt-2 d-flex align-items-end">
                                 <input type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}" class="btn form-btn me-2 btn-dark px-2 py-2" >
                                 <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
-                                <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn px-2 py-2" style="background-color: #b5282f;color:white;">Reset</a>
+                                <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn px-2 py-2 btn-dark" style="color:white;">Reset</a>
                             </div>
                         </div>
 
@@ -217,12 +222,14 @@ $setting = \App\Models\Utility::colorset();
                                     <td>
                                         <input type="checkbox" name="tasks[]" value="{{$task->id}}" class="sub-check">
                                     </td>
-                                    <td> <span class="badge text-white" style="background-color:{{$color_code }}">{{ $task->due_date  }}</span>
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                         <span class="badge text-white" style="background-color:{{$color_code }}">{{ $task->due_date  }}</span>
                                     </td>
-                                    <td>
+
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         <span style="cursor:pointer" class="task-name hyper-link" @can('view task') onclick="openNav(<?= $task->id ?>)" @endcan data-task-id="{{ $task->id }}">{{ $task->name }}</span>
                                     </td>
-                                    <td>
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         @if (!empty($task->assigned_to))
                                         <span style="cursor:pointer" class="hyper-link" @can('view task') onclick="openSidebar('/users/'+{{ $task->assigned_to }}+'/user_detail')" @endcan>
                                             {{ $users[$task->assigned_to] }}
@@ -230,7 +237,7 @@ $setting = \App\Models\Utility::colorset();
                                         @endif
                                     </td>
 
-                                    <td>
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
 
                                         @if (!empty($task->assigned_to))
                                         @if ($task->assigned_type == 'company')
@@ -247,15 +254,21 @@ $setting = \App\Models\Utility::colorset();
                                         </span>
                                         @endif
                                         @endif
+
+                                        
                                     </td>
 
-                                    <td>
+                                    
+
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         @if ($task->status == 0)
                                             <span class="badge  text-white" style="background-color:#B3CDE1">{{ __('On Going') }}</span>
                                         @else
                                             <span class="badge text-white" style="background: green; " >{{ __('Completed') }}</span>
                                         @endif
                                     </td>
+
+                                    
                                 </tr>
                                 @empty
                                 @endforelse

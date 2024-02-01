@@ -1,10 +1,11 @@
-<form action="{{ url('branch') }}" method="post" novalidate>
+<form action="{{ url('branch') }}" id="create-branch" method="post" novalidate>
     @csrf
     <div class="modal-body" style="min-height: 35vh;">
         <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="name">{{ __('Name') }}</label>
+                        <span class="text-danger">*</span>
                         <input type="text" name="name" class="form-control"
                             placeholder="{{ __('Enter Branch Name') }}">
                         @error('name')
@@ -20,6 +21,7 @@
                         
                         @if (
                         \Auth::user()->type == 'super admin' ||
+                            \Auth::user()->type == 'Admin Team' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager')
                         <label for="branches" class="col-sm-3 col-form-label">Brands<span
@@ -55,10 +57,11 @@
                 </div>
 
                 <div class="col-md-6">
-                    <div class="form-group" id="region_div">
+                    <div class="form-group" id="region_divs">
 
                         @if (
                         \Auth::user()->type == 'super admin' ||
+                        \Auth::user()->type == 'Admin Team' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||
@@ -136,7 +139,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="phone">{{ __('Phone') }}</label>
-                        <input type="text" name="phone" class="form-control"
+                        <input type="text" name="phone" id="phone" class="form-control"
                             placeholder="{{ __('Enter Branch Phone') }}">
                         @error('phone')
                             <span class="invalid-name" role="alert">
@@ -162,7 +165,7 @@
     </div>
     <div class="modal-footer">
         <input type="button" value="{{ __('Cancel') }}" class="btn btn-light" data-bs-dismiss="modal">
-        <input type="submit" value="{{ __('Create') }}" class="btn btn-dark px-2">
+        <input type="submit" value="{{ __('Create') }}" class="btn btn-dark px-2 create-branch">
     </div>
 </form>
 
@@ -184,17 +187,9 @@
                     data = JSON.parse(data);
 
                     if (data.status === 'success') {
-                        if(type == 'brand'){
-                            $('#region_div').html('');
-                            $("#region_div").html(data.regions);
+                        $('#region_divs').html('');
+                            $("#region_divs").html(data.regions);
                             select2();
-                        }else{
-                            $('#brands').remove();
-                            $("#brands_div").html(data.brands);
-                            select2();
-                        }
-
-                       
                     } else {
                         console.error('Server returned an error:', data.message);
                     }
@@ -236,5 +231,50 @@
             });
         });
 
+       
+    $(document).on("submit", "#create-branch", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        // Serialize form data
+        var formData = $(this).serialize();
+
+         // Change button text and disable it
+        $(".create-branch").text('Creating...').prop("disabled", true);
+        
+        // AJAX request
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"), // Form action URL
+            data: formData, // Serialized form data
+            success: function(response) {
+              data = JSON.parse(response);
+
+              if(data.status == 'success'){
+                show_toastr('Success', data.msg, 'success');
+                  $('#commonModal').modal('hide');
+                  $(".modal-backdrop").removeClass("modal-backdrop");
+                  $(".block-screen").css('display', 'none');
+                   // Change button text and disable it
+                  $(".create-branch").text('Create').prop("disabled", false);
+                  openSidebar('/branch/'+data.id+'/show');
+              }else{
+                $(".create-branch").text('Create').prop("disabled", false);
+                show_toastr('Error', data.msg, 'error');
+              }
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
     })
+</script>
+
+<script>
+    const input = document.querySelector("#phone");
+    window.intlTelInput(input, {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+    });
 </script>

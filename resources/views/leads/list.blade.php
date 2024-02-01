@@ -156,7 +156,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 <div class="dropdown">
                                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        ALL LEAD
+                                        ALL LEADS
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                         <li><a class="dropdown-item delete-bulk-leads" href="javascript:void(0)">Delete</a>
@@ -170,44 +170,44 @@ if (isset($lead->is_active) && $lead->is_active) {
                             {{-- /// --}}
 
                             <div class="col-8 d-flex justify-content-end gap-2 pe-0">
-                                <div class="input-group w-25">
-                                    <button class="btn  list-global-search-btn px-0">
-                                        <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                                <div class="input-group w-25 rounded" style= "width:36px; height: 36px; margin-top:10px;">
+                                    <button class="btn  list-global-search-btn  p-0 pb-2 ">
+                                        <span class="input-group-text bg-transparent border-0 px-1" id="basic-addon1">
                                             <i class="ti ti-search" style="font-size: 18px"></i>
                                         </span>
                                     </button>
                                     <input type="Search"
-                                        class="form-control border-0 bg-transparent ps-0 list-global-search"
+                                        class="form-control border-0 bg-transparent p-0 pb-2 list-global-search"
                                         placeholder="Search this list..." aria-label="Username"
                                         aria-describedby="basic-addon1">
                                 </div>
 
-                                <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()"><i class="ti ti-refresh"
-                                        style="font-size: 18px"></i></button>
+                                <!-- <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()"><i class="ti ti-refresh"
+                                        style="font-size: 18px"></i></button> -->
 
-                                <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" aria-expanded="false">
+                                <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" aria-expanded="false"  style="color:white; width:36px; height: 36px; margin-top:10px;">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                 </button>
-                                <a  href="{{ url('/leads') }}" data-bs-toggle="tooltip" title="{{ __('Leads View') }}" class="btn px-2 btn-dark d-flex align-items-center">
+                                <a  href="{{ url('/leads') }}" data-bs-toggle="tooltip" title="{{ __('Leads View') }}" class="btn px-2 btn-dark d-flex align-items-center"  style="color:white; width:36px; height: 36px; margin-top:10px;">
                                     {{-- <i class="ti ti-plus" style="font-size:18px"></i> --}}
                                     <i class="fa-solid fa-border-all" style="font-size:18px"></i>
                                 </a>
                                 @can('create lead')
-                                <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark">
+                                <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark"  style="color:white; width:36px; height: 36px; margin-top:10px;">
                                     <i class="ti ti-plus" style="font-size:18px"></i>
                                 </button>
                                 @endcan
                                 @can('create lead')
                                 <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}"
                                     class="btn px-2 btn-dark" id="import_csv_modal_btn" data-bs-toggle="modal"
-                                    data-bs-target="#import_csv">
+                                    data-bs-target="#import_csv"  style="color:white; width:36px; height: 36px; margin-top:10px;">
                                     <i class="fa fa-file-csv"></i>
                                 </button>
                                 @endcan
 
 
 
-                                <a href="{{ route('leads.download') }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
+                                <a href="{{ route('leads.download') }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
                                     <i class="ti ti-download"></i>
                                 </a>
 
@@ -290,9 +290,9 @@ if (isset($lead->is_active) && $lead->is_active) {
                         <div class="filter-data px-3" id="filter-show"
                             <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                             <form action="/leads/list" method="GET" class="">
-                                <div class="row my-3">
+                                <div class="row my-3 align-items-end">
                                     @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                    <div class="col-md-4 mt-1"> <label for="">Brands</label>
+                                    <div class="col-md-3 mt-1"> <label for="">Brands</label>
                                         <select class="form form-control select2" id="choices-multiple555"
                                             name="created_by[]" multiple style="width: 95%;">
                                             <option value="">Select Brand</option>
@@ -305,7 +305,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     </div>
                                     @endif
 
-                                    <div class="col-md-4"> <label for="">Name</label>
+                                    <div class="col-md-3"> <label for="">Name</label>
                                         <select class="form form-control select2" id="choices-multiple110" name="name[]"
                                             multiple style="width: 95%;">
                                             <option value="">Select name</option>
@@ -318,7 +318,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     </div>
 
 
-                                    <div class="col-md-4"> <label for="">Assigned To</label>
+                                    <div class="col-md-3"> <label for="">Assigned To</label>
                                         <select name="users[]" id="choices-multiple333" class="form form-control select2"
                                             multiple style="width: 95%;">
                                             <option value="">Select user</option>
@@ -330,7 +330,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         </select>
                                     </div>
 
-                                    <div class="col-md-4"> <label for="">Stage</label>
+                                    <div class="col-md-3"> <label for="">Stage</label>
                                         <select class="form form-control select2" id="choices-multiple444"
                                             name="stages[]" multiple style="width: 95%;">
                                             <option value="">Select Stage</option>
@@ -348,7 +348,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             border: 1px solid rgb(209, 209, 209) !important;
                                         }
                                     </style>
-                                    <div class="col-md-4 mt-2">
+                                    <div class="col-md-3 mt-2">
                                         <label for="">Created at</label>
                                         <input type="date" class="form form-control" name="created_at"
                                             value="<?= isset($_GET['created_at']) ? $_GET['created_at'] : '' ?>"
@@ -433,16 +433,16 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                         class="sub-check"></td>
 
 
-                                                <td>
+                                                <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                                     <span style="cursor:pointer" class="lead-name hyper-link"
                                                        @can('view lead') onclick="openNav(<?= $lead->id ?>)" @endcan
                                                         data-lead-id="{{ $lead->id }}">{{ $lead->name }}</span>
                                                 </td>
 
-                                                <td>{{ $lead->email }}</td>
-                                                <td>{{ $lead->phone }}</td>
-                                                <td>{{ !empty($lead->stage) ? $lead->stage->name : '-' }}</td>
-                                                <td>
+                                                <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;" > <a href="{{ $lead->email }}">{{ $lead->email }}</a></td>
+                                                <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $lead->phone }}</td>
+                                                <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($lead->stage) ? $lead->stage->name : '-' }}</td>
+                                                <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                                     @php
                                                         $assigned_to = isset($lead->user_id) && isset($users[$lead->user_id]) ? $users[$lead->user_id] : 0;
                                                     @endphp
@@ -455,12 +455,12 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                     @endif
                                                 </td>
                                                 @if (\Auth::user()->type == 'super admin')
-                                                    <td>{{ $users[$lead->brand_id] ?? '' }}</td>
-                                                    <td>{{ isset( $branches[$lead->branch_id]) ?  $branches[$lead->branch_id] : '' }}</td>
+                                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $users[$lead->brand_id] ?? '' }}</td>
+                                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset( $branches[$lead->branch_id]) ?  $branches[$lead->branch_id] : '' }}</td>
                                                 @endif
 
                                                 @if (Auth::user()->type != 'client')
-                                                    <td class="Action py-1 px-0">
+                                                    <td class="Action py-1 px-0" >
                                                         {{-- <span>
 
                                                             @if (\Auth::user()->type == 'super admin' || \Gate::check('view lead'))

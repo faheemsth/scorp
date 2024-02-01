@@ -42,6 +42,7 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
 ->count();
 @endphp
 
+
 <nav class="navbar navbar-expand navbar-light topbar  static-top shadow" style="background-color: #B3CDE1;">
     <button id="sidebarToggleTop" class="btn d-md-none ">
         <i class="fa fa-bars"></i>

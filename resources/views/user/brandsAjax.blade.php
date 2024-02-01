@@ -10,7 +10,14 @@
         </span>
     </td>
     <td><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
-    <td>{{ !empty($user->project_director_id) && isset($projectDirectors[$user->project_director_id]) ? $projectDirectors[$user->project_director_id] : '' }}</td>
+    <td>
+        @php 
+                                            $project_director = \App\Models\User::join('company_permission', 'company_permission.user_id', '=', 'users.id')
+                                                                ->where('company_permission.permitted_company_id', $user->id)
+                                                                ->first();
+                                        @endphp 
+                                        {{ $project_director->name ?? '' }}
+    </td>
 </tr>
 @empty
 <tr>
