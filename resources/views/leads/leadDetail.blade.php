@@ -380,14 +380,14 @@
                                                                     style="padding-left: 10px; font-size: 14px;"
                                                                     class="edit-td">
 
-                                                                    {{-- <div class="d-flex edit-input-field-div">
+                                                                    <div class="d-flex edit-input-field-div">
                                                                         <div class="input-group border-0 organization_id">
                                                                             {{ $org_name }}
-                                                </div>
-                                                <div class="edit-btn-div">
-                                                    <button class="btn btn-secondary rounded-0 btn-effect-none edit-input" name="organization_id" style="padding: 7px;"><i class="ti ti-pencil"></i></button>
-                                                </div>
-                                            </div> --}}
+                                                                        </div>
+                                                                        <div class="edit-btn-div">
+                                                                            <button class="btn btn-secondary rounded-0 btn-effect-none edit-input" name="organization_id" style="padding: 7px;"><i class="ti ti-pencil"></i></button>
+                                                                        </div>
+                                                                    </div>
 
                                                                 </td>
                                                             </tr>
@@ -518,7 +518,7 @@
                                                                     {{ $lead->created_at }}
                                                                 </td>
                                                             </tr>
-                                                            <tr>
+                                                            <tr class="d-none">
                                                                 <td class=""
                                                                     style="width: 200px; font-size: 14px;">
                                                                     {{ __('Date of Last Activity') }}
@@ -528,7 +528,7 @@
 
                                                                 </td>
                                                             </tr>
-                                                            <tr>
+                                                            <tr class="d-none">
                                                                 <td class=""
                                                                     style="width: 200px; font-size: 14px;">
                                                                     {{ __('Date of Next Activity') }}

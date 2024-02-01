@@ -37,9 +37,11 @@ if (isset($lead->is_active) && $lead->is_active) {
 @section('page-title')
     {{ __('Manage Leads') }}
     @if (\Auth::user()->type != 'super admin')
-        @if ($pipeline)
-            - {{ $pipeline->name }}
-        @endif
+
+    @if ($pipeline->isNotEmpty())
+    - {{ $pipeline->first()->name }}
+    @endif
+
     @endif
 @endsection
 @section('page-title')
