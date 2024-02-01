@@ -55,7 +55,7 @@ class LeadController extends Controller
      */
     public function index()
     {
-        if (\Auth::user()->can('manage lead')) {
+        if (\Auth::user()->can('manage lead') || \Auth::user()->type == 'Admin Team') {
 
             if (\Auth::user()->default_pipeline) {
                 $pipeline = Pipeline::where('id', '=', \Auth::user()->default_pipeline)->first();
@@ -71,7 +71,8 @@ class LeadController extends Controller
 
             //$total_records = Lead::count();
 
-            if (\Auth::user()->can('view all leads')) {
+            if (\Auth::user()->can('view all leads') || \Auth::user()->type == 'Admin Team') {
+
                 $total_records = Lead::count();
             } elseif (\Auth::user()->type == 'company') {
                 $lead_created_by = User::select(['users.id', 'users.name'])->join('roles', 'roles.name', '=', 'users.type')
@@ -91,7 +92,6 @@ class LeadController extends Controller
 
             $avatar = User::get()->pluck('avatar', 'id');
             $username = User::get()->pluck('name', 'id');
-
             return view('leads.index', compact('pipelines', 'pipeline', 'total_records','username','avatar'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
@@ -165,7 +165,7 @@ class LeadController extends Controller
         /////////////////end pagination calculation
 
         $filters = $this->leadsFilter();
-        if ($usr->can('manage lead') || \Auth::user()->type == 'super admin') {
+        if ($usr->can('manage lead') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
 
             if (\Auth::user()->type == 'super admin') {
                 $pipeline = Pipeline::get();
@@ -185,7 +185,7 @@ class LeadController extends Controller
             $brand_ids = array_keys($companies);
 
             $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id');
-            if(\Auth::user()->type == 'super admin'){
+            if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team'){
 
             }else if(\Auth::user()->type == 'company'){
                 $leads_query->where('brand_id', \Auth::user()->id);
