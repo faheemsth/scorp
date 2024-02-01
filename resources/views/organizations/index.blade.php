@@ -107,6 +107,47 @@
             border: 1px solid rgb(209, 209, 209) !important;
         }
     </style>
+<style>
+    /* .red-cross {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                color: red;
+            } */
+    .boximg {
+        margin: auto;
+    }
+
+    .dropdown-togglefilter:hover .dropdown-menufil {
+        display: block;
+    }
+
+    .choices__inner {
+        border: 1px solid #ccc !important;
+        min-height: auto;
+        padding: 4px !important;
+    }
+
+    .fil:hover .submenu {
+        display: block;
+    }
+
+    .fil .submenu {
+        display: none;
+        position: absolute;
+        top: 3%;
+        left: 154px;
+        width: 100%;
+        background-color: #fafafa;
+        font-weight: 600;
+        list-style-type: none;
+
+    }
+
+    .dropdown-item:hover {
+        background-color: white !important;
+    }
+</style>
 
     <div class="col-12">
         <div class="card">
@@ -119,9 +160,33 @@
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL ORGANIZATION
                             </button>
+                            @php
+                            $saved_filters = App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'organizations')->get();
+                            @endphp
+                              @if(sizeof($saved_filters) > 0)
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item delete-bulk-organizations" href="javascript:void(0)">Delete</a></li>
+                                        @foreach($saved_filters as $filter)
+                                        <li class="d-flex align-items-center justify-content-between ps-2">
+                                            <div class="col-10">
+                                                <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                                <span class="text-dark"> ({{$filter->count}})</span>
+                                            </div>
+                                            <ul class="w-25" style="list-style: none;">
+                                                <li class="fil fw-bolder">
+                                                    <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                                    <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                                                                box-shadow: 0px 0px 1px #e9e9e9;">
+                                                        <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name ?>', <?= $filter->id ?>)">Rename</a></li>
+                                                        <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+
+                                        </li>
+                                        @endforeach
+
                             </ul>
+                        @endif
                         </div>
                     </div>
 
@@ -209,6 +274,7 @@
                             <div class="col-md-4 mt-2">
                                 <br>
                                 <input type="submit" class="btn form-btn bg-dark me-2" style=" color:white;">
+                                <a type="button" id="save-filter-btn" onClick="saveFilter('organizations',<?= sizeof($organizations) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                 <a href="/organization/" class="btn form-btn bg-dark" style="color:white;">Reset</a>
                             </div>
                         </div>
@@ -985,6 +1051,11 @@
     })
 
     $(document).ready(function() {
+        let curr_url = window.location.href;
+
+if(curr_url.includes('?')){
+    $('#save-filter-btn').css('display','inline-block');
+}
         // Attach an event listener to the input field
         $('.list-global-search').keypress(function(e) {
             // Check if the pressed key is Enter (key code 13)

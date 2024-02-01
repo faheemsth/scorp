@@ -41,6 +41,64 @@ $(document).on('change', '.sub-check', function() {
             font-size: 14px;
         }
     </style>
+                            <style>
+                                .form-controls,
+                                .form-btn {
+                                    padding: 4px 1rem !important;
+                                }
+
+                                /* Set custom width for specific table cells */
+                                .action-btn {
+                                    display: inline-grid !important;
+                                }
+
+                                .dataTable-bottom,
+                                .dataTable-top {
+                                    display: none;
+                                }
+                            </style>
+
+                            <style>
+                                /* .red-cross {
+                                            position: absolute;
+                                            top: 5px;
+                                            right: 5px;
+                                            color: red;
+                                        } */
+                                .boximg {
+                                    margin: auto;
+                                }
+
+                                .dropdown-togglefilter:hover .dropdown-menufil {
+                                    display: block;
+                                }
+
+                                .choices__inner {
+                                    border: 1px solid #ccc !important;
+                                    min-height: auto;
+                                    padding: 4px !important;
+                                }
+
+                                .fil:hover .submenu {
+                                    display: block;
+                                }
+
+                                .fil .submenu {
+                                    display: none;
+                                    position: absolute;
+                                    top: 3%;
+                                    left: 154px;
+                                    width: 100%;
+                                    background-color: #fafafa;
+                                    font-weight: 600;
+                                    list-style-type: none;
+
+                                }
+
+                                .dropdown-item:hover {
+                                    background-color: white !important;
+                                }
+                            </style>
     <div class="row">
         <div class="card py-3">
             <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
@@ -52,12 +110,31 @@ $(document).on('change', '.sub-check', function() {
                             ALL CONTACTS
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <!-- <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li> -->
-                            <li><a class="dropdown-item delete-bulk-contacts" href="javascript:void(0)">Delete</a></li>
-                            {{-- <li id="actions_div" style="display:none;font-size:14px;color:#3a3b45;"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li> --}}
 
+                            @php
+                            $saved_filters = App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'clients')->get();
+                             @endphp
+                           @if(sizeof($saved_filters) > 0)
+                            @foreach($saved_filters as $filter)
+                            <li class="d-flex align-items-center justify-content-between ps-2">
+                                <div class="col-10">
+                                    <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                    <span class="text-dark"> ({{$filter->count}})</span>
+                                </div>
+                                <ul class="w-25" style="list-style: none;">
+                                    <li class="fil fw-bolder">
+                                        <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                        <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                                                    box-shadow: 0px 0px 1px #e9e9e9;">
+                                            <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name ?>', <?= $filter->id ?>)">Rename</a></li>
+                                            <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+
+                            </li>
+                            @endforeach
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -129,8 +206,8 @@ $(document).on('change', '.sub-check', function() {
                         <div class="col-md-4 mt-3">
                             <br>
                             <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
-                            <a type="button" id="save-filter-btn" onClick="saveFilter('clients',<?= sizeof($clients) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                             <a href="/clients" class="btn bg-dark" style="color:white;">Reset</a>
+                            <a type="button" id="save-filter-btn" onClick="saveFilter('clients',<?= sizeof($clients) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                         </div>
                     </div>
                     <div class="row d-none">

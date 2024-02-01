@@ -156,7 +156,7 @@
                     @if (\Auth::user()->can('edit deal'))
 
                     <a href="#" data-size="lg" data-url="{{ route('deals.edit', $deal->id) }}"
-                        data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Deal') }}"
+                        data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Deal') }}" title="{{ __('Update Admission') }}"
                         class="btn px-2 py-2 text-white" style="background-color: #313949;">
                         <i class="ti ti-pencil"></i>
                     </a>

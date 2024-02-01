@@ -281,7 +281,7 @@ class ClientController extends Controller
         if(\Auth::user()->can('edit client'))
         {
             $user = \Auth::user();
-            if($client->created_by == $user->creatorId() || \Auth::user()->type == 'super admin')
+            if($client->created_by == $user->creatorId() || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
             {
                 $client->customField = CustomField::getData($client, 'client');
                 $customFields        = CustomField::where('module', '=', 'client')->get();
@@ -411,7 +411,7 @@ class ClientController extends Controller
     public function clientDetail($id){
         $client = User::findOrFail($id);
         $deal = Deal::join('client_deals', 'client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->first();
-        
+
         $lead = Lead::select('leads.*')
                         ->join('deals as d', 'leads.is_converted', '=', 'd.id')
                         ->join('client_deals as cd', 'cd.deal_id', '=', 'd.id')
