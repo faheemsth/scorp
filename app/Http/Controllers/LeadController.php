@@ -759,19 +759,26 @@ class LeadController extends Controller
         $from=LeadStage::find($lead->stage_id)->name;
         if (\Auth::user()->can('edit lead') || \Auth::user()->type == 'super admin') {
             if ($lead->created_by == \Auth::user()->creatorId() || \Auth::user()->can('edit lead') || \Auth::user()->type == 'super admin') {
+                if($request->lead_assgigned_user == 0){
+
+                    return json_encode([
+                        'status' => 'error',
+                        'message' => 'User Responsible Is Required',
+                    ]);
+
+                 }
                 $validator = \Validator::make(
                     $request->all(),
                     [
-                        //'lead_prefix' => 'required',
                         'lead_first_name' => 'required',
                         'lead_last_name' => 'required',
                         'lead_stage' => 'required',
-                        //'lead_assgigned_user' => 'required',
-                        //'lead_branch' => 'required',
-                        //'lead_organization' => 'required',
-                        //'lead_source' => 'required',
                         'lead_phone' => 'required',
-                        'lead_email' => 'required',
+                        'brand_id' => 'required',
+                        'region_id' => 'required',
+                        'lead_branch' => 'required',
+                        'lead_assgigned_user' => 'required',
+                        'lead_email' => 'required|unique:leads,email',
                     ]
                 );
 

@@ -87,6 +87,7 @@
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Lead Status') }}
+                                                <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choice-1" name="lead_stage">
@@ -103,6 +104,7 @@
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Brand') }}
+                                                <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="">
                                                {{-- Brand Dropdown --}}
@@ -110,7 +112,7 @@
                                                     \Auth::user()->type == 'super admin' ||
                                                         \Auth::user()->type == 'Project Director' ||
                                                         \Auth::user()->type == 'Project Manager')
-                                                            
+
                                                     <select class="form-control select2 brand_id" id="choices-1011"
                                                         name="brand_id" {{ !\Auth::user()->can('edit brand lead') ? 'disabled' : '' }}>
                                                         <option value="">Select Brand</option>
@@ -128,7 +130,7 @@
                                                             <option value="{{$key}}" {{ $key == \Auth::user()->id ? 'selected' : ''}}>{{$comp}}</option>
                                                         @endforeach
                                                     </select>
-                                                @else 
+                                                @else
                                                     <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}">
                                                         <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
                                                             @foreach($companies as $key => $comp)
@@ -142,9 +144,10 @@
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Region') }}
+                                                <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="region_div">
-                                        
+
                                                 @if (\Auth::user()->type == 'super admin' ||
                                                         \Auth::user()->type == 'Project Director' ||
                                                         \Auth::user()->type == 'Project Manager' ||
@@ -156,7 +159,7 @@
                                                                 'id' => 'region_id',
                                                             ]) !!}
 
-                                                @else 
+                                                @else
                                                      <input type="hidden" name="region_id" value="{{ $lead->region_id }}">
                                                         {!! Form::select('region_id', $regions, $lead->region_id, [
                                                             'class' => 'form-control select2',
@@ -170,9 +173,10 @@
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Branch') }}
+                                                <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="branch_div">
-                                                
+
 
                                                 @if (\Auth::user()->type == 'super admin' ||
                                                         \Auth::user()->type == 'Project Director' ||
@@ -186,7 +190,7 @@
                                                                         <option value="{{$key}}" {{ $lead->branch_id == $key ? 'selected' : '' }}>{{$branch}}</option>
                                                                     @endforeach
                                                             </select>
-                                                @else 
+                                                @else
                                                          <input type="hidden" name="lead_branch" value="{{ \Auth::user()->branch_id }}">
                                                             <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
                                                                 onchange="Change(this)" {{ !\Auth::user()->can('edit branch lead') ? 'disabled' : '' }}>
@@ -201,6 +205,7 @@
                                         <tr>
                                             <td class="" style="width: 110px;  font-size: 13px;">
                                                 {{ __('User Responsible') }}
+                                                <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="assign_to_div">
                                                 <select class="form-control select2" id="choice-2"
@@ -477,7 +482,7 @@
 
 <script>
     $(document).ready(function() {
-        
+
         // var id = {{ $lead->brand_id }};
         // $.ajax({
         //     type: 'GET',
