@@ -316,8 +316,8 @@ $setting = \App\Models\Utility::colorset();
                                         $assigned_user = \App\Models\User::findOrFail($task->assigned_to);
                                         ?>
 
-                                        <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{ $assigned_user->created_by }}+'/user_detail')">
-                                            {{ isset($users[$assigned_user->created_by]) ? $users[$assigned_user->created_by] : '' }}
+                                        <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{ $task->brand_id }}+'/user_detail')">
+                                            {{ isset($users[$task->brand_id]) ? $users[$task->brand_id] : '' }}
                                         </span>
                                         @endif
                                         @endif

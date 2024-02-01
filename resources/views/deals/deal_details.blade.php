@@ -159,7 +159,6 @@
                         data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Deal') }}"
                         class="btn px-2 py-2 text-white" style="background-color: #313949;">
                         <i class="ti ti-pencil"></i>
-
                     </a>
                     @endif
 
@@ -702,7 +701,7 @@
                                                                 <td>{{ $app->application_key }}</td>
                                                                 <td>{{ $universities[$app->university_id] ?? '' }}</td>
                                                                 <td>{{ $app->intake }}</td>
-                                                                <td>{{ $stages[$app->stage_id] }}</td>
+                                                                <td>{{ $stages[$app->stage_id] ?? '' }}</td>
                                                                 <td>
                                                                     <div class="d-flex justify-center align-items-center">
                                                                     @can('edit application')

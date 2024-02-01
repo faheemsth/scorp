@@ -221,7 +221,7 @@
                                                 <tr>
                                                     <td class=""
                                                         style="width: 100px;  font-size: 13px;">
-                                                        {{ __('Office Responsible') }}
+                                                        {{ __('Branch') }}
                                                         <span class="text-danger" style="font-size: 16px;">*</span>
                                                     </td>
                                                     <td class=""
