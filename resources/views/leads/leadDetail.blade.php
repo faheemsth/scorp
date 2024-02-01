@@ -1070,7 +1070,7 @@
                                                                             data-bs-toggle="tooltip"
                                                                             title="{{ __('Add Task') }}"
                                                                             class="btn p-2 text-white"
-                                                                            style="background-color: #313949;">
+                                                                            style="background-color: #313949; color: #fff !important;">
                                                                             <i class="ti ti-plus"></i>
                                                                         </a>
                                                                     @endcan

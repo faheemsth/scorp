@@ -136,8 +136,8 @@ class LeadController extends Controller
             $filters['subject'] = $_GET['subject'];
         }
 
-        if (isset($_GET['created_by']) && !empty($_GET['created_by'])) {
-            $filters['created_by'] = $_GET['created_by'];
+        if (isset($_GET['brand_id']) && !empty($_GET['brand_id'])) {
+            $filters['brand_id'] = $_GET['brand_id'];
         }
 
         if (isset($_GET['created_at']) && !empty($_GET['created_at'])) {
@@ -184,14 +184,14 @@ class LeadController extends Controller
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
 
-            $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id');
+            $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id');
             if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team'){
 
             }else if(\Auth::user()->type == 'company'){
                 $leads_query->where('brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
                 $leads_query->whereIn('brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+            }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
                 $leads_query->where('region_id', \Auth::user()->region_id);
             }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
                 $leads_query->where('branch_id', \Auth::user()->branch_id);
@@ -209,6 +209,8 @@ class LeadController extends Controller
             foreach ($filters as $column => $value) {
                 if ($column === 'name') {
                     $leads_query->whereIn('leads.name', $value);
+                } elseif ($column === 'brand_id') {
+                    $leads_query->whereIn('leads.brand_id', $value);
                 } elseif ($column === 'stage_id') {
                     $leads_query->whereIn('stage_id', $value);
                 } elseif ($column === 'users') {
@@ -222,6 +224,8 @@ class LeadController extends Controller
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
                 $leads_query->Where('leads.name', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('users.name', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('branches.name', 'like', '%' . $g_search . '%');
                 $leads_query->orWhere('leads.email', 'like', '%' . $g_search . '%');
                 $leads_query->orWhere('leads.phone', 'like', '%' . $g_search . '%');
             }
@@ -237,7 +241,7 @@ class LeadController extends Controller
             $sourcess = Source::get()->pluck('name', 'id');
             $branches = Branch::get()->pluck('name', 'id')->ToArray();
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-                $html = view('leads.leads_list_ajax', compact('leads', 'users', 'total_records'))->render();
+                $html = view('leads.leads_list_ajax', compact('leads', 'users', 'branches','total_records'))->render();
 
                 return json_encode([
                     'status' => 'success',
@@ -778,7 +782,7 @@ class LeadController extends Controller
                         'region_id' => 'required',
                         'lead_branch' => 'required',
                         'lead_assgigned_user' => 'required',
-                        'lead_email' => 'required|unique:leads,email',
+                        'lead_email' => 'required',
                     ]
                 );
 
@@ -3607,26 +3611,62 @@ class LeadController extends Controller
 
     public function download(){
         if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
-        $region_query = Lead::select(['leads.*']);
-        ///////////////////Filter Data
-        if(isset($_GET['brand_id']) && !empty($_GET['brand_id'])){
-            $region_query->where('brands', $_GET['brand_id']);
-        }
-        if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
-            $region_query->where('id', $_GET['region_id']);
-        }
-        if (\Auth::user()->type == 'super admin') {
-            $leads = Region::orderBy('name', 'ASC')->get();
-        } else if (\Auth::user()->type == 'company') {
-            $region_query->where('brand_id', [\Auth::user()->id]);
-        } else {
+            $filters = $this->leadsFilter();
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            $region_query->whereIn('brand_id', $brand_ids);
-        }
-        $leads = $region_query->orderBy('name', 'ASC')->get();
-        $users = allUsers();
-        $branches = Branch::get()->pluck('name', 'id')->ToArray();
+
+            $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id');
+            if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team'){
+
+            }else if(\Auth::user()->type == 'company'){
+                $leads_query->where('brand_id', \Auth::user()->id);
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                $leads_query->whereIn('brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
+                $leads_query->where('region_id', \Auth::user()->region_id);
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+                $leads_query->where('branch_id', \Auth::user()->branch_id);
+            }else{
+                $leads_query->where('user_id', \Auth::user()->id);
+            }
+
+
+
+
+
+          //  $leads_query->whereIn('brand_id', $brand_ids)->where('is_converted',0);
+
+            // Add the dynamic filters
+            foreach ($filters as $column => $value) {
+                if ($column === 'name') {
+                    $leads_query->whereIn('leads.name', $value);
+                } elseif ($column === 'brand_id') {
+                    $leads_query->whereIn('leads.brand_id', $value);
+                } elseif ($column === 'stage_id') {
+                    $leads_query->whereIn('stage_id', $value);
+                } elseif ($column === 'users') {
+                    $leads_query->whereIn('leads.user_id', $value);
+                } elseif ($column == 'created_at') {
+                    $leads_query->whereDate('leads.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                }
+            }
+
+            //if list global search
+            if (isset($_GET['search']) && !empty($_GET['search'])) {
+                $g_search = $_GET['search'];
+                $leads_query->Where('leads.name', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('users.name', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('branches.name', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('leads.email', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('leads.phone', 'like', '%' . $g_search . '%');
+            }
+
+            $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
+            $leads = $leads_query->clone()->groupBy('leads.id')->orderBy('leads.created_at', 'desc')->get();
+            $users = allUsers();
+            $branches = Branch::get()->pluck('name', 'id')->ToArray();
+
+      
         $header = [
             'S.No.',
             'Name',
@@ -3648,7 +3688,7 @@ class LeadController extends Controller
                 'stage' => !empty($region->stage) ? $region->stage->name : '-',
                 'assigned_to' => $users[$region->user_id] ?? '',
                 'brand' => $users[$region->brand_id] ?? '',
-                'branch' => isset( $branches[$region->branch_id]) ?  $branches[$region->branch_id] : ''
+                'branch' => $branches[$region->branch_id] ?? ''
             ];
         }
 

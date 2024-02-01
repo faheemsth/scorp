@@ -378,11 +378,11 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                                     <div class="col-md-3 mt-1"> <label for="">Brands</label>
                                         <select class="form form-control select2" id="choices-multiple555"
-                                            name="created_by[]" multiple style="width: 95%;">
+                                            name="brand_id[]" multiple style="width: 95%;">
                                             <option value="">Select Brand</option>
                                     @if (FiltersBrands())
                                             @foreach (FiltersBrands() as $key => $brand)
-                                            <option value="{{ $key }}" {{ isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' }}>{{ $brand }}</option>
+                                            <option value="{{ $key }}" {{ isset($_GET['brand_id']) && in_array($key, $_GET['brand_id']) ? 'selected' : '' }}>{{ $brand }}</option>
                                            @endforeach
                                     @endif
                                         </select>
@@ -397,19 +397,6 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                 <option value="{{ $lead->name }}"
                                                     <?= isset($_GET['name']) && in_array($lead->name, $_GET['name']) ? 'selected' : '' ?>
                                                     class="">{{ $lead->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-
-                                    <div class="col-md-3"> <label for="">Assigned To</label>
-                                        <select name="users[]" id="choices-multiple333" class="form form-control select2"
-                                            multiple style="width: 95%;">
-                                            <option value="">Select user</option>
-                                            @foreach ($companies as $key => $company)
-                                                <option value="{{ $key }}"
-                                                    <?= isset($_GET['users']) && in_array($key, $_GET['users']) ? 'selected' : '' ?>
-                                                    class="">{{ $company }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -501,10 +488,9 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         <th data-resizable-columns-id="phone" class="ps-3">{{ __('Phone') }}</th>
                                         <th data-resizable-columns-id="stage" class="ps-3">{{ __('Stage') }}</th>
                                         <th data-resizable-columns-id="users" class="ps-3">{{ __('Assigned to') }}</th>
-                                        @if (\Auth::user()->type == 'super admin')
-                                            <th data-resizable-columns-id="created_by">{{ __('Brand') }}</th>
-                                            <th data-resizable-columns-id="created_by">{{ __('Branch') }}</th>
-                                        @endif
+                                        <th data-resizable-columns-id="created_by">{{ __('Brand') }}</th>
+                                        <th data-resizable-columns-id="created_by">{{ __('Branch') }}</th>
+                                      
                                         {{-- <th data-resizable-columns-id="actions" style="width: 5%;">{{ __('Action') }}
                                         </th> --}}
                                     </tr>
@@ -538,10 +524,10 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                         </span>
                                                     @endif
                                                 </td>
-                                                @if (\Auth::user()->type == 'super admin')
+
                                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $users[$lead->brand_id] ?? '' }}</td>
-                                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset( $branches[$lead->branch_id]) ?  $branches[$lead->branch_id] : '' }}</td>
-                                                @endif
+                                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $branches[$lead->branch_id] ?? '' }}</td>
+                                              
 
                                                 @if (Auth::user()->type != 'client')
                                                     <td class="Action py-1 px-0" >

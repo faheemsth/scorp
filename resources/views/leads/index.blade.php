@@ -366,7 +366,7 @@
                     </div>
                 </div>
             </div>
-            <input type="search" class="form-control border-0 bg-transparent ps-0" id="searchInput" placeholder="Search this list..." aria-label="Search" aria-describedby="basic-addon1">
+            
             <div class="col-sm-12">
 
                 @php
