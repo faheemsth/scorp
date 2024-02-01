@@ -1839,4 +1839,5 @@ Route::get('/brands-download', [UserController::class, 'download'])->name('users
 Route::get('/regions-download', [RegionController::class, 'download'])->name('regions.download');
 Route::get('/branches-download', [BranchController::class, 'download'])->name('branches.download');
 Route::get('/employees-download', [UserController::class, 'downloadEmployees'])->name('employees.download');
+Route::get('/tasks-download', [DealController::class, 'downloadTasks'])->name('tasks.download');
 Route::get('/leads-download', [LeadController::class, 'download'])->name('leads.download');

@@ -1339,7 +1339,7 @@ class OrganizationController extends Controller
     //organization_id
     public function taskDelete(Request $request, $id)
     {
-        if (\Auth::user()->can('edit task')) {
+        if (\Auth::user()->can('delete task')) {
 
             $task = DealTask::where('id', $id)->first();
             $task->delete();
@@ -1442,7 +1442,7 @@ class OrganizationController extends Controller
     {
         $task = DealTask::findOrFail($id);
         $task->delete();
-        return redirect()->route('deals.get.user.tasks')->with('success', __('Organization successfully deleted!'));
+        return redirect()->route('deals.get.user.tasks')->with('success', __('Task successfully deleted!'));
     }
 
     public function deleteBulkOrganizations(Request $request)

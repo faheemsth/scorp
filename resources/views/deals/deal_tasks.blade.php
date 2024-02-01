@@ -36,6 +36,47 @@ $setting = \App\Models\Utility::colorset();
         border: 1px solid rgb(209, 209, 209) !important;
     }
 </style>
+<style>
+    /* .red-cross {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                color: red;
+            } */
+    .boximg {
+        margin: auto;
+    }
+
+    .dropdown-togglefilter:hover .dropdown-menufil {
+        display: block;
+    }
+
+    .choices__inner {
+        border: 1px solid #ccc !important;
+        min-height: auto;
+        padding: 4px !important;
+    }
+
+    .fil:hover .submenu {
+        display: block;
+    }
+
+    .fil .submenu {
+        display: none;
+        position: absolute;
+        top: 3%;
+        left: 154px;
+        width: 100%;
+        background-color: #fafafa;
+        font-weight: 600;
+        list-style-type: none;
+
+    }
+
+    .dropdown-item:hover {
+        background-color: white !important;
+    }
+</style>
 <div class="row">
     <div class="col-12">
         <div class="card my-card">
@@ -50,13 +91,31 @@ $setting = \App\Models\Utility::colorset();
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL TASKS
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item assigned_to" href="javascript:void(0)">Assigned to</a></li>
-                                <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
-                                <li><a class="dropdown-item" href="#">Brand Change</a></li>
-                                <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li>
-                                {{-- <li id="actions_div" style="display:none"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li> --}}
+                            @if(sizeof($saved_filters) > 0)
+                            <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton1">
+
+                                @foreach($saved_filters as $filter)
+                                <li class="d-flex align-items-center justify-content-between ps-2">
+                                    <div class="col-10">
+                                        <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                        <span class="text-dark"> ({{$filter->count}})</span>
+                                    </div>
+                                    <ul class="w-25" style="list-style: none;">
+                                        <li class="fil fw-bolder">
+                                            <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                            <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                            box-shadow: 0px 0px 1px #e9e9e9;">
+                                                <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name?>', <?= $filter->id ?>)">Rename</a></li>
+                                                <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                @endforeach
+
                             </ul>
+                            @endif
                         </div>
                     </div>
 
@@ -83,12 +142,19 @@ $setting = \App\Models\Utility::colorset();
                         </button>
                         @endcan
 
-                        <a href="{{ route('users.download') }}" class="btn p-2 btn-dark" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" >
+                        <!-- <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> -->
+                        
+                        @if(auth()->user()->type == 'super admin' || auth()->user()->type == 'Admin Team')
+                        <a href="{{ route('tasks.download') }}" class="btn p-2 btn-dark" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" >
                                 <i class="ti ti-download" style="font-size:18px"></i>
                         </a>
+                        @endif
 
-                        <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
-
+                        @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete task'))
+                        <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Regions') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; margin-top:10px;">
+                            <i class="ti ti-trash"></i>
+                        </a>
+                        @endif
                     </div>
                 </div>
 
@@ -143,8 +209,9 @@ $setting = \App\Models\Utility::colorset();
 
                             <div class="col-md-4 mt-4 pt-2 d-flex align-items-end">
                                 <input type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}" class="btn form-btn me-2 btn-dark px-2 py-2" >
-                                <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                 <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn px-2 py-2 btn-dark" style="color:white;">Reset</a>
+                                <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
+
                             </div>
                         </div>
 
@@ -753,26 +820,37 @@ $setting = \App\Models\Utility::colorset();
 
     $(document).on('change', '.main-check', function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));
+
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+        }
     });
+
+
     $(document).on('change', '.sub-check', function() {
         var selectedIds = $('.sub-check:checked').map(function() {
             return this.value;
         }).get();
 
-        console.log(selectedIds.length)
-
-        if(selectedIds.length > 0){
+        if (selectedIds.length > 0) {
             selectedArr = selectedIds;
-            $("#actions_div").css('display', 'block');
-        }else{
+            $("#actions_div").removeClass('d-none');
+        } else {
             selectedArr = selectedIds;
 
-            $("#actions_div").css('display', 'none');
+            $("#actions_div").addClass('d-none');
         }
-        let commaSeperated = selectedArr.join(",");
-        console.log(commaSeperated)
-        $("#tasks_ids").val(commaSeperated);
-
     });
 
     function massUpdate(){
@@ -797,7 +875,7 @@ $setting = \App\Models\Utility::colorset();
         $("#update-status-modal").modal('show');
     });
 
-    $(document).on("click", '.delete-bulk-tasks', function() {
+    $(document).on("click", '.delete-bulk', function() {
         var task_ids = $(".sub-check:checked");
         var selectedIds = $('.sub-check:checked').map(function() {
             return this.value;
