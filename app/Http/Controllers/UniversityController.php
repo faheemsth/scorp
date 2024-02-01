@@ -110,7 +110,7 @@ class UniversityController extends Controller
     }
 
     public function download(){
-        
+
         $universities = University::when(!empty($_GET['name']), function ($query) {
             return $query->where('name', 'like', '%' . $_GET['name'] . '%');
         })
@@ -149,7 +149,7 @@ class UniversityController extends Controller
             'Band',
             'Resource',
             'Application Method'
-        ]; 
+        ];
 
         $data = [];
         foreach($universities as $key => $university){
@@ -475,8 +475,7 @@ class UniversityController extends Controller
     {
         $id = $_GET['id'];
         $university = University::where('id', $id)->first();
-        $html = '<option value=""> Select month </option>';
-        
+        $html = '';
 
 
         if ($university) {
@@ -486,14 +485,18 @@ class UniversityController extends Controller
             $months = months();
 
 
+            $html = '<select name="intake_month" class="form form-control select2" id="intake_month">';
+
             foreach ($months as $key => $month) {
                 if (in_array($key, $uni_months)) {
                     $html .= '<option value="' . $key . '"> ' . $month . ' </option>';
                 }
             }
+
+            $html .= '</select>';
            // $html .= '</select>';
         }
-                
+
         return json_encode([
             'status' => 'success',
             'html' => $html
