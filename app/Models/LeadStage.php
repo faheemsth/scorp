@@ -16,52 +16,93 @@ class LeadStage extends Model
     public function lead()
     {
         $start = 0;
-        $num_results_on_page = 25;
+        $num_results_on_page = 50;
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
-            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
             $start = ($page - 1) * $num_results_on_page;
-        }else{
+        } else {
             $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
         }
 
-        $lead_created_by = [];
-        if(\Auth::user()->can('view all leads') || \Auth::user()->type == 'Admin Team'){
-            return Lead::select('leads.*')->where('leads.stage_id', '=', $this->id)->orderBy('leads.order')->orderBy('leads.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
-        }else if(\Auth::user()->type=='company'){
-            $lead_created_by = User::select(['users.id', 'users.name'])->join('roles', 'roles.name', '=', 'users.type')
-                    ->join('role_has_permissions', 'role_has_permissions.role_id', '=', 'roles.id')
-                    ->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
-                    ->where(['users.created_by' => \auth::id(), 'permissions.name' => 'create lead'])
-                    ->groupBy('users.id')
-                    ->pluck('id')
-                    ->toArray();
-                    $lead_created_by[] = \Auth::user()->id;
-                    return Lead::select('leads.*')->whereIn('leads.created_by', $lead_created_by)->where('leads.stage_id', '=', $this->id)->orderBy('leads.order')->orderBy('leads.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
+
+        $companies = FiltersBrands();
+        $brand_ids = array_keys($companies);
+
+        $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id');
+        $leads_query->where('leads.stage_id', $this->id);
+        if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team'){
+
+        }else if(\Auth::user()->type == 'company'){
+            $leads_query->where('leads.brand_id', \Auth::user()->id);
+        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            $leads_query->whereIn('leads.brand_id', $brand_ids);
+        }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
+            $leads_query->where('leads.region_id', \Auth::user()->region_id);
+        }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+            $leads_query->where('leads.branch_id', \Auth::user()->branch_id);
         }else{
-            $lead_created_by[] = \Auth::user()->created_by;
-            $lead_created_by[] = \Auth::user()->id;;
-            return Lead::select('leads.*')->join('user_leads', 'user_leads.lead_id', '=', 'leads.id')->whereIn('user_leads.user_id', $lead_created_by)->where('leads.stage_id', '=', $this->id)->orderBy('leads.order')->orderBy('leads.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
+            $leads_query->where('leads.user_id', \Auth::user()->id);
         }
+
+        //if list global search
+        if ( isset($_GET['search']) && !empty($_GET['search'])) {
+            $g_search = $_GET['search'];
+            $leads_query->Where('leads.name', 'like', '%' . $g_search . '%');
+            $leads_query->orWhere('users.name', 'like', '%' . $g_search . '%');
+            $leads_query->orWhere('branches.name', 'like', '%' . $g_search . '%');
+            $leads_query->orWhere('leads.email', 'like', '%' . $g_search . '%');
+            $leads_query->orWhere('leads.phone', 'like', '%' . $g_search . '%');
+        }
+
+        $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
+        $leads = $leads_query->clone()->groupBy('leads.id')->orderBy('leads.created_at', 'desc')->skip($start)->take($num_results_on_page)->get();
+        return $leads;
     }
 
     public function lead_count(){
-        if(\Auth::user()->can('view all leads') || \Auth::user()->type == 'Admin Team'){
-            return Lead::select('leads.*')->where('leads.stage_id', '=', $this->id)->count();
-        }else if(\Auth::user()->type=='company'){
-            $lead_created_by = User::select(['users.id', 'users.name'])->join('roles', 'roles.name', '=', 'users.type')
-                    ->join('role_has_permissions', 'role_has_permissions.role_id', '=', 'roles.id')
-                    ->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
-                    ->where(['users.created_by' => \auth::id(), 'permissions.name' => 'create lead'])
-                    ->groupBy('users.id')
-                    ->pluck('id')
-                    ->toArray();
-                    $lead_created_by[] = \Auth::user()->id;
-                    return Lead::select('leads.*')->whereIn('leads.created_by', $lead_created_by)->where('leads.stage_id', '=', $this->id)->count();
-        }else{
-            $lead_created_by[] = \Auth::user()->created_by;
-            $lead_created_by[] = \Auth::user()->id;;
-            return Lead::select('leads.*')->join('user_leads', 'user_leads.lead_id', '=', 'leads.id')->whereIn('user_leads.user_id', $lead_created_by)->where('leads.stage_id', '=', $this->id)->count();
+        $start = 0;
+        $num_results_on_page = 50;
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = ($page - 1) * $num_results_on_page;
+        } else {
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
         }
+
+
+        $companies = FiltersBrands();
+        $brand_ids = array_keys($companies);
+
+        $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id');
+        $leads_query->where('leads.stage_id', $this->id);
+        if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team'){
+
+        }else if(\Auth::user()->type == 'company'){
+            $leads_query->where('leads.brand_id', \Auth::user()->id);
+        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            $leads_query->whereIn('leads.brand_id', $brand_ids);
+        }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
+            $leads_query->where('leads.region_id', \Auth::user()->region_id);
+        }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+            $leads_query->where('leads.branch_id', \Auth::user()->branch_id);
+        }else{
+            $leads_query->where('leads.user_id', \Auth::user()->id);
+        }
+
+        //if list global search
+        if ( isset($_GET['search']) && !empty($_GET['search'])) {
+            $g_search = $_GET['search'];
+            $leads_query->Where('leads.name', 'like', '%' . $g_search . '%');
+            $leads_query->orWhere('users.name', 'like', '%' . $g_search . '%');
+            $leads_query->orWhere('branches.name', 'like', '%' . $g_search . '%');
+            $leads_query->orWhere('leads.email', 'like', '%' . $g_search . '%');
+            $leads_query->orWhere('leads.phone', 'like', '%' . $g_search . '%');
+        }
+
+        $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
+        $leads = $leads_query->clone()->groupBy('leads.id')->count();
+        return $leads;
     }
 }

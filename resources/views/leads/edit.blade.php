@@ -227,7 +227,7 @@
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choice-4"
                                                     name="lead_organization">
-                                                    <option>Select Agency</option>
+                                                    <option value="">Select Agency</option>
                                                     @foreach ($organizations as $key => $org)
                                                         <option value="{{ $key }}"
                                                             <?= $lead->organization_id == $key ? 'selected' : '' ?>>
@@ -363,10 +363,21 @@
                                                 Address
                                             </td>
                                             <td class="" style="width: 350PX;  font-size: 13px; bg-danger">
-                                                <div class="form-floating">
-                                                    <textarea class="form-control" placeholder="Street" id="floatingTextarea" name="lead_street">{{ $lead->street }}</textarea>
-                                                </div>
+                                                
                                                 <div class="row">
+                                                    <div class="col-12 col-form" style="text-align: left;">
+                                                        <select class="form-control select2" id="choice-6"
+                                                            name="lead_country">
+                                                            <option>Country...</option>
+                                                            @foreach ($countries as $con)
+                                                                <option value="{{ $con }}"
+                                                                    <?= $con == $lead->country ? 'selected' : '' ?>>
+                                                                    {{ $con }}</option>
+                                                            @endforeach
+
+                                                        </select>
+                                                    </div>
+
                                                     <div class="col-6 col-form">
                                                         <input type="text" class="form-control"
                                                             id="formGroupExampleInput" placeholder="City"
@@ -382,17 +393,9 @@
                                                             id="formGroupExampleInput" placeholder="Postel Code"
                                                             name="lead_postal_code" value="{{ $lead->postal_code }}">
                                                     </div>
-                                                    <div class="col-6 col-form" style="text-align: left;">
-                                                        <select class="form-control select2" id="choice-6"
-                                                            name="lead_country">
-                                                            <option>Country...</option>
-                                                            @foreach ($countries as $con)
-                                                                <option value="{{ $con }}"
-                                                                    <?= $con == $lead->country ? 'selected' : '' ?>>
-                                                                    {{ $con }}</option>
-                                                            @endforeach
-
-                                                        </select>
+                                                   
+                                                    <div class="col-6 col-form">
+                                                        <input type="text" class="form form-control" name="lead_street" value="{{ $lead->street }}" placeholder="Address...">
                                                     </div>
                                                 </div>
                                             </td>
@@ -451,14 +454,9 @@
                                                 {{ __('Tag List') }}
                                             </td>
                                             <td class="" style="padding-left: 10px;">
-                                                <select name="lead_tags_list" id="choice-7"
-                                                    class="form form-control select2">
-                                                    <option value=""></option>
-                                                    if($lead->tags)
-                                                    <option selected value="{{ $lead->tags }}">{{ $lead->tags }}
-                                                    </option>
-                                                    <option value="tag1">tag1</option>
-                                                    <option value="tag2">tag2</option>
+                                                <select name="lead_tags_list" id="choice-6" class="form form-control select2">
+                                                    <option value="Public" {{ $lead->tags == 'Public' ? 'selected' : ''}} >Public</option>
+                                                    <option value="Private" {{ $lead->tags == 'Private' ? 'selected' : ''}} >Private</option>
                                                 </select>
                                             </td>
                                         </tr>

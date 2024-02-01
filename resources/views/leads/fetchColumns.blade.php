@@ -4,7 +4,7 @@
             \Auth::user()->type == 'super admin' ||
                 \Auth::user()->type == 'Project Director' ||
                 \Auth::user()->type == 'Project Manager')
-            <label for="branches" class="col-sm-3 col-form-label">Brands<span class="text-danger">*</span></label>
+            <label for="branches" class="col-form-label">Brands<span class="text-danger">*</span></label>
             <div class="form-group" id="brand_div">
                 {!! Form::select('brand_id', $companies, 0, [
                     'class' => 'form-control select2 brand_id',
@@ -12,7 +12,7 @@
                 ]) !!}
             </div>
         @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
-            <label for="branches" class="col-sm-3 col-form-label">Brands<span class="text-danger">*</span></label>
+            <label for="branches" class="col-form-label">Brands<span class="text-danger">*</span></label>
             <div class="form-group" id="brand_div">
                 <input type="hidden" name="brand_id" value="{{ \Auth::user()->id }}">
                 <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
@@ -23,7 +23,7 @@
                 </select>
             </div>
         @else
-            <label for="branches" class="col-sm-3 col-form-label">Brands<span class="text-danger">*</span></label>
+            <label for="branches" class="col-form-label">Brands<span class="text-danger">*</span></label>
             <div class="form-group" id="brand_div">
                 <input type="hidden" name="brand_id" value="{{ \Auth::user()->brand_id }}">
                 <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
@@ -42,7 +42,7 @@
                 \Auth::user()->type == 'Project Manager' ||
                 \Auth::user()->type == 'company' ||
                 \Auth::user()->type == 'Regional Manager')
-            <label for="branches" class="col-sm-3 col-form-label">Region<span class="text-danger">*</span></label>
+            <label for="branches" class="col-form-label">Region<span class="text-danger">*</span></label>
             <div class="form-group" id="region_div">
                 {!! Form::select('region_id', $regions, null, [
                     'class' => 'form-control select2',
@@ -50,7 +50,7 @@
                 ]) !!}
             </div>
         @else
-            <label for="branches" class="col-sm-3 col-form-label">Region<span class="text-danger">*</span></label>
+            <label for="branches" class="col-form-label">Region<span class="text-danger">*</span></label>
             <div class="form-group" id="region_div">
                 <input type="hidden" name="region_id" value="{{ \Auth::user()->region_id }}">
                 {!! Form::select('region_id', $regions, \Auth::user()->region_id, [
@@ -70,7 +70,7 @@
                 \Auth::user()->type == 'Regional Manager' ||
                 \Auth::user()->type == 'Branch Manager')
 
-            <label for="branches" class="col-sm-3 col-form-label">Branch<span class="text-danger">*</span></label>
+            <label for="branches" class="col-form-label">Branch<span class="text-danger">*</span></label>
             <div class="form-group" id="branch_div">
                 <select name="branch_id" id="branch_id" class="form-control select2 branch_id" onchange="Change(this)">
                     @foreach ($branches as $key => $branch)
@@ -79,7 +79,7 @@
                 </select>
             </div>
         @else
-            <label for="branches" class="col-sm-3 col-form-label">Branch<span class="text-danger">*</span></label>
+            <label for="branches" class="col-form-label">Branch<span class="text-danger">*</span></label>
             <div class="form-group" id="branch_div">
                 <input type="hidden" name="branch_id" value="{{ \Auth::user()->branch_id }}">
                 <select name="branch_id" id="branch_id" class="form-control select2 branch_id" onchange="Change(this)">
@@ -108,16 +108,16 @@
 
 <div class="row mt-3">
     <div class="col-md-3">
-        <h5>FILE Column</h5>
+        <p><b>FILE Column</b></p>
     </div>
     <div class="col-md-3">
-        <h5>Leads Columns</h5>
+        <p><b>Leads Columns</b></p>
     </div>
     <div class="col-md-3">
-        <h5>FILE Column</h5>
+        <p><b>FILE Column</b></p>
     </div>
     <div class="col-md-3">
-        <h5>Leads Columns</h5>
+        <p><b>Leads Columns</b></p>
     </div>
 
 
