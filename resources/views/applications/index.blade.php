@@ -74,6 +74,8 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                 <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="ti ti-filter" style="font-size:18px"></i>
                 </button>
+
+                
                 <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
 
             </div>
