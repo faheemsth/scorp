@@ -26,7 +26,7 @@ class LeadStage extends Model
         }
 
         $lead_created_by = [];
-        if(\Auth::user()->can('view all leads')){
+        if(\Auth::user()->can('view all leads') || \Auth::user()->type == 'Admin Team'){
             return Lead::select('leads.*')->where('leads.stage_id', '=', $this->id)->orderBy('leads.order')->orderBy('leads.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
         }else if(\Auth::user()->type=='company'){
             $lead_created_by = User::select(['users.id', 'users.name'])->join('roles', 'roles.name', '=', 'users.type')
@@ -46,7 +46,7 @@ class LeadStage extends Model
     }
 
     public function lead_count(){
-        if(\Auth::user()->can('view all leads')){
+        if(\Auth::user()->can('view all leads') || \Auth::user()->type == 'Admin Team'){
             return Lead::select('leads.*')->where('leads.stage_id', '=', $this->id)->count();
         }else if(\Auth::user()->type=='company'){
             $lead_created_by = User::select(['users.id', 'users.name'])->join('roles', 'roles.name', '=', 'users.type')

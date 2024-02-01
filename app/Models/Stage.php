@@ -23,7 +23,7 @@ class Stage extends Model
         }
 
 
-        if($usr->can('view all deals') || \Auth::user()->type == 'super admin'){
+        if($usr->can('view all deals') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team'){
             $deal1_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
             $deal1_query->where('deals.stage_id', '=', $this->id)->where('deals.stage_id', '=', $this->id);
             return $deal1_query->orderBy('deals.order')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
@@ -56,9 +56,9 @@ class Stage extends Model
 
     public function deals_count(){
          // return Deal::select('deals.*')->join('client_deals','client_deals.deal_id','=','deals.id')->where('client_deals.client_id', '=', \Auth::user()->id)->where('deals.stage_id', '=', $this->id)->orderBy('deals.order')->count();
-        
+
             $usr =\auth::user();
-         if($usr->can('view all deals') || \Auth::user()->type == 'super admin'){
+         if($usr->can('view all deals') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team'){
             $deal1_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
             return $deal1_query->where('deals.stage_id', '=', $this->id)->count();
         }else if(\auth::user()->type == "company") {

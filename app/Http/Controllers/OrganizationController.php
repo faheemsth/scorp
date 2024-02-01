@@ -228,7 +228,7 @@ class OrganizationController extends Controller
      */
     public function store(Request $request)
     {
-     
+
      if (\Auth::user()->type == 'super admin' || \Auth::user()->can('create organization')) {
 
         //
@@ -252,7 +252,7 @@ class OrganizationController extends Controller
             ]
         );
 
-     
+
 
         if ($validator->fails()) {
             $messages = $validator->getMessageBag();
@@ -262,7 +262,7 @@ class OrganizationController extends Controller
             ]);
         }
 
-       
+
 
         //Creating users
         $user = new User();
@@ -911,7 +911,7 @@ class OrganizationController extends Controller
     public function taskCreate($id)
     {
 
-        
+
 
 
 
@@ -938,7 +938,7 @@ class OrganizationController extends Controller
             //         }
             //         $branches = $branch_query->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             // }
-                  
+
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
            /// $branches = ['' => 'Select Branch'];
@@ -1008,7 +1008,7 @@ class OrganizationController extends Controller
             // }else{
             //     $Region= ['' => 'Select Region'];
             // }
-            
+
             //$Region= ['' => 'Select Region'];
 
             //function will return all the relevent brands, regions,leads
@@ -1027,7 +1027,12 @@ class OrganizationController extends Controller
     public function taskStore($id, Request $request)
     {
         $usr = \Auth::user();
-
+        if ($request->assigned_to == 0){
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Assigned to is Required'
+            ]);
+        }
         if (\Auth::user()->can('create task')) {
 
             $validator = \Validator::make(
@@ -1139,7 +1144,7 @@ class OrganizationController extends Controller
             // if (\Auth::user()->type == 'super admin') {
             //     $branches = Branch::where('brands',DealTask::where('id', $id)->first()->brand_id)->get()->pluck('name', 'id')->toArray();
             // } else {
-               
+
             //     $branches = Branch::where('brands',DealTask::where('id', $id)->first()->brand_id)->where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             // }
 
@@ -1180,7 +1185,7 @@ class OrganizationController extends Controller
             //     $employees =  User::where('brand_id', DealTask::where('id', $id)->first()->brand_id)->pluck('name', 'id')->toArray();
             // }
 
-            //$employees =  User::where('branch_id', $task->branch_id)->pluck('name', 'id')->toArray(); 
+            //$employees =  User::where('branch_id', $task->branch_id)->pluck('name', 'id')->toArray();
             //$Region=Region::whereRaw('FIND_IN_SET(?, brands)', [$task->brand_id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             // dd($branches);
@@ -1252,7 +1257,7 @@ class OrganizationController extends Controller
             if(isset($request->brand_id)){
                 $dealTask->brand_id = $request->brand_id;
             }
-           
+
             $dealTask->assigned_type = $request->assign_type;
             if(isset($request->region_id)){
                 $dealTask->region_id = $request->region_id;
