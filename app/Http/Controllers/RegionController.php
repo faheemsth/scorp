@@ -189,8 +189,17 @@ class RegionController extends Controller
             //  $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
 
             $regions = Region::where('brands', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            $filter = $_GET['filter'] ?? '';
 
-            $html = ' <label for="region_id">Region <span class="text-danger">*<span></label><select class="form form-control select2" id="region_id" name="region_id" > <option value="">Select Region</option> ';
+            $html = '<label for="region_id">Region';
+
+            // Checking if $filter is not empty and is true
+            if (empty($filter)) {
+                $html .= '<span class="text-danger">*</span>';
+            }
+            
+            $html .= '</label><select class="form form-control select2" id="region_id" name="region_id"><option value="">Select Region</option>';
+            
             foreach ($regions as $key => $region) {
                 $html .= '<option value="' . $key . '">' . $region . '</option> ';
             }
@@ -202,13 +211,27 @@ class RegionController extends Controller
                 'regions' => $html,
             ]);
         } else if ($type == 'region') {
+            $filter = $_GET['filter'] ?? '';
 
             $branches = Branch::where('region_id', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            $html = ' <label for="branch_id">Branch</label><select class="form form-control select2" id="branch_id" name="branch_id" > <option value="">Select Branch</option> ';
+            
+            $html = '<label for="branch_id">Branch';
+
+            // Checking if $filter is not empty and is true
+            if (empty($filter)) {
+                $html .= '<span class="text-danger">*</span>';
+            }
+
+            $html .= '</label><select class="form form-control select2" id="branch_id" name="branch_id" > <option value="">Select Branch</option> ';
+            
+            
             foreach ($branches as $key => $branch) {
                 $html .= '<option value="' . $key . '">' . $branch . '</option> ';
             }
             $html .= '</select>';
+
+
+
             return json_encode([
                 'status' => 'success',
                 'branches' => $html,

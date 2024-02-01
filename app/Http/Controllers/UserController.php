@@ -725,14 +725,17 @@ class UserController extends Controller
             }
 
 
-            // if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
-            //     $g_search = $_GET['search'];
-            //     $usersQuery->where(function ($query) use ($g_search) {
-            //             $query->where('users.name', 'like', '%' . $g_search . '%')
-            //                 ->orWhere('users.website_link', 'like', '%' . $g_search . '%')
-            //                 ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%');
-            //         });                
-            // }
+            if(isset($_GET['search']) && !empty($_GET['search'])){
+                $g_search = $_GET['search'];
+                $usersQuery->where('users.name', 'like', '%' . $g_search . '%')
+                    ->orWhere('users.email', 'like', '%' . $g_search . '%')
+                    ->orWhere('users.type', 'like', '%' . $g_search . '%')
+                    ->orWhere('users.phone', 'like', '%' . $g_search . '%')
+                    ->orWhere(DB::raw('(SELECT name FROM branches branch WHERE branch.id = users.branch_id)'), 'like', '%' . $g_search . '%')
+                    ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%')
+                    ->orWhere(DB::raw('(SELECT name FROM users brand WHERE brand.id = users.brand_id)'), 'like', '%' . $g_search . '%');
+            }
+
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
@@ -740,7 +743,9 @@ class UserController extends Controller
                     ->orWhere('users.email', 'like', '%' . $g_search . '%')
                     ->orWhere('users.type', 'like', '%' . $g_search . '%')
                     ->orWhere('users.phone', 'like', '%' . $g_search . '%')
-                    ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%');
+                    ->orWhere(DB::raw('(SELECT name FROM branches branch WHERE branch.id = users.branch_id)'), 'like', '%' . $g_search . '%')
+                    ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%')
+                    ->orWhere(DB::raw('(SELECT name FROM users brand WHERE brand.id = users.brand_id)'), 'like', '%' . $g_search . '%');
             }
 
             $users = $usersQuery
@@ -779,7 +784,7 @@ class UserController extends Controller
                     ->toArray(); // Convert the collection to an associative array
             }
 
-            $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'region')->get();
+            $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'employee')->get();
 
 
             $data = [

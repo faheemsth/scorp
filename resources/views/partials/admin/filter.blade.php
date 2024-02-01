@@ -231,6 +231,7 @@ $filters = \App\Models\SavedFilter::where('created_by',\Auth::user()->id)->get()
 
 
     function deleteFilter(id) {
+        var csrf_token = $('meta[name="csrf-token"]').attr('content');
         // Prompt the user for confirmation using SweetAlert
         Swal.fire({
             title: 'Are you sure?',

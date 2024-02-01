@@ -185,6 +185,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                         @php 
                                             $project_director = \App\Models\User::join('company_permission', 'company_permission.user_id', '=', 'users.id')
                                                                 ->where('company_permission.permitted_company_id', $user->id)
+                                                                ->where('type', 'Project Director')
                                                                 ->first();
                                         @endphp 
                                         {{ $project_director->name ?? '' }}

@@ -21,6 +21,47 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
         font-size: 14px !important;
     }
 </style>
+<style>
+    /* .red-cross {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                color: red;
+            } */
+    .boximg {
+        margin: auto;
+    }
+
+    .dropdown-togglefilter:hover .dropdown-menufil {
+        display: block;
+    }
+
+    .choices__inner {
+        border: 1px solid #ccc !important;
+        min-height: auto;
+        padding: 4px !important;
+    }
+
+    .fil:hover .submenu {
+        display: block;
+    }
+
+    .fil .submenu {
+        display: none;
+        position: absolute;
+        top: 3%;
+        left: 154px;
+        width: 100%;
+        background-color: #fafafa;
+        font-weight: 600;
+        list-style-type: none;
+
+    }
+
+    .dropdown-item:hover {
+        background-color: white !important;
+    }
+</style>
 
 @section('content')
 
@@ -52,8 +93,8 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                             <li class="fil fw-bolder">
                                                 <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
                                                 <ul class="submenu" style="border: 1px solid #e9e9e9;
-                                            box-shadow: 0px 0px 1px #e9e9e9;">
-                                                    <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name ?>', <?= $filter->id ?>)">Rename</a></li>
+                                                box-shadow: 0px 0px 1px #e9e9e9;">
+                                                    <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name?>', <?= $filter->id ?>)">Rename</a></li>
                                                     <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
                                                 </ul>
                                             </li>
@@ -114,7 +155,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                         });
                     </script>
                     {{-- Filters --}}
-                    <div class="filter-data px-3" id="filterToggle" <?= isset($_GET['brand']) ? '' : 'style="display: none;"' ?>>
+                    <div class="filter-data px-3" id="filterToggle" <?= isset($_GET['branch_id']) ? '' : 'style="display: none;"' ?>>
                         <form action="/user/employees" method="GET" class="">
                             <div class="row my-3">
 
@@ -127,7 +168,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
                                 @if($type == 'super admin'|| $type == 'Admin Team' || $type == 'Project Director' || $type == 'Project Manager')
                                 <div class="col-md-3 mt-2">
-                                    <label for="">Brands</label>
+                                    <label for="">Brand</label>
                                     <select name="brand" class="form form-control select2" id="filter_brand_id">
                                         <option value="">Select Option</option>
                                         @if (!empty($filters['brands']))
@@ -146,7 +187,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
                                 @if($type == 'super admin'|| $type == 'Admin Team' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'company' || $type == 'Region Manager')
                                 <div class="col-md-3 mt-2" id="region_filter_div">
-                                    <label for="">Regions</label>
+                                    <label for="">Region</label>
 
                                     <select name="region_id" class="form form-control select2" id="filter_region_id">
                                         <option value="">Select Option</option>
@@ -163,7 +204,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
 
                                 <div class="col-md-3 mt-2" id="branch_filter_div">
-                                    <label for="">Branches</label>
+                                    <label for="">Branch</label>
 
                                     <select name="branch_id" class="form form-control select2" id="filter_branch_id">
                                         <option value="">Select Option</option>
@@ -322,12 +363,14 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
     $("#filter_brand_id").on("change", function() {
         var id = $(this).val();
         var type = 'brand';
+        var filter = true;
 
         $.ajax({
             type: 'GET',
             url: '{{ route('region_brands') }}',
             data: {
                 id: id, // Add a key for the id parameter
+                filter,
                 type: type
             },
             success: function(data) {
@@ -348,14 +391,16 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
     });
 
 
-    $(document).on("change", "#filter_region_id", function() {
+    $(document).on("change", "#filter_region_id, #region_id", function() {
         var id = $(this).val();
+        var filter = true;
         var type = 'region';
         $.ajax({
             type: 'GET',
             url: '{{ route('region_brands') }}',
             data: {
                 id: id, // Add a key for the id parameter
+                filter,
                 type: type
             },
             success: function(data) {
