@@ -58,7 +58,7 @@
 
 
         <div class="col-md-6">
-            <div class="form-group" id="region_div">
+            <div class="form-group" id="region_divs">
                 @if (
                         \Auth::user()->type == 'super admin' ||
                         \Auth::user()->type == 'Admin Team' ||
@@ -257,8 +257,8 @@
 
                 if (data.status === 'success') {
                     if(type == 'brand'){
-                        $('#region_div').html('');
-                        $("#region_div").html(data.regions);
+                        $('#region_divs').html('');
+                        $("#region_divs").html(data.regions);
                         select2();
                     }else{
                         $('#brands').remove();
