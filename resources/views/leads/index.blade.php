@@ -366,7 +366,7 @@
                     </div>
                 </div>
             </div>
-
+            <input type="search" class="form-control border-0 bg-transparent ps-0" id="searchInput" placeholder="Search this list..." aria-label="Search" aria-describedby="basic-addon1">
             <div class="col-sm-12">
 
                 @php
@@ -513,7 +513,29 @@
         </div>
     </div>
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Add an event listener to the search input
+        $('#searchInput').on('input', function() {
+            // Get the search term
+            var searchTerm = $(this).val().toLowerCase();
 
+            // Loop through each card
+            $('.kanban-box .card').each(function() {
+                // Get the text content of the card
+                var cardText = $(this).text().toLowerCase();
+
+                // Show or hide the card based on the search term
+                if (cardText.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+</script>
 <script>
     function openNav(lead_id) {
         var ww = $(window).width()

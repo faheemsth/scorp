@@ -216,7 +216,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                 {{-- <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> --}}
                                 @if(auth()->user()->can('delete lead'))
-                                <a class="btn p-2 btn-dark  text-white assigned_to delete-bulk-leads d-none" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="font-weight: 500;">
+                                <a class="btn p-2 btn-dark  text-white assigned_to delete-bulk-leads d-none" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;">
                                     <i class="ti ti-trash"></i>
                                 </a>
                                 @endif

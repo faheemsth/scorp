@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class DealApplication extends Model
 {
     use HasFactory;
+    protected $labels;
+    protected $products;
+    protected $sources;
     protected $fillable = ['labels','application_key','deal_id', 'university_id', 'course', 'stage_id', 'external_app_id', 'name', 'intake', 'created_by'];
 
     public function getUniversity($id)
