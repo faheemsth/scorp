@@ -546,7 +546,7 @@
                                     <th style="width: 50px !important;">
                                         <input type="checkbox" class="main-check">
                                     </th>
-                                    <th style="width: 100px !important;">{{ __('Admission Name') }}</th>
+                                    <th style="width: 100px !important;">{{ __('Name') }}</th>
                                     <th>{{ __('Passport') }}</th>
                                     <th>{{ __('Stage') }}</th>
 

@@ -58,13 +58,13 @@ class ApplicationsController extends Controller
 
          /////////////////end pagination calculation
 
-         if ($usr->can('view application') || $usr->type == 'super admin' || $usr->type == 'company') {
+         if ($usr->can('view application') || $usr->type == 'super admin' || $usr->type == 'company' || $usr->type == 'Admin Team') {
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             $app_query = DealApplication::select(['deal_applications.*']);
             $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
-            if(\Auth::user()->type == 'super admin'){
-                
+            if(\Auth::user()->type == 'super admin' || $usr->type == 'Admin Team'){
+
             }else if(\Auth::user()->type == 'company'){
                 $app_query->where('deals.brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
@@ -89,7 +89,7 @@ class ApplicationsController extends Controller
                 // $brand_ids = array_keys($companies);
             //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->whereIn('deal_applications.brand_id', $brand_ids);
             // }
-           
+
             $total_records = $app_query->count();
             //$filters
             $app_for_filer = $app_query->get();
@@ -116,7 +116,8 @@ class ApplicationsController extends Controller
             }
 
             $applications = $app_query->get();
-         
+
+
             $universities = University::get()->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             $brands = User::where('type', 'company')->get();

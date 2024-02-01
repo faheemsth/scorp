@@ -81,10 +81,10 @@
                 <div class="d-flex justify-content-end gap-1 me-3">
 
                 <a href="https://wa.me/{{ !empty($client->phone) ? formatPhoneNumber($client->phone) : '' }}?text=Hello ! Dear {{ $client->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" data-bs-title="{{ __('Whatsapp') }}" class="btn p-2 btn-dark text-white">
-                    <i class=""></i>
+                    <i class="fa-brands fa-whatsapp"></i>
                 </a>
 
-                @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit client'))
+                @if (\Auth::user()->type == 'super admin')
 
                         <a href="#" data-size="lg" data-url="{{ route('clients.edit', $client->id) }}"
                             data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Client') }}"
@@ -234,7 +234,7 @@
                                     </div>
 
 
-                                    @php 
+                                    @php
                                         $type = \Auth::user()->type;
                                         $is_show = true;
 
@@ -242,7 +242,7 @@
 
                                         }else if($type == 'Project Director' || $type == 'Project Manager'){
                                                 $per_brands = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('permitted_company_id', $deal->brand_id)->first();
-                                                
+
                                                 if($per_brands){
                                                     $is_show = true;
                                                 }
@@ -253,7 +253,7 @@
                                         }
 
                                     @endphp
-                                    
+
                                     @if($is_show)
 
                                     <div class="accordion-item">
@@ -303,7 +303,7 @@
                                     </div>
                                     @endif
 
-                                    
+
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                             <button class="accordion-button p-2" type="button"
@@ -340,7 +340,7 @@
                                     </div>
 
 
-                                    
+
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                             <button class="accordion-button p-2" type="button"
