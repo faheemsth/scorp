@@ -218,7 +218,64 @@
         }
     }
 </style>
+<style>
+    .form-controls,
+    .form-btn {
+        padding: 4px 1rem !important;
+    }
 
+    /* Set custom width for specific table cells */
+    .action-btn {
+        display: inline-grid !important;
+    }
+
+    .dataTable-bottom,
+    .dataTable-top {
+        display: none;
+    }
+</style>
+
+<style>
+    /* .red-cross {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                color: red;
+            } */
+    .boximg {
+        margin: auto;
+    }
+
+    .dropdown-togglefilter:hover .dropdown-menufil {
+        display: block;
+    }
+
+    .choices__inner {
+        border: 1px solid #ccc !important;
+        min-height: auto;
+        padding: 4px !important;
+    }
+
+    .fil:hover .submenu {
+        display: block;
+    }
+
+    .fil .submenu {
+        display: none;
+        position: absolute;
+        top: 3%;
+        left: 154px;
+        width: 100%;
+        background-color: #fafafa;
+        font-weight: 600;
+        list-style-type: none;
+
+    }
+
+    .dropdown-item:hover {
+        background-color: white !important;
+    }
+</style>
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
 <li class="breadcrumb-item">{{ __('Admissions') }}</li>
@@ -329,11 +386,38 @@
                             <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL ADMISSIONS
                             </button>
+
+
+
+                            @php
+                            $saved_filters = App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'deals')->get();
+                            @endphp
+                              @if(sizeof($saved_filters) > 0)
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
-                          </ul>
-                        </div>
+                                        @foreach($saved_filters as $filter)
+                                        <li class="d-flex align-items-center justify-content-between ps-2">
+                                            <div class="col-10">
+                                                <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                                <span class="text-dark"> ({{$filter->count}})</span>
+                                            </div>
+                                            <ul class="w-25" style="list-style: none;">
+                                                <li class="fil fw-bolder">
+                                                    <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                                    <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                                                                box-shadow: 0px 0px 1px #e9e9e9;">
+                                                        <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name ?>', <?= $filter->id ?>)">Rename</a></li>
+                                                        <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+
+                                        </li>
+                                        @endforeach
+
+                            </ul>
+                        @endif
                     </div>
+                </div>
 
 
                     <div class="col-8 d-flex justify-content-end gap-2 pe-0">
@@ -385,7 +469,7 @@
                                     <label for="">Name</label>
                                     <select name="name[]" id="deals" class="form form-control select2" multiple style="width: 95%;">
                                         <option value="">Select name</option>
-                                        @foreach ($deals as $deal)
+                                        @foreach ($Alldeals as $deal)
                                         <option value="{{ $deal->name }}" <?= isset($_GET['name']) && in_array($deal->name, $_GET['name']) ? 'selected' : '' ?> class="">{{ $deal->name }}</option>
                                         @endforeach
                                     </select>
@@ -426,8 +510,8 @@
                                 <div class="col-md-4 mt-3">
                                     <br>
                                     <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
-                                    <a type="button" id="save-filter-btn" onClick="saveFilter('deals',<?= sizeof($deals) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                     <a href="/deals/list" class="btn bg-dark" style="color:white;">Reset</a>
+                                    <a type="button" id="save-filter-btn" onClick="saveFilter('deals',<?= sizeof($deals) ?>)" class="btn me-2 bg-dark ml-2" style=" color:white;display:none;">Save Filter</a>
                                 </div>
                             </div>
 
