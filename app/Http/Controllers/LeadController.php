@@ -167,7 +167,7 @@ class LeadController extends Controller
         $filters = $this->leadsFilter();
         if ($usr->can('manage lead') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
 
-            if (\Auth::user()->type == 'super admin') {
+            if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
                 $pipeline = Pipeline::get();
             }else{
                 if (\Auth::user()->default_pipeline) {

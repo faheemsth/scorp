@@ -25,6 +25,47 @@ class="btn btn-sm btn-primary">
         font-size: 14px !important;
     }
 </style>
+<style>
+    /* .red-cross {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                color: red;
+            } */
+    .boximg {
+        margin: auto;
+    }
+
+    .dropdown-togglefilter:hover .dropdown-menufil {
+        display: block;
+    }
+
+    .choices__inner {
+        border: 1px solid #ccc !important;
+        min-height: auto;
+        padding: 4px !important;
+    }
+
+    .fil:hover .submenu {
+        display: block;
+    }
+
+    .fil .submenu {
+        display: none;
+        position: absolute;
+        top: 3%;
+        left: 154px;
+        width: 100%;
+        background-color: #fafafa;
+        font-weight: 600;
+        list-style-type: none;
+
+    }
+
+    .dropdown-item:hover {
+        background-color: white !important;
+    }
+</style>
 <div class="row">
 
 
@@ -41,29 +82,30 @@ class="btn btn-sm btn-primary">
                             <span> ALL BRANCHES </span>
                         </button>
                         @if(sizeof($saved_filters) > 0)
-                        <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton1">
+                            <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton1">
 
-                            @foreach($saved_filters as $filter)
-                            <li class="d-flex align-items-center justify-content-between ps-2">
-                                <div class="col-10">
-                                    <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
-                                    <span class="text-dark"> ({{$filter->count}})</span>
-                                </div>
-                                <ul class="w-25" style="list-style: none;">
-                                    <li class="fil fw-bolder">
-                                        <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
-                                        <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                @foreach($saved_filters as $filter)
+                                <li class="d-flex align-items-center justify-content-between ps-2">
+                                    <div class="col-10">
+                                        <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                        <span class="text-dark"> ({{$filter->count}})</span>
+                                    </div>
+                                    <ul class="w-25" style="list-style: none;">
+                                        <li class="fil fw-bolder">
+                                            <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                            <ul class="submenu" style="border: 1px solid #e9e9e9;
                                             box-shadow: 0px 0px 1px #e9e9e9;">
-                                            <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name ?>', <?= $filter->id ?>)">Rename</a></li>
-                                            <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
+                                                <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name?>', <?= $filter->id ?>)">Rename</a></li>
+                                                <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
 
-                            </li>
-                            @endforeach
-                        </ul>
-                        @endif
+                                </li>
+                                @endforeach
+
+                            </ul>
+                            @endif
                     </div>
                 </div>
                 <div class="col-8 d-flex justify-content-end gap-2">
@@ -116,11 +158,11 @@ class="btn btn-sm btn-primary">
 
                         @if($type == 'super admin' || $type == 'Admin Team' || $type == 'Project Director' || $type == 'Project Manager')
                         <div class="col-md-3">
-                            <label for="">Brands</label>
+                            <label for="">Brand</label>
                             <select name="brand_id" id="brand_id" class="form form-control select2">
                                 <option value="">Select Brand</option>
                                 @foreach($filters['brands'] as $key => $brand)
-                                <option value="{{ $key }}">{{ $brand }}</option>
+                                <option value="{{ $key }}" {{ isset($_GET['brand_id']) && $_GET['brand_id'] == $key ? 'selected' : ''}}>{{ $brand }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -129,11 +171,11 @@ class="btn btn-sm btn-primary">
 
                         @if($type == 'super admin' || $type == 'Admin Team' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'Region Manager')
                         <div class="col-md-3" id="region_div">
-                            <label for="">Regions</label>
+                            <label for="">Region</label>
                             <select class="form form-control select2" id="filter_region_id" name="region_id" style="width: 95%;">
                                 <option value="">Select Region</option>
                                 @foreach ($filters['regions'] as $key => $region)
-                                <option value="{{ $key }}">{{ $region }}</option>
+                                <option value="{{ $key }}" {{ isset($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : ''}}>{{ $region }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -142,11 +184,11 @@ class="btn btn-sm btn-primary">
 
                         @if($type == 'super admin' || $type == 'Admin Team' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'Region Manager')
                         <div class="col-md-3" id="branch_div">
-                            <label for="">Branches</label>
+                            <label for="">Branch</label>
                             <select class="form form-control select2" id="filter_branch_id" name="branch_id" style="width: 95%;">
                                 <option value="">Select Region</option>
                                 @foreach ($filters['branches'] as $key => $branch)
-                                <option value="{{ $key }}">{{ $region }}</option>
+                                <option value="{{ $key }}" {{ isset($_GET['branch_id']) && $_GET['branch_id'] == $key ? 'selected' : ''}}>{{ $region }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -381,13 +423,15 @@ class="btn btn-sm btn-primary">
     $("#brand_id").on("change", function() {
         var id = $(this).val();
         var type = 'brand';
+        var filter = true;
 
         $.ajax({
             type: 'GET',
             url: '{{ route('region_brands') }}',
             data: {
                 id: id, // Add a key for the id parameter
-                type: type
+                type: type,
+                filter: filter
             },
             success: function(data) {
                 data = JSON.parse(data);
@@ -410,12 +454,15 @@ class="btn btn-sm btn-primary">
     $(document).on("change", "#filter_region_id", function() {
         var id = $(this).val();
         var type = 'region';
+        var filter = true;
+
         $.ajax({
             type: 'GET',
             url: '{{ route('region_brands') }}',
             data: {
                 id: id, // Add a key for the id parameter
-                type: type
+                type: type,
+                filter: filter
             },
             success: function(data) {
                 data = JSON.parse(data);
