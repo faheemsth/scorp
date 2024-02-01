@@ -274,7 +274,7 @@ class DealController extends Controller
                 $deals_query->where('brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
                 $deals_query->whereIn('brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+            }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
                 $deals_query->where('region_id', \Auth::user()->region_id);
             }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
                 $deals_query->where('branch_id', \Auth::user()->branch_id);
@@ -290,7 +290,7 @@ class DealController extends Controller
                 $deal_simple_query->where('brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
                 $deal_simple_query->whereIn('brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+            }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
                 $deal_simple_query->where('region_id', \Auth::user()->region_id);
             }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
                 $deal_simple_query->where('branch_id', \Auth::user()->branch_id);
@@ -3860,6 +3860,90 @@ class DealController extends Controller
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
+    }
+
+    public function download(){
+        //whole query
+        $filters = $this->dealFilters();
+        $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
+        $companies = FiltersBrands();
+        $brand_ids = array_keys($companies);
+
+        if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team'){
+
+        }else if(\Auth::user()->type == 'company'){
+            $deals_query->where('brand_id', \Auth::user()->id);
+        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            $deals_query->whereIn('brand_id', $brand_ids);
+        }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
+            $deals_query->where('region_id', \Auth::user()->region_id);
+        }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+            $deals_query->where('branch_id', \Auth::user()->branch_id);
+        }else{
+            $deals_query->where('assigned_to', \Auth::user()->id);
+        }
+
+
+        foreach ($filters as $column => $value) {
+            if ($column === 'name') {
+                $deals_query->whereIn('name', $value);
+            } elseif ($column === 'stage_id') {
+                $deals_query->whereIn('stage_id', $value);
+            } elseif ($column == 'users') {
+                $deals_query->whereIn('created_by', $value);
+            } elseif ($column == 'created_at') {
+                $deals_query->whereDate('deals.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+            }
+        }
+
+        //if list global search
+        if (isset($_GET['search']) && !empty($_GET['search'])) {
+            $g_search = $_GET['search'];
+            $deals_query->Where('deals.name', 'like', '%' . $g_search . '%');
+            //$deals_query->orWhere('deals.email', 'like', '%' . $g_search . '%');
+            $deals_query->orWhere('deals.phone', 'like', '%' . $g_search . '%');
+        }
+
+
+        $deals_query->orderBy('deals.id', 'DESC');
+        $deals = $deals_query->get();
+
+        $stages = Stage::get()->pluck('name', 'id')->toArray();
+        $brands = $companies;
+        $users = allUsers();
+        $sources = Source::get()->pluck('name', 'id')->toArray();
+       
+        
+        $header = [
+            'Sr.No.',
+            'Name',
+            'Passport',
+            'Stage',
+            'Intake',
+            'Assigned to'
+        ];
+
+        $data = [];
+        foreach($deals as $key => $deal){
+            $client = \App\Models\User::join('client_deals', 'client_deals.client_id', 'users.id')->where('client_deals.deal_id', $deal->id)->first();
+            $passport_number = isset($client->passport_number) ? $client->passport_number : '';
+            $month = !empty($deal->intake_month) ? $deal->intake_month : 'January';
+            $year = !empty($deal->intake_year) ? $deal->intake_year : '2023';
+            
+            $data[] = [
+                'sr_no' => $key+1,
+                'name' => $deal->name,
+                'passport_number' => $passport_number,
+                'stage' => $stages[$deal->stage_id] ?? '',
+                'intake' => $month.' 1 ,'.$year,
+                'assigned_to' => $users[$deal->assigned_to] ?? ''
+            ];
+        }
+
+
+        downloadCSV($header, $data, 'deals.csv');
+        return true;
+
     }
 
 }

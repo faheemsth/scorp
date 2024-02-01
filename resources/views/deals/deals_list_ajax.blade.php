@@ -1,5 +1,11 @@
 @if (count($deals) > 0)
 @foreach ($deals as $deal)
+
+@php
+                                $client = \App\Models\User::join('client_deals', 'client_deals.client_id', 'users.id')->where('client_deals.deal_id', $deal->id)->first();
+                                $passport_number = isset($client->passport_number) ? $client->passport_number : '';
+                                @endphp
+
     <tr>
         <td> <input type="checkbox" name=""></td>
         <td style="width: 100px !important; ">
@@ -14,6 +20,7 @@
                 @endif
             </span>
         </td>
+        <td> {{ $passport_number }}</td>
         <td>{{ $deal->stage->name }}</td>
         <td>
             @php

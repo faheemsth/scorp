@@ -1841,3 +1841,4 @@ Route::get('/branches-download', [BranchController::class, 'download'])->name('b
 Route::get('/employees-download', [UserController::class, 'downloadEmployees'])->name('employees.download');
 Route::get('/tasks-download', [DealController::class, 'downloadTasks'])->name('tasks.download');
 Route::get('/leads-download', [LeadController::class, 'download'])->name('leads.download');
+Route::get('/deals-download', [DealController::class, 'download'])->name('deals.download');
