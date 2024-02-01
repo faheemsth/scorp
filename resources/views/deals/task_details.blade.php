@@ -15,7 +15,7 @@
 
 
                     <div class="lead-basic-info">
-                        <p class="pb-0 mb-0 fw-normal">{{ __('Tasks') }}</p>
+                        <p class="pb-0 mb-0 fw-normal">{{ __('Task') }}</p>
                         <div class="d-flex align-items-baseline ">
                             <h5 class="fw-bold">{{ $task->name }}</h5>
                         </div>
@@ -321,7 +321,7 @@
                                                                 <td class="email-td"
                                                                     style="padding-left: 20px; font-size: 14px;">
 
-                                                                    {{ $task->remainder }}
+                                                                    {{ $task->remainder_date }}
                                                                 </td>
                                                             </tr>
 

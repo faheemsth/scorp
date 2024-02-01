@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use App\Models\Deal;
 use App\Models\User;
 use App\Models\Label;
 use App\Models\Stage;
 use App\Models\Branch;
 use App\Models\Course;
+use App\Models\Region;
 use App\Models\Source;
 use App\Models\Utility;
 use App\Models\DealCall;
 use App\Models\DealFile;
 use App\Models\DealNote;
 use App\Models\DealTask;
-use App\Models\Notification;
 use App\Models\Pipeline;
 use App\Models\UserDeal;
 use App\Models\DealEmail;
@@ -23,19 +24,19 @@ use App\Models\University;
 use App\Mail\SendDealEmail;
 use App\Models\ActivityLog;
 use App\Models\CustomField;
+use App\Models\SavedFilter;
+use App\Models\Notification;
 use App\Models\StageHistory;
 use Illuminate\Http\Request;
 use App\Models\DealDiscussion;
 use App\Models\ProductService;
 use App\Models\TaskDiscussion;
 use App\Models\DealApplication;
+use App\Models\ApplicationStage;
 use App\Models\ClientPermission;
+use App\Models\CompanyPermission;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use App\Models\CompanyPermission;
-use App\Models\Region;
-use App\Models\ApplicationStage;
-use Session;
 
 class DealController extends Controller
 {
@@ -2713,7 +2714,7 @@ class DealController extends Controller
         }
 
         if (\Auth::user()->can('manage task') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company') {
-            $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to');
+            $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to')->join('users as brand', 'brand.id', '=', 'deal_tasks.brand_id');;
             
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
@@ -2723,7 +2724,7 @@ class DealController extends Controller
                 $tasks->where('deal_tasks.brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
                 $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+            }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
                 $tasks->where('deal_tasks.region_id', \Auth::user()->region_id);
             }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
                 $tasks->where('deal_tasks.branch_id', \Auth::user()->branch_id);
@@ -2754,7 +2755,8 @@ class DealController extends Controller
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
                 $tasks->Where('deal_tasks.name', 'like', '%' . $g_search . '%');
-              //  $tasks->orWhere('tasks.email', 'like', '%' . $g_search . '%');
+                $tasks->orWhere('brand.name', 'like', '%' . $g_search . '%');
+                $tasks->orWhere('users.name', 'like', '%' . $g_search . '%');
                 $tasks->orWhere('deal_tasks.due_date', 'like', '%' . $g_search . '%');
             }
 
@@ -2798,8 +2800,9 @@ class DealController extends Controller
             // $regions = $filter['regions'];
             // $branches = $filter['branches'];
             // $employees = $filter['employees'];
+            $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'tasks')->get();
 
-            return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'filter'));
+            return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'filter', 'saved_filters'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -3761,5 +3764,86 @@ class DealController extends Controller
         }
     }
 
+
+    public function downloadTasks(){
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
+            $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to');
+            
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            if(\Auth::user()->type == 'super admin'){
+                
+            }else if(\Auth::user()->type == 'company'){
+                $tasks->where('deal_tasks.brand_id', \Auth::user()->id);
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+                $tasks->where('deal_tasks.region_id', \Auth::user()->region_id);
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+                $tasks->where('deal_tasks.branch_id', \Auth::user()->branch_id);
+            }else{
+                $tasks->where('deal_tasks.assigned_to', \Auth::user()->id);
+            }
+           
+            $filters = $this->TasksFilter();
+
+            foreach ($filters as $column => $value) {
+                if ($column === 'subjects') {
+                    $tasks->whereIn('deal_tasks.name', $value);
+                } elseif ($column === 'assigned_to') {
+                    $tasks->whereIn('assigned_to', $value);
+                } elseif ($column === 'created_by') {
+                    $tasks->whereIn('deal_tasks.brand_id', $value);
+                } elseif ($column == 'due_date') {
+                    $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                }elseif ($column == 'status') {
+                    $tasks->where('status',$value);
+                }
+            }
+
+            if(!isset($_GET['status'])){
+                $tasks->where('status', 0);
+            }
+
+
+            if(isset($_GET['search']) && !empty($_GET['search'])){
+                $g_search = $_GET['search'];
+                $tasks->Where('deal_tasks.name', 'like', '%' . $g_search . '%');
+              //  $tasks->orWhere('tasks.email', 'like', '%' . $g_search . '%');
+                $tasks->orWhere('deal_tasks.due_date', 'like', '%' . $g_search . '%');
+            }
+
+            $tasks = $tasks->orderBy('created_at', 'DESC')->get();
+            $all_users = allUsers();
+
+            //header 
+            $header = [
+                'Sr.No.',
+                'Subject',
+                'Assigned to',
+                'Brand',
+                'Status'
+            ];
+
+            $data = [];
+            foreach($tasks as $key => $task){
+                $data[] = [
+                    'sr' => $key + 1,
+                    'Subject' => $task->name,
+                    'Assigned To' => $all_users[$task->assigned_to] ?? '',
+                    'Brand' => $all_users[$task->brand_id] ?? '',
+                    'Status' => ($task->status == 1) ? 'Completed' : 'On Going'
+                ];
+            }
+
+
+
+            downloadCSV($header, $data, 'tasks.csv');
+            return true;
+            //return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'filter', 'saved_filters'));
+        } else {
+            return redirect()->back()->with('error', __('Permission Denied.'));
+        }
+    }
 
 }

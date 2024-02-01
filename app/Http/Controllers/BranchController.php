@@ -51,6 +51,11 @@ class BranchController extends Controller
                 $branch_query->whereIn('brands', $brand_ids);
             }
 
+
+            if(\Auth::user()->type == 'Region Manager'){
+                $branch_query->where('region_id', \Auth::user()->region_id);
+            }
+
             ///Filter Data
             if(isset($_GET['brand_id']) && !empty($_GET['brand_id'])){
                 $branch_query->where('brands', $_GET['brand_id']);

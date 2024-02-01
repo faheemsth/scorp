@@ -247,7 +247,7 @@
                             </label>
                             <div class="col-sm-6">
 
-                                <select class="form form-control select2 related_type" disabled readonly
+                                <select class="form form-control select2 related_type"
                                     id="choices-multiple6" name="related_type">
                                     <option value="">Select type</option>
                                     <option value="organization"
@@ -266,7 +266,7 @@
                                     class="text-danger">*</span></label>
                             <div class="col-sm-6">
 
-                                <select class="form form-control related_to" disabled id="choices-multiple7"
+                                <select class="form form-control related_to" id="choices-multiple7"
                                     name="related_to">
                                     <option value="">Related To</option>
                                     @foreach ($related_to as $key => $related)
