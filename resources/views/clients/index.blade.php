@@ -261,7 +261,6 @@ $(document).on('change', '.sub-check', function() {
                             <th class="d-none" style="border-left: 1px solid #fff;">Contact Email</th>
                             <th style="border-left: 1px solid #fff;">Admissions</th>
                             <th style="border-left: 1px solid #fff;">Applications</th>
-                            <th style="border-left: 1px solid #fff; display: none;">Action</th>
                         </tr>
                     </thead>
                     <tbody class="leads-list-div" style="font-size: 14px;" class="new-organization-list-tbody">
@@ -281,71 +280,21 @@ $(document).on('change', '.sub-check', function() {
                                 <td class="d-none">{{$client->email}}</td>
                                 <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{$client->clientDeals->count()}}</td>
                                 <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{$client->clientApplications($client->id)}}</td>
-                                <td class="d-none">
-
-                                    <div class="card-header-right">
-                                        <div class="btn-group card-option">
-                                            <button type="button" class="btn" data-bs-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false" >
-                                                <i class="ti ti-dots-vertical"></i>
-                                            </button>
-
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                @can('edit client')
-                                                    <a href="#!" data-size="md"
-                                                        data-url="{{ route('clients.edit', $client->id) }}"
-                                                        data-ajax-popup="true" class="dropdown-item"
-                                                        data-bs-original-title="{{ __('Edit User') }}">
-                                                        <i class="ti ti-pencil"></i>
-                                                        <span>{{ __('Edit') }}</span>
-                                                    </a>
-                                                @endcan
-
-                                                @can('delete client')
-                                                    {!! Form::open([
-                                                        'method' => 'DELETE',
-                                                        'route' => ['clients.destroy', $client['id']],
-                                                        'id' => 'delete-form-' . $client['id'],
-                                                    ]) !!}
-                                                    <a href="#!" class="dropdown-item bs-pass-para">
-                                                        <i class="ti ti-archive"></i>
-                                                        <span>
-                                                            @if ($client->delete_status != 0)
-                                                                {{ __('Delete') }}
-                                                            @else
-                                                                {{ __('Restore') }}
-                                                            @endif
-                                                        </span>
-                                                    </a>
-
-                                                    {!! Form::close() !!}
-                                                @endcan
-
-                                                <a href="#!"
-                                                    data-url="{{ route('clients.reset', \Crypt::encrypt($client->id)) }}"
-                                                    data-ajax-popup="true" class="dropdown-item"
-                                                    data-bs-original-title="{{ __('Reset Password') }}">
-                                                    <i class="ti ti-adjustments"></i>
-                                                    <span> {{ __('Reset Password') }}</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </td>
+                               
                             </tr>
                         @empty
                         @endforelse
                     </tbody>
                 </table>
             </div>
-
-            @if ($total_records > 0)
-                @include('layouts.pagination', [
-                    'total_pages' => $total_records,
-                    'num_results_on_page' => 50,
-                ])
-            @endif
+            <div class="pagination_html">
+                @if ($total_records > 0)
+                    @include('layouts.pagination', [
+                        'total_pages' => $total_records,
+                        'num_results_on_page' => 50,
+                    ])
+                @endif
+            </div>
         </div>
         <div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg my-0" role="document">
@@ -513,6 +462,62 @@ $(document).on('change', '.sub-check', function() {
                     },
                 });
             }
+
+
+            //global search
+        $(document).on("click", ".list-global-search-btn", function() {
+            var search = $(".list-global-search").val();
+            var ajaxCall = 'true';
+            $(".leads-list-div").html('Loading...');
+
+            $.ajax({
+                type: 'GET',
+                url: "{{ route('clients.index') }}",
+                data: {
+                    search: search,
+                    ajaxCall: ajaxCall
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        console.log(data.html);
+                        $(".leads-list-div").html(data.html);
+                        $(".pagination_div").html(data.pagination_html);
+                    }
+                }
+            })
+        })
+
+        $(document).ready(function () {
+            // Attach an event listener to the input field
+            $('.list-global-search').keypress(function (e) {
+                // Check if the pressed key is Enter (key code 13)
+                if (e.which === 13) {
+                    var search = $(".list-global-search").val();
+                    var ajaxCall = 'true';
+                    $(".leads-list-div").html('Loading...');
+
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ route('clients.index') }}",
+                        data: {
+                            search: search,
+                            ajaxCall: ajaxCall
+                        },
+                        success: function(data) {
+                            data = JSON.parse(data);
+
+                            if (data.status == 'success') {
+                                console.log(data.html);
+                                $(".leads-list-div").html(data.html);
+                                $(".pagination_div").html(data.pagination_html);
+                            }
+                        }
+                    })
+                }
+            });
+        });
         </script>
     @endpush
 

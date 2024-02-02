@@ -84,7 +84,11 @@ class ClientController extends Controller
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             $client_query->whereIn('deals.brand_id', $brand_ids);
-
+            if (isset($_GET['search']) && !empty($_GET['search'])) {
+                $g_search = $_GET['search'];
+                $client_query->where('users.name', 'like',  '%' . $g_search . '%');
+                $client_query->orwhere('users.passport_number', 'like',  '%' . $g_search . '%');
+            }
 
             $total_records = $client_query->count();
             $clients = $client_query->orderBy('created_at', 'DESC')->skip($start)->take($num_results_on_page)->get();
@@ -93,10 +97,14 @@ class ClientController extends Controller
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('clients.clients_list_ajax', compact('clients', 'total_records'))->render();
-
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' =>  $num_results_on_page
+                ])->render();
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => $html,
+                    'pagination_html' => $pagination_html 
                 ]);
             }
 
