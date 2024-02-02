@@ -2615,17 +2615,19 @@ class DealController extends Controller
                     'intake_month' => 'required'
                 ]
             );
-                // Default Field Value
-                if ($usr->default_pipeline) {
-                    $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
-                    if (!$pipeline) {
-                        $pipeline = Pipeline::first();
-                    }
-                } elseif (\Auth::user()->type == 'super admin') {
-                    $pipeline = Pipeline::first();
-                } else {
-                    $pipeline = Pipeline::first();
-                }
+           // $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
+
+                // // Default Field Value
+                // if ($usr->default_pipeline) {
+                //     $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
+                //     if (!$pipeline) {
+                //         $pipeline = Pipeline::first();
+                //     }
+                // } elseif (\Auth::user()->type == 'super admin') {
+                //     $pipeline = Pipeline::first();
+                // } else {
+                //     $pipeline = Pipeline::first();
+                // }
             if ($validator->fails()) {
 
                 $messages = $validator->getMessageBag();
@@ -2657,7 +2659,7 @@ class DealController extends Controller
             $application->university_id = $request->university;
             $application->stage_id = $request->status;
             $application->course = $request->course;
-            $application->pipeline_id = $pipeline->id;
+            //$application->pipeline_id = $pipeline->id;
             $application->external_app_id = $request->application_key;
             $application->intake = date('Y-m-d', strtotime($request->intake));
             $application->name = $deal->name . '-' . $request->course . '-' . $university_name . '-' . $request->application_key;

@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Stage;
+use App\Models\Utility;
+use App\Models\Pipeline;
 use App\Models\ClientDeal;
 use App\Models\University;
+use App\Models\ActivityLog;
+use App\Models\SavedFilter;
 use App\Models\StageHistory;
 use Illuminate\Http\Request;
 use App\Models\DealApplication;
-use App\Models\Pipeline;
-use App\Models\ActivityLog;
-use App\Models\Utility;
 
 
 class ApplicationsController extends Controller
@@ -121,18 +122,23 @@ class ApplicationsController extends Controller
             $universities = University::get()->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             $brands = User::where('type', 'company')->get();
-
+            $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'applications')->get();
+            
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('applications.applications_list_ajax',  compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands'))->render();
-
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' => $num_results_on_page,
+                ])->render();
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => $html,
+                    'pagination_html' => $pagination_html
                 ]);
             }
 
 
-            return view('applications.index', compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands'));
+            return view('applications.index', compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands', 'saved_filters'));
 
          }else{
             return redirect()->back()->with('error', __('Permission Denied.'));

@@ -482,6 +482,7 @@ class UniversityController extends Controller
 
             $intake_months = $university->intake_months;
             $uni_months = explode(',', $intake_months);
+
             $months = months();
 
 
