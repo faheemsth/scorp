@@ -290,8 +290,13 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 </button>
                                 @endcan
 
+                                @php
+                                    $all_params = $_GET;
+                                    $query_string = http_build_query($all_params);
+                                @endphp
+
                                 @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
-                                    <a href="{{ route('leads.download') }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
+                                    <a href="{{ route('leads.download') }}?{{ $query_string }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
                                         <i class="ti ti-download"></i>
                                     </a>
                                 @endif
@@ -375,43 +380,88 @@ if (isset($lead->is_active) && $lead->is_active) {
                             <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                             <form action="/leads/list" method="GET" class="">
                                 <div class="row my-3 align-items-end">
-                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                    <div class="col-md-3 mt-1"> <label for="">Brands</label>
-                                        <select class="form form-control select2" id="choices-multiple555"
-                                            name="brand_id[]" multiple style="width: 95%;">
-                                            <option value="">Select Brand</option>
-                                    @if (FiltersBrands())
-                                            @foreach (FiltersBrands() as $key => $brand)
-                                            <option value="{{ $key }}" {{ isset($_GET['brand_id']) && in_array($key, $_GET['brand_id']) ? 'selected' : '' }}>{{ $brand }}</option>
-                                           @endforeach
-                                    @endif
+                                @php
+                                $type = \Auth::user()->type;
+                                $access_levels = accessLevel();
+                                @endphp
+
+                       
+
+                                @if(in_array($type, $access_levels['first']))
+                                    <div class="col-md-3 mt-2">
+                                        <label for="">Brand</label>
+                                        <select name="brand" class="form form-control select2" id="filter_brand_id">
+                                            @if (!empty($filters['brands']))
+                                                @foreach ($filters['brands'] as $key => $Brand)
+                                                <option value="{{ $key }}" {{ !empty($_GET['brand']) && $_GET['brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No brands available</option>
+                                            @endif
                                         </select>
                                     </div>
-                                    @endif
+                                @endif
 
-                                    <div class="col-md-3"> <label for="">Name</label>
+
+
+                                @if(in_array($type, $access_levels['first']) || in_array($type, $access_levels['second']))
+                                    <div class="col-md-3 mt-2" id="region_filter_div">
+                                        <label for="">Region</label>
+                                        <select name="region_id" class="form form-control select2" id="filter_region_id">
+                                            @if (!empty($filters['regions']))
+                                                @foreach ($filters['regions'] as $key => $region)
+                                                <option value="{{ $key }}" {{ !empty($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : '' }}>{{ $region }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+
+                                @if(in_array($type, $access_levels['first']) || in_array($type, $access_levels['second']) || in_array($type, $access_levels['third']))
+                                    <div class="col-md-3 mt-2" id="branch_filter_div">
+                                        <label for="">Branch</label>
+                                        <select name="branch_id" class="form form-control select2" id="filter_branch_id">
+                                            @if (!empty($filters['branches']))
+                                                @foreach ($filters['branches'] as $key => $branch)
+                                                <option value="{{ $key }}" {{ !empty($_GET['branch_id']) && $_GET['branch_id'] == $key ? 'selected' : '' }}>{{ $branch }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+                                   
+
+                                <div class="col-md-3"> <label for="">Name</label>
+                                    <div class="" id="filter-names">
                                         <select class="form form-control select2" id="choices-multiple110" name="name[]"
                                             multiple style="width: 95%;">
                                             <option value="">Select name</option>
                                             @foreach ($leads as $lead)
-                                                <option value="{{ $lead->name }}"
-                                                    <?= isset($_GET['name']) && in_array($lead->name, $_GET['name']) ? 'selected' : '' ?>
+                                                <option value="{{ $lead->id }}"
+                                                    <?= isset($_GET['name']) && in_array($lead->id, $_GET['name']) ? 'selected' : '' ?>
                                                     class="">{{ $lead->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
+                                </div>
 
-                                    <div class="col-md-3"> <label for="">Stage</label>
-                                        <select class="form form-control select2" id="choices-multiple444"
-                                            name="stages[]" multiple style="width: 95%;">
-                                            <option value="">Select Stage</option>
-                                            @foreach ($stages as $stage)
-                                                <option value="{{ $stage->id }}"
-                                                    <?= isset($_GET['stages']) && in_array($stage->id, $_GET['stages']) ? 'selected' : '' ?>
-                                                    class="">{{ $stage->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                <div class="col-md-3"> <label for="">Stage</label>
+                                    <select class="form form-control select2" id="choices-multiple444"
+                                        name="stages[]" multiple style="width: 95%;">
+                                        <option value="">Select Stage</option>
+                                        @foreach ($stages as $stage)
+                                            <option value="{{ $stage->id }}"
+                                                <?= isset($_GET['stages']) && in_array($stage->id, $_GET['stages']) ? 'selected' : '' ?>
+                                                class="">{{ $stage->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
 
                                     <style>
@@ -615,11 +665,13 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                 </tbody>
                             </table>
-                            @if ($total_records > 0)
-                                @include('layouts.pagination', [
-                                    'total_pages' => $total_records,
-                                ])
-                            @endif
+                            <div class="pagination_div">
+                                @if ($total_records > 0)
+                                    @include('layouts.pagination', [
+                                        'total_pages' => $total_records,
+                                    ])
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1218,6 +1270,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     if (data.status == 'success') {
                         console.log(data.html);
                         $(".leads-list-div").html(data.html);
+                        $(".pagination_div").html(data.pagination_html);
                     }
                 }
             });
@@ -1242,6 +1295,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     if (data.status == 'success') {
                         console.log(data.html);
                         $(".leads-list-div").html(data.html);
+                        $(".pagination_div").html(data.pagination_html);
                     }
                 }
             })
@@ -1269,6 +1323,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                             if (data.status == 'success') {
                                 console.log(data.html);
                                 $(".leads-list-div").html(data.html);
+                                $(".pagination_div").html(data.pagination_html);
                             }
                         }
                     })
@@ -1609,5 +1664,108 @@ $('.' + name + '-td').html(html);
             <?php } ?>
             return html;
         }
+
+
+
+        ////////////////////Filters Javascript
+        $("#filter_brand_id").on("change", function() {
+            var id = $(this).val();
+            var type = 'brand';
+            var filter = true;
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#region_filter_div').html('');
+                        $("#region_filter_div").html(data.regions);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+
+        $(document).on("change", "#filter_region_id, #region_id", function() {
+            var id = $(this).val();
+            var filter = true;
+            var type = 'region';
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#branch_filter_div').html('');
+                        $("#branch_filter_div").html(data.branches);
+                        getLeads();
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+        $(document).on("change", "#filter_branch_id, #branch_id", function() {
+           getLeads();
+        });
+
+        function getLeads(){
+            var brand_id = $("#filter_brand_id").val();
+            var region_id = $("#region_id").val();
+            var branch_id = $("#branch_id").val();
+
+            var type = 'leads';
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('filterData') }}',
+                data: {
+                   brand_id,
+                   region_id,
+                   branch_id,
+                   type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#filter-names').html('');
+                        $("#filter-names").html(data.html);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        }
+
+        
     </script>
 @endpush

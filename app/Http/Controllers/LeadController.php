@@ -140,10 +140,17 @@ class LeadController extends Controller
             $filters['brand_id'] = $_GET['brand_id'];
         }
 
+        if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
+            $filters['region_id'] = $_GET['region_id'];
+        }
+
+        if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
+            $filters['branch_id'] = $_GET['branch_id'];
+        }
+
         if (isset($_GET['created_at']) && !empty($_GET['created_at'])) {
             $filters['created_at'] = $_GET['created_at'];
         }
-
         return $filters;
     }
 
@@ -184,7 +191,7 @@ class LeadController extends Controller
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
 
-            $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id');
+            $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id')->join('users as assigned_to', 'assigned_to.id', '=', 'leads.user_id');
             if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team'){
 
             }else if(\Auth::user()->type == 'company'){
@@ -208,9 +215,13 @@ class LeadController extends Controller
             // Add the dynamic filters
             foreach ($filters as $column => $value) {
                 if ($column === 'name') {
-                    $leads_query->whereIn('leads.name', $value);
+                    $leads_query->whereIn('leads.id', $value);
                 } elseif ($column === 'brand_id') {
-                    $leads_query->whereIn('leads.brand_id', $value);
+                    $leads_query->where('leads.brand_id', $value);
+                }elseif ($column === 'region_id') {
+                    $leads_query->where('leads.region_id', $value);
+                }elseif ($column === 'branch_id') {
+                    $leads_query->where('leads.branch_id', $value);
                 } elseif ($column === 'stage_id') {
                     $leads_query->whereIn('stage_id', $value);
                 } elseif ($column === 'users') {
@@ -220,17 +231,31 @@ class LeadController extends Controller
                 }
             }
 
+            if (!isset($_GET['ajaxCall']) && isset($_GET['search']) && !empty($_GET['search'])) {
+                $g_search = $_GET['search'];
+                $leads_query->Where('leads.name', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('users.name', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('branches.name', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('lead_stages.name', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('leads.email', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('assigned_to.name', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('leads.phone', 'like', '%' . $g_search . '%');
+            }
+
             //if list global search
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
                 $leads_query->Where('leads.name', 'like', '%' . $g_search . '%');
                 $leads_query->orWhere('users.name', 'like', '%' . $g_search . '%');
                 $leads_query->orWhere('branches.name', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('lead_stages.name', 'like', '%' . $g_search . '%');
                 $leads_query->orWhere('leads.email', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('assigned_to.name', 'like', '%' . $g_search . '%');
                 $leads_query->orWhere('leads.phone', 'like', '%' . $g_search . '%');
             }
 
             $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
+            $leads_query->where('leads.is_converted', 0);
             $total_records =  $leads_query->clone()->count();
             $leads = $leads_query->clone()->groupBy('leads.id')->orderBy('leads.created_at', 'desc')->skip($start)->take($num_results_on_page)->get();
             $users = allUsers();
@@ -242,10 +267,14 @@ class LeadController extends Controller
             $branches = Branch::get()->pluck('name', 'id')->ToArray();
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('leads.leads_list_ajax', compact('leads', 'users', 'branches','total_records'))->render();
-
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' =>  $num_results_on_page
+                ])->render();
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => $html,
+                    'pagination_html' =>  $pagination_html
                 ]);
             }
 
@@ -271,7 +300,11 @@ class LeadController extends Controller
 
                 $assign_to = User::whereIn('brand_id', $brand_ids)->pluck('name', 'id')->toArray();
             }
-            return view('leads.list', compact('pipelines','branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status', 'assign_to'));
+
+            $filters = BrandsRegionsBranches();
+
+
+            return view('leads.list', compact('pipelines','branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status', 'assign_to', 'filters'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -1642,9 +1675,7 @@ class LeadController extends Controller
     {
         if (\Auth::user()->can('edit lead')) {
             $lead = Lead::find($id);
-            if ($lead->created_by == \Auth::user()->creatorId()) {
-                //$labels   = Label::where('pipeline_id', '=', $lead->pipeline_id)->where('created_by', \Auth::user()->creatorId())->get();
-                $labels   = Label::where('pipeline_id', '=', $lead->pipeline_id)->get();
+            $labels   = Label::where('pipeline_id', '=', $lead->pipeline_id)->get();
                 $selected = $lead->labels();
                 if ($selected) {
                     $selected = $selected->pluck('name', 'id')->toArray();
@@ -1653,9 +1684,6 @@ class LeadController extends Controller
                 }
 
                 return view('leads.labels', compact('lead', 'labels', 'selected'));
-            } else {
-                return response()->json(['error' => __('Permission Denied.')], 401);
-            }
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
         }
@@ -1665,18 +1693,14 @@ class LeadController extends Controller
     {
         if (\Auth::user()->can('edit lead')) {
             $leads = Lead::find($id);
-            if ($leads->created_by == \Auth::user()->creatorId()) {
-                if ($request->labels) {
-                    $leads->labels = implode(',', $request->labels);
-                } else {
-                    $leads->labels = $request->labels;
-                }
-                $leads->save();
-
-                return redirect()->back()->with('success', __('Labels successfully updated!'));
+            if ($request->labels) {
+                $leads->labels = implode(',', $request->labels);
             } else {
-                return redirect()->back()->with('error', __('Permission Denied.'));
+                $leads->labels = $request->labels;
             }
+            $leads->save();
+
+            return redirect()->back()->with('success', __('Labels successfully updated!'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -3615,7 +3639,7 @@ class LeadController extends Controller
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
 
-            $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id');
+            $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id')->join('users as assigned_to', 'assigned_to.id', '=', 'leads.user_id');
             if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team'){
 
             }else if(\Auth::user()->type == 'company'){
@@ -3632,16 +3656,16 @@ class LeadController extends Controller
 
 
 
-
-
-          //  $leads_query->whereIn('brand_id', $brand_ids)->where('is_converted',0);
-
             // Add the dynamic filters
             foreach ($filters as $column => $value) {
                 if ($column === 'name') {
-                    $leads_query->whereIn('leads.name', $value);
+                    $leads_query->whereIn('leads.id', $value);
                 } elseif ($column === 'brand_id') {
-                    $leads_query->whereIn('leads.brand_id', $value);
+                    $leads_query->where('leads.brand_id', $value);
+                }elseif ($column === 'region_id') {
+                    $leads_query->where('leads.region_id', $value);
+                }elseif ($column === 'branch_id') {
+                    $leads_query->where('leads.branch_id', $value);
                 } elseif ($column === 'stage_id') {
                     $leads_query->whereIn('stage_id', $value);
                 } elseif ($column === 'users') {
@@ -3651,17 +3675,19 @@ class LeadController extends Controller
                 }
             }
 
-            //if list global search
-            if (isset($_GET['search']) && !empty($_GET['search'])) {
+            if (!isset($_GET['ajaxCall']) && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
                 $leads_query->Where('leads.name', 'like', '%' . $g_search . '%');
                 $leads_query->orWhere('users.name', 'like', '%' . $g_search . '%');
                 $leads_query->orWhere('branches.name', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('lead_stages.name', 'like', '%' . $g_search . '%');
                 $leads_query->orWhere('leads.email', 'like', '%' . $g_search . '%');
+                $leads_query->orWhere('assigned_to.name', 'like', '%' . $g_search . '%');
                 $leads_query->orWhere('leads.phone', 'like', '%' . $g_search . '%');
             }
 
             $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
+            $leads_query->where('leads.is_converted', 0);
             $leads = $leads_query->clone()->groupBy('leads.id')->orderBy('leads.created_at', 'desc')->get();
             $users = allUsers();
             $branches = Branch::get()->pluck('name', 'id')->ToArray();
@@ -3697,6 +3723,39 @@ class LeadController extends Controller
     }else{
         return redirect()->back()->with('error', __('Permission Denied.'));
     }
+}
+
+
+
+ public function filterData(Request $request){
+    
+    $brand_id = $request->get('brand_id');
+    $region_id = $request->get('region_id');
+    $branch_id = $request->get('branch_id');
+    $type = $request->get('type');
+
+
+    if(!empty($region_id) && empty($branch_id)){
+        $leads = Lead::where('brand_id', $brand_id)->where('region_id', $region_id)->pluck('name', 'id')->toArray();
+    }else{
+        $leads = Lead::where('brand_id', $brand_id)->where('region_id', $region_id)->where('branch_id', $branch_id)->pluck('name', 'id')->toArray();
     }
+
+
+    $html = '<select class="form form-control select2" id="choices-multiple110" name="name[]"
+    multiple style="width: 95%;">
+    <option value="">Select name</option>';
+
+    foreach($leads as $key => $lead){
+        $html .= '<option value="'.$key.'">"'.$lead.'"</option>';
+    }
+
+    $html .= '</select>';
+
+    return json_encode([
+        'status' => 'success',
+        'html' => $html
+    ]);
+ }
 
 }

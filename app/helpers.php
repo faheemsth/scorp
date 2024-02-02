@@ -363,6 +363,27 @@ function downloadCSV($headers, $data, $filename = 'data.csv') {
     exit;
 }
 
+function accessLevel(){
+    return [ 
+        'first' => [
+            'super admin',
+            'Admin Team',
+            'Project Director',
+            'Project Manager'
+        ],
+        'second' => [
+            'Region Manager'
+        ],
+        'third' => [
+            'Branch Manager',
+            'Admissions Manager',
+            'Admissions Officer',
+            'Marketing Officer'
+        ]
+    ];
+}
+
+
 
 
 
