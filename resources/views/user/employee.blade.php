@@ -61,6 +61,9 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
     .dropdown-item:hover {
         background-color: white !important;
     }
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
 </style>
 
 @section('content')
@@ -157,7 +160,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                     {{-- Filters --}}
                     <div class="filter-data px-3" id="filterToggle" <?= isset($_GET['branch_id']) ? '' : 'style="display: none;"' ?>>
                         <form action="/user/employees" method="GET" class="">
-                            <div class="row my-3">
+                            <div class="row my-3 filbar">
 
 
                                 @php
@@ -220,11 +223,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
 
 
-                                <div class="col-md-3 mt-2">
-                                    <label for="">Name</label>
-                                    <input type="text" class="form form-control" placeholder="Search Name" name="Name" value="<?= isset($_GET['Name']) ? $_GET['Name'] : '' ?>" style="width: 95%; border-color:#aaa">
-                                </div>
-
+                              
 
                                 <div class="col-md-3 mt-2">
                                     <label for="">Designation</label>
@@ -236,6 +235,10 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                         @endforeach
                                         @endif
                                     </select>
+                                </div>
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Name</label>
+                                    <input type="text" class="form form-control" placeholder="Search Name" name="Name" value="<?= isset($_GET['Name']) ? $_GET['Name'] : '' ?>" style="width: 95%; border-color:#aaa">
                                 </div>
 
                                 <div class="col-md-3 mt-2 d-none">

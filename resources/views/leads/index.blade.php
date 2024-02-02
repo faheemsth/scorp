@@ -11,6 +11,16 @@
 @push('css-page')
     <link rel="stylesheet" href="{{ asset('css/summernote/summernote-bs4.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/dragula.min.css') }}" id="main-style-link">
+<style>
+    .form-control:focus{
+                    border: none !important;
+                    outline:none !important;
+                }
+   
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
+</style>
 @endpush
 @push('script-page')
     <script src="{{ asset('css/summernote/summernote-bs4.js') }}"></script>

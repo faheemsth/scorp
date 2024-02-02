@@ -217,6 +217,14 @@
             left: 0 !important;
         }
     }
+    .form-control:focus{
+                    border: none !important;
+                    outline:none !important;
+                }
+   
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
 </style>
 <style>
     .form-controls,
@@ -493,7 +501,7 @@
                     <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                         <form action="/deals/list" method="GET" class="">
 
-                            <div class="row my-3">
+                            <div class="row my-3 filbar">
                                 <div class="col-md-4">
                                     <label for="">Name</label>
                                     <select name="name[]" id="deals" class="form form-control select2" multiple style="width: 95%;">
@@ -526,11 +534,7 @@
                                     </select>
                                 </div>
                                 @endif
-                                <style>
-                                    .form-control:focus {
-                                        border: 1px solid rgb(209, 209, 209) !important;
-                                    }
-                                </style>
+                                
                                 <div class="col-md-4 mt-2">
                                     <label for="">Created at</label>
                                     <input type="date" class="form form-control" name="created_at" value="<?= isset($_GET['created_at']) ? $_GET['created_at'] : '' ?>" style="width: 95%; border-color:#aaa">

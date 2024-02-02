@@ -76,6 +76,14 @@ $setting = \App\Models\Utility::colorset();
     .dropdown-item:hover {
         background-color: white !important;
     }
+    .form-control:focus{
+                    border: none !important;
+                    outline:none !important;
+                }
+   
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
 </style>
 <div class="row">
     <div class="col-12">
@@ -162,7 +170,7 @@ $setting = \App\Models\Utility::colorset();
                     <form action="/deals/get-user-tasks" method="GET" class="">
 
 
-                        <div class="row my-3 ">
+                        <div class="row my-3 filbar">
                             <div class="col-md-4"> <label for="">Brands</label>
                                 <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
                                     <option value="">Select Brand</option>
@@ -193,7 +201,7 @@ $setting = \App\Models\Utility::colorset();
                             </div>
 
 
-                            <div class="col-md-4">
+                            <div class="col-md-4 mt-2">
                                 <label for="">Status</label>
                                 <select class="form form-control select2" id="status444" name="status" multiple style="width: 95%;">
                                     <option value="">Select Status</option>

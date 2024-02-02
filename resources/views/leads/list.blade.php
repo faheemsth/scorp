@@ -54,12 +54,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 @endsection
 
 <style>
-    /* .form-controls,
-    .form-btn {
-        padding: 4px 1rem !important;
-    } */
-
-    /* Set custom width for specific table cells */
+   
     .action-btn {
         display: inline-grid !important;
     }
@@ -82,9 +77,7 @@ if (isset($lead->is_active) && $lead->is_active) {
         color: #1F2735 !important;
     }
 
-    .form-control:focus {
-        border: 1px solid rgb(209, 209, 209) !important;
-    }
+   
 </style>
 {{-- comment --}}
 
@@ -207,6 +200,15 @@ if (isset($lead->is_active) && $lead->is_active) {
                             .dropdown-item:hover {
                                 background-color: white !important;
                             }
+                            .form-control:focus{
+                                border: none !important;
+                                outline:none !important;
+                            }
+   
+                            .filbar .form-control:focus{
+                                            border: 1px solid rgb(209, 209, 209) !important;
+                                        }
+
                         </style>
 
                         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
@@ -374,7 +376,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                         <div class="filter-data px-3" id="filter-show"
                             <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                             <form action="/leads/list" method="GET" class="">
-                                <div class="row my-3 align-items-end">
+                                <div class="row my-3 align-items-end filbar">
                                     @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                                     <div class="col-md-3 mt-1"> <label for="">Brands</label>
                                         <select class="form form-control select2" id="choices-multiple555"
@@ -414,11 +416,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     </div>
 
 
-                                    <style>
-                                        .form-control:focus {
-                                            border: 1px solid rgb(209, 209, 209) !important;
-                                        }
-                                    </style>
+                                  
                                     <div class="col-md-3 mt-2">
                                         <label for="">Created at</label>
                                         <input type="date" class="form form-control" name="created_at"
