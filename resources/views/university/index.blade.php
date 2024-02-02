@@ -47,6 +47,14 @@
 .dropdown-item:hover{
     background-color: white !important;
 }
+.form-control:focus{
+                    border: none !important;
+                    outline:none !important;
+                }
+   
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
 </style>
 
 
@@ -85,11 +93,7 @@
                 @php
                 if ($i < 5) { echo '<div style="border-left: 3px solid black; height: 80px; width: 5px;margin-top: 1.9rem; " class = "mx-4"></div>' ; } $countryFound=true; @endphp @endif @endif @endforeach @empty @endforelse </div>
 
-                    <!-- <style>
-                        .form-control:focus {
-                            border: 1px solid rgb(209, 209, 209) !important;
-                        }
-                    </style> -->
+                   
 
                     <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                         <div class="col-3">
@@ -111,8 +115,7 @@
                                         <ul class="w-25" style="list-style: none;">
                                         <li class="fil fw-bolder">
                                             <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
-                                            <ul class="submenu" style="border: 1px solid #e9e9e9;
-                                            box-shadow: 0px 0px 1px #e9e9e9;">
+                                            <ul class="submenu" style="border: 1px solid #e9e9e9;box-shadow: 0px 0px 1px #e9e9e9;">
                                               <li><a class="dropdown-item" href="#">Rename</a></li>
                                               <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
                                             </ul>
@@ -194,7 +197,7 @@
                     {{-- Filters --}}
                     <div class="filter-data px-3" id="filter-show" <?= isset($_GET['name']) ? '' : 'style="display: none;"' ?>>
                         <form action="/university" method="GET" class="">
-                            <div class="row my-3">
+                            <div class="row my-3 filbar">
                                 <div class="col-md-3 mt-2">
                                     <label for="">Name</label>
                                     <input type="text" class="form form-control" placeholder="Search Name" name="name" value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>" style="width: 95%; border-color:#aaa">

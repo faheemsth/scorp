@@ -141,7 +141,7 @@
                     @can('edit organization')
                         <a href="#" data-size="lg" data-url="{{ route('organization.edit', $org->id) }}"
                             data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"
-                            class="btn px-2 btn-dark text-white">
+                            class="btn px-2 btn-dark text-white" style="color:white; width:36px; height: 36px; margin-top:10px;">
                             <i class="ti ti-pencil"></i>
                         </a>
                     @endcan
@@ -155,7 +155,7 @@
                         ]) !!}
 
                         <a href="#" class="btn px-2 bg-danger  align-items-center bs-pass-para"
-                            data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i class="ti ti-trash text-white"></i></a>
+                            data-bs-toggle="tooltip" title="{{ __('Delete') }}" style="color:white; width:36px; height: 36px; margin-top:10px;"><i class="ti ti-trash text-white"></i></a>
 
                         {!! Form::close() !!}
                     @endcan
@@ -314,7 +314,7 @@
 
                                                                 <td class="email-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $org->email }}
+                                                                   <a href="{{ $org->email }}" target="_blank" >{{ $org->email }}</a> 
                                                                 </td>
                                                             </tr>
 
@@ -325,7 +325,7 @@
                                                                 </td>
                                                                 <td class="website-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $org_detail->website }}
+                                                                   <a href="{{ $org_detail->website }}" target="_blank">{{ $org_detail->website }}</a> 
                                                                 </td>
                                                             </tr>
 
@@ -336,7 +336,7 @@
                                                                 </td>
                                                                 <td class="linkedin-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $org_detail->linkedin }}
+                                                                   <a href="{{ $org_detail->linkedin }}" target="_blank" >{{ $org_detail->linkedin }}</a> 
                                                                 </td>
                                                             </tr>
 
@@ -348,7 +348,7 @@
 
                                                                 <td class="facebook-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $org_detail->facebook }}
+                                                                   <a href="{{ $org_detail->facebook }}" target="_blank" >{{ $org_detail->facebook }}</a> 
                                                                 </td>
                                                             </tr>
 
@@ -359,7 +359,7 @@
                                                                 </td>
                                                                 <td class="twitter-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $org_detail->twitter }}
+                                                                   <a href="{{ $org_detail->twitter }}" target="_blank" >{{ $org_detail->twitter }}</a> 
                                                                 </td>
                                                             </tr>
 
@@ -371,8 +371,7 @@
                                                                 </td>
                                                                 <td class="drive_link-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    <a href="  {{ $org_detail->drive_link }}">
-                                                                        {{ $org_detail->drive_link }}</a>
+                                                                   <a href="{{ $org_detail->drive_link }}" target="_blank">{{ $org_detail->drive_link }}</a> 
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -445,8 +444,8 @@
                                                                 </td>
                                                                 <td class=""
                                                                     style="padding-left:10px; font-size: 13px;">
-                                                                    <a href=""
-                                                                        style="font-size:14px">{{ __('Change') }}</a>
+                                                                    
+                                                                        style="font-size:14px">{{ __('Change') }}
                                                                 </td>
                                                             </tr>
 

@@ -97,14 +97,27 @@
             </div>
         </li>
         {{-- dashboard end li  --}}
+
+
+
+        {{-- announcement  --}}
+        <li class=" nav-item {{ Request::segment(1) == 'announcement' ? 'active' : '' }}">
+            <a href="{{ url('announcement') }}" class="nav-link">
+                    <i class="fa fa-solid fa-bullhorn" id="icon1"  style="color: #ffff;font-size: 15px;"></i>
+                    <i class="fa fa-solid fa-bullhorn" id="icon2"  style="color: #2e82d0;font-size: 15px;"></i>
+                <span>{{ __('Announcement') }}</span>
+            </a>
+        </li>
+        {{-- end announcement  --}}
         {{-- /// --}}
+        
 
         @if (Gate::check('manage user') || Gate::check('manage region') || Gate::check('manage branch') || Gate::check('manage employee'))
         <li class="nav-item">
             <a class="nav-link {{Request::segment(1) == 'branch' || Request::segment(1) == 'users' || (Request::segment(1) == 'user' && Request::segment(2) == 'employees') || Request::segment(1) == 'region' ? '' : 'collapsed' }}"
             href="#" data-toggle="collapse" data-target="#collapsehrm"
                 aria-expanded="true" aria-controls="collapsehrm">
-                <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px"
+                <img src="{{ asset('assets/cs-theme/icons/hrm.png') }}" width="23px"
                 style="margin-top:-5px" alt="" srcset="">
                 <span>{{ __('HRM System') }}</span>
             </a>
@@ -430,20 +443,7 @@
         @endif
     @endcan
 
-    @can('manage invoice')
-        {{-- announcement  --}}
-        <li class="d-none nav-item {{ Request::segment(1) == 'invoice' ? 'active' : '' }}">
-            <a href="{{ url('invoice') }}" class="nav-link">
-                <img src="{{ asset('assets/cs-theme/icons/Group 138.png') }}" id="icon1" width="15px"
-                    height="15px" style="margin-top:-6px" alt="" srcset="">
-                <img src="{{ asset('assets/cs-theme/icons/Group 138.png') }}" id="icon2" width="15px"
-                    height="15px" style="margin-top:-6px" alt="" srcset="">
-
-                <span>{{ __('Invoice') }}</span>
-            </a>
-        </li>
-        {{-- end announcement  --}}
-        @endcan
+   
 
 
 
@@ -950,15 +950,7 @@
 
 
 
-        {{-- announcement  --}}
-        <li class=" nav-item {{ Request::segment(1) == 'announcement' ? 'active' : '' }}">
-            <a href="{{ url('announcement') }}" class="nav-link">
-                    <i class="fa fa-solid fa-bullhorn" id="icon1"  style="color: #ffff;font-size: 15px;"></i>
-                    <i class="fa fa-solid fa-bullhorn" id="icon2"  style="color: #2e82d0;font-size: 15px;"></i>
-                <span>{{ __('Announcement') }}</span>
-            </a>
-        </li>
-        {{-- end announcement  --}}
+       
 
         {{-- support  --}}
         <li class=" nav-item {{ Request::segment(1) == 'support' ? 'active' : '' }}">

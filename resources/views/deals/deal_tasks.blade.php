@@ -76,6 +76,14 @@ $setting = \App\Models\Utility::colorset();
     .dropdown-item:hover {
         background-color: white !important;
     }
+    .form-control:focus{
+                    border: none !important;
+                    outline:none !important;
+                }
+   
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
 </style>
 <div class="row">
     <div class="col-12">
