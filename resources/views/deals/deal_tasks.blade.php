@@ -163,56 +163,102 @@ $setting = \App\Models\Utility::colorset();
 
 
                         <div class="row my-3 ">
-                            <div class="col-md-4"> <label for="">Brands</label>
-                                <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
-                                    <option value="">Select Brand</option>
-                                    @if (FiltersBrands())
-                                        @foreach (FiltersBrands() as $key => $brand)
-                                          <option value="{{ $key }}" {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }}>{{ $brand }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                            @php
+                            $type = \Auth::user()->type;
+                            $access_levels = accessLevel();
+                            $filters = BrandsRegionsBranches();
+                            @endphp
 
-                            <div class="col-md-4"> <label for="">Subject</label>
-                                <select class="form form-control select2" id="choices-multiple110" name="subjects[]" multiple style="width: 95%;">
-                                    <option value="">Select Subject</option>
-                                    @foreach ($tasks as $filter_task)
-                                    <option value="{{ $filter_task->name }}" <?= isset($_GET['subjects']) && in_array($filter_task->name, $_GET['subjects']) ? 'selected' : '' ?> class="">{{ $filter_task->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="col-md-4"> <label for="">Assigned To</label>
-                                <select name="assigned_to[]" id="choices-multiple333" class="form form-control select2" multiple style="width: 95%;">
-                                    <option value="">Select user</option>
-                                    @foreach ($assign_to as $key => $user)
-                                    <option value="{{ $key }}" <?= isset($_GET['assigned_to']) && in_array($key, $_GET['assigned_to']) ? 'selected' : '' ?> class="">{{ $user }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            @if(in_array($type, $access_levels['first']))
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Brand</label>
+                                    <select name="brand" class="form form-control select2" id="filter_brand_id">
+                                        @if (!empty($filters['brands']))
+                                            @foreach ($filters['brands'] as $key => $Brand)
+                                            <option value="{{ $key }}" {{ !empty($_GET['brand']) && $_GET['brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
+                                            @endforeach
+                                            @else
+                                            <option value="" disabled>No brands available</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            @endif
 
 
-                            <div class="col-md-4">
-                                <label for="">Status</label>
-                                <select class="form form-control select2" id="status444" name="status" multiple style="width: 95%;">
-                                    <option value="">Select Status</option>
-                                    <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Completed</option>
-                                    <option value="0" <?= isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : '' ?>>On Going</option>
-                                </select>
-                            </div>
 
-                            <div class="col-md-4 mt-2">
-                                <label for="">Due Date</label>
-                                <input type="date" class="form form-control" name="due_date" value="<?= isset($_GET['due_date']) ? $_GET['due_date'] : '' ?>" style="width: 95%; border-color:#aaa">
-                            </div>
+                                @if(in_array($type, $access_levels['first']) || in_array($type, $access_levels['second']))
+                                    <div class="col-md-3 mt-2" id="region_filter_div">
+                                        <label for="">Region</label>
+                                        <select name="region_id" class="form form-control select2" id="filter_region_id">
+                                            @if (!empty($filters['regions']))
+                                                @foreach ($filters['regions'] as $key => $region)
+                                                <option value="{{ $key }}" {{ !empty($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : '' }}>{{ $region }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
 
-                            <div class="col-md-4 mt-4 pt-2 d-flex align-items-end">
-                                <input type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}" class="btn form-btn me-2 btn-dark px-2 py-2" >
-                                <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn px-2 py-2 btn-dark" style="color:white;">Reset</a>
-                                <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
 
-                            </div>
+                                @if(in_array($type, $access_levels['first']) || in_array($type, $access_levels['second']) || in_array($type, $access_levels['third']))
+                                    <div class="col-md-3 mt-2" id="branch_filter_div">
+                                        <label for="">Branch</label>
+                                        <select name="branch_id" class="form form-control select2" id="filter_branch_id">
+                                            @if (!empty($filters['branches']))
+                                                @foreach ($filters['branches'] as $key => $branch)
+                                                <option value="{{ $key }}" {{ !empty($_GET['branch_id']) && $_GET['branch_id'] == $key ? 'selected' : '' }}>{{ $branch }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+                                <div class="col-md-3"> <label for="">Subject</label>
+                                    <div class="subject_data" id="filter-names">
+                                        <select class="form form-control select2" id="choices-multiple110" name="subjects[]" multiple style="width: 95%;">
+                                            <option value="">Select Subject</option>
+                                            @foreach ($tasks as $filter_task)
+                                            <option value="{{ $filter_task->id }}" <?= isset($_GET['subjects']) && in_array($filter_task->name, $_GET['subjects']) ? 'selected' : '' ?> class="">{{ $filter_task->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3"> <label for="">Assigned To</label>
+                                    <div class="" id="assign_to_div">
+                                        <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
+                                            @foreach ($filters['employees'] as $key => $user)
+                                            <option value="{{ $key }}" <?= isset($_GET['assigned_to']) && in_array($key, $_GET['assigned_to']) ? 'selected' : '' ?> class="">{{ $user }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-3">
+                                    <label for="">Status</label>
+                                    <select class="form form-control select2" id="status444" name="status" multiple style="width: 95%;">
+                                        <option value="">Select Status</option>
+                                        <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Completed</option>
+                                        <option value="0" <?= isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : '' ?>>On Going</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="">Due Date</label>
+                                    <input type="date" class="form form-control" name="due_date" value="<?= isset($_GET['due_date']) ? $_GET['due_date'] : '' ?>" style="width: 95%; border-color:#aaa">
+                                </div>
+
+                                <div class="col-md-3 mt-4 pt-2 d-flex align-items-end">
+                                    <input type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}" class="btn form-btn me-2 btn-dark px-2 py-2" >
+                                    <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn mr-2 px-2 py-2 btn-dark" style="color:white;">Reset</a>
+                                    <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn me-3 bg-dark" style=" color:white;display:none;">Save Filter</a>
+
+                                </div>
                         </div>
 
                         <div class="row my-4 d-none">
@@ -338,17 +384,22 @@ $setting = \App\Models\Utility::colorset();
                                     
                                 </tr>
                                 @empty
+                                <tr>
+                                    <td class="7">No Record Found!!!</td>
+                                </tr>
                                 @endforelse
                         </tbody>
                     </table>
                 </div>
-
+                
+                <div class="pagination_div">
                 @if ($total_records > 0)
                 @include('layouts.pagination', [
                 'total_pages' => $total_records,
                 'num_results_on_page' => 50,
                 ])
                 @endif
+                </div>
 
 
                 <div id="mySidenav" style="z-index: 1065; padding-left:10px; box-shadow: -5px 0px 30px 0px #aaa;" class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>" style="padding-left: 5px">
@@ -895,5 +946,131 @@ $setting = \App\Models\Utility::colorset();
             }
         });
     })
+
+
+    ////////////////////Filters Javascript
+    $("#filter_brand_id").on("change", function() {
+            var id = $(this).val();
+            var type = 'brand';
+            var filter = true;
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#region_filter_div').html('');
+                        $("#region_filter_div").html(data.regions);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+
+        $(document).on("change", "#filter_region_id, #region_id", function() {
+            var id = $(this).val();
+            var filter = true;
+            var type = 'region';
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#branch_filter_div').html('');
+                        $("#branch_filter_div").html(data.branches);
+                        getTasks();
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+        $(document).on("change", "#filter_branch_id, #branch_id", function() {
+           getTasks();
+
+            var id = $(this).val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('filter-branch-users') }}',
+                    data: {
+                        id: id
+                    },
+                    success: function(data){
+                        data = JSON.parse(data);
+
+                        if (data.status === 'success') {
+                            $('#assign_to_div').html('');
+                            $("#assign_to_div").html(data.html);
+                            select2();
+                        } else {
+                            console.error('Server returned an error:', data.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX request failed:', status, error);
+                    }
+                });
+        });
+
+        function getTasks(){
+            var brand_id = $("#filter_brand_id").val();
+            var region_id = $("#region_id").val();
+            var branch_id = $("#branch_id").val();
+
+            var type = 'tasks';
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('filterData') }}',
+                data: {
+                   brand_id,
+                   region_id,
+                   branch_id,
+                   type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#filter-names').html('');
+                        $("#filter-names").html(data.html);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        }
+
+
 </script>
 @endpush

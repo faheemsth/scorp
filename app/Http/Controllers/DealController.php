@@ -2701,12 +2701,20 @@ class DealController extends Controller
             $filters['subjects'] = $_GET['subjects'];
         }
 
-        if (isset($_GET['assigned_to']) && !empty($_GET['assigned_to'])) {
-            $filters['assigned_to'] = $_GET['assigned_to'];
+        if (isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user'])) {
+            $filters['assigned_to'] = $_GET['lead_assgigned_user'];
         }
 
-        if (isset($_GET['brands']) && !empty($_GET['brands'])) {
-            $filters['created_by'] = $_GET['brands'];
+        if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+            $filters['brand_id'] = $_GET['brand'];
+        }
+
+        if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
+            $filters['region_id'] = $_GET['region_id'];
+        }
+
+        if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
+            $filters['branch_id'] = $_GET['branch_id'];
         }
 
         if (isset($_GET['due_date']) && !empty($_GET['due_date'])) {
@@ -2754,11 +2762,15 @@ class DealController extends Controller
 
             foreach ($filters as $column => $value) {
                 if ($column === 'subjects') {
-                    $tasks->whereIn('deal_tasks.name', $value);
+                    $tasks->whereIn('deal_tasks.id', $value);
                 } elseif ($column === 'assigned_to') {
-                    $tasks->whereIn('assigned_to', $value);
-                } elseif ($column === 'created_by') {
-                    $tasks->whereIn('deal_tasks.brand_id', $value);
+                    $tasks->where('assigned_to', $value);
+                } elseif ($column === 'brand_id') {
+                    $tasks->where('deal_tasks.brand_id', $value);
+                }elseif ($column === 'region_id') {
+                    $tasks->where('deal_tasks.region_id', $value);
+                }elseif ($column === 'branch_id') {
+                    $tasks->where('deal_tasks.branch_id', $value);
                 } elseif ($column == 'due_date') {
                     $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
                 }elseif ($column == 'status') {
