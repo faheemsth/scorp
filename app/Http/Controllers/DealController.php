@@ -3324,7 +3324,7 @@ class DealController extends Controller
         return json_encode([
             'status' => 'success',
             'html' => $html,
-            'message' => 'Lead ' . $name . ' updated successfully'
+            'message' => 'Admission ' . $name . ' updated successfully'
         ]);
     }
 
@@ -3385,7 +3385,7 @@ class DealController extends Controller
         return json_encode([
             'status' => 'success',
             'html' => $html,
-            'message' => 'Lead ' . $name . ' updated successfully'
+            'message' => 'Admission ' . $name . ' updated successfully'
         ]);
     }
 

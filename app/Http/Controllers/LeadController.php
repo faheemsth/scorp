@@ -195,13 +195,13 @@ class LeadController extends Controller
             $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id')->join('users as assigned_to', 'assigned_to.id', '=', 'leads.user_id');
             if (\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team') {
             } else if (\Auth::user()->type == 'company') {
-                $leads_query->where('brand_id', \Auth::user()->id);
+                $leads_query->where('leads.brand_id', \Auth::user()->id);
             } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') {
-                $leads_query->whereIn('brand_id', $brand_ids);
+                $leads_query->whereIn('leads.brand_id', $brand_ids);
             } else if (\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)) {
-                $leads_query->where('region_id', \Auth::user()->region_id);
+                $leads_query->where('leads.region_id', \Auth::user()->region_id);
             } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)) {
-                $leads_query->where('branch_id', \Auth::user()->branch_id);
+                $leads_query->where('leads.branch_id', \Auth::user()->branch_id);
             } else {
                 $leads_query->where('user_id', \Auth::user()->id);
             }
