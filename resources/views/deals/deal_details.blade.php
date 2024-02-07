@@ -447,7 +447,7 @@
                                                             </td>
                                                             <td class="drive_link-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                {{-- <div class="d-flex align-items-center edit-input-field-div">
+                                                                <div class="d-flex align-items-center edit-input-field-div">
                                                                     <div class="input-group border-0 drive_link d-flex align-items-center">
                                                                         @if (isset($deal->drive_link) && !empty($deal->drive_link))
                                                                         <a href="{{ $deal->drive_link }}" target="blank" style="font-size: 14px; color: rgb(46, 134, 249);">
@@ -460,16 +460,16 @@
                                                                     <div class="edit-btn-div">
                                                                         <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="drive_link"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </div> --}}
-                                                                @if (isset($deal->drive_link) && !empty($deal->drive_link))
+                                                                </div>
+                                                                {{-- @if (isset($deal->drive_link) && !empty($deal->drive_link))
                                                                 <a href="{{ $deal->drive_link }}" target="blank" style="font-size: 14px; color: rgb(46, 134, 249);">
                                                                     {{ $deal->drive_link }}
                                                                 </a>
                                                                 @else
                                                                 <a href="{{ $deal->drive_link }}">
-                                                                {{ isset($deal->drive_link) ? $deal->drive_link : '' }}
+                                                                {{ isset($deal->drive_link) ? $deal->drive_link : '' }} --}}
                                                             </a>
-                                                                @endif
+                                                                {{-- @endif --}}
                                                             </td>
                                                         </tr>
                                                     </tbody>

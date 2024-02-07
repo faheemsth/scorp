@@ -1286,13 +1286,17 @@ class UserController extends Controller
                 continue;
             }
 
+            $user = User::where('email', $d['Email'])->first();
+            if(!$user){
+                $user   = new User();
+            }
+            
 
-            $user               = new User();
             $user['name']       = $d['Full Name'];
             $user['email']      = $d['Email'];
             $psw                = 'study1234';
-            $user['password']   = Hash::make($psw);
             $user['type']       =  $d['Role'];
+            $user['password']   = Hash::make($psw);
             $user['branch_id'] = $branch_id;
             $user['region_id'] = $region_id;
             $user['brand_id'] =  $brand->id;

@@ -20,6 +20,15 @@
         margin: 0;
         padding: 0;
     }
+    .canvasjs-chart-credit{
+        display:none;
+    }
+    .anychart-credits-text{
+        display:none;
+    }
+    .anychart-credits-logo{
+        display:none;
+    }
 </style>
 
 
@@ -118,7 +127,7 @@
                 // suffix: "k"
             }],
             axisY2: {
-                title: "Revenue",
+                title: "",
                 lineColor: "#7F6084",
                 tickColor: "#7F6084",
                 labelFontColor: "#7F6084",
@@ -157,7 +166,7 @@
             },
             {
                 type: "line",
-                name: "Order",
+                name: "",
                 color: "#000",
                 axisYIndex: 0,
                 showInLegend: true,
@@ -178,7 +187,7 @@
             },
             {
                 type: "line",
-                name: "Revenue",
+                name: "",
                 color: "#7F6084",
                 axisYType: "secondary",
                 showInLegend: true,
@@ -309,9 +318,10 @@
             </a>
 
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                <li><a class="dropdown-item" href="#">Active Vision</a></li>
+                <li><a class="dropdown-item" href="#">Bright Routes</a></li>
+                <li><a class="dropdown-item" href="#">Career Advisers</a></li>
+                <li><a class="dropdown-item" href="#">Ibex Study</a></li>
             </ul>
 
         </div>
@@ -322,9 +332,10 @@
             </a>
 
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                <li><a class="dropdown-item" href="#">Lahore</a></li>
+                <li><a class="dropdown-item" href="#">Karachi</a></li>
+                <li><a class="dropdown-item" href="#">Islamabad</a></li>
+                <li><a class="dropdown-item" href="#">Peshawar</a></li>
             </ul>
         </div>
         <div class="dropdown col-6 col-lg-2 col-md-4 my-2">
@@ -334,9 +345,9 @@
             </a>
 
             <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                <li><a class="dropdown-item" href="#">Abertay University</a></li>
+                <li><a class="dropdown-item" href="#">University of Lahore</a></li>
+                <li><a class="dropdown-item" href="#">Chicago University</a></li>
             </ul>
         </div>
         <div class="dropdown col-6 col-lg-2 col-md-4 my-2">
@@ -344,11 +355,11 @@
                 data-bs-toggle="dropdown" aria-expanded="false">
                 Intakes
             </a>
-
             <ul class="dropdown-menu ">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                <li><a class="dropdown-item" href="#">January</a></li>
+                <li><a class="dropdown-item" href="#">February</a></li>
+                <li><a class="dropdown-item" href="#">March</a></li>
+                <li><a class="dropdown-item" href="#">April</a></li>
             </ul>
         </div>
         <div class="dropdown  col-lg-4 col-md-6 my-2">
@@ -358,9 +369,10 @@
             </a>
 
             <ul class="dropdown-menu w-100 ">
-                <li><a class="dropdown-item" href="#">Action</a></li>
-                <li><a class="dropdown-item" href="#">Another action</a></li>
-                <li><a class="dropdown-item" href="#">Something else here</a></li>
+                <li><a class="dropdown-item" href="#">May 15,2021-May 21,2021</a></li>
+                <li><a class="dropdown-item" href="#">June</a></li>
+                <li><a class="dropdown-item" href="#">July</a></li>
+                <li><a class="dropdown-item" href="#">August</a></li>
             </ul>
         </div>
     </div>
@@ -375,18 +387,19 @@
                 <div class="d-flex justify-content-between align-items-center p-4">
                     <h6 class="card-title  fw-bold ">Admission-Application Chart </h6>
                     <select class="form-select form-select-sm w-25" aria-label="Small select example">
-                        <option selected>Select Option</option>
-                        <option value="1">Pakistan</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        <option selected>Select</option>
+                        <option value="1">Admission-Application</option>
+                        <option value="2">Application-Deposit</option>
+                        <option value="3">Admission-Deposit</option>
+                        <option value="4">Deposit-Visa</option>
                     </select>
                 </div>
 
                 <div id="chartContainer" style="height: 300px; width: 100%;"></div>
                 <div class="card-body">
-                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
+                    <!-- <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
                         additional content. This content is a little bit longer.</p>
-                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                    <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p> -->
                 </div>
             </div>
 
@@ -396,13 +409,14 @@
 
 
             <div class="card h-100 ">
-                <div class="p-4 text-center">
+                <div class="p-4 d-flex justify-content-between align-items-center p-4">
                     <h6 class="card-title  fw-bold">Stages Shares</h6>
                     <select class="form-select form-select-sm w-50 float-right " aria-label="Small select example">
-                        <option selected>Select Option</option>
-                        <option value="1">Option</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        <option selected>Select </option>
+                        <option value="1">Amar Suhail</option>
+                        <option value="2">Dr Kashif Shahzad</option>
+                        <option value="3">Muhammad Asif</option>
+                        <option value="4">Muhammad Shahid</option>
                     </select>
                 </div>
                 <div id="dounotchart2"></div>
@@ -469,8 +483,9 @@
                     <select class="form-select form-select-sm w-50" aria-label="Small select example">
                         <option selected>Select Country</option>
                         <option value="1">Pakistan</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        <option value="2">USA</option>
+                        <option value="3">Australia</option>
+                        <option value="4">United Kingdom</option>
                     </select>
                 </div>
                 <span id="chartdiv" class=""> </span>
@@ -506,11 +521,12 @@
             <div class="card h-100">
                 <div class="p-4 text-center">
                     <h6 class="card-title  fw-bold">Project Directors Shares in SCORP</h6>
-                    <select class="form-select form-select-sm w-50 float-right " aria-label="Small select example">
+                    <select class="form-select form-select-sm w-50 float-right" aria-label="Small select example">
                         <option selected>Select Option</option>
-                        <option value="1">one</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        <option value="1">Amar Suhail</option>
+                        <option value="2">Dr Kashif Shahzad</option>
+                        <option value="3">Muhammad Asif</option>
+                        <option value="4">Muhammad Shahid</option>
                     </select>
                 </div>
 
