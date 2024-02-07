@@ -151,6 +151,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
 // ChartGranted
+Route::get('/chartdashboard', function () {
+    return view('chartdashboard.chart');
+ });
 Route::get('/ChartGranted', [VisaChartController::class, 'TestChartGranted']);
 Route::get('/GrantedByCountry', [VisaChartController::class, 'GrantedByCountry']);
 Route::get('/GrantedByUniversty', [VisaChartController::class, 'GrantedByUniversty']);
@@ -1842,3 +1845,9 @@ Route::get('/employees-download', [UserController::class, 'downloadEmployees'])-
 Route::get('/tasks-download', [DealController::class, 'downloadTasks'])->name('tasks.download');
 Route::get('/leads-download', [LeadController::class, 'download'])->name('leads.download');
 Route::get('/deals-download', [DealController::class, 'download'])->name('deals.download');
+
+
+
+
+////////////////////////////////////////////////Filters LEADS
+Route::get('/filter-data', [LeadController::class, 'filterData'])->name('filterData');

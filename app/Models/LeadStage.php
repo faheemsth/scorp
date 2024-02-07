@@ -56,6 +56,7 @@ class LeadStage extends Model
         }
 
         $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
+        $leads_query->where('leads.is_converted', 0);
         $leads = $leads_query->clone()->groupBy('leads.id')->orderBy('leads.created_at', 'desc')->skip($start)->take($num_results_on_page)->get();
         return $leads;
     }
@@ -102,6 +103,7 @@ class LeadStage extends Model
         }
 
         $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
+        $leads_query->where('leads.is_converted', 0);
         $leads = $leads_query->clone()->groupBy('leads.id')->count();
         return $leads;
     }
