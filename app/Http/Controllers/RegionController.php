@@ -49,7 +49,7 @@ class RegionController extends Controller
                         ->orwhere('brand.name', 'like', '%'.$g_search.'%');
         }
 
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR') {
 
         } else if (\Auth::user()->type == 'company') {
             $region_query->where('brands', \Auth::user()->id);
@@ -307,7 +307,7 @@ class RegionController extends Controller
             $region->location = $request->location;
             $region->phone = $request->phone;
             $region->email = $request->email;
-            $region->brands = $request->brands;
+            $region->brands = $request->brands[0];
             $region->update();
 
             return json_encode([

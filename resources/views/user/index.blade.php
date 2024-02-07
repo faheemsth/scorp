@@ -50,7 +50,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                             </div>
 
-                            @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                            @if(\Auth::user()->type == 'super admin'|| \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                             <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false" style="width:36px; height: 36px; margin-top:10px;">
                                 <i class="ti ti-filter" style="font-size:18px"></i>
                             </button>
@@ -86,7 +86,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                     {{-- Filters --}}
 
 
-                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                     <div class="filter-data px-3" id="filterToggle" <?= isset($_GET['Brand']) || isset($_GET['Director']) ? '' : 'style="display: none;"' ?>>
                         <form action="/users" method="GET" class="">
                             @php
@@ -94,7 +94,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             @endphp
 
                             <div class="row my-3 align-items-end">
-                                @if($userType == 'super admin' || $userType == 'Project Director' || $userType == 'Project Manager')
+                                @if($userType == 'super admin'|| $userType == 'Admin Team' || $userType == 'HR' || $userType == 'Project Director' || $userType == 'Project Manager')
                                 <div class="col-md-4 mt-2">
                                     <label for="">Brand</label>
                                     <select name="Brand" class="form form-control select2" id="filter_brand">
