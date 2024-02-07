@@ -68,7 +68,7 @@ class UserController extends Controller
 
 
         if (\Auth::user()->can('manage user')) {
-            if (\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Admin Team') {
+            if (\Auth::user()->type != 'super admin' || \Auth::user()->type != 'Admin Team' || \Auth::user()->type == 'HR') {
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
                 $users->whereIn('users.id', $brand_ids);
@@ -711,7 +711,7 @@ class UserController extends Controller
 
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
+            if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR') {
             } else if (\Auth::user()->type == 'company') {
                 $usersQuery->where('brand_id', \Auth::user()->id);
             } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') {
@@ -1230,15 +1230,27 @@ class UserController extends Controller
 
         $rows = array_map('str_getcsv', explode("\n", $csvData));
         $header = array_shift($rows);
-
+        
         $data = [];
         foreach ($rows as $row) {
-            $data[] = array_combine($header, $row);
+            
+            if(!isset($row[0])){
+                continue;
+            }
+            $data[] = [
+                    'Full Name' => $row[0],
+                    'Role' => $row[1],
+                    'Brand' => $row[2],
+                    'Region' => $row[3],
+                    'Branch' => $row[4],
+                    'Email' => $row[5],
+                    'Phone' => $row[6]
+                ];
         }
 
-        // echo "<pre>";
-        // print_r($data);
-        // die();
+ 
+
+       
 
         foreach ($data as $key => $d) {
             $brand = User::where(['name' => $d['Brand'], 'type' => 'company'])->first();
@@ -1253,10 +1265,11 @@ class UserController extends Controller
 
             //regions
 
-            $region = Region::where(['brands' => $brand->id])->first();
+            $region = Region::where(['brands' => $brand->id, 'name' => $d['Region']])->first();
             $region_id = isset($region->id) ? $region->id : 0;
 
             if (!$region) {
+                echo 'new Region '.$d['Region'].'<br>';
                 $new_region = new Region();
                 $new_region->name = $d['Region'];
                 $new_region->location = $d['Region'];
@@ -1267,9 +1280,10 @@ class UserController extends Controller
 
 
             //Branch
-            $branch = Branch::where(['brands' => $brand->id, 'region_id' => $region_id])->first();
+            $branch = Branch::where(['brands' => $brand->id, 'region_id' => $region_id, 'name' => $d['Branch']])->first();
             $branch_id = isset($branch->id) ? $branch->id : 0;
             if (!$branch) {
+                echo 'new Branch '.$d['Branch'].'<br>';
                 $new_branch = new Branch();
                 $new_branch->name = $d['Branch'];
                 $new_branch->region_id = $region_id;
@@ -1281,10 +1295,10 @@ class UserController extends Controller
 
 
             ////////////////////////////////Creating Employee
-            $is_exist = User::where('email', $d['Email'])->first();
-            if ($is_exist) {
-                continue;
-            }
+            // $is_exist = User::where('email', $d['Email'])->first();
+            // if ($is_exist) {
+            //     continue;
+            // }
 
             $user = User::where('email', $d['Email'])->first();
             if(!$user){
