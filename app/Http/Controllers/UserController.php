@@ -51,10 +51,12 @@ class UserController extends Controller
 
         //$users = User::where('type', 'company');
         $users = User::query()
-            ->join('company_permission', 'company_permission.permitted_company_id', '=', 'users.id')
-            ->join('users AS p', 'p.id', '=', 'company_permission.user_id')
+            ->leftjoin('company_permission', 'company_permission.permitted_company_id', '=', 'users.id')
+            ->leftjoin('users AS p', 'p.id', '=', 'company_permission.user_id')
             ->select('users.*')
             ->where('users.type', '=', 'company');
+        
+
 
         if (isset($_GET['Brand']) && !empty($_GET['Brand'])) {
             $brandId = $_GET['Brand'];
@@ -86,7 +88,7 @@ class UserController extends Controller
             }
 
             $total_records = $users->count();
-            $users = $users->where('company_permission.active', 'true')->skip($start)
+            $users = $users->where('company_permission.active', 'false')->skip($start)
                 ->take($num_results_on_page)
                 ->orderBy('users.name', 'ASC')
                 ->groupBy('users.id')
@@ -168,10 +170,9 @@ class UserController extends Controller
                 ]);
                 // return redirect()->back()->with('error', $messages->first());
             }
-
-
-            if (\Auth::user()->type == 'super admin') {
-                $psw = '1234';
+            
+            
+            $psw = '1234';
 
                 $user               = new User();
                 $user['name']       = $request->name;
@@ -213,60 +214,16 @@ class UserController extends Controller
                 ExperienceCertificate::defaultExpCertificatRegister($user->id);
                 JoiningLetter::defaultJoiningLetterRegister($user->id);
                 NOC::defaultNocCertificateRegister($user->id);
-            } else {
-                $objUser    = \Auth::user()->creatorId();
-                $objUser = User::find($objUser);
-                $user = User::find(\Auth::user()->created_by);
-                $total_user = $objUser->countUsers();
-                $plan       = Plan::find($objUser->plan);
 
-
-                if ($total_user < $plan->max_users || $plan->max_users == -1) {
-                    $role_r                = Role::findById($request->role);
-                    $psw                   = $request->password;
-                    $request['password']   = Hash::make($request->password);
-                    $request['type']       = $role_r->name;
-                    $request['lang']       = !empty($default_language) ? $default_language->value : 'en';
-                    $request['created_by'] = \Auth::user()->creatorId();
-                    $user = User::create($request->all());
-                    $user->branch_id = $request->branch_id;
-                    $user['date_of_birth'] = $request->dob;
-                    $user['phone'] = $request->phone;
-
-                    $user->assignRole($role_r);
-
-                    //                $user->userDefaultData();
-                    $user->userDefaultDataRegister($user->id);
-                    $user->userWarehouseRegister($user->id);
-
-                    //default bank account for new company
-                    $user->userDefaultBankAccount($user->id);
-
-                    Utility::chartOfAccountTypeData($user->id);
-                    Utility::chartOfAccountData($user);
-                    // default chart of account for new company
-                    Utility::chartOfAccountData1($user->id);
-
-                    Utility::pipeline_lead_deal_Stage($user->id);
-                    Utility::project_task_stages($user->id);
-                    Utility::labels($user->id);
-                    Utility::sources($user->id);
-                    Utility::jobStage($user->id);
-                    GenerateOfferLetter::defaultOfferLetterRegister($user->id);
-                    ExperienceCertificate::defaultExpCertificatRegister($user->id);
-                    JoiningLetter::defaultJoiningLetterRegister($user->id);
-                    NOC::defaultNocCertificateRegister($user->id);
-                    if ($request['type'] != 'client')
-                        \App\Models\Utility::employeeDetails($user->id, \Auth::user()->creatorId());
-                } else {
-                    return json_encode([
-                        'status' => 'error',
-                        'msg' =>  __('Your user limit is over, Please upgrade plan.')
-                    ]);
-                    return redirect()->back()->with('error', __('Your user limit is over, Please upgrade plan.'));
-                }
-            }
-
+            $p_dir = User::where('type', 'Project Director')->first();
+            $new_permission = new \App\Models\CompanyPermission();
+            $new_permission->user_id = $p_dir->id;
+            $new_permission->permitted_company_id = $user->id;
+            $new_permission->active = 'false';
+            $new_permission->created_by = \Auth::user()->id;
+            $new_permission->save();
+            
+            
             // Send Email
             $setings = Utility::settings();
             if ($setings['new_user'] == 1) {

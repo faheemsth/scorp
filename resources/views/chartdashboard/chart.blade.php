@@ -61,10 +61,10 @@
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels: ['New Lead', 'Contacted', 'Documents Pending','Documents Received', 'Advised', 'Unqualified', 'Junk Lead'],
             datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
+                label: 'Stages',
+                data: [12, 19, 3, 5, 2, 3, 4],
                 borderWidth: 2,
                 borderColor: '#000'
             }]
@@ -82,11 +82,11 @@
     new Chart(ctx2, {
         type: 'bar',
         data: {
-            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+            labels: ['AA Advisers', 'Active Visions', 'Better Uni'],
             datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                borderWidth: 2,
+                label: 'Stages Data',
+                data: [12, 19, 11],
+                borderWidth: 1,
                 borderColor: '#000'
             }]
         },
@@ -282,10 +282,13 @@
     anychart.onDocumentReady(function () {
 
         var data = anychart.data.set([
-            ["Wimbledon", 8],
-            ["Australian Open", 6],
-            ["U.S. Open", 5],
-            ["French Open", 1]
+            ["New Lead", 8],
+            ["Contacted", 6],
+            ["Documents Pending", 5],
+            ["Documents Received", 1],
+            ["Advised", 1],
+            ["Unqualified", 1],
+            ["Junk Lead", 1],
         ]);
 
         var palette = anychart.palettes.distinctColors();
@@ -301,15 +304,21 @@
         chart.draw();
     });
 </script>
-
-
-
-
 @endpush
+
+@section('page-title')
+{{ __('Dashboard') }}
+@endsection
+
+@section('breadcrumb')
+<li class="breadcrumb-item">
+    <a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a>
+</li>
+@endsection
+
 
 @section('content')
 <div class="main-content py-5" >
-
     <div class="row">
         <div class="dropdown col-6 col-lg-2 col-md-4 my-2 ">
             <a class="btn bg-white text-dark dropdown-toggle w-100 py-2 fw-bold fs-5" href="#" role="button"
@@ -413,10 +422,13 @@
                     <h6 class="card-title  fw-bold">Stages Shares</h6>
                     <select class="form-select form-select-sm w-50 float-right " aria-label="Small select example">
                         <option selected>Select </option>
-                        <option value="1">Amar Suhail</option>
-                        <option value="2">Dr Kashif Shahzad</option>
-                        <option value="3">Muhammad Asif</option>
-                        <option value="4">Muhammad Shahid</option>
+                        <option value="1">New Lead</option>
+                        <option value="2">Contacted</option>
+                        <option value="3">Documents Pending</option>
+                        <option value="4">Documents Received</option>
+                        <option value="">Advised</option>
+                        <option value="">Unqualified</option>
+                        <option value="">Qualified</option>
                     </select>
                 </div>
                 <div id="dounotchart2"></div>
@@ -445,30 +457,26 @@
                     <table class="table mt-3">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
-                                <th scope="col" class="table-active">First</th>
-                                <th scope="col">Last</th>
-                                <th scope="col">Handle</th>
+                                <th scope="col">Brands</th>
+                                <th scope="col">Deposit</th>
+                                <th scope="col">Visa</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
+                                <td>AA Advisers</td>
+                                <td>12</td>
+                                <td>11</td>
                             </tr>
                             <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
+                                <td>Active Visions</td>
+                                <td>12</td>
+                                <td>11</td>
                             </tr>
                             <tr>
-                                <th scope="row">3</th>
-                                <td >Larry </td>
-                                <td>Bird</td>
-                                <td>@twitter</td>
+                                <td>Better Uni</td>
+                                <td>12</td>
+                                <td>11</td>
                             </tr>
                         </tbody>
                     </table>
@@ -491,24 +499,31 @@
                 <span id="chartdiv" class=""> </span>
                 <div class="card-body">
                     <table class="table">
+                        <thead>
+                            <th>Location</th>
+                            <th>Leads</th>
+                            <th>Deposit</th>
+                            <th>Visa</th>
+                        </thead>
                         
                         <tbody>
                             <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
+                                <td>Pakistan</td>
+                                <td>1200</td>
+                                <td>400</td>
+                                <td>200</td>
                             </tr>
                             <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
+                                <td>India</td>
+                                <td>1600</td>
+                                <td>600</td>
+                                <td>200</td>
                             </tr>
                             <tr>
-                                <th scope="row">3</th>
-                                <td colspan="2">Larry the Bird</td>
-                                <td>@twitter</td>
+                                <td>Pakistan</td>
+                                <td>2994</td>
+                                <td>1200</td>
+                                <td>1600</td>
                             </tr>
                         </tbody>
                     </table>
@@ -519,8 +534,8 @@
         </div>
         <div class="col">
             <div class="card h-100">
-                <div class="p-4 text-center">
-                    <h6 class="card-title  fw-bold">Project Directors Shares in SCORP</h6>
+                <div class="pl-4 py-4 d-flex">
+                    <h6 class="card-title  fw-bold">Project Directors Shares</h6>
                     <select class="form-select form-select-sm w-50 float-right" aria-label="Small select example">
                         <option selected>Select Option</option>
                         <option value="1">Amar Suhail</option>
@@ -533,24 +548,33 @@
                 <div id="dounotchart"></div>
                 <div class="card-body">
                     <table class="table mb-2">
-                       
+                       <thead>
+                        <tr>
+                            <th>Project Director</th>
+                            <th>Deposit</th>
+                            <th>Visa</th>
+                        </tr>
+                       </thead>
                         <tbody>
                             <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
+                                <td>Amar Suhail</td>
+                                <td>500</td>
+                                <td>200</td>
                             </tr>
                             <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
+                                <td>Dr Kashif Shahzad</td>
+                                <td>500</td>
+                                <td>200</td>
                             </tr>
                             <tr>
-                                <th scope="row">3</th>
-                                <td colspan="2">Larry the Bird</td>
-                                <td>@twitter</td>
+                                <td>Muhammad Asif</td>
+                                <td>500</td>
+                                <td>200</td>
+                            </tr>
+                            <tr>
+                                <td>Muhammad Shahid</td>
+                                <td>500</td>
+                                <td>200</td>
                             </tr>
                         </tbody>
                     </table>

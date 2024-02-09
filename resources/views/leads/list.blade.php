@@ -400,19 +400,6 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                 @else
                                                 <option value="" disabled>No brands available</option>
                                             @endif
-=========
-                                <div class="row my-3 align-items-end filbar">
-                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                    <div class="col-md-3 mt-1"> <label for="">Brands</label>
-                                        <select class="form form-control select2" id="choices-multiple555"
-                                            name="brand_id[]" multiple style="width: 95%;">
-                                            <option value="">Select Brand</option>
-                                    @if (FiltersBrands())
-                                            @foreach (FiltersBrands() as $key => $brand)
-                                            <option value="{{ $key }}" {{ isset($_GET['brand_id']) && in_array($key, $_GET['brand_id']) ? 'selected' : '' }}>{{ $brand }}</option>
-                                           @endforeach
-                                    @endif
->>>>>>>>> Temporary merge branch 2
                                         </select>
                                     </div>
                                 @endif
