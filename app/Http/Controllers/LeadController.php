@@ -1048,7 +1048,7 @@ class LeadController extends Controller
             $lead_exist = Lead::where('email', $lead->email)->first();
 
             if ($lead_exist) {
-                continue;
+                $lead = Lead::where('email', $lead->email)->first();
             }
 
             //if no email found
@@ -1072,7 +1072,7 @@ class LeadController extends Controller
             }
 
             $lead->stage_id    = $stage->id;
-            $lead->created_by  = $usr->id;
+            $lead->created_by  = \Auth::user()->id;
             $lead->date        = date('Y-m-d');
 
             if (!empty($lead->name) || !empty($lead->email) || !empty($lead->phone) || !empty($lead->subject) || !empty($lead->notes)) {
