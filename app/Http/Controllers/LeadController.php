@@ -192,7 +192,7 @@ class LeadController extends Controller
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
 
-            $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id')->join('users as assigned_to', 'assigned_to.id', '=', 'leads.user_id');
+            $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id')->leftjoin('users as assigned_to', 'assigned_to.id', '=', 'leads.user_id');
             if (\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team') {
             } else if (\Auth::user()->type == 'company') {
                 $leads_query->where('leads.brand_id', \Auth::user()->id);
@@ -229,17 +229,6 @@ class LeadController extends Controller
                 } elseif ($column == 'created_at') {
                     $leads_query->whereDate('leads.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
                 }
-            }
-
-            if (!isset($_GET['ajaxCall']) && isset($_GET['search']) && !empty($_GET['search'])) {
-                $g_search = $_GET['search'];
-                $leads_query->Where('leads.name', 'like', '%' . $g_search . '%');
-                $leads_query->orWhere('users.name', 'like', '%' . $g_search . '%');
-                $leads_query->orWhere('branches.name', 'like', '%' . $g_search . '%');
-                $leads_query->orWhere('lead_stages.name', 'like', '%' . $g_search . '%');
-                $leads_query->orWhere('leads.email', 'like', '%' . $g_search . '%');
-                $leads_query->orWhere('assigned_to.name', 'like', '%' . $g_search . '%');
-                $leads_query->orWhere('leads.phone', 'like', '%' . $g_search . '%');
             }
 
             //if list global search
@@ -1024,15 +1013,17 @@ class LeadController extends Controller
 
     private function excelSheetDataSaved($request, $file, $pipeline, $stage)
     {
+
+        
         $usr = \Auth::user();
         $column_arr = [];
         $spreadsheet = IOFactory::load($file->getPathname());
         $worksheet = $spreadsheet->getActiveSheet();
-        $key = 0;
+        $key = 0;   
 
+       
+   
         foreach ($worksheet->getRowIterator() as $line) {
-
-
             if ($key == 0) {
                 foreach ($line->getCellIterator() as $column_key => $column) {
                     $column = preg_replace('/[^\x20-\x7E]/', '', $column);
@@ -1041,7 +1032,7 @@ class LeadController extends Controller
                 $key++;
                 continue;
             }
-
+           
 
             $lead  = new Lead();
             $test = [];
@@ -1055,9 +1046,11 @@ class LeadController extends Controller
             }
 
             $lead_exist = Lead::where('email', $lead->email)->first();
+
             if ($lead_exist) {
                 continue;
             }
+
             //if no email found
             if (!in_array('email', $column_arr)) {
                 $lead->email = '';
@@ -1069,7 +1062,8 @@ class LeadController extends Controller
 
             $lead->user_id     = $request->lead_assgigned_user;
             $lead->brand_id     = $request->brand_id;
-            $lead->branch_id     = $request->branch_id;
+            $lead->region_id    = $request->region_id;
+            $lead->branch_id     = $request->lead_branch;
 
             $lead->pipeline_id = $pipeline->id;
 
@@ -1080,6 +1074,7 @@ class LeadController extends Controller
             $lead->stage_id    = $stage->id;
             $lead->created_by  = $usr->id;
             $lead->date        = date('Y-m-d');
+
             if (!empty($lead->name) || !empty($lead->email) || !empty($lead->phone) || !empty($lead->subject) || !empty($lead->notes)) {
                 $lead->save();
                 UserLead::create(
@@ -1176,7 +1171,8 @@ class LeadController extends Controller
 
             $lead->user_id     = $request->lead_assgigned_user;
             $lead->brand_id     = $request->brand_id;
-            $lead->branch_id     = $request->branch_id;
+            $lead->region_id    = $request->region_id;
+            $lead->branch_id     = $request->lead_branch;
 
             $lead->pipeline_id = $pipeline->id;
             if (!isset($stage->id)) {
@@ -1269,6 +1265,9 @@ class LeadController extends Controller
             } else {
                 $response =  $this->excelSheetDataSaved($request, $file, $pipeline, $stage);
             }
+
+           
+
 
 
             // $handle = fopen($file->getPathname(), 'r');
