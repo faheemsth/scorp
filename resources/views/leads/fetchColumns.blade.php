@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row align-items-baseline">
     <div class="col-6">
         @if (
             \Auth::user()->type == 'super admin' ||
@@ -124,7 +124,7 @@
     <div class="row">
         <?php foreach($first_row as $key => $row){ ?>
         <div class="col-md-3 mt-3"><label for=""><?= $row ?></label></div>
-        <div class="col-md-3 mt-3">
+        <div class="col-md-3 mt-3 px-2">
             <select name="columns[<?= $row ?>]" id="" data-id="<?= $key ?>"
                 class="form form-control lead-columns">
                 <option value="">Select Column</option>

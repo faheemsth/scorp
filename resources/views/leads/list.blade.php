@@ -333,7 +333,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                 <div class="card-body px-2 py-0">
                                                     <div class="row">
                                                         <div class="col-md-6">
-                                                            <div class="form-groups mt-2">
+                                                            <div class="form-groups mt-2 ps-2">
                                                                 <label for="extension"
                                                                     class="form-label">Extension</label>
                                                                 <select type="file" class="form-control" name="extension" id="extension" required>
@@ -344,7 +344,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                             </div>
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <div class="form-groups mt-2">
+                                                            <div class="form-groups mt-2 pe-3">
                                                                 <label for="lead-file"
                                                                     class="form-label">{{ __('Column') }}</label>
                                                                 <input type="file" name="leads_file" id="lead-file"
