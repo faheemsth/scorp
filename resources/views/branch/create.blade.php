@@ -1,7 +1,7 @@
 <form action="{{ url('branch') }}" id="create-branch" method="post" novalidate>
     @csrf
     <div class="modal-body" style="min-height: 35vh;">
-        <div class="row">
+        <div class="row align-items-baseline">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="name">{{ __('Name') }}</label>
@@ -25,7 +25,7 @@
                             \Auth::user()->type == 'Admin Team' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager')
-                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                        <label for="branches" class=" col-form-label">Brands<span
                                 class="text-danger">*</span></label>
                         {!! Form::select('brands', $brands, 0, [
                             'class' => 'form-control select2 brand_id',
@@ -68,7 +68,7 @@
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||
                             \Auth::user()->type == 'Regional Manager')
-                        <label for="branches" class="col-sm-3 col-form-label">Region<span
+                        <label for="branches" class=" col-form-label">Region<span
                                 class="text-danger">*</span></label>
                         {!! Form::select('region_id', $regions, null, [
                             'class' => 'form-control select2',

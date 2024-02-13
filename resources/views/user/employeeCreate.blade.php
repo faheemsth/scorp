@@ -2,7 +2,7 @@
 <div class="modal-body" style="height:75vh;">
     <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
         <div class="card-body px-2 py-0">
-            <div class="row">
+            <div class="row align-items-baseline">
 
                 <div class="col-md-6">
                     <div class="form-group">
@@ -46,14 +46,14 @@
                         \Auth::user()->type == 'HR' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager')
-                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                        <label for="branches" class=" col-form-label">Brands<span
                                 class="text-danger">*</span></label>
                         {!! Form::select('companies', $companies, 0, [
                             'class' => 'form-control select2 brand_id',
                             'id' => 'brands',
                         ]) !!}
                     @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
-                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                        <label for="branches" class=" col-form-label">Brands<span
                                 class="text-danger">*</span></label>
                         <input type="hidden" name="companies" value="{{ \Auth::user()->id }}">
                         <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
@@ -90,22 +90,21 @@
 
                     @if (
                         \Auth::user()->type == 'super admin' ||
-<<<<<<< HEAD
+
                         \Auth::user()->type == 'HR' ||
-=======
->>>>>>> f74aa4a12869e771b7f069934b026b3b9c891439
+
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||
                             \Auth::user()->type == 'Regional Manager')
-                        <label for="branches" class="col-sm-3 col-form-label">Region<span
+                        <label for="branches" class=" col-form-label">Region<span
                                 class="text-danger">*</span></label>
                         {!! Form::select('region_id', $Region, null, [
                             'class' => 'form-control select2',
                             'id' => 'region_id',
                         ]) !!}
                     @else
-                        <label for="branches" class="col-sm-3 col-form-label">Region<span
+                        <label for="branches" class=" col-form-label">Region<span
                                 class="text-danger">*</span></label>
                         <input type="hidden" name="region_id" value="{{ \Auth::user()->region_id }}">
                         {!! Form::select('region_id', $Region, \Auth::user()->region_id, [
@@ -126,7 +125,7 @@
                             \Auth::user()->type == 'company' ||
                             \Auth::user()->type == 'Regional Manager' ||
                             \Auth::user()->type == 'Branch Manager')
-                        <label for="branches" class="col-sm-3 col-form-label">Branch<span
+                        <label for="branches" class=" col-form-label">Branch<span
                                 class="text-danger">*</span></label>
                         <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
                             onchange="Change(this)">
