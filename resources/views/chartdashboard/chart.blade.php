@@ -374,7 +374,7 @@
         <div class="dropdown  col-lg-4 col-md-6 my-2">
             <a class="btn bg-white text-dark btn-lg dropdown-toggle w-100 py-2 fw-bold fs-5" href="#" role="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
-                April 15,2020-April 21,2020
+                january 15,2023-April 21,2024
             </a>
 
             <ul class="dropdown-menu w-100 ">
@@ -533,8 +533,8 @@
             </div>
         </div>
         <div class="col">
-            <div class="card h-100">
-                <div class="pl-4 py-4 d-flex">
+            <div class="card h-100 ">
+                <div class="p-4 d-flex justify-content-between ">
                     <h6 class="card-title  fw-bold">Project Directors Shares</h6>
                     <select class="form-select form-select-sm w-50 float-right" aria-label="Small select example">
                         <option selected>Select Option</option>
@@ -546,8 +546,8 @@
                 </div>
 
                 <div id="dounotchart"></div>
-                <div class="card-body">
-                    <table class="table mb-2">
+                <div class="card-body mb-5">
+                    <table class="table mb-5 ">
                        <thead>
                         <tr>
                             <th>Project Director</th>
