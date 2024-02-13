@@ -1,6 +1,7 @@
 @push('css-page')
 <link rel="stylesheet" href="assets/css/customizer.css">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="{{ asset('css/intel_input.css') }}">
 @endpush
 @php
 $users = \Auth::user();
@@ -23,13 +24,13 @@ $currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->
 $com_permissions = [];
 if ($currentUserCompany != null) {
 
-if (Session::get('auth_type') == \Auth::user()->type ||
-Session::get('auth_type') == 'Project Director' ||
-Session::get('auth_type') == 'Project Manager'){
-$com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', Session::get('auth_type_id'))->get();
-}else{
-$com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', \Auth::user()->id)->get();
-}
+    if (Session::get('auth_type') == \Auth::user()->type ||
+    Session::get('auth_type') == 'Project Director' ||
+    Session::get('auth_type') == 'Project Manager'){
+      $com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', Session::get('auth_type_id'))->get();
+    }else{
+       $com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', \Auth::user()->id)->get();
+    }
 }
 
 $all_companies = App\Models\User::orderBy('name', 'asc')->where('type', 'company')
@@ -41,14 +42,15 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
 ->count();
 @endphp
 
+
 <nav class="navbar navbar-expand navbar-light topbar  static-top shadow" style="background-color: #B3CDE1;">
     <button id="sidebarToggleTop" class="btn d-md-none ">
         <i class="fa fa-bars"></i>
     </button>
     <div class="logo ms-md-2">
         <a href="#">
-            <!-- <img src="{{ asset('assets/cs-theme/assets/images/scorp-logo.png') }}" alt=""> -->
-            <img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:'assets/cs-theme/assets/images/scorp-logo.png') }}" class="big-logo">
+             <img src="{{ asset('storage/uploads/logo/1-logo-dark.png') }}" alt=""> 
+            <!--<img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:asset('storage/uploads/logo/1-logo-dark.png')) }}" class="big-logo">-->
         </a>
     </div>
     <!-- Sidebar Toggle (Topbar) -->
@@ -59,7 +61,7 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
 
 
     <!-- Topbar Navbar -->
-    <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav ml-auto align-items-center">
 
         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
         <li class="nav-item dropdown no-arrow d-sm-none">
@@ -103,11 +105,11 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
 
         <li>
         @if (Session::get('is_company_login') == true)
-            <a href="javascript::void(0)" onclick="LoginBack({{ Session::get('auth_type_id') }})" data-toggle="tooltip" title="Back To Your Account!" class="btn btn-dark mx-1" style="width: 100px; height: 45px; margin-top: 1rem;">Go Back</a>
+            <a href="javascript::void(0)" onclick="LoginBack({{ Session::get('auth_type_id') }})" data-toggle="tooltip" title="Back To Your Account!" class="btn btn-dark mx-1" style="width: 100px; height: 42px;">Go Back</a>
         @endif
         </li>
 
-        <div class="" style="width: 300px; margin-top: 1rem; margin-right: 10px;">
+        <div class="" style="width: 300px; margin-right: 10px;">
         
         @if (\Auth::user()->type == 'super admin')
         <select name="company" id="company" class="form form-select select2" style="width:100% !important" onChange="loginWithCompany();">
@@ -150,9 +152,6 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
         Session::get('auth_type') == 'Project Manager')
         <select name="company" id="company" class="form form-select select2" style="width:100% !important" onChange="loginWithCompany();">
             <option value="">Select Companies</option>
-
-            <option value="{{ Session::get('auth_type_id') }}">{{Session::get('auth_type')}}</option>
-
             @foreach ($all_companies as $key => $comp)
             @foreach ($com_permissions as $com_per)
             @if ($com_per->permitted_company_id == $key)

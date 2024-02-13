@@ -107,7 +107,7 @@
         text-align: left;
     }
 
-    .btn-sm{
+    .btn-sm {
         width: 30px;
         height: 30px;
     }
@@ -138,26 +138,27 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-1 me-3">
-                    <a href="#" data-size="lg" data-url="{{ route('organization.edit', $org->id) }}"
-                        data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"
-                        class="btn px-2 btn-dark text-white">
-                        <i class="ti ti-pencil"></i>
-                    </a>
+                    @can('edit organization')
+                        <a href="#" data-size="lg" data-url="{{ route('organization.edit', $org->id) }}"
+                            data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit') }}"
+                            class="btn px-2 btn-dark text-white" style="color:white; width:36px; height: 36px; margin-top:10px;">
+                            <i class="ti ti-pencil"></i>
+                        </a>
+                    @endcan
 
-                    {!! Form::open([
-                        'method' => 'DELETE',
-                        'route' => ['organization.destroy', $org->id],
-                        'id' => 'delete-form-' . $org->id,
-                        'class'=>'mb-0',
-                    ]) !!}
+                    @can('delete organization')
+                        {!! Form::open([
+                            'method' => 'DELETE',
+                            'route' => ['organization.destroy', $org->id],
+                            'id' => 'delete-form-' . $org->id,
+                            'class' => 'mb-0',
+                        ]) !!}
 
-                    <a href="#"
-                        class="btn px-2 bg-danger  align-items-center bs-pass-para"
-                        data-bs-toggle="tooltip"
-                        title="{{ __('Delete') }}"><i
-                            class="ti ti-trash text-white"></i></a>
+                        <a href="#" class="btn px-2 bg-danger  align-items-center bs-pass-para"
+                            data-bs-toggle="tooltip" title="{{ __('Delete') }}" style="color:white; width:36px; height: 36px; margin-top:10px;"><i class="ti ti-trash text-white"></i></a>
 
-                    {!! Form::close() !!}
+                        {!! Form::close() !!}
+                    @endcan
                 </div>
 
 
@@ -198,7 +199,7 @@
                                     data-bs-target="#pills-related" type="button" role="tab"
                                     aria-controls="pills-related" aria-selected="false">{{ __('Related') }}</button>
                             </li>
-                            <li class="nav-item" role="presentation">
+                            <li class="nav-item d-none" role="presentation">
                                 <button class="nav-link pills-link" id="pills-activity-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-activity" type="button" role="tab"
                                     aria-controls="pills-activity" aria-selected="false">{{ __('Task') }}</button>
@@ -206,7 +207,7 @@
                             <li class="nav-item " role="presentation">
                                 <button class="nav-link pills-link" id="pills-news-tab" data-bs-toggle="pill"
                                     data-bs-target="#pills-news" type="button" role="tab"
-                                    aria-controls="pills-activity" aria-selected="false">{{ __('Actvities') }}</button>
+                                    aria-controls="pills-activity" aria-selected="false">{{ __('Timeline') }}</button>
                             </li>
                         </ul>
                     </div>
@@ -228,7 +229,8 @@
                                             </button>
                                         </h2>
 
-                                        <div id="panelsStayOpen-collapsekeyone" class="accordion-collapse collapse show"
+                                        <div id="panelsStayOpen-collapsekeyone"
+                                            class="accordion-collapse collapse show"
                                             aria-labelledby="panelsStayOpen-headingkeyone">
                                             <div class="accordion-body">
 
@@ -254,21 +256,7 @@
                                                                 </td>
                                                                 <td class="name-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-
-                                                                    {{-- <div
-                                                                        class="d-flex align-items-baseline edit-input-field-div">
-                                                                        <div class="input-group border-0 name">
-                                                                            {{ $org->name }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="name"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div> --}}
                                                                     {{ $org->name }}
-
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -278,19 +266,6 @@
                                                                 </td>
                                                                 <td class="type-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-
-                                                                    {{-- <div
-                                                                        class="d-flex align-items-baseline edit-input-field-div">
-                                                                        <div class="input-group border-0 type">
-                                                                            {{ $org_detail->type }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="type"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div> --}}
                                                                     {{ $org_detail->type }}
                                                                 </td>
                                                             </tr>
@@ -327,19 +302,6 @@
                                                                 </td>
                                                                 <td class="phone-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-
-                                                                    {{-- <div
-                                                                        class="d-flex align-items-baseline edit-input-field-div">
-                                                                        <div class="input-group border-0 phone">
-                                                                            {{ $org_detail->phone }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="phone"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div> --}}
                                                                     {{ $org_detail->phone }}
                                                                 </td>
                                                             </tr>
@@ -349,22 +311,10 @@
                                                                     style="width: 100px; font-size: 14px;">
                                                                     {{ __('Email') }}
                                                                 </td>
+
                                                                 <td class="email-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-
-                                                                    {{-- <div
-                                                                        class="d-flex align-items-baseline edit-input-field-div">
-                                                                        <div class="input-group border-0 email">
-                                                                            {{ $org->email }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="email"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div> --}}
-                                                                    {{ $org->email }}
+                                                                   <a href="{{ $org->email }}" target="_blank" >{{ $org->email }}</a> 
                                                                 </td>
                                                             </tr>
 
@@ -375,19 +325,7 @@
                                                                 </td>
                                                                 <td class="website-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    {{-- <div
-                                                                        class="d-flex align-items-baseline edit-input-field-div">
-                                                                        <div class="input-group border-0 website">
-                                                                            {{ $org_detail->website }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="website"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div> --}}
-                                                                    {{ $org_detail->website }}
+                                                                   <a href="{{ $org_detail->website }}" target="_blank">{{ $org_detail->website }}</a> 
                                                                 </td>
                                                             </tr>
 
@@ -398,44 +336,22 @@
                                                                 </td>
                                                                 <td class="linkedin-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-
-                                                                    {{-- <div
-                                                                        class="d-flex align-items-baseline edit-input-field-div">
-                                                                        <div class="input-group border-0 linkedin">
-                                                                            {{ $org_detail->linkedin }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="linkedin"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div> --}}
-                                                                    {{ $org_detail->linkedin }}
+                                                                   <a href="{{ $org_detail->linkedin }}" target="_blank" >{{ $org_detail->linkedin }}</a> 
                                                                 </td>
                                                             </tr>
+
                                                             <tr>
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
                                                                     {{ __('Facebook') }}
                                                                 </td>
+
                                                                 <td class="facebook-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    {{-- <div
-                                                                        class="d-flex align-items-baseline edit-input-field-div">
-                                                                        <div class="input-group border-0 facebook">
-                                                                            {{ $org_detail->facebook }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="facebook"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div> --}}
-                                                                    {{ $org_detail->facebook }}
+                                                                   <a href="{{ $org_detail->facebook }}" target="_blank" >{{ $org_detail->facebook }}</a> 
                                                                 </td>
                                                             </tr>
+
                                                             <tr>
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
@@ -443,21 +359,7 @@
                                                                 </td>
                                                                 <td class="twitter-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-
-
-                                                                    {{-- <div
-                                                                        class="d-flex align-items-baseline edit-input-field-div">
-                                                                        <div class="input-group border-0 twitter">
-                                                                            {{ $org_detail->twitter }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="twitter"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div> --}}
-                                                                    {{ $org_detail->twitter }}
+                                                                   <a href="{{ $org_detail->twitter }}" target="_blank" >{{ $org_detail->twitter }}</a> 
                                                                 </td>
                                                             </tr>
 
@@ -469,29 +371,12 @@
                                                                 </td>
                                                                 <td class="drive_link-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-
-
-                                                                    {{-- <div
-                                                                        class="d-flex align-items-baseline edit-input-field-div">
-                                                                        <div class="input-group border-0 drive_link">
-                                                                            {{ $org_detail->drive_link }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input"
-                                                                                name="drive_link"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div> --}}
-                                                                  <a href="  {{ $org_detail->drive_link }}">
-                                                                    {{ $org_detail->drive_link }}</a>
+                                                                   <a href="{{ $org_detail->drive_link }}" target="_blank">{{ $org_detail->drive_link }}</a> 
                                                                 </td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
-
-
                                             </div>
                                         </div>
                                     </div>
@@ -504,11 +389,11 @@
                                                 {{ __('ADDRESS INFORMATION') }}
                                             </button>
                                         </h2>
+
                                         <div id="panelsStayOpen-collapsekeythree"
                                             class="accordion-collapse collapse show"
                                             aria-labelledby="panelsStayOpen-headingkeythree">
                                             <div class="accordion-body">
-
                                                 <div class="table-responsive mt-1" style="margin-left: 10px;">
 
                                                     <table>
@@ -522,18 +407,6 @@
                                                                 <td class="address-td"
                                                                     style="width: 80%; font-size: 13px;">
 
-                                                                    {{-- <div
-                                                                        class="d-flex align-items-baseline edit-input-field-div">
-                                                                        <div
-                                                                            class="input-group border-0 d-flex align-items-baseline">
-                                                                            {{ $org_detail->billing_street . ' ' . $org_detail->billing_city . ' ' . $org_detail->billing_state . ' ' . $org_detail->billing_postal_code . ' ' . $org_detail->billing_country }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary edit-btn-address rounded-0 btn-effect-none"><i
-                                                                                    class="ti ti-pencil"></i></button>
-                                                                        </div>
-                                                                    </div> --}}
                                                                     {{ $org_detail->billing_street . ' ' . $org_detail->billing_city . ' ' . $org_detail->billing_state . ' ' . $org_detail->billing_postal_code . ' ' . $org_detail->billing_country }}
 
 
@@ -571,8 +444,8 @@
                                                                 </td>
                                                                 <td class=""
                                                                     style="padding-left:10px; font-size: 13px;">
-                                                                    <a href=""
-                                                                        style="font-size:14px">{{ __('Change') }}</a>
+                                                                    
+                                                                        style="font-size:14px">{{ __('Change') }}
                                                                 </td>
                                                             </tr>
 
@@ -641,21 +514,6 @@
                                                                 </td>
                                                                 <td class="description-td"
                                                                     style="padding-left:15px; width: 550px; text-align: justify; font-size: 14px;">
-
-                                                                    {{-- <div class="d-flex align-items-baseline edit-input-field-div"
-                                                                        @if (!empty($org_detail->description)) style="min-height: 150px;" @endif>
-                                                                        <div
-                                                                            class="input-group border-0 d-flex align-items-baseline">
-                                                                            {{ $org_detail->description }}
-                                                                        </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <button
-                                                                                class="btn btn-sm btn-secondary edit-input rounded-0 btn-effect-none"
-                                                                                name="description">
-                                                                                <i class="ti ti-pencil"></i>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div> --}}
                                                                     {{ $org_detail->description }}
                                                                 </td>
                                                             </tr>
@@ -667,7 +525,7 @@
                                     </div>
 
 
-                                    <div class="accordion-item">
+                                    <div class="accordion-item d-none">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeytag">
                                             <button class="accordion-button p-2" type="button"
                                                 data-bs-toggle="collapse"
@@ -707,21 +565,17 @@
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
 
                             @php
                                 $notes = \App\Models\OrganizationNote::where('organization_id', $org->id)->get();
-
                             @endphp
 
                             {{-- Details Pill End --}}
                             <div class="tab-pane fade" id="pills-related" role="tabpanel"
                                 aria-labelledby="pills-related-tab">
-
-
                                 <div class="block-items">
+                                   
                                     <div class="block-item large-block" id="con-stats" title="1 Linked Contacts"
                                         data-bs-target="#contacts-grid-container">
                                         <div class="top-label">Contacts</div>
@@ -733,11 +587,12 @@
                                         </div>
                                     </div>
 
-                                    <div class="block-item large-block" id="con-stats" title="1 Linked Contacts"
-                                        data-bs-target="#contacts-grid-container">
+                                    <div class="block-item large-block d-none" id="con-stats"
+                                        title="1 Linked Contacts" data-bs-target="#contacts-grid-container">
                                         <div class="top-label">Discussion</div>
                                         <div class="block-item-count">
-                                            {{ $org->organizationLeadDiscussions($org->id) }}</div>
+                                            {{ $org->organizationLeadDiscussions($org->id) }}
+                                        </div>
                                         <div class="fp-product-count-holder">
                                             <div class="fp-product-count-total"></div>
                                             <div class="fp-product-count-percent" style="width: 0px;"></div>
@@ -757,6 +612,17 @@
 
                                     <div class="block-item large-block" id="con-stats" title="1 Linked Contacts"
                                         data-bs-target="#contacts-grid-container">
+                                        <div class="top-label">Tasks</div>
+                                        <div class="block-item-count">{{ $org->organizationLeadTasks($org->id) }}
+                                        </div>
+                                        <div class="fp-product-count-holder">
+                                            <div class="fp-product-count-total"></div>
+                                            <div class="fp-product-count-percent" style="width: 0px;"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="block-item large-block d-none" id="con-stats"
+                                        title="1 Linked Contacts" data-bs-target="#contacts-grid-container">
                                         <div class="top-label">Links</div>
                                         <div class="block-item-count">{{ !empty($org_detail->drive_link) ? 1 : 0 }}
                                         </div>
@@ -767,8 +633,8 @@
                                     </div>
 
 
-                                    <div class="block-item large-block" id="con-stats" title="1 Linked Contacts"
-                                        data-bs-target="#contacts-grid-container">
+                                    <div class="block-item large-block d-none" id="con-stats"
+                                        title="1 Linked Contacts" data-bs-target="#contacts-grid-container">
                                         <div class="top-label">Opportunity</div>
                                         <div class="block-item-count">{{ $org->organizationOpportunity($org->id) }}
                                         </div>
@@ -786,6 +652,7 @@
                                     <div id="discussion_note">
                                         <div class="row">
 
+                                            <!-- Contacts related to organizations -->
                                             <div class="accordion" id="accordionPanelsStayOpenExample">
                                                 <!-- Open Accordion Item -->
                                                 <div class="accordion-item">
@@ -805,17 +672,6 @@
 
                                                                 <div class="col-12">
                                                                     <div class="card" style="box-shadow: none;">
-
-                                                                        <div class="card-header px-0 pt-0"
-                                                                            style="padding-bottom: 18px;">
-                                                                            <!-- <div class="d-flex justify-content-end">
-                                                                                <div class="float-end">
-                                                                                    <a data-size="lg" data-url="javascript:void(0)" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Contact') }}" class="btn btn-sm text-white" style="background-color: #b5282f;">
-                                                                                        <i class="ti ti-plus"></i>
-                                                                                    </a>
-                                                                                </div>
-                                                                            </div> -->
-                                                                        </div>
                                                                         <div class="card-body px-0"
                                                                             style="max-height: 300px; overflow-y: scroll;">
                                                                             <table class="table">
@@ -850,14 +706,15 @@
                                                 </div>
                                             </div>
 
+                                            <!-- Noted related to organization -->
                                             <div class="accordion" id="accordionPanelsStayOpenExample">
-                                                <!-- Open Accordion Item -->
+
                                                 <div class="accordion-item">
                                                     <h2 class="accordion-header" id="panelsStayOpen-headingdisc">
                                                         <button class="accordion-button p-2" type="button"
                                                             data-bs-toggle="collapse"
                                                             data-bs-target="#panelsStayOpen-collapsedisc">
-                                                            {{ __('Discussion') }}
+                                                            {{ __('Notes') }}
                                                         </button>
                                                     </h2>
 
@@ -866,159 +723,397 @@
                                                         aria-labelledby="panelsStayOpen-headingdisc">
                                                         <div class="accordion-body">
                                                             <div class="">
+
                                                                 <div class="col-12">
                                                                     <div class="card">
-                                                                        <div class="card-header"
-                                                                            style="padding-bottom: 18px;">
-                                                                            <div class="d-flex justify-content-end">
-                                                                                <div class="float-end">
-                                                                                    <a data-size="lg"
-                                                                                        data-url="{{ route('organization.discussions.create', $org->id) }}"
-                                                                                        data-ajax-popup="true"
-                                                                                        data-bs-toggle="tooltip"
-                                                                                        title="{{ __('Add Message') }}"
-                                                                                        class="btn px-2 btn-dark text-white"
-                                                                                        >
-                                                                                        <i class="ti ti-plus"></i>
-                                                                                    </a>
+                                                                        <textarea name="" id="" cols="95"
+                                                                            class="form-control @can('create notes') textareaClass @endcan " readonly style="cursor: pointer"></textarea>
+                                                                        <span id="textareaID" style="display: none;">
+                                                                            <div class="card-header px-0 pt-0"
+                                                                                style="padding-bottom: 18px;">
+                                                                                {{ Form::model($org, ['route' => ['organization.notes.store', $org->id], 'method' => 'POST', 'id' => 'create-notes', 'style' => 'z-index: 9999999 !important;']) }}
+                                                                                <textarea name="description" id="description" class="form form-control" cols="10" rows="1"></textarea>
+                                                                                <input type="hidden" id="note_id"
+                                                                                    name="note_id">
+                                                                                <input type="hidden" name="org_id"
+                                                                                    id="org_id"
+                                                                                    value="{{ $org->id }}">
+                                                                                <div
+                                                                                    class="d-flex justify-content-end mt-2">
+                                                                                    <button type="button"
+                                                                                        id="cancelNote"
+                                                                                        class="btn btn-secondary mx-2">Cancel</button>
+                                                                                    <button type="submit"
+                                                                                        class="btn btn-secondary">Save</button>
                                                                                 </div>
+                                                                                {{ Form::close() }}
                                                                             </div>
-                                                                        </div>
+                                                                        </span>
 
+                                                                        <div class="card-body px-0 py-0">
+                                                                            @php
+                                                                                $notes = \App\Models\OrganizationNote::where('organization_id', $org->id)
+                                                                                    ->orderBy('created_at', 'DESC')
+                                                                                    ->get();
+                                                                            @endphp
 
-                                                                        <div class="card-body px-0">
                                                                             <ul
-                                                                                class="list-group list-group-flush mt-2">
-                                                                                @foreach ($discussions as $discussion)
-                                                                                    <li class="list-group-item px-3">
+                                                                                class="list-group list-group-flush mt-2 note-tbody">
+
+                                                                                @foreach ($notes as $note)
+                                                                                    <li class="list-group-item px-3 pb-0"
+                                                                                        id="lihover">
+
                                                                                         <div
                                                                                             class="d-block d-sm-flex align-items-start">
-                                                                                            <img src="@if ($discussion['avatar'] && $discussion['avatar'] != '') {{ asset('/storage/uploads/avatar/' . $discussion['avatar']) }} @else {{ asset('/storage/uploads/avatar/avatar.png') }} @endif"
-                                                                                                class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
-                                                                                                alt="image">
                                                                                             <div class="w-100">
                                                                                                 <div
-                                                                                                    class="d-flex align-items-center justify-content-between">
+                                                                                                    class="d-flex align-items-center justify-content-between w-100">
                                                                                                     <div
-                                                                                                        class="mb-3 mb-sm-0">
-                                                                                                        <h5
+                                                                                                        class="mb-3 mb-sm-0 w-50 pb-3">
+                                                                                                        <p
                                                                                                             class="mb-0">
-                                                                                                            {{ $discussion['comment'] }}
-                                                                                                        </h5>
+                                                                                                            {{ $note->description }}
+                                                                                                        </p>
                                                                                                         <span
-                                                                                                            class="text-muted text-sm">{{ $discussion['name'] }}</span>
+                                                                                                            class="text-muted text-sm">{{ $note->created_at }}
+                                                                                                        </span><br>
+                                                                                                        <span
+                                                                                                            class="text-muted text-sm"><i
+                                                                                                                class="step__icon fa fa-user me-2"
+                                                                                                                aria-hidden="true"></i>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
+                                                                                                        </span>
                                                                                                     </div>
-                                                                                                    <div
-                                                                                                        class=" form-switch form-switch-right mb-4">
-                                                                                                        {{ $discussion['created_at'] }}
+
+                                                                                                    <style>
+                                                                                                        #editable {
+                                                                                                            display: none;
+                                                                                                        }
+
+                                                                                                        #lihover:hover #editable {
+                                                                                                            display: flex;
+                                                                                                        }
+                                                                                                    </style>
+                                                                                                    <div class="d-flex gap-3"
+                                                                                                        id="dellhover">
+                                                                                                        <i class="ti ti-pencil textareaClassedit"
+                                                                                                            data-note="{{ $note->description }}"
+                                                                                                            data-note-id="{{ $note->id }}"
+                                                                                                            id="editable"
+                                                                                                            style="font-size: 20px;cursor:pointer;"></i>
+                                                                                                        <script></script>
+                                                                                                        <i class="ti ti-trash delete-notes"
+                                                                                                            id="editable"
+                                                                                                            data-note-id="{{ $note->id }}"
+                                                                                                            style="font-size: 20px;cursor:pointer;"></i>
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
                                                                                     </li>
                                                                                 @endforeach
+
                                                                             </ul>
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+
+                                                <!-- Tasks -->
+                                                @can('manage task')
+                                                    <div class="accordion" id="accordionPanelsStayOpenExample">
+                                                        <!-- Open Accordion Item -->
+                                                        <div class="accordion-item">
+                                                            <h2 class="d-flex justify-between align-items-center accordion-header"
+                                                                id="panelsStayOpen-headingnote">
+                                                                <button class="accordion-button p-2" type="button"
+                                                                    data-bs-toggle="collapse"
+                                                                    data-bs-target="#panelsStayOpen-collapsetasks">
+
+                                                                    <div
+                                                                        style="position: absolute;right: 27px;z-index: 9999;">
+                                                                        @can('create task')
+                                                                            <a data-size="lg"
+                                                                                data-url="/organiation/1/task?type=organization&typeid={{ $org->id }}"
+                                                                                data-ajax-popup="true"
+                                                                                data-bs-toggle="tooltip"
+                                                                                title="{{ __('Add Task') }}"
+                                                                                class="btn p-2 text-white"
+                                                                                style="background-color: #313949;">
+                                                                                <i class="ti ti-plus"></i>
+                                                                            </a>
+                                                                        @endcan
+                                                                    </div>
+                                                                    <span>
+                                                                        {{ __('Tasks') }}
+                                                                    </span>
+                                                                </button>
+
+                                                            </h2>
+
+                                                            <div id="panelsStayOpen-collapsetasks"
+                                                                class="accordion-collapse collapse show"
+                                                                aria-labelledby="panelsStayOpen-headingnote">
+                                                                <div class="accordion-body">
+
+
+                                                                    <div class="">
+                                                                        <div class="col-12">
+                                                                            <div class="card">
+                                                                                <div class="card-header ">
+                                                                                    <div
+                                                                                        class="d-flex justify-content-end">
+
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="card-body px-0">
+
+                                                                                    <ul
+                                                                                        class="list-group list-group-flush mt-2 notes-tbody">
+                                                                                        @php
+                                                                                            $section = 1;
+                                                                                            $section2 = 1;
+                                                                                        @endphp
+                                                                                        @foreach ($tasks as $task)
+                                                                                            @if ($task->status == 1)
+                                                                                                <div class="ps-3 py-2 d-flex gap-2 align-items-baseline"
+                                                                                                    style="border-bottom: 1px solid rgb(192, 192, 192);">
+                                                                                                    <i class="fa-regular fa-square-check"
+                                                                                                        style="color: #000000;"></i>
+                                                                                                    <h6 class="fw-bold">
+                                                                                                        {{ $section == 1 ? 'Closed Activity' : '' }}
+                                                                                                    </h6>
+                                                                                                </div>
+                                                                                                <li class="list-group-item px-3"
+                                                                                                    id="lihover">
+                                                                                                    <div
+                                                                                                        class="d-block d-sm-flex align-items-start">
+                                                                                                        <div
+                                                                                                            class="w-100">
+                                                                                                            <div
+                                                                                                                class="d-flex align-items-center justify-content-between">
+                                                                                                                <div
+                                                                                                                    class="mb-3 mb-sm-0">
+                                                                                                                    <h5
+                                                                                                                        class="mb-0">
+                                                                                                                        {{ $task->name }}
+
+                                                                                                                    </h5>
+                                                                                                                    <span
+                                                                                                                        class="text-muted text-sm">
+                                                                                                                        {{ $task->created_at }}
+                                                                                                                    </span><br>
+                                                                                                                    <span
+                                                                                                                        class="text-muted text-sm"><i
+                                                                                                                            class="step__icon fa fa-user"
+                                                                                                                            aria-hidden="true"></i>
+                                                                                                                        {{ \App\Models\User::where('id', $task->assigned_to)->first()->name }}
+
+                                                                                                                        <span
+                                                                                                                            class="d-flex">
+                                                                                                                            <div>
+                                                                                                                                Status
+                                                                                                                            </div>
+                                                                                                                            <div
+                                                                                                                                class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }} ms-5 py-1">
+                                                                                                                                <span>
+                                                                                                                                    {{ $task->status == 1 ? 'Completed' : 'On Going' }}
+                                                                                                                                </span>
+                                                                                                                            </div>
+                                                                                                                        </span>
+                                                                                                                        {{-- --}}
+                                                                                                                    </span>
+                                                                                                                </div>
+
+                                                                                                                <style>
+                                                                                                                    #editable {
+                                                                                                                        display: none;
+                                                                                                                    }
+
+                                                                                                                    #lihover:hover #editable {
+                                                                                                                        display: flex;
+                                                                                                                    }
+                                                                                                                </style>
+                                                                                                                <div class="d-flex gap-3"
+                                                                                                                    id="dellhover">
+
+                                                                                                                    <a data-size="lg"
+                                                                                                                        data-url="{{ route('organiation.tasks.edit', $task->id) }}"
+                                                                                                                        data-ajax-popup="true"
+                                                                                                                        data-bs-toggle="tooltip"
+                                                                                                                        title="{{ __('Update Task') }}"
+                                                                                                                        id="editable"
+                                                                                                                        class="btn textareaClassedit">
+                                                                                                                        <i class="ti ti-pencil"
+                                                                                                                            style="font-size: 20px;margin-right: -30px;"></i>
+                                                                                                                    </a>
+
+
+                                                                                                                    <a href="javascript:void(0)"
+                                                                                                                        class="btn"
+                                                                                                                        id="editable"
+                                                                                                                        onclick="deleteTask({{ $task->id }}, {{ $org->id }}, 'lead');">
+                                                                                                                        <i class="ti ti-trash "
+                                                                                                                            style="font-size: 20px;"></i>
+                                                                                                                    </a>
+
+                                                                                                                </div>
+
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </li>
+                                                                                                @php
+                                                                                                    $section++;
+                                                                                                @endphp
+
+                                                                                                @elseif($task->status == 0)
+                                                                                                <div class="ps-3 py-2 d-flex gap-2 align-items-baseline"
+                                                                                                    style="border-bottom: 1px solid rgb(192, 192, 192);">
+                                                                                                    <i class="fa-regular fa-square-check"
+                                                                                                        style="color: #000000;"></i>
+                                                                                                    <h6 class="fw-bold">
+                                                                                                        {{ $section2 == 1 ? 'Open Activity' : '' }}
+                                                                                                    </h6>
+                                                                                                </div>
+                                                                                                <li class="list-group-item px-3"
+                                                                                                    id="lihover">
+                                                                                                    <div
+                                                                                                        class="d-block d-sm-flex align-items-start">
+                                                                                                        <div
+                                                                                                            class="w-100">
+                                                                                                            <div
+                                                                                                                class="d-flex align-items-center justify-content-between">
+                                                                                                                <div
+                                                                                                                    class="mb-3 mb-sm-0">
+                                                                                                                    <h5
+                                                                                                                        class="mb-0">
+                                                                                                                        {{ $task->name }}
+
+                                                                                                                    </h5>
+                                                                                                                    <span
+                                                                                                                        class="text-muted text-sm">
+                                                                                                                        {{ $task->created_at }}
+                                                                                                                    </span><br>
+                                                                                                                    <span
+                                                                                                                        class="text-muted text-sm"><i
+                                                                                                                            class="step__icon fa fa-user"
+                                                                                                                            aria-hidden="true"></i>
+                                                                                                                        {{ \App\Models\User::where('id', $task->assigned_to)->first()->name ?? '' }}
+
+                                                                                                                        <span
+                                                                                                                            class="d-flex">
+                                                                                                                            <div>
+                                                                                                                                Status
+                                                                                                                            </div>
+                                                                                                                            <div
+                                                                                                                                class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }} ms-5 py-1">
+                                                                                                                                <span>
+                                                                                                                                    {{ $task->status == 1 ? 'Completed' : 'On Going' }}
+                                                                                                                                </span>
+                                                                                                                            </div>
+                                                                                                                        </span>
+                                                                                                                        {{-- --}}
+                                                                                                                    </span>
+                                                                                                                </div>
+
+                                                                                                                <style>
+                                                                                                                    #editable {
+                                                                                                                        display: none;
+                                                                                                                    }
+
+                                                                                                                    #lihover:hover #editable {
+                                                                                                                        display: flex;
+                                                                                                                    }
+                                                                                                                </style>
+                                                                                                                <div class="d-flex gap-3"
+                                                                                                                    id="dellhover">
+
+                                                                                                                    <a data-size="lg"
+                                                                                                                        data-url="{{ route('organiation.tasks.edit', $task->id) }}"
+                                                                                                                        data-ajax-popup="true"
+                                                                                                                        data-bs-toggle="tooltip"
+                                                                                                                        title="{{ __('Update Task') }}"
+                                                                                                                        id="editable"
+                                                                                                                        class="btn textareaClassedit">
+                                                                                                                        <i class="ti ti-pencil"
+                                                                                                                            style="font-size: 20px;margin-right: -30px;"></i>
+                                                                                                                    </a>
+
+
+                                                                                                                    <a href="javascript:void(0)"
+                                                                                                                        class="btn"
+                                                                                                                        id="editable"
+                                                                                                                        onclick="deleteTask({{ $task->id }}, {{ $org->id }}, 'lead');">
+                                                                                                                        <i class="ti ti-trash "
+                                                                                                                            style="font-size: 20px;"></i>
+                                                                                                                    </a>
+
+                                                                                                                </div>
+
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </li>
+                                                                                                @php
+                                                                                                    $section2++;
+                                                                                                @endphp
+                                                                                            @endif
+                                                                                        @endforeach
+
+                                                                                    </ul>
+
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endcan
+
                                             </div>
 
 
-
-                                            <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            <!-- Contacts related to organizations -->
+                                            <div class="accordion d-none" id="accordionPanelsStayOpenExample">
                                                 <!-- Open Accordion Item -->
                                                 <div class="accordion-item">
-                                                    <h2 class="accordion-header" id="panelsStayOpen-headingnote">
+                                                    <h2 class="accordion-header" id="panelsStayOpen-headingcontact">
                                                         <button class="accordion-button p-2" type="button"
                                                             data-bs-toggle="collapse"
-                                                            data-bs-target="#panelsStayOpen-collapsenote">
-                                                            {{ __('Notes') }}
+                                                            data-bs-target="#panelsStayOpen-collapsecontact">
+                                                            {{ __('Opportunities') }}
                                                         </button>
                                                     </h2>
 
-                                                    <div id="panelsStayOpen-collapsenote"
+                                                    <div id="panelsStayOpen-collapsecontact"
                                                         class="accordion-collapse collapse show"
-                                                        aria-labelledby="panelsStayOpen-headingnote">
+                                                        aria-labelledby="panelsStayOpen-headingcontact">
                                                         <div class="accordion-body">
-
-
                                                             <div class="">
 
                                                                 <div class="col-12">
-                                                                    <div class="card">
-
-                                                                        <div class="card-header "
-                                                                            style="padding-bottom: 18px;">
-                                                                            <div class="d-flex justify-content-end">
-                                                                                <div class="float-end">
-                                                                                    <a data-size="lg"
-                                                                                        data-url="{{ route('organization.notes.create', $org->id) }}"
-                                                                                        data-ajax-popup="true"
-                                                                                        data-bs-toggle="tooltip"
-                                                                                        title="{{ __('Add Message') }}"
-                                                                                        class="btn px-2 btn-dark text-white"
-                                                                                        >
-                                                                                        <i class="ti ti-plus"></i>
-                                                                                    </a>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="card-body px-0">
+                                                                    <div class="card" style="box-shadow: none;">
+                                                                        <div class="card-body px-0"
+                                                                            style="max-height: 300px; overflow-y: scroll;">
                                                                             <table class="table">
                                                                                 <thead class="table-bordered">
                                                                                     <tr>
-                                                                                        <th scope="col">Title</th>
-                                                                                        <th scope="col">Description
-                                                                                        </th>
-                                                                                        <th scope="col">Date Added
-                                                                                        </th>
-                                                                                        <th scope="col">Added By
-                                                                                        </th>
-                                                                                        <th scope="col">Action</th>
+                                                                                        <th>Student Name</th>
+                                                                                        <th>Course</th>
+                                                                                        <th>University</th>
+                                                                                        <th>Stage</th>
+                                                                                        <th>Created at</th>
                                                                                     </tr>
                                                                                 </thead>
-                                                                                <tbody class="notes-tbody">
-                                                                                    @forelse($org->organizationLeadNotesList($org->id) as $note)
-                                                                                        <tr>
-
-
-                                                                                            <td>{{ $note->title }}
-                                                                                            </td>
-                                                                                            <td>{{ $note->description }}
-                                                                                            </td>
-                                                                                            <td>{{ $note->created_at }}
-                                                                                            </td>
-                                                                                            <td>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
-                                                                                            </td>
-                                                                                            <td class="d-flex">
-
-                                                                                                <a data-url="{{ route('organization.notes.edit', $note->id) }}"
-                                                                                                    data-ajax-popup="true"
-                                                                                                    data-bs-toggle="tooltip"
-                                                                                                    title="{{ __('Drive Link') }}"
-                                                                                                    class="btn px-2 btn-dark text-white mx-2"
-                                                                                                   >
-                                                                                                    <i
-                                                                                                        class="ti ti-pencil "></i>
-                                                                                                </a>
-
-                                                                                                <a href="javascript:void(0)"
-                                                                                                    class="btn px-2 btn-dark text-white delete-notes"
-                                                                                                    data-note-id="{{ $note->id }}"
-                                                                                                    >
-                                                                                                    <i
-                                                                                                        class="ti ti-trash "></i>
-                                                                                                </a>
-                                                                                            </td>
-
-                                                                                        </tr>
-                                                                                    @empty
-                                                                                    @endforelse
+                                                                                <tbody>
 
                                                                                 </tbody>
                                                                             </table>
@@ -1032,23 +1127,21 @@
                                                 </div>
                                             </div>
                                         </div>
-
-
-
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="tab-pane fade" id="pills-activity" role="tabpanel"
-                                aria-labelledby="pills-activity-tab">
-                                <div class="accordion" id="accordionPanelsStayOpenExample">
-                                    <!-- Open Accordion Item -->
+                                <div class="tab-pane fade" id="pills-news" role="tabpanel"
+                                    aria-labelledby="pills-news-tab">
+
+                                    <div class="accordion" id="accordionPanelsStayOpenExample">
+                                       <!-- Open Accordion Item -->
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingactive">
                                             <button class="accordion-button p-2" type="button"
                                                 data-bs-toggle="collapse"
                                                 data-bs-target="#panelsStayOpen-collapseactive">
-                                                {{ __('Task') }}
+                                                {{ __('Timeline') }}
                                             </button>
                                         </h2>
 
@@ -1056,152 +1149,51 @@
                                             class="accordion-collapse collapse show"
                                             aria-labelledby="panelsStayOpen-headingactive">
                                             <div class="accordion-body">
+                                                <!-- Accordion Content -->
+
+
                                                 <div class="mt-1">
-                                                    <div id="activity" class=" px-0">
-                                                        <div class=" px-0" style=" padding-bottom: 18px;">
-                                                            <div class="d-flex justify-content-end">
-                                                                <div class="float-end">
-                                                                    <a data-size="lg"
-                                                                        data-url="/organiation/1/task?type=organization&typeid={{$org->id}}"
-                                                                        data-ajax-popup="true"
-                                                                        data-bs-toggle="tooltip"
-                                                                        title="{{ __('Add Message') }}"
-                                                                        class="btn px-2 btn-dark text-white"
-                                                                       >
-                                                                        <i class="ti ti-plus"></i>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <table class="table">
-                                                            <thead class="table-bordered">
-                                                                <tr>
-                                                                    <th scope="col">{{ __('Task Name') }}</th>
-                                                                    <th scope="col">{{ __('Assigned To') }}</th>
-                                                                    <th scope="col">{{ __('Status') }}</th>
-                                                                    <th scope="col">{{ __('Start Date') }}</th>
-                                                                    <th scope="col">{{ __('Due Date') }}</th>
-                                                                    <th scope="col">Action</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody class="tasks-list-tbody">
+                                                    <div class="timeline-wrapper">
+                                                        <ul class="StepProgress">
+                                                            @foreach ($log_activities as $activity)
+                                                                @php
+                                                                    $remark = json_decode($activity->note);
+                                                                @endphp
 
-                                                                @forelse($tasks as $task)
-                                                                    <tr style="font-size: 14px;">
-                                                                        <td>{{ $task->name }}</td>
-                                                                        <td>{{ isset($task->assigned_to) ? \App\Models\User::where('id', $task->assigned_to)->first()->name : '' }}
-                                                                        </td>
-                                                                        <td>
-                                                                            <span class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp'}}"> {{ $task->status == 1 ? 'Completed' : 'On Going'}} </span>
-                                                                        </td>
-                                                                        <td>{{ $task->start_date }}</td>
-                                                                        <td>{{ $task->due_date }}</td>
+                                                                <li class="StepProgress-item is-done">
+                                                                    <div class="bold time">{{ $activity->created_at }}</div>
+                                                                    <div class="bold" style="text-align: left; margin-left: 80px;">
+                                                                          <p class="bold" style="margin-bottom: 0rem; color: #000000;">{{ $remark->title }}</p>
+                                                                          <p class="m-0">{{ $remark->message }}</p>
+                                                                          <span class="text-muted text-sm" style="cursor: pointer;" @can('show employee') onclick="openSidebar('/user/employee/{{ isset($activity->created_by) ? $activity->created_by : '' }}/show')"  @endcan ><i class="step__icon fa fa-user me-2" aria-hidden="true"></i>{{ isset($users[$activity->created_by]) ? $users[$activity->created_by] : '' }}</span>
+                                                                    </div>
+                                                                </li>
 
-                                                                        <td class="d-flex">
+                                                            @endforeach
 
-                                                                            <a data-size="lg"
-                                                                                data-url="{{ route('organiation.tasks.edit', $task->id) }}"
-                                                                                data-ajax-popup="true"
-                                                                                data-bs-toggle="tooltip"
-                                                                                title="{{ __('Drive Link') }}"
-                                                                                class="btn px-2 btn-dark text-white mx-2"
-                                                                               >
-                                                                                <i class="ti ti-pencil "></i>
-                                                                            </a>
-
-                                                                            <a href="javascript:void(0)"
-                                                                                class="btn px-2 btn-danger text-white"
-
-                                                                                onclick="deleteTask({{ $task->id }}, {{ $org->id }}, 'organization');">
-                                                                                <i class="ti ti-trash "></i>
-                                                                            </a>
-                                                                        </td>
-                                                                    </tr>
-                                                                @empty
-                                                                @endforelse
-
-                                                            </tbody>
-                                                        </table>
+                                                        </ul>
                                                     </div>
                                                 </div>
+                                                <!-- End of Accordion Content -->
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-
-                            <div class="tab-pane fade" id="pills-news" role="tabpanel"
-                                aria-labelledby="pills-news-tab">
-
-                                <div class="accordion" id="accordionPanelsStayOpenExample">
-                                    <!-- Open Accordion Item -->
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="panelsStayOpen-headingnews">
-                                            <button class="accordion-button p-2" type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#panelsStayOpen-collapsenews">
-                                                {{ __('Activities') }}
-                                            </button>
-                                        </h2>
-
-                                        <div id="panelsStayOpen-collapsenews" class="accordion-collapse collapse show"
-                                            aria-labelledby="panelsStayOpen-headingnews">
-                                            <div class="accordion-body">
-                                                <div class="mt-1">
-                                                    <div id="news" class=" px-0">
-                                                        <div class=" px-0" style=" padding-bottom: 18px;">
-                                                            <div class="d-flex justify-content-end">
-                                                                <div class="float-end">
-                                                                    <a data-size="lg" data-url=""
-                                                                        data-ajax-popup="true"
-                                                                        data-bs-toggle="tooltip"
-                                                                        title="{{ __('Add Message') }}"
-                                                                        class="btn px-2 btn-dark text-white"
-                                                                        >
-                                                                        <i class="ti ti-plus"></i>
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class=""
-                                                            style="max-height: 200px; overflow-y: scroll;">
-
-                                                            <table class="w-100">
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td class="p-3">
-
-                                                                            @foreach ($org->organizationActivitiesList($org->id) as $log)
-                                                                                <div class="p-2"
-                                                                                    style="border-bottom: 1px solid rgb(240, 240, 240);">
-                                                                                    <div
-                                                                                        class="d-flex align-items-baseline p-1">
-                                                                                        <p class="mb-0">
-                                                                                            <b>{{ $log->log_type }}
-                                                                                                :</b>
-                                                                                            {{ json_decode($log->remark)->title }}
-                                                                                        </p>
-                                                                                    </div>
-                                                                                    <small>{{ $log->created_at }}</small>
-
-                                                                                </div>
-                                                                            @endforeach
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <!-- End of Open Accordion Item -->
                                     </div>
                                 </div>
-                            </div>
 
+                            {{-- </div> --}}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+
+        @push('script-page')
+            <script>
+                $('#create-notes').submit(function(event) {
+                    event.preventDefault(); // Prevents the default form submission
+                    $('#textareaID, .textareaClass').toggle("slide");
+                });
+            </script>
+        @endpush

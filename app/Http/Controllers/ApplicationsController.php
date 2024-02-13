@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Stage;
+use App\Models\Utility;
+use App\Models\Pipeline;
 use App\Models\ClientDeal;
 use App\Models\University;
+use App\Models\ActivityLog;
+use App\Models\SavedFilter;
 use App\Models\StageHistory;
 use Illuminate\Http\Request;
 use App\Models\DealApplication;
-use App\Models\Pipeline;
-use App\Models\ActivityLog;
-use App\Models\Utility;
 
 
 class ApplicationsController extends Controller
@@ -58,18 +59,38 @@ class ApplicationsController extends Controller
 
          /////////////////end pagination calculation
 
-         if ($usr->can('view application') || $usr->type == 'super admin' || $usr->type == 'company') {
-
-            $app_query = DealApplication::select(['deal_applications.*']);
-            
-            if(\Auth::user()->type == 'super admin'){
-            $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
-            }else{
-                 $companies = FiltersBrands();
+         if ($usr->can('view application') || $usr->type == 'super admin' || $usr->type == 'company' || $usr->type == 'Admin Team') {
+            $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->whereIn('deal_applications.brand_id', $brand_ids);
+            $app_query = DealApplication::select(['deal_applications.*']);
+            $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
+            if(\Auth::user()->type == 'super admin' || $usr->type == 'Admin Team'){
+
+            }else if(\Auth::user()->type == 'company'){
+                $app_query->where('deals.brand_id', \Auth::user()->id);
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                $app_query->whereIn('deals.brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+                $app_query->where('deals.region_id', \Auth::user()->region_id);
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+                $app_query->where('deals.branch_id', \Auth::user()->branch_id);
+            }else{
+                $app_query->where('deals.assigned_to', \Auth::user()->id);
             }
-           
+
+
+
+
+
+
+            // if(\Auth::user()->type == 'super admin'){
+            //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
+            // }else{
+                //  $companies = FiltersBrands();
+                // $brand_ids = array_keys($companies);
+            //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->whereIn('deal_applications.brand_id', $brand_ids);
+            // }
+
             $total_records = $app_query->count();
             //$filters
             $app_for_filer = $app_query->get();
@@ -96,22 +117,28 @@ class ApplicationsController extends Controller
             }
 
             $applications = $app_query->get();
-         
+
+
             $universities = University::get()->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             $brands = User::where('type', 'company')->get();
-
+            $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'applications')->get();
+            
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('applications.applications_list_ajax',  compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands'))->render();
-
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' => $num_results_on_page,
+                ])->render();
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => $html,
+                    'pagination_html' => $pagination_html
                 ]);
             }
 
 
-            return view('applications.index', compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands'));
+            return view('applications.index', compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands', 'saved_filters'));
 
          }else{
             return redirect()->back()->with('error', __('Permission Denied.'));

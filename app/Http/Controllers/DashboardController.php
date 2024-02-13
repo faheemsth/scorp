@@ -288,7 +288,9 @@ class DashboardController extends Controller
     {
 
         if (Auth::check()) {
-
+            return view('chartdashboard.chart');
+            
+            
             if (Auth::user()->default_pipeline) {
                 $pipeline = Pipeline::where('id', '=', Auth::user()->default_pipeline)->first();
                 if (!$pipeline) {
@@ -305,11 +307,12 @@ class DashboardController extends Controller
             } elseif (Auth::user()->type == 'super admin') {
                 ///////////////////////////////////////////////////Chart of Lead Stages
                 $data = $this->superAdminCrmDashboarData();
-                return view('dashboard.crm-dashboard', $data);
+                return view('crm.dashboard', $data);
             } elseif (Auth::user()->type == 'team') {
 
                 $data = $this->superAdminCrmDashboarData();
-                return view('dashboard.crm-dashboard', $data);
+                return view('chartdashboard.chart');
+               // return view('dashboard.crm-dashboard', $data);
             } elseif (Auth::user()->type == 'company') {
 
                 ///////////////////////////////////////////////////Chart of Lead Stages
@@ -510,9 +513,12 @@ class DashboardController extends Controller
 
     public function crm_dashboard_index()
     {
+        
          if (!Auth::check()) {
            return redirect('login');
          }
+         
+         return view('chartdashboard.chart');
         $total_admissions = 0;
         $total_deposits = 0;
         $total_visas = 0;
@@ -807,6 +813,7 @@ class DashboardController extends Controller
         $topUsers = DB::table('deals as d')
                     ->join('users as u', 'd.created_by', '=', 'u.id')
                     ->join('stages as s', 'd.stage_id', '=', 's.id')
+                    ->where('u.type', '!=', 'super admin')
                     ->whereIn('s.id', $filter)
                     ->groupBy('u.id', 'u.name')
                     ->select('u.id as user_id', 'u.name', DB::raw('COUNT(d.id) as total'))

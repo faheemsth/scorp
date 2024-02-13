@@ -1,10 +1,11 @@
-<form action="{{ url('branch') }}" method="post" novalidate>
+<form action="{{ url('branch') }}" id="create-branch" method="post" novalidate>
     @csrf
     <div class="modal-body" style="min-height: 35vh;">
         <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="name">{{ __('Name') }}</label>
+                        <span class="text-danger">*</span>
                         <input type="text" name="name" class="form-control"
                             placeholder="{{ __('Enter Branch Name') }}">
                         @error('name')
@@ -17,27 +18,73 @@
 
                 <div class="col-md-6">
                     <div class="form-group" id="brands_div">
-                        <label for="region_id">{{ __('Brands') }}</label>
-                        <select name="brands[]" id="brands" id="brands-1" class="form-control select2">
-                            <option value="">Select Brands</option>
-                            @foreach($brands as $key => $brand)
-                            <option value="{{$key}}"> {{$brand}} </option>
+                        
+                        @if (
+                        \Auth::user()->type == 'super admin' ||
+                        \Auth::user()->type == 'HR' ||
+                            \Auth::user()->type == 'Admin Team' ||
+                            \Auth::user()->type == 'Project Director' ||
+                            \Auth::user()->type == 'Project Manager')
+                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                                class="text-danger">*</span></label>
+                        {!! Form::select('brands', $brands, 0, [
+                            'class' => 'form-control select2 brand_id',
+                            'id' => 'brands',
+                        ]) !!}
+
+                    @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
+                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                                class="text-danger">*</span></label>
+                        <input type="hidden" name="brands" value="{{ \Auth::user()->id }}">
+                        <select class='form-control select2 brand_id' disabled ="brands" id="brands">
+                            @foreach ($brands as $key => $comp)
+                                <option value="{{ $key }}" {{ $key == \Auth::user()->id ? 'selected' : '' }}>
+                                    {{ $comp }}</option>
                             @endforeach
                         </select>
+                    @else
+                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                                class="text-danger">*</span></label>
+                        <input type="hidden" name="brands" value="{{ \Auth::user()->brand_id }}">
+                        <select class='form-control select2 brand_id' disabled  id="brands">
+                            @foreach ($brands as $key => $comp)
+                                <option value="{{ $key }}"
+                                    {{ $key == \Auth::user()->brand_id ? 'selected' : '' }}>{{ $comp }}
+                                </option>
+                            @endforeach
+                        </select>
+                    @endif
                     </div>
                 </div>
 
                 <div class="col-md-6">
-                    <div class="form-group" id="region_div">
-                        <label for="region_id">{{ __('Region') }}</label>
-                        <select name="region_id" id="region_id" class="form-control select2">
-                            <option value="">Select Region</option>
-                            @if (!empty($regions))
-                                @foreach ($regions as $region)
-                                    <option value="{{ $region->id }}">{{ $region->name }}</option>
-                                @endforeach
-                            @endif
-                        </select>
+                    <div class="form-group" id="region_divs">
+
+                        @if (
+                        \Auth::user()->type == 'super admin' ||
+                         \Auth::user()->type == 'HR' ||
+                        \Auth::user()->type == 'Admin Team' ||
+                            \Auth::user()->type == 'Project Director' ||
+                            \Auth::user()->type == 'Project Manager' ||
+                            \Auth::user()->type == 'company' ||
+                            \Auth::user()->type == 'Regional Manager')
+                        <label for="branches" class="col-sm-3 col-form-label">Region<span
+                                class="text-danger">*</span></label>
+                        {!! Form::select('region_id', $regions, null, [
+                            'class' => 'form-control select2',
+                            'id' => 'region_id',
+                        ]) !!}
+                    @else
+                        <label for="branches" class="col-sm-3 col-form-label">Region<span
+                                class="text-danger">*</span></label>
+                        <input type="hidden" name="region_id" value="{{ \Auth::user()->region_id }}">
+                        {!! Form::select('region_id', $regions, \Auth::user()->region_id, [
+                            'class' => 'form-control select2',
+                            'disabled' => 'disabled',
+                            'id' => 'region_id',
+                        ]) !!}
+                    @endif
+
                         @error('region_id')
                             <span class="invalid-name" role="alert">
                                 <strong class="text-danger">{{ $message }}</strong>
@@ -94,7 +141,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="phone">{{ __('Phone') }}</label>
-                        <input type="text" name="phone" class="form-control"
+                        <input type="text" name="phone" id="phone" class="form-control"
                             placeholder="{{ __('Enter Branch Phone') }}">
                         @error('phone')
                             <span class="invalid-name" role="alert">
@@ -120,7 +167,7 @@
     </div>
     <div class="modal-footer">
         <input type="button" value="{{ __('Cancel') }}" class="btn btn-light" data-bs-dismiss="modal">
-        <input type="submit" value="{{ __('Create') }}" class="btn btn-dark px-2">
+        <input type="submit" value="{{ __('Create') }}" class="btn btn-dark px-2 create-branch">
     </div>
 </form>
 
@@ -142,17 +189,9 @@
                     data = JSON.parse(data);
 
                     if (data.status === 'success') {
-                        if(type == 'brand'){
-                            $('#region_div').html('');
-                            $("#region_div").html(data.regions);
+                        $('#region_divs').html('');
+                            $("#region_divs").html(data.regions);
                             select2();
-                        }else{
-                            $('#brands').remove();
-                            $("#brands_div").html(data.brands);
-                            select2();
-                        }
-
-                       
                     } else {
                         console.error('Server returned an error:', data.message);
                     }
@@ -194,5 +233,50 @@
             });
         });
 
+       
+    $(document).on("submit", "#create-branch", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        // Serialize form data
+        var formData = $(this).serialize();
+
+         // Change button text and disable it
+        $(".create-branch").text('Creating...').prop("disabled", true);
+        
+        // AJAX request
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"), // Form action URL
+            data: formData, // Serialized form data
+            success: function(response) {
+              data = JSON.parse(response);
+
+              if(data.status == 'success'){
+                show_toastr('Success', data.msg, 'success');
+                  $('#commonModal').modal('hide');
+                  $(".modal-backdrop").removeClass("modal-backdrop");
+                  $(".block-screen").css('display', 'none');
+                   // Change button text and disable it
+                  $(".create-branch").text('Create').prop("disabled", false);
+                  openSidebar('/branch/'+data.id+'/show');
+              }else{
+                $(".create-branch").text('Create').prop("disabled", false);
+                show_toastr('Error', data.msg, 'error');
+              }
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
     })
+</script>
+
+<script>
+    const input = document.querySelector("#phone");
+    window.intlTelInput(input, {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+    });
 </script>

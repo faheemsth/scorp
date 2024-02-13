@@ -58,6 +58,7 @@
                                                     <td class=""
                                                         style="width: 150px;  font-size: 13px;">
                                                         {{ __('Admission Name') }}
+                                                        <span class="text-danger">*</span>
                                                     </td>
                                                     <td class="d-flex gap-1 mb-1"
                                                         style="padding-left: 10px; font-size: 13px; text-align: left;">
@@ -69,10 +70,11 @@
                                                     <td class=""
                                                         style="width: 150px;  font-size: 13px;">
                                                     {{ __('Intake Month') }}
+                                                    <span class="text-danger">*</span>
                                                     </td>
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
-                                                        <select class="form-control select2" id="choice-1"  name="intake_month">
+                                                        <select class="form-control select2" id="choice-01"  name="intake_month">
                                                             <option>Select Month</option>
                                                             @foreach($months as $key => $month)
                                                                 <option value="{{$key}}" {{ $deal->intake_month == $key ? 'selected' : '' }} >{{$month}}</option>
@@ -86,6 +88,7 @@
                                                     <td class=""
                                                         style="width: 150px;  font-size: 13px;">
                                                     {{ __('Intake Year') }}
+                                                    <span class="text-danger">*</span>
                                                     </td>
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
@@ -103,6 +106,7 @@
                                                     <td class=""
                                                         style="width: 150px;  font-size: 13px;">
                                                     {{ __('Linked Contact') }}
+
                                                     </td>
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
@@ -217,7 +221,7 @@
                                                 <tr>
                                                     <td class=""
                                                         style="width: 100px;  font-size: 13px;">
-                                                        {{ __('Office Responsible') }}
+                                                        {{ __('Branch') }}
                                                         <span class="text-danger" style="font-size: 16px;">*</span>
                                                     </td>
                                                     <td class=""
@@ -255,6 +259,7 @@
                                                     <td class=""
                                                         style="width: 150px;  font-size: 13px;">
                                                         {{ __('Pipeline') }}
+                                                        <span class="text-danger">*</span>
                                                     </td>
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">
@@ -275,6 +280,7 @@
                                                     <td class=""
                                                         style="width: 150px;  font-size: 13px;">
                                                         {{ __('Stage') }}
+                                                        <span class="text-danger">*</span>
                                                     </td>
                                                     <td class=""
                                                         style="padding-left: 10px; font-size: 13px; text-align: left; ">

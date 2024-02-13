@@ -36,6 +36,47 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
 <li class="breadcrumb-item">{{__('Applications')}}</li>
 @endsection
 @section('content')
+<style>
+    /* .red-cross {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                color: red;
+            } */
+    .boximg {
+        margin: auto;
+    }
+
+    .dropdown-togglefilter:hover .dropdown-menufil {
+        display: block;
+    }
+
+    .choices__inner {
+        border: 1px solid #ccc !important;
+        min-height: auto;
+        padding: 4px !important;
+    }
+
+    .fil:hover .submenu {
+        display: block;
+    }
+
+    .fil .submenu {
+        display: none;
+        position: absolute;
+        top: 3%;
+        left: 154px;
+        width: 100%;
+        background-color: #fafafa;
+        font-weight: 600;
+        list-style-type: none;
+
+    }
+
+    .dropdown-item:hover {
+        background-color: white !important;
+    }
+</style>
 <div class="row">
     <div class="card py-3 my-card">
         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
@@ -45,36 +86,75 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         ALL APPLICATIONS
                     </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item delete-bulk-applciations" href="javascript:void(0)">Delete</a></li>
-                            {{-- <li id="actions_div" style="display:none;font-size:14px;color:#3a3b45;"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li> --}}
+                    @if(sizeof($saved_filters) > 0)
+                            <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton1">
 
-                        </ul>
+                                @foreach($saved_filters as $filter)
+                                <li class="d-flex align-items-center justify-content-between ps-2">
+                                    <div class="col-10">
+                                        <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                        <span class="text-dark"> ({{$filter->count}})</span>
+                                    </div>
+                                    <ul class="w-25" style="list-style: none;">
+                                        <li class="fil fw-bolder">
+                                            <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                            <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                            box-shadow: 0px 0px 1px #e9e9e9;">
+                                                <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name?>', <?= $filter->id ?>)">Rename</a></li>
+                                                <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                @endforeach
+
+                            </ul>
+                            @endif
                 </div>
             </div>
 
             <div class="col-8 d-flex justify-content-end gap-2 pe-0">
-                <div class="input-group w-25">
-                    <button class="btn btn-sm list-global-search-btn">
-                        <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                <div class="input-group w-25 rounded" style="width:36px; height: 36px; margin-top:10px;">
+                    <button class="btn btn-sm list-global-search-btn p-0 pb-2">
+                        <span class="input-group-text bg-transparent border-0  px-1 " id="basic-addon1">
                             <i class="ti ti-search" style="font-size: 18px"></i>
                         </span>
                     </button>
-                    <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
+                    <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2  list-global-search" placeholder="Search this list...">
                 </div>
+
 
                 <!-- <a href="{{ url('application') }}" class="btn filter-btn-show p-2 btn-dark" type="button">
                     <i class="ti ti-file" style="font-size:18px,color:white"></i>
                 </a> -->
 
                 <div>
-                    <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                    <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark d-none"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
                 </div>
 
-                <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                <!-- <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="ti ti-filter" style="font-size:18px"></i>
-                </button>
-                <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+                </button> -->
+
+                <a href="javascript:void(0)" class="btn  btn-dark filter-btn-show px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Filter" class="btn  btn-dark px-0">
+                <i class="ti ti-filter"></i>
+                    </a>
+
+
+                    @if(auth()->user()->type == 'super admin' || auth()->user()->type == 'Admin Team')
+                        <a href="{{ route('regions.download') }}" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
+                        <i class="ti ti-download" style="font-size:18px"></i>
+                    </a>
+                    @endif
+
+                    @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete application'))
+                    <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Bulk Delete') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; margin-top:10px;">
+                        <i class="ti ti-trash"></i>
+                    </a>
+                    @endif
+
+                <!-- <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> -->
 
             </div>
         </div>
@@ -131,11 +211,11 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     <div class="col-md-4 mt-2">
                         <br>
                         <input type="submit" class="btn form-btn me-2 btn-dark">
+                        <a href="/applications/" class="btn form-btn btn-dark">Reset</a>
                         <a type="button" id="save-filter-btn" onClick="saveFilter('applications',<?= sizeof($applications) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
-                        <a href="/applications/" class="btn form-btn btn-danger">Reset</a>
                     </div>
                 </div>
-                <div class="row my-4">
+                <div class="row my-4 d-none">
                     <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
                         <?php
@@ -199,8 +279,8 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                                     <input type="checkbox" name="applications[]" value="{{$app->id}}" class="sub-check">
                                 </td>
                                 <td>
-                                <span style="cursor:pointer" class="hyper-link" @can('view application') onclick="openSidebar('deals/'+{{ $app->id }}+'/detail-application')" @endcan>
-                                {{ strlen($app->name) > 10 ? substr($app->name, 0, 10) . '...' : $app->name }}
+                                <span style="cursor:pointer" class="hyper-link" @can('view application') onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')" @endcan>
+                                {{ strlen($app->name) > 20 ? substr($app->name, 0, 20) . '...' : $app->name }}
                             </span>
                                 </td>
                                 <td>{{ $app['course'] }}</td>
@@ -220,13 +300,14 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                 </tbody>
             </table>
         </div>
-
+        <div class="pagination_div">
         @if ($total_records > 0)
         @include('layouts.pagination', [
         'total_pages' => $total_records,
         'num_results_on_page' => 50,
         ])
         @endif
+        </div>
     </div>
     <div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg my-0" role="document">
@@ -286,36 +367,98 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
 
     $(document).on('change', '.main-check', function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));
+
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+        }
     });
 
     $(document).on('change', '.sub-check', function() {
-            var selectedIds = $('.sub-check:checked').map(function() {
-                return this.value;
-            }).get();
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
 
-            console.log(selectedIds.length)
+        // console.log(selectedIds.length)
 
-            if (selectedIds.length > 0) {
-                selectedArr = selectedIds;
-                $("#actions_div").css('display', 'block');
-            } else {
-                selectedArr = selectedIds;
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
 
-                $("#actions_div").css('display', 'none');
-            }
-            let commaSeperated = selectedArr.join(",");
-            console.log(commaSeperated)
-            $("#app_ids").val(commaSeperated);
-
-        });
-
-        function massUpdate() {
-            if (selectedArr.length > 0) {
-                $('#mass-update-modal').modal('show')
-            } else {
-                alert('Please choose Tasks!')
-            }
+            $("#actions_div").addClass('d-none');
         }
+        let commaSeperated = selectedArr.join(",");
+        //console.log(commaSeperated)
+        //$("#region_ids").val(commaSeperated);
+
+    });
+
+
+    $(document).on("click", '.delete-bulk', function() {
+        var task_ids = $(".sub-check:checked");
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-bulk-applications?ids=' + selectedIds.join(',');
+            }
+        });
+    })
+
+    // $(document).on('change', '.main-check', function() {
+    //     $(".sub-check").prop('checked', $(this).prop('checked'));
+    // });
+
+    // $(document).on('change', '.sub-check', function() {
+    //         var selectedIds = $('.sub-check:checked').map(function() {
+    //             return this.value;
+    //         }).get();
+
+    //         console.log(selectedIds.length)
+
+    //         if (selectedIds.length > 0) {
+    //             selectedArr = selectedIds;
+    //             $("#actions_div").css('display', 'block');
+    //         } else {
+    //             selectedArr = selectedIds;
+
+    //             $("#actions_div").css('display', 'none');
+    //         }
+    //         let commaSeperated = selectedArr.join(",");
+    //         console.log(commaSeperated)
+    //         $("#app_ids").val(commaSeperated);
+
+    //     });
+
+    //     function massUpdate() {
+    //         if (selectedArr.length > 0) {
+    //             $('#mass-update-modal').modal('show')
+    //         } else {
+    //             alert('Please choose Tasks!')
+    //         }
+    //     }
 
         $('#bulk_field').on('change', function() {
 
@@ -399,6 +542,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                 if (data.status == 'success') {
                     console.log(data.html);
                     $(".application_tbody").html(data.html);
+                    $(".pagination_div").html(data.pagination_html);
                 }
             }
         })

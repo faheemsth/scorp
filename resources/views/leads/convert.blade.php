@@ -9,6 +9,7 @@
         </div>
         <div class="col-6 new_client form-group">
             {{ Form::label('client_passport', __('Contact Passport'),['class'=>'form-label']) }}
+            <span style="color: red">*</span>
             {{ Form::text('client_passport',null, array('class' => 'form-control','required'=>'required')) }}
         </div>
         <div class="col-sm-12 col-md-12 d-none">
@@ -46,24 +47,26 @@
         </div>
         <div class="col-6 new_client form-group">
             <label class="custom-control-label" for="">Intake Month</label>
-
-            <select class="form-control select2" id="choice-1"  name="intake_month" required>
+            <span style="color: red">*</span>
+            <select class="form-control select2" id="intake-month-select" name="intake_month" required>
                 <option>Select Month</option>
                 @foreach($months as $key => $month)
-                    <option value="{{$key}}" >{{$month}}</option>
+                    <option value="{{$key}}">{{$month}}</option>
                 @endforeach
             </select>
         </div>
+
         <div class="col-6 new_client form-group">
             <label class="custom-control-label" for="">Intake Year</label>
-
-            <select class="form-control select2" id="choice-1"  name="intake_year" required>
+            <span style="color: red">*</span>
+            <select class="form-control select2" id="intake-year-select" name="intake_year" required>
                 <option>Select Year</option>
                 @foreach($years as $key => $year)
                     <option value="{{$key}}">{{$year}}</option>
                 @endforeach
             </select>
         </div>
+
         <div class="col-6 new_client form-group" style="display: none;">
             {{ Form::label('client_password', __('Contact Password'),['class'=>'form-label']) }}
             {{ Form::text('client_password','123456789', array('class' => 'form-control','required'=>'required')) }}

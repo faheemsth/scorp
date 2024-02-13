@@ -36,6 +36,55 @@ $setting = \App\Models\Utility::colorset();
         border: 1px solid rgb(209, 209, 209) !important;
     }
 </style>
+<style>
+    /* .red-cross {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                color: red;
+            } */
+    .boximg {
+        margin: auto;
+    }
+
+    .dropdown-togglefilter:hover .dropdown-menufil {
+        display: block;
+    }
+
+    .choices__inner {
+        border: 1px solid #ccc !important;
+        min-height: auto;
+        padding: 4px !important;
+    }
+
+    .fil:hover .submenu {
+        display: block;
+    }
+
+    .fil .submenu {
+        display: none;
+        position: absolute;
+        top: 3%;
+        left: 154px;
+        width: 100%;
+        background-color: #fafafa;
+        font-weight: 600;
+        list-style-type: none;
+
+    }
+
+    .dropdown-item:hover {
+        background-color: white !important;
+    }
+    .form-control:focus{
+                    border: none !important;
+                    outline:none !important;
+                }
+   
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
+</style>
 <div class="row">
     <div class="col-12">
         <div class="card my-card">
@@ -43,47 +92,77 @@ $setting = \App\Models\Utility::colorset();
 
             <div class="card-body">
 
-                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
+                <div class="row align-items-center ps-0 ms-0 pe-4 my-2 ">
                     <div class="col-4">
                         <p class="mb-0 pb-0 ps-1">Tasks</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                ALL Tasks
+                                ALL TASKS
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item assigned_to" href="javascript:void(0)">Assigned to</a></li>
-                                <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
-                                <li><a class="dropdown-item" href="#">Brand Change</a></li>
-                                <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li>
-                                {{-- <li id="actions_div" style="display:none"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li> --}}
+                            @if(sizeof($saved_filters) > 0)
+                            <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton1">
+
+                                @foreach($saved_filters as $filter)
+                                <li class="d-flex align-items-center justify-content-between ps-2">
+                                    <div class="col-10">
+                                        <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                        <span class="text-dark"> ({{$filter->count}})</span>
+                                    </div>
+                                    <ul class="w-25" style="list-style: none;">
+                                        <li class="fil fw-bolder">
+                                            <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                            <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                            box-shadow: 0px 0px 1px #e9e9e9;">
+                                                <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name?>', <?= $filter->id ?>)">Rename</a></li>
+                                                <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                @endforeach
+
                             </ul>
+                            @endif
                         </div>
                     </div>
 
 
                     <div class="col-8 d-flex justify-content-end gap-2 pe-0">
-                        <div class="input-group w-25">
-                            <button class="btn btn-sm list-global-search-btn">
-                                <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                        <div class="input-group w-25 rounded" style="width:36px; height: 36px; margin-top:10px;">
+                            <button class="btn btn-sm list-global-search-btn  p-0 pb-2 ">
+                                <span class="input-group-text bg-transparent border-0   px-1" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
                             </button>
-                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search..." aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
 
-                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark d-none" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
-                        <button class="btn filter-btn-show p-2 btn-dark"  type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
+                        <button class="btn filter-btn-show p-2 btn-dark"  type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" style="width:36px; height: 36px; margin-top:10px;">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
                         @can('create task')
-                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark">
+                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark" style="width:36px; height: 36px; margin-top:10px;">
                             <i class="ti ti-plus" style="font-size:18px"></i>
                         </button>
                         @endcan
-                        <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
 
+                        <!-- <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> -->
+                        
+                        @if(auth()->user()->type == 'super admin' || auth()->user()->type == 'Admin Team')
+                        <a href="{{ route('tasks.download') }}" class="btn p-2 btn-dark" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" >
+                                <i class="ti ti-download" style="font-size:18px"></i>
+                        </a>
+                        @endif
+
+                        @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete task'))
+                        <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Regions') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; margin-top:10px;">
+                            <i class="ti ti-trash"></i>
+                        </a>
+                        @endif
                     </div>
                 </div>
 
@@ -91,58 +170,106 @@ $setting = \App\Models\Utility::colorset();
                     <form action="/deals/get-user-tasks" method="GET" class="">
 
 
-                        <div class="row my-3">
-                            <div class="col-md-4"> <label for="">Brands</label>
-                                <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
-                                    <option value="">Select Brand</option>
-                                    @if (FiltersBrands())
-                                        @foreach (FiltersBrands() as $key => $brand)
-                                          <option value="{{ $key }}" {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }}>{{ $brand }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                        <div class="row my-3 ">
+                            @php
+                            $type = \Auth::user()->type;
+                            $access_levels = accessLevel();
+                            $filters = BrandsRegionsBranches();
+                            @endphp
 
-                            <div class="col-md-4"> <label for="">Subject</label>
-                                <select class="form form-control select2" id="choices-multiple110" name="subjects[]" multiple style="width: 95%;">
-                                    <option value="">Select Subject</option>
-                                    @foreach ($tasks as $filter_task)
-                                    <option value="{{ $filter_task->name }}" <?= isset($_GET['subjects']) && in_array($filter_task->name, $_GET['subjects']) ? 'selected' : '' ?> class="">{{ $filter_task->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="col-md-4"> <label for="">Assigned To</label>
-                                <select name="assigned_to[]" id="choices-multiple333" class="form form-control select2" multiple style="width: 95%;">
-                                    <option value="">Select user</option>
-                                    @foreach ($assign_to as $key => $user)
-                                    <option value="{{ $key }}" <?= isset($_GET['assigned_to']) && in_array($key, $_GET['assigned_to']) ? 'selected' : '' ?> class="">{{ $user }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                            @if(in_array($type, $access_levels['first']))
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Brand</label>
+                                    <select name="brand" class="form form-control select2" id="filter_brand_id">
+                                        @if (!empty($filters['brands']))
+                                            @foreach ($filters['brands'] as $key => $Brand)
+                                            <option value="{{ $key }}" {{ !empty($_GET['brand']) && $_GET['brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
+                                            @endforeach
+                                            @else
+                                            <option value="" disabled>No brands available</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            @endif
 
 
-                            <div class="col-md-4">
-                                <label for="">Status</label>
-                                <select class="form form-control select2" id="status444" name="status" multiple style="width: 95%;">
-                                    <option value="">Select Status</option>
-                                    <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Completed</option>
-                                    <option value="0" <?= isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : '' ?>>On Going</option>
-                                </select>
-                            </div>
 
-                            <div class="col-md-4 mt-2">
-                                <label for="">Due Date</label>
-                                <input type="date" class="form form-control" name="due_date" value="<?= isset($_GET['due_date']) ? $_GET['due_date'] : '' ?>" style="width: 95%; border-color:#aaa">
-                            </div>
+                                @if(in_array($type, $access_levels['first']) || in_array($type, $access_levels['second']))
+                                    <div class="col-md-3 mt-2" id="region_filter_div">
+                                        <label for="">Region</label>
+                                        <select name="region_id" class="form form-control select2" id="filter_region_id">
+                                            @if (!empty($filters['regions']))
+                                                @foreach ($filters['regions'] as $key => $region)
+                                                <option value="{{ $key }}" {{ !empty($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : '' }}>{{ $region }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
 
-                            <div class="col-md-4 mt-4 pt-2">
-                                <input type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}" class="btn form-btn me-2 btn-dark px-2 py-2" >
-                                <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
-                                <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn px-2 py-2" style="background-color: #b5282f;color:white;">Reset</a>
-                            </div>
+
+                                @if(in_array($type, $access_levels['first']) || in_array($type, $access_levels['second']) || in_array($type, $access_levels['third']))
+                                    <div class="col-md-3 mt-2" id="branch_filter_div">
+                                        <label for="">Branch</label>
+                                        <select name="branch_id" class="form form-control select2" id="filter_branch_id">
+                                            @if (!empty($filters['branches']))
+                                                @foreach ($filters['branches'] as $key => $branch)
+                                                <option value="{{ $key }}" {{ !empty($_GET['branch_id']) && $_GET['branch_id'] == $key ? 'selected' : '' }}>{{ $branch }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+                                <div class="col-md-3"> <label for="">Subject</label>
+                                    <div class="subject_data" id="filter-names">
+                                        <select class="form form-control select2" id="choices-multiple110" name="subjects[]" multiple style="width: 95%;">
+                                            <option value="">Select Subject</option>
+                                            @foreach ($tasks as $filter_task)
+                                            <option value="{{ $filter_task->id }}" <?= isset($_GET['subjects']) && in_array($filter_task->name, $_GET['subjects']) ? 'selected' : '' ?> class="">{{ $filter_task->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3"> <label for="">Assigned To</label>
+                                    <div class="" id="assign_to_div">
+                                        <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
+                                            @foreach ($filters['employees'] as $key => $user)
+                                            <option value="{{ $key }}" <?= isset($_GET['assigned_to']) && in_array($key, $_GET['assigned_to']) ? 'selected' : '' ?> class="">{{ $user }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-3">
+                                    <label for="">Status</label>
+                                    <select class="form form-control select2" id="status444" name="status" multiple style="width: 95%;">
+                                        <option value="">Select Status</option>
+                                        <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Completed</option>
+                                        <option value="0" <?= isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : '' ?>>On Going</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label for="">Due Date</label>
+                                    <input type="date" class="form form-control" name="due_date" value="<?= isset($_GET['due_date']) ? $_GET['due_date'] : '' ?>" style="width: 95%; border-color:#aaa">
+                                </div>
+
+                                <div class="col-md-3 mt-4 pt-2 d-flex align-items-end">
+                                    <input type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}" class="btn form-btn me-2 btn-dark px-2 py-2" >
+                                    <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn mr-2 px-2 py-2 btn-dark" style="color:white;">Reset</a>
+                                    <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn me-3 bg-dark" style=" color:white;display:none;">Save Filter</a>
+
+                                </div>
                         </div>
-                        <div class="row my-4">
+
+                        <div class="row my-4 d-none">
                             <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
                                 <?php
@@ -216,12 +343,14 @@ $setting = \App\Models\Utility::colorset();
                                     <td>
                                         <input type="checkbox" name="tasks[]" value="{{$task->id}}" class="sub-check">
                                     </td>
-                                    <td> <span class="badge text-white" style="background-color:{{$color_code }}">{{ $task->due_date  }}</span>
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                         <span class="badge text-white" style="background-color:{{$color_code }}">{{ $task->due_date  }}</span>
                                     </td>
-                                    <td>
+
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         <span style="cursor:pointer" class="task-name hyper-link" @can('view task') onclick="openNav(<?= $task->id ?>)" @endcan data-task-id="{{ $task->id }}">{{ $task->name }}</span>
                                     </td>
-                                    <td>
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         @if (!empty($task->assigned_to))
                                         <span style="cursor:pointer" class="hyper-link" @can('view task') onclick="openSidebar('/users/'+{{ $task->assigned_to }}+'/user_detail')" @endcan>
                                             {{ $users[$task->assigned_to] }}
@@ -229,7 +358,7 @@ $setting = \App\Models\Utility::colorset();
                                         @endif
                                     </td>
 
-                                    <td>
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
 
                                         @if (!empty($task->assigned_to))
                                         @if ($task->assigned_type == 'company')
@@ -241,33 +370,44 @@ $setting = \App\Models\Utility::colorset();
                                         $assigned_user = \App\Models\User::findOrFail($task->assigned_to);
                                         ?>
 
-                                        <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{ $assigned_user->created_by }}+'/user_detail')">
-                                            {{ isset($users[$assigned_user->created_by]) ? $users[$assigned_user->created_by] : '' }}
+                                        <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{ $task->brand_id }}+'/user_detail')">
+                                            {{ isset($users[$task->brand_id]) ? $users[$task->brand_id] : '' }}
                                         </span>
                                         @endif
                                         @endif
+
+                                        
                                     </td>
 
-                                    <td>
+                                    
+
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         @if ($task->status == 0)
                                             <span class="badge  text-white" style="background-color:#B3CDE1">{{ __('On Going') }}</span>
                                         @else
                                             <span class="badge text-white" style="background: green; " >{{ __('Completed') }}</span>
                                         @endif
                                     </td>
+
+                                    
                                 </tr>
                                 @empty
+                                <tr>
+                                    <td class="7">No Record Found!!!</td>
+                                </tr>
                                 @endforelse
                         </tbody>
                     </table>
                 </div>
-
+                
+                <div class="pagination_div">
                 @if ($total_records > 0)
                 @include('layouts.pagination', [
                 'total_pages' => $total_records,
                 'num_results_on_page' => 50,
                 ])
                 @endif
+                </div>
 
 
                 <div id="mySidenav" style="z-index: 1065; padding-left:10px; box-shadow: -5px 0px 30px 0px #aaa;" class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>" style="padding-left: 5px">
@@ -739,26 +879,37 @@ $setting = \App\Models\Utility::colorset();
 
     $(document).on('change', '.main-check', function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));
+
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+        }
     });
+
+
     $(document).on('change', '.sub-check', function() {
         var selectedIds = $('.sub-check:checked').map(function() {
             return this.value;
         }).get();
 
-        console.log(selectedIds.length)
-
-        if(selectedIds.length > 0){
+        if (selectedIds.length > 0) {
             selectedArr = selectedIds;
-            $("#actions_div").css('display', 'block');
-        }else{
+            $("#actions_div").removeClass('d-none');
+        } else {
             selectedArr = selectedIds;
 
-            $("#actions_div").css('display', 'none');
+            $("#actions_div").addClass('d-none');
         }
-        let commaSeperated = selectedArr.join(",");
-        console.log(commaSeperated)
-        $("#tasks_ids").val(commaSeperated);
-
     });
 
     function massUpdate(){
@@ -783,7 +934,7 @@ $setting = \App\Models\Utility::colorset();
         $("#update-status-modal").modal('show');
     });
 
-    $(document).on("click", '.delete-bulk-tasks', function() {
+    $(document).on("click", '.delete-bulk', function() {
         var task_ids = $(".sub-check:checked");
         var selectedIds = $('.sub-check:checked').map(function() {
             return this.value;
@@ -803,5 +954,131 @@ $setting = \App\Models\Utility::colorset();
             }
         });
     })
+
+
+    ////////////////////Filters Javascript
+    $("#filter_brand_id").on("change", function() {
+            var id = $(this).val();
+            var type = 'brand';
+            var filter = true;
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#region_filter_div').html('');
+                        $("#region_filter_div").html(data.regions);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+
+        $(document).on("change", "#filter_region_id, #region_id", function() {
+            var id = $(this).val();
+            var filter = true;
+            var type = 'region';
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#branch_filter_div').html('');
+                        $("#branch_filter_div").html(data.branches);
+                        getTasks();
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+        $(document).on("change", "#filter_branch_id, #branch_id", function() {
+           getTasks();
+
+            var id = $(this).val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('filter-branch-users') }}',
+                    data: {
+                        id: id
+                    },
+                    success: function(data){
+                        data = JSON.parse(data);
+
+                        if (data.status === 'success') {
+                            $('#assign_to_div').html('');
+                            $("#assign_to_div").html(data.html);
+                            select2();
+                        } else {
+                            console.error('Server returned an error:', data.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX request failed:', status, error);
+                    }
+                });
+        });
+
+        function getTasks(){
+            var brand_id = $("#filter_brand_id").val();
+            var region_id = $("#region_id").val();
+            var branch_id = $("#branch_id").val();
+
+            var type = 'tasks';
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('filterData') }}',
+                data: {
+                   brand_id,
+                   region_id,
+                   branch_id,
+                   type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#filter-names').html('');
+                        $("#filter-names").html(data.html);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        }
+
+
 </script>
 @endpush

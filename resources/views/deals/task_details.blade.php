@@ -15,7 +15,7 @@
 
 
                     <div class="lead-basic-info">
-                        <p class="pb-0 mb-0 fw-normal">{{ __('Tasks') }}</p>
+                        <p class="pb-0 mb-0 fw-normal">{{ __('Task') }}</p>
                         <div class="d-flex align-items-baseline ">
                             <h5 class="fw-bold">{{ $task->name }}</h5>
                         </div>
@@ -28,7 +28,7 @@
                     @if ($task->status == 0)
                     @can('edit status task')
                     <a href="javascript:void(0)" onclick="ChangeTaskStatus({{ $task->id }})"
-                        title="{{ __('Edit Status') }}" class="btn px-2 btn-dark text-white">
+                        title="{{ __('Edit Status') }}" class="btn px-2 btn-dark text-white" style="width:36px; height: 36px; margin-top:12px;">
                         <i class="fa-solid fa-check" style="color: #ffffff;"></i>
                     </a>
                     @endcan
@@ -36,13 +36,13 @@
 
                     @can('edit task')
                     <button href="#" data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}"
-                        data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit Task') }}"class="btn px-2 btn-dark text-white">
+                        data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit Task') }}"class="btn px-2 btn-dark text-white" style="width:36px; height: 36px; margin-top:12px;">
                         <i class="ti ti-pencil"></i>
                     </button>
                     @endcan
 
                     @can('delete task')
-                    <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-danger text-white"  title="{{ __('Delete') }}">
+                    <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-danger text-white"  title="{{ __('Delete') }}" style="width:36px; height: 36px; margin-top:12px;">
                         <i class="ti ti-trash"></i>
                     </a>
                     @endcan
@@ -321,7 +321,7 @@
                                                                 <td class="email-td"
                                                                     style="padding-left: 20px; font-size: 14px;">
 
-                                                                    {{ $task->remainder }}
+                                                                    {{ $task->remainder_date }}
                                                                 </td>
                                                             </tr>
 

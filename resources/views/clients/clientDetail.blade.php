@@ -50,6 +50,25 @@
         text-align: left;
     }
 </style>
+@php
+                                        $type = \Auth::user()->type;
+                                        $is_show = true;
+
+                                        if($type == 'super admin'){
+
+                                        }else if($type == 'Project Director' || $type == 'Project Manager'){
+                                                $per_brands = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('permitted_company_id', $deal->brand_id)->first();
+
+                                                if($per_brands){
+                                                    $is_show = true;
+                                                }
+                                        }else if($type == 'Regional Manager'){
+                                                $is_show = ($lead->region_id == \Auth::user()->region_id);
+                                        }else if($type == 'Branch Manager' || $type == 'Admissions Manager' || $type == 'Admissions Officer' || $type == 'Marketing Officer'){
+                                            $is_show = ($deal->branch_id == \Auth::user()->branch_id);
+                                        }
+
+                                    @endphp
 <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
 <div class="container-fluid px-1 mx-0">
     <div class="row">
@@ -79,16 +98,17 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-1 me-3">
-
-                <a href="https://wa.me/{{ !empty($client->phone) ? formatPhoneNumber($client->phone) : '' }}?text=Hello ! Dear {{ $client->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" data-bs-title="{{ __('Whatsapp') }}" class="btn p-2 btn-dark text-white">
-                    <i class=""></i>
+                @if($is_show)
+                <a href="https://wa.me/{{ !empty($client->phone) ? formatPhoneNumber($client->phone) : '' }}?text=Hello ! Dear {{ $client->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" data-bs-title="{{ __('Whatsapp') }}" class="btn p-2 btn-dark text-white" style="color:white; width:36px; height: 36px; margin-top:10px;">
+                    <i class="fa-brands fa-whatsapp"></i>
                 </a>
+                @endif
 
-                @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit client'))
+                @if (\Auth::user()->type == 'super admin')
 
                         <a href="#" data-size="lg" data-url="{{ route('clients.edit', $client->id) }}"
                             data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Client') }}"
-                            class="btn btn-dark text-white p-2">
+                            class="btn btn-dark text-white p-2"  style="color:white; width:36px; height: 36px; margin-top:10px;">
                             <i class="ti ti-pencil "></i>
                         </a>
 
@@ -101,7 +121,7 @@
                         <span> @if($client->delete_status!=0){{__('Delete')}} @else {{__('Restore')}}@endif</span>
                     </a> --}}
 
-                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn p-2 btn-danger text-white bs-pass-para" >
+                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn p-2 btn-danger text-white bs-pass-para" style="color:white; width:36px; height: 36px; margin-top:10px;" >
                         <i class="ti ti-trash"></i>
                     </a>
                     {!! Form::close() !!}
@@ -235,12 +255,13 @@
 
 
 
+                                    @if($is_show)
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                             <button class="accordion-button p-2" type="button"
                                                 data-bs-toggle="collapse"
                                                 data-bs-target="#panelsStayOpen-collapsekeytwo">
-                                                {{ __('CONTACT AND DETAIL') }}
+                                                {{ __('CONTACT DETAIL') }}
                                             </button>
                                         </h2>
 
@@ -256,11 +277,22 @@
                                                             <tr>
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Passport Number') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $client->passport_number ?? '' }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Email') }}
                                                                 </td>
                                                                 <td class=""
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $client->email }}
+                                                                   <a href="{{ $client->email }}" target="_blank" >{{ $client->email }}</a> 
                                                                 </td>
                                                             </tr>
 
@@ -280,6 +312,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endif
 
 
                                     <div class="accordion-item">
@@ -316,6 +349,8 @@
                                             </div>
                                         </div>
                                     </div>
+
+
 
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
@@ -521,11 +556,12 @@
                                                                             $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
                                                                         @endphp
                                                                         <tr>
-                                                                            <td>{{ $universities[$app->university_id] }}</td>
+                                                                            <td>{{ $universities[$app->university_id] ?? '' }}</td>
                                                                             <td> {{ $app->intake }} </td>
                                                                             <td> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }}  </td>
                                                                             <td> {{ isset($branch->name) ? $branch->name : ''  }} </td>
-                                                                            <td> {{ $users[$deal->assigned_to] }} </td>
+                                                                            <td> {{ $users[$deal->assigned_to] ?? '
+                                                                                '}} </td>
                                                                             <td><span class="badge {{ $app->status != 'Approved' ? 'bg-warning-scorp' : 'bg-success-scorp' }}"> {{ $app->status }}</span></td>
                                                                         </tr>
                                                                     @empty

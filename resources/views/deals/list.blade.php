@@ -217,8 +217,73 @@
             left: 0 !important;
         }
     }
+    .form-control:focus{
+                    border: none !important;
+                    outline:none !important;
+                }
+   
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
+</style>
+<style>
+    .form-controls,
+    .form-btn {
+        padding: 4px 1rem !important;
+    }
+
+    /* Set custom width for specific table cells */
+    .action-btn {
+        display: inline-grid !important;
+    }
+
+    .dataTable-bottom,
+    .dataTable-top {
+        display: none;
+    }
 </style>
 
+<style>
+    /* .red-cross {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                color: red;
+            } */
+    .boximg {
+        margin: auto;
+    }
+
+    .dropdown-togglefilter:hover .dropdown-menufil {
+        display: block;
+    }
+
+    .choices__inner {
+        border: 1px solid #ccc !important;
+        min-height: auto;
+        padding: 4px !important;
+    }
+
+    .fil:hover .submenu {
+        display: block;
+    }
+
+    .fil .submenu {
+        display: none;
+        position: absolute;
+        top: 3%;
+        left: 154px;
+        width: 100%;
+        background-color: #fafafa;
+        font-weight: 600;
+        list-style-type: none;
+
+    }
+
+    .dropdown-item:hover {
+        background-color: white !important;
+    }
+</style>
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
 <li class="breadcrumb-item">{{ __('Admissions') }}</li>
@@ -329,42 +394,98 @@
                             <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL ADMISSIONS
                             </button>
+
+
+
+                            @php
+                            $saved_filters = App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'deals')->get();
+                            @endphp
+                              @if(sizeof($saved_filters) > 0)
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
-                          </ul>
-                        </div>
+                                        @foreach($saved_filters as $filter)
+                                        <li class="d-flex align-items-center justify-content-between ps-2">
+                                            <div class="col-10">
+                                                <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                                <span class="text-dark"> ({{$filter->count}})</span>
+                                            </div>
+                                            <ul class="w-25" style="list-style: none;">
+                                                <li class="fil fw-bolder">
+                                                    <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                                    <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                                                                box-shadow: 0px 0px 1px #e9e9e9;">
+                                                        <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name ?>', <?= $filter->id ?>)">Rename</a></li>
+                                                        <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+
+                                        </li>
+                                        @endforeach
+
+                            </ul>
+                        @endif
                     </div>
+                </div>
 
 
                     <div class="col-8 d-flex justify-content-end gap-2 pe-0">
-                        <div class="input-group w-25">
-                            <button class="btn btn-sm list-global-search-btn">
+                        <!-- <div class="input-group w-25">
+                            <button class="btn btn-sm list-global-search-btn px-0">
                                 <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
                             </button>
                             <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list...">
+                        </div> -->
+
+                        <div class="input-group w-25 rounded" style="width:36px; height: 36px; margin-top:10px;">
+                            <button class="btn btn-sm list-global-search-btn p-0 pb-2">
+                                <span class="input-group-text bg-transparent border-0  px-1 " id="basic-addon1">
+                                    <i class="ti ti-search" style="font-size: 18px"></i>
+                                </span>
+                            </button>
+                            <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2  list-global-search" placeholder="Search this list...">
                         </div>
 
 
 
 
 
-                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 d-none refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
-                        <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
-                            <i class="ti ti-filter" style="font-size:18px"></i>
-                        </button>
+                        <!-- <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
+                            <i class="ti ti-filter"></i>
+                        </button> -->
 
+                        <a href="javascript:void(0)" class="btn p-2 filter-btn-show btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Filter" class="btn  btn-dark px-0">
+                        <i class="ti ti-filter"></i>
+                        </a>
+<!-- 
                         <a  href="{{ url('/deals') }}" data-bs-toggle="tooltip" title="{{ __('Deals View') }}" class="btn px-2 btn-dark d-flex align-items-center">
                             {{-- <i class="ti ti-plus" style="font-size:18px"></i> --}}
                             <i class="fa-solid fa-border-all" style="font-size:18px"></i>
+                        </a> -->
+
+                        <a href="{{ url('/deals') }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Deal View" class="btn  btn-dark px-0">
+                            <i class="fa-solid fa-border-all"></i>
                         </a>
+
+                        @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
+                            <a href="{{ route('deals.download') }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
+                                <i class="ti ti-download"></i>
+                            </a>
+                        @endif
+
+                        @if(auth()->user()->can('delete deal'))
+                            <a class="btn p-2 btn-dark  text-white assigned_to delete-bulk d-none" data-bs-toggle="tooltip" title="{{__('Mass Delete')}}" id="actions_div" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;">
+                                <i class="ti ti-trash"></i>
+                            </a>
+                        @endif
 
                         {{-- <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}" class="btn p-2 btn-dark">
                             <i class="ti ti-plus"></i>
                         </a> --}}
-                        <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+                        <!-- <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> -->
 
 
                     </div>
@@ -380,12 +501,12 @@
                     <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                         <form action="/deals/list" method="GET" class="">
 
-                            <div class="row my-3">
+                            <div class="row my-3 filbar">
                                 <div class="col-md-4">
                                     <label for="">Name</label>
                                     <select name="name[]" id="deals" class="form form-control select2" multiple style="width: 95%;">
                                         <option value="">Select name</option>
-                                        @foreach ($deals as $deal)
+                                        @foreach ($Alldeals as $deal)
                                         <option value="{{ $deal->name }}" <?= isset($_GET['name']) && in_array($deal->name, $_GET['name']) ? 'selected' : '' ?> class="">{{ $deal->name }}</option>
                                         @endforeach
                                     </select>
@@ -413,11 +534,7 @@
                                     </select>
                                 </div>
                                 @endif
-                                <style>
-                                    .form-control:focus {
-                                        border: 1px solid rgb(209, 209, 209) !important;
-                                    }
-                                </style>
+                                
                                 <div class="col-md-4 mt-2">
                                     <label for="">Created at</label>
                                     <input type="date" class="form form-control" name="created_at" value="<?= isset($_GET['created_at']) ? $_GET['created_at'] : '' ?>" style="width: 95%; border-color:#aaa">
@@ -426,8 +543,8 @@
                                 <div class="col-md-4 mt-3">
                                     <br>
                                     <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
-                                    <a type="button" id="save-filter-btn" onClick="saveFilter('deals',<?= sizeof($deals) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                     <a href="/deals/list" class="btn bg-dark" style="color:white;">Reset</a>
+                                    <a type="button" id="save-filter-btn" onClick="saveFilter('deals',<?= sizeof($deals) ?>)" class="btn me-2 bg-dark ml-2" style=" color:white;display:none;">Save Filter</a>
                                 </div>
                             </div>
 
@@ -462,11 +579,11 @@
                                     <th style="width: 50px !important;">
                                         <input type="checkbox" class="main-check">
                                     </th>
-                                    <th style="width: 100px !important;">{{ __('Admission Name') }}</th>
+                                    <th style="width: 100px !important;">{{ __('Name') }}</th>
                                     <th>{{ __('Passport') }}</th>
                                     <th>{{ __('Stage') }}</th>
 
-                                    <th>{{ __('Lead Source') }}</th>
+                                    <th>{{ __('Source') }}</th>
 
                                     <th>{{ __('Intake') }}</th>
 
@@ -488,6 +605,7 @@
                                     <td>
                                         <input type="checkbox" name="deals[]" value="{{$deal->id}}" class="sub-check">
                                     </td>
+                                    
                                     <td style="width: 100px !important; ">
                                         <span style="cursor:pointer" class="deal-name hyper-link" @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})" @endcan data-deal-id="{{ $deal->id }}">
 
@@ -675,30 +793,70 @@
             $("#filter-show").toggle();
         });
 
+        // $(document).on('change', '.main-check', function() {
+        //     $(".sub-check").prop('checked', $(this).prop('checked'));
+        // });
+
+        // $(document).on('change', '.sub-check', function() {
+        //     var selectedIds = $('.sub-check:checked').map(function() {
+        //         return this.value;
+        //     }).get();
+
+        //     console.log(selectedIds.length)
+
+        //     if(selectedIds.length > 0){
+        //         selectedArr = selectedIds;
+        //         $("#actions_div").css('display', 'block');
+        //     }else{
+        //         selectedArr = selectedIds;
+
+        //         $("#actions_div").css('display', 'none');
+        //     }
+        //     let commaSeperated = selectedArr.join(",");
+        //     console.log(commaSeperated)
+        //     $("#deal_ids").val(commaSeperated);
+
+        // });
+
         $(document).on('change', '.main-check', function() {
-            $(".sub-check").prop('checked', $(this).prop('checked'));
-        });
+        $(".sub-check").prop('checked', $(this).prop('checked'));
 
-        $(document).on('change', '.sub-check', function() {
-            var selectedIds = $('.sub-check:checked').map(function() {
-                return this.value;
-            }).get();
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
 
-            console.log(selectedIds.length)
+        // console.log(selectedIds.length)
 
-            if(selectedIds.length > 0){
-                selectedArr = selectedIds;
-                $("#actions_div").css('display', 'block');
-            }else{
-                selectedArr = selectedIds;
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
 
-                $("#actions_div").css('display', 'none');
-            }
-            let commaSeperated = selectedArr.join(",");
-            console.log(commaSeperated)
-            $("#deal_ids").val(commaSeperated);
+            $("#actions_div").addClass('d-none');
+        }
+    });
 
-        });
+    $(document).on('change', '.sub-check', function() {
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+        }
+        let commaSeperated = selectedArr.join(",");
+        //console.log(commaSeperated)
+        //$("#region_ids").val(commaSeperated);
+
+    });
 
         function massUpdate(){
             if(selectedArr.length > 0){
@@ -707,6 +865,28 @@
                 alert('Please choose Tasks!')
             }
         }
+
+
+        $(document).on("click", '.delete-bulk', function() {
+        var task_ids = $(".sub-check:checked");
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-bulk-deals?ids=' + selectedIds.join(',');
+            }
+        });
+    })
 
         $('#bulk_field').on('change', function() {
 

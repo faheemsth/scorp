@@ -103,6 +103,12 @@ class User extends Authenticatable
         return $count;
     }
 
+    public function organizationLeadTasks($id)
+    {
+        $count = DealTask::where('related_to', $id)->count();
+        return $count;
+    }
+
     public function organizationLeadNotesList($id)
     {
         $count = OrganizationNote::where('organization_id', $id)->orderBy('created_at', 'DESC')->get();
@@ -123,7 +129,6 @@ class User extends Authenticatable
         return $count;
     }
 
-
     public function organizationTasks($id)
     {
         $count = DealTask::where('organization_id', $id)->groupBy('organization_id')->count();
@@ -134,6 +139,12 @@ class User extends Authenticatable
     {
         $count = DealTask::where('organization_id', $id)->get();
         return $count;
+    }
+
+    public function organizationOpportunitiesList($id)
+    {
+        $result = Lead::join('client_deals', 'client_deals.client_id', '=', 'leads.is_converted')->join('deal_applications', 'deal_applications.deal_id', '=', 'client_deals.deal_id')->where('leads.organization_id', $id)->groupBy('leads.organization_id')->get();
+        return $result;
     }
 
 

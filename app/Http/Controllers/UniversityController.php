@@ -21,7 +21,7 @@ class UniversityController extends Controller
      */
         public function index()
     {
-        $num_results_on_page = 50;
+        $num_results_on_page = 25;
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
@@ -42,7 +42,7 @@ class UniversityController extends Controller
             })
 
             ->when(!empty($_GET['city']), function ($query) {
-                return $query->where('city', 'like', '%' . $_GET['city'] . '%');
+                return $query->where('campuses', 'like', '%' . $_GET['city'] . '%');
             })
 
             ->when(!empty($_GET['note']), function ($query) {
@@ -58,10 +58,12 @@ class UniversityController extends Controller
             ->paginate($num_results_on_page);
 
             $users = User::get()->pluck('name', 'id');
-
             $universityStatsByCountries = University::selectRaw('count(id) as total_universities, country')
                 ->groupBy('country')
                 ->get();
+
+            $saved_filters = \App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'university')->get();
+
             $statuses = [];
             foreach ($universityStatsByCountries as $university) {
                 $statuses[$university->country] = $university->total_universities;
@@ -71,15 +73,31 @@ class UniversityController extends Controller
                 'universities' => $universities,
                 'users' => $users,
                 'statuses' => $statuses,
+                'saved_filters' => $saved_filters,
                 'total_records' => $universities->total(), // Use total() for total record count
             ];
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+                $g_search = $_GET['search'];
+                $universities = University::query()
+                            ->orwhere('name', 'like', '%'.$g_search.'%')
+                            ->orwhere('campuses', 'like', '%'.$g_search.'%')
+                            ->orwhere('intake_months', 'like', '%'.$g_search.'%')
+                            ->orwhere('territory', 'like', '%'.$g_search.'%')
+                            ->skip($start)
+                            ->take($num_results_on_page)
+                            ->paginate($num_results_on_page);
+                $data['universities'] = $universities;
                 $html = view('university.university_list_ajax', $data)->render();
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $universities->total(),
+                    'num_results_on_page' => $num_results_on_page,
+                ])->render();
 
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => $html,
+                    'pagination_html' => $pagination_html
                 ]);
             }
 
@@ -89,6 +107,65 @@ class UniversityController extends Controller
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
+    }
+
+    public function download(){
+
+        $universities = University::when(!empty($_GET['name']), function ($query) {
+            return $query->where('name', 'like', '%' . $_GET['name'] . '%');
+        })
+        ->when(!empty($_GET['country']), function ($query) {
+            return $query->where('country', 'like', '%' . $_GET['country'] . '%');
+        })
+
+        ->when(!empty($_GET['city']), function ($query) {
+            return $query->where('city', 'like', '%' . $_GET['city'] . '%');
+        })
+
+        ->when(!empty($_GET['note']), function ($query) {
+            return $query->where('note', 'like', '%' . $_GET['note'] . '%');
+        })
+
+        ->when(!empty($_GET['created_by']), function ($query) {
+            return $query->where('created_by', 'like', '%' . $_GET['created_by'] . '%');
+        })
+
+        ->get();
+
+        $users = User::get()->pluck('name', 'id');
+        $universityStatsByCountries = University::selectRaw('count(id) as total_universities, country')
+            ->groupBy('country')
+            ->get();
+
+
+        //dd($universities);
+
+        $header = [
+            'Sr.No.',
+            'Institutes',
+            'Campuse',
+            'Intake Months',
+            'Territory',
+            'Band',
+            'Resource',
+            'Application Method'
+        ];
+
+        $data = [];
+        foreach($universities as $key => $university){
+            $data[] = [
+                $key+1,
+                $university->name,
+                $university->campuses,
+                $university->intake_months,
+                $university->territory,
+                $users[$university->company_id] ?? '',
+                $university->resource_drive_link,
+                $university->application_method_drive_link
+            ];
+        }
+        downloadCSV($header, $data, 'toolkit.csv');
+        return;
     }
 
 
@@ -110,10 +187,9 @@ class UniversityController extends Controller
             $months = months();
 
             //getting companies
-            $companies = companies();
+            $companies = FiltersBrands();
 
-            $categories = InstituteCategory::pluck('name', 'id');
-            $categories->prepend('', 'Select Category');
+            $categories = InstituteCategory::pluck('name', 'id')->prepend('Select Category', 0);
 
             $data = [
                 'countries' => $countries,
@@ -148,16 +224,22 @@ class UniversityController extends Controller
                     'name' => 'required|max:20',
                     'country' => 'required|max:20',
                     'city' => 'required|max:20',
-                    'phone' => 'required|max:20',
-                    'note' => 'required',
-                    'category_id' => 'required'
+                  //  'phone' => 'required|max:20',
+                   // 'note' => 'required',
+                   'months' => 'required',
+                   'territory' => 'required',
+                   'company_id' => 'required',
+                    //'category_id' => 'required'
                 ]
             );
 
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
-
-                return redirect()->route('university.index')->with('error', $messages->first());
+                return json_encode([
+                    'status' => 'error',
+                    'message' => $messages->first()
+                ]);
+                //return redirect()->route('university.index')->with('error', $messages->first());
             }
 
             $university              = new University();
@@ -193,10 +275,18 @@ class UniversityController extends Controller
             addLogActivity($data);
 
 
-
-            return redirect()->route('university.index')->with('success', __('University successfully created!'));
+            return json_encode([
+                'status' => 'success',
+                'id' => $university->id,
+                'message' => 'University created successfully.'
+            ]);
+           // return redirect()->route('university.index')->with('success', __('University successfully created!'));
         } else {
-            return redirect()->back()->with('error', __('Permission Denied.'));
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Permission Denied.'
+            ]);
+            //return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
 
@@ -235,7 +325,7 @@ class UniversityController extends Controller
             $companies = companies();
 
             $categories = InstituteCategory::pluck('name', 'id');
-            $categories->prepend('', 'Select Category');
+            $categories->prepend('Select Category', 0);
 
             $data = [
                 'countries' => $countries,
@@ -269,15 +359,22 @@ class UniversityController extends Controller
                     'name' => 'required|max:20',
                     'country' => 'required|max:20',
                     'city' => 'required|max:20',
-                    'phone' => 'required|max:20',
-                    'note' => 'required'
+                    'months' => 'required',
+                    'territory' => 'required',
+                    'company_id' => 'required',
+                    //'category_id' => 'required'
+                    //'phone' => 'required|max:20',
+                    //'note' => 'required'
                 ]
             );
 
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
-
-                return redirect()->route('users')->with('error', $messages->first());
+                return json_encode([
+                    'status' => 'error',
+                    'message' => $messages->first()
+                ]);
+               // return redirect()->route('users')->with('error', $messages->first());
             }
 
             $university->name        = $request->name;
@@ -305,9 +402,19 @@ class UniversityController extends Controller
             ];
             addLogActivity($data);
 
-            return redirect()->route('university.index')->with('success', __('University successfully updated!'));
+            return json_encode([
+                'status' => 'success',
+                'id'  => $university->id,
+                'message' => 'University updated successfully.'
+            ]);
+
+            //return redirect()->route('university.index')->with('success', __('University successfully updated!'));
         } else {
-            return redirect()->back()->with('error', __('Permission Denied.'));
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Permission Denied.'
+            ]);
+            //return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
 
@@ -368,25 +475,29 @@ class UniversityController extends Controller
     {
         $id = $_GET['id'];
         $university = University::where('id', $id)->first();
-        $html = '<option value=""> Select month </option>';
-        
+        $html = '';
 
 
         if ($university) {
 
             $intake_months = $university->intake_months;
             $uni_months = explode(',', $intake_months);
+
             $months = months();
 
+
+            $html = '<select name="intake_month" class="form form-control select2" id="intake_month">';
 
             foreach ($months as $key => $month) {
                 if (in_array($key, $uni_months)) {
                     $html .= '<option value="' . $key . '"> ' . $month . ' </option>';
                 }
             }
+
+            $html .= '</select>';
            // $html .= '</select>';
         }
-                
+
         return json_encode([
             'status' => 'success',
             'html' => $html

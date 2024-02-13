@@ -11,6 +11,16 @@
 @push('css-page')
     <link rel="stylesheet" href="{{ asset('css/summernote/summernote-bs4.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/dragula.min.css') }}" id="main-style-link">
+<style>
+    .form-control:focus{
+                    border: none !important;
+                    outline:none !important;
+                }
+   
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
+</style>
 @endpush
 @push('script-page')
     <script src="{{ asset('css/summernote/summernote-bs4.js') }}"></script>
@@ -366,7 +376,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <div class="col-sm-12">
 
                 @php
@@ -513,7 +523,29 @@
         </div>
     </div>
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Add an event listener to the search input
+        $('#searchInput').on('input', function() {
+            // Get the search term
+            var searchTerm = $(this).val().toLowerCase();
 
+            // Loop through each card
+            $('.kanban-box .card').each(function() {
+                // Get the text content of the card
+                var cardText = $(this).text().toLowerCase();
+
+                // Show or hide the card based on the search term
+                if (cardText.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+</script>
 <script>
     function openNav(lead_id) {
         var ww = $(window).width()

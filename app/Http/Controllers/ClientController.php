@@ -2,23 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClientDeal;
-use App\Models\ClientPermission;
-use App\Models\Contract;
-use App\Models\CustomField;
-use App\Models\Estimation;
-use App\Models\Invoice;
-use App\Models\Plan;
-use App\Models\University;
-use App\Models\User;
-use App\Models\Utility;
 use http\Client;
+use App\Models\Deal;
+use App\Models\Lead;
+use App\Models\Plan;
+use App\Models\User;
+use App\Models\Stage;
+use App\Models\Invoice;
+use App\Models\Utility;
+use App\Models\Contract;
+use App\Models\ClientDeal;
+use App\Models\Estimation;
+use App\Models\University;
+use App\Models\CustomField;
 use Illuminate\Http\Request;
+use App\Models\ClientPermission;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
@@ -78,10 +81,14 @@ class ClientController extends Controller
                 $client_query->where('users.email', 'like', '%' . $_GET['email'] . '%');
             }
 
-            $companies = FiltersBrands();
-            $brand_ids = array_keys($companies);
-            $client_query->whereIn('deals.brand_id', $brand_ids);
-
+            // $companies = FiltersBrands();
+            // $brand_ids = array_keys($companies);
+            // $client_query->whereIn('deals.brand_id', $brand_ids);
+            if (isset($_GET['search']) && !empty($_GET['search'])) {
+                $g_search = $_GET['search'];
+                $client_query->where('users.name', 'like',  '%' . $g_search . '%');
+                $client_query->orwhere('users.passport_number', 'like',  '%' . $g_search . '%');
+            }
 
             $total_records = $client_query->count();
             $clients = $client_query->orderBy('created_at', 'DESC')->skip($start)->take($num_results_on_page)->get();
@@ -90,10 +97,14 @@ class ClientController extends Controller
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('clients.clients_list_ajax', compact('clients', 'total_records'))->render();
-
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' =>  $num_results_on_page
+                ])->render();
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => $html,
+                    'pagination_html' => $pagination_html 
                 ]);
             }
 
@@ -278,7 +289,7 @@ class ClientController extends Controller
         if(\Auth::user()->can('edit client'))
         {
             $user = \Auth::user();
-            if($client->created_by == $user->creatorId() || \Auth::user()->type == 'super admin')
+            if($client->created_by == $user->creatorId() || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
             {
                 $client->customField = CustomField::getData($client, 'client');
                 $customFields        = CustomField::where('module', '=', 'client')->get();
@@ -407,13 +418,19 @@ class ClientController extends Controller
 
     public function clientDetail($id){
         $client = User::findOrFail($id);
-        $deal = \App\Models\Deal::join('client_deals', 'client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->first();
-        $lead = \App\Models\Lead::join('client_deals', 'client_deals.client_id', 'leads.is_converted')->where('client_deals.client_id', $id)->first();
+        $deal = Deal::join('client_deals', 'client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->first();
+
+        $lead = Lead::select('leads.*')
+                        ->join('deals as d', 'leads.is_converted', '=', 'd.id')
+                        ->join('client_deals as cd', 'cd.deal_id', '=', 'd.id')
+                        ->where('cd.client_id', $id)
+                        ->first();
+
         $organizations = User::get()->pluck('name', 'id')->toArray();
 
-        $deals = \App\Models\Deal::join('client_deals', 'client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->get();
-        $applications = \App\Models\Deal::select(['deal_applications.*'])->join('deal_applications', 'deal_applications.deal_id', 'deals.id')->join('client_deals','client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->get();
-        $stages = \App\Models\Stage::get()->pluck('name', 'id')->toArray();
+        $deals = Deal::join('client_deals', 'client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->get();
+        $applications = Deal::select(['deal_applications.*'])->join('deal_applications', 'deal_applications.deal_id', 'deals.id')->join('client_deals','client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->get();
+        $stages = Stage::get()->pluck('name', 'id')->toArray();
         $universities = University::get()->pluck('name', 'id')->toArray();
 
         $html = view('clients.clientDetail', compact('client', 'deal', 'lead', 'organizations', 'deals', 'applications', 'stages', 'universities'))->render();

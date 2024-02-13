@@ -6,10 +6,10 @@
             {{ Form::label('subject', __('Subject'),['class'=>'form-label']) }}
             {{ Form::text('subject', null, array('class' => 'form-control','required'=>'required')) }}
         </div>
-        @if(\Auth::user()->type !='client')
+        @if(\Auth::user()->type == 'super admin')
             <div class="form-group col-md-6">
                 {{Form::label('user',__('Support for User'),['class'=>'form-label'])}}
-                {{Form::select('user',$users,null,array('class'=>'form-control select'))}}
+                {{Form::select('user',$users,null,array('class'=>'form-control select2', 'id' => 'user_id'))}}
             </div>
         @endif
         <div class="form-group col-md-6">

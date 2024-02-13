@@ -112,20 +112,20 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-1 me-3">
-                    @can('View Deal')
-                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949;">
+                    {{-- @can('view lead') --}}
+                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
                         <i class="fa-brands fa-whatsapp"></i>
                     </a>
+                    {{-- @endcan --}}
 
 
-                    @endcan
                     @can('edit lead')
 
                         @if (!empty($deal))
                             <a href="javascript:void(0)" @can('View Deal') @if ($deal->is_active)   onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }}) @else '' @endif @else '' @endcan"
                                 data-size="lg" data-bs-toggle="tooltip"
                                 data-bs-title=" {{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white"
-                                style="background-color: #313949">
+                                style="background-color: #313949 color:white; width:36px; height: 36px; margin-top:10px;" >
                                 <i class="ti ti-exchange"></i>
                             </a>
                         @else
@@ -133,7 +133,7 @@
                             <a href="#" data-size="lg"
                                 data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
                                 data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] To Deal') }}"
-                                class="btn px-2 py-2 btn-dark text-white">
+                                class="btn px-2 py-2 btn-dark text-white"style= "width:36px; height: 36px; margin-top:10px;">
                                 <i class="ti ti-exchange"></i>
                             </a>
                             @endcan
@@ -143,14 +143,14 @@
 
                     <a href="#" data-url="{{ URL::to('leads/' . $lead->id . '/labels') }}" data-ajax-popup="true"
                         data-size="lg" data-bs-toggle="tooltip" title="{{ __('Label') }}" class="btn px-2 py-2 text-white"
-                        style="background-color: #313949;">
+                        style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
                         <i class="ti ti-bookmark"></i>
                     </a>
 
                     @can('edit lead')
                     <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}"
                         data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Lead') }}" title="Update Lead" data-original-title="{{ __('Update Lead') }}"
-                        class="btn px-2 py-2 text-white" style="background-color: #313949;">
+                        class="btn px-2 py-2 text-white" style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
                         <i class="ti ti-pencil"></i>
                     </a>
                     @endcan
@@ -163,7 +163,7 @@
                         ]) !!}
 
                         <a href="#" data-bs-toggle="tooltip" title="{{__('Delete')}}"
-                            class="btn px-2 py-2 text-white bs-pass-para bg-danger">
+                            class="btn px-2 py-2 text-white bs-pass-para bg-danger"style= "width:36px; height: 36px; margin-top:10px;">
                             <i class="ti ti-trash" ></i>
                         </a>
 
@@ -380,14 +380,14 @@
                                                                     style="padding-left: 10px; font-size: 14px;"
                                                                     class="edit-td">
 
-                                                                    {{-- <div class="d-flex edit-input-field-div">
+                                                                    <div class="d-flex edit-input-field-div">
                                                                         <div class="input-group border-0 organization_id">
                                                                             {{ $org_name }}
-                                                </div>
-                                                <div class="edit-btn-div">
-                                                    <button class="btn btn-secondary rounded-0 btn-effect-none edit-input" name="organization_id" style="padding: 7px;"><i class="ti ti-pencil"></i></button>
-                                                </div>
-                                            </div> --}}
+                                                                        </div>
+                                                                        <div class="edit-btn-div">
+                                                                            <button class="btn btn-secondary rounded-0 btn-effect-none edit-input" name="organization_id" style="padding: 7px;"><i class="ti ti-pencil"></i></button>
+                                                                        </div>
+                                                                    </div>
 
                                                                 </td>
                                                             </tr>
@@ -518,7 +518,7 @@
                                                                     {{ $lead->created_at }}
                                                                 </td>
                                                             </tr>
-                                                            <tr>
+                                                            <tr class="d-none">
                                                                 <td class=""
                                                                     style="width: 200px; font-size: 14px;">
                                                                     {{ __('Date of Last Activity') }}
@@ -528,7 +528,7 @@
 
                                                                 </td>
                                                             </tr>
-                                                            <tr>
+                                                            <tr class="d-none">
                                                                 <td class=""
                                                                     style="width: 200px; font-size: 14px;">
                                                                     {{ __('Date of Next Activity') }}
@@ -782,7 +782,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="accordion-item">
+                                    {{-- <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeytag">
                                             <button class="accordion-button p-2" type="button"
                                                 data-bs-toggle="collapse"
@@ -814,7 +814,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="accordion-item d-none">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeydetails">
                                             <button class="accordion-button p-2" type="button"
@@ -1070,7 +1070,7 @@
                                                                             data-bs-toggle="tooltip"
                                                                             title="{{ __('Add Task') }}"
                                                                             class="btn p-2 text-white"
-                                                                            style="background-color: #313949;">
+                                                                            style="background-color: #313949; color: #fff !important;">
                                                                             <i class="ti ti-plus"></i>
                                                                         </a>
                                                                     @endcan
@@ -1091,8 +1091,7 @@
                                                                 <div class="">
                                                                     <div class="col-12">
                                                                         <div class="card">
-                                                                            <div class="card-header "
-                                                                                >
+                                                                            <div class="card-header ">
                                                                                 <div class="d-flex justify-content-end">
 
                                                                                 </div>
@@ -1105,12 +1104,12 @@
                                                                                    @endphp
                                                                                     @foreach($tasks as $task)
                                                                                     @if ($task->status == 1)
-                                                                                    <div class="ps-3 py-2 d-flex gap-2 align-items-baseline" style="border-bottom: 1px solid rgb(192, 192, 192);">
-                                                                                        <i class="fa-regular fa-square-check" style="color: #000000;"></i>
-                                                                                        <h6 class="fw-bold">
-                                                                                            {{ $section == 1 ? 'Closed Activity': '' }}
-                                                                                        </h6>
-                                                                                    </div>
+                                                                                        <div class="ps-3 py-2 d-flex gap-2 align-items-baseline" style="border-bottom: 1px solid rgb(192, 192, 192);">
+                                                                                            <i class="fa-regular fa-square-check" style="color: #000000;"></i>
+                                                                                            <h6 class="fw-bold">
+                                                                                                {{ $section == 1 ? 'Closed Activity': '' }}
+                                                                                            </h6>
+                                                                                        </div>
                                                                                         <li class="list-group-item px-3"
                                                                                             id="lihover">
                                                                                             <div class="d-block d-sm-flex align-items-start">
@@ -1362,9 +1361,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-
-
-
                                         </div>
                                     </div>
                                 </div>
