@@ -151,6 +151,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
 // ChartGranted
+Route::get('/chartdashboard', function () {
+    return view('chartdashboard.chart');
+ });
 Route::get('/ChartGranted', [VisaChartController::class, 'TestChartGranted']);
 Route::get('/GrantedByCountry', [VisaChartController::class, 'GrantedByCountry']);
 Route::get('/GrantedByUniversty', [VisaChartController::class, 'GrantedByUniversty']);

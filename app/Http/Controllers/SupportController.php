@@ -74,7 +74,7 @@ class SupportController extends Controller
         ];
         //$status = Support::$status;
         $status = Support::status();
-        $users = User::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        $users = User::where('type', 'sth_team')->get()->pluck('name', 'id')->toArray();
         return view('support.create', compact('priority', 'users','status'));
     }
 

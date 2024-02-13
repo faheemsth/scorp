@@ -9,7 +9,7 @@ class SavedFilterController extends Controller
 {
     public function save(Request $request)
     {
-    
+
         $filter = new SavedFilter;
         $filter->filter_name = $request->filter_name;
         $filter->url = $request->url;
@@ -19,7 +19,14 @@ class SavedFilterController extends Controller
         $filter->save();
 
         return redirect()->back()->with('success', __('Filter Saved'));
-    
+
+    }
+
+    public function edit(Request $request){
+        $filter = SavedFilter::findOrFail($request->id);
+        $filter->filter_name = $request->filter_name;
+        $filter->save();
+        return redirect()->back()->with('success', __('Filter Updated'));
     }
 
     public function edit(Request $request){
@@ -31,7 +38,7 @@ class SavedFilterController extends Controller
 
     public function deleteFilter(Request $request){
         $filter = SavedFilter::where('id',$request->id)->delete();
-        return redirect()->back()->with('success', __('Filter Deleted'));
+        return response()->json(['status' => 'success','msg' =>__('Filter Deleted')]);
     }
 
 }

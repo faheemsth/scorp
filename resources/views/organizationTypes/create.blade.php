@@ -5,7 +5,6 @@
             {{ Form::label('name', __('Type Name'),['class'=>'form-label']) }}
             {{ Form::text('name', '', array('class' => 'form-control','required'=>'required')) }}
         </div>
-
     </div>
 </div>
 <div class="modal-footer">

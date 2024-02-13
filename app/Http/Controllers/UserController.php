@@ -288,6 +288,15 @@ class UserController extends Controller
             $new_permission->save();
 
 
+            $p_dir = User::where('type', 'Project Director')->first();
+            $new_permission = new \App\Models\CompanyPermission();
+            $new_permission->user_id = $p_dir->id;
+            $new_permission->permitted_company_id = $user->id;
+            $new_permission->active = 'false';
+            $new_permission->created_by = \Auth::user()->id;
+            $new_permission->save();
+            
+            
             // Send Email
             $setings = Utility::settings();
             if ($setings['new_user'] == 1) {
