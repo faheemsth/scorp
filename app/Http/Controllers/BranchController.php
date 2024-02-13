@@ -296,16 +296,9 @@ class BranchController extends Controller
     {
         if(\Auth::user()->can('delete branch'))
         {
-            if($branch->created_by == \Auth::user()->creatorId())
-            {
-                $branch->delete();
+             $branch->delete();
 
-                return redirect()->route('branch.index')->with('success', __('Branch successfully deleted.'));
-            }
-            else
-            {
-                return redirect()->back()->with('error', __('Permission denied.'));
-            }
+            return redirect()->route('branch.index')->with('success', __('Branch successfully deleted.'));
         }
         else
         {

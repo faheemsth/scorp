@@ -311,7 +311,7 @@ $lang=Utility::getValByName('default_language');
         .iti--show-flags{
             width: 100% !important;
         }
-
+        
         @media screen and (max-width: 480px) {
             .dash-header {
                 left: 0 !important;

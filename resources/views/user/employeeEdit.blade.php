@@ -36,6 +36,7 @@
                 <div class="form-group col-md-6" id="brand_div" >
                     @if (
                         \Auth::user()->type == 'super admin' ||
+                         \Auth::user()->type == 'HR' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager')
                         <label for="branches" class="col-sm-3 col-form-label">Brands<span
@@ -71,6 +72,7 @@
                 <div class="form-group col-md-6 {{ $user->type == 'Project Director' || $user->type == 'Project Manager' ? 'd-none' : ''}}" id="region_div">
                                      @if (
                         \Auth::user()->type == 'super admin' ||
+                         \Auth::user()->type == 'HR' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||

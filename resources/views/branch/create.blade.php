@@ -21,6 +21,7 @@
                         
                         @if (
                         \Auth::user()->type == 'super admin' ||
+                        \Auth::user()->type == 'HR' ||
                             \Auth::user()->type == 'Admin Team' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager')
@@ -61,6 +62,7 @@
 
                         @if (
                         \Auth::user()->type == 'super admin' ||
+                         \Auth::user()->type == 'HR' ||
                         \Auth::user()->type == 'Admin Team' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||

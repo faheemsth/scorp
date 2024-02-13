@@ -37,8 +37,8 @@ return [
     // ],
     
      'google' => [
-        'client_id' => '830387916310-kme82uflnu78k0tq8sphb246c4co1uuk.apps.googleusercontent.com',
-        'client_secret' => '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',
-        'redirect' => 'https://test.scorp.co/auth/google/callback',
+        'client_id' => '930366102613-ir658fhtcbsbhc4mgcqgq7l66uu2osf6.apps.googleusercontent.com',
+        'client_secret' => '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',
+        'redirect' => 'https://erp.scorp.co/auth/google/callback',
     ],
 ];

@@ -43,6 +43,7 @@
 
                     @if (
                         \Auth::user()->type == 'super admin' ||
+                        \Auth::user()->type == 'HR' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager')
                         <label for="branches" class="col-sm-3 col-form-label">Brands<span
@@ -89,6 +90,10 @@
 
                     @if (
                         \Auth::user()->type == 'super admin' ||
+<<<<<<< HEAD
+                        \Auth::user()->type == 'HR' ||
+=======
+>>>>>>> f74aa4a12869e771b7f069934b026b3b9c891439
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||

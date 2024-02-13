@@ -98,7 +98,7 @@
                       </a>
                     @endcan
 
-                    @can('delete brand')
+                    @can('delete user')
                     {!! Form::open(['method' => 'DELETE','class'=>'mb-0' , 'route' => ['users.destroy', $user['id']],'id'=>'delete-form-'.$user['id']]) !!}
                     <a href="#!" class="btn px-2 py-2 btn-danger text-white bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
                         <i class="ti ti-archive"></i>

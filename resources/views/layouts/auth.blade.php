@@ -213,8 +213,8 @@ body{
                     <img src="{{ asset('assets/cs-theme/assets/images/Frame.png') }}" alt="" class="loginimg">
 
                     <div class="textdiv mt-3 mx-auto">
-                        <p class="textper mb-0 my-3" style="color: #1F2635;  font-weight: bold;">"Attention is the New
-                            Currency"</p>
+                        <p class="textper mb-0 my-3" style="color: #1F2635;  font-weight: bold;">Attention is the New
+                            Currency</p>
                         <p class="textp" style="color: #1F2635; "> The more effortless the writing looks, the more
                             effort the
                             writer actually put into the

@@ -81,9 +81,9 @@ class ClientController extends Controller
                 $client_query->where('users.email', 'like', '%' . $_GET['email'] . '%');
             }
 
-            $companies = FiltersBrands();
-            $brand_ids = array_keys($companies);
-            $client_query->whereIn('deals.brand_id', $brand_ids);
+            // $companies = FiltersBrands();
+            // $brand_ids = array_keys($companies);
+            // $client_query->whereIn('deals.brand_id', $brand_ids);
             if (isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
                 $client_query->where('users.name', 'like',  '%' . $g_search . '%');

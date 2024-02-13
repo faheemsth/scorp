@@ -49,8 +49,8 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
     </button>
     <div class="logo ms-md-2">
         <a href="#">
-            <!-- <img src="{{ asset('assets/cs-theme/assets/images/scorp-logo.png') }}" alt=""> -->
-            <img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:'assets/cs-theme/assets/images/scorp-logo.png') }}" class="big-logo">
+             <img src="{{ asset('storage/uploads/logo/1-logo-dark.png') }}" alt=""> 
+            <!--<img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:asset('storage/uploads/logo/1-logo-dark.png')) }}" class="big-logo">-->
         </a>
     </div>
     <!-- Sidebar Toggle (Topbar) -->
@@ -110,7 +110,7 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
         </li>
 
         <div class="" style="width: 300px; margin-right: 10px;">
-
+        
         @if (\Auth::user()->type == 'super admin')
         <select name="company" id="company" class="form form-select select2" style="width:100% !important" onChange="loginWithCompany();">
             <option value="">Select Companies</option>

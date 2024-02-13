@@ -10,7 +10,6 @@
         </span>
 
     </td>
-    <td>{{ $client->email }}</td>
     <td>{{ $client->clientDeals->count() }}</td>
     <td>{{ $client->clientApplications($client->id) }}</td>
 </tr>

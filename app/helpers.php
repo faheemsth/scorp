@@ -299,7 +299,7 @@ if (!function_exists('BrandsRegionsBranches')){
 
             //dd($brand_id.' '.$region_id.' '.$branch_id);
 
-            if($type == 'super admin'){
+            if($type == 'super admin' || $type == 'HR' || $type == 'Admin Team'){
                   $brands = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                   $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                   $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();

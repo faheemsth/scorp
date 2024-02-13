@@ -183,12 +183,14 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
                                     <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         @php 
-                                            $project_director = \App\Models\User::join('company_permission', 'company_permission.user_id', '=', 'users.id')
-                                                                ->where('company_permission.permitted_company_id', $user->id)
-                                                                ->where('type', 'Project Director')
-                                                                ->first();
+                                            // $project_director = \App\Models\User::join('company_permission', 'company_permission.user_id', '=', 'users.id')
+                                            //                     ->where('company_permission.permitted_company_id', $user->id)
+                                            //                     ->where('type', 'Project Director')
+                                            //                     ->first();
                                         @endphp 
-                                        {{ $project_director->name ?? '' }}
+                                        {{-- {{ $project_director->name ?? '' }} --}}
+
+                                        {{ $user->project_director}}
                                     </td>
                                 </tr>
                                 @empty

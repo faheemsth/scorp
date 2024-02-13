@@ -48,57 +48,121 @@ class UserController extends Controller
             $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
             $start = 0;
         }
-
-        //$users = User::where('type', 'company');
-        $users = User::query()
-            ->leftjoin('company_permission', 'company_permission.permitted_company_id', '=', 'users.id')
-            ->leftjoin('users AS p', 'p.id', '=', 'company_permission.user_id')
-            ->select('users.*')
-            ->where('users.type', '=', 'company');
-        
-
-
-        if (isset($_GET['Brand']) && !empty($_GET['Brand'])) {
-            $brandId = $_GET['Brand'];
-            $users->where('users.id', $brandId);
-        }
-
-        if (isset($_GET['Director']) && !empty($_GET['Director'])) {
-            $directorId = intval($_GET['Director']);
-            $users->where('users.project_director_id', $directorId);
-        }
-
-
         if (\Auth::user()->can('manage user')) {
-            if (\Auth::user()->type != 'super admin' || \Auth::user()->type != 'Admin Team' || \Auth::user()->type == 'HR') {
+
+            $user_query = User::select(['users.id','users.name', 'users.website_link', 'project_director.name as project_director'])
+                         ->where('users.type', 'company')
+                         ->leftjoin('users as project_director', 'project_director.id', '=', 'users.project_director_id');
+               
+            if (\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Admin Team' && \Auth::user()->type != 'HR') {
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
-                $users->whereIn('users.id', $brand_ids);
+                $user_query->whereIn('users.id', $brand_ids);
             }
 
 
-            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
+            if(isset($_GET['search']) && !empty($_GET['search'])){
                 $g_search = $_GET['search'];
-                $users->where('users.type', 'company')
-                    ->where(function ($query) use ($g_search) {
-                        $query->where('users.name', 'like', '%' . $g_search . '%')
-                            ->orWhere('users.website_link', 'like', '%' . $g_search . '%')
-                            ->orWhere('p.name', 'like', '%' . $g_search . '%');
-                    });
+                $user_query->where(function ($query) use ($g_search) {
+                    $query->where('users.name', 'like', '%' . $g_search . '%')
+                        ->orWhere('users.website_link', 'like', '%' . $g_search . '%')
+                        ->orWhere('project_director.name', 'like', '%' . $g_search . '%');
+                });
             }
 
-            $total_records = $users->count();
-            $users = $users->where('company_permission.active', 'false')->skip($start)
-                ->take($num_results_on_page)
-                ->orderBy('users.name', 'ASC')
-                ->groupBy('users.id')
+
+            if(isset($_GET['Brand']) && !empty($_GET['Brand'])){
+                $user_query->where('users.id', $_GET['Brand']);
+            }
+
+            if(isset($_GET['Director']) && !empty($_GET['Director'])){
+                $user_query->where('users.project_director_id', $_GET['Director']);
+            }
+
+
+
+
+
+
+           
+
+            $total_records = $user_query->count();
+            $users = $user_query->orderBy('users.name', 'ASC')
                 ->paginate($num_results_on_page);
 
+            // $brand_data = [];
+            // foreach ($users as $brand) {
+            //     $found = false;
+            //     $director = '';
+
+            //     if(!isset($_GET['Brand'])){
+            //         $found = true;
+            //     }
+
+            //     $companyPermissions = CompanyPermission::query()
+            //         ->select('users.*')
+            //         ->join('users', 'company_permission.user_id', '=', 'users.id')
+            //         ->where('company_permission.permitted_company_id', $brand->id)
+            //         ->where('company_permission.active', 'true')
+            //         ->where('users.type', 'Project Director')
+            //         ->first();
+            //     if (isset($companyPermissions->name)) {
+            //         $director = $companyPermissions->name;
+            //     }
+
+            //     if(isset($_GET['Director']) && !empty($_GET['Director']) && isset($companyPermissions) && $companyPermissions->id == $_GET['Director']){
+            //         $found = true;
+            //     }
+
+            //     if (isset($_GET['search']) && !empty($_GET['search'])) {
+            //         $g_search = $_GET['search'];
+            //         // $director = \App\Models\CompanyPermission::join('users as director', 'company_permission.user_id', '=', 'director.id')
+            //         //             ->where('permitted_company_id', $brand->id)
+            //         //             ->where('active', 'true')
+            //         //             ->where('director.name', 'like', '%'.$g_search.'%')
+            //         //             ->get();
+
+            //         $companyPermissions = CompanyPermission::query()
+            //             ->select('users.*')
+            //             ->join('users', 'company_permission.user_id', '=', 'users.id')
+            //             ->where('company_permission.permitted_company_id', $brand->id)
+            //             ->where('company_permission.active', 'true')
+            //             ->where('users.name', 'like', '%' . $g_search . '%')
+            //             ->first();
+
+
+
+
+            //         if (str_contains($brand->name, $g_search) || str_contains($brand->website_link, $g_search) || isset($companyPermissions->name)) {
+            //             $found = true;
+            //             $director = $companyPermissions->name ?? '';
+            //         } else {
+            //             $found = false;
+            //         }
+
+            //         // if($brand->id == 3254){
+            //         //     dd($director);
+            //         //     dd((isset($director->brand_id) && $director->brand_id == $brand->id));
+            //         // }
+            //     }
+
+
+
+
+            //     if ($found) {
+
+            //         $brand_data[] = json_decode(json_encode([
+            //             'id' => $brand->id,
+            //             'name' => $brand->name,
+            //             'website_link' => $brand->website_link,
+            //             'director' => $director
+            //         ]));
+            //     }
+            // }
+            
             $projectDirectors = allUsers();
-            // return view('user.index-Old')->with('users', $users);
             $Brands = User::where('type', 'company')->pluck('name', 'id')->toArray();
             $ProjectDirector = User::where('type', 'Project Director')->pluck('name', 'id')->toArray();
-
 
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
@@ -170,50 +234,59 @@ class UserController extends Controller
                 ]);
                 // return redirect()->back()->with('error', $messages->first());
             }
-            
-            
+
+
             $psw = '1234';
 
-                $user               = new User();
-                $user['name']       = $request->name;
-                $user['email']      = $this->generateUniqueEmail();
-                $user['password']   = Hash::make('1234');
-                $user['type']       =  $request->role;
-                $user['default_pipeline'] = 1;
-                $user['plan'] = 1;
-                $user['lang']       = !empty($default_language) ? $default_language->value : '';
-                $user['created_by'] = \Auth::user()->creatorId();
-                $user['plan']       = Plan::first()->id;
-                $user['domain_link'] = $request->domain_link;
-                $user['website_link'] = $request->website_link;
-                $user['drive_link'] = $request->drive_link;
-                $user['project_director_id'] = $request->project_director;
+            $user               = new User();
+            $user['name']       = $request->name;
+            $user['email']      = $this->generateUniqueEmail();
+            $user['password']   = Hash::make('1234');
+            $user['type']       =  $request->role;
+            $user['default_pipeline'] = 1;
+            $user['plan'] = 1;
+            $user['lang']       = !empty($default_language) ? $default_language->value : '';
+            $user['created_by'] = \Auth::user()->creatorId();
+            $user['plan']       = Plan::first()->id;
+            $user['domain_link'] = $request->domain_link;
+            $user['website_link'] = $request->website_link;
+            $user['drive_link'] = $request->drive_link;
+            $user['project_director_id'] = $request->project_director;
 
-                $user->save();
+            $user->save();
 
-                $role_r = Role::findByName($request->role);
-                $user->assignRole($role_r);
-                //                $user->userDefaultData();
-                $user->userDefaultDataRegister($user->id);
-                $user->userWarehouseRegister($user->id);
+            $role_r = Role::findByName($request->role);
+            $user->assignRole($role_r);
+            //                $user->userDefaultData();
+            $user->userDefaultDataRegister($user->id);
+            $user->userWarehouseRegister($user->id);
 
-                //default bank account for new company
-                $user->userDefaultBankAccount($user->id);
+            //default bank account for new company
+            $user->userDefaultBankAccount($user->id);
 
-                Utility::chartOfAccountTypeData($user->id);
-                Utility::chartOfAccountData($user);
-                // default chart of account for new company
-                Utility::chartOfAccountData1($user->id);
+            Utility::chartOfAccountTypeData($user->id);
+            Utility::chartOfAccountData($user);
+            // default chart of account for new company
+            Utility::chartOfAccountData1($user->id);
 
-                Utility::pipeline_lead_deal_Stage($user->id);
-                Utility::project_task_stages($user->id);
-                Utility::labels($user->id);
-                Utility::sources($user->id);
-                Utility::jobStage($user->id);
-                GenerateOfferLetter::defaultOfferLetterRegister($user->id);
-                ExperienceCertificate::defaultExpCertificatRegister($user->id);
-                JoiningLetter::defaultJoiningLetterRegister($user->id);
-                NOC::defaultNocCertificateRegister($user->id);
+            Utility::pipeline_lead_deal_Stage($user->id);
+            Utility::project_task_stages($user->id);
+            Utility::labels($user->id);
+            Utility::sources($user->id);
+            Utility::jobStage($user->id);
+            GenerateOfferLetter::defaultOfferLetterRegister($user->id);
+            ExperienceCertificate::defaultExpCertificatRegister($user->id);
+            JoiningLetter::defaultJoiningLetterRegister($user->id);
+            NOC::defaultNocCertificateRegister($user->id);
+
+            $p_dir = User::where('type', 'Project Director')->first();
+            $new_permission = new \App\Models\CompanyPermission();
+            $new_permission->user_id = $p_dir->id;
+            $new_permission->permitted_company_id = $user->id;
+            $new_permission->active = 'false';
+            $new_permission->created_by = \Auth::user()->id;
+            $new_permission->save();
+
 
             $p_dir = User::where('type', 'Project Director')->first();
             $new_permission = new \App\Models\CompanyPermission();
@@ -682,7 +755,7 @@ class UserController extends Controller
             }
 
 
-            if(isset($_GET['search']) && !empty($_GET['search'])){
+            if (isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
                 $usersQuery->where('users.name', 'like', '%' . $g_search . '%')
                     ->orWhere('users.email', 'like', '%' . $g_search . '%')
@@ -1030,6 +1103,7 @@ class UserController extends Controller
                     // return redirect()->back()->with('error', $messages->first());
                 }
 
+                
                 $role = Role::findByName($request->role);
                 //$role = Role::findByName('company');
                 $input         = $request->all();
@@ -1089,17 +1163,18 @@ class UserController extends Controller
                         'role' => 'required',
                     ]
                 );
-
-
+                
                 $role = Role::findByName($request->role);
                 $input         = $request->all();
                 $input['type'] = $role->name;
+                
                 $user->fill($input)->save();
+                
                 $user->branch_id = $request->branch_id;
                 $user->date_of_birth =  $request->dob;
                 $user->phone = $request->phone;
                 //$user->branch_id = $request->branch_id;
-                $user['region_id'] = $request->region_id;
+                $user->region_id = $request->region_id;
                 $user->type = $role->name;
                 $user->update();
 
@@ -1187,27 +1262,27 @@ class UserController extends Controller
 
         $rows = array_map('str_getcsv', explode("\n", $csvData));
         $header = array_shift($rows);
-        
+
         $data = [];
         foreach ($rows as $row) {
-            
-            if(!isset($row[0])){
+
+            if (!isset($row[0])) {
                 continue;
             }
             $data[] = [
-                    'Full Name' => $row[0],
-                    'Role' => $row[1],
-                    'Brand' => $row[2],
-                    'Region' => $row[3],
-                    'Branch' => $row[4],
-                    'Email' => $row[5],
-                    'Phone' => $row[6]
-                ];
+                'Full Name' => $row[0],
+                'Role' => $row[1],
+                'Brand' => $row[2],
+                'Region' => $row[3],
+                'Branch' => $row[4],
+                'Email' => $row[5],
+                'Phone' => $row[6]
+            ];
         }
 
- 
 
-       
+
+
 
         foreach ($data as $key => $d) {
             $brand = User::where(['name' => $d['Brand'], 'type' => 'company'])->first();
@@ -1226,7 +1301,7 @@ class UserController extends Controller
             $region_id = isset($region->id) ? $region->id : 0;
 
             if (!$region) {
-                echo 'new Region '.$d['Region'].'<br>';
+                echo 'new Region ' . $d['Region'] . '<br>';
                 $new_region = new Region();
                 $new_region->name = $d['Region'];
                 $new_region->location = $d['Region'];
@@ -1240,7 +1315,7 @@ class UserController extends Controller
             $branch = Branch::where(['brands' => $brand->id, 'region_id' => $region_id, 'name' => $d['Branch']])->first();
             $branch_id = isset($branch->id) ? $branch->id : 0;
             if (!$branch) {
-                echo 'new Branch '.$d['Branch'].'<br>';
+                echo 'new Branch ' . $d['Branch'] . '<br>';
                 $new_branch = new Branch();
                 $new_branch->name = $d['Branch'];
                 $new_branch->region_id = $region_id;
@@ -1258,10 +1333,10 @@ class UserController extends Controller
             // }
 
             $user = User::where('email', $d['Email'])->first();
-            if(!$user){
+            if (!$user) {
                 $user   = new User();
             }
-            
+
 
             $user['name']       = $d['Full Name'];
             $user['email']      = $d['Email'];
@@ -1450,9 +1525,9 @@ class UserController extends Controller
         ];
 
         $project_director = \App\Models\User::join('company_permission', 'company_permission.user_id', '=', 'users.id')
-                            ->where('company_permission.permitted_company_id', $user->id)
-                            ->first();
-       
+            ->where('company_permission.permitted_company_id', $user->id)
+            ->first();
+
 
         $data = [];
         foreach ($users as $key => $brand) {
