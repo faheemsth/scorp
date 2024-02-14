@@ -411,7 +411,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         <label for="">Region</label>
                                         <select name="region_id" class="form form-control select2" id="filter_region_id">
                                             @if (!empty($filters['regions']))
-                                                @foreach ($filters['regions'] as $key => $region)
+                                                @foreach   ($filters['regions'] as $key => $region)
                                                 <option value="{{ $key }}" {{ !empty($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : '' }}>{{ $region }}</option>
                                                 @endforeach
                                                 @else
@@ -1735,8 +1735,19 @@ $('.' + name + '-td').html(html);
             var brand_id = $("#filter_brand_id").val();
             var region_id = $("#region_id").val();
             var branch_id = $("#branch_id").val();
+           
+            if (typeof region_id === 'undefined') {
+                var region_id = $("#filter_region_id").val();
+            }
 
-            var type = 'leads';
+            if (typeof branch_id === 'undefined') {
+                var branch_id = $("#filter_branch_id").val();
+            }
+
+
+            
+
+            var type = 'lead';
 
             $.ajax({
                 type: 'GET',

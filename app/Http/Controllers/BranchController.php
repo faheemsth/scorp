@@ -44,7 +44,7 @@ class BranchController extends Controller
 
             if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR'){
              }else if(\Auth::user()->type == 'company'){
-              $branch_query->whereRaw('brands', [\Auth::user()->id]);
+              $branch_query->where('brands', \Auth::user()->id);
             }else{
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);

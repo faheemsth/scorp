@@ -211,7 +211,7 @@ class LeadController extends Controller
 
 
             //  $leads_query->whereIn('brand_id', $brand_ids)->where('is_converted',0);
-
+          
             // Add the dynamic filters
             foreach ($filters as $column => $value) {
                 if ($column === 'name') {
@@ -243,8 +243,13 @@ class LeadController extends Controller
                 $leads_query->orWhere('leads.phone', 'like', '%' . $g_search . '%');
             }
 
-            $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
-            $leads_query->where('leads.is_converted', 0);
+          
+            if(empty($_GET)){
+                $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
+                $leads_query->where('leads.is_converted', 0);
+            }
+           
+
             $total_records =  $leads_query->clone()->count();
             $leads = $leads_query->clone()->groupBy('leads.id')->orderBy('leads.created_at', 'desc')->skip($start)->take($num_results_on_page)->get();
             $users = allUsers();
@@ -1019,10 +1024,9 @@ class LeadController extends Controller
         $column_arr = [];
         $spreadsheet = IOFactory::load($file->getPathname());
         $worksheet = $spreadsheet->getActiveSheet();
-        $key = 0;   
-
-       
-   
+        $key = 0;  
+        
+        //$assigned_user = isset($request->lead_assgigned_user) ? $request->lead_assgigned_user : $request->assigned_to;
         foreach ($worksheet->getRowIterator() as $line) {
             if ($key == 0) {
                 foreach ($line->getCellIterator() as $column_key => $column) {
@@ -1049,6 +1053,18 @@ class LeadController extends Controller
 
             if ($lead_exist) {
                 $lead = Lead::where('email', $lead->email)->first();
+            }else{
+                $lead  = new Lead();
+            }
+
+            $test = [];
+            foreach ($line->getCellIterator() as $column_key => $column) {
+
+                $column = preg_replace('/[^\x20-\x7E]/', '', $column);
+                if (!empty($column_arr[$column_key])) {
+                    $test[$column_arr[$column_key]] = $column;
+                    $lead->{$column_arr[$column_key]} = $column;
+                }
             }
 
             //if no email found
@@ -1075,8 +1091,10 @@ class LeadController extends Controller
             $lead->created_by  = \Auth::user()->id;
             $lead->date        = date('Y-m-d');
 
+            //dd($lead);
+
             if (!empty($lead->name) || !empty($lead->email) || !empty($lead->phone) || !empty($lead->subject) || !empty($lead->notes)) {
-                $lead->save();
+               $lead->save();
                 UserLead::create(
                     [
                         'user_id' => $usr->id,
@@ -3720,8 +3738,8 @@ class LeadController extends Controller
         $type = $request->get('type');
         $html = '';
         if ($type == 'lead') {
-            if (!empty($region_id) && empty($branch_id)) {
-                $leads = Lead::where('brand_id', $brand_id)->where('region_id', $region_id)->pluck('name', 'id')->toArray();
+            if (!empty($region_id) && !empty($branch_id)) {
+                $leads = Lead::where('branch_id', $branch_id)->where('region_id', $region_id)->pluck('name', 'id')->toArray();
             } else {
                 $leads = Lead::where('brand_id', $brand_id)->where('region_id', $region_id)->where('branch_id', $branch_id)->pluck('name', 'id')->toArray();
             }
@@ -3732,7 +3750,7 @@ class LeadController extends Controller
                     <option value="">Select name</option>';
 
             foreach ($leads as $key => $lead) {
-                $html .= '<option value="' . $key . '">"' . $lead . '"</option>';
+                $html .= '<option value="' . $key . '">' . $lead . '</option>';
             }
 
             $html .= '</select>';
