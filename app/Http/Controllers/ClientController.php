@@ -59,7 +59,7 @@ class ClientController extends Controller
             $user    = \Auth::user();
 
             $start = 0;
-            $num_results_on_page = 50;
+            $num_results_on_page = 25;
             if (isset($_GET['page'])) {
                 $page = $_GET['page'];
                 $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -90,7 +90,8 @@ class ClientController extends Controller
                 $client_query->orwhere('users.passport_number', 'like',  '%' . $g_search . '%');
             }
 
-            $total_records = $client_query->count();
+            $client_query->groupBy('users.id');
+            $total_records = count($client_query->get());
             $clients = $client_query->orderBy('created_at', 'DESC')->skip($start)->take($num_results_on_page)->get();
 
             // $clients = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'client')->skip($start)->take($num_results_on_page)->get();

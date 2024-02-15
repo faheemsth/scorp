@@ -161,7 +161,7 @@ class LeadController extends Controller
 
         //////////////pagination calculation
         $start = 0;
-        $num_results_on_page = 50;
+        $num_results_on_page = 25;
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
             $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -1018,6 +1018,7 @@ class LeadController extends Controller
 
     private function excelSheetDataSaved($request, $file, $pipeline, $stage)
     {
+       // dd($request->input());
 
         
         $usr = \Auth::user();
@@ -2482,6 +2483,8 @@ class LeadController extends Controller
             );
 
             $client->passport_number =  $request->client_passport;
+            $client->region_id = $lead->region_id;
+            $client->brand_id = $lead->brand_id;
             $client->save();
 
             $client->assignRole($role);

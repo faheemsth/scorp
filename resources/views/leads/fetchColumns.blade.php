@@ -72,7 +72,7 @@
 
             <label for="branches" class="col-form-label">Branch<span class="text-danger">*</span></label>
             <div class="form-group" id="branch_div">
-                <select name="branch_id" id="lead_branch" class="form-control select2 branch_id" onchange="Change(this)">
+                <select name="lead_branch" id="lead_branch" class="form-control select2 branch_id" onchange="Change(this)">
                     @foreach ($branches as $key => $branch)
                         <option value="{{ $key }}">{{ $branch }}</option>
                     @endforeach

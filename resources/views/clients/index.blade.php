@@ -157,9 +157,9 @@ $(document).on('change', '.sub-check', function() {
                         <i class="ti ti-filter" style="font-size:18px"></i>
                     </button>
 
-                    <a href="http://127.0.0.1:8000/university-download" class="btn p-2 btn-dark" style=" color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv">
+                    <!-- <a href="http://127.0.0.1:8000/university-download" class="btn p-2 btn-dark" style=" color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv">
                                 <i class="ti ti-download" style="font-size:18px"></i>
-                     </a>
+                     </a> -->
 
                     @can('create client')
                      <button data-url="{{ route('clients.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}"  class="btn p-2 btn-dark d-none" data-bs-toggle="modal"   style="color:white; width:36px; height: 36px; margin-top:10px;">
@@ -179,7 +179,7 @@ $(document).on('change', '.sub-check', function() {
             </style>
             {{-- Filters --}}
             <div class="filter-data px-3" id="filter-show"
-                <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+                <?= isset($_GET['name']) && !empty($_GET['name']) ? '' : 'style="display: none;"' ?>>
                 <form action="/clients" method="GET" class="">
                     <div class="row filbar">
                         <div class="col-md-4 mt-2">
@@ -291,7 +291,7 @@ $(document).on('change', '.sub-check', function() {
                 @if ($total_records > 0)
                     @include('layouts.pagination', [
                         'total_pages' => $total_records,
-                        'num_results_on_page' => 50,
+                        'num_results_on_page' => 25,
                     ])
                 @endif
             </div>
