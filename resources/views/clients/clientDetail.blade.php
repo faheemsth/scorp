@@ -51,24 +51,26 @@
     }
 </style>
 @php
-                                        $type = \Auth::user()->type;
-                                        $is_show = true;
+    $type = \Auth::user()->type;
+    $is_show = true;
 
-                                        if($type == 'super admin'){
+    if($type == 'super admin'){
 
-                                        }else if($type == 'Project Director' || $type == 'Project Manager'){
-                                                $per_brands = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('permitted_company_id', $deal->brand_id)->first();
+    }else if($type == 'Project Director' || $type == 'Project Manager'){
+            $per_brands = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('permitted_company_id', $deal->brand_id)->first();
 
-                                                if($per_brands){
-                                                    $is_show = true;
-                                                }
-                                        }else if($type == 'Regional Manager'){
-                                                $is_show = ($lead->region_id == \Auth::user()->region_id);
-                                        }else if($type == 'Branch Manager' || $type == 'Admissions Manager' || $type == 'Admissions Officer' || $type == 'Marketing Officer'){
-                                            $is_show = ($deal->branch_id == \Auth::user()->branch_id);
-                                        }
+            if($per_brands){
+                $is_show = true;
+            }
+    }else if($type == 'Region Manager'){
+            $is_show = ($lead->region_id == \Auth::user()->region_id);
+    }else if($type == 'Branch Manager' || $type == 'Admissions Manager' || $type == 'Admissions Officer' || $type == 'Marketing Officer'){
+        $is_show = ($deal->branch_id == \Auth::user()->branch_id);
+    }else{
+        $is_show = false;
+    }
 
-                                    @endphp
+@endphp
 <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
 <div class="container-fluid px-1 mx-0">
     <div class="row">

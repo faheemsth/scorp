@@ -72,7 +72,7 @@
 
             <label for="branches" class="col-form-label">Branch<span class="text-danger">*</span></label>
             <div class="form-group" id="branch_div">
-                <select name="branch_id" id="branch_id" class="form-control select2 branch_id" onchange="Change(this)">
+                <select name="lead_branch" id="lead_branch" class="form-control select2 branch_id" onchange="Change(this)">
                     @foreach ($branches as $key => $branch)
                         <option value="{{ $key }}">{{ $branch }}</option>
                     @endforeach
@@ -81,8 +81,8 @@
         @else
             <label for="branches" class="col-form-label">Branch<span class="text-danger">*</span></label>
             <div class="form-group" id="branch_div">
-                <input type="hidden" name="branch_id" value="{{ \Auth::user()->branch_id }}">
-                <select name="branch_id" id="branch_id" class="form-control select2 branch_id" onchange="Change(this)">
+                <input type="hidden" name="lead_branch" value="{{ \Auth::user()->branch_id }}">
+                <select name="lead_branch" id="branch_id" class="form-control select2 branch_id" onchange="Change(this)">
                     @foreach ($branches as $key => $branch)
                         <option value="{{ $key }}" {{ \Auth::user()->branch_id == $key ? 'selected' : '' }}>
                             {{ $branch }}</option>
@@ -96,7 +96,7 @@
     <div class="col-6">
         <label for="">Lead Assigned to <span class="text-danger">*</span></label>
         <div id="assign_to_div">
-            <select name="assigned_to" id="assigned_to" class="form form-control">
+            <select name="lead_assgigned_user" id="assigned_to" class="form form-control">
                 @foreach ($employees as $key => $employee)
                     <option value="{{ $key }}">{{ $employee }}</option>
                 @endforeach
