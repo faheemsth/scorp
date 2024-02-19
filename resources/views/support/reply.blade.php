@@ -107,7 +107,7 @@
                     @if($support->status == 'Open')
                     <h5 class="mt-0 mb-3">{{__('Comments')}}</h5>
                     {{ Form::open(array('route' => array('support.reply.answer',$support->id))) }}
-                    <textarea class="form-control form-control-light mb-2" name="description" placeholder="Your comment" id="example-textarea" rows="3" required=""></textarea>
+                    <textarea class="form-control form-control-light mb-2" name="description" placeholder="Your comment" id="example-textarea" rows="3" required="" >{{!empty($support->description)?$support->description:''}}</textarea>
                     <div class="text-end">
                         <div class=" mb-2 ml-2">
                             {{Form::submit(__('Send'),array('class'=>'btn btn-primary'))}}
