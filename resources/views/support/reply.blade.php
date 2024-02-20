@@ -47,6 +47,39 @@
                         <li class="list-group-item px-0">
                             <div class="row align-items-center">
                                 <div class="col-6">
+                                    <span class="form-label">{{__('Brand')}}:</span>
+                                </div>
+                                <div class="col-6 text-end">
+                                
+                                    {{ optional(\App\Models\User::find(optional($support->createdBy)->brand_id))->name }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0">
+                            <div class="row align-items-center">
+                                <div class="col-6">
+                                    <span class="form-label">{{__('Region')}}:</span>
+                                </div>
+                                <div class="col-6 text-end">
+                                {{ optional(\App\Models\Region::find(optional($support->createdBy)->region_id))->name }}
+
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0">
+                            <div class="row align-items-center">
+                                <div class="col-6">
+                                    <span class="form-label">{{__('Branch')}}:</span>
+                                </div>
+                                <div class="col-6 text-end">
+                                    
+                                {{ optional(\App\Models\Branch::find(optional($support->createdBy)->branch_id))->name }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0">
+                            <div class="row align-items-center">
+                                <div class="col-6">
                                     <span class="form-label">{{__('Ticket Code')}}:</span>
                                 </div>
                                 <div class="col-6 text-end">
