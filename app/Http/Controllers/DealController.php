@@ -843,9 +843,9 @@ class DealController extends Controller
 
 
                 $months = months();
-                $currentYear = date('Y');
+                $currentYear = 2000;
                 $years = [];
-                for ($i = 0; $i < 5; $i++) {
+                for ($i = 0; $i < 100; $i++) {
                     $nextYear = $currentYear + $i;
                     $years[$nextYear] = $nextYear;
                 }
