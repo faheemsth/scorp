@@ -3,7 +3,9 @@
         @if (
             \Auth::user()->type == 'super admin' ||
                 \Auth::user()->type == 'Project Director' ||
-                \Auth::user()->type == 'Project Manager')
+                \Auth::user()->type == 'Project Manager' ||
+                \Auth::user()->can('level 1') ||
+                \Auth::user()->can('level 2'))
             <label for="branches" class="col-form-label">Brands<span class="text-danger">*</span></label>
             <div class="form-group" id="brand_div">
                 {!! Form::select('brand_id', $companies, 0, [
@@ -41,7 +43,10 @@
                 \Auth::user()->type == 'Project Director' ||
                 \Auth::user()->type == 'Project Manager' ||
                 \Auth::user()->type == 'company' ||
-                \Auth::user()->type == 'Regional Manager')
+                \Auth::user()->type == 'Region Manager' ||
+                \Auth::user()->can('level 1') ||
+                \Auth::user()->can('level 2') ||
+                \Auth::user()->can('level 3'))
             <label for="branches" class="col-form-label">Region<span class="text-danger">*</span></label>
             <div class="form-group" id="region_div">
                 {!! Form::select('region_id', $regions, null, [
@@ -67,8 +72,12 @@
                 \Auth::user()->type == 'Project Director' ||
                 \Auth::user()->type == 'Project Manager' ||
                 \Auth::user()->type == 'company' ||
-                \Auth::user()->type == 'Regional Manager' ||
-                \Auth::user()->type == 'Branch Manager')
+                \Auth::user()->type == 'Region Manager' ||
+                \Auth::user()->type == 'Branch Manager' ||
+                \Auth::user()->can('level 1') ||
+                \Auth::user()->can('level 2') ||
+                \Auth::user()->can('level 3') ||
+                \Auth::user()->can('level 4'))
 
             <label for="branches" class="col-form-label">Branch<span class="text-danger">*</span></label>
             <div class="form-group" id="branch_div">

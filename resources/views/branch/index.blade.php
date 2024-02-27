@@ -156,7 +156,7 @@ class="btn btn-sm btn-primary">
                         $type = \Auth::user()->type;
                         @endphp
 
-                        @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager')
+                        @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
                         <div class="col-md-3">
                             <label for="">Brand</label>
                             <select name="brand_id" id="brand_id" class="form form-control select2">
@@ -169,7 +169,7 @@ class="btn btn-sm btn-primary">
                         @endif
 
 
-                        @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'Region Manager')
+                        @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'Region Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3'))
                         <div class="col-md-3" id="region_div">
                             <label for="">Region</label>
                             <select class="form form-control select2" id="filter_region_id" name="region_id" style="width: 95%;">
@@ -182,7 +182,7 @@ class="btn btn-sm btn-primary">
                         @endif
 
 
-                        @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'Region Manager')
+                        @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'Region Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3') || \Auth::user()->can('level 4'))
                         <div class="col-md-3" id="branch_div">
                             <label for="">Branch</label>
                             <select class="form form-control select2" id="filter_branch_id" name="branch_id" style="width: 95%;">

@@ -23,8 +23,11 @@
                      \Auth::user()->type == 'HR' ||
                     \Auth::user()->type == 'Admin Team' ||
                         \Auth::user()->type == 'Project Director' ||
-                        \Auth::user()->type == 'Project Manager')
-                    <label for="branches" class=" col-form-label">Brands<span
+                        \Auth::user()->type == 'Project Manager' ||
+                        \Auth::user()->can('level 1') ||
+                        \Auth::user()->can('level 2')
+                        )
+                    <label for="branches" class="col-sm-3 col-form-label">Brands<span
                             class="text-danger">*</span></label>
                     {!! Form::select('brands', $brands, $branch->brands, [
                         'class' => 'form-control select2 brand_id',
@@ -67,8 +70,10 @@
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||
-                            \Auth::user()->type == 'Regional Manager')
-                        <label for="branches" class=" col-form-label">Region<span
+                            \Auth::user()->type == 'Region Manager' ||
+                            \Auth::user()->can('level 1') ||
+                            \Auth::user()->can('level 2'))
+                        <label for="branches" class="col-sm-3 col-form-label">Region<span
                                 class="text-danger">*</span></label>
                         {!! Form::select('region_id', $regions, $branch->region_id, [
                             'class' => 'form-control select2',

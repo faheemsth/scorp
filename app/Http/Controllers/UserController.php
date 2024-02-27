@@ -741,14 +741,14 @@ class UserController extends Controller
 
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR') {
+            if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR' || \Auth::user()->can('level 1')) {
             } else if (\Auth::user()->type == 'company') {
                 $usersQuery->where('brand_id', \Auth::user()->id);
-            } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') {
+            } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')) {
                 $usersQuery->whereIn('brand_id', $brand_ids);
-            } else if (\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)) {
+            } else if (\Auth::user()->type == 'Region Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)) {
                 $usersQuery->where('region_id', \Auth::user()->region_id);
-            } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)) {
+            } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)) {
                 $usersQuery->where('branch_id', \Auth::user()->branch_id);
             } else {
                 $usersQuery->where('id', \Auth::user()->id);
@@ -1495,14 +1495,14 @@ class UserController extends Controller
 
         $companies = FiltersBrands();
         $brand_ids = array_keys($companies);
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('level 1')) {
         } else if (\Auth::user()->type == 'company') {
             $usersQuery->where('brand_id', \Auth::user()->id);
-        } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') {
+        } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')) {
             $usersQuery->whereIn('brand_id', $brand_ids);
-        } else if (\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)) {
+        } else if (\Auth::user()->type == 'Region Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)) {
             $usersQuery->where('region_id', \Auth::user()->region_id);
-        } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)) {
+        } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)) {
             $usersQuery->where('branch_id', \Auth::user()->branch_id);
         } else {
             $usersQuery->where('id', \Auth::user()->id);
@@ -1585,14 +1585,14 @@ class UserController extends Controller
 
         $companies = FiltersBrands();
         $brand_ids = array_keys($companies);
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('level 1')) {
         } else if (\Auth::user()->type == 'company') {
             $usersQuery->where('brand_id', \Auth::user()->id);
-        } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') {
+        } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')) {
             $usersQuery->whereIn('brand_id', $brand_ids);
-        } else if (\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)) {
+        } else if (\Auth::user()->type == 'Regional Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)) {
             $usersQuery->where('region_id', \Auth::user()->region_id);
-        } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)) {
+        } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)) {
             $usersQuery->where('branch_id', \Auth::user()->branch_id);
         } else {
             $usersQuery->where('id', \Auth::user()->id);

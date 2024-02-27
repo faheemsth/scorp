@@ -45,8 +45,10 @@
                         \Auth::user()->type == 'super admin' ||
                         \Auth::user()->type == 'HR' ||
                             \Auth::user()->type == 'Project Director' ||
-                            \Auth::user()->type == 'Project Manager')
-                        <label for="branches" class=" col-form-label">Brands<span
+                            \Auth::user()->type == 'Project Manager' ||
+                            \Auth::user()->can('level 1') ||
+                            \Auth::user()->can('level 2'))
+                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                 class="text-danger">*</span></label>
                         {!! Form::select('companies', $companies, 0, [
                             'class' => 'form-control select2 brand_id',
@@ -90,14 +92,15 @@
 
                     @if (
                         \Auth::user()->type == 'super admin' ||
-
                         \Auth::user()->type == 'HR' ||
-
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||
-                            \Auth::user()->type == 'Regional Manager')
-                        <label for="branches" class=" col-form-label">Region<span
+                            \Auth::user()->type == 'Region Manager' ||
+                            \Auth::user()->can('level 1') ||
+                            \Auth::user()->can('level 2') ||
+                            \Auth::user()->can('level 3'))
+                        <label for="branches" class="col-sm-3 col-form-label">Region<span
                                 class="text-danger">*</span></label>
                         {!! Form::select('region_id', $Region, null, [
                             'class' => 'form-control select2',
@@ -123,9 +126,13 @@
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||
-                            \Auth::user()->type == 'Regional Manager' ||
-                            \Auth::user()->type == 'Branch Manager')
-                        <label for="branches" class=" col-form-label">Branch<span
+                            \Auth::user()->type == 'Region Manager' ||
+                            \Auth::user()->type == 'Branch Manager' ||
+                            \Auth::user()->can('level 1') ||
+                            \Auth::user()->can('level 2') ||
+                            \Auth::user()->can('level 3') ||
+                            \Auth::user()->can('level 4'))
+                        <label for="branches" class="col-sm-3 col-form-label">Branch<span
                                 class="text-danger">*</span></label>
                         <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
                             onchange="Change(this)">

@@ -111,7 +111,9 @@
                                                 @if (
                                                     \Auth::user()->type == 'super admin' ||
                                                         \Auth::user()->type == 'Project Director' ||
-                                                        \Auth::user()->type == 'Project Manager')
+                                                        \Auth::user()->type == 'Project Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2'))
 
                                                     <select class="form-control select2 brand_id" id="choices-1011"
                                                         name="brand_id" {{ !\Auth::user()->can('edit brand lead') ? 'disabled' : '' }}>
@@ -152,7 +154,10 @@
                                                         \Auth::user()->type == 'Project Director' ||
                                                         \Auth::user()->type == 'Project Manager' ||
                                                         \Auth::user()->type == 'company' ||
-                                                        \Auth::user()->type == 'Regional Manager')
+                                                        \Auth::user()->type == 'Region Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2') ||
+                                                        \Auth::user()->can('level 3'))
 
                                                             {!! Form::select('region_id', $regions, $lead->region_id, [
                                                                 'class' => 'form-control select2',
@@ -182,8 +187,12 @@
                                                         \Auth::user()->type == 'Project Director' ||
                                                         \Auth::user()->type == 'Project Manager' ||
                                                         \Auth::user()->type == 'company' ||
-                                                        \Auth::user()->type == 'Regional Manager' ||
-                                                        \Auth::user()->type == 'Branch Manager')
+                                                        \Auth::user()->type == 'Region Manager' ||
+                                                        \Auth::user()->type == 'Branch Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2') ||
+                                                        \Auth::user()->can('level 3') ||
+                                                        \Auth::user()->can('level 4'))
                                                             <select name="lead_branch" id="branch_id" class="form-control select2 branch_id"
                                                                 onchange="Change(this)" {{ !\Auth::user()->can('edit branch lead') ? 'disabled' : '' }}>
                                                                     @foreach($branches as $key => $branch)

@@ -31,15 +31,15 @@ class LeadStage extends Model
 
         $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id');
         $leads_query->where('leads.stage_id', $this->id);
-        if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team'){
+        if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || \Auth::user()->can('level 1')){
 
         }else if(\Auth::user()->type == 'company'){
             $leads_query->where('leads.brand_id', \Auth::user()->id);
-        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')){
             $leads_query->whereIn('leads.brand_id', $brand_ids);
-        }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
+        }else if(\Auth::user()->type == 'Region Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)){
             $leads_query->where('leads.region_id', \Auth::user()->region_id);
-        }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+        }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)){
             $leads_query->where('leads.branch_id', \Auth::user()->branch_id);
         }else{
             $leads_query->where('leads.user_id', \Auth::user()->id);
@@ -78,15 +78,15 @@ class LeadStage extends Model
 
         $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id');
         $leads_query->where('leads.stage_id', $this->id);
-        if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team'){
+        if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || \Auth::user()->can('level 1')){
 
         }else if(\Auth::user()->type == 'company'){
             $leads_query->where('leads.brand_id', \Auth::user()->id);
-        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')){
             $leads_query->whereIn('leads.brand_id', $brand_ids);
-        }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
+        }else if(\Auth::user()->type == 'Region Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)){
             $leads_query->where('leads.region_id', \Auth::user()->region_id);
-        }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+        }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)){
             $leads_query->where('leads.branch_id', \Auth::user()->branch_id);
         }else{
             $leads_query->where('leads.user_id', \Auth::user()->id);

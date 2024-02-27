@@ -156,35 +156,35 @@
                                                     @if($module == 'level')
                                                         @if($key = array_search('level 1', $permissions))
                                                             <div class="col-md-3 custom-control custom-checkbox">
-                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                                {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
                                                                 {{Form::label('permission'.$key,'level 1',['class'=>'custom-control-label'])}}<br>
                                                             </div>
                                                         @endif 
 
                                                         @if($key = array_search('level 2', $permissions))
                                                             <div class="col-md-3 custom-control custom-checkbox">
-                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                                {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
                                                                 {{Form::label('permission'.$key,'level 2',['class'=>'custom-control-label'])}}<br>
                                                             </div>
                                                         @endif
 
                                                         @if($key = array_search('level 3', $permissions))
                                                             <div class="col-md-3 custom-control custom-checkbox">
-                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                                {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
                                                                 {{Form::label('permission'.$key,'level 3',['class'=>'custom-control-label'])}}<br>
                                                             </div>
                                                         @endif
 
                                                         @if($key = array_search('level 4', $permissions))
                                                             <div class="col-md-3 custom-control custom-checkbox">
-                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                                {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
                                                                 {{Form::label('permission'.$key,'level 4',['class'=>'custom-control-label'])}}<br>
                                                             </div>
                                                         @endif
 
                                                         @if($key = array_search('level 5', $permissions))
                                                             <div class="col-md-3 custom-control custom-checkbox">
-                                                                {{Form::checkbox('permissions[]',$key,false, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                                {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
                                                                 {{Form::label('permission'.$key,'level 5',['class'=>'custom-control-label'])}}<br>
                                                             </div>
                                                         @endif
