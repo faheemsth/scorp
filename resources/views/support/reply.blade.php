@@ -80,6 +80,16 @@
                         <li class="list-group-item px-0">
                             <div class="row align-items-center">
                                 <div class="col-6">
+                                    <span class="form-label">{{__('Phone')}}:</span>
+                                </div>
+                                <div class="col-6 text-end">
+                                {{!empty($support->createdBy)?$support->createdBy->phone:''}}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0">
+                            <div class="row align-items-center">
+                                <div class="col-6">
                                     <span class="form-label">{{__('Ticket Code')}}:</span>
                                 </div>
                                 <div class="col-6 text-end">
