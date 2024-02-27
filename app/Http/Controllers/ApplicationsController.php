@@ -59,7 +59,7 @@ class ApplicationsController extends Controller
 
          /////////////////end pagination calculation
 
-         if ($usr->can('view application') || $usr->type == 'super admin' || $usr->type == 'company' || $usr->type == 'Admin Team') {
+         if ($usr->can('view application') || $usr->type == 'super admin' || $usr->type == 'company' || $usr->type == 'Admin Team' || $usr->can('level 1')) {
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             $app_query = DealApplication::select(['deal_applications.*']);
@@ -68,11 +68,11 @@ class ApplicationsController extends Controller
 
             }else if(\Auth::user()->type == 'company'){
                 $app_query->where('deals.brand_id', \Auth::user()->id);
-            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || $usr->can('level 2')){
                 $app_query->whereIn('deals.brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
+            }else if(\Auth::user()->type == 'Region Manager' || $usr->can('level 3') && !empty(\Auth::user()->region_id)){
                 $app_query->where('deals.region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || $usr->can('level 4') && !empty(\Auth::user()->branch_id) ){
                 $app_query->where('deals.branch_id', \Auth::user()->branch_id);
             }else{
                 $app_query->where('deals.assigned_to', \Auth::user()->id);

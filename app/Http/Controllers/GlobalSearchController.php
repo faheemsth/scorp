@@ -77,8 +77,8 @@ class GlobalSearchController extends Controller
 
         $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to');
 
-        if (\Auth::user()->type == 'super admin') {
-        } elseif(strtolower(\Auth::user()->type) == 'project manager'){
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('level 1')) {
+        } elseif(strtolower(\Auth::user()->type) == 'project manager' || \Auth::user()->can('level 2')){
             $all_created_emp = User::where(['created_by' => \Auth::user()->created_by, 'type' => 'employee'])->get()->pluck('id', 'id')->toArray();
             $all_created_emp[] = \Auth::user()->id;
             $all_created_emp[] = \Auth::user()->created_by;
@@ -172,7 +172,7 @@ class GlobalSearchController extends Controller
         $client_query = User::select(['users.*'])->join('client_deals', 'client_deals.client_id', 'users.id')->join('deals', 'deals.id', 'client_deals.deal_id');
         $user    = \Auth::user();
 
-        if (\Auth::user()->type == 'super admin') {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('level 1')) {
 
         }else if (\Auth::user()->type == 'company') {
 
@@ -182,7 +182,7 @@ class GlobalSearchController extends Controller
             $client_query_created_by = array_keys($users);
             $client_query->whereIn('deals.created_by', $client_query_created_by);
 
-        }else if (strtolower(\Auth::user()->type) == 'project manager') { 
+        }else if (strtolower(\Auth::user()->type) == 'project manager' || \Auth::user()->can('level 2')) { 
 
             $users = $this->companyEmployees($user->created_by);
             $users[$user->id] = $user->name;
@@ -191,7 +191,9 @@ class GlobalSearchController extends Controller
             $client_query_created_by = array_keys($users);
             $client_query->whereIn('deals.created_by', $client_query_created_by);
 
-        }  else if(strtolower(\auth::user()->type) == 'marketing officer') {
+        } else if(\Auth::user()->can('level 3')){
+
+        } else if(strtolower(\auth::user()->type) == 'marketing officer' || \Auth::user()->can('level 4')) {
             $branch_admission_officer = User::where(['type' => 'Admission Officer', 'branch_id' => $user->branch_id])->pluck('id', 'id')->toArray();
             $branch_admission_officer[] = $user->id;
             $client_query->whereIn('deals.created_by', $branch_admission_officer);
@@ -209,7 +211,7 @@ class GlobalSearchController extends Controller
         $usr = \Auth::user();
         $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
 
-        if(strtolower(\Auth::user()->type) == 'super admin'){
+        if(strtolower(\Auth::user()->type) == 'super admin' || \Auth::user()->can('level 1')){
 
         }else if (\Auth::user()->type == 'company') {
             $users = $this->companyEmployees(\auth::id());
@@ -218,14 +220,16 @@ class GlobalSearchController extends Controller
             $deal_created_by = array_keys($users);
 
             $deals_query->whereIn('deals.created_by', $deal_created_by);
-        } else if (strtolower(\Auth::user()->type) == 'project manager') {
+        } else if (strtolower(\Auth::user()->type) == 'project manager' || \Auth::user()->can('level 2')) {
             $users = $this->companyEmployees($usr->created_by);
             $users[$usr->id] = $usr->name;
             $users[$usr->created_by] = $usr->created_by;
             $companies = $users;
             $deal_created_by = array_keys($users);
             $deals_query->whereIn('deals.created_by', $deal_created_by);
-        } else if (strtolower(\auth::user()->type) == 'marketing officer') {
+        } else if(\Auth::user()->can('level 3')){
+
+        }else if (strtolower(\auth::user()->type) == 'marketing officer' || \Auth::user()->can('level 4')) {
             $branch_admission_officer = User::where(['type' => 'Admission Officer', 'branch_id' => $usr->branch_id])->pluck('id', 'id')->toArray();
             $branch_admission_officer[] = $usr->id;
             $deals_query->whereIn('deals.created_by', $branch_admission_officer);
@@ -244,10 +248,16 @@ class GlobalSearchController extends Controller
 
         $app_query = DealApplication::select(['deal_applications.*']);
 
-        if ($usr->type == 'super admin') { 
+        if ($usr->type == 'super admin' || \Auth::user()->can('level 1')) { 
             $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
         }else if ($usr->type == 'company') {
             $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->where('deals.created_by', $usr->id);
+        }else if(\Auth::user()->can('level 2')){
+        
+        }else if(\Auth::user()->can('level 3')){
+        
+        }else if(\Auth::user()->can('level 4')) {
+
         }else {
             $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->where('deals.created_by', $usr->created_by);
         }

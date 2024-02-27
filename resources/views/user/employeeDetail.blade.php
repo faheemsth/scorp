@@ -209,7 +209,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' ? 'd-none' : ''}}">
+                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' || \Auth::user()->can('level 2') ? 'd-none' : ''}}">
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Region') }}
                                                                 </td>
@@ -218,7 +218,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' || $employee->type == 'Region Manager'? 'd-none' : ''}}">
+                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' || $employee->type == 'Region Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3')? 'd-none' : ''}}">
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Branch') }}
                                                                 </td>

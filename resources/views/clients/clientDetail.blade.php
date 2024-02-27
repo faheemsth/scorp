@@ -54,17 +54,17 @@
     $type = \Auth::user()->type;
     $is_show = true;
 
-    if($type == 'super admin'){
+    if($type == 'super admin' || \Auth::user()->can('level 1')){
 
-    }else if($type == 'Project Director' || $type == 'Project Manager'){
+    }else if($type == 'Project Director' || $type == 'Project Manager' || \Auth::user()->can('level 2')){
             $per_brands = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('permitted_company_id', $deal->brand_id)->first();
 
             if($per_brands){
                 $is_show = true;
             }
-    }else if($type == 'Region Manager'){
+    }else if($type == 'Region Manager' || \Auth::user()->can('level 3')){
             $is_show = ($lead->region_id == \Auth::user()->region_id);
-    }else if($type == 'Branch Manager' || $type == 'Admissions Manager' || $type == 'Admissions Officer' || $type == 'Marketing Officer'){
+    }else if($type == 'Branch Manager' || $type == 'Admissions Manager' || $type == 'Admissions Officer' || $type == 'Marketing Officer' || \Auth::user()->can('level 4')){
         $is_show = ($deal->branch_id == \Auth::user()->branch_id);
     }else{
         $is_show = false;

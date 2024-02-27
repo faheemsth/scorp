@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 
-@if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
+@if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' || \Auth::user()->can('level 2'))
     @php
         $com_permissions = [];
         $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();

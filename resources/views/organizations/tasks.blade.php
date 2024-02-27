@@ -47,7 +47,9 @@
                             @if (
                                 \Auth::user()->type == 'super admin' ||
                                     \Auth::user()->type == 'Project Director' ||
-                                    \Auth::user()->type == 'Project Manager')
+                                    \Auth::user()->type == 'Project Manager' ||
+                                    \Auth::user()->can('level 1') ||
+                                    \Auth::user()->can('level 2'))
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                         class="text-danger">*</span></label>
@@ -93,7 +95,10 @@
                                     \Auth::user()->type == 'Project Director' ||
                                     \Auth::user()->type == 'Project Manager' ||
                                     \Auth::user()->type == 'company' ||
-                                    \Auth::user()->type == 'Regional Manager')
+                                    \Auth::user()->type == 'Region Manager' ||
+                                    \Auth::user()->can('level 1') ||
+                                    \Auth::user()->can('level 2') ||
+                                    \Auth::user()->can('level 3'))
                         
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Region<span
@@ -125,8 +130,12 @@
                                     \Auth::user()->type == 'Project Director' ||
                                     \Auth::user()->type == 'Project Manager' ||
                                     \Auth::user()->type == 'company' ||
-                                    \Auth::user()->type == 'Regional Manager' ||
-                                    \Auth::user()->type == 'Branch Manager')
+                                    \Auth::user()->type == 'Region Manager' ||
+                                    \Auth::user()->type == 'Branch Manager' ||
+                                    \Auth::user()->can('level 1') ||
+                                    \Auth::user()->can('level 2') ||
+                                    \Auth::user()->can('level 3') ||
+                                    \Auth::user()->can('level 4'))
 
                                         <div class="form-group row ">
                                             <label for="branches" class="col-sm-3 col-form-label">Branch<span

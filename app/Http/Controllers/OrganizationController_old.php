@@ -829,7 +829,7 @@ class OrganizationController extends Controller
             $status     = DealTask::$status;
             $users = User::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
 
-            if(\Auth::user()->type == 'super admin'){
+            if(\Auth::user()->type == 'super admin' || \Auth::user()->can('level 1')){
                 $branches = Branch::orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             }else if(\Auth::user()->type == 'company'){
                 $branches = Branch::where('brands', \Auth::user()->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();

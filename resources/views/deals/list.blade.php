@@ -522,7 +522,7 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
                                 <div class="col-md-4"> <label for="">Brands</label>
                                     <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple style="width: 95%;">
                                         <option value="">Select Brand</option>

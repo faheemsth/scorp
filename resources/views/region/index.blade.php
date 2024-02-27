@@ -393,7 +393,7 @@
                             $type = \Auth::user()->type;
                             @endphp
 
-                            @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager')
+                            @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
                             <div class="col-md-4 mt-2">
                                 <label for="">Brand</label>
                                 <select name="brand_id" class="form form-control select2" id="filter_brand_id">
@@ -409,7 +409,7 @@
                             </div>
                             @endif
 
-                            @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'company' || $type == 'Region Manager')
+                            @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'company' || $type == 'Region Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3'))
                             <div class="col-md-4 mt-2" id="region_div">
                                 <label for="">Region</label>
 
