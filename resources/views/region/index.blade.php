@@ -374,7 +374,7 @@
 
 
 
-            <div class="table-responsive mt-2">
+            <div class="table-responsive">
                 {{-- Filters --}}
 
                 <script>
