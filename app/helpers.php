@@ -283,7 +283,7 @@ if (!function_exists('BrandsRegionsBranches')) {
             $brands = User::where('type', 'company')->where('id', $user->brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $regions = Region::where('id', $user->region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $branches = Branch::where('id', $user->branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            $employees = User::where('branch_id', $user->branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            $employees = User::where('branch_id', $user->branch_id)->whereNotIn('type', ['client', 'company', 'super admin'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         }
 
 
