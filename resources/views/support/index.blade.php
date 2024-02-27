@@ -79,7 +79,7 @@
                                 <i class="ti ti-cast"></i>
                             </div>
                             <div class="ms-3">
-                                <small class="text-muted">{{__('On Hold')}}</small>
+                                <small class="text-muted">{{__('Hold')}}</small>
                                 <h6 class="m-0">{{__('Ticket')}}</h6>
                             </div>
                         </div>
@@ -123,7 +123,7 @@
         
         <div class="col-md-12">
             <div class="card ">
-                <div class="row align-items-center ps-3 ms-0 pe-5 my-4">
+                <div class="row align-items-center ps-3 my-4">
                     <div class="col-4">
                         <div class="dropdown">
                             <button class=" All-leads" type="button" id="dropdownMenuButton1">
@@ -134,13 +134,13 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-8 d-flex justify-content-end gap-2 pe-0 ">
+                    <div class="col-8 d-flex justify-content-end gap-2 ">
                         
                         <div class="input-group w-25 rounded" style="width:36px; height:36px; ">
                             <span class="input-group-text bg-transparent border-0  px-1 pt-0" id="basic-addon1">
                                 <i class="ti ti-search" style="font-size: 18px"></i>
                             </span>
-                            <input type="Search" class="form-control border-0 bg-transparent px-0 pb-2"
+                            <input type="Search" class="form-control border-0 bg-transparent px-0 pb-2 text-truncate"
                                 placeholder="Search this list..." aria-label="Username"
                                 aria-describedby="basic-addon1">
                         </div>
@@ -239,8 +239,8 @@
                             <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 1000 ? 'selected' : '' ?>
                             value="1000">1000</option>
                         <option
-                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] ==  ? 'selected' : '' ?>
-                            value="{{  }}">all</option>
+                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 'all' ? 'selected' : '' ?>
+                            value="all">all</option>
                     </select>
 
                     <span style="margin-top: 5px;">entries per page</span>

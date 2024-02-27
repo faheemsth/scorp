@@ -11557,6 +11557,17 @@ a:focus {
     color:white;
 }
 
+@media only screen and (max-width: 425px) {
+    .sidebar {
+        width: 7.5rem;
+    }
+    .sidebar .nav-item .nav-link {
+        text-align: center;
+        padding: .75rem 0.5rem;
+        width: 6.8rem
+    }
+}
+
 .sidebar .nav-item.active .nav-link {
     /* font-weight: 700 */
 }

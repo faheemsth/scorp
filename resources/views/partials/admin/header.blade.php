@@ -64,7 +64,7 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
     <ul class="navbar-nav ml-auto align-items-center">
 
         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-        <li class="nav-item dropdown no-arrow d-sm-none">
+        <li class="nav-item dropdown no-arrow d-none">
             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-search fa-fw"></i>
             </a>
@@ -84,7 +84,7 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
         </li>
 
         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-        <li class="nav-item dropdown no-arrow d-sm-none">
+        <li class="nav-item dropdown no-arrow d-none">
             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-search fa-fw"></i>
             </a>
@@ -103,13 +103,13 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
             </div>
         </li>
 
-        <li>
+        <li class="d-none d-md-inline-block">
         @if (Session::get('is_company_login') == true)
             <a href="javascript::void(0)" onclick="LoginBack({{ Session::get('auth_type_id') }})" data-toggle="tooltip" title="Back To Your Account!" class="btn btn-dark mx-1" style="width: 100px; height: 42px;">Go Back</a>
         @endif
         </li>
 
-        <div class="" style="width: 300px; margin-right: 10px;">
+        <div class="d-none d-md-inline-block" style="width: 300px; margin-right: 10px;">
         
         @if (\Auth::user()->type == 'super admin')
         <select name="company" id="company" class="form form-select select2" style="width:100% !important" onChange="loginWithCompany();">
@@ -201,7 +201,7 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
             </div>
         </li>
         <!-- Nav Item - Messages -->
-        <li class="nav-item dropdown no-arrow mx-1">
+        <li class="nav-item dropdown no-arrow mx-1 d-none d-md-inline-block">
             <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa-regular fa-circle-question" style="font-size: 19px; color: #000;"></i>
                 <!-- Counter - Messages -->
