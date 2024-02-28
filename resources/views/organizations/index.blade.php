@@ -87,11 +87,11 @@
     label {
         font-weight: normal !important;
     }
-  
+
     .filbar .form-control:focus{
                     border: 1px solid rgb(209, 209, 209) !important;
                 }
-    
+
 </style>
 
 
@@ -103,7 +103,7 @@
 <div class="row">
 
 
-   
+
 <style>
     /* .red-cross {
                 position: absolute;
@@ -287,10 +287,10 @@
                                 </th>
                                 <!-- <td style="border-left: 1px solid #fff;"></td> -->
                                 <td style="border-left: 1px solid #fff;">Organization Name</td>
-                                <td style="border-left: 1px solid #fff;">Phone</td>
-                                <td style="border-left: 1px solid #fff;">Billing Street</td>
-                                <td style="border-left: 1px solid #fff;">Billing City</td>
-                                <td style="border-left: 1px solid #fff;">Billing State</td>
+                                {{-- <td style="border-left: 1px solid #fff;">Organization email</td> --}}
+                                <td style="border-left: 1px solid #fff;">Organization Phone</td>
+                                <td style="border-left: 1px solid #fff;">Contact Person Name</td>
+
                                 <td style="border-left: 1px solid #fff;">Billing Country</td>
 
                                 <td style="border-left: 1px solid #fff; display: none;">Action</td>
@@ -315,10 +315,10 @@
                                 <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                     <span style="cursor:pointer" class="org-name hyper-link" @can('show organization') onclick="openNav(<?= $org->id ?>)" @endcan data-org-id="{{ $org->id }}">{{ $org->name }}</span>
                                 </td>
+                                {{-- <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org_data->email) ? $org_data->email : '' }}</td> --}}
+
                                 <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
-                                <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org_data->billing_street) ? $org_data->billing_street : '' }}</td>
-                                <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org_data->billing_city) ? $org_data->billing_city : '' }}</td>
-                                <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org_data->billing_state) ? $org_data->billing_state : '' }}</td>
+                                <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org_data->contactname) ? $org_data->contactname : '' }}</td>
                                 <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org_data->billing_country) ? $org_data->billing_country : '' }}</td>
                                 <td class="d-none">
                                     <div class="dropdown">
