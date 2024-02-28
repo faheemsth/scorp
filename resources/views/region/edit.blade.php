@@ -42,7 +42,7 @@
     }
 </style>
 
-{{ Form::open(['url' => 'region/create', 'method' => 'POST', 'id' => 'CreateRegion', 'novalidate' => 'novalidate']) }}
+{{ Form::open(['url' => 'region/create', 'method' => 'POST', 'id' => 'UpdateRegion', 'novalidate' => 'novalidate']) }}
 
 <div class="modal-body py-0">
     <div class="lead-content my-2" style="height: 100%;">
@@ -118,7 +118,7 @@
                                                 {{ __('Phone') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
-                                                <input type="text" class="form-control" placeholder="Enter Phone"
+                                                <input type="text" class="form-control" id="phone" placeholder="Enter Phone"
                                                     value="{{ optional($regions)->phone ?? '' }}" name="phone">
                                             </td>
                                         </tr>
@@ -167,7 +167,13 @@
 
 <div class="modal-footer">
     <input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{ __('Update') }}" class="btn  btn-dark px-2">
+    <input type="submit" value="{{ __('Update') }}" class="btn  btn-dark px-2 update-region">
 </div>
 
 {{ Form::close() }}
+<script>
+    const input = document.querySelector("#phone");
+    window.intlTelInput(input, {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+    });
+</script>

@@ -156,10 +156,9 @@
                     @if (\Auth::user()->can('edit deal'))
 
                     <a href="#" data-size="lg" data-url="{{ route('deals.edit', $deal->id) }}"
-                        data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Deal') }}"
+                        data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Deal') }}" title="{{ __('Update Admission') }}"
                         class="btn px-2 py-2 text-white" style="background-color: #313949;">
                         <i class="ti ti-pencil"></i>
-
                     </a>
                     @endif
 
@@ -187,7 +186,7 @@
 
             <div class="lead-info d-flex justify-content-between p-3 text-center">
                 <div class="">
-                    <small>{{ __('Office Responsible') }}</small>
+                    <small>{{ __('Branch') }}</small>
                     <span class="font-weight-bolder">
                         {{ !empty($deal->branch_id) && isset($branches[$deal->branch_id]) ? $branches[$deal->branch_id] : '' }}
                     </span>
@@ -273,18 +272,18 @@
 
                 ?>
 
-<style>
-    .missedup{
-        background-color:#e0e0e0 !important;
-        color:white !important;
-    }
-    .missedup::after{
-        border-left-color: #e0e0e0 !important;
-    }
-  </style>
+                <style>
+                    .missedup{
+                        background-color:#e0e0e0 !important;
+                        color:white !important;
+                    }
+                    .missedup::after{
+                        border-left-color: #e0e0e0 !important;
+                    }
+                </style>
 
                 <a type="button" data-lead-id="{{ $deal->id }}" data-stage-id="{{ $key }}"
-                    class="lead_stage deal_stage {{ $is_missed == true ? 'missedup' : ($deal->stage->name == $stage ? 'current' : ($done == true ? 'done' : '')) }}"
+                    class="lead_stage {{ Auth::user()->can('edit stage deal') ? 'deal_stage' : '' }} {{ $is_missed == true ? 'missedup' : ($deal->stage->name == $stage ? 'current' : ($done == true ? 'done' : '')) }}"
                     style="font-size:12px">{{ $stage }}  @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif</a>
                 @endforeach
 
@@ -448,7 +447,7 @@
                                                             </td>
                                                             <td class="drive_link-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                {{-- <div class="d-flex align-items-center edit-input-field-div">
+                                                                <div class="d-flex align-items-center edit-input-field-div">
                                                                     <div class="input-group border-0 drive_link d-flex align-items-center">
                                                                         @if (isset($deal->drive_link) && !empty($deal->drive_link))
                                                                         <a href="{{ $deal->drive_link }}" target="blank" style="font-size: 14px; color: rgb(46, 134, 249);">
@@ -461,16 +460,16 @@
                                                                     <div class="edit-btn-div">
                                                                         <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="drive_link"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </div> --}}
-                                                                @if (isset($deal->drive_link) && !empty($deal->drive_link))
+                                                                </div>
+                                                                {{-- @if (isset($deal->drive_link) && !empty($deal->drive_link))
                                                                 <a href="{{ $deal->drive_link }}" target="blank" style="font-size: 14px; color: rgb(46, 134, 249);">
                                                                     {{ $deal->drive_link }}
                                                                 </a>
                                                                 @else
                                                                 <a href="{{ $deal->drive_link }}">
-                                                                {{ isset($deal->drive_link) ? $deal->drive_link : '' }}
+                                                                {{ isset($deal->drive_link) ? $deal->drive_link : '' }} --}}
                                                             </a>
-                                                                @endif
+                                                                {{-- @endif --}}
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -531,7 +530,7 @@
 
                                                             </td>
 
-                                                        <tr>
+                                                        <tr class="d-none">
                                                             <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Agency Link') }}
                                                             </td>
@@ -550,7 +549,7 @@
 
                                                         <tr>
                                                             <td class="" style="width: 150px; font-size: 14px;">
-                                                                {{ __('Office Responsible') }}
+                                                                {{ __('Branch') }}
                                                             </td>
                                                             <td class="branch_id-td" style="padding-left: 10px; font-size: 14px;">
                                                                 {{-- <div class="d-flex align-items-center edit-input-field-div">
@@ -574,7 +573,7 @@
                                                             </td>
                                                         </tr>
 
-                                                        <tr>
+                                                        <tr class="d-none">
                                                             <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Date of Next Activity') }}
                                                             </td>
@@ -592,7 +591,7 @@
                                                             </td>
                                                         </tr>
 
-                                                        <tr>
+                                                        <tr class="d-none">
                                                             <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Date of Last Activity') }}
                                                             </td>
@@ -672,7 +671,7 @@
                                                 <div class="float-end">
                                                     @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('create application'))
                                                     <a data-size="lg" data-url="{{ route('deals.application.create', $deal->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Application') }}" class="btn btn-dark p-2 text-white" >
-                                                        <i class="ti ti-plus"></i>
+                                                        <i class="ti ti-plus" style="color: white"></i>
                                                     </a>
                                                     @endif
                                                 </div>
@@ -702,13 +701,13 @@
                                                                 <td>{{ $app->application_key }}</td>
                                                                 <td>{{ $universities[$app->university_id] ?? '' }}</td>
                                                                 <td>{{ $app->intake }}</td>
-                                                                <td>{{ $stages[$app->stage_id] }}</td>
+                                                                <td>{{ $stages[$app->stage_id] ?? '' }}</td>
                                                                 <td>
                                                                     <div class="d-flex justify-center align-items-center">
                                                                     @can('edit application')
                                                                     @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
                                                                     <a data-size="lg" title="{{ __('Edit Application') }}" href="#" class="btn px-2 btn-dark text-white mx-1" data-url="{{ route('deals.application.edit', $app->id) }}" data-ajax-popup="true" data-title="{{ __('Edit Application') }}" data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
-                                                                        <i class="ti ti-edit"></i>
+                                                                        <i class="ti ti-edit" style="color: white"></i>
                                                                     </a>
                                                                     @endif
                                                                     @endcan
@@ -960,7 +959,7 @@
                                                                             <div class="float-end">
                                                                                 @can('create task')
                                                                                 <a data-size="lg" data-url="/organiation/1/task?type=deal&typeid={{ $deal->id }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Task') }}" class="btn p-2 btn-dark text-white" >
-                                                                                    <i class="ti ti-plus"></i>
+                                                                                    <i class="ti ti-plus" style="color: white"></i>
                                                                                 </a>
                                                                                 @endcan
                                                                             </div>
@@ -1030,7 +1029,7 @@
                                                                                                     id="editable"
                                                                                                     class="btn textareaClassedit">
                                                                                                     <i
-                                                                                                        class="ti ti-pencil" style="font-size: 20px;margin-right: -30px;"></i>
+                                                                                                        class="ti ti-pencil" style="font-size: 20px;margin-right: -30px;color: white"></i>
                                                                                                 </a>
 
 
@@ -1038,7 +1037,7 @@
                                                                                                     class="btn"
                                                                                                     id="editable"
                                                                                                     onclick="deleteTask({{ $task->id }}, {{ $deal->id }}, 'lead');">
-                                                                                                    <i class="ti ti-trash " style="font-size: 20px;"></i>
+                                                                                                    <i class="ti ti-trash " style="font-size: 20px;color: white"></i>
                                                                                                 </a>
 
                                                                                             </div>

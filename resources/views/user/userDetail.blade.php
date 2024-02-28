@@ -98,7 +98,7 @@
                       </a>
                     @endcan
 
-                    @can('delete brand')
+                    @can('delete user')
                     {!! Form::open(['method' => 'DELETE','class'=>'mb-0' , 'route' => ['users.destroy', $user['id']],'id'=>'delete-form-'.$user['id']]) !!}
                     <a href="#!" class="btn px-2 py-2 btn-danger text-white bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
                         <i class="ti ti-archive"></i>
@@ -169,7 +169,7 @@
                                                                     {{ __('Domain Link') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $user->domain_link }}
+                                                               <a href="{{ $user->domain_link }}" target="_blank" >{{ $user->domain_link }}</a> 
                                                                 </td>
                                                             </tr>
 

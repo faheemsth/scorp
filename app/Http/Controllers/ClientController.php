@@ -59,7 +59,7 @@ class ClientController extends Controller
             $user    = \Auth::user();
 
             $start = 0;
-            $num_results_on_page = 50;
+            $num_results_on_page = 25;
             if (isset($_GET['page'])) {
                 $page = $_GET['page'];
                 $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -81,22 +81,31 @@ class ClientController extends Controller
                 $client_query->where('users.email', 'like', '%' . $_GET['email'] . '%');
             }
 
-            $companies = FiltersBrands();
-            $brand_ids = array_keys($companies);
-            $client_query->whereIn('deals.brand_id', $brand_ids);
+            // $companies = FiltersBrands();
+            // $brand_ids = array_keys($companies);
+            // $client_query->whereIn('deals.brand_id', $brand_ids);
+            if (isset($_GET['search']) && !empty($_GET['search'])) {
+                $g_search = $_GET['search'];
+                $client_query->where('users.name', 'like',  '%' . $g_search . '%');
+                $client_query->orwhere('users.passport_number', 'like',  '%' . $g_search . '%');
+            }
 
-
-            $total_records = $client_query->count();
+            $client_query->groupBy('users.id');
+            $total_records = count($client_query->get());
             $clients = $client_query->orderBy('created_at', 'DESC')->skip($start)->take($num_results_on_page)->get();
 
             // $clients = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'client')->skip($start)->take($num_results_on_page)->get();
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('clients.clients_list_ajax', compact('clients', 'total_records'))->render();
-
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' =>  $num_results_on_page
+                ])->render();
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => $html,
+                    'pagination_html' => $pagination_html 
                 ]);
             }
 
@@ -281,7 +290,7 @@ class ClientController extends Controller
         if(\Auth::user()->can('edit client'))
         {
             $user = \Auth::user();
-            if($client->created_by == $user->creatorId() || \Auth::user()->type == 'super admin')
+            if($client->created_by == $user->creatorId() || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
             {
                 $client->customField = CustomField::getData($client, 'client');
                 $customFields        = CustomField::where('module', '=', 'client')->get();
@@ -411,7 +420,7 @@ class ClientController extends Controller
     public function clientDetail($id){
         $client = User::findOrFail($id);
         $deal = Deal::join('client_deals', 'client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->first();
-        
+
         $lead = Lead::select('leads.*')
                         ->join('deals as d', 'leads.is_converted', '=', 'd.id')
                         ->join('client_deals as cd', 'cd.deal_id', '=', 'd.id')

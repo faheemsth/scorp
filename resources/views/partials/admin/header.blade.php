@@ -42,14 +42,15 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
 ->count();
 @endphp
 
+
 <nav class="navbar navbar-expand navbar-light topbar  static-top shadow" style="background-color: #B3CDE1;">
     <button id="sidebarToggleTop" class="btn d-md-none ">
         <i class="fa fa-bars"></i>
     </button>
     <div class="logo ms-md-2">
         <a href="#">
-            <!-- <img src="{{ asset('assets/cs-theme/assets/images/scorp-logo.png') }}" alt=""> -->
-            <img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:'assets/cs-theme/assets/images/scorp-logo.png') }}" class="big-logo">
+             <img src="{{ asset('storage/uploads/logo/1-logo-dark.png') }}" alt=""> 
+            <!--<img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:asset('storage/uploads/logo/1-logo-dark.png')) }}" class="big-logo">-->
         </a>
     </div>
     <!-- Sidebar Toggle (Topbar) -->
@@ -192,7 +193,7 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
                     {!! $notification->data !!}
                 @endforeach --}}
                 <ul style="max-height: 300px; overflow-y: scroll;">
-                      
+
                     @foreach($notifications as $notification)
                     {!! $notification->data !!}
                     @endforeach

@@ -16,7 +16,7 @@ if (!function_exists('countries')) {
         $contries = \App\Models\Country::get();
 
 
-        foreach($contries as $country){
+        foreach ($contries as $country) {
             $all_countries[$country->name] = $country->name;
         }
 
@@ -49,7 +49,7 @@ if (!function_exists('months')) {
 if (!function_exists('companies')) {
     function companies()
     {
-       return User::where('type', 'company')->pluck('name', 'id')->toArray();
+        return User::where('type', 'company')->pluck('name', 'id')->toArray();
     }
 }
 
@@ -57,21 +57,21 @@ if (!function_exists('companies')) {
 if (!function_exists('allUsers')) {
     function allUsers()
     {
-       return User::pluck('name', 'id')->toArray();
+        return User::pluck('name', 'id')->toArray();
     }
 }
 
 if (!function_exists('allRegions')) {
     function allRegions()
     {
-       return Region::pluck('name', 'id')->toArray();
+        return Region::pluck('name', 'id')->toArray();
     }
 }
 
 if (!function_exists('companiesEmployees')) {
     function companiesEmployees($company_id)
     {
-       return User::where('created_by', $company_id)->pluck('name', 'id')->toArray();
+        return User::where('created_by', $company_id)->pluck('name', 'id')->toArray();
     }
 }
 
@@ -79,7 +79,7 @@ if (!function_exists('companiesEmployees')) {
 if (!function_exists('allUniversities')) {
     function allUniversities()
     {
-       return University::pluck('name', 'id')->toArray();
+        return University::pluck('name', 'id')->toArray();
     }
 }
 
@@ -87,7 +87,7 @@ if (!function_exists('allUniversities')) {
 if (!function_exists('allPermittedCompanies')) {
     function allPermittedCompanies()
     {
-       return CompanyPermission::where('user_id', \Auth::user()->id)->where('active', 'true')->pluck('permitted_company_id')->toArray();
+        return CompanyPermission::where('user_id', \Auth::user()->id)->where('active', 'true')->pluck('permitted_company_id')->toArray();
     }
 }
 
@@ -95,35 +95,35 @@ if (!function_exists('allPermittedCompanies')) {
 if (!function_exists('addLogActivity')) {
     function addLogActivity($data = [])
     {
-       $new_log = new LogActivity();
-       $new_log->type = $data['type'];
-       $new_log->start_date = date('Y-m-d');
-       $new_log->time = date('H:i:s');
-       $new_log->note = $data['note'];
-       $new_log->module_type = isset($data['module_type']) ? $data['module_type'] : '';
-       $new_log->module_id = isset($data['module_id']) ? $data['module_id'] : 0;
-       $new_log->created_by = \Auth::user()->id;
-       $new_log->save();
+        $new_log = new LogActivity();
+        $new_log->type = $data['type'];
+        $new_log->start_date = date('Y-m-d');
+        $new_log->time = date('H:i:s');
+        $new_log->note = $data['note'];
+        $new_log->module_type = isset($data['module_type']) ? $data['module_type'] : '';
+        $new_log->module_id = isset($data['module_id']) ? $data['module_id'] : 0;
+        $new_log->created_by = \Auth::user()->id;
+        $new_log->save();
     }
 }
 
 if (!function_exists('addLeadHistory')) {
     function addLeadHistory($data = [])
     {
-        if(isset($data['stage_id'])){
+        if (isset($data['stage_id'])) {
             StageHistory::where('type_id', $data['type_id'])
-                        ->where('type', $data['type'])
-                        ->where('stage_id', '>=', $data['stage_id'])
-                        ->delete();
+                ->where('type', $data['type'])
+                ->where('stage_id', '>=', $data['stage_id'])
+                ->delete();
         }
 
 
-       $new_log = new StageHistory();
-       $new_log->type = $data['type'];
-       $new_log->type_id = $data['type_id'];
-       $new_log->stage_id = $data['stage_id'];
-       $new_log->created_by = \Auth::user()->id;
-       $new_log->save();
+        $new_log = new StageHistory();
+        $new_log->type = $data['type'];
+        $new_log->type_id = $data['type_id'];
+        $new_log->stage_id = $data['stage_id'];
+        $new_log->created_by = \Auth::user()->id;
+        $new_log->save();
     }
 }
 
@@ -157,38 +157,40 @@ if (!function_exists('FiltersBrands')) {
     function FiltersBrands()
     {
         $brands = User::where('type', 'company');
-        if(\Auth::user()->type == 'company'){
+        if (\Auth::user()->type == 'company') {
             $user_brand = !empty(\Auth::user()->id) ? \Auth::user()->id : 0;
-        }else{
+        } else {
             $user_brand = !empty(\Auth::user()->brand_id) ? \Auth::user()->brand_id : 0;
         }
 
 
-        if(\Auth::user()->type == 'super admin'){
-
-        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR' || \Auth::user()->can('level 1')) {
+        } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')) {
             $permittedCompanies = allPermittedCompanies();
             $brands->whereIn('id', $permittedCompanies);
             $brands->orWhere('id', $user_brand);
-        }else if(\Auth::user()->type == 'Regional Manager'){
+        } else if (\Auth::user()->type == 'Region Manager' || \Auth::user()->can('level 3')) {
             $regions = Region::where('region_manager_id', \Auth::user()->id)->pluck('id')->toArray();
             $branches = Branch::whereIn('region_id', $regions)->pluck('id')->toArray();
             $brands->whereIn('branch_id', $branches);
             $brands->orWhere('id', $user_brand);
-        }else if(\Auth::user()->type == 'Branch Manager') {
+        } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->can('level 4')) {
             $branches = Branch::where('branch_manager_id', \Auth::user()->id)->pluck('id')->toArray();
             $brands->whereIn('branch_id', $branches);
             $brands->orWhere('id', $user_brand);
-        }else{
+        } else if(\Auth::user()->can('level 5')){
+            $brands->where('id', $user_brand);
+        } else {
             $brands->where('id', $user_brand);
         }
 
-       return $brands->pluck('name', 'id')->toArray();
+        return $brands->pluck('name', 'id')->toArray();
     }
 }
 
-if (!function_exists('FiltersRegions')){
-    function FiltersRegions($id){
+if (!function_exists('FiltersRegions')) {
+    function FiltersRegions($id)
+    {
         $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
         $html = ' <select class="form form-control region_id select2" id="region_id" name="region_id"> <option value="">Select Region</option> ';
         foreach ($regions as $key => $region) {
@@ -200,8 +202,9 @@ if (!function_exists('FiltersRegions')){
     }
 }
 
-if (!function_exists('FiltersBranches')){
-    function FiltersBranches($id){
+if (!function_exists('FiltersBranches')) {
+    function FiltersBranches($id)
+    {
         $branches = Branch::where('region_id', $id)->pluck('name', 'id')->toArray();
         $html = ' <select class="form form-control branch_id select2" id="branch_id" name="lead_branch"> <option value="">Select Branch</option> ';
         foreach ($branches as $key => $branch) {
@@ -214,8 +217,9 @@ if (!function_exists('FiltersBranches')){
 }
 
 
-if (!function_exists('FiltersBranchUsers')){
-    function FiltersBranchUsers($id){
+if (!function_exists('FiltersBranchUsers')) {
+    function FiltersBranchUsers($id)
+    {
         $users = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client'])->where('branch_id', $id)->pluck('name', 'id')->toArray();
         $html = ' <select class="form form-control user_id select2" id="user_id" name="lead_assgigned_user"> <option value="">Select User</option> ';
         foreach ($users as $key => $user) {
@@ -229,54 +233,65 @@ if (!function_exists('FiltersBranchUsers')){
 
 
 //returning stages ranges like visa fall in 1,2,3 and deposit fall in 4,5,6
-if (!function_exists('stagesRange')){
-    function stagesRange($type){
-         if($type == 'visas'){
+if (!function_exists('stagesRange')) {
+    function stagesRange($type)
+    {
+        if ($type == 'visas') {
             return [4, 5, 6];
-         }else if($type == 'deposit'){
+        } else if ($type == 'deposit') {
             return [7, 8, 9];
-         }else{
+        } else {
             return [1, 2, 3];
-         }
+        }
     }
 }
 
 
 
 
-if (!function_exists('BrandsRegionsBranches')){
-    function BrandsRegionsBranches(){
+if (!function_exists('BrandsRegionsBranches')) {
+    function BrandsRegionsBranches()
+    {
         $brands = [];
         $regions = [];
         $branches = [];
         $employees = [];
 
         $user = \Auth::user();
-        $type = $user->type;
+        $type = $user->type; 
 
-        if($type == 'super admin'){
-              $brands = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();  
-        }else if($type == 'company'){
+        if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
+            $regions = Region::where('id', $_GET['region_id'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+        }
+
+        if(isset($_GET['branch_id']) && !empty($_GET['branch_id'])){
+            $branches = Branch::where('id', $_GET['branch_id'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+        }
+
+        if ($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || \Auth::user()->can('level 1')) {
+            $brands = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+        } else if ($type == 'company') {
             $brands = User::where('type', 'company')->where('id', $user->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $regions = Region::where('brands', $user->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-        }else if($type == 'Project Director' || $type == 'Project Manager') {
+        } else if ($type == 'Project Director' || $type == 'Project Manager' || \Auth::user()->can('level 2')) {
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             $brands = User::where('type', 'company')->whereIn('id', $brand_ids)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-        }else if($type == 'Regional Manager'){
+        } else if ($type == 'Region Manager' || \Auth::user()->can('level 3')) {
             $brands = User::where('type', 'company')->where('id', $user->brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $regions = Region::where('id', $user->region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-        }else if($type == 'Branch Manager' || $type == 'Admissions Officer' || $type == 'Admissions Manager' || $type == 'Marketing Officer'){
+            $branches = Branch::where('region_id', $user->region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+        } else if ($type == 'Branch Manager' || $type == 'Admissions Officer' || $type == 'Admissions Manager' || $type == 'Marketing Officer' || \Auth::user()->can('level 4')) {
             $brands = User::where('type', 'company')->where('id', $user->brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $regions = Region::where('id', $user->region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $branches = Branch::where('id', $user->branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            $employees = User::where('branch_id', $user->branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            $employees = User::where('branch_id', $user->branch_id)->whereNotIn('type', ['client', 'company', 'super admin'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         }
 
 
 
         return [
-            'brands' => [0 => 'Select Brand']+$brands,
+            'brands' => [0 => 'Select Brand'] + $brands,
             'regions' => [0 => 'Select Region'] + $regions,
             'branches' => [0 => 'Select Branch'] + $branches,
             'employees' => [0 => 'Select Employee'] + $employees
@@ -286,50 +301,51 @@ if (!function_exists('BrandsRegionsBranches')){
 
 
 
-    if (!function_exists('BrandsRegionsBranchesForEdit')){
-        function BrandsRegionsBranchesForEdit($brand_id = 0, $region_id = 0, $branch_id = 0){
+    if (!function_exists('BrandsRegionsBranchesForEdit')) {
+        function BrandsRegionsBranchesForEdit($brand_id = 0, $region_id = 0, $branch_id = 0)
+        {
             $brands = [];
             $regions = [];
             $branches = [];
             $employees = [];
-    
+
             $user = \Auth::user();
             $type = $user->type;
 
             //dd($brand_id.' '.$region_id.' '.$branch_id);
-    
-            if($type == 'super admin'){
-                  $brands = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray(); 
-                  $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-                  $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-                  $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();    
-            }else if($type == 'company'){
+
+            if ($type == 'super admin' || $type == 'HR' || $type == 'Admin Team' || \Auth::user()->can('level 1')) {
+                $brands = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            } else if ($type == 'company') {
                 $brands = User::where('type', 'company')->where('id', $user->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            }else if($type == 'Project Director' || $type == 'Project Manager') {
+            } else if ($type == 'Project Director' || $type == 'Project Manager' || \Auth::user()->can('level 2')) {
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
                 $brands = User::where('type', 'company')->whereIn('id', $brand_ids)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-                  $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-                  $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            }else if($type == 'Regional Manager'){
+                $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            } else if ($type == 'Region Manager' || \Auth::user()->can('level 3')) {
                 $brands = User::where('type', 'company')->where('id', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-                  $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-                  $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            }else if($type == 'Branch Manager' || $type == 'Admissions Officer' || $type == 'Admissions Manager' || $type == 'Marketing Officer'){
+                $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            } else if ($type == 'Branch Manager' || $type == 'Admissions Officer' || $type == 'Admissions Manager' || $type == 'Marketing Officer' || \Auth::user()->can('level 4')) {
                 $brands = User::where('type', 'company')->where('id', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $regions = Region::where('id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             }
 
-    
+
             return [
-                'brands' => [0 => 'Select Brand']+$brands,
+                'brands' => [0 => 'Select Brand'] + $brands,
                 'regions' => [0 => 'Select Region'] + $regions,
                 'branches' => [0 => 'Select Branch'] + $branches,
                 'employees' => [0 => 'Select Employee'] + $employees
@@ -339,7 +355,8 @@ if (!function_exists('BrandsRegionsBranches')){
 }
 
 
-function downloadCSV($headers, $data, $filename = 'data.csv') {
+function downloadCSV($headers, $data, $filename = 'data.csv')
+{
     // Set headers for CSV download
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -362,7 +379,23 @@ function downloadCSV($headers, $data, $filename = 'data.csv') {
     exit;
 }
 
-
-
-
-?>
+function accessLevel()
+{
+    return [
+        'first' => [
+            'super admin',
+            'Admin Team',
+            'Project Director',
+            'Project Manager'
+        ],
+        'second' => [
+            'Region Manager'
+        ],
+        'third' => [
+            'Branch Manager',
+            'Admissions Manager',
+            'Admissions Officer',
+            'Marketing Officer'
+        ]
+    ];
+}

@@ -44,7 +44,6 @@
 </style>
 
 {{ Form::open(['url' => 'region/create', 'method' => 'POST', 'id' => 'CreateRegion', 'novalidate' => 'novalidate']) }}
-
 <div class="modal-body py-0">
     <div class="lead-content my-2" style="height: 100%;">
         <div class="card-body px-2 py-0">
@@ -68,6 +67,7 @@
                                         <tr>
                                             <td class="" style="width: 150px;  font-size: 13px;">
                                                 {{ __('Name') }}
+                                                <span class="text-danger">*</span>
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="text" class="form-control" placeholder="Name" value="" name="name">
@@ -76,6 +76,7 @@
                                         <tr>
                                             <td class="" style="width: 150px;  font-size: 13px;">
                                                 {{ __('Brands') }}
+                                                <span class="text-danger">*</span>
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
 
@@ -102,11 +103,7 @@
                                                 {{ __('Phone') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
-                                                <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css"> -->
-
-                                                <input type="text" class="form-control" placeholder="Enter Phone" value="" id="phones" name="phone">
-
-
+                                                <input type="text" class="form-control" placeholder="Enter Phone" value="" id="phone" name="phone">
                                             </td>
                                         </tr>
 
@@ -147,7 +144,7 @@
 
 <div class="modal-footer">
     <input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{ __('Create') }}" class="btn  btn-dark px-2 new-lead-btn">
+    <input type="submit" value="{{ __('Create') }}" class="btn  btn-dark px-2 create-region">
 </div>
 
 {{ Form::close() }}

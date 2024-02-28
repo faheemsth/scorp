@@ -2669,7 +2669,7 @@ textarea.form-control.is-invalid {
 .logo img{
     /* width: 100%; */
     width: 200px;
-    height: 55px;
+    height: 31px;
 }
 @media screen and (max-width: 768px){
     .logo img{

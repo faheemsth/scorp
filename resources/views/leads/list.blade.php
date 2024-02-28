@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 
-@if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
+@if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' || \Auth::user()->can('level 2'))
     @php
         $com_permissions = [];
         $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
@@ -37,9 +37,11 @@ if (isset($lead->is_active) && $lead->is_active) {
 @section('page-title')
     {{ __('Manage Leads') }}
     @if (\Auth::user()->type != 'super admin')
-        @if ($pipeline)
-            - {{ $pipeline->name }}
-        @endif
+
+    @if ($pipeline)
+    - {{ $pipeline->first()->name }}
+    @endif
+
     @endif
 @endsection
 @section('page-title')
@@ -52,12 +54,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 @endsection
 
 <style>
-    /* .form-controls,
-    .form-btn {
-        padding: 4px 1rem !important;
-    } */
-
-    /* Set custom width for specific table cells */
+   
     .action-btn {
         display: inline-grid !important;
     }
@@ -80,9 +77,7 @@ if (isset($lead->is_active) && $lead->is_active) {
         color: #1F2735 !important;
     }
 
-    .form-control:focus {
-        border: 1px solid rgb(209, 209, 209) !important;
-    }
+   
 </style>
 {{-- comment --}}
 
@@ -148,7 +143,73 @@ if (isset($lead->is_active) && $lead->is_active) {
             <div class="col-xl-12">
                 <div class="card my-card" style="max-width: 98%;border-radius:0px; min-height: 250px !important;">
                     <div class="card-body table-border-style" style="padding: 25px 3px;">
+                        <style>
+                            .form-controls,
+                            .form-btn {
+                                padding: 4px 1rem !important;
+                            }
 
+                            /* Set custom width for specific table cells */
+                            .action-btn {
+                                display: inline-grid !important;
+                            }
+
+                            .dataTable-bottom,
+                            .dataTable-top {
+                                display: none;
+                            }
+                        </style>
+
+                        <style>
+                            /* .red-cross {
+                                        position: absolute;
+                                        top: 5px;
+                                        right: 5px;
+                                        color: red;
+                                    } */
+                            .boximg {
+                                margin: auto;
+                            }
+
+                            .dropdown-togglefilter:hover .dropdown-menufil {
+                                display: block;
+                            }
+
+                            .choices__inner {
+                                border: 1px solid #ccc !important;
+                                min-height: auto;
+                                padding: 4px !important;
+                            }
+
+                            .fil:hover .submenu {
+                                display: block;
+                            }
+
+                            .fil .submenu {
+                                display: none;
+                                position: absolute;
+                                top: 3%;
+                                left: 154px;
+                                width: 100%;
+                                background-color: #fafafa;
+                                font-weight: 600;
+                                list-style-type: none;
+
+                            }
+
+                            .dropdown-item:hover {
+                                background-color: white !important;
+                            }
+                            .form-control:focus{
+                                border: none !important;
+                                outline:none !important;
+                            }
+   
+                            .filbar .form-control:focus{
+                                            border: 1px solid rgb(209, 209, 209) !important;
+                                        }
+
+                        </style>
 
                         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                             <div class="col-4">
@@ -156,11 +217,37 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 <div class="dropdown">
                                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        ALL LEAD
+                                        ALL LEADS
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item delete-bulk-leads" href="javascript:void(0)">Delete</a>
+                                        {{-- <li><a class="dropdown-item delete-bulk-leads" href="javascript:void(0)">Delete</a>
+                                        </li> --}}
+
+
+                                        @php
+                                        $saved_filters = App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'leads')->get();
+                                         @endphp
+                                       @if(sizeof($saved_filters) > 0)
+                                        @foreach($saved_filters as $filter)
+                                        <li class="d-flex align-items-center justify-content-between ps-2">
+                                            <div class="col-10">
+                                                <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                                <span class="text-dark"> ({{$filter->count}})</span>
+                                            </div>
+                                            <ul class="w-25" style="list-style: none;">
+                                                <li class="fil fw-bolder">
+                                                    <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                                    <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                                                                box-shadow: 0px 0px 1px #e9e9e9;">
+                                                        <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name ?>', <?= $filter->id ?>)">Rename</a></li>
+                                                        <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+
                                         </li>
+                                        @endforeach
+                                        @endif
 
                                     </ul>
                                 </div>
@@ -170,42 +257,60 @@ if (isset($lead->is_active) && $lead->is_active) {
                             {{-- /// --}}
 
                             <div class="col-8 d-flex justify-content-end gap-2 pe-0">
-                                <div class="input-group w-25">
-                                    <button class="btn  list-global-search-btn px-0">
-                                        <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                                <div class="input-group w-25 rounded" style= "width:36px; height: 36px; margin-top:10px;">
+                                    <button class="btn  list-global-search-btn  p-0 pb-2 ">
+                                        <span class="input-group-text bg-transparent border-0 px-1" id="basic-addon1">
                                             <i class="ti ti-search" style="font-size: 18px"></i>
                                         </span>
                                     </button>
                                     <input type="Search"
-                                        class="form-control border-0 bg-transparent ps-0 list-global-search"
+                                        class="form-control border-0 bg-transparent p-0 pb-2 list-global-search"
                                         placeholder="Search this list..." aria-label="Username"
                                         aria-describedby="basic-addon1">
                                 </div>
 
-                                <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()"><i class="ti ti-refresh"
-                                        style="font-size: 18px"></i></button>
+                                <!-- <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()"><i class="ti ti-refresh"
+                                        style="font-size: 18px"></i></button> -->
 
-                                <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" aria-expanded="false">
+                                <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" aria-expanded="false"  style="color:white; width:36px; height: 36px; margin-top:10px;">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                 </button>
-                                <a  href="{{ url('/leads') }}" data-bs-toggle="tooltip" title="{{ __('Leads View') }}" class="btn px-2 btn-dark d-flex align-items-center">
+                                <a  href="{{ url('/leads') }}" data-bs-toggle="tooltip" title="{{ __('Leads View') }}" class="btn px-2 btn-dark d-flex align-items-center"  style="color:white; width:36px; height: 36px; margin-top:10px;">
                                     {{-- <i class="ti ti-plus" style="font-size:18px"></i> --}}
                                     <i class="fa-solid fa-border-all" style="font-size:18px"></i>
                                 </a>
                                 @can('create lead')
-                                <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark">
+                                <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark"  style="color:white; width:36px; height: 36px; margin-top:10px;">
                                     <i class="ti ti-plus" style="font-size:18px"></i>
                                 </button>
                                 @endcan
                                 @can('create lead')
                                 <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}"
                                     class="btn px-2 btn-dark" id="import_csv_modal_btn" data-bs-toggle="modal"
-                                    data-bs-target="#import_csv">
+                                    data-bs-target="#import_csv"  style="color:white; width:36px; height: 36px; margin-top:10px;">
                                     <i class="fa fa-file-csv"></i>
                                 </button>
                                 @endcan
-                                <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
 
+                                @php
+                                    $all_params = $_GET;
+                                    $query_string = http_build_query($all_params);
+                                @endphp
+
+                                @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
+                                    <a href="{{ route('leads.download') }}?{{ $query_string }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
+                                        <i class="ti ti-download"></i>
+                                    </a>
+                                @endif
+
+
+
+                                {{-- <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> --}}
+                                @if(auth()->user()->can('delete lead'))
+                                <a class="btn p-2 btn-dark  text-white assigned_to delete-bulk-leads d-none" data-bs-toggle="tooltip" title="{{__('Mass Delete')}}" id="actions_div" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                                @endif
                             </div>
                         </div>
 
@@ -276,65 +381,93 @@ if (isset($lead->is_active) && $lead->is_active) {
                         <div class="filter-data px-3" id="filter-show"
                             <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                             <form action="/leads/list" method="GET" class="">
-                                <div class="row my-3">
-                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                    <div class="col-md-4 mt-1"> <label for="">Brands</label>
-                                        <select class="form form-control select2" id="choices-multiple555"
-                                            name="created_by[]" multiple style="width: 95%;">
-                                            <option value="">Select Brand</option>
-                                    @if (FiltersBrands())
-                                            @foreach (FiltersBrands() as $key => $brand)
-                                            <option value="{{ $key }}" {{ isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' }}>{{ $brand }}</option>
-                                           @endforeach
-                                    @endif
+                                <div class="row my-3 align-items-end">
+                                @php
+                                $type = \Auth::user()->type;
+                                $access_levels = accessLevel();
+                                @endphp
+
+                       
+
+                                @if(in_array($type, $access_levels['first']))
+                                    <div class="col-md-3 mt-2">
+                                        <label for="">Brand</label>
+                                        <select name="brand" class="form form-control select2" id="filter_brand_id">
+                                            @if (!empty($filters['brands']))
+                                                @foreach ($filters['brands'] as $key => $Brand)
+                                                <option value="{{ $key }}" {{ !empty($_GET['brand']) && $_GET['brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No brands available</option>
+                                            @endif
                                         </select>
                                     </div>
-                                    @endif
+                                @endif
 
-                                    <div class="col-md-4"> <label for="">Name</label>
+
+
+                                @if(in_array($type, $access_levels['first']) || in_array($type, $access_levels['second']))
+                                    <div class="col-md-3 mt-2" id="region_filter_div">
+                                        <label for="">Region</label>
+                                        <select name="region_id" class="form form-control select2" id="filter_region_id">
+                                            @if (!empty($filters['regions']))
+                                                @foreach   ($filters['regions'] as $key => $region)
+                                                <option value="{{ $key }}" {{ !empty($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : '' }}>{{ $region }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+
+                                @if(in_array($type, $access_levels['first']) || in_array($type, $access_levels['second']) || in_array($type, $access_levels['third']))
+                                    <div class="col-md-3 mt-2" id="branch_filter_div">
+                                        <label for="">Branch</label>
+                                        <select name="branch_id" class="form form-control select2" id="filter_branch_id">
+                                            @if (!empty($filters['branches']))
+                                                @foreach ($filters['branches'] as $key => $branch)
+                                                <option value="{{ $key }}" {{ !empty($_GET['branch_id']) && $_GET['branch_id'] == $key ? 'selected' : '' }}>{{ $branch }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+                                   
+
+                                <div class="col-md-3"> <label for="">Name</label>
+                                    <div class="" id="filter-names">
                                         <select class="form form-control select2" id="choices-multiple110" name="name[]"
                                             multiple style="width: 95%;">
                                             <option value="">Select name</option>
                                             @foreach ($leads as $lead)
-                                                <option value="{{ $lead->name }}"
-                                                    <?= isset($_GET['name']) && in_array($lead->name, $_GET['name']) ? 'selected' : '' ?>
+                                                <option value="{{ $lead->id }}"
+                                                    <?= isset($_GET['name']) && in_array($lead->id, $_GET['name']) ? 'selected' : '' ?>
                                                     class="">{{ $lead->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
+                                </div>
+
+                                <div class="col-md-3"> <label for="">Stage</label>
+                                    <select class="form form-control select2" id="choices-multiple444"
+                                        name="stages[]" multiple style="width: 95%;">
+                                        <option value="">Select Stage</option>
+                                        @foreach ($stages as $stage)
+                                            <option value="{{ $stage->id }}"
+                                                <?= isset($_GET['stages']) && in_array($stage->id, $_GET['stages']) ? 'selected' : '' ?>
+                                                class="">{{ $stage->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
 
 
-                                    <div class="col-md-4"> <label for="">Assigned To</label>
-                                        <select name="users[]" id="choices-multiple333" class="form form-control select2"
-                                            multiple style="width: 95%;">
-                                            <option value="">Select user</option>
-                                            @foreach ($companies as $key => $company)
-                                                <option value="{{ $key }}"
-                                                    <?= isset($_GET['users']) && in_array($key, $_GET['users']) ? 'selected' : '' ?>
-                                                    class="">{{ $company }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-4"> <label for="">Stage</label>
-                                        <select class="form form-control select2" id="choices-multiple444"
-                                            name="stages[]" multiple style="width: 95%;">
-                                            <option value="">Select Stage</option>
-                                            @foreach ($stages as $stage)
-                                                <option value="{{ $stage->id }}"
-                                                    <?= isset($_GET['stages']) && in_array($stage->id, $_GET['stages']) ? 'selected' : '' ?>
-                                                    class="">{{ $stage->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-
-                                    <style>
-                                        .form-control:focus {
-                                            border: 1px solid rgb(209, 209, 209) !important;
-                                        }
-                                    </style>
-                                    <div class="col-md-4 mt-2">
+                                  
+                                    <div class="col-md-3 mt-2">
                                         <label for="">Created at</label>
                                         <input type="date" class="form form-control" name="created_at"
                                             value="<?= isset($_GET['created_at']) ? $_GET['created_at'] : '' ?>"
@@ -344,12 +477,12 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <div class="col-md-4 mt-3">
                                         <br>
                                         <input type="submit" class="btn form-btn me-2 bg-dark" style=" color:white;">
-                                        <a type="button" id="save-filter-btn" onClick="saveFilter('leads',<?= sizeof($leads) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                         <a href="/leads/list" class="btn form-btn bg-dark" style="color:white;">Reset</a>
+                                        <a type="button" id="save-filter-btn" onClick="saveFilter('leads',<?= sizeof($leads) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                     </div>
                                 </div>
 
-                                
+
                                 <div class="row my-4 d-none">
                                     <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
@@ -403,10 +536,9 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         <th data-resizable-columns-id="phone" class="ps-3">{{ __('Phone') }}</th>
                                         <th data-resizable-columns-id="stage" class="ps-3">{{ __('Stage') }}</th>
                                         <th data-resizable-columns-id="users" class="ps-3">{{ __('Assigned to') }}</th>
-                                        @if (\Auth::user()->type == 'super admin')
-                                            <th data-resizable-columns-id="created_by">{{ __('Brand') }}</th>
-                                            <th data-resizable-columns-id="created_by">{{ __('Branch') }}</th>
-                                        @endif
+                                        <th data-resizable-columns-id="created_by">{{ __('Brand') }}</th>
+                                        <th data-resizable-columns-id="created_by">{{ __('Branch') }}</th>
+                                      
                                         {{-- <th data-resizable-columns-id="actions" style="width: 5%;">{{ __('Action') }}
                                         </th> --}}
                                     </tr>
@@ -419,16 +551,16 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                         class="sub-check"></td>
 
 
-                                                <td>
+                                                <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                                     <span style="cursor:pointer" class="lead-name hyper-link"
                                                        @can('view lead') onclick="openNav(<?= $lead->id ?>)" @endcan
                                                         data-lead-id="{{ $lead->id }}">{{ $lead->name }}</span>
                                                 </td>
 
-                                                <td>{{ $lead->email }}</td>
-                                                <td>{{ $lead->phone }}</td>
-                                                <td>{{ !empty($lead->stage) ? $lead->stage->name : '-' }}</td>
-                                                <td>
+                                                <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;" > <a href="{{ $lead->email }}">{{ $lead->email }}</a></td>
+                                                <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $lead->phone }}</td>
+                                                <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($lead->stage) ? $lead->stage->name : '-' }}</td>
+                                                <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                                     @php
                                                         $assigned_to = isset($lead->user_id) && isset($users[$lead->user_id]) ? $users[$lead->user_id] : 0;
                                                     @endphp
@@ -440,13 +572,13 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                         </span>
                                                     @endif
                                                 </td>
-                                                @if (\Auth::user()->type == 'super admin')
-                                                    <td>{{ $users[$lead->brand_id] ?? '' }}</td>
-                                                    <td>{{ isset( $branches[$lead->branch_id]) ?  $branches[$lead->branch_id] : '' }}</td>
-                                                @endif
+
+                                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $users[$lead->brand_id] ?? '' }}</td>
+                                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $branches[$lead->branch_id] ?? '' }}</td>
+                                              
 
                                                 @if (Auth::user()->type != 'client')
-                                                    <td class="Action py-1 px-0">
+                                                    <td class="Action py-1 px-0" >
                                                         {{-- <span>
 
                                                             @if (\Auth::user()->type == 'super admin' || \Gate::check('view lead'))
@@ -531,11 +663,13 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                 </tbody>
                             </table>
-                            @if ($total_records > 0)
-                                @include('layouts.pagination', [
-                                    'total_pages' => $total_records,
-                                ])
-                            @endif
+                            <div class="pagination_div">
+                                @if ($total_records > 0)
+                                    @include('layouts.pagination', [
+                                        'total_pages' => $total_records,
+                                    ])
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -612,7 +746,9 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 @push('script-page')
     <script>
-
+    $(".add-filter").on("click", function() {
+        $(".filter-data").toggle();
+    })
         $(document).ready(function() {
             let curr_url = window.location.href;
 
@@ -624,25 +760,39 @@ if (isset($lead->is_active) && $lead->is_active) {
             $("#import_csv").modal('show');
         })
 
-        $(document).on('change', '.main-check', function() {
-            $(".sub-check").prop('checked', $(this).prop('checked'));
+       // single check
+
+       $(document).on('change', '.main-check', function() {
+        $(".sub-check").prop('checked', $(this).prop('checked'));
+
+            var selectedIds = $('.sub-check:checked').map(function() {
+                return this.value;
+            }).get();
+
+        // console.log(selectedIds.length)
+
+            if (selectedIds.length > 0) {
+                selectedArr = selectedIds;
+                $("#actions_div").removeClass('d-none');
+            } else {
+                selectedArr = selectedIds;
+
+                $("#actions_div").addClass('d-none');
+            }
         });
 
-        
         $(document).on('change', '.sub-check', function() {
             var selectedIds = $('.sub-check:checked').map(function() {
                 return this.value;
             }).get();
 
-            console.log(selectedIds.length)
-
             if (selectedIds.length > 0) {
                 selectedArr = selectedIds;
-                $("#actions_div").css('display', 'block');
+                $("#actions_div").removeClass('d-none');
             } else {
                 selectedArr = selectedIds;
 
-                $("#actions_div").css('display', 'none');
+                $("#actions_div").addClass('d-none');
             }
             let commaSeperated = selectedArr.join(",");
             console.log(commaSeperated)
@@ -1118,6 +1268,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     if (data.status == 'success') {
                         console.log(data.html);
                         $(".leads-list-div").html(data.html);
+                        $(".pagination_div").html(data.pagination_html);
                     }
                 }
             });
@@ -1142,6 +1293,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     if (data.status == 'success') {
                         console.log(data.html);
                         $(".leads-list-div").html(data.html);
+                        $(".pagination_div").html(data.pagination_html);
                     }
                 }
             })
@@ -1169,6 +1321,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                             if (data.status == 'success') {
                                 console.log(data.html);
                                 $(".leads-list-div").html(data.html);
+                                $(".pagination_div").html(data.pagination_html);
                             }
                         }
                     })
@@ -1509,5 +1662,119 @@ $('.' + name + '-td').html(html);
             <?php } ?>
             return html;
         }
+
+
+
+        ////////////////////Filters Javascript
+        $("#filter_brand_id").on("change", function() {
+            var id = $(this).val();
+            var type = 'brand';
+            var filter = true;
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#region_filter_div').html('');
+                        $("#region_filter_div").html(data.regions);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+
+        $(document).on("change", "#filter_region_id, #region_id", function() {
+            var id = $(this).val();
+            var filter = true;
+            var type = 'region';
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#branch_filter_div').html('');
+                        $("#branch_filter_div").html(data.branches);
+                        getLeads();
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+        $(document).on("change", "#filter_branch_id, #branch_id", function() {
+           getLeads();
+        });
+
+        function getLeads(){
+            var brand_id = $("#filter_brand_id").val();
+            var region_id = $("#region_id").val();
+            var branch_id = $("#branch_id").val();
+           
+            if (typeof region_id === 'undefined') {
+                var region_id = $("#filter_region_id").val();
+            }
+
+            if (typeof branch_id === 'undefined') {
+                var branch_id = $("#filter_branch_id").val();
+            }
+
+
+            
+
+            var type = 'lead';
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('filterData') }}',
+                data: {
+                   brand_id,
+                   region_id,
+                   branch_id,
+                   type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#filter-names').html('');
+                        $("#filter-names").html(data.html);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        }
+
+        
     </script>
 @endpush

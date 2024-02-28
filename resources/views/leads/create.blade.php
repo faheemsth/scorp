@@ -96,7 +96,9 @@
                                                 @if (
                                                     \Auth::user()->type == 'super admin' ||
                                                         \Auth::user()->type == 'Project Director' ||
-                                                        \Auth::user()->type == 'Project Manager')
+                                                        \Auth::user()->type == 'Project Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2'))
                                                             {!! Form::select('brand_id', $companies, 0, [
                                                                 'class' => 'form-control select2 brand_id',
                                                                 'id' => 'brands',
@@ -134,7 +136,10 @@
                                                         \Auth::user()->type == 'Project Director' ||
                                                         \Auth::user()->type == 'Project Manager' ||
                                                         \Auth::user()->type == 'company' ||
-                                                        \Auth::user()->type == 'Regional Manager')
+                                                        \Auth::user()->type == 'Region Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2' ||
+                                                        \Auth::user()->can('level 3')))
 
                                                             {!! Form::select('region_id', $regions, null, [
                                                                 'class' => 'form-control select2',
@@ -163,8 +168,12 @@
                                                         \Auth::user()->type == 'Project Director' ||
                                                         \Auth::user()->type == 'Project Manager' ||
                                                         \Auth::user()->type == 'company' ||
-                                                        \Auth::user()->type == 'Regional Manager' ||
-                                                        \Auth::user()->type == 'Branch Manager')
+                                                        \Auth::user()->type == 'Region Manager' ||
+                                                        \Auth::user()->type == 'Branch Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2') ||
+                                                        \Auth::user()->can('level 3') ||
+                                                        \Auth::user()->can('level 4'))
                                                             <select name="lead_branch" id="branch_id" class="form-control select2 branch_id"
                                                                 onchange="Change(this)">
                                                                     @foreach($branches as $key => $branch)
@@ -341,10 +350,17 @@
                                                 Address 
                                             </td>
                                             <td class="" style="width: 350PX; font-size: 13px; bg-danger">
-                                                <div class="form-floating">
-                                                    <textarea class="form-control" placeholder="Street" id="floatingTextarea" name="lead_street"></textarea>
-                                                </div>
                                                 <div class="row">
+                                                    <div class="col-12 col-form" style="text-align: left;">
+                                                        <select class="form-control select2" id="choice-5" name="lead_country">
+                                                            <option>Country...</option>
+                                                            @foreach($countries as $con)
+                                                            <option value="{{$con}}">{{$con}}</option>
+                                                            @endforeach
+
+                                                        </select>
+                                                    </div>
+
                                                     <div class="col-6 col-form">
                                                         <input type="text" class="form-control" id="formGroupExampleInput" placeholder="City" name="lead_city">
                                                     </div>
@@ -354,15 +370,12 @@
                                                     <div class="col-6 col-form">
                                                         <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Postel Code" name="lead_postal_code">
                                                     </div>
-                                                    <div class="col-6 col-form" style="text-align: left;">
-                                                        <select class="form-control select2" id="choice-5" name="lead_country">
-                                                            <option>Country...</option>
-                                                            @foreach($countries as $con)
-                                                            <option value="{{$con}}">{{$con}}</option>
-                                                            @endforeach
 
-                                                        </select>
+                                                    <div class="col-6">
+                                                        <input type="text" class="form form-control" value="" name="lead_street" placeholder="Address...">
+                                                        <!-- <textarea class="form-control" placeholder="Street" id="floatingTextarea" name="lead_street"></textarea> -->
                                                     </div>
+                                                   
                                                 </div>
                                             </td>
                                         </tr>
@@ -417,8 +430,7 @@
                                             </td>
                                             <td class="" style="padding-left: 10px;">
                                                 <select name="lead_tags_list" id="choice-6" class="form form-control select2">
-                                                    <option value=""></option>
-                                                    <option value="Public">Public</option>
+                                                    <option value="Public" selected>Public</option>
                                                     <option value="Private">Private</option>
                                                 </select>
                                             </td>
