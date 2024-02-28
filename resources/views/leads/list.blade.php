@@ -54,7 +54,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 @endsection
 
 <style>
-   
+
     .action-btn {
         display: inline-grid !important;
     }
@@ -77,7 +77,7 @@ if (isset($lead->is_active) && $lead->is_active) {
         color: #1F2735 !important;
     }
 
-   
+
 </style>
 {{-- comment --}}
 
@@ -204,7 +204,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 border: none !important;
                                 outline:none !important;
                             }
-   
+
                             .filbar .form-control:focus{
                                             border: 1px solid rgb(209, 209, 209) !important;
                                         }
@@ -387,7 +387,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 $access_levels = accessLevel();
                                 @endphp
 
-                       
+
 
                                 @if(in_array($type, $access_levels['first']))
                                     <div class="col-md-3 mt-2">
@@ -437,7 +437,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     </div>
                                 @endif
 
-                                   
+
 
                                 <div class="col-md-3"> <label for="">Name</label>
                                     <div class="" id="filter-names">
@@ -466,7 +466,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 </div>
 
 
-                                  
+
                                     <div class="col-md-3 mt-2">
                                         <label for="">Created at</label>
                                         <input type="date" class="form form-control" name="created_at"
@@ -538,7 +538,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         <th data-resizable-columns-id="users" class="ps-3">{{ __('Assigned to') }}</th>
                                         <th data-resizable-columns-id="created_by">{{ __('Brand') }}</th>
                                         <th data-resizable-columns-id="created_by">{{ __('Branch') }}</th>
-                                      
+
                                         {{-- <th data-resizable-columns-id="actions" style="width: 5%;">{{ __('Action') }}
                                         </th> --}}
                                     </tr>
@@ -575,7 +575,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $users[$lead->brand_id] ?? '' }}</td>
                                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $branches[$lead->branch_id] ?? '' }}</td>
-                                              
+
 
                                                 @if (Auth::user()->type != 'client')
                                                     <td class="Action py-1 px-0" >
@@ -1735,7 +1735,7 @@ $('.' + name + '-td').html(html);
             var brand_id = $("#filter_brand_id").val();
             var region_id = $("#region_id").val();
             var branch_id = $("#branch_id").val();
-           
+
             if (typeof region_id === 'undefined') {
                 var region_id = $("#filter_region_id").val();
             }
@@ -1745,7 +1745,7 @@ $('.' + name + '-td').html(html);
             }
 
 
-            
+
 
             var type = 'lead';
 
@@ -1775,6 +1775,6 @@ $('.' + name + '-td').html(html);
             });
         }
 
-        
+
     </script>
 @endpush
