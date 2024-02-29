@@ -128,25 +128,25 @@
                                     <div class="form-group row ">
                                         <label for="contactname" class="col-sm-3 col-form-label">Name <span class="text-danger">*</span></label>
                                         <div class="col-sm-6">
-                                            <input type="text" class="form-control" id="contactname" value="" placeholder="Name" name='contactname'>
+                                            <input type="text" class="form-control" id="contactname" value="{{ $org_detail->contactname }}" placeholder="Name" name='contactname'>
                                         </div>
                                     </div>
                                     <div class="form-group row ">
                                         <label for="contactemail" class="col-sm-3 col-form-label">Email </label>
                                         <div class="col-sm-6">
-                                            <input type="text" class="form-control" id="contactemail" value="" placeholder="Email" name='contactemail'>
+                                            <input type="text" class="form-control" id="contactemail" value="{{ $org_detail->contactemail }}" placeholder="Email" name='contactemail'>
                                         </div>
                                     </div>
                                     <div class="form-group row ">
                                         <label for="contactphone" class="col-sm-3 col-form-label">Phone </label>
                                         <div class="col-sm-6">
-                                            <input type="text" class="form-control" id="contactphone" value="" placeholder="Phone" name='contactphone'>
+                                            <input type="text" class="form-control" id="contactphone" value="{{ $org_detail->contactphone }}" placeholder="Phone" name='contactphone'>
                                         </div>
                                     </div>
                                     <div class="form-group row ">
                                         <label for="contactjobroll" class="col-sm-3 col-form-label">Job Roll </label>
                                         <div class="col-sm-6">
-                                            <input type="text" class="form-control" id="contactjobroll" value="" placeholder="Job Roll" name='contactjobroll'>
+                                            <input type="text" class="form-control" id="contactjobroll" value="{{ $org_detail->contactjobroll }}" placeholder="Job Roll" name='contactjobroll'>
                                         </div>
                                     </div>
                                 </div>
@@ -168,7 +168,7 @@
                                         Address</label>
                                     <div class="col-6">
                                         <div class="col-12 px-0">
-                                            <textarea name="organization_billing_street" class="form form-control" id="" cols="30" rows="3"></textarea>
+                                            <textarea name="organization_billing_street" class="form form-control" id="" cols="30" rows="3">{{ $org_detail->organization_billing_street }}</textarea>
                                         </div>
 
                                     </div>
@@ -180,10 +180,8 @@
                                         <div class="col-12 px-0">
                                             <select name="organization_billing_country" id="countries" class="form form-select select2">
                                                 <option value="">Select country</option>
-                                                @foreach ($countries as $country)
-                                                <option value="{{ $country }}">
-                                                    {{ $country }}
-                                                </option>
+                                                @foreach($countries as $country)
+                                                <option value="{{$country}}" <?= isset($org_detail->billing_country) && $org_detail->billing_country  == $country ? 'selected' : '' ?>>{{$country}}</option>
                                                 @endforeach
                                             </select>
                                         </div>

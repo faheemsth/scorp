@@ -314,7 +314,7 @@
 
                                                                 <td class="email-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                   <a href="{{ $org->email }}" target="_blank" >{{ $org->email }}</a> 
+                                                                   <a href="{{ $org->email }}" target="_blank" >{{ $org->email }}</a>
                                                                 </td>
                                                             </tr>
 
@@ -325,7 +325,7 @@
                                                                 </td>
                                                                 <td class="website-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                   <a href="{{ $org_detail->website }}" target="_blank">{{ $org_detail->website }}</a> 
+                                                                   <a href="{{ $org_detail->website }}" target="_blank">{{ $org_detail->website }}</a>
                                                                 </td>
                                                             </tr>
 
@@ -336,7 +336,7 @@
                                                                 </td>
                                                                 <td class="linkedin-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                   <a href="{{ $org_detail->linkedin }}" target="_blank" >{{ $org_detail->linkedin }}</a> 
+                                                                   <a href="{{ $org_detail->linkedin }}" target="_blank" >{{ $org_detail->linkedin }}</a>
                                                                 </td>
                                                             </tr>
 
@@ -348,7 +348,7 @@
 
                                                                 <td class="facebook-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                   <a href="{{ $org_detail->facebook }}" target="_blank" >{{ $org_detail->facebook }}</a> 
+                                                                   <a href="{{ $org_detail->facebook }}" target="_blank" >{{ $org_detail->facebook }}</a>
                                                                 </td>
                                                             </tr>
 
@@ -359,7 +359,7 @@
                                                                 </td>
                                                                 <td class="twitter-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                   <a href="{{ $org_detail->twitter }}" target="_blank" >{{ $org_detail->twitter }}</a> 
+                                                                   <a href="{{ $org_detail->twitter }}" target="_blank" >{{ $org_detail->twitter }}</a>
                                                                 </td>
                                                             </tr>
 
@@ -371,7 +371,7 @@
                                                                 </td>
                                                                 <td class="drive_link-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                   <a href="{{ $org_detail->drive_link }}" target="_blank">{{ $org_detail->drive_link }}</a> 
+                                                                   <a href="{{ $org_detail->drive_link }}" target="_blank">{{ $org_detail->drive_link }}</a>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -380,7 +380,84 @@
                                             </div>
                                         </div>
                                     </div>
+                                    {{-- ///// --}}
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="panelsStayOpen-headingkeythreee">
+                                            <button class="accordion-button p-2" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#panelsStayOpen-collapsekeythreee">
+                                                {{ __('CONTACT PERSON INFORMATION') }}
+                                            </button>
+                                        </h2>
 
+                                        <div id="panelsStayOpen-collapsekeythreee"
+                                            class="accordion-collapse collapse show"
+                                            aria-labelledby="panelsStayOpen-headingkeythreee">
+                                            <div class="accordion-body">
+                                                <div class="table-responsive mt-1" style="margin-left: 10px;">
+
+                                                    <table>
+                                                        <tbody>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 115PX; font-size: 14px;">
+                                                                    {{ __('Name') }}
+                                                                </td>
+                                                                <td class="address-td"
+                                                                    style="width: 80%; font-size: 13px;">
+
+                                                                    {{ $org_detail->contactname  }}
+
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 115PX; font-size: 14px;">
+                                                                    {{ __('phone') }}
+                                                                </td>
+                                                                <td class="address-td"
+                                                                    style="width: 80%; font-size: 13px;">
+
+                                                                    {{  $org_detail->contactphone }}
+
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 115PX; font-size: 14px;">
+                                                                    {{ __('Job Role') }}
+                                                                </td>
+                                                                <td class="address-td"
+                                                                    style="width: 80%; font-size: 13px;">
+
+                                                                    {{ $org_detail->contactjobroll  }}
+
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 115PX; font-size: 14px;">
+                                                                    {{ __('Email') }}
+                                                                </td>
+                                                                <td class="address-td"
+                                                                    style="width: 80%; font-size: 13px;">
+
+                                                                    {{  $org_detail->contactemail }}
+
+
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {{-- /////// --}}
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeythree">
                                             <button class="accordion-button p-2" type="button"
@@ -407,11 +484,24 @@
                                                                 <td class="address-td"
                                                                     style="width: 80%; font-size: 13px;">
 
-                                                                    {{ $org_detail->billing_street . ' ' . $org_detail->billing_city . ' ' . $org_detail->billing_state . ' ' . $org_detail->billing_postal_code . ' ' . $org_detail->billing_country }}
+                                                                    {{ $org_detail->billing_street  }}
 
 
                                                                 </td>
                                                             </tr>
+                                                            {{-- <tr>
+                                                                <td class=""
+                                                                    style="width: 115PX; font-size: 14px;">
+                                                                    {{ __('Country') }}
+                                                                </td>
+                                                                <td class="address-td"
+                                                                    style="width: 80%; font-size: 13px;">
+
+                                                                    {{  $org_detail->billing_country }}
+
+
+                                                                </td>
+                                                            </tr> --}}
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -437,17 +527,17 @@
                                                     <table>
                                                         <tbody>
 
-                                                            <tr>
+                                                            {{-- <tr>
                                                                 <td class=""
                                                                     style="width: 145px; font-size: 14px;">
                                                                     {{ __('Dates to remember') }}
                                                                 </td>
                                                                 <td class=""
-                                                                    style="padding-left:10px; font-size: 13px;">
-                                                                    
-                                                                        style="font-size:14px">{{ __('Change') }}
+                                                                    style="padding-left:10px; font-size: 14px;">
+
+                                                                       {{ __('Change') }}
                                                                 </td>
-                                                            </tr>
+                                                            </tr> --}}
 
 
                                                             <tr>
@@ -575,7 +665,7 @@
                             <div class="tab-pane fade" id="pills-related" role="tabpanel"
                                 aria-labelledby="pills-related-tab">
                                 <div class="block-items">
-                                   
+
                                     <div class="block-item large-block" id="con-stats" title="1 Linked Contacts"
                                         data-bs-target="#contacts-grid-container">
                                         <div class="top-label">Contacts</div>

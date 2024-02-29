@@ -287,7 +287,7 @@
                                 </th>
                                 <!-- <td style="border-left: 1px solid #fff;"></td> -->
                                 <td style="border-left: 1px solid #fff;">Organization Name</td>
-                                {{-- <td style="border-left: 1px solid #fff;">Organization email</td> --}}
+                                <td style="border-left: 1px solid #fff;">Organization email</td>
                                 <td style="border-left: 1px solid #fff;">Organization Phone</td>
                                 <td style="border-left: 1px solid #fff;">Contact Person Name</td>
 
@@ -315,7 +315,7 @@
                                 <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                     <span style="cursor:pointer" class="org-name hyper-link" @can('show organization') onclick="openNav(<?= $org->id ?>)" @endcan data-org-id="{{ $org->id }}">{{ $org->name }}</span>
                                 </td>
-                                {{-- <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org_data->email) ? $org_data->email : '' }}</td> --}}
+                                <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org->email) ? $org->email : '' }}</td>
 
                                 <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
                                 <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org_data->contactname) ? $org_data->contactname : '' }}</td>
