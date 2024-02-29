@@ -53,32 +53,7 @@
 
 
 {{-- minicharts --}}
-{{-- <script>
-    window.onload = function () {
-    
-    var chart = new CanvasJS.Chart("minichart", {
-        animationEnabled: true,
-        theme: "",
-        title:{
-            // text: "Simple Line Chart"
-        },
-        data: [{        
-            type: "line",
-              indexLabelFontSize: 16,
-            dataPoints: [
-                { y: 450 },
-                { y: 414},
-                { y: 520, indexLabel: "\u2191 highest",markerColor: "red", markerType: "triangle" },
-                { y: 460 },
-                { y: 450 },
-                
-            ]
-        }]
-    });
-    chart.render();
-    
-    }
-</script> --}}
+
 <script>
     google.charts.load('current',{packages:['corechart']});
     google.charts.setOnLoadCallback(drawChart);
@@ -95,11 +70,26 @@
     
     // Set Options
     const options = {
-     
+    series: {
+      0: { visibleInLegend: true, color: 'black' },
+      1: { visibleInLegend: false },
+      2: { visibleInLegend: false },
       
-     
-      legend: 'none'
-    };
+    },
+    hAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      ticks: [],
+      baselineColor: 'transparent',
+      viewWindow: { min: 50, max: 150 } 
+    },
+    vAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      baselineColor: 'transparent'
+    },
+    chartArea: { left: 0, top: 0, width: '100%', height: '100%' }
+  };
     
     // Draw
     const chart = new google.visualization.LineChart(document.getElementById('minichart'));
@@ -124,12 +114,26 @@
     
     // Set Options
     const options = {
-     
+    series: {
+      0: { visibleInLegend: true, color: 'black' },
+      1: { visibleInLegend: false },
+      2: { visibleInLegend: false },
       
-     
-      legend: 'none'
-    };
-    
+    },
+    hAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      ticks: [],
+      baselineColor: 'transparent',
+      viewWindow: { min: 50, max: 150 } 
+    },
+    vAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      baselineColor: 'transparent'
+    },
+    chartArea: { left: 0, top: 0, width: '100%', height: '100%' }
+  };
     // Draw
     const chart = new google.visualization.LineChart(document.getElementById('minichart2'));
     chart.draw(data, options);
@@ -148,17 +152,31 @@
       ['Price', 'Size'],
       [50,7],[60,8],[70,8],[80,9],[90,9],
       [100,9],[110,10],[120,11],
-      [130,14],[140,14],[150,15]
+      [130,14],[140,14],[180,5],
     ]);
     
     // Set Options
     const options = {
-     
+    series: {
+      0: { visibleInLegend: true, color: 'black' },
+      1: { visibleInLegend: false },
+      2: { visibleInLegend: false },
       
-     
-      legend: 'none'
-    };
-    
+    },
+    hAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      ticks: [],
+      baselineColor: 'transparent',
+      viewWindow: { min: 50, max: 150 } 
+    },
+    vAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      baselineColor: 'transparent'
+    },
+    chartArea: { left: 0, top: 0, width: '100%', height: '100%' }
+  };
     // Draw
     const chart = new google.visualization.LineChart(document.getElementById('minichart3'));
     chart.draw(data, options);
@@ -177,16 +195,31 @@
       ['Price', 'Size'],
       [50,7],[60,8],[70,8],[80,9],[90,9],
       [100,9],[110,10],[120,11],
-      [130,14],[140,14],[150,15]
+      [130,14],[140,14],[155, 15],
     ]);
     
     // Set Options
     const options = {
-     
+    series: {
+      0: { visibleInLegend: true, color: 'black' },
+      1: { visibleInLegend: false },
+      2: { visibleInLegend: false },
       
-     
-      legend: 'none'
-    };
+    },
+    hAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      ticks: [],
+      baselineColor: 'transparent',
+      viewWindow: { min: 50, max: 150 } 
+    },
+    vAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      baselineColor: 'transparent'
+    },
+    chartArea: { left: 0, top: 0, width: '100%', height: '100%' }
+  };
     
     // Draw
     const chart = new google.visualization.LineChart(document.getElementById('minichart4'));
@@ -194,6 +227,181 @@
     
     }
 </script>
+{{-- second mini line graph --}}
+<script>
+    google.charts.load('current',{packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    
+    function drawChart() {
+    
+    // Set Data
+    const data = google.visualization.arrayToDataTable([
+      ['Price', 'Size'],
+      [50,7],[60,8],[70,8],[80,9],[90,9],
+      [100,9],[110,10],[120,11],
+      [130,14],[140,14],[200,10]
+    ]);
+    
+    // Set Options
+    const options = {
+    series: {
+      0: { visibleInLegend: true, color: 'black' },
+      1: { visibleInLegend: false },
+      2: { visibleInLegend: false },
+      
+    },
+    hAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      ticks: [],
+      baselineColor: 'transparent',
+      viewWindow: { min: 50, max: 150 } 
+    },
+    vAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      baselineColor: 'transparent'
+    },
+    chartArea: { left: 0, top: 0, width: '100%', height: '100%' }
+  };
+    
+    // Draw
+    const chart = new google.visualization.LineChart(document.getElementById('minichart5'));
+    chart.draw(data, options);
+    
+    }
+</script>
+{{-- 2 --}}
+<script>
+    google.charts.load('current',{packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    
+    function drawChart() {
+    
+    // Set Data
+    const data = google.visualization.arrayToDataTable([
+      ['Price', 'Size'],
+      [50,7],[60,8],[70,8],[80,9],[90,9],
+      [100,9],[110,10],[120,11],
+      [135,14],[145,14],[150,15]
+    ]);
+    
+    // Set Options
+    const options = {
+    series: {
+      0: { visibleInLegend: true, color: 'black' },
+      1: { visibleInLegend: false },
+      2: { visibleInLegend: false },
+      
+    },
+    hAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      ticks: [],
+      baselineColor: 'transparent',
+      viewWindow: { min: 50, max: 150 } 
+    },
+    vAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      baselineColor: 'transparent'
+    },
+    chartArea: { left: 0, top: 0, width: '100%', height: '100%' }
+  };
+    // Draw
+    const chart = new google.visualization.LineChart(document.getElementById('minichart6'));
+    chart.draw(data, options);
+    
+    }
+</script>
+{{-- 3 --}}
+<script>
+    google.charts.load('current',{packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    
+    function drawChart() {
+    
+    // Set Data
+    const data = google.visualization.arrayToDataTable([
+      ['Price', 'Size'],
+      [50,7],[60,8],[70,8],[80,9],[90,9],
+      [95,9],[115,10],[120,11],
+      [130,14],[140,14],[150,15],
+    ]);
+    
+    // Set Options
+    const options = {
+    series: {
+      0: { visibleInLegend: true, color: 'black' },
+      1: { visibleInLegend: false },
+      2: { visibleInLegend: false },
+      
+    },
+    hAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      ticks: [],
+      baselineColor: 'transparent',
+      viewWindow: { min: 50, max: 150 } 
+    },
+    vAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      baselineColor: 'transparent'
+    },
+    chartArea: { left: 0, top: 0, width: '100%', height: '100%' }
+  };
+    // Draw
+    const chart = new google.visualization.LineChart(document.getElementById('minichart7'));
+    chart.draw(data, options);
+    
+    }
+</script>
+{{-- 4 --}}
+<script>
+    google.charts.load('current',{packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    
+    function drawChart() {
+    
+    // Set Data
+    const data = google.visualization.arrayToDataTable([
+      ['Price', 'Size'],
+      [50,7],[55,8],[75,8],[80,9],[90,9],
+      [100,9],[110,10],[120,11],
+      [130,14],[140,14],[155, 15],
+    ]);
+    
+    // Set Options
+    const options = {
+    series: {
+      0: { visibleInLegend: true, color: 'black' },
+      1: { visibleInLegend: false },
+      2: { visibleInLegend: false },
+      
+    },
+    hAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      ticks: [],
+      baselineColor: 'transparent',
+      viewWindow: { min: 50, max: 150 } 
+    },
+    vAxis: {
+      gridlines: { color: 'transparent' },
+      textPosition: 'none',
+      baselineColor: 'transparent'
+    },
+    chartArea: { left: 0, top: 0, width: '100%', height: '100%' }
+  };
+    
+    // Draw
+    const chart = new google.visualization.LineChart(document.getElementById('minichart8'));
+    chart.draw(data, options);
+    
+    }
+</script>
+{{-- second mini line graph end --}}
 
 <script>
     
@@ -549,53 +757,55 @@
                 </div>
 
                 <div id="chartContainer" style="height: 300px; width: 100%;"></div>
-                <div class="card-body">
-                    <div class="row" >
-                        <div class="col-3">
+                <div class="card-body pe-0 ">
+                    <div class="row mx-auto px-2" >
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                             
-                            <a href="#" class="mini-text">11 <br>This is the refrence text</a>
+                            <h4><a href="#" class="text-dark">11</a></h4>
+                            <a href="#" class="text-dark">This is demo text</a>
+
                         
                             {{-- <div id="minichart" style="height: 0px; width: 100%;"></div> --}}
-                            <div id="minichart" style=" width:200px; height:150px;"></div>
+                            <div id="minichart" style=" width:150px; height:70px;"></div>
 
 
                         </div>
-                        <div class="col-3 px-0">
-                            <p class="mini-text">11</p>
-                            <small>this is the mini text</small>
-                            <div id="minichart2" style=" width:200px; height:150px;"></div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                            <h4><a href="#" class="text-dark">14</a></h4>
+                            <a href="#" class="text-dark">This is demo text</a>
+                            <div id="minichart2" style=" width:150px; height:70px;"></div>
                         </div>
-                        <div class="col-3">
-                            <p class="mini-text">11</p>
-                            <small>this is the mini text</small>
-                            <div id="minichart3" style=" width:200px; height:150px;"></div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                            <h4><a href="#" class="text-dark">7</a></h4>
+                            <a href="#" class="text-dark">This is demo text</a>
+                            <div id="minichart3" style=" width:150px; height:70px;"></div>
                         </div>
-                        <div class="col-3">
-                            <p class="mini-text">11</p>
-                            <small>this is the mini text</small>
-                            <div id="minichart4" style=" width:200px; height:150px;"></div>
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                            <h4><a href="#" class="text-dark">7</a></h4>
+                            <a href="#" class="text-dark">This is demo text</a>
+                            <div id="minichart4" style=" width:150px; height:70px;"></div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-3">
-                            <p class="mini-text">11</p>
-                            <small>this is the mini text</small>
-
+                    <div class="row mx-auto px-2">
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                            <h4><a href="#" class="text-dark">11</a></h4>
+                            <a href="#" class="text-dark">This is demo text</a>
+                            <div id="minichart5" style=" width:150px; height:70px;"></div>
                         </div>
-                        <div class="col-3">
-                            <p class="mini-text">11</p>
-                            <small>this is the mini text</small>
-
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                            <h4><a href="#" class="text-dark">14</a></h4>
+                            <a href="#" class="text-dark">This is demo text</a>
+                            <div id="minichart6" style=" width:150px; height:70px;"></div>
                         </div>
-                        <div class="col-3">
-                            <p class="mini-text">11</p>
-                            <small>this is the mini text</small>
-
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                            <h4><a href="#" class="text-dark">7</a></h4>
+                            <a href="#" class="text-dark">This is demo text</a>
+                            <div id="minichart7" style=" width:150px; height:70px;"></div>
                         </div>
-                        <div class="col-3">
-                            <p class="mini-text">11</p>
-                            <small>this is the mini text</small>
-
+                        <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+                            <h4><a href="#" class="text-dark">7</a></h4>
+                            <a href="#" class="text-dark">This is demo text</a>
+                            <div id="minichart8" style=" width:150px; height:70px;"></div>
                         </div>
                     </div>
                     <!-- <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
