@@ -213,7 +213,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                             <div class="col-4">
-                                <p class="mb-0 pb-0 ps-1">LEADS</p>
+                                <p class="mb-0 pb-0 ps-1">Leads</p>
                                 <div class="dropdown">
                                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
                                         data-bs-toggle="dropdown" aria-expanded="false">
