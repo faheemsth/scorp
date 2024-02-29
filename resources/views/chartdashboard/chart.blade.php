@@ -47,12 +47,156 @@
 <script src="//cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-core.min.js"></script>
 <script src="https://cdn.anychart.com/releases/8.11.1/js/anychart-pie.min.js"></script>
+<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
 
 
 
-
+{{-- minicharts --}}
+{{-- <script>
+    window.onload = function () {
+    
+    var chart = new CanvasJS.Chart("minichart", {
+        animationEnabled: true,
+        theme: "",
+        title:{
+            // text: "Simple Line Chart"
+        },
+        data: [{        
+            type: "line",
+              indexLabelFontSize: 16,
+            dataPoints: [
+                { y: 450 },
+                { y: 414},
+                { y: 520, indexLabel: "\u2191 highest",markerColor: "red", markerType: "triangle" },
+                { y: 460 },
+                { y: 450 },
+                
+            ]
+        }]
+    });
+    chart.render();
+    
+    }
+</script> --}}
+<script>
+    google.charts.load('current',{packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    
+    function drawChart() {
+    
+    // Set Data
+    const data = google.visualization.arrayToDataTable([
+      ['Price', 'Size'],
+      [50,7],[60,8],[70,8],[80,9],[90,9],
+      [100,9],[110,10],[120,11],
+      [130,14],[140,14],[150,15]
+    ]);
+    
+    // Set Options
+    const options = {
+     
+      
+     
+      legend: 'none'
+    };
+    
+    // Draw
+    const chart = new google.visualization.LineChart(document.getElementById('minichart'));
+    chart.draw(data, options);
+    
+    }
+</script>
+{{-- 2 --}}
+<script>
+    google.charts.load('current',{packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    
+    function drawChart() {
+    
+    // Set Data
+    const data = google.visualization.arrayToDataTable([
+      ['Price', 'Size'],
+      [50,7],[60,8],[70,8],[80,9],[90,9],
+      [100,9],[110,10],[120,11],
+      [130,14],[140,14],[150,15]
+    ]);
+    
+    // Set Options
+    const options = {
+     
+      
+     
+      legend: 'none'
+    };
+    
+    // Draw
+    const chart = new google.visualization.LineChart(document.getElementById('minichart2'));
+    chart.draw(data, options);
+    
+    }
+</script>
+{{-- 3 --}}
+<script>
+    google.charts.load('current',{packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    
+    function drawChart() {
+    
+    // Set Data
+    const data = google.visualization.arrayToDataTable([
+      ['Price', 'Size'],
+      [50,7],[60,8],[70,8],[80,9],[90,9],
+      [100,9],[110,10],[120,11],
+      [130,14],[140,14],[150,15]
+    ]);
+    
+    // Set Options
+    const options = {
+     
+      
+     
+      legend: 'none'
+    };
+    
+    // Draw
+    const chart = new google.visualization.LineChart(document.getElementById('minichart3'));
+    chart.draw(data, options);
+    
+    }
+</script>
+{{-- 4 --}}
+<script>
+    google.charts.load('current',{packages:['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    
+    function drawChart() {
+    
+    // Set Data
+    const data = google.visualization.arrayToDataTable([
+      ['Price', 'Size'],
+      [50,7],[60,8],[70,8],[80,9],[90,9],
+      [100,9],[110,10],[120,11],
+      [130,14],[140,14],[150,15]
+    ]);
+    
+    // Set Options
+    const options = {
+     
+      
+     
+      legend: 'none'
+    };
+    
+    // Draw
+    const chart = new google.visualization.LineChart(document.getElementById('minichart4'));
+    chart.draw(data, options);
+    
+    }
+</script>
 
 <script>
+    
 
     // line with barr
 
@@ -406,6 +550,54 @@
 
                 <div id="chartContainer" style="height: 300px; width: 100%;"></div>
                 <div class="card-body">
+                    <div class="row" >
+                        <div class="col-3">
+                            
+                            <a href="#" class="mini-text">11 <br>This is the refrence text</a>
+                        
+                            {{-- <div id="minichart" style="height: 0px; width: 100%;"></div> --}}
+                            <div id="minichart" style=" width:200px; height:150px;"></div>
+
+
+                        </div>
+                        <div class="col-3 px-0">
+                            <p class="mini-text">11</p>
+                            <small>this is the mini text</small>
+                            <div id="minichart2" style=" width:200px; height:150px;"></div>
+                        </div>
+                        <div class="col-3">
+                            <p class="mini-text">11</p>
+                            <small>this is the mini text</small>
+                            <div id="minichart3" style=" width:200px; height:150px;"></div>
+                        </div>
+                        <div class="col-3">
+                            <p class="mini-text">11</p>
+                            <small>this is the mini text</small>
+                            <div id="minichart4" style=" width:200px; height:150px;"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-3">
+                            <p class="mini-text">11</p>
+                            <small>this is the mini text</small>
+
+                        </div>
+                        <div class="col-3">
+                            <p class="mini-text">11</p>
+                            <small>this is the mini text</small>
+
+                        </div>
+                        <div class="col-3">
+                            <p class="mini-text">11</p>
+                            <small>this is the mini text</small>
+
+                        </div>
+                        <div class="col-3">
+                            <p class="mini-text">11</p>
+                            <small>this is the mini text</small>
+
+                        </div>
+                    </div>
                     <!-- <p class="card-text">This is a wider card with supporting text below as a natural lead-in to
                         additional content. This content is a little bit longer.</p>
                     <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p> -->
