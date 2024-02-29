@@ -464,7 +464,7 @@
         <div class="col">
             <div class="card h-100 ">
                 <h6 class="card-title p-4 fw-bold ">Language Breakdown</h6>
-                <canvas id="myChart2" class="px-2 " style="width: 100%; height: 280px;"></canvas>
+                <canvas id="myChart2" class="px-2 " style="width: 100%; height: 295px;"></canvas>
                 <div class="card-body px-0 scrollable-table overflow-auto" >
 
                     <table class="table ">
