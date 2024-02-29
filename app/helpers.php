@@ -1,12 +1,14 @@
 <?php
 
-use App\Models\ActivityLog;
+use App\Models\User;
 use App\Models\Branch;
-use App\Models\StageHistory;
-use App\Models\LogActivity;
 use App\Models\Region;
 use App\Models\University;
-use App\Models\User;
+use App\Models\ActivityLog;
+use App\Models\LogActivity;
+use App\Models\Notification;
+use App\Models\StageHistory;
+use App\Events\NewNotification;
 use App\Models\CompanyPermission;
 
 if (!function_exists('countries')) {
@@ -104,6 +106,29 @@ if (!function_exists('addLogActivity')) {
         $new_log->module_id = isset($data['module_id']) ? $data['module_id'] : 0;
         $new_log->created_by = \Auth::user()->id;
         $new_log->save();
+
+
+
+        ///////////////////Creating Notification
+        $msg = '';
+        if(strtolower($data['module_type']) == 'lead'){
+            $msg = 'New lead created.';
+        }else if(strtolower($data['module_type']) == 'deal'){
+            $msg = 'New deal created.';
+        }else if(strtolower($data['module_type']) == 'application'){
+            $msg = 'New application created.';
+        }else{
+            $msg = 'New record created';
+        }
+
+        $notification = new Notification;
+        $notification->user_id = 0;
+        $notification->type = 'push notificationn';
+        $notification->data = $msg;
+        $notification->is_read = 0;
+
+        $notification->save();
+        event(new NewNotification($notification));
     }
 }
 
