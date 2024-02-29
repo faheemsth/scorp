@@ -323,10 +323,10 @@
 
                                 <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                     @if(!empty($support->attachment))
-                                        <a  class="action-btn bg-primary  ms-2 btn btn-sm align-items-center" href="{{ $supportpath . '/' . $support->attachment }}" download="">
+                                        <a  class="action-btn bg-dark  ms-2 btn btn-sm align-items-center" href="{{ $supportpath . '/' . $support->attachment }}" download="">
                                             <i class="ti ti-download text-white"></i>
                                         </a>
-                                        <a href="{{ $supportpath . '/' . $support->attachment }}"  class="action-btn bg-secondary ms-2 mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Download')}}" target="_blank"><span class="btn-inner--icon"><i class="ti ti-crosshair text-white" ></i></span></a>
+                                        <a href="{{ $supportpath . '/' . $support->attachment }}"  class="action-btn bg-dark ms-2 mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Download')}}" target="_blank"><span class="btn-inner--icon"><i class="ti ti-crosshair text-white" ></i></span></a>
                                     @else
                                         -
                                     @endif
@@ -351,13 +351,13 @@
 
                                 <td class="Action" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                 <span>
-                                    <div class="action-btn btn-warning ms-2">
+                                    <div class="action-btn btn-dark ms-2">
                                         <a href="{{ route('support.reply',\Crypt::encrypt($support->id)) }}" data-title="{{__('Support Reply')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Reply')}}" data-original-title="{{__('Reply')}}">
                                             <i class="ti ti-corner-up-left text-white"></i>
                                         </a>
                                     </div>
                                     @if(\Auth::user()->type=='super admin' || \Auth::user()->type=='company' || \Auth::user()->id==$support->ticket_created)
-                                        <div class="action-btn bg-primary  ms-2">
+                                        <div class="action-btn bg-dark  ms-2">
                                             <a href="#" data-size="lg" data-url="{{ route('support.edit',$support->id) }}" data-ajax-popup="true" data-title="{{__('Edit Support')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
                                                 <i class="ti ti-pencil text-white"></i>
                                             </a>
