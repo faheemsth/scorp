@@ -211,7 +211,7 @@ class LeadController extends Controller
 
 
             //  $leads_query->whereIn('brand_id', $brand_ids)->where('is_converted',0);
-          
+
             // Add the dynamic filters
             foreach ($filters as $column => $value) {
                 if ($column === 'name') {
@@ -243,12 +243,12 @@ class LeadController extends Controller
                 $leads_query->orWhere('leads.phone', 'like', '%' . $g_search . '%');
             }
 
-          
+
             if(empty($_GET)){
                 $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
                 $leads_query->where('leads.is_converted', 0);
             }
-           
+
 
             $total_records =  $leads_query->clone()->count();
             $leads = $leads_query->clone()->groupBy('leads.id')->orderBy('leads.created_at', 'desc')->skip($start)->take($num_results_on_page)->get();
@@ -517,6 +517,7 @@ class LeadController extends Controller
                     ]),
                     'module_id' => $lead->id,
                     'module_type' => 'lead',
+                    'notification_type' => 'Lead Created'
                 ];
                 addLogActivity($data);
 
@@ -873,6 +874,7 @@ class LeadController extends Controller
                     ]),
                     'module_id' => $lead->id,
                     'module_type' => 'lead',
+                    'notification_type' => 'Lead Updated'
                 ];
                 addLogActivity($data);
 
@@ -923,6 +925,7 @@ class LeadController extends Controller
                     ]),
                     'module_id' => $lead->id,
                     'module_type' => 'lead',
+                    'notification_type' => 'Lead Deleted'
                 ];
                 addLogActivity($data);
 
@@ -998,6 +1001,7 @@ class LeadController extends Controller
                 ]),
                 'module_id' => $_POST['lead_id'],
                 'module_type' => 'lead',
+                'notification_type' => 'Discussion created'
             ];
             addLogActivity($data);
 
@@ -1020,13 +1024,13 @@ class LeadController extends Controller
     {
        // dd($request->input());
 
-        
+
         $usr = \Auth::user();
         $column_arr = [];
         $spreadsheet = IOFactory::load($file->getPathname());
         $worksheet = $spreadsheet->getActiveSheet();
-        $key = 0;  
-        
+        $key = 0;
+
         //$assigned_user = isset($request->lead_assgigned_user) ? $request->lead_assgigned_user : $request->assigned_to;
         foreach ($worksheet->getRowIterator() as $line) {
             if ($key == 0) {
@@ -1037,7 +1041,7 @@ class LeadController extends Controller
                 $key++;
                 continue;
             }
-           
+
 
             $lead  = new Lead();
             $test = [];
@@ -1285,7 +1289,7 @@ class LeadController extends Controller
                 $response =  $this->excelSheetDataSaved($request, $file, $pipeline, $stage);
             }
 
-           
+
 
 
 
@@ -1658,6 +1662,7 @@ class LeadController extends Controller
                     ]),
                     'module_id' => $id,
                     'module_type' => 'lead',
+                    'notification_type' => 'Notes created'
                 ];
                 addLogActivity($data);
 
@@ -2109,6 +2114,7 @@ class LeadController extends Controller
             ]),
             'module_id' => $request->id,
             'module_type' => 'lead',
+            'notification_type' => 'Drive link added'
         ];
         addLogActivity($data);
 
@@ -2164,6 +2170,7 @@ class LeadController extends Controller
                 ]),
                 'module_id' => $request->id,
                 'module_type' => 'lead',
+                'notification_type' => 'Lead Notes Updated'
             ];
             addLogActivity($data);
 
@@ -2198,6 +2205,7 @@ class LeadController extends Controller
             ]),
             'module_id' => $id,
             'module_type' => 'lead',
+            'notification_type' => 'Notes created'
         ];
         addLogActivity($data);
 
@@ -2253,6 +2261,7 @@ class LeadController extends Controller
             ]),
             'module_id' => $request->id,
             'module_type' => 'lead',
+            'notification_type' => 'Lead Notes Updated'
         ];
         addLogActivity($data);
 
@@ -2286,6 +2295,7 @@ class LeadController extends Controller
             ]),
             'module_id' => $request->lead_id,
             'module_type' => 'lead',
+            'notification_type' => 'Lead Notes Deleted'
         ];
         addLogActivity($data);
 
@@ -2359,6 +2369,7 @@ class LeadController extends Controller
                     ]),
                     'module_id' => $lead->id,
                     'module_type' => 'lead',
+                    'notification_type' => 'Lead Updated'
                 ];
                 addLogActivity($data);
 
@@ -2720,6 +2731,7 @@ class LeadController extends Controller
             ]),
             'module_id' => $lead->id,
             'module_type' => 'lead',
+            'notification_type' => 'Lead Converted'
         ];
         addLogActivity($data);
 
@@ -2732,6 +2744,7 @@ class LeadController extends Controller
             ]),
             'module_id' => $deal->id,
             'module_type' => 'deal',
+            'notification_type' => 'Deal Created'
         ];
         addLogActivity($data);
 
@@ -3117,6 +3130,7 @@ class LeadController extends Controller
             ]),
             'module_id' => $lead_id,
             'module_type' => 'lead',
+            'notification_type' => 'Stage Updated'
         ];
         addLogActivity($data);
 
@@ -3437,6 +3451,7 @@ class LeadController extends Controller
             ]),
             'module_id' => $task->id,
             'module_type' => 'task',
+            'notification_type' => 'Task created'
         ];
         addLogActivity($data);
 
@@ -3551,6 +3566,10 @@ class LeadController extends Controller
             ]),
             'module_id' => $lead->id,
             'module_type' => 'lead',
+            'notification_type' => 'Lead Converted'
+
+
+
         ];
         addLogActivity($data);
 

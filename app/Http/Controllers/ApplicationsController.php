@@ -123,7 +123,7 @@ class ApplicationsController extends Controller
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             $brands = User::where('type', 'company')->get();
             $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'applications')->get();
-            
+
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('applications.applications_list_ajax',  compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands'))->render();
                 $pagination_html = view('layouts.pagination', [

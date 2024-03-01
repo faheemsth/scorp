@@ -306,6 +306,7 @@ class OrganizationController extends Controller
                         ]),
             'module_id' => $user->id,
             'module_type' => 'organization',
+            'notification_type' => 'Organization Created'
         ];
         addLogActivity($data);
 
@@ -413,6 +414,7 @@ class OrganizationController extends Controller
                         ]),
             'module_id' => $user->id,
             'module_type' => 'organization',
+            'notification_type' => 'Organization Updated'
         ];
         addLogActivity($data);
 
@@ -742,6 +744,7 @@ class OrganizationController extends Controller
                             ]),
                 'module_id' => $request->id,
                 'module_type' => 'lead',
+                'notification_type' => 'Lead Notes Updated'
             ];
             addLogActivity($data);
 
@@ -776,6 +779,7 @@ class OrganizationController extends Controller
                         ]),
             'module_id' => $id,
             'module_type' => 'lead',
+            'notification_type' => 'Notes created'
         ];
         addLogActivity($data);
 
@@ -1112,6 +1116,7 @@ class OrganizationController extends Controller
                 'note' => json_encode($remarks),
                 'module_id' => $dealTask->id,
                 'module_type' => 'task',
+                'notification_type' => 'Task created'
             ];
             addLogActivity($data);
 
@@ -1302,6 +1307,7 @@ class OrganizationController extends Controller
                 'note' => json_encode($remarks),
                 'module_id' => $dealTask->id,
                 'module_type' => 'task',
+                'notification_type' => 'Task Update'
             ];
             addLogActivity($data);
 
@@ -1319,6 +1325,7 @@ class OrganizationController extends Controller
                     'note' => json_encode($remarks),
                     'module_id' => $dealTask->id,
                     'module_type' => 'task',
+                    'notification_type' => 'Task Update'
                 ];
                 addLogActivity($data);
             }
@@ -1360,6 +1367,7 @@ class OrganizationController extends Controller
                 ]),
                 'module_id' => 1,
                 'module_type' => 'task',
+                'notification_type' => 'Task Deleted'
             ];
             addLogActivity($data);
 

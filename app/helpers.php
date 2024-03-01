@@ -117,6 +117,54 @@ if (!function_exists('addLogActivity')) {
             $msg = 'Lead updated.';
         }else if(strtolower($data['module_type']) == 'application'){
             $msg = 'New application created.';
+        }else if(strtolower($data['notification_type']) == 'University Created'){
+            $msg = 'New University Created.';
+        }else if(strtolower($data['notification_type']) == 'University Updated'){
+            $msg = 'University Updated.';
+        }else if(strtolower($data['notification_type']) == 'University Deleted'){
+            $msg = 'University Deleted.';
+        }else if(strtolower($data['notification_type']) == 'Deal Created'){
+            $msg = 'Deal Created.';
+        }else if(strtolower($data['notification_type']) == 'Deal Updated'){
+            $msg = 'Deal Updated.';
+        }else if(strtolower($data['notification_type']) == 'Lead Updated'){
+            $msg = 'Lead Updated.';
+        }else if(strtolower($data['notification_type']) == 'Deal Notes Created'){
+            $msg = 'Deal Notes Created.';
+        }else if(strtolower($data['notification_type']) == 'Task Created'){
+            $msg = 'Task Created.';
+        }else if(strtolower($data['notification_type']) == 'Task Updated'){
+            $msg = 'Task Updated.';
+        }else if(strtolower($data['notification_type']) == 'Stage Updated'){
+            $msg = 'Stage Updated.';
+        }else if(strtolower($data['notification_type']) == 'Deal Stage Updated'){
+            $msg = 'Deal Stage Updated.';
+        }else if(strtolower($data['notification_type']) == 'Organization Created'){
+            $msg = 'Organization Created.';
+        }else if(strtolower($data['notification_type']) == 'Organization Updated'){
+            $msg = 'Organization Updated.';
+        }else if(strtolower($data['notification_type']) == 'Lead Notes Updated'){
+            $msg = 'Lead Notes Updated.';
+        }else if(strtolower($data['notification_type']) == 'Notes created'){
+            $msg = 'Notes created.';
+        }else if(strtolower($data['notification_type']) == 'Task Deleted'){
+            $msg = 'Task Deleted.';
+        }else if(strtolower($data['notification_type']) == 'Lead Created'){
+            $msg = 'Lead Created.';
+        }else if(strtolower($data['notification_type']) == 'Lead Updated'){
+            $msg = 'Lead Updated.';
+        }else if(strtolower($data['notification_type']) == 'Lead Deleted'){
+            $msg = 'Lead Deleted.';
+        }else if(strtolower($data['notification_type']) == 'Discussion created'){
+            $msg = 'Discussion created.';
+        }else if(strtolower($data['notification_type']) == 'Drive link added'){
+            $msg = 'Drive link added.';
+        }else if(strtolower($data['notification_type']) == 'Lead Notes Updated'){
+            $msg = 'Lead Notes Updated.';
+        }else if(strtolower($data['notification_type']) == 'Lead Notes Deleted'){
+            $msg = 'Lead Notes Deleted.';
+        }else if(strtolower($data['notification_type']) == 'Lead Converted'){
+            $msg = 'Lead Converted.';
         }else{
             $msg = 'New record created';
         }
@@ -283,7 +331,7 @@ if (!function_exists('BrandsRegionsBranches')) {
         $employees = [];
 
         $user = \Auth::user();
-        $type = $user->type; 
+        $type = $user->type;
 
         if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
             $regions = Region::where('id', $_GET['region_id'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
