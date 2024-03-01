@@ -184,6 +184,7 @@ class ApplicationsController extends Controller
                         ]),
             'module_id' => $application_id,
             'module_type' => 'application',
+            'notification_type' => 'application stage update'
         ];
         addLogActivity($data);
 
@@ -287,6 +288,7 @@ class ApplicationsController extends Controller
                     ]),
                     'module_id' => $deal->deal_id,
                     'module_type' => 'Application',
+                    'notification_type' => 'lead updated'
                 ];
                 addLogActivity($data);
 
