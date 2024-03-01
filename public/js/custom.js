@@ -138,10 +138,10 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
 function select2() {
     if ($("select.select2").length > 0) {
         $("select.select2").each(function (index, element) {
-            console.log(element);
+          //  console.log(element);
             // console.log(element);
             var id = $(element).attr('id');
-            console.log('Element ID:', id); // Add this line for debugging
+          //  console.log('Element ID:', id); // Add this line for debugging
             var multipleCancelButton = new Choices(
                 '#' + id, {
                     removeItemButton: true,

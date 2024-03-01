@@ -31,6 +31,7 @@ use Illuminate\Http\Request;
 use App\Models\DealDiscussion;
 use App\Models\ProductService;
 use App\Models\TaskDiscussion;
+use App\Events\NewNotification;
 use App\Models\DealApplication;
 use App\Models\ApplicationStage;
 use App\Models\ClientPermission;
@@ -245,6 +246,8 @@ class DealController extends Controller
 
     public function deal_list()
     {
+        // die('come');
+
         $usr = \Auth::user();
         $cnt_deal = [];
         $comparePrice = '';

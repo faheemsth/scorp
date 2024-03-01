@@ -151,7 +151,7 @@ class="btn btn-sm btn-primary">
             <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                 <form action="/branch" method="GET" class="">
 
-                    <div class="row my-3">
+                    <div class="row mb-2">
                         @php
                         $type = \Auth::user()->type;
                         @endphp
