@@ -111,10 +111,10 @@ if (!function_exists('addLogActivity')) {
 
         ///////////////////Creating Notification
         $msg = '';
-        if(strtolower($data['module_type']) == 'lead'){
-            $msg = 'New lead created.';
-        }else if(strtolower($data['module_type']) == 'deal'){
-            $msg = 'New deal created.';
+        if(strtolower($data['notification_type']) == 'application stage update'){
+            $msg = 'Application stage updated.';
+        }else if(strtolower($data['notification_type']) == 'lead updated'){
+            $msg = 'Lead updated.';
         }else if(strtolower($data['module_type']) == 'application'){
             $msg = 'New application created.';
         }else{
