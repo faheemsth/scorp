@@ -1763,6 +1763,9 @@ Route::get('/organiation/{id}/task-edit', [OrganizationController::class, 'taskE
 Route::post('/organization/{id}/task-update', [OrganizationController::class, 'taskUpdate'])->name('organization.tasks.update')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/task-delete', [OrganizationController::class, 'taskDelete'])->name('organization.task.delete')->middleware(['auth', 'XSS']);
 
+Route::post('/organization/update/{id}', [OrganizationController::class, 'update']);
+
+
 Route::get('/get_branch_by_type', [OrganizationController::class, 'GetBranchByType'])->name('GetBranchByType')->middleware(['auth', 'XSS']);
 
 
