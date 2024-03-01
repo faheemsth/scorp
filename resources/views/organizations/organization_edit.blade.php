@@ -115,6 +115,44 @@
                             </div>
                         </div>
 
+                             {{-- Organizaiton contact person Info --}}
+                             <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                                        CONTACT PERSON INFORMATION
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingThree">
+                                    <div class="accordion-body">
+
+                                        <div class="form-group row ">
+                                            <label for="contactname" class="col-sm-3 col-form-label">Name <span class="text-danger">*</span></label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="contactname" value="{{ $org_detail->contactname }}" placeholder="Name" name='contactname'>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row ">
+                                            <label for="contactemail" class="col-sm-3 col-form-label">Email </label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="contactemail" value="{{ $org_detail->contactemail }}" placeholder="Email" name='contactemail'>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row ">
+                                            <label for="contactphone" class="col-sm-3 col-form-label">Phone </label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="contactphone" value="{{ $org_detail->contactphone }}" placeholder="Phone" name='contactphone'>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row ">
+                                            <label for="contactjobroll" class="col-sm-3 col-form-label">Job Roll </label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="contactjobroll" value="{{ $org_detail->contactjobroll }}" placeholder="Job Roll" name='contactjobroll'>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         {{-- Organizaiton Address Info --}}
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="panelsStayOpen-headingThree">
@@ -126,35 +164,28 @@
                                 <div class="accordion-body">
 
                                     <div class="form-group row">
-                                        <label for="billing-addres" class="col-sm-3 col-form-label">Billing Address</label>
-                                        <div class="col-sm-6">
-                                            <div class="col-12">
+                                        <label for="billing-addres" class="col-sm-3 col-form-label">Billing
+                                            Address</label>
+                                        <div class="col-6">
+                                            <div class="col-12 px-0">
                                                 <textarea name="organization_billing_street" class="form form-control" id="" cols="30" rows="3">{{ $org_detail->billing_street }}</textarea>
                                             </div>
 
-                                            <div class="row mt-1 mx-0">
-                                                <div class="col-6 mt-1 space">
-                                                    <input type="text" class="form-control" id="billing-city" placeholder="Billing City" value="{{ $org_detail->billing_city }}" name="organization_billing_city">
-                                                </div>
-
-                                                <div class="col-6 mt-1 space">
-                                                    <input type="text" class="form-control" id="billing-state" placeholder="Billing State" value="{{ $org_detail->billing_state }}" name="organization_billing_state">
-                                                </div>
-
-                                                <div class="col-6 mt-1 space">
-                                                    <input type="text" class="form-control" id="billing-postal-code" placeholder="Billing Postal Code" value="{{ $org_detail->billing_postal_code }}" name="organization_billing_postal_code">
-                                                </div>
-
-
-                                                <div class="col-6 mt-1 space">
-                                                    <select name="organization_billing_country" id="" class="form form-select">
-                                                        <option value="">Select country</option>
-                                                        @foreach($countries as $country)
-                                                        <option value="{{$country}}" <?= isset($org_detail->billing_country) && $org_detail->billing_country  == $country ? 'selected' : '' ?>>{{$country}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="billing-addres" class="col-sm-3 col-form-label">Country
+                                            </label>
+                                        <div class="col-6">
+                                            <div class="col-12 px-0">
+                                                <select name="organization_billing_country" id="" class="form form-select">
+                                                    <option value="">Select country</option>
+                                                    @foreach($countries as $country)
+                                                    <option value="{{$country}}" <?= isset($org_detail->billing_country) && $org_detail->billing_country  == $country ? 'selected' : '' ?>>{{$country}}</option>
+                                                    @endforeach
+                                                </select>
                                             </div>
+                                        </div>
 
                                         </div>
                                     </div>
