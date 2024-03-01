@@ -408,7 +408,7 @@
             <div class="card h-100">
                 <div class="d-flex justify-content-between align-items-center p-4  gap-2">
                     <h6 class="card-title  fw-bold">Admission-Application Chart </h6>
-                    <select class="form-select form-select-sm w-50" aria-label="Small select example">
+                    <select class="form-select form-select-sm w-25" aria-label="Small select example">
                         <option selected>Select</option>
                         <option value="1">Admission-Application</option>
                         <option value="2">Application-Deposit</option>

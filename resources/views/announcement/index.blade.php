@@ -8,6 +8,21 @@
     <li class="breadcrumb-item">{{__('Announcement')}}</li>
 @endsection
 
+<style>
+    .search-bar-input{
+        width:30% !important;
+    }
+    @media only screen and (max-width: 768px){
+        .search-bar-input{
+        width:50% !important;
+    }
+    }
+    @media only screen and (max-width: 425px){
+        .search-bar-input{
+        width:100% !important;
+    }
+    }
+</style>
 
 
 
@@ -16,11 +31,11 @@
         <div class="col-md-12">
             <div class="card">
             <div class="card-body ">
-                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                    <div class="col-4">
+                <div class="row align-items-center ">
+                    <div class="col-12 col-md-4 pb-2 ">
                         <p class="mb-0 pb-0 ps-1">Announcement</p>
-                        <div class="dropdown">
-                            <button class="dropdown-toggle All-leads " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="dropdown " >
+                            <button class="dropdown-toggle All-leads " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
                                 ALL ANNOUNCEMENT
                             </button>
                             <!-- <ul class="dropdown-menu d-none" aria-labelledby="dropdownMenuButton1">
@@ -34,8 +49,8 @@
                     </div>
 
 
-                    <div class="col-8 d-flex justify-content-end gap-2 pe-0">
-                        <div class="input-group w-25 rounded" style = "width:36px; height:36px;">
+                    <div class="col-12 col-md-8 d-flex justify-content-end gap-2 pe-0 me-0 align-items-center pb-1">
+                        <div class="input-group  rounded search-bar-input  " style="height:36px;">
                             <button class="btn btn-sm list-global-search-btn px-0 ">
                                 <span class="input-group-text bg-transparent border-0 px-1 pt-0" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
@@ -51,15 +66,15 @@
                         </button> -->
 
                         @can('create announcement')
-                        <button data-size="lg" data-url="{{ route('announcement.create') }}" data-ajax-popup="true" data-title="{{__('Create New Announcement')}}" data-bs-toggle="tooltip" title="{{__('Create Announcement')}}" class="btn px-2 btn-dark" style="width:36px; height: 36px; ">
+                        <button data-size="lg" data-url="{{ route('announcement.create') }}" data-ajax-popup="true" data-title="{{__('Create New Announcement')}}" data-bs-toggle="tooltip" title="{{__('Create Announcement')}}" class="btn px-2 btn-dark  " style="width:36px; height: 36px; ">
                             <i class="ti ti-plus" style="font-size:18px"></i>
                         </button>
                         @endcan
-
-                        <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+<!-- 
+                        <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> -->
                     </div>
                 </div>
-                    <div class="table mt-3 overflow-auto">
+                    <div class="table overflow-auto">
                     <table class="table ">
                             <thead>
                             <tr>
