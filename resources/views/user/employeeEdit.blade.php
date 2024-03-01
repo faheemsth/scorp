@@ -3,7 +3,7 @@
 <div class="modal-body" style="height:75vh;">
     <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
         <div class="card-body px-2 py-0">
-            <div class="row">
+            <div class="row align-items-baseline">
                 <div class="col-md-6">
                     <div class="form-group">
                         {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}
@@ -48,7 +48,7 @@
                             'id' => 'brands',
                         ]) !!}
                     @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
-                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                        <label for="branches" class=" col-form-label">Brands<span
                                 class="text-danger">*</span></label>
                         <input type="hidden" name="companies" value="{{ $user->brand_id }}">
                         <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
@@ -58,7 +58,7 @@
                             @endforeach
                         </select>
                     @else
-                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                        <label for="branches" class=" col-form-label">Brands<span
                                 class="text-danger">*</span></label>
                         <input type="hidden" name="companies" value="{{ $user->brand_id }}">
                         <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
@@ -89,7 +89,7 @@
                             'id' => 'region_id',
                         ]) !!}
                     @else
-                        <label for="branches" class="col-sm-3 col-form-label">Region<span
+                        <label for="branches" class=" col-form-label">Region<span
                                 class="text-danger">*</span></label>
                         <input type="hidden" name="region_id" value="{{ $user->region_id }}">
                         {!! Form::select('region_id', $Region, $user->region_id, [
@@ -123,7 +123,7 @@
                             @endforeach
                         </select>
                     @else
-                        <label for="branches" class="col-sm-3 col-form-label">Branch<span
+                        <label for="branches" class=" col-form-label">Branch<span
                                 class="text-danger">*</span></label>
                         <input type="hidden" name="branch_id" value="{{ $user->branch_id }}">
                         <select name="branch_id" id="branch_id" class="form-control select2 branch_id"

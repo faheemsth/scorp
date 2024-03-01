@@ -47,6 +47,49 @@
                         <li class="list-group-item px-0">
                             <div class="row align-items-center">
                                 <div class="col-6">
+                                    <span class="form-label">{{__('Brand')}}:</span>
+                                </div>
+                                <div class="col-6 text-end">
+                                
+                                    {{ optional(\App\Models\User::find(optional($support->createdBy)->brand_id))->name }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0">
+                            <div class="row align-items-center">
+                                <div class="col-6">
+                                    <span class="form-label">{{__('Region')}}:</span>
+                                </div>
+                                <div class="col-6 text-end">
+                                {{ optional(\App\Models\Region::find(optional($support->createdBy)->region_id))->name }}
+
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0">
+                            <div class="row align-items-center">
+                                <div class="col-6">
+                                    <span class="form-label">{{__('Branch')}}:</span>
+                                </div>
+                                <div class="col-6 text-end">
+                                    
+                                {{ optional(\App\Models\Branch::find(optional($support->createdBy)->branch_id))->name }}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0">
+                            <div class="row align-items-center">
+                                <div class="col-6">
+                                    <span class="form-label">{{__('Phone')}}:</span>
+                                </div>
+                                <div class="col-6 text-end">
+                                {{!empty($support->createdBy)?$support->createdBy->phone:''}}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item px-0">
+                            <div class="row align-items-center">
+                                <div class="col-6">
                                     <span class="form-label">{{__('Ticket Code')}}:</span>
                                 </div>
                                 <div class="col-6 text-end">
@@ -107,7 +150,7 @@
                     @if($support->status == 'Open')
                     <h5 class="mt-0 mb-3">{{__('Comments')}}</h5>
                     {{ Form::open(array('route' => array('support.reply.answer',$support->id))) }}
-                    <textarea class="form-control form-control-light mb-2" name="description" placeholder="Your comment" id="example-textarea" rows="3" required=""></textarea>
+                    <textarea class="form-control form-control-light mb-2" name="description" placeholder="Your comment" id="example-textarea" rows="3" required="" >{{!empty($support->description)?$support->description:''}}</textarea>
                     <div class="text-end">
                         <div class=" mb-2 ml-2">
                             {{Form::submit(__('Send'),array('class'=>'btn btn-primary'))}}

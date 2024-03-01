@@ -79,7 +79,7 @@
                                 <i class="ti ti-cast"></i>
                             </div>
                             <div class="ms-3">
-                                <small class="text-muted">{{__('On Hold')}}</small>
+                                <small class="text-muted">{{__('Hold')}}</small>
                                 <h6 class="m-0">{{__('Ticket')}}</h6>
                             </div>
                         </div>
@@ -119,39 +119,39 @@
 
 </div>
 
-    <div class="row">
+    <div class="row ">
         
         <div class="col-md-12">
-            <div class="card">
-                <div class="row align-items-center" style="margin-left: 5px;margin-top: 20px">
-                    <div class="col-2">
+            <div class="card ">
+                <div class="row align-items-center ps-3 my-4">
+                    <div class="col-4">
                         <div class="dropdown">
                             <button class=" All-leads" type="button" id="dropdownMenuButton1">
-                                ALL Support
+                                ALL SUPPORT
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a class="dropdown-item" href="#">Delete</a></li>
                             </ul>
                         </div>
                     </div>
-                    <div class="col-10 d-flex justify-content-end gap-2">
+                    <div class="col-8 d-flex justify-content-end gap-2 ">
                         
-                        <div class="input-group w-25">
-                            <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                        <div class="input-group w-25 rounded" style="width:36px; height:36px; ">
+                            <span class="input-group-text bg-transparent border-0  px-1 pt-0" id="basic-addon1">
                                 <i class="ti ti-search" style="font-size: 18px"></i>
                             </span>
-                            <input type="Search" class="form-control border-0 bg-transparent ps-0"
+                            <input type="Search" class="form-control border-0 bg-transparent px-0 pb-2 text-truncate"
                                 placeholder="Search this list..." aria-label="Username"
                                 aria-describedby="basic-addon1">
                         </div>
                         <a href="#" data-size="lg" data-url="{{ route('support.create') }}" data-ajax-popup="true"
-                            data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Support')}}" class="btn btn-dark py-2 px-2">
+                            data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Support')}}" class="btn btn-dark py-2 px-2" style="width:36px; height: 36px; ">
                                 <i class="ti ti-plus" style="font-size:18px"></i>
                             </a>
                         <!-- @can('create support') -->
 
                         <!-- <div class="float-end"> -->
-                            <a href="{{ route('support.grid') }}" class="btn btn-dark py-2 px-2" data-bs-toggle="tooltip" title="{{__('Grid View')}}">
+                            <a href="{{ route('support.grid') }}" class="btn btn-dark py-2 px-2" data-bs-toggle="tooltip" title="{{__('Grid View')}} " style="width:36px; height: 36px; ">
                                 <i class="ti ti-layout-grid text-white" style="font-size:18px"></i>
                             </a>
                     
@@ -239,8 +239,8 @@
                             <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 1000 ? 'selected' : '' ?>
                             value="1000">1000</option>
                         <option
-                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] ==  ? 'selected' : '' ?>
-                            value="{{  }}">all</option>
+                            <?= isset($_GET['num_results_on_page']) && $_GET['num_results_on_page'] == 'all' ? 'selected' : '' ?>
+                            value="all">all</option>
                     </select>
 
                     <span style="margin-top: 5px;">entries per page</span>
@@ -270,11 +270,11 @@
                         @foreach($supports as $support)
 
                             <tr>
-                                <td scope="row">
+                                <td scope="row" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                     <div class="media align-items-center">
                                         <div>
-                                            <div class="avatar-parent-child">
-                                                <img alt="" class="avatar rounded-circle avatar-sm" @if(!empty($support->createdBy) && !empty($support->createdBy->avatar)) src="{{asset(Storage::url('uploads/avatar')).'/'.$support->createdBy->avatar}}" @else  src="{{asset(Storage::url('uploads/avatar')).'/avatar.png'}}" @endif>
+                                            <div class="avatar-parent-child pe-2 ">
+                                                <img alt="" class="avatar rounded-circle avatar-sm " @if(!empty($support->createdBy) && !empty($support->createdBy->avatar)) src="{{asset(Storage::url('uploads/avatar')).'/'.$support->createdBy->avatar}}" @else  src="{{asset(Storage::url('uploads/avatar')).'/avatar.png'}}" @endif>
                                                 @if($support->replyUnread()>0)
                                                     <span class="avatar-child avatar-badge bg-success"></span>
                                                 @endif
@@ -285,7 +285,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td scope="row">
+                                <td scope="row" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                     <div class="media align-items-center">
                                         <div class="media-body">
                                             <a href="{{ route('support.reply',\Crypt::encrypt($support->id)) }}" class="name h6 mb-0 text-sm">{{$support->subject}}</a><br>
@@ -302,12 +302,12 @@
                                     </div>
                                 </td>
 
-                                <td>{{$support->ticket_code}}</td>
-{{--                                <td>--}}
+                                <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{$support->ticket_code}}</td>
+{{--                                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">--}}
 {{--                                    @if(!empty($support->attachment))--}}
 {{--                                        <div class="action-btn bg-primary ms-2">--}}
 
-{{--                                        <a href="{{asset(Storage::url('uploads/supports')).'/'.$support->attachment}}" download="" class="mx-3 btn btn-sm align-items-center" target="_blank">--}}
+{{--                                        <a href="{{asset(Storage::url('uploads/supports')).'/'.$support->attachment}}" download="" class="mx-3 btn-primary  btn-sm align-items-center" target="_blank">--}}
 
 {{--                                                <i class="ti ti-download text-white" data-bs-toggle="tooltip" data-bs-original-title="{{ __('Download') }}"></i></a>--}}
 {{--                                        </div>--}}
@@ -321,9 +321,9 @@
 {{--                                    @endif--}}
 {{--                                </td>--}}
 
-                                <td>
+                                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                     @if(!empty($support->attachment))
-                                        <a  class="action-btn bg-primary ms-2 btn btn-sm align-items-center" href="{{ $supportpath . '/' . $support->attachment }}" download="">
+                                        <a  class="action-btn bg-primary  ms-2 btn btn-sm align-items-center" href="{{ $supportpath . '/' . $support->attachment }}" download="">
                                             <i class="ti ti-download text-white"></i>
                                         </a>
                                         <a href="{{ $supportpath . '/' . $support->attachment }}"  class="action-btn bg-secondary ms-2 mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Download')}}" target="_blank"><span class="btn-inner--icon"><i class="ti ti-crosshair text-white" ></i></span></a>
@@ -333,9 +333,9 @@
 
                                 </td>
 
-                                <td>{{!empty($support->assignUser)?$support->assignUser->name:'-'}}</td>
+                                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{!empty($support->assignUser)?$support->assignUser->name:'-'}}</td>
 
-                                <td>
+                                <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                     @if($support->status == 'Open')
                                         <span class="status_badge text-capitalize badge bg-success p-2 px-3 rounded">{{ __(\App\Models\Support::$status[$support->status]) }}</span>
                                     @elseif($support->status == 'Close')
@@ -347,17 +347,17 @@
 
 
 
-                                <td>{{\Auth::user()->dateFormat($support->created_at)}}</td>
+                                <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{\Auth::user()->dateFormat($support->created_at)}}</td>
 
-                                <td class="Action">
+                                <td class="Action" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                 <span>
-                                    <div class="action-btn bg-warning ms-2">
+                                    <div class="action-btn btn-warning ms-2">
                                         <a href="{{ route('support.reply',\Crypt::encrypt($support->id)) }}" data-title="{{__('Support Reply')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Reply')}}" data-original-title="{{__('Reply')}}">
                                             <i class="ti ti-corner-up-left text-white"></i>
                                         </a>
                                     </div>
                                     @if(\Auth::user()->type=='super admin' || \Auth::user()->type=='company' || \Auth::user()->id==$support->ticket_created)
-                                        <div class="action-btn bg-primary ms-2">
+                                        <div class="action-btn bg-primary  ms-2">
                                             <a href="#" data-size="lg" data-url="{{ route('support.edit',$support->id) }}" data-ajax-popup="true" data-title="{{__('Edit Support')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
                                                 <i class="ti ti-pencil text-white"></i>
                                             </a>

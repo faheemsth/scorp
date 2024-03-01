@@ -1,7 +1,7 @@
 <form action="{{ url('branch') }}" id="create-branch" method="post" novalidate>
     @csrf
     <div class="modal-body" style="min-height: 35vh;">
-        <div class="row">
+        <div class="row align-items-baseline">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="name">{{ __('Name') }}</label>

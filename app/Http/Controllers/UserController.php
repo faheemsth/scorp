@@ -705,7 +705,7 @@ class UserController extends Controller
             $usersQuery = User::select(['users.*'])->whereNotIn('type', $excludedTypes);
 
 
-            //Filters
+            //Filters~
             if (!empty($_GET['brand'])) {
                 $usersQuery->where('brand_id', $_GET['brand']);
             }

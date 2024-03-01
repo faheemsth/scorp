@@ -656,6 +656,19 @@
         chart.draw();
     });
 </script>
+<style>
+
+@media screen and (max-width: 576px) {
+  .scrollable-table {
+    overflow-x: auto;
+    width: 100%;
+    display: block;
+    white-space: nowrap; /* Prevent line breaks */
+  }
+}
+
+</style>
+
 @endpush
 
 @section('page-title')
@@ -670,7 +683,7 @@
 
 
 @section('content')
-<div class="main-content py-5" >
+<div class="main-content pb-5" >
     <div class="row">
         <div class="dropdown col-6 col-lg-2 col-md-4 my-2 ">
             <a class="btn bg-white text-dark dropdown-toggle w-100 py-2 fw-bold fs-5" href="#" role="button"
@@ -726,7 +739,7 @@
         <div class="dropdown  col-lg-4 col-md-6 my-2">
             <a class="btn bg-white text-dark btn-lg dropdown-toggle w-100 py-2 fw-bold fs-5" href="#" role="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
-                April 15,2020-April 21,2020
+                january 15,2023-April 21,2024
             </a>
 
             <ul class="dropdown-menu w-100 ">
@@ -745,9 +758,9 @@
 
 
             <div class="card h-100">
-                <div class="d-flex justify-content-between align-items-center p-4">
-                    <h6 class="card-title  fw-bold ">Admission-Application Chart </h6>
-                    <select class="form-select form-select-sm w-25" aria-label="Small select example">
+                <div class="d-flex justify-content-between align-items-center p-4  gap-2">
+                    <h6 class="card-title  fw-bold">Admission-Application Chart </h6>
+                    <select class="form-select form-select-sm w-50" aria-label="Small select example">
                         <option selected>Select</option>
                         <option value="1">Admission-Application</option>
                         <option value="2">Application-Deposit</option>
@@ -820,9 +833,9 @@
 
 
             <div class="card h-100 ">
-                <div class="p-4 d-flex justify-content-between align-items-center p-4">
+                <div class="d-flex justify-content-between align-items-center p-4  gap-3">
                     <h6 class="card-title  fw-bold">Stages Shares</h6>
-                    <select class="form-select form-select-sm w-50 float-right " aria-label="Small select example">
+                    <select class="form-select form-select-sm w-50" aria-label="Small select example">
                         <option selected>Select </option>
                         <option value="1">New Lead</option>
                         <option value="2">Contacted</option>
@@ -834,10 +847,10 @@
                     </select>
                 </div>
                 <div id="dounotchart2"></div>
-                <div class="card-body">
+                <div class="card-body ">
 
-                    <div class="mb-4 w-100 text-center ">
-                        <canvas id="myChart"class="d-block mx-md-auto mx-sm-auto"></canvas>
+                    <div class="mb-5 w-100 text-center ">
+                        <canvas id="myChart" class= "pb-3 mx-md-auto mx-sm-auto"></canvas>
                     </div>
                 </div>
 
@@ -853,10 +866,10 @@
         <div class="col">
             <div class="card h-100 ">
                 <h6 class="card-title p-4 fw-bold ">Language Breakdown</h6>
-                <canvas id="myChart2" class="px-2 " style="width: 100%; height:220px;"></canvas>
-                <div class="card-body">
+                <canvas id="myChart2" class="px-2 " style="width: 100%; height: 280px;"></canvas>
+                <div class="card-body px-0 scrollable-table overflow-auto" >
 
-                    <table class="table mt-3">
+                    <table class="table ">
                         <thead>
                             <tr>
                                 <th scope="col">Brands</th>
@@ -888,19 +901,19 @@
         </div>
         <div class="col">
             <div class="card h-100">
-                <div class="d-flex justify-content-between align-items-center p-4">
+                <div class="d-flex justify-content-between align-items-center p-4  gap-3">
                     <h6 class="card-title  fw-bold ">Country Breakdown </h6>
                     <select class="form-select form-select-sm w-50" aria-label="Small select example">
-                        <option selected>Select Country</option>
+                        <option selected>Select </option>
                         <option value="1">Pakistan</option>
                         <option value="2">USA</option>
                         <option value="3">Australia</option>
                         <option value="4">United Kingdom</option>
                     </select>
                 </div>
-                <span id="chartdiv" class=""> </span>
-                <div class="card-body">
-                    <table class="table">
+                <span id="chartdiv" class="" style="width: 100%; height: 280px;" > </span>
+                <div class="card-body px-0 scrollable-table overflow-auto">
+                    <table class="table ">
                         <thead>
                             <th>Location</th>
                             <th>Leads</th>
@@ -935,11 +948,11 @@
             </div>
         </div>
         <div class="col">
-            <div class="card h-100">
-                <div class="pl-4 py-4 d-flex">
+            <div class="card h-100 ">
+                <div class="d-flex justify-content-between align-items-center p-4  gap-3">
                     <h6 class="card-title  fw-bold">Project Directors Shares</h6>
-                    <select class="form-select form-select-sm w-50 float-right" aria-label="Small select example">
-                        <option selected>Select Option</option>
+                    <select class="form-select form-select-sm w-50 " aria-label="Small select example">
+                        <option selected>Select</option>
                         <option value="1">Amar Suhail</option>
                         <option value="2">Dr Kashif Shahzad</option>
                         <option value="3">Muhammad Asif</option>
@@ -947,9 +960,9 @@
                     </select>
                 </div>
 
-                <div id="dounotchart"></div>
-                <div class="card-body">
-                    <table class="table mb-2">
+                <div id="dounotchart" style="width: 100%; height: 280px;"></div>
+                <div class="card-body px-0 scrollable-table  overflow-auto ">
+                    <table class="table ">
                        <thead>
                         <tr>
                             <th>Project Director</th>
@@ -958,11 +971,6 @@
                         </tr>
                        </thead>
                         <tbody>
-                            <tr>
-                                <td>Amar Suhail</td>
-                                <td>500</td>
-                                <td>200</td>
-                            </tr>
                             <tr>
                                 <td>Dr Kashif Shahzad</td>
                                 <td>500</td>

@@ -69,7 +69,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             @endif
 
                             @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete user'))
-                            <a href="javascript:void(0)" id="actions_div" class="btn p-2 d-none delete-bulk btn-dark" style="color:white;" data-bs-toggle="tooltip" title="" data-original-title="Delete in bulk">
+                            <a href="javascript:void(0)" id="actions_div" class="btn p-2 d-none delete-bulk btn-dark" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Delete in bulk">
                                 <i class="ti ti-trash"></i>
                             </a>
                             @endif
