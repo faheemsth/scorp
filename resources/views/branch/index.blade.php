@@ -66,15 +66,15 @@ class="btn btn-sm btn-primary">
         background-color: white !important;
     }
 </style>
-<div class="row">
+<div class="row w-100 m-0">
 
 
-    <div>
+    <div class="card">
 
 
-        <div class="card">
+        <div class="card-body">
 
-            <div class="row align-items-center mx-2 my-4 justify-content-between">
+            <div class="row align-items-center ps-0 ms-0 pe-4 my-2 justify-content-between">
                 <div class="col-2">
                     <p class="mb-0 pb-0 ps-1">Branches</p>
                     <div class="dropdown">
@@ -148,7 +148,7 @@ class="btn btn-sm btn-primary">
             </div>
 
 
-            <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+            <div class="filter-data px-3 mb-2" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                 <form action="/branch" method="GET" class="">
 
                     <div class="row mb-2">
@@ -161,6 +161,7 @@ class="btn btn-sm btn-primary">
                             <label for="">Brand</label>
                             <select name="brand_id" id="brand_id" class="form form-control select2">
                                 <option value="">Select Brand</option>
+                                @dd($filters['brands']);
                                 @foreach($filters['brands'] as $key => $brand)
                                 <option value="{{ $key }}" {{ isset($_GET['brand_id']) && $_GET['brand_id'] == $key ? 'selected' : ''}}>{{ $brand }}</option>
                                 @endforeach
@@ -182,25 +183,13 @@ class="btn btn-sm btn-primary">
                         @endif
 
 
-                        @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'Region Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3') || \Auth::user()->can('level 4'))
-                        <div class="col-md-3" id="branch_div">
-                            <label for="">Branch</label>
-                            <select class="form form-control select2" id="filter_branch_id" name="branch_id" style="width: 95%;">
-                                <option value="">Select Region</option>
-                                @foreach ($filters['branches'] as $key => $branch)
-                                <option value="{{ $key }}" {{ isset($_GET['branch_id']) && $_GET['branch_id'] == $key ? 'selected' : ''}}>{{ $region }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @endif
 
 
 
-
-                        <div class="col-md-3 mt-4 pt-2">
-                            <input type="submit" class="btn form-btn me-2 btn-dark px-2 py-2">
-                            <a href="/branch" class="btn btn-dark px-2 py-2" style="background-color: #b5282f;color:white;">Reset</a>
-                            <a type="button" id="save-filter-btn" onClick="saveFilter('branch',<?= sizeof($branches) ?>)" class="btn btn-dark me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
+                        <div class="col-md-5 mt-4 pt-2">
+                            <a type="button" id="save-filter-btn" onClick="saveFilter('branch',<?= sizeof($branches) ?>)" class="btn btn-dark me-2  bg-dark" style=" color:white;display:none;">Save Filter</a>
+                            <input type="submit" class="btn form-btn me-2 btn-dark ">
+                            <a href="/branch" class="btn btn-dark  " style="background-color: #b5282f;color:white;">Reset</a>
                         </div>
                     </div>
 
@@ -230,8 +219,8 @@ class="btn btn-sm btn-primary">
             </div>
 
 
-            <div class="card-body table-border-style">
-                <div class="table-responsive">
+
+                <div class="table-responsive mt-3">
                     <table class="table ">
                         <thead>
                             <tr>
@@ -265,7 +254,7 @@ class="btn btn-sm btn-primary">
                                 <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($regions[$branch->region_id]) ? $regions[$branch->region_id] : '' }}</td>
 
                                 <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($branch->brands) ? \App\Models\User::where('id', $branch->brands)->first()->name : '' }}</td>
-                                
+
                             </tr>
                             @endforeach
                         </tbody>
@@ -279,7 +268,7 @@ class="btn btn-sm btn-primary">
                         @endif
                     </div>
                 </div>
-            </div>
+
         </div>
     </div>
 </div>

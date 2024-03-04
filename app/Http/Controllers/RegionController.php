@@ -93,6 +93,9 @@ class RegionController extends Controller
         } else {
             return view('region.index', $data);
         }
+
+        ////
+
     }
 
     public function create()
@@ -281,7 +284,7 @@ class RegionController extends Controller
 
     public function save(Request $request)
     {
-        
+
         $validator = \Validator::make(
             $request->all(),
             [

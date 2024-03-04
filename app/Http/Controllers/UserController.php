@@ -53,7 +53,7 @@ class UserController extends Controller
             $user_query = User::select(['users.id','users.name', 'users.website_link', 'project_director.name as project_director'])
                          ->where('users.type', 'company')
                          ->leftjoin('users as project_director', 'project_director.id', '=', 'users.project_director_id');
-               
+
             if (\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Admin Team' && \Auth::user()->type != 'HR') {
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
@@ -84,7 +84,7 @@ class UserController extends Controller
 
 
 
-           
+
 
             $total_records = $user_query->count();
             $users = $user_query->orderBy('users.name', 'ASC')
@@ -159,7 +159,7 @@ class UserController extends Controller
             //         ]));
             //     }
             // }
-            
+
             $projectDirectors = allUsers();
             $Brands = User::where('type', 'company')->pluck('name', 'id')->toArray();
             $ProjectDirector = User::where('type', 'Project Director')->pluck('name', 'id')->toArray();
@@ -295,8 +295,8 @@ class UserController extends Controller
             $new_permission->active = 'false';
             $new_permission->created_by = \Auth::user()->id;
             $new_permission->save();
-            
-            
+
+
             // Send Email
             $setings = Utility::settings();
             if ($setings['new_user'] == 1) {
@@ -1103,7 +1103,7 @@ class UserController extends Controller
                     // return redirect()->back()->with('error', $messages->first());
                 }
 
-                
+
                 $role = Role::findByName($request->role);
                 //$role = Role::findByName('company');
                 $input         = $request->all();
@@ -1163,13 +1163,13 @@ class UserController extends Controller
                         'role' => 'required',
                     ]
                 );
-                
+
                 $role = Role::findByName($request->role);
                 $input         = $request->all();
                 $input['type'] = $role->name;
-                
+
                 $user->fill($input)->save();
-                
+
                 $user->branch_id = $request->branch_id;
                 $user->date_of_birth =  $request->dob;
                 $user->phone = $request->phone;
@@ -1516,7 +1516,7 @@ class UserController extends Controller
         $all_users = User::pluck('name', 'id')->toArray();
 
 
-        //header 
+        //header
         $header = [
             'Sr.No.',
             'Name',

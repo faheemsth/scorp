@@ -93,9 +93,9 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             $userType = \Auth::user()->type;
                             @endphp
 
-                            <div class="row my-3 align-items-end">
+                            <div class="row mb-2 align-items-end">
                                 @if($userType == 'super admin'|| $userType == 'Admin Team' || $userType == 'HR' || $userType == 'Project Director' || $userType == 'Project Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
-                                <div class="col-md-4 mt-2">
+                                <div class="col-md-3 mt-2">
                                     <label for="">Brand</label>
                                     <select name="Brand" class="form form-control select2" id="filter_brand">
                                         <option value="">Select Option</option>
@@ -109,7 +109,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 @endif
 
                                 @if($userType == 'super admin')
-                                <div class="col-md-4 mt-2">
+                                <div class="col-md-3 mt-2">
                                     <label for="">Project Director</label>
                                     <select name="Director" class="form form-control select2" id="project_director">
                                         <option value="">Select Option</option>
@@ -123,9 +123,9 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 @endif
 
                                 <div class="col-md-4 mt-2">
-                                    <br>
-                                    <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
-                                    <a href="/users" class="btn bg-dark" style="color:white;">Reset</a>
+
+                                    <input type="submit" class="btn me-2 bg-dark p-2" style=" color:white;">
+                                    <a href="/users" class="btn bg-dark p-2" style="color:white;">Reset</a>
                                 </div>
                             </div>
 
@@ -182,12 +182,12 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     </td>
                                     <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
                                     <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
-                                        @php 
+                                        @php
                                             // $project_director = \App\Models\User::join('company_permission', 'company_permission.user_id', '=', 'users.id')
                                             //                     ->where('company_permission.permitted_company_id', $user->id)
                                             //                     ->where('type', 'Project Director')
                                             //                     ->first();
-                                        @endphp 
+                                        @endphp
                                         {{-- {{ $project_director->name ?? '' }} --}}
 
                                         {{ $user->project_director}}
@@ -344,10 +344,10 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
         // Serialize form data
         var formData = $(this).serialize();
-        
+
         $(".update-brand").text('Updating...');
         $(".update-brand").prop("disabled", true);
-    
+
         // AJAX request
         $.ajax({
             type: "POST",

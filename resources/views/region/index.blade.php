@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('page-title')
-{{ __('Regions') }}
+{{ __('Manage  Regions') }}
 @endsection
 
 @push('css-page')
@@ -212,7 +212,7 @@
 </style>
 
 @section('breadcrumb')
-<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('CRM Dashboard') }}</a></li>
+<li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
 <li class="breadcrumb-item">{{ __('Regions') }}</li>
 @endsection
 
@@ -280,12 +280,12 @@
 <div class="row">
     <div class="col-xl-12">
         <div class="card my-card">
-            <div class="card-body table-border-style">
+            <div class="card-body ">
 
 
 
                 {{-- topbar --}}
-                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
+                <div class="row align-items-center ps-0 ms-0 pe-4 my-2 justify-content-between">
                     <div class="col-2">
                         <p class="mb-0 pb-0 ps-1">Regions</p>
                         <div class="dropdown">
@@ -367,14 +367,9 @@
 
                     </div>
                 </div>
-            </div>
 
 
 
-
-
-
-            <div class="table-responsive">
                 {{-- Filters --}}
 
                 <script>
@@ -386,7 +381,7 @@
                 </script>
 
                 {{-- Filters --}}
-                <div class="filter-data px-3" id="filterToggle" <?= isset($_GET['brand_id']) ? '' : 'style="display: none;"' ?>>
+                <div class="filter-data px-3 mb-2" id="filterToggle" <?= isset($_GET['brand_id']) ? '' : 'style="display: none;"' ?>>
                     <form action="/region/index" method="GET" class="">
                         <div class="row my-3 align-items-end">
                             @php
@@ -394,7 +389,7 @@
                             @endphp
 
                             @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
-                            <div class="col-md-4 mt-2">
+                            <div class="col-md-3 mt-2">
                                 <label for="">Brand</label>
                                 <select name="brand_id" class="form form-control select2" id="filter_brand_id">
                                     <option value="">Select Option</option>
@@ -410,7 +405,7 @@
                             @endif
 
                             @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'company' || $type == 'Region Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3'))
-                            <div class="col-md-4 mt-2" id="region_div">
+                            <div class="col-md-3 mt-2" id="region_div">
                                 <label for="">Region</label>
 
                                 <select name="region_id" class="form form-control select2" id="filter_region_id">
@@ -426,17 +421,17 @@
                             </div>
                             @endif
 
-                            <div class="col-md-3   ">
+                            <div class="col-md-4   ">
+                                <a type="button" id="save-filter-btn" onClick="saveFilter('region',<?= sizeof($regions) ?>)" class="btn btn-dark me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                 <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
                                 <a href="/region/index" class="btn bg-dark" style="color:white;">Reset</a>
-                                <a type="button" id="save-filter-btn" onClick="saveFilter('region',<?= sizeof($regions) ?>)" class="btn btn-dark me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                             </div>
                         </div>
                     </form>
                 </div>
 
 
-                <div class="card-body table-responsive">
+                <div class="table-responsive mt-3">
                     <table class="table">
                         <thead>
                             <tr>

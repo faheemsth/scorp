@@ -167,7 +167,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 $type = \Auth::user()->type;
                                 @endphp
 
-                       
+
 
                                 @if($type == 'super admin'|| $type == 'Admin Team' || $type == 'Project Director' || $type == 'Project Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
                                 <div class="col-md-3 mt-2">
@@ -223,7 +223,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
 
 
-                              
+
 
                                 <div class="col-md-3 mt-2">
                                     <label for="">Designation</label>
@@ -248,9 +248,9 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
                                 <div class="col-md-5 mt-3">
                                     <br>
+                                    <a type="button" id="save-filter-btn" onClick="saveFilter('employee',<?= sizeof($users) ?>)" class="btn btn-dark me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                     <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
                                     <a href="/user/employees" class="btn bg-dark" style="color:white;">Reset</a>
-                                    <a type="button" id="save-filter-btn" onClick="saveFilter('employee',<?= sizeof($users) ?>)" class="btn btn-dark me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                 </div>
                             </div>
 
