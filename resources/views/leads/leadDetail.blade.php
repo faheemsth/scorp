@@ -94,10 +94,9 @@
 <div class="container-fluid ps-2 mx-0 pe-0">
     <div class="row">
         <div class="col-sm-12">
-
             {{-- topbar --}}
-            <div class="lead-topbar d-flex flex-wrape justify-content-between align-items-center py-1 px-2">
-                <div class="d-flex align-items-center">
+            <div class="lead-topbar row d-flex flex-wrape justify-content-between align-items-center py-1 px-2">
+                <div class=" d-flex align-items-center col-12 col-md-5 ">
                     <div class="lead-avator">
                         <img src="{{ asset('assets/images/placeholder-lead.png') }}" alt="" class="">
                     </div>
@@ -111,7 +110,7 @@
 
                 </div>
 
-                <div class="d-flex justify-content-end gap-1 me-3">
+                <div class=" d-flex justify-content-end gap-1 me-3 col-12 col-md-5 ">
                     {{-- @can('view lead') --}}
                     <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
                         <i class="fa-brands fa-whatsapp"></i>
@@ -175,7 +174,7 @@
             </div>
 
 
-            <div class="lead-info d-flex justify-content-between p-3 text-center">
+            <div class="lead-info d-flex justify-content-between py-3 text-center overflow-auto">
                 {{-- <div class="">
                     <small>{{ __('Stage') }}</small>
                     <span class="font-weight-bolder">{{ $lead->stage->name }}</span>

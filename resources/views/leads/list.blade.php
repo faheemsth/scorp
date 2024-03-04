@@ -208,11 +208,28 @@ if (isset($lead->is_active) && $lead->is_active) {
                             .filbar .form-control:focus{
                                             border: 1px solid rgb(209, 209, 209) !important;
                                         }
+                                        
+                                        .search-bar-input {
+
+width: 30% !important;
+}
+
+@media only screen and (max-width: 768px) {
+.search-bar-input {
+    width: 50% !important;
+}
+}
+
+@media only screen and (max-width: 425px) {
+.search-bar-input {
+    width: 100% !important;
+}
+}
 
                         </style>
 
-                        <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                            <div class="col-4">
+                        <div class="row align-items-center ">
+                            <div class="col-12 col-md-4 pb-2 ps-4">
                                 <p class="mb-0 pb-0 ps-1">Leads</p>
                                 <div class="dropdown">
                                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
@@ -256,15 +273,15 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                             {{-- /// --}}
 
-                            <div class="col-8 d-flex justify-content-end gap-2 pe-0">
-                                <div class="input-group w-25 rounded" style= "width:36px; height: 36px; margin-top:10px;">
-                                    <button class="btn  list-global-search-btn  p-0 pb-2 ">
-                                        <span class="input-group-text bg-transparent border-0 px-1" id="basic-addon1">
+                            <div class="col-12 col-md-8 d-flex justify-content-end gap-2 pe-0 me-0 align-items-end">
+                                <div class="input-group search-bar-input rounded" style="height: 36px;">
+                                    <button class="btn  list-global-search-btn  px-0">
+                                        <span class="input-group-text bg-transparent border-0 px-1 pt-0" id="basic-addon1">
                                             <i class="ti ti-search" style="font-size: 18px"></i>
                                         </span>
                                     </button>
                                     <input type="Search"
-                                        class="form-control border-0 bg-transparent p-0 pb-2 list-global-search"
+                                        class="form-control border-0 bg-transparent p-0 pb-1 list-global-search text-truncate "
                                         placeholder="Search this list..." aria-label="Username"
                                         aria-describedby="basic-addon1">
                                 </div>
@@ -272,22 +289,22 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 <!-- <button class="btn px-2 pb-2 pt-2 refresh-list btn-dark" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()"><i class="ti ti-refresh"
                                         style="font-size: 18px"></i></button> -->
 
-                                <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" aria-expanded="false"  style="color:white; width:36px; height: 36px; margin-top:10px;">
+                                <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" aria-expanded="false"  style="color:white; width:36px; height:36px;">
                                     <i class="ti ti-filter" style="font-size:18px"></i>
                                 </button>
-                                <a  href="{{ url('/leads') }}" data-bs-toggle="tooltip" title="{{ __('Leads View') }}" class="btn px-2 btn-dark d-flex align-items-center"  style="color:white; width:36px; height: 36px; margin-top:10px;">
+                                <a  href="{{ url('/leads') }}" data-bs-toggle="tooltip" title="{{ __('Leads View') }}" class="btn px-2 btn-dark d-flex align-items-center"  style="color:white; width:36px; height:36px;">
                                     {{-- <i class="ti ti-plus" style="font-size:18px"></i> --}}
                                     <i class="fa-solid fa-border-all" style="font-size:18px"></i>
                                 </a>
                                 @can('create lead')
-                                <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark"  style="color:white; width:36px; height: 36px; margin-top:10px;">
+                                <button data-size="lg" data-url="{{ route('leads.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Lead') }}" class="btn px-2 btn-dark"  style="color:white; width:36px; height:36px;">
                                     <i class="ti ti-plus" style="font-size:18px"></i>
                                 </button>
                                 @endcan
                                 @can('create lead')
                                 <button data-size="lg" data-bs-toggle="tooltip" title="{{ __('Import Csv') }}"
                                     class="btn px-2 btn-dark" id="import_csv_modal_btn" data-bs-toggle="modal"
-                                    data-bs-target="#import_csv"  style="color:white; width:36px; height: 36px; margin-top:10px;">
+                                    data-bs-target="#import_csv"  style="color:white; width:36px; height: 36px;">
                                     <i class="fa fa-file-csv"></i>
                                 </button>
                                 @endcan
@@ -298,7 +315,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 @endphp
 
                                 @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
-                                    <a href="{{ route('leads.download') }}?{{ $query_string }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
+                                    <a href="{{ route('leads.download') }}?{{ $query_string }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; " data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
                                         <i class="ti ti-download"></i>
                                     </a>
                                 @endif
@@ -307,7 +324,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                 {{-- <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> --}}
                                 @if(auth()->user()->can('delete lead'))
-                                <a class="btn p-2 btn-dark  text-white assigned_to delete-bulk-leads d-none" data-bs-toggle="tooltip" title="{{__('Mass Delete')}}" id="actions_div" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;">
+                                <a class="btn p-2 btn-dark  text-white assigned_to delete-bulk-leads d-none" data-bs-toggle="tooltip" title="{{__('Mass Delete')}}" id="actions_div" style="font-weight: 500; color:white; width:36px; height: 36px;">
                                     <i class="ti ti-trash"></i>
                                 </a>
                                 @endif
@@ -520,7 +537,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                         </div>
 
                         <div class="card-body table-responsive" style="padding: 25px 3px; width:auto;">
-                            <table class="table " data-resizable-columns-id="lead-table" id="tfont">
+                            <table class="table mt-2" data-resizable-columns-id="lead-table" id="tfont">
                                 <thead>
                                     <tr>
                                         <th style="width: 50px !important;">
