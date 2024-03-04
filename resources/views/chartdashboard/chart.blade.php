@@ -856,7 +856,7 @@
 @endsection @section('content')
 <div class="main-content pb-5">
     <div class="row">
-        <div class="dropdown col-6 col-lg-2 col-md-4 my-2">
+        <div class="dropdown col-6 col-lg-3 col-xl-2 col-md-4 my-2">
             <a class="btn bg-white text-dark dropdown-toggle w-100 py-2 fw-bold fs-5" href="#" role="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
                 Brands
@@ -869,7 +869,7 @@
                 <li><a class="dropdown-item" href="#">Ibex Study</a></li>
             </ul>
         </div>
-        <div class="dropdown col-6 col-lg-2 col-md-4 my-2">
+        <div class="dropdown col-6 col-lg-3 col-xl-2 col-md-4 my-2">
             <a class="btn bg-white text-dark dropdown-toggle w-100 py-2 fw-bold fs-5" href="#" role="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
                 Location
@@ -882,7 +882,7 @@
                 <li><a class="dropdown-item" href="#">Peshawar</a></li>
             </ul>
         </div>
-        <div class="dropdown col-6 col-lg-2 col-md-4 my-2">
+        <div class="dropdown col-6 col-lg-3 col-xl-2 col-md-4 my-2">
             <a class="btn bg-white text-dark dropdown-toggle w-100 py-2 fw-bold fs-5" href="#" role="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
                 Institute
@@ -900,7 +900,7 @@
                 </li>
             </ul>
         </div>
-        <div class="dropdown col-6 col-lg-2 col-md-4 my-2">
+        <div class="dropdown col-6 col-lg-3 col-xl-2 col-md-4 my-2">
             <a class="btn bg-white text-dark dropdown-toggle w-100 py-2 fw-bold fs-5" href="#" role="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
                 Intakes
@@ -912,7 +912,7 @@
                 <li><a class="dropdown-item" href="#">April</a></li>
             </ul>
         </div>
-        <div class="dropdown col-lg-4 col-md-7 my-2">
+        <div class="dropdown col-lg-5 col-md-7 col-xl-4 my-2">
             <a class="btn bg-white text-dark btn-lg dropdown-toggle w-100 py-2 fw-bold fs-5" href="#" role="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
                 january 15,2023-April 21,2024
@@ -998,7 +998,7 @@
 
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 my-2 second-card">
             <div class="card h-100">
-                <div class="d-flex justify-content-between align-items-center p-4 gap-3">
+                <div class="d-flex justify-content-between align-items-center p-4 gap-2">
                     <h6 class="card-title fw-bold">Stages Shares</h6>
                     <select class="form-select form-select-sm w-50 " aria-label="Small select example">
                         <option selected>Select</option>
@@ -1024,7 +1024,7 @@
                 <div class="card h-100">
                     <div class="d-flex justify-content-between align-items-center p-4 gap-3">
                         <h6 class="card-title fw-bold">Stages Shares</h6>
-                        <select class="form-select form-select-sm w-50" aria-label="Small select example">
+                        <select class="form-select form-select-sm w-50 " aria-label="Small select example">
                             <option selected>Select</option>
                             <option value="1">New Lead</option>
                             <option value="2">Contacted</option>
@@ -1035,10 +1035,10 @@
                             <option value="">Qualified</option>
                         </select>
                     </div>
-                    <div id="dounotchart3" style="height: 300px; width:100%; "></div>
+                    <div id="dounotchart3" style="height: 300px; width:100%;"></div>
                     <div class="card-body">
 
-                        <canvas id="myChart3" class="" style=" "></canvas>
+                        <canvas id="myChart3"></canvas>
 
                     </div>
                 </div>
@@ -1046,7 +1046,7 @@
             <div class="col-12 col-md-6 col-lg-6 my-2 ">
                 <div class="card h-100">
                     <div class="d-flex justify-content-between align-items-center p-4 gap-3">
-                        <h6 class="card-title fw-bold">Project Directors Shares</h6>
+                        <h6 class="card-title  fw-bold w-75">Project Directors Shares</h6>
                         <select class="form-select form-select-sm w-50" aria-label="Small select example">
                             <option selected>Select</option>
                             <option value="1">Amar Suhail</option>
@@ -1094,9 +1094,9 @@
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 my-2">
             <div class="card h-100">
                 <h6 class="card-title p-4 fw-bold">Language Breakdown</h6>
-                <canvas id="myChart2" class="px-2" style="width: 100%; height: 280px"></canvas>
+                <canvas id="myChart2" class="px-2 mb-1" style="width: 100%; height: 280px"></canvas>
                 <div class="card-body px-0 scrollable-table overflow-auto">
-                    <table class="table">
+                    <table class="table mt-3">
                         <thead>
                             <tr>
                                 <th scope="col">Brands</th>
