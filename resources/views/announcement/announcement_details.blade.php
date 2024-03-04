@@ -29,10 +29,10 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit Announcement'))
-                        <div class="d-flex justify-content-end gap-1 me-3">
+                        <div class="d-flex justify-content-end">
                             <a href="#" data-size="lg" data-url="{{ route('announcement.edit', $announcement->id) }}"
                                 data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update Announcement') }}"
-                                class="btn p-2 btn-dark text-white">
+                                class="btn p-2 btn-dark text-white" style="width:36px; height: 36px; ">
                                 <i class="ti ti-pencil"></i>
                             </a>
                         </div>
@@ -43,7 +43,7 @@
                              {!! Form::open(['method' => 'DELETE', 'route' => ['announcement.destroy', $announcement->id]]) !!}
 
                             <a href="#" data-bs-toggle="tooltip" title="{{__('Delete')}}"
-                                class="btn px-2 py-2 text-white bs-pass-para bg-danger">
+                                class="btn px-2 py-2 text-white bs-pass-para bg-danger" style="width:36px; height: 36px; ">
                                 <i class="ti ti-trash" ></i>
                             </a>
 
@@ -53,9 +53,6 @@
                     </div>
                     @endif
             </div>
-
-
-
 
 
 

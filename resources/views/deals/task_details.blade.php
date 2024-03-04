@@ -51,9 +51,9 @@
             </div>
 
 
-            <div class="lead-info d-flex justify-content-between p-3 text-center">
-                <div class="">
-                    <small style="margin-bottom: 4px;">{{ __('Date Due') }}</small>
+            <div class=" lead-info d-flex justify-content-between py-3 text-center overflow-auto">
+                <div class="col-sm-2">
+                    <small class="mb-2" >{{ __('Date Due') }}</small>
                     <!-- <span class="px-3 text-white " style="border-radius: 6px;
                     background: #22A9E3; padding-top: 2px; padding-bottom: 4px"> -->
                     @php
@@ -86,19 +86,19 @@
 
                     </span>
                 </div>
-                <div class="">
+                <div class="col-sm-2">
                     <small style="margin-bottom: 4px;">{{ __('Priority') }}</small>
                     <span>{{ __('Medium') }}</span>
                 </div>
-                <div class="">
+                <div class="col-sm-2">
                     <small style="margin-bottom: 4px;">{{ __('Status') }}</small>
                     <span>{{ $task->status == 1 ? 'Completed' : 'On Going' }}</span>
                 </div>
-                <div class="">
+                <div class="col-sm-2">
                     <small style="margin-bottom: 4px;">{{ __('Progress') }}</small>
                     <span>{{ strtolower($task->status) == '0' ? '0' : '100' }}</span>
                 </div>
-                <div class="">
+                <div class="col-sm-2">
                     <small style="margin-bottom: 4px;">{{ __('Assigned To') }}</small>
                     <span class="text-info">{{ \App\Models\User::findOrFail($task->assigned_to)->name }}</span>
                 </div>

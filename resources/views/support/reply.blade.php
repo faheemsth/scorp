@@ -120,7 +120,7 @@
                                 <div class="col-6">
                                     <span class="form-label">{{__('Status')}}:</span>
                                 </div>
-                                <div class="col-6 text-end">
+                                <div class="col-6 text-end ">
                                     @if($support->status == 'Open')
                                         <span class="badge bg-primary p-2 px-3 rounded"> {{__('Open')}}</span>
                                     @elseif($support->status == 'Close')
@@ -145,12 +145,24 @@
         </div>
 
         <div class="col-md-8">
+        <div class="card">
+                <div class="card-body">
+                    @if($support->status == 'Open')
+                    <h5 class="mt-0 mb-3">{{__('Description')}}</h5>
+                    <textarea class="form-control form-control-light mb-2" name="description" placeholder="Your comment" id="example-textarea" rows="3" disabled >{{!empty($support->description)?$support->description:''}}</textarea>
+                    {{ Form::close() }}
+                    @endif
+</div></div>
+
+
+
+
             <div class="card">
                 <div class="card-body">
                     @if($support->status == 'Open')
                     <h5 class="mt-0 mb-3">{{__('Comments')}}</h5>
                     {{ Form::open(array('route' => array('support.reply.answer',$support->id))) }}
-                    <textarea class="form-control form-control-light mb-2" name="description" placeholder="Your comment" id="example-textarea" rows="3" required="" >{{!empty($support->description)?$support->description:''}}</textarea>
+                    <textarea class="form-control form-control-light mb-2" name="description" placeholder="Your comment" id="example-textarea" rows="3" required="" ></textarea>
                     <div class="text-end">
                         <div class=" mb-2 ml-2">
                             {{Form::submit(__('Send'),array('class'=>'btn btn-primary'))}}

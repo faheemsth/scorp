@@ -84,18 +84,30 @@ $setting = \App\Models\Utility::colorset();
     .filbar .form-control:focus{
                     border: 1px solid rgb(209, 209, 209) !important;
                 }
+
+    .search-bar-input{
+
+        width:30% !important;
+    }
+    @media only screen and (max-width: 768px){
+        .search-bar-input{
+        width:50% !important;
+    }
+    }
+    @media only screen and (max-width: 425px){
+        .search-bar-input{
+        width:100% !important;
+    }
+    }
 </style>
 <div class="row">
     <div class="col-12">
         <div class="card my-card">
-
-
             <div class="card-body">
-
-                <div class="row align-items-center ps-0 ms-0 pe-4 my-2 ">
-                    <div class="col-4">
+                <div class="row align-items-center ">
+                    <div class="col-12 col-md-4 pb-2">
                         <p class="mb-0 pb-0 ps-1">Tasks</p>
-                        <div class="dropdown">
+                        <div class="dropdown ">
                             <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL TASKS
                             </button>
@@ -128,24 +140,24 @@ $setting = \App\Models\Utility::colorset();
                     </div>
 
 
-                    <div class="col-8 d-flex justify-content-end gap-2 pe-0">
-                        <div class="input-group w-25 rounded" style="width:36px; height: 36px; margin-top:10px;">
-                            <button class="btn btn-sm list-global-search-btn  p-0 pb-2 ">
-                                <span class="input-group-text bg-transparent border-0   px-1" id="basic-addon1">
+                    <div class="col-12 col-md-8 d-flex justify-content-end gap-2 pe-0 me-0 align-items-end">
+                        <div class="input-group  rounded search-bar-input " style="height: 36px;">
+                            <button class="btn btn-sm list-global-search-btn  px-0 ">
+                                <span class="input-group-text bg-transparent border-0  px-1 pt-0" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
                             </button>
-                            <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2 list-global-search text-truncate" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
 
                         <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark d-none" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
-                        <button class="btn filter-btn-show p-2 btn-dark"  type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" style="width:36px; height: 36px; margin-top:10px;">
+                        <button class="btn filter-btn-show p-2 btn-dark"  type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" style="width:36px; height: 36px; ">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
                         @can('create task')
-                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark" style="width:36px; height: 36px; margin-top:10px;">
+                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark" style="width:36px; height: 36px;">
                             <i class="ti ti-plus" style="font-size:18px"></i>
                         </button>
                         @endcan
@@ -153,13 +165,13 @@ $setting = \App\Models\Utility::colorset();
                         <!-- <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> -->
                         
                         @if(auth()->user()->type == 'super admin' || auth()->user()->type == 'Admin Team')
-                        <a href="{{ route('tasks.download') }}" class="btn p-2 btn-dark" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" >
+                        <a href="{{ route('tasks.download') }}" class="btn p-2 btn-dark" style="color:white; width:36px; height: 36px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" >
                                 <i class="ti ti-download" style="font-size:18px"></i>
                         </a>
                         @endif
 
                         @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete task'))
-                        <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Regions') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; margin-top:10px;">
+                        <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Regions') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; ">
                             <i class="ti ti-trash"></i>
                         </a>
                         @endif
@@ -293,7 +305,7 @@ $setting = \App\Models\Utility::colorset();
                     </form>
                 </div>
 
-                <div class="table-responsive mt-3">
+                <div class="table-responsive mt-1">
                     <table class="table table-hover mb-0">
                         <thead>
                             <tr>
