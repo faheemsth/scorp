@@ -518,7 +518,7 @@ class DashboardController extends Controller
            return redirect('login');
          }
          
-         return view('chartdashboard.chart');
+     return view('chartdashboard.chart');
         $total_admissions = 0;
         $total_deposits = 0;
         $total_visas = 0;
