@@ -202,7 +202,7 @@ class DashboardController extends Controller
         if (!isset($_GET['company']) || isset($_GET['company']) && $_GET['company'] == 'all') {
 
             //fetching all permitted companies
-           // $allowedCompanies = CompanyPermission::where(['active' => 'true'])->get()->pluck('name', 'id')->toArray();
+            // $allowedCompanies = CompanyPermission::where(['active' => 'true'])->get()->pluck('name', 'id')->toArray();
 
             $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
 
@@ -289,8 +289,8 @@ class DashboardController extends Controller
 
         if (Auth::check()) {
             return view('chartdashboard.chart');
-            
-            
+
+
             if (Auth::user()->default_pipeline) {
                 $pipeline = Pipeline::where('id', '=', Auth::user()->default_pipeline)->first();
                 if (!$pipeline) {
@@ -312,7 +312,7 @@ class DashboardController extends Controller
 
                 $data = $this->superAdminCrmDashboarData();
                 return view('chartdashboard.chart');
-               // return view('dashboard.crm-dashboard', $data);
+                // return view('dashboard.crm-dashboard', $data);
             } elseif (Auth::user()->type == 'company') {
 
                 ///////////////////////////////////////////////////Chart of Lead Stages
@@ -513,313 +513,257 @@ class DashboardController extends Controller
 
     public function crm_dashboard_index()
     {
+        if (!Auth::check()) {
+            return redirect('login');
+        }
+
+        $filter_data = BrandsRegionsBranches();
+
+        $chart_data = $this->getChartData();
+
+        //getting subcharts
+        $sub_chart_visas = $this->getSubChartVisasData();
+        $sub_chart_deposit = $this->getSubChartDepositData();
         
-         if (!Auth::check()) {
-           return redirect('login');
-         }
-         
-     return view('chartdashboard.chart');
-        $total_admissions = 0;
-        $total_deposits = 0;
-        $total_visas = 0;
-        $total_app = 0;
-        if(Auth::user()->type == 'super admin'){
+        // echo "<pre>";
+        // print_r($sub_chart_visas);
+        // die();
 
-            $total_admissions = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-            ->whereIn('deals.stage_id', [1, 2, 3])
-            ->where('s.id', '<', 4)
-            ->count();
-            $total_deposits = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-                ->whereIn('deals.stage_id', [4, 5, 6])
-                ->where('s.id', '<', 7)
-                ->count();
-            $total_visas = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-                ->whereIn('deals.stage_id', [7, 8, 9])
-                ->where('s.id', '<', 10)
-                ->count();
+        $data = [
+            'filter_data' => $filter_data,
+            'chart_data1_json' => json_encode($chart_data),
+            'sub_chart_deposit' => json_encode($sub_chart_deposit),
+            'sub_chart_visas' => json_encode($sub_chart_visas)
+        ];
 
-            $total_app = DealApplication::count();
-
-        }else if(Auth::user()->type == 'company'){
-
-            $id = Auth::user()->id;
-
-            $total_admissions = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-            ->whereIn('deals.stage_id', [1, 2, 3])
-            ->where('s.id', '<', 4)
-            ->where('deals.created_at', $id)
-
-            ->count();
-            $total_deposits = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-                ->whereIn('deals.stage_id', [4, 5, 6])
-                ->where('s.id', '<', 7)
-            ->where('deals.created_at', $id)
-
-                ->count();
-            $total_visas = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-                ->whereIn('deals.stage_id', [7, 8, 9])
-                ->where('s.id', '<', 10)
-            ->where('deals.created_at', $id)
-
-                ->count();
-
-            $total_app = DealApplication::join('deals as d', 'd.id', '=', 'deal_applications.deal_id')
-            ->where('d.created_by', $id)
-            ->count();
-
-        }
-
-
-        $totalValues3 = ['total_applications' => $total_app];
-
-        $top_brands = DB::table('deals as d')
-            ->select(DB::raw('COUNT(d.id) AS total'), 'd.created_by', 'u.name')
-            ->join('stages as s', 's.id', '=', 'd.stage_id')
-            ->join('users as u', 'u.id', '=', 'd.created_by')
-            ->where('s.id', '<=', 4)
-            ->groupBy('d.created_by')
-            ->orderByDesc('total')
-            ->limit(3)
-            ->get();
-
-
-        $totalValues = [];
-
-        foreach ($top_brands as $top_brand) {
-            $totalValues[] = $top_brand->total;
-        }
-
-        $jsonData = json_encode($totalValues);
-
-        if(isset($_GET['status']) && $_GET['status'] == 'Admission-Application'){
-            $spline_chart = $this->AdmissionApplications();
-        }else if(isset($_GET['status']) && $_GET['status'] == 'Application-Deposit'){
-            $spline_chart = $this->ApplicationDeposit();
-        }else if(isset($_GET['status']) && $_GET['status'] == 'Admission-Deposit'){
-            $spline_chart = $this->AdmissionDeposit();
-        }else if(isset($_GET['status']) && $_GET['status'] == 'Deposit-visas'){
-            $spline_chart = $this->DepositVisas();
-        }else{
-            $spline_chart = $this->AdmissionApplications();
-        }
-
-
-        if(isset($_GET['top_brand_filter']) && $_GET['top_brand_filter'] == 'admissions'){
-            $area_chart = $this->GetTop3Brands();
-        }else if(isset($_GET['top_brand_filter']) && $_GET['top_brand_filter'] == 'deposits'){
-            $area_chart = $this->GetTop3Brands([4, 5, 6]);
-        }else if(isset($_GET['top_brand_filter']) && $_GET['top_brand_filter'] == 'visas'){
-            $area_chart = $this->GetTop3Brands([7, 8, 9]);
-        }else{
-            $area_chart = $this->GetTop3Brands();
-        }
-
-        $Unqualified = Lead::where('created_by',Auth::id())->whereIn('leads.stage_id', [6])->count();
-        $Qualified = Lead::where('created_by',Auth::id())->whereIn('leads.stage_id', [8])->count();
-        $Assigned = Lead::where('created_by',Auth::id())->whereNotNull('user_id')->count();
-        $Unassigned = Lead::where('created_by',Auth::id())->whereNull('user_id')->count();
-
-        return view('dashboard.crm-dashboard', compact('Unassigned','Assigned','Qualified','Unqualified','total_admissions', 'total_deposits', 'total_visas', 'total_app', 'top_brands',  'spline_chart', 'area_chart'));
+        return view('chartdashboard.chart', $data);
     }
 
+    private function getChartData()
+    {
+        $datatype = isset($_GET['datatype']) ? $_GET['datatype'] : 'Admission-Applications';
 
-    private function AdmissionApplications()
+        switch ($datatype) {
+            case 'Application-Deposit':
+                return $this->getApplicationsDepositData();
+            case 'Admission-Deposit':
+                return $this->getAdmissionsDepositData();
+            case 'Deposit-Visa':
+                return $this->getDepositVisasData();
+            default:
+                return $this->getAdmissionApplicationsData();
+        }
+    }
+
+    private function getApplicationsDepositData()
+    {
+        return [
+            $this->getApplicationsData(),
+            $this->getAdmissionsData('Admissions', [4, 5, 6])
+        ];
+    }
+
+    private function getAdmissionsDepositData()
+    {
+        return [
+            $this->getAdmissionsData('Admissions'),
+            $this->getAdmissionsData('Deposits', [4, 5, 6])
+        ];
+    }
+
+    private function getDepositVisasData()
+    {
+        return [
+            $this->getAdmissionsData('Deposits', [4, 5, 6]),
+            $this->getAdmissionsData('Visas', [7, 8, 9])
+        ];
+    }
+
+    private function getAdmissionApplicationsData()
+    {
+        return [
+            $this->getAdmissionsData('Admissions'),
+            $this->getApplicationsData()
+        ];
+    }
+
+    private function getApplicationsData()
+    {
+        // Array of months
+        $months = [
+            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        // Year to query
+        $year = 2024;
+
+        // Initialize empty arrays
+        $application_counts = [];
+
+        // Retrieve query parameters
+        $brand_id = isset($_GET['brand_id']) ? $_GET['brand_id'] : 0;
+        $region_id = isset($_GET['region_id']) ? $_GET['region_id'] : 0;
+        $branch_id = isset($_GET['branch_id']) ? $_GET['branch_id'] : 0;
+
+
+        foreach ($months as $month) {
+            // Get the month number
+            $monthNumber = Carbon::parse("first day of $month")->format('m');
+
+            // Query for applications
+            $applications_query = Deal::join('deal_applications as da', 'da.deal_id', '=', 'deals.id')
+                ->whereYear('da.created_at', $year)
+                ->whereMonth('da.created_at', $monthNumber)
+                ->when($brand_id, function ($query, $brand_id) {
+                    return $query->where('deals.brand_id', $brand_id);
+                })
+                ->when($region_id, function ($query, $region_id) {
+                    return $query->where('deals.region_id', $region_id);
+                })
+                ->when($branch_id, function ($query, $branch_id) {
+                    return $query->where('deals.branch_id', $branch_id);
+                });
+
+            // Count applications for the month
+            $application_counts[$month] = $applications_query->count();
+        }
+
+        return [
+            'name' => 'Applications',
+            'data' => $application_counts
+        ];
+    }
+
+    private function getAdmissionsData($name, $stageIds = [])
     {
         $months = [
-            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
         ];
 
-        $admission_counts = [];
+        $year = 2024;
+        $data = [];
+
+        $brand_id = isset($_GET['brand_id']) ? $_GET['brand_id'] : 0;
+        $region_id = isset($_GET['region_id']) ? $_GET['region_id'] : 0;
+        $branch_id = isset($_GET['branch_id']) ? $_GET['branch_id'] : 0;
+
         foreach ($months as $month) {
-            $monthNumber = Carbon::parse("first day of $month")->format('m'); // Get the month number
+            $monthNumber = Carbon::parse("first day of $month")->format('m');
 
-            $admission_query = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-                ->whereYear('deals.created_at', 2023)
-                ->whereMonth('deals.created_at', $monthNumber);
+            $query = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
+                ->whereYear('deals.created_at', $year)
+                ->whereMonth('deals.created_at', $monthNumber)
+                ->when(!empty($stageIds), function ($query) use ($stageIds) {
+                    return $query->whereIn('deals.stage_id', $stageIds);
+                })
+                ->when($brand_id, function ($query, $brand_id) {
+                    return $query->where('deals.brand_id', $brand_id);
+                })
+                ->when($region_id, function ($query, $region_id) {
+                    return $query->where('deals.region_id', $region_id);
+                })
+                ->when($branch_id, function ($query, $branch_id) {
+                    return $query->where('deals.branch_id', $branch_id);
+                });
 
-            $admission_counts[$month] = $admission_query->count();
+            // Count applications for the month
+            $data[$month] = $query->count();
         }
 
-
-
-
-        $application_counts = [];
-        foreach ($months as $month) {
-            $monthNumber = Carbon::parse("1 $month")->format('m'); // Get the month number
-
-            $applications_query = DealApplication::whereYear('created_at', 2023)
-                ->whereMonth('created_at', $monthNumber);
-
-            $application_counts[$month] = $applications_query->count();
-        }
-
-        // Fill in 0 for months with no records
-        $application_counts = array_merge(array_fill_keys($months, 0), $application_counts);
-
-
-        $spline_chart = [
-            [
-                'name' => 'Applications',
-                'data' => $application_counts
-            ],
-            [
-                'name' => 'Admissions',
-                'data' => $admission_counts
-            ]
-        ];
-        return $spline_chart;
+        return ['name' => $name, 'data' => $data];
     }
 
-    private function AdmissionDeposit(){
-        $months = [
-            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+
+    ////////////////////////////////////////Getting subchart details
+    private function getSubChartDepositData()
+    {
+        $year = 2024;
+
+        // Retrieve query parameters
+        $brand_id = isset($_GET['brand_id']) ? $_GET['brand_id'] : 0;
+        $region_id = isset($_GET['region_id']) ? $_GET['region_id'] : 0;
+        $branch_id = isset($_GET['branch_id']) ? $_GET['branch_id'] : 0;
+
+
+        //Getting Deposit data
+        $deposit = $this->getAdmissionsData('Deposits', [4, 5, 6]);
+
+
+        $query = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
+            ->whereIn('deals.stage_id', [4,5,6])
+            ->whereYear('deals.created_at', $year)
+            ->when($brand_id, function ($query, $brand_id) {
+                return $query->where('deals.brand_id', $brand_id);
+            })
+            ->when($region_id, function ($query, $region_id) {
+                return $query->where('deals.region_id', $region_id);
+            })
+            ->when($branch_id, function ($query, $branch_id) {
+                return $query->where('deals.branch_id', $branch_id);
+            });
+
+        // Count applications for the month
+        $deposit_count = $query->count();
+
+
+        return [
+            'name' => $deposit['name'],
+            'data' => $deposit['data'],
+            'total' => $deposit_count
         ];
-
-        $admission_counts = [];
-        foreach ($months as $month) {
-            $monthNumber = Carbon::parse("first day of $month")->format('m'); // Get the month number
-
-            $admission_query = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-                ->whereYear('deals.created_at', 2023)
-                ->whereMonth('deals.created_at', $monthNumber);
-
-            $admission_counts[$month] = $admission_query->count();
-        }
-
-
-
-        $monthlyDepositApplications = [];
-        foreach ($months as $month) {
-            $monthNumber = Carbon::parse("first day of $month")->format('m'); // Get the month number
-
-            $application_query = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-                ->whereIn('deals.stage_id', [4, 5, 6])
-                ->where('s.id', '<', 7)
-                ->whereYear('deals.created_at', 2023)
-                ->whereMonth('deals.created_at', $monthNumber);
-
-            $monthlyDepositApplications[$month] = $application_query->count();
-        }
-
-
-        $spline_chart = [
-            [
-                'name' => 'Admissions',
-                'data' => $admission_counts
-            ],
-            [
-                'name' => 'Deposits',
-                'data' => $monthlyDepositApplications
-            ]
-        ];
-        return $spline_chart;
     }
 
-    private function ApplicationDeposit(){
-        $months = [
-            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
+    private function getSubChartVisasData()
+    {
+        $year = 2024;
+
+        // Retrieve query parameters
+        $brand_id = isset($_GET['brand_id']) ? $_GET['brand_id'] : 0;
+        $region_id = isset($_GET['region_id']) ? $_GET['region_id'] : 0;
+        $branch_id = isset($_GET['branch_id']) ? $_GET['branch_id'] : 0;
+
+
+        //Getting Deposit data
+        $deposit = $this->getAdmissionsData('Visas', [7, 8, 9]);
+
+
+        $query = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
+            ->whereIn('deals.stage_id', [7,8,9])
+            ->whereYear('deals.created_at', $year)
+            ->when($brand_id, function ($query, $brand_id) {
+                return $query->where('deals.brand_id', $brand_id);
+            })
+            ->when($region_id, function ($query, $region_id) {
+                return $query->where('deals.region_id', $region_id);
+            })
+            ->when($branch_id, function ($query, $branch_id) {
+                return $query->where('deals.branch_id', $branch_id);
+            });
+
+        // Count applications for the month
+        $deposit_count = $query->count();
+
+
+        return [
+            'name' => $deposit['name'],
+            'data' => $deposit['data'],
+            'total' => $deposit_count
         ];
-
-        $application_counts = [];
-        foreach ($months as $month) {
-            $monthNumber = Carbon::parse("1 $month")->format('m'); // Get the month number
-
-            $applications_query = DealApplication::whereYear('created_at', 2023)
-                ->whereMonth('created_at', $monthNumber);
-
-            $application_counts[$month] = $applications_query->count();
-        }
-
-        // Fill in 0 for months with no records
-        $application_counts = array_merge(array_fill_keys($months, 0), $application_counts);
-
-
-
-        $monthlyDepositApplications = [];
-        foreach ($months as $month) {
-            $monthNumber = Carbon::parse("first day of $month")->format('m'); // Get the month number
-
-            $application_query = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-                ->whereIn('deals.stage_id', [4, 5, 6])
-                ->where('s.id', '<', 7)
-                ->whereYear('deals.created_at', 2023)
-                ->whereMonth('deals.created_at', $monthNumber);
-
-            $monthlyDepositApplications[$month] = $application_query->count();
-        }
-
-
-        $spline_chart = [
-            [
-                'name' => 'Applications',
-                'data' => $application_counts
-            ],
-            [
-                'name' => 'Deposits',
-                'data' => $monthlyDepositApplications
-            ]
-        ];
-        return $spline_chart;
     }
 
-    private function DepositVisas(){
-
-        $months = [
-            'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'
-        ];
-
-
-        $monthlyDepositApplications = [];
-        foreach ($months as $month) {
-            $monthNumber = Carbon::parse("first day of $month")->format('m'); // Get the month number
-
-            $application_query = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-                ->whereIn('deals.stage_id', [4, 5, 6])
-                ->where('s.id', '<', 7)
-                ->whereYear('deals.created_at', 2023)
-                ->whereMonth('deals.created_at', $monthNumber);
-
-            $monthlyDepositApplications[$month] = $application_query->count();
-        }
-
-        $monthlyVisas = [];
-        foreach ($months as $month) {
-            $monthNumber = Carbon::parse("first day of $month")->format('m'); // Get the month number
-
-            $deal_query = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-                ->whereIn('deals.stage_id', [7, 8, 9])
-                ->where('s.id', '<', 10)
-                ->whereYear('deals.created_at', 2023)
-                ->whereMonth('deals.created_at', $monthNumber);
-
-            $monthlyVisas[$month] = $deal_query->count();
-        }
-
-
-        $spline_chart = [
-            [
-                'name' => 'Deposits',
-                'data' => $monthlyDepositApplications
-            ],
-            [
-                'name' => 'Visas',
-                'data' => $monthlyVisas
-            ],
-        ];
-        return $spline_chart;
-    }
-
-    private function GetTop3Brands($filter = [1, 2, 3]){
+    private function GetTop3Brands($filter = [1, 2, 3])
+    {
         $topUsers = DB::table('deals as d')
-                    ->join('users as u', 'd.created_by', '=', 'u.id')
-                    ->join('stages as s', 'd.stage_id', '=', 's.id')
-                    ->where('u.type', '!=', 'super admin')
-                    ->whereIn('s.id', $filter)
-                    ->groupBy('u.id', 'u.name')
-                    ->select('u.id as user_id', 'u.name', DB::raw('COUNT(d.id) as total'))
-                    ->orderByDesc('total')
-                    ->limit(3)
-                    ->get()->toArray();
+            ->join('users as u', 'd.created_by', '=', 'u.id')
+            ->join('stages as s', 'd.stage_id', '=', 's.id')
+            ->where('u.type', '!=', 'super admin')
+            ->whereIn('s.id', $filter)
+            ->groupBy('u.id', 'u.name')
+            ->select('u.id as user_id', 'u.name', DB::raw('COUNT(d.id) as total'))
+            ->orderByDesc('total')
+            ->limit(3)
+            ->get()->toArray();
 
         return $topUsers;
     }
@@ -1017,7 +961,7 @@ class DashboardController extends Controller
                 }
             } else {
                 return redirect()->route('crm.dashboard');
-               // return $this->project_dashboard_index();
+                // return $this->project_dashboard_index();
             }
         } else {
             if (!file_exists(storage_path() . "/installed")) {
@@ -1240,19 +1184,20 @@ class DashboardController extends Controller
         return Utility::error_res('Tracker not found.');
     }
 
-    public function loggedInAsCustomer($id){
-        try{
+    public function loggedInAsCustomer($id)
+    {
+        try {
             $sess_check = Session::get('auth_type_id');
             $auth_id = auth()->user()->id;
 
-            if($sess_check != null && $sess_check != ''){
+            if ($sess_check != null && $sess_check != '') {
                 $auth_id = $sess_check;
-            }else{
+            } else {
                 Session::put('auth_type_id', $auth_id);
                 Session::put('auth_type_created_by', auth()->user()->created_by);
                 Session::put('auth_type', auth()->user()->type);
                 Session::put('is_company_login', true);
-                if(auth()->user()->type == 'super admin'){
+                if (auth()->user()->type == 'super admin') {
                     Session::put('onlyadmin', auth()->user()->type);
                 }
             }
@@ -1261,44 +1206,44 @@ class DashboardController extends Controller
             // if(auth()->user()->type == 'Project Manager' || auth()->user()->type == 'Project Director'){
             //     Session::put('ProjectController', auth()->user()->type);
             // }
-            $user = User::where('id',$id)->first();
-            if($user){
+            $user = User::where('id', $id)->first();
+            if ($user) {
                 // session()->put('action_clicked_admin',$user->email);
                 \Auth::loginUsingId($user->id);
                 return redirect('crm-dashboard');
-            }else{
-                return redirect()->back()->with('error','User Not Found');
+            } else {
+                return redirect()->back()->with('error', 'User Not Found');
             }
-        }catch(Exception $e){
+        } catch (Exception $e) {
 
-            return redirect()->back()->with('error',$e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    public function loggedInAsUser($id){
+    public function loggedInAsUser($id)
+    {
 
-        try{
+        try {
             $auth_id = auth()->user()->id;
 
-            if(Session::get('auth_type_id') == $id){
-                $user = User::where('id',$id)->first();
+            if (Session::get('auth_type_id') == $id) {
+                $user = User::where('id', $id)->first();
 
                 Session::flush('auth_type');
                 Session::flush('is_company_login');
                 Session::flush('auth_type_id');
                 Session::flush('auth_type_created_by');
-
             }
-            if($user){
+            if ($user) {
                 // session()->put('action_clicked_admin',$user->email);
                 \Auth::loginUsingId($user->id);
                 return redirect('crm-dashboard');
-            }else{
-                return redirect()->back()->with('error','User Not Found');
+            } else {
+                return redirect()->back()->with('error', 'User Not Found');
             }
-        }catch(Exception $e){
+        } catch (Exception $e) {
 
-            return redirect()->back()->with('error',$e->getMessage());
+            return redirect()->back()->with('error', $e->getMessage());
         }
     }
 }
