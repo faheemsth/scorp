@@ -520,20 +520,42 @@ class DashboardController extends Controller
         $filter_data = BrandsRegionsBranches();
 
         $chart_data = $this->getChartData();
+        $stage_share_data = $this->getStageShareLeads();
+        $top_brands = $this->AdmissionTopper();
+        $top_countries = $this->GetTop3Countries();
+        $deals_stage_share_data = $this->getStageShareDeals();
 
+        
         //getting subcharts
         $sub_chart_visas = $this->getSubChartVisasData();
         $sub_chart_deposit = $this->getSubChartDepositData();
-        
-        // echo "<pre>";
-        // print_r($sub_chart_visas);
-        // die();
+        $sub_chart_applications = $this->getSubChartApplicationsData();
+        $sub_chart_admissions = $this->getSubChartAdmissionsData();
+        $sub_chart_assignedleads = $this->getSubChartAssignedLeadsData();
+        $sub_chart_unassignedleads = $this->getSubChartUnassignedLeadsData();
+        $sub_chart_Qualifiedleads = $this->getSubChartQualifiedLeadsData();
+        $sub_chart_Unqualifiedleads = $this->getSubChartUnqualifiedLeadsData();
+
+
+
+
 
         $data = [
             'filter_data' => $filter_data,
             'chart_data1_json' => json_encode($chart_data),
+            'stage_share_data' => json_encode($stage_share_data),
+            'top_brands' => json_encode($top_brands),
+            'top_countries' => $top_countries,
+            'deals_stage_share_data' => json_encode($deals_stage_share_data),
+
             'sub_chart_deposit' => json_encode($sub_chart_deposit),
-            'sub_chart_visas' => json_encode($sub_chart_visas)
+            'sub_chart_visas' => json_encode($sub_chart_visas),
+            'sub_chart_applications' =>  json_encode($sub_chart_applications),
+            'sub_chart_admissions' => json_encode($sub_chart_admissions),
+            'sub_chart_assignedleads' => json_encode($sub_chart_assignedleads),
+            'sub_chart_unassignedleads' => json_encode($sub_chart_unassignedleads),
+            'sub_chart_qualifiedleads' => json_encode($sub_chart_Qualifiedleads),
+            'sub_chart_unqualifiedleads' => json_encode($sub_chart_Unqualifiedleads)
         ];
 
         return view('chartdashboard.chart', $data);
@@ -613,10 +635,23 @@ class DashboardController extends Controller
             // Query for applications
             $applications_query = Deal::join('deal_applications as da', 'da.deal_id', '=', 'deals.id')
                 ->whereYear('da.created_at', $year)
-                ->whereMonth('da.created_at', $monthNumber)
-                ->when($brand_id, function ($query, $brand_id) {
-                    return $query->where('deals.brand_id', $brand_id);
-                })
+                ->whereMonth('da.created_at', $monthNumber);
+
+            if (\Auth::user()->can('level 1') || \Auth::user()->can('level 2')) {
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+                $applications_query->whereIn('deals.brand_id', $brand_ids);
+            } else if (\Auth::user()->can('level 3')) {
+                $applications_query->where('deals.region_id', \Auth::user()->region_id);
+            } else if (\Auth::user()->can('level 4')) {
+                $applications_query->where('deals.branch_id', \Auth::user()->branch_id);
+            } else {
+                $applications_query->where('deals.branch_id', \Auth::user()->branch_id);
+            }
+
+            $applications_query->when($brand_id, function ($query, $brand_id) {
+                return $query->where('deals.brand_id', $brand_id);
+            })
                 ->when($region_id, function ($query, $region_id) {
                     return $query->where('deals.region_id', $region_id);
                 })
@@ -656,10 +691,23 @@ class DashboardController extends Controller
                 ->whereMonth('deals.created_at', $monthNumber)
                 ->when(!empty($stageIds), function ($query) use ($stageIds) {
                     return $query->whereIn('deals.stage_id', $stageIds);
-                })
-                ->when($brand_id, function ($query, $brand_id) {
-                    return $query->where('deals.brand_id', $brand_id);
-                })
+                });
+
+            if (\Auth::user()->can('level 1') || \Auth::user()->can('level 2')) {
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+                $query->whereIn('deals.brand_id', $brand_ids);
+            } else if (\Auth::user()->can('level 3')) {
+                $query->where('deals.region_id', \Auth::user()->region_id);
+            } else if (\Auth::user()->can('level 4')) {
+                $query->where('deals.branch_id', \Auth::user()->branch_id);
+            } else {
+                $query->where('deals.branch_id', \Auth::user()->branch_id);
+            }
+
+            $query->when($brand_id, function ($query, $brand_id) {
+                return $query->where('deals.brand_id', $brand_id);
+            })
                 ->when($region_id, function ($query, $region_id) {
                     return $query->where('deals.region_id', $region_id);
                 })
@@ -674,99 +722,400 @@ class DashboardController extends Controller
         return ['name' => $name, 'data' => $data];
     }
 
+    private function getLeadsData($name, $filter)
+    {
+        $months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+
+        $year = 2024;
+        $data = [];
+
+        // Get filter values safely
+        $brand_id = $this->getSafeFilterValue('brand_id');
+        $region_id = $this->getSafeFilterValue('region_id');
+        $branch_id = $this->getSafeFilterValue('branch_id');
+
+        foreach ($months as $month) {
+            $monthNumber = Carbon::parse("first day of $month")->format('m');
+
+            $query = Lead::whereYear('leads.created_at', $year)
+                ->whereMonth('leads.created_at', $monthNumber);
+
+            if (\Auth::user()->can('level 1') || \Auth::user()->can('level 2')) {
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+                $query->whereIn('leads.brand_id', $brand_ids);
+            } else if (\Auth::user()->can('level 3')) {
+                $query->where('leads.region_id', \Auth::user()->region_id);
+            } else if (\Auth::user()->can('level 4')) {
+                $query->where('leads.branch_id', \Auth::user()->branch_id);
+            } else {
+                $query->where('leads.branch_id', \Auth::user()->branch_id);
+            }
+
+            // Apply filter based on the provided filter type
+            if ($filter == 'Unassigned Lead') {
+                $query->whereNull('user_id');
+            } else if ($filter == 'Qualified Lead') {
+                $query->whereIn('stage_id', [5]);
+            } else if ($filter == 'Unqualified Lead') {
+                $query->whereIn('stage_id', [6]);
+            } else { // Unassigned leads
+                $query->whereNotNull('user_id');
+            }
+
+            // Apply optional filters
+            if ($brand_id) {
+                $query->where('leads.brand_id', $brand_id);
+            }
+            if ($region_id) {
+                $query->where('leads.region_id', $region_id);
+            }
+            if ($branch_id) {
+                $query->where('leads.branch_id', $branch_id);
+            }
+
+            // Count applications for the month
+            $data[$month] = $query->count();
+        }
+
+        return ['name' => $name, 'data' => $data];
+    }
+
+    // Helper function to get safe filter values from $_GET
+    private function getSafeFilterValue($key)
+    {
+        return isset($_GET[$key]) ? intval($_GET[$key]) : null;
+    }
+
 
     ////////////////////////////////////////Getting subchart details
     private function getSubChartDepositData()
     {
-        $year = 2024;
-
-        // Retrieve query parameters
-        $brand_id = isset($_GET['brand_id']) ? $_GET['brand_id'] : 0;
-        $region_id = isset($_GET['region_id']) ? $_GET['region_id'] : 0;
-        $branch_id = isset($_GET['branch_id']) ? $_GET['branch_id'] : 0;
-
-
         //Getting Deposit data
         $deposit = $this->getAdmissionsData('Deposits', [4, 5, 6]);
-
-
-        $query = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-            ->whereIn('deals.stage_id', [4,5,6])
-            ->whereYear('deals.created_at', $year)
-            ->when($brand_id, function ($query, $brand_id) {
-                return $query->where('deals.brand_id', $brand_id);
-            })
-            ->when($region_id, function ($query, $region_id) {
-                return $query->where('deals.region_id', $region_id);
-            })
-            ->when($branch_id, function ($query, $branch_id) {
-                return $query->where('deals.branch_id', $branch_id);
-            });
-
-        // Count applications for the month
-        $deposit_count = $query->count();
-
 
         return [
             'name' => $deposit['name'],
             'data' => $deposit['data'],
-            'total' => $deposit_count
+            'total' => array_sum($deposit['data'])
         ];
     }
 
     private function getSubChartVisasData()
     {
-        $year = 2024;
-
-        // Retrieve query parameters
-        $brand_id = isset($_GET['brand_id']) ? $_GET['brand_id'] : 0;
-        $region_id = isset($_GET['region_id']) ? $_GET['region_id'] : 0;
-        $branch_id = isset($_GET['branch_id']) ? $_GET['branch_id'] : 0;
-
-
         //Getting Deposit data
         $deposit = $this->getAdmissionsData('Visas', [7, 8, 9]);
-
-
-        $query = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
-            ->whereIn('deals.stage_id', [7,8,9])
-            ->whereYear('deals.created_at', $year)
-            ->when($brand_id, function ($query, $brand_id) {
-                return $query->where('deals.brand_id', $brand_id);
-            })
-            ->when($region_id, function ($query, $region_id) {
-                return $query->where('deals.region_id', $region_id);
-            })
-            ->when($branch_id, function ($query, $branch_id) {
-                return $query->where('deals.branch_id', $branch_id);
-            });
-
-        // Count applications for the month
-        $deposit_count = $query->count();
-
-
         return [
             'name' => $deposit['name'],
             'data' => $deposit['data'],
-            'total' => $deposit_count
+            'total' => array_sum($deposit['data'])
         ];
     }
 
-    private function GetTop3Brands($filter = [1, 2, 3])
+    private function getSubChartApplicationsData()
     {
-        $topUsers = DB::table('deals as d')
-            ->join('users as u', 'd.created_by', '=', 'u.id')
-            ->join('stages as s', 'd.stage_id', '=', 's.id')
-            ->where('u.type', '!=', 'super admin')
-            ->whereIn('s.id', $filter)
-            ->groupBy('u.id', 'u.name')
-            ->select('u.id as user_id', 'u.name', DB::raw('COUNT(d.id) as total'))
-            ->orderByDesc('total')
-            ->limit(3)
-            ->get()->toArray();
-
-        return $topUsers;
+        //Getting Deposit data
+        $applications = $this->getApplicationsData();
+        return [
+            'name' => $applications['name'],
+            'data' => $applications['data'],
+            'total' => array_sum($applications['data'])
+        ];
     }
+
+    private function getSubChartAdmissionsData()
+    {
+        //Getting Deposit data
+        $admissions = $this->getAdmissionsData('Admissions');
+
+        return [
+            'name' => $admissions['name'],
+            'data' => $admissions['data'],
+            'total' => array_sum($admissions['data'])
+        ];
+    }
+
+    private function getSubChartAssignedLeadsData()
+    {
+        //Getting Deposit data
+        $leads = $this->getLeadsData('Assigned Leads', 'Assigned Lead');
+        return [
+            'name' => $leads['name'],
+            'data' => $leads['data'],
+            'total' => array_sum($leads['data'])
+        ];
+    }
+
+    private function getSubChartUnassignedLeadsData()
+    {
+        //Getting Deposit data
+        $leads = $this->getLeadsData('Unassigned Leads', 'Unassigned Lead');
+        return [
+            'name' => $leads['name'],
+            'data' => $leads['data'],
+            'total' => array_sum($leads['data'])
+        ];
+    }
+
+
+    private function getSubChartQualifiedLeadsData()
+    {
+        //Getting Deposit data
+        $leads = $this->getLeadsData('Qualified Leads', 'Qualified Lead');
+        return [
+            'name' => $leads['name'],
+            'data' => $leads['data'],
+            'total' => array_sum($leads['data'])
+        ];
+    }
+
+    private function getSubChartUnqualifiedLeadsData()
+    {
+        //Getting Deposit data
+        $leads = $this->getLeadsData('Unqualified Leads', 'Unqualified Lead');
+        return [
+            'name' => $leads['name'],
+            'data' => $leads['data'],
+            'total' => array_sum($leads['data'])
+        ];
+    }
+
+
+    private function getStageShareLeads()
+    {
+        $year = 2024;
+
+        // Get filter values safely
+        $brand_id = $this->getSafeFilterValue('brand_id');
+        $region_id = $this->getSafeFilterValue('region_id');
+        $branch_id = $this->getSafeFilterValue('branch_id');
+
+        $query = Lead::select(['s.name', DB::raw('count(leads.id) as total')])
+            ->join('lead_stages as s', 's.id', '=', 'leads.stage_id')
+            ->whereYear('leads.created_at', $year);
+        if (\Auth::user()->can('level 1') || \Auth::user()->can('level 2')) {
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $query->whereIn('leads.brand_id', $brand_ids);
+        } else if (\Auth::user()->can('level 3')) {
+            $query->where('leads.region_id', \Auth::user()->region_id);
+        } else if (\Auth::user()->can('level 4')) {
+            $query->where('leads.branch_id', \Auth::user()->branch_id);
+        } else {
+            $query->where('leads.branch_id', \Auth::user()->branch_id);
+        }
+
+        if ($brand_id) {
+            $query->where('leads.brand_id', $brand_id);
+        }
+        if ($region_id) {
+            $query->where('leads.region_id', $region_id);
+        }
+        if ($branch_id) {
+            $query->where('leads.branch_id', $branch_id);
+        }
+
+        $leads = $query->groupBy('leads.stage_id')
+            ->orderBy('s.id')->pluck('total', 's.name')->toArray();
+        return $leads;
+    }
+
+    private function getStageShareDeals()
+    {
+        $year = 2024;
+
+        // Get filter values safely
+        $brand_id = $this->getSafeFilterValue('brand_id');
+        $region_id = $this->getSafeFilterValue('region_id');
+        $branch_id = $this->getSafeFilterValue('branch_id');
+
+        $query = Deal::select(['s.name', DB::raw('count(deals.id) as total')])
+            ->join('stages as s', 's.id', '=', 'deals.stage_id')
+            ->whereYear('deals.created_at', $year);
+
+        if (\Auth::user()->can('level 1') || \Auth::user()->can('level 2')) {
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            $query->whereIn('deals.brand_id', $brand_ids);
+        } else if (\Auth::user()->can('level 3')) {
+            $query->where('deals.region_id', \Auth::user()->region_id);
+        } else if (\Auth::user()->can('level 4')) {
+            $query->where('deals.branch_id', \Auth::user()->branch_id);
+        } else {
+            $query->where('deals.branch_id', \Auth::user()->branch_id);
+        }
+
+        if ($brand_id) {
+            $query->where('deals.brand_id', $brand_id);
+        }
+        if ($region_id) {
+            $query->where('deals.region_id', $region_id);
+        }
+        if ($branch_id) {
+            $query->where('deals.branch_id', $branch_id);
+        }
+
+        $deals = $query->groupBy('deals.stage_id')
+            ->orderBy('s.id')->pluck('total', 's.name')->toArray();
+        return $deals;
+    }
+
+    private function AdmissionTopper()
+    {
+        // if (\Auth::user()->can('level 1') || \Auth::user()->can('level 2')) {
+        //    $top = $this->GetTop3Brands();
+        // } else if (\Auth::user()->can('level 3')) {
+
+        // } else if (\Auth::user()->can('level 4')) {
+
+        // } else {
+
+        // }
+        // echo "<pre>";
+        // print_r($this->GetTop3Regions());
+        // die();
+        return  $this->GetTop3Brands();
+    }
+
+
+
+    private function GetTop3Regions()
+    {
+        $results = DB::table(DB::raw('(
+                                        SELECT 
+                                            CASE 
+                                                WHEN @prev_region = region_id THEN @rank
+                                                ELSE @rank := @rank + 1
+                                            END AS rank,
+                                            @prev_region := region_id AS region_id,
+                                            name,
+                                            total_deals
+                                        FROM (
+                                            SELECT 
+                                                d.region_id,
+                                                COALESCE(u.name, "others") AS name,
+                                                COUNT(*) AS total_deals
+                                            FROM deals d
+                                            LEFT JOIN regions u ON d.region_id = u.id
+                                            GROUP BY d.region_id
+                                            ORDER BY total_deals DESC
+                                        ) AS ranked_regions,
+                                        (SELECT @rank := 0, @prev_region := NULL) AS vars
+                                    ) AS ranked_with_ranks'))
+            ->select('name', DB::raw('SUM(total_deals) AS total_deals'))
+            ->groupBy('name')
+            ->orderByDesc('total_deals')
+            ->get();
+
+        // Convert the stdClass objects to associative arrays for easier manipulation
+        $resultsArray = json_decode(json_encode($results), true);
+
+        // Get the top 3 regions
+        $top3Regions = array_slice($resultsArray, 0, 3);
+
+        // Calculate the total deals for the remaining regions
+        $totalOtherDeals = array_sum(array_column(array_slice($resultsArray, 3), 'total_deals'));
+
+        // Return the top 3 regions and the total count of deals for the remaining regions under "other"
+        return [
+            'top' => $top3Regions,
+            'other' => $totalOtherDeals
+        ];
+    }
+
+
+    private function GetTop3Brands()
+    {
+        $results = DB::table(DB::raw('(
+            SELECT 
+                CASE 
+                    WHEN @prev_brand = brand_id THEN @rank
+                    ELSE @rank := @rank + 1
+                END AS rank,
+                @prev_brand := brand_id AS brand_id,
+                brand_name,
+                total_deals
+            FROM (
+                SELECT 
+                    d.brand_id,
+                    COALESCE(u.name, "other_brand") AS brand_name,
+                    COUNT(*) AS total_deals
+                FROM deals d
+                LEFT JOIN users u ON d.brand_id = u.id
+                GROUP BY d.brand_id
+                ORDER BY total_deals DESC
+            ) AS ranked_brands,
+            (SELECT @rank := 0, @prev_brand := NULL) AS vars
+        ) AS ranked_with_ranks'))
+            ->select('brand_name', DB::raw('SUM(total_deals) AS total_deals'))
+            ->groupBy('brand_name')
+            ->orderByDesc('total_deals')
+            ->get();
+
+
+        // Convert the stdClass objects to associative arrays for easier manipulation
+        $resultsArray = json_decode(json_encode($results), true);
+
+        // Get the top 3 brands
+        $top3Brands = array_slice($resultsArray, 0, 3);
+
+        // Calculate the total deals for the remaining brands
+        $totalOtherDeals = array_sum(array_column(array_slice($resultsArray, 3), 'total_deals'));
+
+        return [
+            'top_brands' => $top3Brands,
+            'totalOtherDeal' => $totalOtherDeals
+        ];
+    }
+
+
+    private function GetTop3Countries()
+    {
+        $results = DB::table(DB::raw('(
+        SELECT 
+            CASE 
+                WHEN @prev_country = country THEN @rank
+                ELSE @rank := @rank + 1
+            END AS rank,
+            @prev_country := country AS country,
+            COALESCE(country, "others") AS name,
+            total_deals
+        FROM (
+            SELECT 
+                l.country,
+                COUNT(*) AS total_deals
+            FROM deals d
+            LEFT JOIN leads l ON d.id = l.is_converted
+            GROUP BY l.country
+            ORDER BY total_deals DESC
+        ) AS ranked_countries,
+        (SELECT @rank := 0, @prev_country := NULL) AS vars
+    ) AS ranked_with_ranks'))
+            ->select(DB::raw('COALESCE(country, "others") AS country'), DB::raw('SUM(total_deals) AS total_deals'))
+            ->groupBy('country')
+            ->orderByDesc('total_deals')
+            ->get();
+
+        // Convert the stdClass objects to associative arrays for easier manipulation
+        $resultsArray = json_decode(json_encode($results), true);
+
+        // Get the top 3 countries
+        $top3Countries = array_slice($resultsArray, 0, 3);
+
+        // Calculate the total deals for the remaining countries
+        $totalOtherDeals = array_sum(array_column(array_slice($resultsArray, 3), 'total_deals'));
+
+        return [
+            'top_countries' => $top3Countries,
+            'other' => $totalOtherDeals
+        ];
+    }
+
+
+
 
 
 

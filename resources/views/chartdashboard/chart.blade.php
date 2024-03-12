@@ -99,580 +99,16 @@
 <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
 <script src="https://www.gstatic.com/charts/loader.js"></script>
 
-{{-- minicharts --}}
 
 
 
-{{-- 3 --}}
-<script>
-    google.charts.load("current", {
-        packages: ["corechart"]
-    });
-    google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-        // Set Data
-        const data = google.visualization.arrayToDataTable([
-            ["Price", "Size"],
-            [50, 7],
-            [60, 8],
-            [70, 8],
-            [80, 9],
-            [90, 9],
-            [100, 9],
-            [110, 10],
-            [120, 11],
-            [130, 14],
-            [140, 14],
-            [180, 5],
-        ]);
-
-        // Set Options
-        const options = {
-            series: {
-                0: {
-                    visibleInLegend: true,
-                    color: "black"
-                },
-                1: {
-                    visibleInLegend: false
-                },
-                2: {
-                    visibleInLegend: false
-                },
-            },
-            hAxis: {
-                gridlines: {
-                    color: "transparent"
-                },
-                textPosition: "none",
-                ticks: [],
-                baselineColor: "transparent",
-                viewWindow: {
-                    min: 50,
-                    max: 150
-                },
-            },
-            vAxis: {
-                gridlines: {
-                    color: "transparent"
-                },
-                textPosition: "none",
-                baselineColor: "transparent",
-            },
-            chartArea: {
-                left: 0,
-                top: 0,
-                width: "100%",
-                height: "100%"
-            },
-        };
-        // Draw
-        const chart = new google.visualization.LineChart(
-            document.getElementById("minichart3")
-        );
-        chart.draw(data, options);
-    }
-</script>
-{{-- 4 --}}
-<script>
-    google.charts.load("current", {
-        packages: ["corechart"]
-    });
-    google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-        // Set Data
-        const data = google.visualization.arrayToDataTable([
-            ["Price", "Size"],
-            [50, 7],
-            [60, 8],
-            [70, 8],
-            [80, 9],
-            [90, 9],
-            [100, 9],
-            [110, 10],
-            [120, 11],
-            [130, 14],
-            [140, 14],
-            [155, 15],
-        ]);
-
-        // Set Options
-        const options = {
-            series: {
-                0: {
-                    visibleInLegend: true,
-                    color: "black"
-                },
-                1: {
-                    visibleInLegend: false
-                },
-                2: {
-                    visibleInLegend: false
-                },
-            },
-            hAxis: {
-                gridlines: {
-                    color: "transparent"
-                },
-                textPosition: "none",
-                ticks: [],
-                baselineColor: "transparent",
-                viewWindow: {
-                    min: 50,
-                    max: 150
-                },
-            },
-            vAxis: {
-                gridlines: {
-                    color: "transparent"
-                },
-                textPosition: "none",
-                baselineColor: "transparent",
-            },
-            chartArea: {
-                left: 0,
-                top: 0,
-                width: "100%",
-                height: "100%"
-            },
-        };
-
-        // Draw
-        const chart = new google.visualization.LineChart(
-            document.getElementById("minichart4")
-        );
-        chart.draw(data, options);
-    }
-</script>
-{{-- second mini line graph --}}
-<script>
-    google.charts.load("current", {
-        packages: ["corechart"]
-    });
-    google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-        // Set Data
-        const data = google.visualization.arrayToDataTable([
-            ["Price", "Size"],
-            [50, 7],
-            [60, 8],
-            [70, 8],
-            [80, 9],
-            [90, 9],
-            [100, 9],
-            [110, 10],
-            [120, 11],
-            [130, 14],
-            [140, 14],
-            [200, 10],
-        ]);
-
-        // Set Options
-        const options = {
-            series: {
-                0: {
-                    visibleInLegend: true,
-                    color: "black"
-                },
-                1: {
-                    visibleInLegend: false
-                },
-                2: {
-                    visibleInLegend: false
-                },
-            },
-            hAxis: {
-                gridlines: {
-                    color: "transparent"
-                },
-                textPosition: "none",
-                ticks: [],
-                baselineColor: "transparent",
-                viewWindow: {
-                    min: 50,
-                    max: 150
-                },
-            },
-            vAxis: {
-                gridlines: {
-                    color: "transparent"
-                },
-                textPosition: "none",
-                baselineColor: "transparent",
-            },
-            chartArea: {
-                left: 0,
-                top: 0,
-                width: "100%",
-                height: "100%"
-            },
-        };
-
-        // Draw
-        const chart = new google.visualization.LineChart(
-            document.getElementById("minichart5")
-        );
-        chart.draw(data, options);
-    }
-</script>
-{{-- 2 --}}
-<script>
-    google.charts.load("current", {
-        packages: ["corechart"]
-    });
-    google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-        // Set Data
-        const data = google.visualization.arrayToDataTable([
-            ["Price", "Size"],
-            [50, 7],
-            [60, 8],
-            [70, 8],
-            [80, 9],
-            [90, 9],
-            [100, 9],
-            [110, 10],
-            [120, 11],
-            [135, 14],
-            [145, 14],
-            [150, 15],
-        ]);
-
-        // Set Options
-        const options = {
-            series: {
-                0: {
-                    visibleInLegend: true,
-                    color: "black"
-                },
-                1: {
-                    visibleInLegend: false
-                },
-                2: {
-                    visibleInLegend: false
-                },
-            },
-            hAxis: {
-                gridlines: {
-                    color: "transparent"
-                },
-                textPosition: "none",
-                ticks: [],
-                baselineColor: "transparent",
-                viewWindow: {
-                    min: 50,
-                    max: 150
-                },
-            },
-            vAxis: {
-                gridlines: {
-                    color: "transparent"
-                },
-                textPosition: "none",
-                baselineColor: "transparent",
-            },
-            chartArea: {
-                left: 0,
-                top: 0,
-                width: "100%",
-                height: "100%"
-            },
-        };
-        // Draw
-        const chart = new google.visualization.LineChart(
-            document.getElementById("minichart6")
-        );
-        chart.draw(data, options);
-    }
-</script>
-{{-- 3 --}}
-<script>
-    google.charts.load("current", {
-        packages: ["corechart"]
-    });
-    google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-        // Set Data
-        const data = google.visualization.arrayToDataTable([
-            ["Price", "Size"],
-            [50, 7],
-            [60, 8],
-            [70, 8],
-            [80, 9],
-            [90, 9],
-            [95, 9],
-            [115, 10],
-            [120, 11],
-            [130, 14],
-            [140, 14],
-            [150, 15],
-        ]);
-
-        // Set Options
-        const options = {
-            series: {
-                0: {
-                    visibleInLegend: true,
-                    color: "black"
-                },
-                1: {
-                    visibleInLegend: false
-                },
-                2: {
-                    visibleInLegend: false
-                },
-            },
-            hAxis: {
-                gridlines: {
-                    color: "transparent"
-                },
-                textPosition: "none",
-                ticks: [],
-                baselineColor: "transparent",
-                viewWindow: {
-                    min: 50,
-                    max: 150
-                },
-            },
-            vAxis: {
-                gridlines: {
-                    color: "transparent"
-                },
-                textPosition: "none",
-                baselineColor: "transparent",
-            },
-            chartArea: {
-                left: 0,
-                top: 0,
-                width: "100%",
-                height: "100%"
-            },
-        };
-        // Draw
-        const chart = new google.visualization.LineChart(
-            document.getElementById("minichart7")
-        );
-        chart.draw(data, options);
-    }
-</script>
-{{-- 4 --}}
-<script>
-    google.charts.load("current", {
-        packages: ["corechart"]
-    });
-    google.charts.setOnLoadCallback(drawChart);
-
-    function drawChart() {
-        // Set Data
-        const data = google.visualization.arrayToDataTable([
-            ["Price", "Size"],
-            [50, 7],
-            [55, 8],
-            [75, 8],
-            [80, 9],
-            [90, 9],
-            [100, 9],
-            [110, 10],
-            [120, 11],
-            [130, 14],
-            [140, 14],
-            [155, 15],
-        ]);
-
-        // Set Options
-        const options = {
-            series: {
-                0: {
-                    visibleInLegend: true,
-                    color: "black"
-                },
-                1: {
-                    visibleInLegend: false
-                },
-                2: {
-                    visibleInLegend: false
-                },
-            },
-            hAxis: {
-                gridlines: {
-                    color: "transparent"
-                },
-                textPosition: "none",
-                ticks: [],
-                baselineColor: "transparent",
-                viewWindow: {
-                    min: 50,
-                    max: 150
-                },
-            },
-            vAxis: {
-                gridlines: {
-                    color: "transparent"
-                },
-                textPosition: "none",
-                baselineColor: "transparent",
-            },
-            chartArea: {
-                left: 0,
-                top: 0,
-                width: "100%",
-                height: "100%"
-            },
-        };
-
-        // Draw
-        const chart = new google.visualization.LineChart(
-            document.getElementById("minichart8")
-        );
-        chart.draw(data, options);
-    }
-</script>
-{{-- second mini line graph end --}}
-{{-- line and bar chart --}}
-<script>
-    // line with barr
-
-    const ctx = document.getElementById("myChart");
-
-    new Chart(ctx, {
-        type: "line",
-        data: {
-            labels: [
-                "New Lead",
-                "Contacted",
-                "Documents Pending",
-                "Documents Received",
-                "Advised",
-                "Unqualified",
-                "Junk Lead",
-            ],
-            datasets: [{
-                label: "Stages",
-                data: [12, 19, 3, 5, 2, 3, 4],
-                borderWidth: 2,
-                borderColor: "#000",
-            }, ],
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                },
-            },
-        },
-    });
-    const ctx2 = document.getElementById("myChart2");
-
-    new Chart(ctx2, {
-        type: "bar",
-        data: {
-            labels: ["AA Advisers", "Active Visions", "Better Uni"],
-            datasets: [{
-                label: "Stages Data",
-                data: [12, 19, 11],
-                borderWidth: 1,
-                borderColor: "#000",
-            }, ],
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                },
-            },
-        },
-    });
-</script>
-
-{{-- main line chart --}}
-<script>
-    var chart1 = <?= $chart_data1_json ?>
-
-    datapoint1 = [];
-    datapoint2 = [];
-    datapoint1_label = '';
-    datapoint2_label = '';
-
-    var outer = 0;
-
-    chart1.forEach(function(item, index) {
-        outer++;
 
 
-        for (const month in item.data) {
-            if (item.data.hasOwnProperty(month)) {
-                if (item.data.hasOwnProperty(month)) {
-                    const dataPoint = {
-                        label: month,
-                        y: item.data[month]
-                    };
 
-                    if (outer == 1) {
-                        datapoint1_label = item.name;
-                        datapoint1.push(dataPoint);
-                    } else {
-                        datapoint2_label = item.name;
-                        datapoint2.push(dataPoint);
-                    }
-                }
-            }
-        }
-    });
-    window.onload = function() {
 
-        var chart = new CanvasJS.Chart("chartContainer", {
-            animationEnabled: true,
-            exportEnabled: true,
-            title: {
-                text: ""
-            },
-            axisY: {
-                title: datapoint1_label + '-' + datapoint2_label
-            },
-            toolTip: {
-                shared: true
-            },
-            legend: {
-                cursor: "pointer",
-                itemclick: toggleDataSeries
-            },
-            data: [{
-                    type: "spline",
-                    name: datapoint1_label,
-                    showInLegend: true,
-                    dataPoints: datapoint1
-                },
-                {
-                    type: "spline",
-                    name: datapoint2_label,
-                    showInLegend: true,
-                    dataPoints: datapoint2
-                }
-            ]
-        });
-
-        chart.render();
-
-        function toggleDataSeries(e) {
-            if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                e.dataSeries.visible = false;
-            } else {
-                e.dataSeries.visible = true;
-            }
-            chart.render();
-        }
-
-    }
-</script>
 
 <script>
     // map chart
-
     var root = am5.Root.new("chartdiv");
     root.setThemes([am5themes_Animated.new(root)]);
 
@@ -693,137 +129,27 @@
     polygonSeries.mapPolygons.template.setAll({
         tooltipText: "{name}",
         interactive: true,
+        fill: am5.color(0xcccccc),
     });
 
     polygonSeries.mapPolygons.template.states.create("hover", {
         fill: am5.color(0x677935),
     });
+
+    function selectCountry(countryName) {
+        var selectedPolygon = polygonSeries.getPolygonById(countryName);
+        if (selectedPolygon) {
+            selectedPolygon.mapPolygon.fill = am5.color(0x677935); // Set fill color for selected country
+            chart.zoomToMapObject(selectedPolygon);
+        }
+    }
+
+    // Example: Selecting a country named "Canada"
+    selectCountry("Canada");
 </script>
 
-{{-- dounut chart --}}
-<script>
-    anychart.onDocumentReady(function() {
-        var data = anychart.data.set([
-            ["Wimbledon", 8],
-            ["Australian Open", 6],
-            ["U.S. Open", 5],
-            ["French Open", 1],
-        ]);
 
-        var palette = anychart.palettes.distinctColors();
 
-        var chart = anychart
-            .pie(data)
-
-            .innerRadius("60%");
-
-        chart.container("dounotchart1");
-
-        chart.draw();
-    });
-</script>
-<script>
-    anychart.onDocumentReady(function() {
-        var data = anychart.data.set([
-            ["New Lead", 8],
-            ["Contacted", 6],
-            ["Documents Pending", 5],
-            ["Documents Received", 1],
-            ["Advised", 1],
-            ["Unqualified", 1],
-            ["Junk Lead", 1],
-        ]);
-
-        var palette = anychart.palettes.distinctColors();
-
-        var chart = anychart
-            .pie(data)
-
-            .innerRadius("60%");
-
-        chart.container("dounotchart2");
-
-        chart.draw();
-    });
-</script>
-{{-- respons-chart script --}}
-<script>
-    anychart.onDocumentReady(function() {
-        var data = anychart.data.set([
-            ["New Lead", 8],
-            ["Contacted", 6],
-            ["Documents Pending", 5],
-            ["Documents Received", 1],
-            ["Advised", 1],
-            ["Unqualified", 1],
-            ["Junk Lead", 1],
-        ]);
-
-        var palette = anychart.palettes.distinctColors();
-
-        var chart = anychart
-            .pie(data)
-
-            .innerRadius("60%");
-
-        chart.container("dounotchart3");
-
-        chart.draw();
-    });
-</script>
-<script>
-    const ctx3 = document.getElementById("myChart3");
-
-    new Chart(ctx3, {
-        type: "line",
-        data: {
-            labels: [
-                "New Lead",
-                "Contacted",
-                "Documents Pending",
-                "Documents Received",
-                "Advised",
-                "Unqualified",
-                "Junk Lead",
-            ],
-            datasets: [{
-                label: "Stages",
-                data: [12, 19, 3, 5, 2, 3, 4],
-                borderWidth: 2,
-                borderColor: "#000",
-            }, ],
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                },
-            },
-        },
-    });
-</script>
-<script>
-    anychart.onDocumentReady(function() {
-        var data = anychart.data.set([
-            ["Wimbledon", 8],
-            ["Australian Open", 6],
-            ["U.S. Open", 5],
-            ["French Open", 1],
-        ]);
-
-        var palette = anychart.palettes.distinctColors();
-
-        var chart = anychart
-            .pie(data)
-
-            .innerRadius("60%");
-
-        chart.container("dounotchart4");
-
-        chart.draw();
-    });
-</script>
-{{-- respons-chart script --}}
 
 
 @endpush @section('page-title')
@@ -913,45 +239,45 @@
                     <div class="row mx-auto px-2">
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
                             <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_visas)->total }}</a></h4>
-                            <a href="#" class="text-dark">Total Number of Visas</a>
+                            <a href="#" class="text-dark">Visas</a>
                             <div id="subchartvisas" style="width: 150px; height: 70px"></div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
                             <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_deposit)->total }} </a></h4>
-                            <a href="#" class="text-dark">Total Number of Deposit</a>
-                            <div id="subchartdeposit1" style="width: 150px; height: 70px"></div>
+                            <a href="#" class="text-dark">Deposit</a>
+                            <div id="subchartdeposit" style="width: 150px; height: 70px"></div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">7</a></h4>
-                            <a href="#" class="text-dark">Total Number of Applications</a>
-                            <div id="minichart3" style="width: 150px; height: 70px"></div>
+                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_applications)->total }}</a></h4>
+                            <a href="#" class="text-dark">Applications</a>
+                            <div id="subchartapplications" style="width: 150px; height: 70px"></div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">7</a></h4>
-                            <a href="#" class="text-dark">Total Number of Admissions</a>
-                            <div id="minichart4" style="width: 150px; height: 70px"></div>
+                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_admissions)->total }}</a></h4>
+                            <a href="#" class="text-dark">Admissions</a>
+                            <div id="subchartadmissions" style="width: 150px; height: 70px"></div>
                         </div>
                     </div>
                     <div class="row mx-auto px-2">
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">11</a></h4>
-                            <a href="#" class="text-dark">Total Number of Assigned Leads</a>
-                            <div id="minichart5" style="width: 150px; height: 70px"></div>
+                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_assignedleads)->total }}</a></h4>
+                            <a href="#" class="text-dark">Assigned Leads</a>
+                            <div id="subchartassignedleads" style="width: 150px; height: 70px"></div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">14</a></h4>
-                            <a href="#" class="text-dark">Total Number of Unassigned Leads </a>
-                            <div id="minichart6" style="width: 150px; height: 70px"></div>
+                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_unassignedleads)->total }}</a></h4>
+                            <a href="#" class="text-dark">Unassigned Leads </a>
+                            <div id="subchartunassignedleads" style="width: 150px; height: 70px"></div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">7</a></h4>
-                            <a href="#" class="text-dark">Total Number of Qualified Leads</a>
-                            <div id="minichart7" style="width: 150px; height: 70px"></div>
+                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_qualifiedleads)->total }}</a></h4>
+                            <a href="#" class="text-dark">Qualified Leads</a>
+                            <div id="subchartqualifiedleads" style="width: 150px; height: 70px"></div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">7</a></h4>
-                            <a href="#" class="text-dark">Total Number of Unqualified Leads</a>
-                            <div id="minichart8" style="width: 150px; height: 70px"></div>
+                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_unqualifiedleads)->total }}</a></h4>
+                            <a href="#" class="text-dark">Unqualified Leads</a>
+                            <div id="subchartunqualifiedleads" style="width: 150px; height: 70px"></div>
                         </div>
                     </div>
                 </div>
@@ -961,126 +287,45 @@
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 my-2 second-card">
             <div class="card h-100">
                 <div class="d-flex justify-content-between align-items-center p-4 gap-2">
-                    <h6 class="card-title fw-bold">Stages Shares</h6>
-                    <select class="form-select form-select-sm w-50 " aria-label="Small select example">
-                        <option selected>Select</option>
-                        <option value="1">New Lead</option>
-                        <option value="2">Contacted</option>
-                        <option value="3">Documents Pending</option>
-                        <option value="4">Documents Received</option>
-                        <option value="">Advised</option>
-                        <option value="">Unqualified</option>
-                        <option value="">Qualified</option>
-                    </select>
+                    <h6 class="card-title fw-bold">Lead Stages Shares</h6>
                 </div>
-                <div id="dounotchart2" style="height: 300px; width:100%;"></div>
+                <div id="stageshare_dounotchart" style="height: 300px; width:100%;"></div>
                 <div class="card-body">
                     <canvas id="myChart" class="" style=" "></canvas>
                 </div>
             </div>
         </div>
     </div>
-    {{-- hidden charts --}}
-    <div class="row respons-chart">
-        <div class="col-12 col-md-6 col-lg-6 my-2">
-            <div class="card h-100">
-                <div class="d-flex justify-content-between align-items-center p-4 gap-3">
-                    <h6 class="card-title fw-bold">Stages Shares</h6>
-                    <select class="form-select form-select-sm w-50 " aria-label="Small select example">
-                        <option selected>Select</option>
-                        <option value="1">New Lead</option>
-                        <option value="2">Contacted</option>
-                        <option value="3">Documents Pending</option>
-                        <option value="4">Documents Received</option>
-                        <option value="">Advised</option>
-                        <option value="">Unqualified</option>
-                        <option value="">Qualified</option>
-                    </select>
-                </div>
-                <div id="dounotchart3" style="height: 300px; width:100%;"></div>
-                <div class="card-body">
 
-                    <canvas id="myChart3"></canvas>
-
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-lg-6 my-2 ">
-            <div class="card h-100">
-                <div class="d-flex justify-content-between align-items-center p-4 gap-3">
-                    <h6 class="card-title  fw-bold w-75">Project Directors Shares</h6>
-                    <select class="form-select form-select-sm w-50" aria-label="Small select example">
-                        <option selected>Select</option>
-                        <option value="1">Amar Suhail</option>
-                        <option value="2">Dr Kashif Shahzad</option>
-                        <option value="3">Muhammad Asif</option>
-                        <option value="4">Muhammad Shahid</option>
-                    </select>
-                </div>
-
-                <div id="dounotchart4" class="" style="width: 100%; height: 300px;"></div>
-                <div class="card-body px-0 scrollable-table overflow-auto">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Project Director</th>
-                                <th>Deposit</th>
-                                <th>Visa</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Dr Kashif Shahzad</td>
-                                <td>500</td>
-                                <td>200</td>
-                            </tr>
-                            <tr>
-                                <td>Muhammad Asif</td>
-                                <td>500</td>
-                                <td>200</td>
-                            </tr>
-                            <tr>
-                                <td>Muhammad Shahid</td>
-                                <td>500</td>
-                                <td>200</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{-- hidden charts --}}
 
     <div class="row my-2">
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 my-2">
             <div class="card h-100">
                 <h6 class="card-title p-4 fw-bold">Language Breakdown</h6>
-                <canvas id="myChart2" class="px-2 mb-1" style="width: 100%; height: 280px"></canvas>
+                <canvas id="topBrands" class="px-2 mb-1" style="width: 100%; height: 280px"></canvas>
                 <div class="card-body px-0 scrollable-table overflow-auto">
                     <table class="table mt-3">
                         <thead>
                             <tr>
                                 <th scope="col">Brands</th>
-                                <th scope="col">Deposit</th>
-                                <th scope="col">Visa</th>
+                                <th scope="col">Admissions</th>
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                            $top3brands = json_decode($top_brands);
+                            @endphp
+
+                            @foreach($top3brands->top_brands as $brand => $states)
                             <tr>
-                                <td>AA Advisers</td>
-                                <td>12</td>
-                                <td>11</td>
+                                <td>{{ $states->brand_name }}</td>
+                                <td>{{ $states->total_deals  }}</td>
                             </tr>
+                            @endforeach
+
                             <tr>
-                                <td>Active Visions</td>
-                                <td>12</td>
-                                <td>11</td>
-                            </tr>
-                            <tr>
-                                <td>Better Uni</td>
-                                <td>12</td>
-                                <td>11</td>
+                                <td>Other Brands</td>
+                                <td>{{ $top3brands->totalOtherDeal }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1091,13 +336,6 @@
             <div class="card h-100">
                 <div class="d-flex justify-content-between align-items-center p-4 gap-3">
                     <h6 class="card-title fw-bold">Country Breakdown</h6>
-                    <select class="form-select form-select-sm w-50" aria-label="Small select example">
-                        <option selected>Select</option>
-                        <option value="1">Pakistan</option>
-                        <option value="2">USA</option>
-                        <option value="3">Australia</option>
-                        <option value="4">United Kingdom</option>
-                    </select>
                 </div>
                 <span id="chartdiv" class="" style="width: 100%; height: 280px">
                 </span>
@@ -1105,30 +343,17 @@
                     <table class="table">
                         <thead>
                             <th>Location</th>
-                            <th>Leads</th>
-                            <th>Deposit</th>
-                            <th>Visa</th>
+                            <th>Admissions</th>
                         </thead>
 
                         <tbody>
+
+                        @foreach($top_countries['top_countries'] as $country)
                             <tr>
-                                <td>Pakistan</td>
-                                <td>1200</td>
-                                <td>400</td>
-                                <td>200</td>
+                                <td>{{$country['country']}}</td>
+                                <td>{{$country['total_deals']}}</td>
                             </tr>
-                            <tr>
-                                <td>India</td>
-                                <td>1600</td>
-                                <td>600</td>
-                                <td>200</td>
-                            </tr>
-                            <tr>
-                                <td>Pakistan</td>
-                                <td>2994</td>
-                                <td>1200</td>
-                                <td>1600</td>
-                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -1136,45 +361,12 @@
         </div>
         <div class="col-12 col-md-6 col-lg-6 col-xl-4 my-2 end-card">
             <div class="card h-100">
-                <div class="d-flex justify-content-between align-items-center p-4 gap-3">
-                    <h6 class="card-title fw-bold">Project Directors Shares</h6>
-                    <select class="form-select form-select-sm w-50" aria-label="Small select example">
-                        <option selected>Select</option>
-                        <option value="1">Amar Suhail</option>
-                        <option value="2">Dr Kashif Shahzad</option>
-                        <option value="3">Muhammad Asif</option>
-                        <option value="4">Muhammad Shahid</option>
-                    </select>
+                <div class="d-flex justify-content-between align-items-center p-4 gap-2">
+                    <h6 class="card-title fw-bold">Admission Stages Shares</h6>
                 </div>
-
-                <div id="dounotchart1" style="width: 100%; height: 280px"></div>
-                <div class="card-body px-0 scrollable-table overflow-auto">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Project Director</th>
-                                <th>Deposit</th>
-                                <th>Visa</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Dr Kashif Shahzad</td>
-                                <td>500</td>
-                                <td>200</td>
-                            </tr>
-                            <tr>
-                                <td>Muhammad Asif</td>
-                                <td>500</td>
-                                <td>200</td>
-                            </tr>
-                            <tr>
-                                <td>Muhammad Shahid</td>
-                                <td>500</td>
-                                <td>200</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div id="admissionstageshare_dounotchart" style="height: 300px; width:100%;"></div>
+                <div class="card-body">
+                    <canvas id="admissionStagesShare" class="" style=" "></canvas>
                 </div>
             </div>
         </div>
@@ -1226,36 +418,47 @@
     })
 </script>
 
-
-
 <script>
-    var sub_chart_visas = <?= $sub_chart_visas ?>;
-    var datapointVisas = [
-        ["Month", "Visas"] // Column headers
-    ];
+    function drawChart(data, options, chartType, elementId) {
+        google.charts.load("current", {
+            packages: ["corechart"]
+        });
+        google.charts.setOnLoadCallback(function() {
+            // Set Data
+            const chartData = google.visualization.arrayToDataTable(data);
 
-    var itemsVisas = sub_chart_visas.data;
-    var monthIndexVisas = 0;
-    for (const month in itemsVisas) {
-        let newData = [monthIndexVisas, itemsVisas[month]];
-        datapointVisas.push(newData);
-        monthIndexVisas++;
+            // Draw
+            const chart = new google.visualization[chartType](
+                document.getElementById(elementId)
+            );
+            chart.draw(chartData, options);
+        });
     }
 
-    console.log(datapointVisas);
+    function prepareChartData(chartData, data) {
+        const datapoints = [
+            ["Month", chartData.name]
+        ]; // Column headers
 
-    google.charts.load("current", {
-        packages: ["corechart"]
-    });
-    google.charts.setOnLoadCallback(drawVisasChart);
+        let monthIndex = 0;
+        for (const month in data) {
+            let newData = [monthIndex, data[month]];
+            datapoints.push(newData);
+            monthIndex++;
+        }
 
-    function drawVisasChart() {
-        // Set Data
-        const dataVisas = google.visualization.arrayToDataTable(datapointVisas);
+        return datapoints;
+    }
 
-        // Set Options
-        const optionsVisas = {
-            chartType: "Bar",
+    function drawSubChart(chartConfig) {
+        const {
+            chartData,
+            chartType,
+            elementId
+        } = chartConfig;
+        const datapoints = prepareChartData(chartData, chartData.data);
+        const options = {
+            chartType: chartType,
             colors: ["black"],
             legend: "none", // Disable the legend
             hAxis: {
@@ -1275,66 +478,283 @@
             }
         };
 
-        // Draw
-        const chartVisas = new google.visualization.LineChart(
-            document.getElementById("subchartvisas")
-        );
-        chartVisas.draw(dataVisas, optionsVisas);
+        drawChart(datapoints, options, chartType, elementId);
+    }
+
+    const subCharts = [{
+            chartData: <?= $sub_chart_visas ?>,
+            chartType: "LineChart",
+            elementId: "subchartvisas"
+        },
+        {
+            chartData: <?= $sub_chart_deposit ?>,
+            chartType: "ComboChart",
+            elementId: "subchartdeposit"
+        },
+        {
+            chartData: <?= $sub_chart_applications ?>,
+            chartType: "ComboChart",
+            elementId: "subchartapplications"
+        },
+        {
+            chartData: <?= $sub_chart_admissions ?>,
+            chartType: "ComboChart",
+            elementId: "subchartadmissions"
+        },
+        {
+            chartData: <?= $sub_chart_assignedleads ?>,
+            chartType: "ComboChart",
+            elementId: "subchartassignedleads"
+        },
+        {
+            chartData: <?= $sub_chart_unassignedleads ?>,
+            chartType: "ComboChart",
+            elementId: "subchartunassignedleads"
+        },
+        {
+            chartData: <?= $sub_chart_qualifiedleads ?>,
+            chartType: "ComboChart",
+            elementId: "subchartqualifiedleads"
+        },
+        {
+            chartData: <?= $sub_chart_unqualifiedleads ?>,
+            chartType: "ComboChart",
+            elementId: "subchartunqualifiedleads"
+        }
+        // Add more sub-chart configurations here as needed
+    ];
+
+    subCharts.forEach(drawSubChart);
+</script>
+
+<script>
+    var chart1 = <?= $chart_data1_json ?>
+
+    datapoint1 = [];
+    datapoint2 = [];
+    datapoint1_label = '';
+    datapoint2_label = '';
+
+    var outer = 0;
+
+    chart1.forEach(function(item, index) {
+        outer++;
+
+
+        for (const month in item.data) {
+            if (item.data.hasOwnProperty(month)) {
+                if (item.data.hasOwnProperty(month)) {
+                    const dataPoint = {
+                        label: month,
+                        y: item.data[month]
+                    };
+
+                    if (outer == 1) {
+                        datapoint1_label = item.name;
+                        datapoint1.push(dataPoint);
+                    } else {
+                        datapoint2_label = item.name;
+                        datapoint2.push(dataPoint);
+                    }
+                }
+            }
+        }
+    });
+    window.onload = function() {
+
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            exportEnabled: true,
+            title: {
+                text: ""
+            },
+            axisY: {
+                title: datapoint1_label + '-' + datapoint2_label
+            },
+            toolTip: {
+                shared: true
+            },
+            legend: {
+                cursor: "pointer",
+                itemclick: toggleDataSeries
+            },
+            data: [{
+                    type: "spline",
+                    name: datapoint1_label,
+                    showInLegend: true,
+                    dataPoints: datapoint1
+                },
+                {
+                    type: "spline",
+                    name: datapoint2_label,
+                    showInLegend: true,
+                    dataPoints: datapoint2
+                }
+            ]
+        });
+
+        chart.render();
+
+        function toggleDataSeries(e) {
+            if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            } else {
+                e.dataSeries.visible = true;
+            }
+            chart.render();
+        }
+
     }
 </script>
 
 <script>
-    var sub_chart_deposit = <?= $sub_chart_deposit ?>;
-    var datapointDeposit = [
-        ["Month", "Deposit"] // Column headers
-    ];
+    // line with barr
+    var stagesdata = <?= $stage_share_data ?>;
+    var stages = [];
+    var stages_data = [];
+    var donuts = [];
 
-    var itemsDeposit = sub_chart_deposit.data;
-    var monthIndexDeposit = 0;
-
-    for (const month in itemsDeposit) {
-        let newData = [monthIndexDeposit, itemsDeposit[month]];
-        datapointDeposit.push(newData);
-        monthIndexDeposit++;
+    for (const stage in stagesdata) {
+        stages.push(stage);
+        stages_data.push(stagesdata[stage]);
+        var new_item = [];
+        new_item.push(stage, stagesdata[stage]);
+        donuts.push(new_item);
     }
 
-    google.charts.load("current", {
-        packages: ["corechart"]
-    });
-    google.charts.setOnLoadCallback(drawDepositChart);
 
-    function drawDepositChart() {
-        // Set Data
-        const dataDeposit = google.visualization.arrayToDataTable(datapointDeposit);
+    const ctx = document.getElementById("myChart");
 
-        // Set Options
-        const optionsDeposit = {
-            chartType: "Bar",
-            colors: ["black"],
-            legend: "none", // Disable the legend
-            hAxis: {
-                gridlines: {
-                    color: "transparent"
+    new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: stages,
+            datasets: [{
+                label: "Stages",
+                data: stages_data,
+                borderWidth: 2,
+                borderColor: "#000",
+            }, ],
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
                 },
-                textPosition: "none",
-                ticks: [],
-                baselineColor: "transparent"
             },
-            vAxis: {
-                gridlines: {
-                    color: "transparent"
-                },
-                textPosition: "none",
-                baselineColor: "transparent"
-            }
-        };
+        },
+    });
 
-        // Draw
-        const chartDeposit = new google.visualization.ComboChart(
-            document.getElementById("subchartdeposit")
-        );
-        chartDeposit.draw(dataDeposit, optionsDeposit);
+    anychart.onDocumentReady(function() {
+        var data = anychart.data.set(donuts);
+        var palette = anychart.palettes.distinctColors();
+
+        var chart = anychart
+            .pie(data)
+
+            .innerRadius("60%");
+
+        chart.container("stageshare_dounotchart");
+
+        chart.draw();
+    });
+</script>
+
+<script>
+    var topbrands = <?= $top_brands ?>;
+    var brands = [];
+    var brand_stats = [];
+
+    for (const brand in topbrands) {
+        if (brand === 'top_brands') {
+            topbrands[brand].forEach(function(item, index) {
+                brands.push(item.brand_name);
+                brand_stats.push(item.total_deals);
+            });
+        } else {
+            brands.push('Other Brands');
+            brand_stats.push(topbrands[brand].toString());
+        }
     }
+
+    const ctx2 = document.getElementById("topBrands");
+    if (ctx2) { // Check if canvas element exists
+        new Chart(ctx2, {
+            type: "bar",
+            data: {
+                labels: brands,
+                datasets: [{
+                    label: "Admissions",
+                    data: brand_stats,
+                    borderWidth: 1,
+                    borderColor: "#000",
+                }, ],
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                },
+            },
+        });
+    } else {
+        console.error("Canvas element with ID 'topBrands' not found.");
+    }
+</script>
+
+
+<script>
+    // line with barr
+    var stagesdata = <?= $deals_stage_share_data ?>;
+    var stages = [];
+    var stages_data = [];
+    var admissions_donuts = [];
+
+    for (const stage in stagesdata) {
+        stages.push(stage);
+        stages_data.push(stagesdata[stage]);
+        var new_item = [];
+        new_item.push(stage, stagesdata[stage]);
+        admissions_donuts.push(new_item);
+    }
+
+
+    const ctx_2 = document.getElementById("admissionStagesShare");
+
+    new Chart(ctx_2, {
+        type: "line",
+        data: {
+            labels: stages,
+            datasets: [{
+                label: "Stages",
+                data: stages_data,
+                borderWidth: 2,
+                borderColor: "#000",
+            }, ],
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
+
+    anychart.onDocumentReady(function() {
+        var data = anychart.data.set(admissions_donuts);
+        var palette = anychart.palettes.distinctColors();
+
+        var chart = anychart
+            .pie(data)
+
+            .innerRadius("60%");
+
+        chart.container("admissionstageshare_dounotchart");
+
+        chart.draw();
+    });
 </script>
 
 
