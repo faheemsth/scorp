@@ -1855,5 +1855,5 @@ Route::get('/deals-download', [DealController::class, 'download'])->name('deals.
 ////////////////////////////////////////////////Filters LEADS
 Route::get('/filter-data', [LeadController::class, 'filterData'])->name('filterData');
 
-Route::get('/filter-regions', [RegionController::class, 'filterRegions'])->name('filter-regions');
-Route::get('/filter-branches', [RegionController::class, 'filterBranches'])->name('filter-branches');
+Route::get('/filter-regions', [RegionController::class, 'filterRegions'])->name('my-filter-regions');
+Route::get('/filter-branches', [RegionController::class, 'filterBranches'])->name('my-filter-branches');

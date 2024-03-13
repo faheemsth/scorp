@@ -71,25 +71,8 @@ class LeadController extends Controller
             $pipelines = Pipeline::get()->pluck('name', 'id');
 
             //$total_records = Lead::count();
-
-            if (\Auth::user()->can('view all leads') || \Auth::user()->type == 'Admin Team') {
-
-                $total_records = Lead::count();
-            } elseif (\Auth::user()->type == 'company') {
-                $lead_created_by = User::select(['users.id', 'users.name'])->join('roles', 'roles.name', '=', 'users.type')
-                    ->join('role_has_permissions', 'role_has_permissions.role_id', '=', 'roles.id')
-                    ->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
-                    ->where(['users.created_by' => \auth::id(), 'permissions.name' => 'create lead'])
-                    ->groupBy('users.id')
-                    ->pluck('id')
-                    ->toArray();
-                $lead_created_by[] = \Auth::user()->id;
-                $total_records = Lead::whereIn('leads.created_by', $lead_created_by)->count();
-            } else {
-                $lead_created_by[] = \Auth::user()->created_by;
-                $lead_created_by[] = \Auth::user()->id;;
-                $total_records = Lead::whereIn('leads.created_by', $lead_created_by)->count();
-            }
+           $executed_data =  $this->executeLeadQuery();
+           $total_records = $executed_data['total_records'];
 
             $avatar = User::get()->pluck('avatar', 'id');
             $username = User::get()->pluck('name', 'id');
@@ -155,24 +138,24 @@ class LeadController extends Controller
         return $filters;
     }
 
-    public function lead_list()
+    private function executeLeadQuery()
     {
         $usr = \Auth::user();
 
-        //////////////pagination calculation
+        // Pagination calculation
         $start = 0;
         $num_results_on_page = 25;
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
-            $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
             $start = ($page - 1) * $num_results_on_page;
         } else {
             $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
         }
 
-        /////////////////end pagination calculation
-
+        // Filters
         $filters = $this->leadsFilter();
+
         if ($usr->can('manage lead') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
 
             if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
@@ -189,120 +172,161 @@ class LeadController extends Controller
                 }
             }
 
+            // Initialize variables
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
 
-            $leads_query = Lead::select('leads.*')->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')->join('users', 'users.id', '=', 'leads.brand_id')->join('branches', 'branches.id', '=', 'leads.branch_id')->leftjoin('users as assigned_to', 'assigned_to.id', '=', 'leads.user_id');
-            if (\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || \Auth::user()->can('level 1')) {
-            } else if (\Auth::user()->type == 'company') {
+           
+
+            // Build the leads query
+            $leads_query = Lead::select('leads.*')
+                ->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')
+                ->join('users', 'users.id', '=', 'leads.brand_id')
+                ->join('branches', 'branches.id', '=', 'leads.branch_id')
+                ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'leads.user_id');
+
+            // Apply user type-based filtering
+            $userType = \Auth::user()->type;
+            if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
+                // No additional filtering needed
+            } elseif ($userType === 'company') {
                 $leads_query->where('leads.brand_id', \Auth::user()->id);
-            } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')) {
+            } elseif (in_array($userType, ['Project Director', 'Project Manager']) || \Auth::user()->can('level 2')) {
                 $leads_query->whereIn('leads.brand_id', $brand_ids);
-            } else if (\Auth::user()->type == 'Region Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)) {
+            } elseif (($userType === 'Region Manager' || \Auth::user()->can('level 3')) && !empty(\Auth::user()->region_id)) {
                 $leads_query->where('leads.region_id', \Auth::user()->region_id);
-            } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)) {
-                $leads_query->where('leads.branch_id', \Auth::user()->branch_id);
+            } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)) {
+               $leads_query->where('leads.branch_id', \Auth::user()->branch_id);
             } else {
                 $leads_query->where('user_id', \Auth::user()->id);
             }
 
-
-
-
-
-            //  $leads_query->whereIn('brand_id', $brand_ids)->where('is_converted',0);
-
-            // Add the dynamic filters
+            // Apply dynamic filters
             foreach ($filters as $column => $value) {
-                if ($column === 'name') {
-                    $leads_query->whereIn('leads.id', $value);
-                } elseif ($column === 'brand_id') {
-                    $leads_query->where('leads.brand_id', $value);
-                } elseif ($column === 'region_id') {
-                    $leads_query->where('leads.region_id', $value);
-                } elseif ($column === 'branch_id') {
-                    $leads_query->where('leads.branch_id', $value);
-                } elseif ($column === 'stage_id') {
-                    $leads_query->whereIn('stage_id', $value);
-                } elseif ($column === 'users') {
-                    $leads_query->whereIn('leads.user_id', $value);
-                } elseif ($column == 'created_at') {
-                    $leads_query->whereDate('leads.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                switch ($column) {
+                    case 'name':
+                        $leads_query->whereIn('leads.id', $value);
+                        break;
+                    case 'brand_id':
+                        $leads_query->where('leads.brand_id', $value);
+                        break;
+                    case 'region_id':
+                        $leads_query->where('leads.region_id', $value);
+                        break;
+                    case 'branch_id':
+                        $leads_query->where('leads.branch_id', $value);
+                        break;
+                    case 'stage_id':
+                        $leads_query->whereIn('stage_id', $value);
+                        break;
+                    case 'users':
+                        $leads_query->whereIn('leads.user_id', $value);
+                        break;
+                    case 'created_at':
+                        $leads_query->whereDate('leads.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                        break;
                 }
             }
 
-            //if list global search
-            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
-                $g_search = $_GET['search'];
-                $leads_query->Where('leads.name', 'like', '%' . $g_search . '%');
-                $leads_query->orWhere('users.name', 'like', '%' . $g_search . '%');
-                $leads_query->orWhere('branches.name', 'like', '%' . $g_search . '%');
-                $leads_query->orWhere('lead_stages.name', 'like', '%' . $g_search . '%');
-                $leads_query->orWhere('leads.email', 'like', '%' . $g_search . '%');
-                $leads_query->orWhere('assigned_to.name', 'like', '%' . $g_search . '%');
-                $leads_query->orWhere('leads.phone', 'like', '%' . $g_search . '%');
+            // Apply global search if provided
+            if (request()->filled('ajaxCall') && request()->ajax() && request()->filled('search')) {
+                $g_search = request()->input('search');
+                $leads_query->where(function ($query) use ($g_search) {
+                    $query->where('leads.name', 'like', "%$g_search%")
+                        ->orWhere('users.name', 'like', "%$g_search%")
+                        ->orWhere('branches.name', 'like', "%$g_search%")
+                        ->orWhere('lead_stages.name', 'like', "%$g_search%")
+                        ->orWhere('leads.email', 'like', "%$g_search%")
+                        ->orWhere('assigned_to.name', 'like', "%$g_search%")
+                        ->orWhere('leads.phone', 'like', "%$g_search%");
+                });
             }
 
-
-            if(empty($_GET)){
-                $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead']);
-                $leads_query->where('leads.is_converted', 0);
+            // Apply default filters when $_GET is empty
+            if (empty($_GET)) {
+                $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead'])
+                    ->where('leads.is_converted', 0);
             }
 
-
-            $total_records =  $leads_query->clone()->count();
-            $leads = $leads_query->clone()->groupBy('leads.id')->orderBy('leads.created_at', 'desc')->skip($start)->take($num_results_on_page)->get();
-            $users = allUsers();
-            $stages = LeadStage::get();
-            $pipelines = Pipeline::get()->pluck('name', 'id');
-            $organizations = User::where('type', 'organization')->pluck('name', 'id');
-            $brands = $companies;
-            $sourcess = Source::get()->pluck('name', 'id');
-            $branches = Branch::get()->pluck('name', 'id')->ToArray();
-            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-                $html = view('leads.leads_list_ajax', compact('leads', 'users', 'branches', 'total_records'))->render();
-                $pagination_html = view('layouts.pagination', [
-                    'total_pages' => $total_records,
-                    'num_results_on_page' =>  $num_results_on_page
-                ])->render();
-                return json_encode([
-                    'status' => 'success',
-                    'html' => $html,
-                    'pagination_html' =>  $pagination_html
-                ]);
-            }
-
-            $total_leads_by_status_records = Lead::select([
-                'lead_stages.type',
-                DB::raw('count(leads.id) as total_leads')
-            ])
-                ->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')
-                ->groupBy('lead_stages.type')
+            // Count total records and retrieve paginated leads
+            $total_records = $leads_query->count();
+            $leads = $leads_query->groupBy('leads.id')
+                ->orderBy('leads.created_at', 'desc')
+                ->skip($start)
+                ->take($num_results_on_page)
                 ->get();
-            $total_leads_by_status = [];
-            foreach ($total_leads_by_status_records as $status) {
-                $total_leads_by_status[$status->type] = $status->total_leads;
-            }
 
-            $assign_to = array();
-            if (\Auth::user()->type == 'super admin') {
-                $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
-                    ->pluck('name', 'id')->toArray();
-            } else {
-                $companies = FiltersBrands();
-                $brand_ids = array_keys($companies);
-
-                $assign_to = User::whereIn('brand_id', $brand_ids)->pluck('name', 'id')->toArray();
-            }
-
-            $filters = BrandsRegionsBranches();
-
-
-            return view('leads.list', compact('pipelines', 'branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status', 'assign_to', 'filters'));
-        } else {
-            return redirect()->back()->with('error', __('Permission Denied.'));
+            return [
+                'total_records' => $total_records,
+                'leads' => $leads,
+                'companies' => $companies,
+                'pipeline' => $pipeline,
+                'num_results_on_page' => $num_results_on_page
+            ];
         }
     }
+
+    public function lead_list()
+    {
+        $usr = \Auth::user();
+
+        $executed_data = $this->executeLeadQuery();
+        $leads = $executed_data['leads'];
+        $total_records = $executed_data['total_records'];
+        $brands = $executed_data['companies'];
+        $companies = $executed_data['companies'];
+        $pipeline = $executed_data['pipeline'];
+        $num_results_on_page = $executed_data['num_results_on_page'];
+
+        $users = allUsers();
+        $stages = LeadStage::get();
+        $pipelines = Pipeline::get()->pluck('name', 'id');
+        $organizations = User::where('type', 'organization')->pluck('name', 'id');
+        
+        $sourcess = Source::get()->pluck('name', 'id');
+        $branches = Branch::get()->pluck('name', 'id')->ToArray();
+        if (request()->filled('ajaxCall') && request()->ajax()) {
+            $html = view('leads.leads_list_ajax', compact('leads', 'users', 'branches', 'total_records'))->render();
+            $pagination_html = view('layouts.pagination', [
+                'total_pages' => $total_records,
+                'num_results_on_page' =>  $num_results_on_page // You need to define $num_results_on_page
+            ])->render();
+            return json_encode([
+                'status' => 'success',
+                'html' => $html,
+                'pagination_html' =>  $pagination_html
+            ]);
+        }
+
+        $total_leads_by_status_records = Lead::select([
+            'lead_stages.type',
+            DB::raw('count(leads.id) as total_leads')
+        ])
+            ->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')
+            ->groupBy('lead_stages.type')
+            ->get();
+        $total_leads_by_status = [];
+        foreach ($total_leads_by_status_records as $status) {
+            $total_leads_by_status[$status->type] = $status->total_leads;
+        }
+
+        $assign_to = [];
+        if (\Auth::user()->type == 'super admin') {
+            $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+                ->pluck('name', 'id')->toArray();
+        } else {
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+
+            $assign_to = User::whereIn('brand_id', $brand_ids)->pluck('name', 'id')->toArray();
+        }
+
+        $filters = BrandsRegionsBranches();
+
+        return view('leads.list', compact('pipelines', 'branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status', 'assign_to', 'filters'));
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -1022,7 +1046,7 @@ class LeadController extends Controller
 
     private function excelSheetDataSaved($request, $file, $pipeline, $stage)
     {
-       // dd($request->input());
+        // dd($request->input());
 
 
         $usr = \Auth::user();
@@ -1058,7 +1082,7 @@ class LeadController extends Controller
 
             if ($lead_exist) {
                 $lead = Lead::where('email', $lead->email)->first();
-            }else{
+            } else {
                 $lead  = new Lead();
             }
 
@@ -1099,7 +1123,7 @@ class LeadController extends Controller
             //dd($lead);
 
             if (!empty($lead->name) || !empty($lead->email) || !empty($lead->phone) || !empty($lead->subject) || !empty($lead->notes)) {
-               $lead->save();
+                $lead->save();
                 UserLead::create(
                     [
                         'user_id' => $usr->id,

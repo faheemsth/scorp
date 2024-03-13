@@ -48,7 +48,7 @@ class ApplicationsController extends Controller
 
          //////////////pagination calculation
          $start = 0;
-         $num_results_on_page = 50;
+         $num_results_on_page = 25;
          if (isset($_GET['page'])) {
              $page = $_GET['page'];
              $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -64,7 +64,7 @@ class ApplicationsController extends Controller
             $brand_ids = array_keys($companies);
             $app_query = DealApplication::select(['deal_applications.*']);
             $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
-            if(\Auth::user()->type == 'super admin' || $usr->type == 'Admin Team'){
+            if(\Auth::user()->type == 'super admin' || $usr->type == 'Admin Team' || $usr->can('level 1')){
 
             }else if(\Auth::user()->type == 'company'){
                 $app_query->where('deals.brand_id', \Auth::user()->id);

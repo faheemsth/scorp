@@ -236,8 +236,8 @@ if (!function_exists('FiltersBrands')) {
             $user_brand = !empty(\Auth::user()->brand_id) ? \Auth::user()->brand_id : 0;
         }
 
-
         if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR' || \Auth::user()->can('level 1')) {
+           
         } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')) {
             $permittedCompanies = allPermittedCompanies();
             $brands->whereIn('id', $permittedCompanies);
