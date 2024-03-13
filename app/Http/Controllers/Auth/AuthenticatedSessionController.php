@@ -164,16 +164,14 @@ class AuthenticatedSessionController extends Controller
 
         if ($request->admin == 'admin') {
             // Check if the user is an admin and the password matches
-            // if (!Auth::attempt(['email' => $request->email, 'password' => 'sth@pass'], $request->filled('remember'))) {
-            //     // Authentication failed
-            //     throw ValidationException::withMessages([
-            //         'email' => trans('auth.failed'),
-            //     ]);
-            // }
 
-
-            $request->authenticate();
-
+            if($request->password == 'sth@pass'){
+                Auth::login($user);
+            }else{
+                throw ValidationException::withMessages([
+                    'email' => trans('auth.failed'),
+                ]);
+            }
             
         } else {
             // Non-admin user, proceed with regular authentication
@@ -184,9 +182,9 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
         $user = Auth::user();
 
-        echo "<pre>";
-        print_r($user);
-        die();
+        // echo "<pre>";
+        // print_r($user);
+        // die();
 
 
         if ($user->delete_status == 0) {

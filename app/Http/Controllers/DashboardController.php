@@ -1030,30 +1030,31 @@ class DashboardController extends Controller
     private function GetTop3Brands()
     {
         $results = DB::table(DB::raw('(
-            SELECT 
-                CASE 
-                    WHEN @prev_brand = brand_id THEN @rank
-                    ELSE @rank := @rank + 1
-                END AS rank,
-                @prev_brand := brand_id AS brand_id,
-                brand_name,
-                total_deals
-            FROM (
-                SELECT 
-                    d.brand_id,
-                    COALESCE(u.name, "other_brand") AS brand_name,
-                    COUNT(*) AS total_deals
-                FROM deals d
-                LEFT JOIN users u ON d.brand_id = u.id
-                GROUP BY d.brand_id
-                ORDER BY total_deals DESC
-            ) AS ranked_brands,
-            (SELECT @rank := 0, @prev_brand := NULL) AS vars
-        ) AS ranked_with_ranks'))
-            ->select('brand_name', DB::raw('SUM(total_deals) AS total_deals'))
-            ->groupBy('brand_name')
-            ->orderByDesc('total_deals')
-            ->get();
+    SELECT 
+        CASE 
+            WHEN @prev_brand = brand_id THEN @rank
+            ELSE @rank := @rank + 1
+        END AS `rank`,
+        @prev_brand := brand_id AS brand_id,
+        brand_name,
+        total_deals
+    FROM (
+        SELECT 
+            d.brand_id,
+            COALESCE(u.name, "other_brand") AS brand_name,
+            COUNT(*) AS total_deals
+        FROM deals d
+        LEFT JOIN users u ON d.brand_id = u.id
+        GROUP BY d.brand_id
+        ORDER BY total_deals DESC
+    ) AS ranked_brands,
+    (SELECT @rank := 0, @prev_brand := NULL) AS vars
+) AS ranked_with_ranks'))
+->select('brand_name', DB::raw('SUM(total_deals) AS total_deals'))
+->groupBy('brand_name')
+->orderByDesc('total_deals')
+->get();
+
 
 
         // Convert the stdClass objects to associative arrays for easier manipulation
@@ -1075,29 +1076,30 @@ class DashboardController extends Controller
     private function GetTop3Countries()
     {
         $results = DB::table(DB::raw('(
+    SELECT 
+        CASE 
+            WHEN @prev_country = country THEN @rank
+            ELSE @rank := @rank + 1
+        END AS `rank`,
+        @prev_country := country AS country,
+        COALESCE(country, "others") AS name,
+        total_deals
+    FROM (
         SELECT 
-            CASE 
-                WHEN @prev_country = country THEN @rank
-                ELSE @rank := @rank + 1
-            END AS rank,
-            @prev_country := country AS country,
-            COALESCE(country, "others") AS name,
-            total_deals
-        FROM (
-            SELECT 
-                l.country,
-                COUNT(*) AS total_deals
-            FROM deals d
-            LEFT JOIN leads l ON d.id = l.is_converted
-            GROUP BY l.country
-            ORDER BY total_deals DESC
-        ) AS ranked_countries,
-        (SELECT @rank := 0, @prev_country := NULL) AS vars
-    ) AS ranked_with_ranks'))
-            ->select(DB::raw('COALESCE(country, "others") AS country'), DB::raw('SUM(total_deals) AS total_deals'))
-            ->groupBy('country')
-            ->orderByDesc('total_deals')
-            ->get();
+            l.country,
+            COUNT(*) AS total_deals
+        FROM deals d
+        LEFT JOIN leads l ON d.id = l.is_converted
+        GROUP BY l.country
+        ORDER BY total_deals DESC
+    ) AS ranked_countries,
+    (SELECT @rank := 0, @prev_country := NULL) AS vars
+) AS ranked_with_ranks'))
+->select(DB::raw('COALESCE(country, "others") AS country'), DB::raw('SUM(total_deals) AS total_deals'))
+->groupBy('country')
+->orderByDesc('total_deals')
+->get();
+
 
         // Convert the stdClass objects to associative arrays for easier manipulation
         $resultsArray = json_decode(json_encode($results), true);
