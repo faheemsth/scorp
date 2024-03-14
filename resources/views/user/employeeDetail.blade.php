@@ -79,7 +79,7 @@
             <div class="lead-topbar d-flex flex-wrape justify-content-between align-items-center p-2">
                 <div class="d-flex align-items-center">
                     <div class="lead-avator">
-                        <img src="{{ asset('assets/images/placeholder-lead.png') }}" alt="" class="">
+                        <img src="{{ asset('assets/images/placeholder-lead.png') }}" alt="" style="width:50px; height:50px;" class="">
                     </div>
 
                     <div class="lead-basic-info">

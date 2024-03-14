@@ -472,3 +472,66 @@ function accessLevel()
         ]
     ];
 }
+
+/**
+ * Calculates pagination details based on the current page and number of results per page.
+ * If 'page' and 'num_results_on_page' parameters are provided in the GET request,
+ * calculates the start index for fetching results accordingly.
+ * 
+ * @return array An array containing pagination details:
+ *               - 'start': The start index for fetching results.
+ *               - 'num_results_on_page': The number of results to display on each page.
+ *               - 'page': The current page number.
+ */
+function getPaginationDetail(){
+    // Pagination calculation
+    $start = 0; // Default start index
+    $num_results_on_page = 25; // Default number of results per page
+    
+    if (isset($_GET['page'])) {
+        $page = $_GET['page']; // Current page number
+        
+        // If 'num_results_on_page' parameter is provided, update $num_results_on_page
+        $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+        
+        // Calculate the start index based on the current page and number of results per page
+        $start = ($page - 1) * $num_results_on_page;
+    } else {
+        $page = 1;
+        // If 'page' parameter is not provided, only update $num_results_on_page if 'num_results_on_page' parameter is provided
+        $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+    }
+
+    // Return an array containing pagination details
+    return [
+        'start' => $start, // Start index for fetching results
+        'num_results_on_page' => $num_results_on_page, // Number of results to display on each page
+        'page' => $page // Current page number
+    ];
+}
+
+
+/**
+ * Retrieves lists of users, regions, and branches for use in dropdowns or select inputs.
+ * Assumes 'name' and 'id' fields exist in the respective database tables.
+ *
+ * @return array Associative array containing lists of users, regions, and branches.
+ */
+function UserRegionBranch(){
+    // Retrieve users and format them as 'name' => 'id'
+    $users = User::pluck('name', 'id')->toArray();
+    
+    // Retrieve regions and format them as 'name' => 'id'
+    $regions = Region::pluck('name', 'id')->toArray();
+    
+    // Retrieve branches and format them as 'name' => 'id'
+    $branches = Branch::pluck('name', 'id')->toArray();
+
+    // Return the formatted data
+    return [
+        'users' => $users,
+        'regions' => $regions,
+        'branches' => $branches
+    ];
+}
+

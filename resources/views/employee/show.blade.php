@@ -1,260 +1,250 @@
-@extends('layouts.admin')
+<a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
+<div class="container-fluid px-1 mx-0">
+    <div class="row">
+        <div class="col-sm-12">
 
-@section('page-title')
-    {{__('Employee')}}
-@endsection
-@section('breadcrumb')
-    <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
-    <li class="breadcrumb-item"><a href="{{route('employee.index')}}">{{__('Employee')}}</a></li>
-    <li class="breadcrumb-item">{{$employeesId}}</li>
-@endsection
-
-@section('action-btn')
-    @if(!empty($employee))
-        <div class="float-end mt-3 m-2">
-            @can('edit employee')
-
-                <a href="{{route('employee.edit',\Illuminate\Support\Facades\Crypt::encrypt($employee->id))}}" data-bs-toggle="tooltip" title="{{__('Edit')}}"class="btn btn-sm btn-primary">
-                    <i class="ti ti-pencil"></i>
-                </a>
-
-            @endcan
-        </div>
-
-        <div class="text-end">
-            <div class="d-flex justify-content-end drp-languages">
-                <ul class="list-unstyled mb-0 m-2">
-                    <li class="dropdown dash-h-item status-drp">
-                        <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
-                           role="button" aria-haspopup="false" aria-expanded="false">
-                            <span class="drp-text hide-mob text-primary"> {{__('Joining Letter')}}</span>
-                            <i class="ti ti-chevron-down drp-arrow nocolor hide-mob"></i>
-                        </a>
-                        <div class="dropdown-menu dash-h-dropdown">
-                            <a href="{{route('joiningletter.download.pdf',$employee->id)}}" class=" btn-icon dropdown-item" data-bs-toggle="tooltip" data-bs-placement="top"  target="_blanks"><i class="ti ti-download ">&nbsp;</i>{{__('PDF')}}</a>
-
-                            <a href="{{route('joininglatter.download.doc',$employee->id)}}" class=" btn-icon dropdown-item" data-bs-toggle="tooltip" data-bs-placement="top"  target="_blanks"><i class="ti ti-download ">&nbsp;</i>{{__('DOC')}}</a>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="list-unstyled mb-0 m-2">
-                    <li class="dropdown dash-h-item status-drp">
-                        <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
-                           role="button" aria-haspopup="false" aria-expanded="false">
-                            <span class="drp-text hide-mob text-primary"> {{__('Experience Certificate')}}</span>
-                            <i class="ti ti-chevron-down drp-arrow nocolor hide-mob"></i>
-                        </a>
-                        <div class="dropdown-menu dash-h-dropdown">
-                            <a href="{{route('exp.download.pdf',$employee->id)}}" class=" btn-icon dropdown-item" data-bs-toggle="tooltip" data-bs-placement="top"  target="_blanks"><i class="ti ti-download ">&nbsp;</i>{{__('PDF')}}</a>
-
-                            <a href="{{route('exp.download.doc',$employee->id)}}" class=" btn-icon dropdown-item" data-bs-toggle="tooltip" data-bs-placement="top"  target="_blanks"><i class="ti ti-download ">&nbsp;</i>{{__('DOC')}}</a>
-                        </div>
-                    </li>
-                </ul>
-                <ul class="list-unstyled mb-0 m-2">
-                    <li class="dropdown dash-h-item status-drp">
-                        <a class="dash-head-link dropdown-toggle arrow-none me-0" data-bs-toggle="dropdown" href="#"
-                           role="button" aria-haspopup="false" aria-expanded="false">
-                            <span class="drp-text hide-mob text-primary"> {{__('NOC')}}</span>
-                            <i class="ti ti-chevron-down drp-arrow nocolor hide-mob"></i>
-                        </a>
-                        <div class="dropdown-menu dash-h-dropdown">
-                            <a href="{{route('noc.download.pdf',$employee->id)}}" class=" btn-icon dropdown-item" data-bs-toggle="tooltip" data-bs-placement="top"  target="_blanks"><i class="ti ti-download ">&nbsp;</i>{{__('PDF')}}</a>
-
-                            <a href="{{route('noc.download.doc',$employee->id)}}" class=" btn-icon dropdown-item" data-bs-toggle="tooltip" data-bs-placement="top"  target="_blanks"><i class="ti ti-download ">&nbsp;</i>{{__('DOC')}}</a>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    @endif
-@endsection
-
-@section('content')
-    @if(!empty($employee))
-        <div class="row">
-            <div class="col-xl-12">
-                <div class="row">
-                    <div class="col-sm-12 col-md-6">
-
-                        <div class="card ">
-                            <div class="card-body employee-detail-body fulls-card">
-                                <h5>{{__('Personal Detail')}}</h5>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('EmployeeId')}} : </strong>
-                                            <span>{{$employeesId}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="info text-sm font-style">
-                                            <strong class="font-bold">{{__('Name')}} :</strong>
-                                            <span>{{!empty($employee)?$employee->name:''}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="info text-sm font-style">
-                                            <strong class="font-bold">{{__('Email')}} :</strong>
-                                            <span>{{!empty($employee)?$employee->email:''}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Date of Birth')}} :</strong>
-                                            <span>{{\Auth::user()->dateFormat(!empty($employee)?$employee->dob:'')}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Phone')}} :</strong>
-                                            <span>{{!empty($employee)?$employee->phone:''}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Address')}} :</strong>
-                                            <span>{{!empty($employee)?$employee->address:''}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Salary Type')}} :</strong>
-                                            <span>{{!empty($employee->salaryType)?$employee->salaryType->name:''}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Basic Salary')}} :</strong>
-                                            <span>{{!empty($employee)?$employee->salary:''}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Topbar Start -->
+            <div class="lead-topbar d-flex justify-content-between align-items-center p-2">
+                <div class="d-flex align-items-center">
+                    <div class="lead-avatar">
+                        <img src="{{ asset('assets/images/placeholder-lead.png') }}" style="width:50px; height:50px;" alt="Employee Avatar">
                     </div>
-                    <div class="col-sm-12 col-md-6">
-
-                        <div class="card ">
-                            <div class="card-body employee-detail-body fulls-card">
-                                <h5>{{__('Company Detail')}}</h5>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Branch')}} : </strong>
-                                            <span>{{!empty($employee->branch)?$employee->branch->name:''}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="info text-sm font-style">
-                                            <strong class="font-bold">{{__('Department')}} :</strong>
-                                            <span>{{!empty($employee->department)?$employee->department->name:''}}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Designation')}} :</strong>
-                                            <span>{{!empty($employee->designation)?$employee->designation->name:''}}</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Date Of Joining')}} :</strong>
-                                            <span>{{\Auth::user()->dateFormat(!empty($employee)?$employee->company_doj:'')}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="lead-basic-info">
+                        <p class="pb-0 mb-0 fw-normal">{{ __('Employee') }}</p>
+                        <h5 class="fw-bold">{{ $employee->name }}</h5>
                     </div>
                 </div>
+                <div class="d-flex gap-1 me-3">
+                    @can('edit employee')
+                    <a href="{{ route('user.employee.edit', $employee->id) }}" class="btn btn-dark text-white" style="width: 36px; height: 36px; margin-top: 10px;" data-bs-original-title="{{__('Edit Employee')}}" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
+                        <i class="ti ti-pencil" style="font-size: 18px;"></i>
+                    </a>
+                    @endcan
 
-                <div class="row">
-                    <div class="col-sm-12 col-md-6">
+                    @can('delete employee')
+                    {!! Form::open(['method' => 'DELETE', 'class' => 'mb-0', 'route' => ['users.destroy', $employee->id], 'id' => 'delete-form-'.$employee->id]) !!}
+                    <button type="submit" class="btn btn-danger text-white bs-pass-para" style="width: 36px; height: 36px; margin-top: 10px;" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
+                        <i class="ti ti-archive" style="font-size: 18px;"></i>
+                    </button>
+                    {!! Form::close() !!}
+                    @endcan
 
-                        <div class="card ">
-                            <div class="card-body employee-detail-body fulls-card">
-                                <h5>{{__('Document Detail')}}</h5>
-                                <hr>
-                                <div class="row">
-                                    @php
+                    @can('password reset employee')
+                    <a href="{{ route('users.reset', \Crypt::encrypt($employee->id)) }}" class="btn btn-dark text-white" style="width: 36px; height: 36px; margin-top: 10px;" data-bs-original-title="{{__('Reset Password')}}" data-bs-toggle="tooltip" title="{{ __('Password Reset') }}">
+                        <i class="ti ti-adjustments" style="font-size: 18px;"></i>
+                    </a>
+                    @endcan
+                </div>
+            </div>
+            <!-- Topbar End -->
 
-                                        $employeedoc = !empty($employee)?$employee->documents()->pluck('document_value',__('document_id')):[];
-                                    @endphp
-                                    @if(!$documents->isEmpty())
-                                        @foreach($documents as $key=>$document)
-                                            <div class="col-md-6">
-                                                <div class="info text-sm">
-                                                    <strong class="font-bold">{{$document->name }} : </strong>
-                                                    <span><a href="{{ (!empty($employeedoc[$document->id])?asset(Storage::url('uploads/document')).'/'.$employeedoc[$document->id]:'') }}" target="_blank">{{ (!empty($employeedoc[$document->id])?$employeedoc[$document->id]:'') }}</a></span>
-                                                </div>
+
+            <div class="card me-3">
+                <div class="card-header bg-white">
+                    <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-details" role="tab" aria-controls="pills-details" aria-selected="true">{{ __('Personal Details') }}</button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-company" role="tab" aria-controls="pills-details" aria-selected="true">{{ __('Company Detail') }}</button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-documents" role="tab" aria-controls="pills-details" aria-selected="true">{{ __('Document Detail') }}</button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-bank" role="tab" aria-controls="pills-details" aria-selected="true">{{ __('Bank Account Detail') }}</button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body">
+                    <div class="tab-content" id="pills-tabContent">
+                        <!-- Personal Detail Tab Start -->
+                        <div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab">
+                            <div class="accordion" id="accordionPanelsStayOpenExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headinginfo">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseinfo">
+                                            {{ __('PERSONAL INFORMATION') }}
+                                        </button>
+                                    </h2>
+
+                                    <div id="panelsStayOpen-collapseinfo" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headinginfo">
+                                        <div class="accordion-body">
+                                            <div class="table-responsive mt-1">
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Record ID') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $employee->id }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Name') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $employee->name }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Email') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;"><a href="mailto:{{ $employee->email }}" target="_blank">{{ $employee->email }}</a></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Phone') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $employee->phone }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Created at') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $employee->created_at }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Update at') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $employee->updated_at }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
                                             </div>
-                                        @endforeach
-                                    @else
-                                        <div class="text-center">
-                                            No Document Type Added.!
                                         </div>
-                                    @endif
-
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6">
+                        <!-- Personal Detail Tab End -->
 
-                        <div class="card ">
-                            <div class="card-body employee-detail-body fulls-card">
-                                <h5>{{__('Bank Account Detail')}}</h5>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Account Holder Name')}} : </strong>
-                                            <span>{{!empty($employee)?$employee->account_holder_name:''}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="info text-sm font-style">
-                                            <strong class="font-bold">{{__('Account Number')}} :</strong>
-                                            <span>{{!empty($employee)?$employee->account_number:''}}</span>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Bank Name')}} :</strong>
-                                            <span>{{!empty($employee)?$employee->bank_name:''}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Bank Identifier Code')}} :</strong>
-                                            <span>{{!empty($employee)?$employee->bank_identifier_code:''}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Branch Location')}} :</strong>
-                                            <span>{{!empty($employee)?$employee->branch_location:''}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="info text-sm">
-                                            <strong class="font-bold">{{__('Tax Payer Id')}} :</strong>
-                                            <span>{{!empty($employee)?$employee->tax_payer_id:''}}</span>
-                                        </div>
-                                    </div>
+                        <!-- Personal Company Information Tab Start -->
+                        <div class="tab-pane fade" id="pills-company" role="tabpanel" aria-labelledby="pills-details-tab">
+                            <div class="accordion" id="accordionPanelsStayOpenExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headinginfo">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseinfo">
+                                            {{ __('COMPANY INFORMATION') }}
+                                        </button>
+                                    </h2>
 
+                                    <div id="panelsStayOpen-collapseinfo" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headinginfo">
+                                        <div class="accordion-body">
+                                            <div class="table-responsive mt-1">
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Brand') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $userRegionBranch['users'][$employee->brand_id] ?? '' }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Region') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $userRegionBranch['regions'][$employee->region_id] ?? '' }}</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Branch') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $userRegionBranch['branches'][$employee->branch_id] ?? '' }}</td>
+                                                        </tr>
+
+                                                        <td style="font-size: 14px;">{{ __('Designation') }}</td>
+                                                        <td style="padding-left: 10px; font-size: 14px;">{{ ucfirst($employee->type) }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
+                        <!-- Personal Company Information Tab End -->
+
+
+                        <!-- Personal Company Information Tab Start -->
+                        <div class="tab-pane fade" id="pills-documents" role="tabpanel" aria-labelledby="pills-details-tab">
+                            <div class="accordion" id="accordionPanelsStayOpenExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headinginfo">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseinfo">
+                                            {{ __('EMPLOYEE DOCUMENTS') }}
+                                        </button>
+                                    </h2>
+
+                                    <div id="panelsStayOpen-collapseinfo" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headinginfo">
+                                        <div class="accordion-body">
+                                            <div class="table-responsive mt-1">
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td colspan="2" style="font-size: 14px;">{{ __('No Document Available!!!') }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Personal Company Information Tab End -->
+
+
+                        <!-- Personal Company Information Tab Start -->
+                        <div class="tab-pane fade" id="pills-bank" role="tabpanel" aria-labelledby="pills-details-tab">
+                            <div class="accordion" id="accordionPanelsStayOpenExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headinginfo">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseinfo">
+                                            {{ __('BANK DETAIL') }}
+                                        </button>
+                                    </h2>
+
+                                    <div id="panelsStayOpen-collapseinfo" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headinginfo">
+                                        <div class="accordion-body">
+                                            <div class="table-responsive mt-1">
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Account Holder') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $employee->account_holder_name ?? '' }}</td>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Account Number') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $employee->account_number ?? '' }}</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Bank Name') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $employee->bank_name ?? '' }}</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Bank Identifier Code') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $employee->bank_identifier_code ?? '' }}</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Branch Location') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $employee->branch_location ?? '' }}</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td style="font-size: 14px;">{{ __('Tax Payer Id') }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">{{ $employee->tax_payer_id ?? '' }}</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Personal Company Information Tab End -->
                     </div>
                 </div>
             </div>
         </div>
-    @endif
-@endsection
+    </div>
+</div>
