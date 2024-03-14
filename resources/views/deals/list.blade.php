@@ -389,7 +389,7 @@
                 {{-- topbar --}}
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                     <div class="col-4">
-                        <p class="mb-0 pb-0 ps-1">ADMISSIONS</p>
+                        <p class="mb-0 pb-0 ps-1">Admissions</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL ADMISSIONS

@@ -271,6 +271,8 @@ class UniversityController extends Controller
                             ]),
                 'module_id' => 2,
                 'module_type' => 'university',
+                'notification_type' => 'University Created'
+
             ];
             addLogActivity($data);
 
@@ -399,6 +401,7 @@ class UniversityController extends Controller
                             ]),
                 'module_id' => 2,
                 'module_type' => 'university',
+                'notification_type' => 'University Updated'
             ];
             addLogActivity($data);
 
@@ -438,6 +441,7 @@ class UniversityController extends Controller
                             ]),
                 'module_id' => 2,
                 'module_type' => 'university',
+                'notification_type' => 'University Deleted'
             ];
             addLogActivity($data);
 

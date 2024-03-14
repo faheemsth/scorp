@@ -48,7 +48,7 @@ class ApplicationsController extends Controller
 
          //////////////pagination calculation
          $start = 0;
-         $num_results_on_page = 50;
+         $num_results_on_page = 25;
          if (isset($_GET['page'])) {
              $page = $_GET['page'];
              $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -64,7 +64,7 @@ class ApplicationsController extends Controller
             $brand_ids = array_keys($companies);
             $app_query = DealApplication::select(['deal_applications.*']);
             $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
-            if(\Auth::user()->type == 'super admin' || $usr->type == 'Admin Team'){
+            if(\Auth::user()->type == 'super admin' || $usr->type == 'Admin Team' || $usr->can('level 1')){
 
             }else if(\Auth::user()->type == 'company'){
                 $app_query->where('deals.brand_id', \Auth::user()->id);
@@ -123,7 +123,7 @@ class ApplicationsController extends Controller
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             $brands = User::where('type', 'company')->get();
             $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'applications')->get();
-            
+
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('applications.applications_list_ajax',  compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands'))->render();
                 $pagination_html = view('layouts.pagination', [
@@ -184,6 +184,7 @@ class ApplicationsController extends Controller
                         ]),
             'module_id' => $application_id,
             'module_type' => 'application',
+            'notification_type' => 'application stage update'
         ];
         addLogActivity($data);
 
@@ -287,6 +288,7 @@ class ApplicationsController extends Controller
                     ]),
                     'module_id' => $deal->deal_id,
                     'module_type' => 'Application',
+                    'notification_type' => 'lead updated'
                 ];
                 addLogActivity($data);
 

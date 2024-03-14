@@ -35,7 +35,7 @@
                 @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit application') || \Auth::user()->can('delete application'))
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @can('edit application')
-                    <a href="#" data-size="lg" data-url="{{ route('deals.application.edit', $application->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Application') }}" class="btn text-white px-2 btn-dark">
+                    <a href="#" data-size="lg" data-url="{{ route('deals.application.edit', $application->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Application') }}" class="btn text-white px-2 btn-dark" style="width: 36px; height: 36px;">
                         <i class="ti ti-pencil"></i>
                     </a>
                     @endcan
@@ -46,7 +46,7 @@
                     'route' => ['deals.application.destroy', $application->id],
                     'id' => 'delete-form-' . $application->id,
                     ]) !!}
-                    <a href="#" class="btn px-2 bg-danger  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i class="ti ti-trash text-white"></i></a>
+                    <a href="#" class="btn px-2 bg-danger  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}" style="width: 36px; height: 36px;"><i class="ti ti-trash text-white"></i></a>
 
                     {!! Form::close() !!}
                     @endcan

@@ -23,7 +23,11 @@ class Organization extends Model
         'billing_state',
         'billing_postal_code',
         'billing_country',
-        'description'
+        'description',
+        'contactemail',
+        'contactphone',
+        'contactjobroll',
+        'contactname'
     ];
 
 

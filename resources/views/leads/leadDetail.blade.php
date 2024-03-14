@@ -147,6 +147,8 @@
                         <i class="ti ti-bookmark"></i>
                     </a>
 
+                    
+
                     @can('edit lead')
                     <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}"
                         data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Lead') }}" title="Update Lead" data-original-title="{{ __('Update Lead') }}"
@@ -170,6 +172,7 @@
 
                         {!! Form::close() !!}
                     @endcan
+                    
 
                 </div>
             </div>

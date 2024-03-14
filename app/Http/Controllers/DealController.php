@@ -31,6 +31,7 @@ use Illuminate\Http\Request;
 use App\Models\DealDiscussion;
 use App\Models\ProductService;
 use App\Models\TaskDiscussion;
+use App\Events\NewNotification;
 use App\Models\DealApplication;
 use App\Models\ApplicationStage;
 use App\Models\ClientPermission;
@@ -245,6 +246,8 @@ class DealController extends Controller
 
     public function deal_list()
     {
+        // die('come');
+
         $usr = \Auth::user();
         $cnt_deal = [];
         $comparePrice = '';
@@ -660,6 +663,7 @@ class DealController extends Controller
                         ]),
             'module_id' => $deal->id,
             'module_type' => 'deal',
+            'notification_type' => 'Deal Created'
         ];
         addLogActivity($data);
 
@@ -731,6 +735,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $deal->id,
                     'module_type' => 'lead',
+                    'notification_type' => 'Deal Created'
                 ];
                 addLogActivity($data);
 
@@ -950,6 +955,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $deal->id,
                     'module_type' => 'deal',
+                    'notification_type' => 'Deal Updated'
                 ];
                 addLogActivity($data);
 
@@ -1029,6 +1035,7 @@ class DealController extends Controller
                     ]),
                     'module_id' => $deal->id,
                     'module_type' => 'Deal',
+                    'notification_type' => 'Lead Updated'
                 ];
                 addLogActivity($data);
                 ActivityLog::create(
@@ -1617,6 +1624,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $deal->id,
                     'module_type' => 'deal',
+                    'notification_type' => 'Deal Notes Created'
                 ];
                 addLogActivity($data);
 
@@ -1753,6 +1761,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $deal->id,
                     'module_type' => 'deal',
+                    'notification_type' => 'Task Created'
                 ];
                 addLogActivity($data);
 
@@ -1910,6 +1919,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $id,
                     'module_type' => 'deal',
+                    'notification_type' => 'Task Updated'
                 ];
                 addLogActivity($data);
 
@@ -2565,6 +2575,7 @@ class DealController extends Controller
                             ]),
                 'module_id' => $new_app->id,
                 'module_type' => 'application',
+                'notification_type' => 'Stage Updated'
             ];
             addLogActivity($data);
 
@@ -3530,6 +3541,7 @@ class DealController extends Controller
                         ]),
             'module_id' => $deal_id,
             'module_type' => 'deal',
+            'notification_type' => 'Deal Stage Updated'
         ];
         addLogActivity($data);
 
@@ -3593,6 +3605,7 @@ class DealController extends Controller
                             ]),
                 'module_id' => $task->deal_id,
                 'module_type' => 'deal',
+                'notification_type' => 'Task Updated'
             ];
             addLogActivity($data);
         }
@@ -3926,8 +3939,8 @@ class DealController extends Controller
         $brands = $companies;
         $users = allUsers();
         $sources = Source::get()->pluck('name', 'id')->toArray();
-       
-        
+
+
         $header = [
             'Sr.No.',
             'Name',
@@ -3943,7 +3956,7 @@ class DealController extends Controller
             $passport_number = isset($client->passport_number) ? $client->passport_number : '';
             $month = !empty($deal->intake_month) ? $deal->intake_month : 'January';
             $year = !empty($deal->intake_year) ? $deal->intake_year : '2023';
-            
+
             $data[] = [
                 'sr_no' => $key+1,
                 'name' => $deal->name,

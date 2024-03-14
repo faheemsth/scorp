@@ -1,12 +1,14 @@
 <?php
 
-use App\Models\ActivityLog;
+use App\Models\User;
 use App\Models\Branch;
-use App\Models\StageHistory;
-use App\Models\LogActivity;
 use App\Models\Region;
 use App\Models\University;
-use App\Models\User;
+use App\Models\ActivityLog;
+use App\Models\LogActivity;
+use App\Models\Notification;
+use App\Models\StageHistory;
+use App\Events\NewNotification;
 use App\Models\CompanyPermission;
 
 if (!function_exists('countries')) {
@@ -104,6 +106,77 @@ if (!function_exists('addLogActivity')) {
         $new_log->module_id = isset($data['module_id']) ? $data['module_id'] : 0;
         $new_log->created_by = \Auth::user()->id;
         $new_log->save();
+
+
+
+        ///////////////////Creating Notification
+        $msg = '';
+        if(strtolower($data['notification_type']) == 'application stage update'){
+            $msg = 'Application stage updated.';
+        }else if(strtolower($data['notification_type']) == 'lead updated'){
+            $msg = 'Lead updated.';
+        }else if(strtolower($data['module_type']) == 'application'){
+            $msg = 'New application created.';
+        }else if(strtolower($data['notification_type']) == 'University Created'){
+            $msg = 'New University Created.';
+        }else if(strtolower($data['notification_type']) == 'University Updated'){
+            $msg = 'University Updated.';
+        }else if(strtolower($data['notification_type']) == 'University Deleted'){
+            $msg = 'University Deleted.';
+        }else if(strtolower($data['notification_type']) == 'Deal Created'){
+            $msg = 'Deal Created.';
+        }else if(strtolower($data['notification_type']) == 'Deal Updated'){
+            $msg = 'Deal Updated.';
+        }else if(strtolower($data['notification_type']) == 'Lead Updated'){
+            $msg = 'Lead Updated.';
+        }else if(strtolower($data['notification_type']) == 'Deal Notes Created'){
+            $msg = 'Deal Notes Created.';
+        }else if(strtolower($data['notification_type']) == 'Task Created'){
+            $msg = 'Task Created.';
+        }else if(strtolower($data['notification_type']) == 'Task Updated'){
+            $msg = 'Task Updated.';
+        }else if(strtolower($data['notification_type']) == 'Stage Updated'){
+            $msg = 'Stage Updated.';
+        }else if(strtolower($data['notification_type']) == 'Deal Stage Updated'){
+            $msg = 'Deal Stage Updated.';
+        }else if(strtolower($data['notification_type']) == 'Organization Created'){
+            $msg = 'Organization Created.';
+        }else if(strtolower($data['notification_type']) == 'Organization Updated'){
+            $msg = 'Organization Updated.';
+        }else if(strtolower($data['notification_type']) == 'Lead Notes Updated'){
+            $msg = 'Lead Notes Updated.';
+        }else if(strtolower($data['notification_type']) == 'Notes created'){
+            $msg = 'Notes created.';
+        }else if(strtolower($data['notification_type']) == 'Task Deleted'){
+            $msg = 'Task Deleted.';
+        }else if(strtolower($data['notification_type']) == 'Lead Created'){
+            $msg = 'Lead Created.';
+        }else if(strtolower($data['notification_type']) == 'Lead Updated'){
+            $msg = 'Lead Updated.';
+        }else if(strtolower($data['notification_type']) == 'Lead Deleted'){
+            $msg = 'Lead Deleted.';
+        }else if(strtolower($data['notification_type']) == 'Discussion created'){
+            $msg = 'Discussion created.';
+        }else if(strtolower($data['notification_type']) == 'Drive link added'){
+            $msg = 'Drive link added.';
+        }else if(strtolower($data['notification_type']) == 'Lead Notes Updated'){
+            $msg = 'Lead Notes Updated.';
+        }else if(strtolower($data['notification_type']) == 'Lead Notes Deleted'){
+            $msg = 'Lead Notes Deleted.';
+        }else if(strtolower($data['notification_type']) == 'Lead Converted'){
+            $msg = 'Lead Converted.';
+        }else{
+            $msg = 'New record created';
+        }
+
+        $notification = new Notification;
+        $notification->user_id = 0;
+        $notification->type = 'push notificationn';
+        $notification->data = $msg;
+        $notification->is_read = 0;
+
+        $notification->save();
+        event(new NewNotification($notification));
     }
 }
 
@@ -163,8 +236,8 @@ if (!function_exists('FiltersBrands')) {
             $user_brand = !empty(\Auth::user()->brand_id) ? \Auth::user()->brand_id : 0;
         }
 
-
         if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR' || \Auth::user()->can('level 1')) {
+           
         } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')) {
             $permittedCompanies = allPermittedCompanies();
             $brands->whereIn('id', $permittedCompanies);
@@ -258,7 +331,7 @@ if (!function_exists('BrandsRegionsBranches')) {
         $employees = [];
 
         $user = \Auth::user();
-        $type = $user->type; 
+        $type = $user->type;
 
         if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
             $regions = Region::where('id', $_GET['region_id'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
@@ -399,3 +472,66 @@ function accessLevel()
         ]
     ];
 }
+
+/**
+ * Calculates pagination details based on the current page and number of results per page.
+ * If 'page' and 'num_results_on_page' parameters are provided in the GET request,
+ * calculates the start index for fetching results accordingly.
+ * 
+ * @return array An array containing pagination details:
+ *               - 'start': The start index for fetching results.
+ *               - 'num_results_on_page': The number of results to display on each page.
+ *               - 'page': The current page number.
+ */
+function getPaginationDetail(){
+    // Pagination calculation
+    $start = 0; // Default start index
+    $num_results_on_page = 25; // Default number of results per page
+    
+    if (isset($_GET['page'])) {
+        $page = $_GET['page']; // Current page number
+        
+        // If 'num_results_on_page' parameter is provided, update $num_results_on_page
+        $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+        
+        // Calculate the start index based on the current page and number of results per page
+        $start = ($page - 1) * $num_results_on_page;
+    } else {
+        $page = 1;
+        // If 'page' parameter is not provided, only update $num_results_on_page if 'num_results_on_page' parameter is provided
+        $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+    }
+
+    // Return an array containing pagination details
+    return [
+        'start' => $start, // Start index for fetching results
+        'num_results_on_page' => $num_results_on_page, // Number of results to display on each page
+        'page' => $page // Current page number
+    ];
+}
+
+
+/**
+ * Retrieves lists of users, regions, and branches for use in dropdowns or select inputs.
+ * Assumes 'name' and 'id' fields exist in the respective database tables.
+ *
+ * @return array Associative array containing lists of users, regions, and branches.
+ */
+function UserRegionBranch(){
+    // Retrieve users and format them as 'name' => 'id'
+    $users = User::pluck('name', 'id')->toArray();
+    
+    // Retrieve regions and format them as 'name' => 'id'
+    $regions = Region::pluck('name', 'id')->toArray();
+    
+    // Retrieve branches and format them as 'name' => 'id'
+    $branches = Branch::pluck('name', 'id')->toArray();
+
+    // Return the formatted data
+    return [
+        'users' => $users,
+        'regions' => $regions,
+        'branches' => $branches
+    ];
+}
+

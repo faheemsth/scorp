@@ -219,7 +219,7 @@ class OrganizationController extends Controller
      */
     public function store(Request $request)
     {
-     
+
      if (\Auth::user()->type == 'super admin' || \Auth::user()->can('create organization')) {
 
         //
@@ -243,7 +243,7 @@ class OrganizationController extends Controller
             ]
         );
 
-     
+
 
         if ($validator->fails()) {
             $messages = $validator->getMessageBag();
@@ -253,7 +253,7 @@ class OrganizationController extends Controller
             ]);
         }
 
-       
+
 
         //Creating users
         $user = new User();
@@ -844,7 +844,7 @@ class OrganizationController extends Controller
                     }
                     $branches = $branch_query->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             }
-                  
+
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
@@ -1002,6 +1002,7 @@ class OrganizationController extends Controller
                 'note' => json_encode($remarks),
                 'module_id' => $dealTask->id,
                 'module_type' => 'task',
+                'notification_type' => 'Task Created'
             ];
             addLogActivity($data);
 
@@ -1036,7 +1037,7 @@ class OrganizationController extends Controller
             if (\Auth::user()->type == 'super admin') {
                 $branches = Branch::where('brands',DealTask::where('id', $id)->first()->brand_id)->get()->pluck('name', 'id')->toArray();
             } else {
-               
+
                 $branches = Branch::where('brands',DealTask::where('id', $id)->first()->brand_id)->where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             }
 
@@ -1075,7 +1076,7 @@ class OrganizationController extends Controller
             }else if(\Auth::user()->type == 'super admin'){
                 $employees =  User::where('brand_id', DealTask::where('id', $id)->first()->brand_id)->pluck('name', 'id')->toArray();
             }
-            
+
             $Region=Region::whereRaw('FIND_IN_SET(?, brands)', [$task->brand_id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
             // dd($branches);
@@ -1180,6 +1181,7 @@ class OrganizationController extends Controller
                 'note' => json_encode($remarks),
                 'module_id' => 1,
                 'module_type' => 'task',
+                'notification_type' => 'Task Update'
             ];
             addLogActivity($data);
 
@@ -1197,6 +1199,7 @@ class OrganizationController extends Controller
                     'note' => json_encode($remarks),
                     'module_id' => 1,
                     'module_type' => 'task',
+                    'notification_type' => 'Task Update'
                 ];
                 addLogActivity($data);
             }
@@ -1238,6 +1241,7 @@ class OrganizationController extends Controller
                 ]),
                 'module_id' => 1,
                 'module_type' => 'task',
+                'notification_type' => 'Task Deleted'
             ];
             addLogActivity($data);
 

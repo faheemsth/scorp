@@ -1763,6 +1763,9 @@ Route::get('/organiation/{id}/task-edit', [OrganizationController::class, 'taskE
 Route::post('/organization/{id}/task-update', [OrganizationController::class, 'taskUpdate'])->name('organization.tasks.update')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/task-delete', [OrganizationController::class, 'taskDelete'])->name('organization.task.delete')->middleware(['auth', 'XSS']);
 
+Route::post('/organization/update/{id}', [OrganizationController::class, 'update']);
+
+
 Route::get('/get_branch_by_type', [OrganizationController::class, 'GetBranchByType'])->name('GetBranchByType')->middleware(['auth', 'XSS']);
 
 
@@ -1851,3 +1854,6 @@ Route::get('/deals-download', [DealController::class, 'download'])->name('deals.
 
 ////////////////////////////////////////////////Filters LEADS
 Route::get('/filter-data', [LeadController::class, 'filterData'])->name('filterData');
+
+Route::get('/filter-regions', [RegionController::class, 'filterRegions'])->name('my-filter-regions');
+Route::get('/filter-branches', [RegionController::class, 'filterBranches'])->name('my-filter-branches');

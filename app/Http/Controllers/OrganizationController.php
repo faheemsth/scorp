@@ -285,9 +285,10 @@ class OrganizationController extends Controller
             'facebook' => $request->organization_facebook,
             'twitter' => $request->organization_twitter,
             'billing_street' => $request->organization_billing_street,
-            'billing_city' => $request->organization_billing_city,
-            'billing_state' => $request->organization_billing_state,
-            'billing_postal_code' => $request->organization_billing_postal_code,
+            'contactname' => $request->contactname,
+            'contactemail' => $request->contactemail,
+            'contactphone' => $request->contactphone,
+            'contactjobroll' => $request->contactjobroll,
             'billing_country' => $request->organization_billing_country,
             'description' => $request->organization_description,
         ]);
@@ -305,6 +306,7 @@ class OrganizationController extends Controller
                         ]),
             'module_id' => $user->id,
             'module_type' => 'organization',
+            'notification_type' => 'Organization Created'
         ];
         addLogActivity($data);
 
@@ -395,9 +397,10 @@ class OrganizationController extends Controller
             'facebook' => $request->organization_facebook,
             'twitter' => $request->organization_twitter,
             'billing_street' => $request->organization_billing_street,
-            'billing_city' => $request->organization_billing_city,
-            'billing_state' => $request->organization_billing_state,
-            'billing_postal_code' => $request->organization_billing_postal_code,
+            'contactname' => $request->contactname,
+            'contactemail' => $request->contactemail,
+            'contactphone' => $request->contactphone,
+            'contactjobroll' => $request->contactjobroll,
             'billing_country' => $request->organization_billing_country,
             'description' => $request->organization_description,
         ]);
@@ -411,6 +414,7 @@ class OrganizationController extends Controller
                         ]),
             'module_id' => $user->id,
             'module_type' => 'organization',
+            'notification_type' => 'Organization Updated'
         ];
         addLogActivity($data);
 
@@ -740,6 +744,7 @@ class OrganizationController extends Controller
                             ]),
                 'module_id' => $request->id,
                 'module_type' => 'lead',
+                'notification_type' => 'Lead Notes Updated'
             ];
             addLogActivity($data);
 
@@ -774,6 +779,7 @@ class OrganizationController extends Controller
                         ]),
             'module_id' => $id,
             'module_type' => 'lead',
+            'notification_type' => 'Notes created'
         ];
         addLogActivity($data);
 
@@ -1110,6 +1116,7 @@ class OrganizationController extends Controller
                 'note' => json_encode($remarks),
                 'module_id' => $dealTask->id,
                 'module_type' => 'task',
+                'notification_type' => 'Task created'
             ];
             addLogActivity($data);
 
@@ -1300,6 +1307,7 @@ class OrganizationController extends Controller
                 'note' => json_encode($remarks),
                 'module_id' => $dealTask->id,
                 'module_type' => 'task',
+                'notification_type' => 'Task Update'
             ];
             addLogActivity($data);
 
@@ -1317,6 +1325,7 @@ class OrganizationController extends Controller
                     'note' => json_encode($remarks),
                     'module_id' => $dealTask->id,
                     'module_type' => 'task',
+                    'notification_type' => 'Task Update'
                 ];
                 addLogActivity($data);
             }
@@ -1358,6 +1367,7 @@ class OrganizationController extends Controller
                 ]),
                 'module_id' => 1,
                 'module_type' => 'task',
+                'notification_type' => 'Task Deleted'
             ];
             addLogActivity($data);
 

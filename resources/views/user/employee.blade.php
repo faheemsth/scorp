@@ -22,12 +22,6 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
     }
 </style>
 <style>
-    /* .red-cross {
-                position: absolute;
-                top: 5px;
-                right: 5px;
-                color: red;
-            } */
     .boximg {
         margin: auto;
     }
@@ -61,9 +55,10 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
     .dropdown-item:hover {
         background-color: white !important;
     }
-    .filbar .form-control:focus{
-                    border: 1px solid rgb(209, 209, 209) !important;
-                }
+
+    .filbar .form-control:focus {
+        border: 1px solid rgb(209, 209, 209) !important;
+    }
 </style>
 
 @section('content')
@@ -97,7 +92,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                                 <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
                                                 <ul class="submenu" style="border: 1px solid #e9e9e9;
                                                 box-shadow: 0px 0px 1px #e9e9e9;">
-                                                    <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name?>', <?= $filter->id ?>)">Rename</a></li>
+                                                    <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name ?>', <?= $filter->id ?>)">Rename</a></li>
                                                     <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
                                                 </ul>
                                             </li>
@@ -132,8 +127,8 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
 
                             @php
-                                $all_params = $_GET;
-                                $query_string = http_build_query($all_params);
+                            $all_params = $_GET;
+                            $query_string = http_build_query($all_params);
                             @endphp
 
                             @if(auth()->user()->type == 'super admin' || auth()->user()->type == 'Admin Team')
@@ -143,9 +138,9 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             @endif
 
                             @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete employee'))
-                                <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Regions') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; margin-top:10px;">
-                                    <i class="ti ti-trash"></i>
-                                </a>
+                            <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Regions') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; margin-top:10px;">
+                                <i class="ti ti-trash"></i>
+                            </a>
                             @endif
                         </div>
                     </div>
@@ -167,22 +162,21 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 $type = \Auth::user()->type;
                                 @endphp
 
-                       
+
 
                                 @if($type == 'super admin'|| $type == 'Admin Team' || $type == 'Project Director' || $type == 'Project Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
                                 <div class="col-md-3 mt-2">
-                                    <label for="">Brand</label>
-                                    <select name="brand" class="form form-control select2" id="filter_brand_id">
+                                    <label for="filter_brand_id">Brand</label>
+                                    <select name="brand" class="form-control select2" id="filter_brand_id">
                                         <option value="">Select Option</option>
-                                        @if (!empty($filters['brands']))
-                                        @foreach ($filters['brands'] as $key => $Brand)
-                                        <option value="{{ $key }}" {{ !empty($_GET['brand']) && $_GET['brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
-                                        @endforeach
-                                        @else
+                                        @forelse ($filters['brands'] as $key => $Brand)
+                                        <option value="{{ $key }}" {{ request('brand') == $key ? 'selected' : '' }}>{{ $Brand }}</option>
+                                        @empty
                                         <option value="" disabled>No brands available</option>
-                                        @endif
+                                        @endforelse
                                     </select>
                                 </div>
+
                                 @endif
 
 
@@ -207,23 +201,17 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
 
                                 <div class="col-md-3 mt-2" id="branch_filter_div">
-                                    <label for="">Branch</label>
-
-                                    <select name="branch_id" class="form form-control select2" id="filter_branch_id">
+                                    <label for="filter_branch_id">Branch</label>
+                                    <select name="branch_id" class="form-control select2" id="filter_branch_id">
                                         <option value="">Select Option</option>
-                                        @if (!empty($filters['branches']))
-                                        @foreach ($filters['branches'] as $key => $branch)
-                                        <option value="{{ $key }}" {{ !empty($_GET['branch_id']) && $_GET['branch_id'] == $key ? 'selected' : '' }}>{{ $branch }}</option>
-                                        @endforeach
-                                        @else
-
-                                        @endif
+                                        @forelse ($filters['branches'] as $key => $branch)
+                                        <option value="{{ $key }}" {{ request('branch_id') == $key ? 'selected' : '' }}>{{ $branch }}</option>
+                                        @empty
+                                        <!-- No branches available -->
+                                        @endforelse
                                     </select>
                                 </div>
 
-
-
-                              
 
                                 <div class="col-md-3 mt-2">
                                     <label for="">Designation</label>
@@ -235,15 +223,6 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                         @endforeach
                                         @endif
                                     </select>
-                                </div>
-                                <div class="col-md-3 mt-2">
-                                    <label for="">Name</label>
-                                    <input type="text" class="form form-control" placeholder="Search Name" name="Name" value="<?= isset($_GET['Name']) ? $_GET['Name'] : '' ?>" style="width: 95%; border-color:#aaa">
-                                </div>
-
-                                <div class="col-md-3 mt-2 d-none">
-                                    <label for="">Phone</label>
-                                    <input type="text" class="form form-control" placeholder="Search Phone" name="phone" value="<?= isset($_GET['phone']) ? $_GET['phone'] : '' ?>" style="width: 95%; border-color:#aaa">
                                 </div>
 
                                 <div class="col-md-5 mt-3">
@@ -323,7 +302,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $employee->type }}</td>
                                     <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $Branchs[$employee->branch_id] ?? '' }}</td>
                                     <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $Regions[$employee->region_id] ?? '' }}</td>
-                                    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{  $brandss[$employee->brand_id] ?? '' }}</td>
+                                    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $brandss[$employee->brand_id] ?? '' }}</td>
                                     <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($employee->last_login_at) ? $employee->last_login_at : '' }}
                                     </td>
 
@@ -370,7 +349,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
         $.ajax({
             type: 'GET',
-            url: '{{ route('region_brands') }}',
+            url: '{{ route('region_brands ') }}',
             data: {
                 id: id, // Add a key for the id parameter
                 filter,
@@ -400,7 +379,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
         var type = 'region';
         $.ajax({
             type: 'GET',
-            url: '{{ route('region_brands') }}',
+            url: '{{ route('region_brands ') }}',
             data: {
                 id: id, // Add a key for the id parameter
                 filter,

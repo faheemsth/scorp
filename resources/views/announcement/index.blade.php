@@ -8,6 +8,21 @@
     <li class="breadcrumb-item">{{__('Announcement')}}</li>
 @endsection
 
+<style>
+    .search-bar-input{
+        width:30% !important;
+    }
+    @media only screen and (max-width: 768px){
+        .search-bar-input{
+        width:50% !important;
+    }
+    }
+    @media only screen and (max-width: 425px){
+        .search-bar-input{
+        width:100% !important;
+    }
+    }
+</style>
 
 
 
@@ -16,57 +31,57 @@
         <div class="col-md-12">
             <div class="card">
             <div class="card-body ">
-                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                    <div class="col-4">
+                <div class="row align-items-center ">
+                    <div class="col-12 col-md-4 pb-2 ">
                         <p class="mb-0 pb-0 ps-1">Announcement</p>
-                        <div class="dropdown">
-                            <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                ALL announcement
+                        <div class="dropdown " >
+                            <button class="dropdown-toggle All-leads " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false" >
+                                ALL ANNOUNCEMENT
                             </button>
-                            <ul class="dropdown-menu d-none" aria-labelledby="dropdownMenuButton1">
+                            <!-- <ul class="dropdown-menu d-none" aria-labelledby="dropdownMenuButton1">
                                 {{-- <li><a class="dropdown-item assigned_to" href="javascript:void(0)">Assigned to</a></li>
                                 <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
                                 <li><a class="dropdown-item" href="#">Brand Change</a></li>--}}
                                 <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li>
                                 {{-- <li id="actions_div" style="display:none"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li> --}}
-                            </ul>
+                            </ul> -->
                         </div>
                     </div>
 
 
-                    <div class="col-8 d-flex justify-content-end gap-2 pe-0">
-                        <div class="input-group w-25">
-                            <button class="btn btn-sm list-global-search-btn">
-                                <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                    <div class="col-12 col-md-8 d-flex justify-content-end gap-2 pe-0 me-0 align-items-center pb-1">
+                        <div class="input-group  rounded search-bar-input  " style="height:36px;">
+                            <button class="btn btn-sm list-global-search-btn px-0 ">
+                                <span class="input-group-text bg-transparent border-0 px-1 pt-0" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
                             </button>
-                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search..." aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="Search" class="form-control border-0 bg-transparent px-0  pb-2 list-global-search text-truncate" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
 
-                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                        <!-- <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button> -->
 
-                        <button class="btn filter-btn-show p-2 btn-dark d-none"  type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
+                        <!-- <button class="btn filter-btn-show p-2 btn-dark "  type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
                             <i class="ti ti-filter" style="font-size:18px"></i>
-                        </button>
+                        </button> -->
 
                         @can('create announcement')
-                        <button data-size="lg" data-url="{{ route('announcement.create') }}" data-ajax-popup="true" data-title="{{__('Create New Announcement')}}" data-bs-toggle="tooltip" title="{{__('Create Announcement')}}" class="btn px-2 btn-dark">
+                        <button data-size="lg" data-url="{{ route('announcement.create') }}" data-ajax-popup="true" data-title="{{__('Create New Announcement')}}" data-bs-toggle="tooltip" title="{{__('Create Announcement')}}" class="btn px-2 btn-dark  " style="width:36px; height: 36px; ">
                             <i class="ti ti-plus" style="font-size:18px"></i>
                         </button>
                         @endcan
-
-                        <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+<!-- 
+                        <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> -->
                     </div>
                 </div>
-                    <div class="table mt-3">
+                    <div class="table overflow-auto">
                     <table class="table ">
                             <thead>
                             <tr>
                                 <th>{{__('Title')}}</th>
-                                <th class="d-none">{{__('Brand')}}</th>
+                                <!-- <th class="d-none">{{__('Brand')}}</th>
                                 <th class="d-none">{{__('Region')}}</th>
-                                <th class="d-none">{{__('Branch')}}</th>
+                                <th class="d-none">{{__('Branch')}}</th> -->
                                 <th>{{__('description')}}</th>
                                 <th>{{__('Start Date')}}</th>
                                 <th>{{__('End Date')}}</th>

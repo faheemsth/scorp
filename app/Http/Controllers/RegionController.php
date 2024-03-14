@@ -480,4 +480,40 @@ class RegionController extends Controller
         downloadCSV($header, $data, 'regions.csv');
         return true;
     }
+
+
+    /////////////////////////////////////Filter Regions
+    public function filterRegions(){
+        $brand_id = $_GET['brand_id'];
+        $regions = Region::where('brands', $brand_id)->pluck('name', 'id')->toArray();
+
+        $html = '<option value="">Select Region</option>';
+        foreach($regions as $key => $region){
+            $html .= "<option value='$key'>$region</option>";
+        }
+
+        $html .= '';
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
+    }
+
+    public function filterBranches(){
+        $region_id = $_GET['region_id'];
+        $regions = Branch::where('region_id', $region_id)->pluck('name', 'id')->toArray();
+
+        $html = '<option value="">Select Region</option>';
+        foreach($regions as $key => $region){
+            $html .= "<option value='$key'>$region</option>";
+        }
+
+        $html .= '';
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
+    }
 }
