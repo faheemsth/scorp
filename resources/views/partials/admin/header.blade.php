@@ -17,9 +17,12 @@ $mode_setting = \App\Models\Utility::mode_layout();
 $adminOption = \App\Models\User::where('type', Session::get('onlyadmin'))->first();
 if (Session::get('is_company_login') == true) {
 $currentUserCompany = \App\Models\User::where('type', 'company')->find(Session::get('auth_type_created_by'));
-} else {
-$currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
+} else if(\Auth::user()->type == 'super admin'){
+    $currentUserCompany = \App\Models\User::where('type', 'company')->first();
+}else {
+$currentUserCompany = \App\Models\User::findOrFail(\Auth::user()->brand_id);
 }
+
 // dd(Session::get('auth_type_created_by'));
 $com_permissions = [];
 if ($currentUserCompany != null) {

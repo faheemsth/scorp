@@ -641,6 +641,8 @@ class DashboardController extends Controller
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
                 $applications_query->whereIn('deals.brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'company'){
+                $applications_query->where('deals.brand_id', \Auth::user()->id);
             } else if (\Auth::user()->can('level 3')) {
                 $applications_query->where('deals.region_id', \Auth::user()->region_id);
             } else if (\Auth::user()->can('level 4')) {
@@ -697,6 +699,8 @@ class DashboardController extends Controller
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
                 $query->whereIn('deals.brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'company'){
+                $query->where('deals.brand_id', \Auth::user()->id);
             } else if (\Auth::user()->can('level 3')) {
                 $query->where('deals.region_id', \Auth::user()->region_id);
             } else if (\Auth::user()->can('level 4')) {
@@ -747,7 +751,9 @@ class DashboardController extends Controller
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
                 $query->whereIn('leads.brand_id', $brand_ids);
-            } else if (\Auth::user()->can('level 3')) {
+            } else if(\Auth::user()->type == 'company'){
+                $query->where('leads.brand_id', \Auth::user()->id);
+            }else if (\Auth::user()->can('level 3')) {
                 $query->where('leads.region_id', \Auth::user()->region_id);
             } else if (\Auth::user()->can('level 4')) {
                 $query->where('leads.branch_id', \Auth::user()->branch_id);
@@ -900,7 +906,9 @@ class DashboardController extends Controller
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             $query->whereIn('leads.brand_id', $brand_ids);
-        } else if (\Auth::user()->can('level 3')) {
+        } else if(\Auth::user()->type == 'company'){
+            $query->where('leads.brand_id', \Auth::user()->id);
+        }else if (\Auth::user()->can('level 3')) {
             $query->where('leads.region_id', \Auth::user()->region_id);
         } else if (\Auth::user()->can('level 4')) {
             $query->where('leads.branch_id', \Auth::user()->branch_id);
@@ -940,7 +948,9 @@ class DashboardController extends Controller
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             $query->whereIn('deals.brand_id', $brand_ids);
-        } else if (\Auth::user()->can('level 3')) {
+        }else if(\Auth::user()->type == 'company'){
+            $query->where('deals.brand_id', \Auth::user()->id);
+        }else if (\Auth::user()->can('level 3')) {
             $query->where('deals.region_id', \Auth::user()->region_id);
         } else if (\Auth::user()->can('level 4')) {
             $query->where('deals.branch_id', \Auth::user()->branch_id);

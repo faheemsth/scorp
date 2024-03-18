@@ -17,35 +17,46 @@
 @section('action-btn')
 @endsection
 
+<style>
+    a{
+        text-decoration: none;
+    }
+    a:hover {
+    text-decoration: none !important;
+}
+</style>
 @section('content')
 <div class="row">
 
 
     <div class="col-lg-3 col-md-6">
-        <div class="card">
-            <div class="card-body">
-                <div class="row align-items-center justify-content-between">
-                    <div class="col-auto mb-3 mb-sm-0">
-                        <div class="d-flex align-items-center">
-                            <div class="theme-avtar bg-primary">
-                                <i class="ti ti-cast"></i>
-                            </div>
-                            <div class="ms-3">
-                                <small class="text-muted">{{__('Total')}}</small>
-                                <h6 class="m-0">{{__('Ticket')}}</h6>
+        <a href="{{ route('support.index') }}" class="">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center justify-content-between">
+                        <div class="col-auto mb-3 mb-sm-0">
+                            <div class="d-flex align-items-center">
+                                <div class="theme-avtar bg-primary">
+                                    <i class="ti ti-cast"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <small class="text-muted">{{__('Total')}}</small>
+                                    <h6 class="m-0">{{__('Ticket')}}</h6>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-auto text-end">
-                        <h3 class="m-0">{{ $countTicket }}</h3>
+                        <div class="col-auto text-end">
+                            <h3 class="m-0">{{ $countTicket }}</h3>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
 
 
     <div class="col-lg-3 col-md-6">
+        <a href="/support?type=open" class="">
         <div class="card">
             <div class="card-body">
                 <div class="row align-items-center justify-content-between">
@@ -66,10 +77,12 @@
                 </div>
             </div>
         </div>
+        </a>
     </div>
 
 
     <div class="col-lg-3 col-md-6">
+        <a href="/support?type=hold" class="">
         <div class="card">
             <div class="card-body">
                 <div class="row align-items-center justify-content-between">
@@ -90,9 +103,11 @@
                 </div>
             </div>
         </div>
+        </a>
     </div>
 
     <div class="col-lg-3 col-md-6">
+        <a href="/support?type=close" class="">
         <div class="card">
             <div class="card-body">
                 <div class="row align-items-center justify-content-between">
@@ -113,6 +128,7 @@
                 </div>
             </div>
         </div>
+        </a>
     </div>
 
 
@@ -174,7 +190,7 @@
             <div class="card-body table-border-style">
                 <div class="filter-data px-5" id="filterToggle"
                 <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
-                <form action="/user/employees" method="GET" class="">
+                <form action="/user/employees" method="GET" class="d-none">
                 <div class="row my-3">
 
 
@@ -267,7 +283,7 @@
                         @php
                             $supportpath=\App\Models\Utility::get_file('uploads/supports');
                         @endphp
-                        @foreach($supports as $support)
+                        @forelse($supports as $support)
 
                             <tr>
                                 <td scope="row" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
@@ -375,7 +391,11 @@
                                 </span>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty 
+                        <tr>
+                            <td colspan="8" class="text-center" style="text-align: center !important;">No Record Found</td>
+                        </tr>
+                        @endforelse 
                         </tbody>
                     </table>
                 </div>
