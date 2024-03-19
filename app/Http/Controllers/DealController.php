@@ -199,6 +199,22 @@ class DealController extends Controller
             $filters['name'] = $_GET['name'];
         }
 
+        if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+            $filters['brand'] = $_GET['brand'];
+        }
+
+        if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
+            $filters['region_id'] = $_GET['region_id'];
+        }
+
+        if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
+            $filters['branch_id'] = $_GET['branch_id'];
+        }
+
+        if (isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user'])) {
+            $filters['deal_assigned_user'] = $_GET['lead_assgigned_user'];
+        }
+
 
         if (isset($_GET['stages']) && !empty($_GET['stages'])) {
             $filters['stage_id'] = $_GET['stages'];
@@ -311,6 +327,14 @@ class DealController extends Controller
                     $deals_query->whereIn('created_by', $value);
                 } elseif ($column == 'created_at') {
                     $deals_query->whereDate('deals.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                }elseif ($column == 'brand') {
+                    $deals_query->where('deals.brand_id', $value);
+                }elseif ($column == 'region_id') {
+                    $deals_query->where('deals.region_id', $value);
+                }elseif ($column == 'branch_id') {
+                    $deals_query->where('deals.branch_id', $value);
+                }elseif ($column == 'deal_assigned_user') {
+                    $deals_query->where('deals.assigned_to', $value);
                 }
             }
 
@@ -369,8 +393,9 @@ class DealController extends Controller
             }
 
             // dd($universities);
+            $filters = BrandsRegionsBranches();
 
-            return view('deals.list', compact('Alldeals','deals','universities','pipelines','users','branches','months','years','clients', 'organizations', 'stages', 'users', 'total_records', 'sources', 'brands'));
+            return view('deals.list', compact('Alldeals','deals','universities','pipelines','users','branches','months','years','clients', 'organizations', 'stages', 'users', 'total_records', 'sources', 'brands', 'filters'));
         }
 
 

@@ -389,7 +389,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 
 
-                                @if(in_array($type, $access_levels['first']))
+                                @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
                                     <div class="col-md-3 mt-2">
                                         <label for="">Brand</label>
                                         <select name="brand" class="form form-control select2" id="filter_brand_id">
@@ -406,7 +406,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 
 
-                                @if(in_array($type, $access_levels['first']) || in_array($type, $access_levels['second']))
+                                @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3'))
                                     <div class="col-md-3 mt-2" id="region_filter_div">
                                         <label for="">Region</label>
                                         <select name="region_id" class="form form-control select2" id="filter_region_id">
@@ -422,7 +422,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 @endif
 
 
-                                @if(in_array($type, $access_levels['first']) || in_array($type, $access_levels['second']) || in_array($type, $access_levels['third']))
+                                @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3') || \Auth::user()->can('level 4'))
                                     <div class="col-md-3 mt-2" id="branch_filter_div">
                                         <label for="">Branch</label>
                                         <select name="branch_id" class="form form-control select2" id="filter_branch_id">
@@ -436,6 +436,16 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         </select>
                                     </div>
                                 @endif
+
+                                <div class="col-md-3 mt-2"> <label for="">Assigned To</label>
+                                    <div class="" id="assign_to_div">
+                                        <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
+                                            @foreach ($filters['employees'] as $key => $user)
+                                            <option value="{{ $key }}" <?= isset($_GET['lead_assgigned_user']) && $key == $_GET['lead_assgigned_user'] ? 'selected' : '' ?> class="">{{ $user }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
 
 
 
@@ -474,10 +484,10 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             style="width: 95%; border-color:#aaa">
                                     </div>
 
-                                    <div class="col-md-4 mt-3">
+                                    <div class="col-md-3 mt-3 d-flex" style="padding:0px;">
                                         <br>
-                                        <input type="submit" class="btn form-btn me-2 bg-dark" style=" color:white;">
-                                        <a href="/leads/list" class="btn form-btn bg-dark" style="color:white;">Reset</a>
+                                        <input type="submit" class="btn form-btn bg-dark" style=" color:white;">
+                                        <a href="/leads/list" style="margin: 0px 3px;" class="btn form-btn bg-dark" style="color:white;">Reset</a>
                                         <a type="button" id="save-filter-btn" onClick="saveFilter('leads',<?= sizeof($leads) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                     </div>
                                 </div>
@@ -1726,6 +1736,34 @@ $('.' + name + '-td').html(html);
                 }
             });
         });
+
+        $(document).on("change", "#filter_branch_id, #branch_id", function() {
+    
+            var id = $(this).val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('filter-branch-users') }}',
+                    data: {
+                        id: id
+                    },
+                    success: function(data){
+                        data = JSON.parse(data);
+
+                        if (data.status === 'success') {
+                            $('#assign_to_div').html('');
+                            $("#assign_to_div").html(data.html);
+                            select2();
+                        } else {
+                            console.error('Server returned an error:', data.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX request failed:', status, error);
+                    }
+                });
+        });
+
 
         $(document).on("change", "#filter_branch_id, #branch_id", function() {
            getLeads();

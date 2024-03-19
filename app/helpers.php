@@ -333,12 +333,18 @@ if (!function_exists('BrandsRegionsBranches')) {
         $user = \Auth::user();
         $type = $user->type;
 
+        if(isset($_GET['brand']) && !empty($_GET['brand'])){
+            $regions = Region::where('brands', $_GET['brand'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+        }
+
         if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
-            $regions = Region::where('id', $_GET['region_id'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            $branches = Branch::where('region_id', $_GET['region_id'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            // $regions = Region::where('id', $_GET['region_id'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         }
 
         if(isset($_GET['branch_id']) && !empty($_GET['branch_id'])){
-            $branches = Branch::where('id', $_GET['branch_id'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+           // $branches = Branch::where('id', $_GET['branch_id'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+           $employees = User::where('branch_id', $_GET['branch_id'])->whereNotIn('type', ['client', 'company', 'super admin'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         }
 
         if ($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || \Auth::user()->can('level 1')) {

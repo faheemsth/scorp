@@ -116,6 +116,10 @@ class LeadController extends Controller
             $filters['users'] = $_GET['users'];
         }
 
+        if (isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user'])) {
+            $filters['lead_assgigned_user'] = $_GET['lead_assgigned_user'];
+        }
+
         if (isset($_GET['subject']) && !empty($_GET['subject'])) {
             $filters['subject'] = $_GET['subject'];
         }
@@ -218,6 +222,9 @@ class LeadController extends Controller
                         break;
                     case 'stage_id':
                         $leads_query->whereIn('stage_id', $value);
+                        break;
+                    case 'lead_assgigned_user':
+                        $leads_query->where('leads.user_id', $value);
                         break;
                     case 'users':
                         $leads_query->whereIn('leads.user_id', $value);

@@ -467,8 +467,8 @@
                     <div class="  collapse-inner rounded">
                         <ul>
                             <li
-                                class="emp nav-item {{ Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' ? ' active' : '' }}">
-                                <a class="collapse-item" href="{{ url('/ChartGranted') }}"
+                                class="emp nav-item {{ Request::segment(1) == 'analysis' ? ' active' : '' }}">
+                                <a class="collapse-item" href="{{ url('/analysis') }}"
                                     style="color:white; font-size: 13px;">
 
                                     <i class="fa-solid fa-chart-pie me-1" id="icon1" style="color: #ffffff;font-size: 15px;"></i>

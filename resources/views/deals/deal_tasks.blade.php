@@ -237,6 +237,18 @@ $setting = \App\Models\Utility::colorset();
                                     </div>
                                 @endif
 
+                                
+                                <div class="col-md-3 mt-2"> <label for="">Assigned To</label>
+                                    <div class="" id="assign_to_div">
+                                        <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
+                                            @foreach ($filters['employees'] as $key => $user)
+                                            <option value="{{ $key }}" <?= isset($_GET['assigned_to']) && in_array($key, $_GET['assigned_to']) ? 'selected' : '' ?> class="">{{ $user }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+
                                 <div class="col-md-3"> <label for="">Subject</label>
                                     <div class="subject_data" id="filter-names">
                                         <select class="form form-control select2" id="choices-multiple110" name="subjects[]" multiple style="width: 95%;">
@@ -247,17 +259,6 @@ $setting = \App\Models\Utility::colorset();
                                         </select>
                                     </div>
                                 </div>
-
-                                <div class="col-md-3"> <label for="">Assigned To</label>
-                                    <div class="" id="assign_to_div">
-                                        <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
-                                            @foreach ($filters['employees'] as $key => $user)
-                                            <option value="{{ $key }}" <?= isset($_GET['assigned_to']) && in_array($key, $_GET['assigned_to']) ? 'selected' : '' ?> class="">{{ $user }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-
 
                                 <div class="col-md-3">
                                     <label for="">Status</label>
@@ -276,7 +277,7 @@ $setting = \App\Models\Utility::colorset();
                                 <div class="col-md-3 mt-4 pt-2 d-flex align-items-end">
                                     <input type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}" class="btn form-btn me-2 btn-dark px-2 py-2" >
                                     <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn mr-2 px-2 py-2 btn-dark" style="color:white;">Reset</a>
-                                    <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn me-3 bg-dark" style=" color:white;display:none;">Save Filter</a>
+                                    <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn mr-2 px-2 py-2 btn-dark" style=" color:white;display:none;">Save Filter</a>
 
                                 </div>
                         </div>
