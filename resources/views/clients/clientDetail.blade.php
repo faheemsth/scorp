@@ -133,30 +133,6 @@
             </div>
 
 
-            <div class="lead-info d-flex justify-content-between p-3 text-center">
-                <div class="">
-                    <small>{{ __('Organization') }}</small>
-                    <span class="font-weight-bolder">
-                        {{ isset($lead->organization_id) && isset($organizations[$lead->organization_id]) ? $organizations[$lead->organization_id] : '' }}
-                    </span>
-                </div>
-                <div class="">
-                    <small>{{ __('Phone') }}</small>
-                    <span>
-                        {{ isset($lead->phone) ? $lead->phone : '' }}
-                    </span>
-                </div>
-                <div class="">
-                    <small>{{ __('Contact Owner') }}</small>
-                    <span>
-
-                    </span>
-                </div>
-
-            </div>
-
-
-
             <div class="content my-2">
 
                 <div class="card">

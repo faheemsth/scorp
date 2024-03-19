@@ -82,7 +82,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
 
                         @can('create employee')
-                        <a href="#" data-size="lg" data-url="{{ route('user.employee.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Employee') }}" class="btn btn-dark d-flex justify-content-center align-items-center" style="color:white; width: 36px; height: 36px; margin-top: 10px;">
+                        <a href="{{ route('employee.create') }}" data-size="lg" data-url="{{ route('employee.create') }}" data-ajax-popup="false" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Employee')}}" class="btn btn-dark d-flex justify-content-center align-items-center" style="color:white; width: 36px; height: 36px; margin-top: 10px;">
                             <i class="ti ti-plus" style="font-size: 18px;"></i>
                         </a>
                         @endcan

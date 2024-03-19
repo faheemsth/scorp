@@ -129,7 +129,7 @@
                     <input type="hidden" name="deal-id" class="deal-id" value="{{ $deal->id }}">
 
                     <div class="lead-basic-info">
-                        <p class="pb-0 mb-0 fw-normal">{{ __('Deal') }}</p>
+                        <p class="pb-0 mb-0 fw-normal">{{ __('Admission') }}</p>
                         <div class="d-flex align-items-baseline ">
                             @if (strlen($deal->name) > 40)
                             <h4>{{ substr($deal->name, 0, 40) }}...</h4>

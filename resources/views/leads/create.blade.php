@@ -197,8 +197,8 @@
                                                 {{ __('User Responsible') }} <span
                                                 class="text-danger">*</span>
                                             </td>
-                                            <td class="" style="padding-left: 10px; font-size: 13px;" id="assign_to_div">
-                                                <select class="form-control select2" id="choice-2" name="lead_assgigned_user">
+                                            <td class="" style="padding-left: 10px; font-size: 13px;" id="assign_to_divs">
+                                                <select class="form-control select2" id="choice-222" name="lead_assgigned_user">
                                                     @foreach($employees as $key => $employee)
                                                     <option value="{{$key}}">{{$employee}}</option>
                                                     @endforeach
@@ -455,35 +455,11 @@
 
 {{Form::close()}}
 
+
 <script>
 
     $(".brand_id").on("change", function(){
-        // var id = $(this).val();
-
-        // $.ajax({
-        //     type: 'GET',
-        //     url: '{{ route('lead_companyemployees') }}',
-        //     data: {
-        //         id: id  // Add a key for the id parameter
-        //     },
-        //     success: function(data){
-        //         data = JSON.parse(data);
-
-        //         if (data.status === 'success') {
-        //             $("#assign_to_div").html(data.employees);
-        //             select2();
-        //             $("#branch_div").html(data.branches);
-        //             select2(); // Assuming this is a function to initialize or update a select2 dropdown
-        //         } else {
-        //             console.error('Server returned an error:', data.message);
-        //         }
-        //     },
-        //     error: function(xhr, status, error) {
-        //         console.error('AJAX request failed:', status, error);
-        //     }
-        // });
-
-
+        
         var id = $(this).val();
 
         $.ajax({
@@ -549,8 +525,8 @@
                 data = JSON.parse(data);
 
                 if (data.status === 'success') {
-                    $('#assign_to_div').html('');
-                    $("#assign_to_div").html(data.html);
+                    $('#assign_to_divs').html('');
+                    $("#assign_to_divs").html(data.html);
                     select2();
                 } else {
                     console.error('Server returned an error:', data.message);

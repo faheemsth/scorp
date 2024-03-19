@@ -136,8 +136,12 @@ class LeadController extends Controller
             $filters['branch_id'] = $_GET['branch_id'];
         }
 
-        if (isset($_GET['created_at']) && !empty($_GET['created_at'])) {
-            $filters['created_at'] = $_GET['created_at'];
+        if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
+            $filters['created_at_from'] = $_GET['created_at_from'];
+        }
+
+        if (isset($_GET['created_at_to']) && !empty($_GET['created_at_to'])) {
+            $filters['created_at_to'] = $_GET['created_at_to'];
         }
         return $filters;
     }
@@ -229,8 +233,11 @@ class LeadController extends Controller
                     case 'users':
                         $leads_query->whereIn('leads.user_id', $value);
                         break;
-                    case 'created_at':
-                        $leads_query->whereDate('leads.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                    case 'created_at_from':
+                        $leads_query->whereDate('leads.created_at', '>=', $value);
+                        break;
+                    case 'created_at_to':
+                        $leads_query->whereDate('leads.created_at', '<=', $value);
                         break;
                 }
             }
@@ -840,7 +847,7 @@ class LeadController extends Controller
                         'region_id' => 'required',
                         'lead_branch' => 'required',
                         'lead_assgigned_user' => 'required',
-                        'lead_email' => 'required',
+                        //'lead_email' => 'required',
                     ]
                 );
 
@@ -3828,6 +3835,29 @@ class LeadController extends Controller
         return json_encode([
             'status' => 'success',
             'html' => $html
+        ]);
+    }
+
+    public function addTags(Request $request){
+
+        // echo "<pre>";
+        // print_r($request->input());
+        // die();
+        $ids = explode(',', $request->selectedIds);
+
+        foreach($ids as $id){
+            $new_tag = new \App\Models\LeadTag();
+            $new_tag->lead_id = $id;
+            $new_tag->tag = $request->tags;
+            $new_tag->created_by = \Auth::user()->id;
+            $new_tag->created_at = date('Y-m-d h:i:s');
+            $new_tag->updated_at = date('Y-m-d h:i:s');
+            $new_tag->save();
+        }
+
+        return json_encode([
+            'status' => 'success',
+            'msg' => 'Tag added successfully'
         ]);
     }
 }

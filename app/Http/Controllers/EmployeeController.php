@@ -81,6 +81,8 @@ class EmployeeController extends Controller
             $branches         = Branch::get()->pluck('name', 'id');
             //$branches->prepend(__('Select Branch'), '');
 
+            $brands = FiltersBrands();
+
             $departments      = Department::get()->pluck('name', 'id');
             $departments->prepend(__('Select Department'), '');
 

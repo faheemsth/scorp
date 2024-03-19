@@ -299,7 +299,7 @@
                                                 <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-                                                <input type="email" class="form-control" name="lead_email"
+                                                <input type="email" class="form-control" disabled name="lead_email"
                                                     value="{{ $lead->email }}" required>
                                             </td>
                                         </tr>

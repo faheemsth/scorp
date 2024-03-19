@@ -1857,3 +1857,6 @@ Route::get('/filter-data', [LeadController::class, 'filterData'])->name('filterD
 
 Route::get('/filter-regions', [RegionController::class, 'filterRegions'])->name('my-filter-regions');
 Route::get('/filter-branches', [RegionController::class, 'filterBranches'])->name('my-filter-branches');
+
+//////////////////////////////////////////////////Add Tags to Leads
+Route::post('/leads/tag', [LeadController::class, 'addTags'])->name('lead_tags');
