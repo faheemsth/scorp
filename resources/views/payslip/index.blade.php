@@ -33,7 +33,7 @@
                         </div>
                     </div>
                     <div class="col-auto float-end ms-2 mt-4">
-                        <a href="#" class="btn  btn-primary"
+                        <a href="javascript:void(0)" class="btn  btn-primary"
                            onclick="document.getElementById('payslip_form').submit(); return false;"
                            data-bs-toggle="tooltip" title="{{ __('payslip') }}"
                            data-original-title="{{ __('payslip') }}">

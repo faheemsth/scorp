@@ -144,13 +144,13 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @if (\Auth::user()->can('edit deal'))
-                            @if (!empty($deal->phone))
-                                <a href="https://wa.me/{{ formatPhoneNumber($deal->phone) }}?text=Hello ! Dear {{ $deal->name }}"
-                                    target="_blank" data-size="lg" data-bs-toggle="tooltip"
-                                    data-bs-title="{{ __('Already Converted To Deal') }}" class="btn btn-dark text-white"
-                                    style="background-color: #313949">
-                                    <i class=""></i>
-                                </a>
+                            @if (!empty($lead->phone))
+                            <a href="https://wa.me/{{ formatPhoneNumber($lead->phone) }}?text=Hello ! Dear {{ $deal->name }}"
+                                target="_blank" data-size="lg" data-bs-toggle="tooltip"
+                                data-bs-title="{{ __('Contact on whatsapp') }}" class="btn btn-dark text-white"
+                                style="background-color: #313949">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a> 
                             @endif
                     @endif
                     @if (\Auth::user()->can('edit deal'))
@@ -373,7 +373,9 @@
                                                                 {{ $deal->intake_month }}
                                                             </td>
                                                         </tr>
+                                                        
 
+                                                        
                                                         <tr>
                                                             <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Intake Year') }}
@@ -564,6 +566,26 @@
 
                                                             </td>
                                                         </tr>
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Phone') }}
+                                                            </td>
+                                                            <td class="twitter-td" style="padding-left: 10px; font-size: 14px;">
+                                                                {{ $lead->phone }}
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Email') }}
+                                                            </td>
+                                                            <td class="twitter-td" style="padding-left: 10px; font-size: 14px;">
+                                                                {{ $lead->email }}
+                                                            </td>
+                                                        </tr>
+
+
                                                         <tr>
                                                             <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Admission Created') }}

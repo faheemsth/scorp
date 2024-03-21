@@ -482,7 +482,7 @@
                                                                                             <td>{{ !empty($deal->brand_id) ? (isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '') : '' }}</td>
                                                                                             <td>{{ isset($branch->name) ? $branch->name : '' }}</td>
                                                                                             <td>{{ isset($deal->assigned_to) && isset($organizations[$deal->assigned_to]) ? $organizations[$deal->assigned_to] : '' }}</td>
-                                                                                            <td>{{ $stages[$deal->stage_id] }}</td>
+                                                                                            <td><span class="badge bg-success-scorp"> {{ $stages[$deal->stage_id] }} </span></td>
                                                                                         </tr>
                                                                                     @empty
                                                                                     @endforelse
@@ -532,6 +532,7 @@
                                                                             $deal = \App\Models\Deal::where('id', $app->deal_id)->first();
                                                                             $users = \App\Models\User::pluck('name', 'id')->toArray();
                                                                             $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
+                                                                            $app_stage = \App\Models\ApplicationStage::pluck('name', 'id')->toArray();
                                                                         @endphp
                                                                         <tr>
                                                                             <td>{{ $universities[$app->university_id] ?? '' }}</td>
@@ -540,7 +541,7 @@
                                                                             <td> {{ isset($branch->name) ? $branch->name : ''  }} </td>
                                                                             <td> {{ $users[$deal->assigned_to] ?? '
                                                                                 '}} </td>
-                                                                            <td><span class="badge {{ $app->status != 'Approved' ? 'bg-warning-scorp' : 'bg-success-scorp' }}"> {{ $app->status }}</span></td>
+                                                                            <td><span class="badge bg-success-scorp"> {{ $app_stage[$app->status] ?? '' }}</span></td>
                                                                         </tr>
                                                                     @empty
                                                                 @endforelse

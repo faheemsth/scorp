@@ -455,7 +455,7 @@ class LeadController extends Controller
                     'lead_branch' => 'required',
                     'lead_assgigned_user' => 'required',
                     'lead_phone' => 'required',
-                    'lead_email' => 'required|unique:leads,email',
+                    //'lead_email' => 'required|unique:leads,email',
                 ]
             );
 
@@ -464,6 +464,15 @@ class LeadController extends Controller
                 return json_encode([
                     'status' => 'error',
                     'message' => $messages->first()
+                ]);
+            }
+
+            $is_exist = Lead::where('email', $request->lead_email)->where('brand_id', $request->brand_id)->first();
+
+            if($is_exist){
+                return json_encode([
+                    'status' => 'error',
+                    'message' => 'Email already exist in the same brand.'
                 ]);
             }
 
@@ -847,7 +856,7 @@ class LeadController extends Controller
                         'region_id' => 'required',
                         'lead_branch' => 'required',
                         'lead_assgigned_user' => 'required',
-                        //'lead_email' => 'required',
+                        'lead_email' => 'required',
                     ]
                 );
 
@@ -865,7 +874,7 @@ class LeadController extends Controller
 
                 $lead->title       = $request->lead_prefix;
                 $lead->name        = $request->lead_first_name . ' ' . $request->lead_last_name;
-                // $lead->email       = $request->lead_email;
+                $lead->email       = $request->lead_email;
                 $lead->phone       = $request->lead_phone;
                 $lead->mobile_phone = $request->lead_mobile_phone;
 
@@ -2478,6 +2487,7 @@ class LeadController extends Controller
     public function convertToDeal($id, Request $request)
     {
 
+        
         $validator = \Validator::make(
             $request->all(),
             [
@@ -2498,6 +2508,7 @@ class LeadController extends Controller
         $usr  = \Auth::user();
         $client = User::where('passport_number', $request->client_passport)->first();
 
+        
         if ($client) {
         } else {
 
@@ -2543,69 +2554,6 @@ class LeadController extends Controller
                 'password' => $request->client_password,
             ];
         }
-        // if ($request->client_check == 'exist') {
-        //     $validator = \Validator::make(
-        //         $request->all(),
-        //         [
-        //             'clients' => 'required',
-        //         ]
-        //     );
-
-        //     if ($validator->fails()) {
-        //         $messages = $validator->getMessageBag();
-
-        //         return redirect()->back()->with('error', $messages->first());
-        //     }
-
-        //     $client = User::where('type', '=', 'client')->where('email', '=', $request->clients)->where('created_by', '=', $usr->creatorId())->first();
-
-        //     if (empty($client)) {
-        //         return redirect()->back()->with('error', 'Client is not available now.');
-        //     }
-        // } else {
-        //     // $validator = \Validator::make(
-        //     //     $request->all(),
-        //     //     [
-        //     //         'client_name' => 'required',
-        //     //         'client_email' => 'required|email|unique:users,email',
-        //     //         'client_password' => 'required',
-        //     //         'client_passport' => 'required|unique:users,passport_number'
-        //     //     ]
-        //     // );
-
-        //     // if ($validator->fails()) {
-        //     //     $messages = $validator->getMessageBag();
-
-        //     //     return redirect()->back()->with('error', $messages->first());
-        //     // }
-
-        //     // $role   = Role::findByName('client');
-        //     // $client = User::create(
-        //     //     [
-        //     //         'name' => $request->client_name,
-        //     //         'email' => $request->client_email,
-        //     //         'password' => \Hash::make($request->client_password),
-        //     //         'brand_id' => $lead->brand_id,
-        //     //         'branch_id' => $lead->branch_id,
-        //     //         'type' => 'client',
-        //     //         'lang' => 'en',
-        //     //         'created_by' => $usr->creatorId(),
-        //     //     ]
-        //     // );
-
-        //     // $client->passport_number =  $request->client_passport;
-        //     // $client->save();
-
-        //     // $client->assignRole($role);
-
-        //     // $cArr = [
-        //     //     'email' => $request->client_email,
-        //     //     'password' => $request->client_password,
-        //     // ];
-
-        //     // Send Email to client if they are new created.
-        //     //Utility::sendEmailTemplate('New User', [$client->id => $client->email], $cArr);
-        // }
 
         // Create Deal
         $stage = Stage::where('pipeline_id', $lead->pipeline_id)

@@ -310,7 +310,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                 $(".list-div").html('Loading...');
                 $.ajax({
                     type: 'GET',
-                    url: "{{ route('user.employees') }}",
+                    url: "{{ route('employee.index') }}",
                     data: {
                         search,
                         ajaxCall

@@ -298,6 +298,74 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="panelsStayOpen-headingcust">
+                                <button class="accordion-button p-2" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#panelsStayOpen-collapsecust">
+                                    {{ __('STUDENT INFORMATION') }}
+                                </button>
+                            </h2>
+                            <div id="panelsStayOpen-collapsecust" class="accordion-collapse collapse show"
+                                aria-labelledby="panelsStayOpen-headingcust">
+                                <div class="accordion-body">
+                                    <!-- Accordion Content -->
+                                    <div class="mt-1" style="margin-left: 10px; width: 65%;">
+        
+                                        <table class="w-100">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="width: 150px;  font-size: 13px;">
+                                                        {{ __('Email Address') }}
+                                                        <span class="text-danger">*</span>
+                                                    </td>
+                                                    <td class="" style="padding-left: 10px; font-size: 13px;">
+                                                        <input type="email" class="form-control" name="lead_email"
+                                                            value="{{ $lead->email }}" required>
+                                                    </td>
+                                                </tr>
+    
+        
+                                                <tr>
+                                                    <td style="width: 150px;  font-size: 13px;">
+                                                        {{ __('Mobile Phone') }}
+                                                        <span class="text-danger">*</span>
+                                                    </td>
+                                                    <td class="" style="padding-left: 10px; font-size: 13px;">
+                                                        <input type="text" class="form-control" name="lead_phone"
+                                                            value="{{ $lead->phone }}" required>
+                                                    </td>
+                                                </tr>
+        
+                                                <tr class="d-none">
+                                                    <td class="" style="width: 100px; font-size: 13px;">
+                                                        {{ __('Mobile Phone') }}
+                                                    </td>
+                                                    <td class="" style="padding-left: 10px; font-size: 13px;">
+                                                        <input type="text" class="form-control" name="lead_mobile_phone"
+                                                            value="{{ $lead->mobile_phone }}">
+        
+                                                    </td>
+                                                </tr>
+        
+                                                <tr class="d-none">
+                                                    <td class="" style="width: 100px; font-size: 13px;">
+                                                        {{ __('Email Opted Out') }}
+                                                    </td>
+                                                    <td class="" style="padding-left: 10px; font-size: 13px;">
+                                                        <input type="checkbox" name="" id="" class="ms-2">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+        
+        
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="panelsStayOpen-headingkeynote">
                                 <button class="accordion-button p-2" type="button"

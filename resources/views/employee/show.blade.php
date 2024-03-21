@@ -14,27 +14,24 @@
                         <h5 class="fw-bold">{{ $employee->name }}</h5>
                     </div>
                 </div>
-                <div class="d-flex gap-1 me-3">
+                
+                <div class="d-flex gap-1 me-3 align-items-center">
                     @can('edit employee')
-                    <a href="{{ route('user.employee.edit', $employee->id) }}" class="btn btn-dark text-white" style="width: 36px; height: 36px; margin-top: 10px;" data-bs-original-title="{{__('Edit Employee')}}" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
+                    <a href="{{ route('employee.edit', $employee->id) }}" class="btn btn-dark text-white d-flex justify-content-center align-items-center" style="width: 36px; height: 36px; margin-top: 10px;" data-bs-original-title="{{__('Edit Employee')}}" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
                         <i class="ti ti-pencil" style="font-size: 18px;"></i>
                     </a>
                     @endcan
-
+                
                     @can('delete employee')
-                    {!! Form::open(['method' => 'DELETE', 'class' => 'mb-0', 'route' => ['users.destroy', $employee->id], 'id' => 'delete-form-'.$employee->id]) !!}
-                    <button type="submit" class="btn btn-danger text-white bs-pass-para" style="width: 36px; height: 36px; margin-top: 10px;" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
+                    {!! Form::open(['method' => 'DELETE', 'class' => 'mb-0', 'route' => ['employee.destroy', $employee->id], 'id' => 'delete-form-'.$employee->id]) !!}
+                    <button type="submit" class="btn btn-danger text-white bs-pass-para d-flex justify-content-center align-items-center" style="width: 36px; height: 36px; margin-top: 10px;" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
                         <i class="ti ti-archive" style="font-size: 18px;"></i>
                     </button>
                     {!! Form::close() !!}
                     @endcan
-
-                    @can('password reset employee')
-                    <a href="{{ route('users.reset', \Crypt::encrypt($employee->id)) }}" class="btn btn-dark text-white" style="width: 36px; height: 36px; margin-top: 10px;" data-bs-original-title="{{__('Reset Password')}}" data-bs-toggle="tooltip" title="{{ __('Password Reset') }}">
-                        <i class="ti ti-adjustments" style="font-size: 18px;"></i>
-                    </a>
-                    @endcan
+            
                 </div>
+                
             </div>
             <!-- Topbar End -->
 
@@ -172,9 +169,25 @@
                                             <div class="table-responsive mt-1">
                                                 <table>
                                                     <tbody>
+                                                        @php
+                                                            $employeedoc = !empty($employee)?$employee->documents()->pluck('document_value',__('document_id')):[];
+                                                        @endphp
+
+                                                        @if(!$documents->isEmpty())
+                                                        @foreach($documents as $key=>$document)
+                                                            
                                                         <tr>
-                                                            <td colspan="2" style="font-size: 14px;">{{ __('No Document Available!!!') }}</td>
+                                                            <td style="font-size: 14px;">{{$document->name }}</td>
+                                                            <td style="padding-left: 10px; font-size: 14px;">
+                                                                <a href="{{ (!empty($employeedoc[$document->id])?asset(Storage::url('uploads/document')).'/'.$employeedoc[$document->id]:'') }}" target="_blank">{{ (!empty($employeedoc[$document->id])?$employeedoc[$document->id]:'') }}</a>
+                                                            </td>
                                                         </tr>
+                                                        @endforeach
+                                                        @else
+                                                        <tr>
+                                                            <td colspan="2"> No Document Found !!!</td>
+                                                        </tr>
+                                                        @endif
                                                     </tbody>
                                                 </table>
                                             </div>

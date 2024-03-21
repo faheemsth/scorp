@@ -70,29 +70,33 @@ class ClientController extends Controller
 
 
            // $clients = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'client')->skip($start)->take($num_results_on_page)->get();
-
-            $client_query = User::select(['users.*'])->join('client_deals', 'client_deals.client_id', 'users.id')->join('deals', 'deals.id', 'client_deals.deal_id');
-
+            $client_query = User::select('users.*')->where('users.type', 'client');
             if (!empty($_GET['name'])) {
                 $client_query->where('users.name', 'like', '%' . $_GET['name'] . '%');
             }
-
+            
             if (!empty($_GET['email'])) {
                 $client_query->where('users.email', 'like', '%' . $_GET['email'] . '%');
             }
-
-            // $companies = FiltersBrands();
-            // $brand_ids = array_keys($companies);
-            // $client_query->whereIn('deals.brand_id', $brand_ids);
+            
             if (isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
-                $client_query->where('users.name', 'like',  '%' . $g_search . '%');
-                $client_query->orwhere('users.passport_number', 'like',  '%' . $g_search . '%');
+                $client_query->where(function ($query) use ($g_search) {
+                    $query->where('users.name', 'like', '%' . $g_search . '%')
+                          ->orWhere('users.passport_number', 'like', '%' . $g_search . '%');
+                });
             }
 
-            $client_query->groupBy('users.id');
-            $total_records = count($client_query->get());
-            $clients = $client_query->orderBy('created_at', 'DESC')->skip($start)->take($num_results_on_page)->get();
+
+        $total_records = $client_query->count();
+       
+         // Paginate the results
+        $clients = $client_query
+            ->orderBy('users.created_at', 'DESC')
+            ->skip($start)
+            ->take($num_results_on_page)
+            ->get();
+       
 
             // $clients = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'client')->skip($start)->take($num_results_on_page)->get();
 

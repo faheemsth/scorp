@@ -859,12 +859,10 @@ class UserController extends Controller
             $user['default_pipeline'] = 1;
             $user['plan'] = 1;
             $user['lang']       = !empty($default_language) ? $default_language->value : '';
-
             $user['created_by'] = $request->companies;
             $user['plan']       = Plan::first()->id;
             $user['date_of_birth'] = $request->dob;
             $user['phone'] = $request->phone;
-
             $user->save();
 
 

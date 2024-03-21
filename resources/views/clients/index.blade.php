@@ -278,7 +278,7 @@ $(document).on('change', '.sub-check', function() {
 
                                 </td>
                                 <td class="d-none">{{$client->email}}</td>
-                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{$client->clientDeals->count()}}</td>
+                                <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{$client->clientDeals->count();}}</td>
                                 <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{$client->clientApplications($client->id)}}</td>
                                
                             </tr>

@@ -36,6 +36,7 @@ use App\Models\DealApplication;
 use App\Models\ApplicationStage;
 use App\Models\ClientPermission;
 use App\Models\CompanyPermission;
+use App\Models\Lead;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -889,7 +890,8 @@ class DealController extends Controller
                 $branches = $filter['branches'];
                 $users = $filter['employees'];
 
-                return view('deals.edit', compact('deal', 'clients', 'contacts', 'months', 'years', 'companies', 'universities', 'branches', 'pipelines', 'stages', 'users', 'organizations'));
+                $lead = Lead::where('is_converted', $deal->id)->first();
+                return view('deals.edit', compact('deal', 'clients', 'contacts', 'months', 'years', 'companies', 'universities', 'branches', 'pipelines', 'stages', 'users', 'organizations', 'lead'));
             } else {
                 return response()->json(['error' => __('Permission Denied.')], 401);
             }
@@ -933,10 +935,12 @@ class DealController extends Controller
                     $messages = $validator->getMessageBag();
 
                     return json_encode([
-                        'status' => 'success',
+                        'status' => 'error',
                         'message' => $messages->first()
                     ]);
                 }
+
+
 
                 $usr = \Auth::user();
                 $deal->name  = $request->name;
@@ -960,6 +964,18 @@ class DealController extends Controller
                 $deal->save();
 
 
+                $lead = Lead::where('is_converted', $id)->first();
+
+                if(!empty($request->lead_email)){
+                    $lead->email = $request->lead_email;
+                }
+
+                if(!empty($request->lead_phone)){
+                    $lead->phone = $request->lead_phone;
+                }
+
+                $lead->save();
+                
                 //send email
                 // $clients = User::whereIN('id', array_filter($request->input('contact')))->get()->pluck('email', 'id')->toArray();
 
@@ -3209,8 +3225,10 @@ class DealController extends Controller
 
              //Getting lead stages history
              $stage_histories = StageHistory::where('type', 'deal')->where('type_id', $deal->id)->pluck('stage_id')->toArray();
+            
+             $lead = Lead::where('is_converted', $deal->id)->first();
 
-            $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories'))->render();
+            $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories', 'lead'))->render();
 
             return json_encode([
                 'status' => 'success',

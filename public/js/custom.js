@@ -145,6 +145,20 @@ function select2() {
     }
 }
 
+function initSelect2() {
+    if ($("select.select2").length > 0) {
+        $("select.select2").each(function (index, element) {
+            var id = $(element).attr('id');
+            var multipleCancelButton = new Choices(
+                '#' + id, {
+                    removeItemButton: true,
+                }
+            );
+        });
+    }
+}
+
+
 
 function arrayToJson(form) {
     var data = $(form).serializeArray();
@@ -280,7 +294,8 @@ function summernote() {
 
 
 
-$(document).on("click", '.bs-pass-para', function () {
+$(document).on("click", '.bs-pass-para', function (e) {
+    e.preventDefault();
     var form = $(this).closest("form");
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -311,7 +326,6 @@ $(document).on("click", '.bs-pass-para', function () {
 
 //only pos system delete button
 $(document).on("click", '.bs-pass-para-pos', function () {
-
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',

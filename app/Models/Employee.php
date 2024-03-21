@@ -17,8 +17,8 @@ class Employee extends Model
         'password',
         'employee_id',
         'branch_id',
-        'department_id',
-        'designation_id',
+        //'department_id',
+        //'designation_id',
         'company_doj',
         'documents',
         'account_holder_name',
@@ -27,8 +27,8 @@ class Employee extends Model
         'bank_identifier_code',
         'branch_location',
         'tax_payer_id',
-        'salary_type',
-        'salary',
+       // 'salary_type',
+        //'salary',
         'created_by',
     ];
 

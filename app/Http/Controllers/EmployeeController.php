@@ -26,6 +26,9 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Models\ExperienceCertificate;
 use Illuminate\Support\Facades\Crypt;
 use App\Exports\DownloadEmployeeSample;
+use App\Models\Region;
+use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 
 //use Faker\Provider\File;
 
@@ -38,59 +41,112 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-
-        if (\Auth::user()->can('manage employee')) {
-            $pagination = getPaginationDetail();
-            $start = $pagination['start'];
-            $limit = $pagination['num_results_on_page'];
-
-            $employee_query = Employee::query()->join('users as u', 'employees.user_id', '=', 'u.id');
-
-            if (\Auth::user()->type == 'company') {
-                $employee_query->whereIn('u.brand_id', \Auth::user()->id);
-            } elseif (\Auth::user()->can('level 1')) {
-                // No filtering needed for level 1 users
-            } elseif (\Auth::user()->can('level 2')) {
-                $companies = FiltersBrands();
-                $brand_ids = array_keys($companies);
-                $employee_query->whereIn('u.brand_id', $brand_ids);
-            } elseif (\Auth::user()->can('level 3')) {
-                $employee_query->whereIn('u.region_id', \Auth::user()->region_id);
-            } elseif (\Auth::user()->can('level 4')) {
-                $employee_query->whereIn('u.branch_id', \Auth::user()->branch_id);
-            } else {
-                $employee_query->whereIn('u.id', \Auth::user()->id);
-            }
-
-            $total_records = $employee_query->count();
-            $employees = $employee_query->skip($start)->take($limit)->get();
-            $filters = BrandsRegionsBranches();
-            $userRegionBranch = UserRegionBranch();
-
-            return view('employee.index', compact('employees', 'total_records', 'filters', 'userRegionBranch'));
-        } else {
+        // Check if user has permission to manage employees
+        if (!\Auth::user()->can('manage employee')) {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
+
+        // Get pagination details
+        $pagination = getPaginationDetail();
+        $start = $pagination['start'];
+        $limit = $pagination['num_results_on_page'];
+
+        // Initialize the query
+        $usersQuery = User::select(['users.*'])
+            ->whereNotIn('type', ['super admin', 'company', 'team', 'client']);
+
+        // Apply filters
+        $request = request();
+        if ($request->filled('brand')) {
+            $usersQuery->where('brand_id', $request->brand);
+        }
+        if ($request->filled('region_id')) {
+            $usersQuery->where('region_id', $request->region_id);
+        }
+        if ($request->filled('branch_id')) {
+            $usersQuery->where('branch_id', $request->branch_id);
+        }
+        if ($request->filled('Name')) {
+            $usersQuery->where('name', 'like', '%' . $request->Name . '%');
+        }
+        if ($request->filled('Designation')) {
+            $usersQuery->where('type', 'like', '%' . $request->Designation . '%');
+        }
+        if ($request->filled('phone')) {
+            $usersQuery->where('phone', 'like', '%' . $request->phone . '%');
+        }
+
+        // Apply search filter if provided
+        if ($request->filled('search')) {
+            $g_search = $request->search;
+            $usersQuery->where(function ($query) use ($g_search) {
+                $query->where('name', 'like', '%' . $g_search . '%')
+                    ->orWhere('email', 'like', '%' . $g_search . '%')
+                    ->orWhere('type', 'like', '%' . $g_search . '%')
+                    ->orWhere('phone', 'like', '%' . $g_search . '%')
+                    ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%')
+                    ->orWhere(DB::raw('(SELECT name FROM users b WHERE b.id = users.brand_id)'), 'like', '%' . $g_search . '%')
+                    ->orWhere(DB::raw('(SELECT name FROM branches br WHERE br.id = users.branch_id)'), 'like', '%' . $g_search . '%'); 
+            });
+        }
+
+        // Count total records
+        $total_records = $usersQuery->count();
+        // Fetch employees with pagination
+        $employees = $usersQuery->skip($start)
+            ->take($limit)
+            ->orderBy('name', 'ASC')
+            ->paginate($limit);
+
+        // Prepare data for view
+        $data = [
+            'employees' => $employees,
+            'total_records' => $total_records,
+            'filters' => BrandsRegionsBranches(),
+            'userRegionBranch' => UserRegionBranch()
+        ];
+
+        // Render view or return JSON for AJAX request
+        if ($request->filled('ajaxCall') && $request->ajaxCall == 'true') {
+            $html = view('employee.employeeAjax', $data)->render();
+            $pagination_html = view('layouts.pagination', [
+                'total_pages' => $total_records,
+                'num_results_on_page' =>  $limit // You need to define $num_results_on_page
+            ])->render();
+            return json_encode([
+                'status' => 'success',
+                'html' => $html,
+                'pagination_html' => $pagination_html
+            ]);
+        } else {
+            return view('employee.index', $data);
+        }
     }
+
 
     public function create()
     {
         if (\Auth::user()->can('create employee')) {
             $company_settings = Utility::settings();
-            $documents        = Document::where('created_by', \Auth::user()->creatorId())->get();
-            $branches         = Branch::get()->pluck('name', 'id');
+            $documents        = Document::get();
+            //$branches         = Branch::get()->pluck('name', 'id');
             //$branches->prepend(__('Select Branch'), '');
 
-            $brands = FiltersBrands();
+            $brands = collect(FiltersBrands());
+            $brands->prepend(__('Select Brand'), '');
 
-            $departments      = Department::get()->pluck('name', 'id');
-            $departments->prepend(__('Select Department'), '');
 
-            $designations     = Designation::get()->pluck('name', 'id');
+            $regions = [];
+            $branches = [];
+
+            $roles = collect(Role::whereNotIn('name', ['super admin', 'company', 'client'])->pluck('name', 'name')->toArray());
+            $roles->prepend(__('Select Role'), '');
+
+            //$designations     = Designation::get()->pluck('name', 'id');
             $employees        = User::where('created_by', \Auth::user()->creatorId())->get();
             $employeesId      = \Auth::user()->employeeIdFormat($this->employeeNumber());
 
-            return view('employee.create', compact('employees', 'employeesId', 'departments', 'designations', 'documents', 'branches', 'company_settings'));
+            return view('employee.create', compact('employees', 'employeesId', 'documents', 'company_settings', 'brands', 'regions', 'branches', 'roles'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -99,7 +155,9 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
 
-
+        // echo "<pre>";
+        // print_r($request->input());
+        // die();
         if (\Auth::user()->can('create employee')) {
             $validator = \Validator::make(
                 $request->all(),
@@ -111,50 +169,60 @@ class EmployeeController extends Controller
                     'address' => 'required',
                     'email' => 'required|unique:users',
                     'password' => 'required',
-                    'department_id' => 'required',
-                    'designation_id' => 'required',
+                    //'department_id' => 'required',
+                    //'designation_id' => 'required',
                     //                                   'document.*' => 'mimes:jpeg,png,jpg,gif,svg,pdf,doc,zip|max:20480',
                 ]
             );
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
-
                 return redirect()->back()->withInput()->with('error', $messages->first());
             }
 
-            $objUser        = User::find(\Auth::user()->id);
-            //$total_employee = $objUser->countEmployees();
-            $total_employee = Employee::where(['created_by' => \Auth::user()->id])->count();
-            $plan           = Plan::find($objUser->plan);
-
-            // if($total_employee < $plan->max_employees || $plan->max_employees == -1)
-            // {
-            $user = User::create(
-                [
-                    'name' => $request['name'],
-                    'email' => $request['email'],
-                    // 'gender'=>$request['gender'],
-                    'password' => Hash::make($request['password']),
-                    'type' => 'employee',
-                    'lang' => 'en',
-                    'created_by' => \Auth::user()->id,
-                ]
-            );
+            $user               = new User();
+            $user['name']       = $request->name;
+            $user['email']      = $request->email;
+            $psw                = 'study1234';
+            $user['password']   = Hash::make($psw);
+            $user['type']       =  $request->role;
+            $user['branch_id'] = $request->branch_id;
+            $user['region_id'] = $request->region_id;
+            $user['brand_id'] = $request->brand_id;
+            $user['default_pipeline'] = 1;
+            $user['plan'] = 1;
+            $user['lang']       = !empty($default_language) ? $default_language->value : '';
+            $user['created_by'] = \Auth::user()->id;
+            $user['plan']       = Plan::first()->id;
+            $user['date_of_birth'] = $request->dob;
+            $user['phone'] = $request->phone;
             $user->save();
-            $user->assignRole('Employee');
-            // }
-            // else
-            // {
-            //     return redirect()->back()->with('error', __('Your employee limit is over, Please upgrade plan.'));
-            // }
 
+            $role_r = Role::findByName($request->role);
+
+            if ($request->role == 'Project Director') {
+                User::where('id', $request->brand_id)->update([
+                    'project_director_id' => $user->id
+                ]);
+            } else if ($request->role == 'Project Manager') {
+                User::where('id', $request->brand_id)->update([
+                    'project_manager_id' => $user->id
+                ]);
+            } else if ($request->role == 'Region Manager') {
+                Region::where('id', $request->region_id)->update([
+                    'region_manager_id' => $user->id
+                ]);
+            } else if ($request->role == 'Branch Manager') {
+                Branch::where('id', $request->branch_id)->update([
+                    'branch_manager_id' => $user->id
+                ]);
+            }
+            $user->assignRole($role_r);
 
             if (!empty($request->document) && !is_null($request->document)) {
                 $document_implode = implode(',', array_keys($request->document));
             } else {
                 $document_implode = null;
             }
-
 
             $employee = Employee::create(
                 [
@@ -165,11 +233,11 @@ class EmployeeController extends Controller
                     'phone' => $request['phone'],
                     'address' => $request['address'],
                     'email' => $request['email'],
-                    'password' => Hash::make($request['password']),
+                    'password' => Hash::make($psw),
                     'employee_id' => $this->employeeNumber(),
                     'branch_id' => $request['branch_id'],
-                    'department_id' => $request['department_id'],
-                    'designation_id' => $request['designation_id'],
+                    // 'department_id' => $request['department_id'],
+                    //'designation_id' => $request['designation_id'],
                     'company_doj' => $request['company_doj'],
                     'documents' => $document_implode,
                     'account_holder_name' => $request['account_holder_name'],
@@ -232,21 +300,31 @@ class EmployeeController extends Controller
 
     public function edit($id)
     {
-        $id = Crypt::decrypt($id);
+
+        //$id = Crypt::decrypt($id);
         if (\Auth::user()->can('edit employee')) {
-            $documents    = Document::where('created_by', \Auth::user()->creatorId())->get();
-            $branches     = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $branches->prepend('Select Branch', '');
-            $departments  = Department::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $designations = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $employee     = Employee::find($id);
-            //            $employeesId  = \Auth::user()->employeeIdFormat($employee->employee_id);
+            $documents        = Document::get();
+            $brands = collect(FiltersBrands());
+            $brands->prepend(__('Select Brand'), '');
+
+
+            $regions = [];
+            $branches = [];
+
+
+            $roles = collect(Role::whereNotIn('name', ['super admin', 'company', 'client'])->pluck('name', 'name')->toArray());
+            $roles->prepend(__('Select Role'), '');
+            $employee = Employee::select(['employees.*', 'u.brand_id', 'u.region_id', 'u.branch_id', 'u.type'])->join('users as u', 'u.id', '=', 'employees.user_id')->where('u.id', $id)->first();
             $employeesId  = \Auth::user()->employeeIdFormat(!empty($employee) ? $employee->employee_id : '');
 
-            $departmentData  = Department::where('created_by', \Auth::user()->creatorId())->where('branch_id', $employee->branch_id)->get()->pluck('name', 'id');
+            if(!empty($employee->region_id)){
+                $regions = Region::where('id', $employee->region_id)->pluck('name', 'id')->toArray();
+            }
 
-
-            return view('employee.edit', compact('employee', 'employeesId', 'branches', 'departments', 'designations', 'documents', 'departmentData'));
+            if(!empty($employee->branch_id)){
+                $branches = Branch::where('id', $employee->branch_id)->pluck('name', 'id')->toArray();
+            }
+            return view('employee.edit', compact('employee', 'employeesId', 'documents', 'brands', 'regions', 'branches', 'roles'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -273,7 +351,50 @@ class EmployeeController extends Controller
                 return redirect()->back()->with('error', $messages->first());
             }
 
+
+
             $employee = Employee::findOrFail($id);
+
+            $user               = User::findOrFail($employee->user_id);
+            $user['name']       = $request->name;
+            $user['email']      = $request->email;
+            $user['type']       =  $request->role;
+            $user['branch_id'] = $request->branch_id;
+            $user['region_id'] = $request->region_id;
+            $user['brand_id'] = $request->brand_id;
+            $user['date_of_birth'] = $request->dob;
+            $user['phone'] = $request->phone;
+            $user->save();
+
+            $role_r = Role::findByName($request->role);
+
+            //IF Role is Project Director ya Project Manager
+            // IF Role is Region Manager or Branch Manager
+            if ($request->role == 'Project Director') {
+                User::where('id', $request->brand_id)->update([
+                    'project_director_id' => $user->id
+                ]);
+            } else if ($request->role == 'Project Manager') {
+                User::where('id', $request->brand_id)->update([
+                    'project_manager_id' => $user->id
+                ]);
+            } else if ($request->role == 'Region Manager') {
+                Region::where('id', $request->region_id)->update([
+                    'region_manager_id' => $user->id
+                ]);
+            } else if ($request->role == 'Branch Manager') {
+                Branch::where('id', $request->branch_id)->update([
+                    'branch_manager_id' => $user->id
+                ]);
+            }
+
+
+            $user->assignRole($role_r);
+
+
+
+
+            
 
             if ($request->document) {
                 foreach ($request->document as $key => $document) {
@@ -321,25 +442,7 @@ class EmployeeController extends Controller
                     }
                 }
             }
-            $employee = Employee::findOrFail($id);
-            $input    = $request->all();
-            $employee->fill($input)->save();
-            $employee = Employee::find($id);
-            $user = User::where('id', $employee->user_id)->first();
-            if (!empty($user)) {
-                $user->name = $employee->name;
-                $user->email = $employee->email;
-                $user->save();
-            }
-            if ($request->salary) {
-                return redirect()->route('setsalary.index')->with('success', 'Employee successfully updated.');
-            }
-
-            if (\Auth::user()->type != 'employee') {
-                return redirect()->route('employee.index')->with('success', 'Employee successfully updated.');
-            } else {
-                return redirect()->route('employee.show', \Illuminate\Support\Facades\Crypt::encrypt($employee->id))->with('success', 'Employee successfully updated.');
-            }
+            return redirect()->route('employee.index')->with('success', 'Employee successfully updated.');
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -347,21 +450,22 @@ class EmployeeController extends Controller
 
     public function destroy($id)
     {
-
-        if (Auth::user()->can('delete employee')) {
-            $employee      = Employee::findOrFail($id);
-            $user          = User::where('id', '=', $employee->user_id)->first();
+        if (Auth::user()->can('delete employee') || Auth::user()->type == 'super admin') {
+          
+            $user          = User::where('id', '=', $id)->first();
+            $employee      = Employee::where('user_id', $user->id)->first();
             $emp_documents = EmployeeDocument::where('employee_id', $employee->employee_id)->get();
             $employee->delete();
             $user->delete();
             $dir = storage_path('uploads/document/');
+            
             foreach ($emp_documents as $emp_document) {
                 $emp_document->delete();
-                if (!empty($emp_document->document_value)) {
+                if (!empty($emp_document->document_value) && file_exists($dir . $emp_document->document_value)) {
                     unlink($dir . $emp_document->document_value);
                 }
             }
-
+            
             return redirect()->route('employee.index')->with('success', 'Employee successfully deleted.');
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -528,13 +632,12 @@ class EmployeeController extends Controller
                 'status' => 'success',
                 'html' => $html
             ]);
-       
         } else {
             return json_encode([
                 'status' => 'error',
                 'msg' => 'Permissioned denied.'
             ]);
-            
+
             //return redirect()->back()->with('error', __('Permission denied.'));
         }
     }

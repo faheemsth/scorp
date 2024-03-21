@@ -23,11 +23,7 @@ class PaySlipController extends Controller
     {
         if(\Auth::user()->can('manage pay slip') || \Auth::user()->type != 'client' || \Auth::user()->type != 'company')
         {
-            $employees = Employee::where(
-                [
-                    'created_by' => \Auth::user()->creatorId(),
-                ]
-            )->first();
+            $employees = Employee::get();
 
             $month = [
                 '01' => 'JAN',
@@ -80,7 +76,6 @@ class PaySlipController extends Controller
 
                            ]
         );
-
         if($validator->fails())
         {
             $messages = $validator->getMessageBag();
@@ -95,17 +90,16 @@ class PaySlipController extends Controller
         $formate_month_year = $year . '-' . $month;
         $validatePaysilp    = PaySlip::where('salary_month', '=', $formate_month_year)->where('created_by', \Auth::user()->creatorId())->pluck('employee_id');
         $payslip_employee   = Employee::where('created_by', \Auth::user()->creatorId())->where('company_doj', '<=', date($year . '-' . $month . '-t'))->count();
-        if($payslip_employee > count($validatePaysilp))
+        
+        if($payslip_employee >= count($validatePaysilp))
         {
             $employees = Employee::where('created_by', \Auth::user()->creatorId())->where('company_doj', '<=', date($year . '-' . $month . '-t'))->whereNotIn('employee_id', $validatePaysilp)->get();
-
+            $employees = Employee::whereNotNull('salary')->whereNotNull('salary_type')->get();
             $employeesSalary = Employee::where('created_by', \Auth::user()->creatorId())->where('salary', '<=', 0)->first();
-
             if(!empty($employeesSalary))
             {
                 return redirect()->route('payslip.index')->with('error', __('Please set employee salary.'));
             }
-
             foreach($employees as $employee)
             {
 

@@ -588,6 +588,21 @@
                                     </select>
                                 </div>
 
+
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Created at From</label>
+                                    <input type="date" class="form form-control" name="created_at_from"
+                                        value="<?= isset($_GET['created_at_from']) ? $_GET['created_at_from'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
+                                </div>
+
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Created at To</label>
+                                    <input type="date" class="form form-control" name="created_at_to"
+                                        value="<?= isset($_GET['created_at_to']) ? $_GET['created_at_to'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
+                                </div>
+
                                 <div class="col-md-4 mt-3">
                                     <br>
                                     <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
