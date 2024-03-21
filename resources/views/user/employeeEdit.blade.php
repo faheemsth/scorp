@@ -153,7 +153,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         {{ Form::label('phone', __('Phone'), ['class' => 'form-label']) }}
-                        {{ Form::text('phone', $user->phone, ['class' => 'form-control', 'required' => 'required']) }}
+                        {{ Form::text('phone', $user->phone, ['class' => 'form-control' , 'id' => 'phone', 'required' => 'required']) }}
                         @error('phone')
                             <small class="invalid-phone" role="alert">
                                 <strong class="text-danger">{{ $phone }}</strong>
@@ -340,7 +340,7 @@
               data = JSON.parse(response);
 
               if(data.status == 'success'){
-                show_toastr('Success', data.msg, 'success');
+                show_toastr('success', data.msg, 'success');
                   $('#commonModal').modal('hide');
                   $(".modal-backdrop").removeClass("modal-backdrop");
                   $(".block-screen").css('display', 'none');
@@ -348,7 +348,7 @@
                   openSidebar('/user/employee/'+data.id+'/show');
               }else{
                 $(".update-employee").text('Updating...').prop("disabled", true);
-                show_toastr('Error', data.msg, 'error');
+                show_toastr('error', data.msg, 'error');
               }
 
             },
@@ -361,3 +361,15 @@
 
 </script>
 
+<script>
+    // Use the input variable in the rest of your code
+    window.intlTelInput(document.getElementById('phone'), {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+        initialCountry: "pk",
+        separateDialCode: true,
+        formatOnDisplay: true,
+        hiddenInput: "full_number",
+        //placeholderNumberType: "FIXED_LINE",
+       // preferredCountries: ["us", "gb"]
+    });
+</script>

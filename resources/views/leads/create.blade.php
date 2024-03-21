@@ -300,7 +300,7 @@
                                                 {{ __('Mobile Phone') }} <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-                                                <input type="text" class="form-control" name="lead_phone" required>
+                                                <input type="text" class="form-control" id="phone" name="lead_phone" required>
                                             </td>
                                         </tr>
 
@@ -543,4 +543,18 @@
 
 
 
+</script>
+
+
+<script>
+    // Use the input variable in the rest of your code
+    window.intlTelInput(document.getElementById('phone'), {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+        initialCountry: "pk",
+        separateDialCode: true,
+        formatOnDisplay: true,
+        hiddenInput: "full_number",
+        //placeholderNumberType: "FIXED_LINE",
+       // preferredCountries: ["us", "gb"]
+    });
 </script>

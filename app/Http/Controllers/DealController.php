@@ -225,8 +225,12 @@ class DealController extends Controller
             $filters['users'] = $_GET['users'];
         }
 
-        if (isset($_GET['created_at']) && !empty($_GET['created_at'])) {
-            $filters['created_at'] = $_GET['created_at'];
+        if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
+            $filters['created_at_from'] = $_GET['created_at_from'];
+        }
+
+        if (isset($_GET['created_at_to']) && !empty($_GET['created_at_to'])) {
+            $filters['created_at_to'] = $_GET['created_at_to'];
         }
 
         if (isset($_GET['price']) && !empty($_GET['price'])) {
@@ -336,8 +340,13 @@ class DealController extends Controller
                     $deals_query->where('deals.branch_id', $value);
                 }elseif ($column == 'deal_assigned_user') {
                     $deals_query->where('deals.assigned_to', $value);
+                }else if($column == 'created_at_from'){
+                    $deals_query->whereDate('deals.created_at', '>=', $value);
+                }else if($column == 'created_at_to'){
+                    $deals_query->whereDate('deals.created_at', '<=', $value);
                 }
             }
+
 
             // $companies = FiltersBrands();
             // $brand_ids = array_keys($companies);
@@ -971,7 +980,7 @@ class DealController extends Controller
                 }
 
                 if(!empty($request->lead_phone)){
-                    $lead->phone = $request->lead_phone;
+                    $lead->phone = $request->full_number;
                 }
 
                 $lead->save();
@@ -2776,6 +2785,14 @@ class DealController extends Controller
             $filters['status'] = $_GET['status'];
         }
 
+        if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
+            $filters['created_at_from'] = $_GET['created_at_from'];
+        }
+
+        if (isset($_GET['created_at_to']) && !empty($_GET['created_at_to'])) {
+            $filters['created_at_to'] = $_GET['created_at_to'];
+        }
+
         return $filters;
     }
     public function userTasks()
@@ -2827,6 +2844,10 @@ class DealController extends Controller
                     $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
                 }elseif ($column == 'status') {
                     $tasks->where('status',$value);
+                }elseif ($column == 'created_at_from') {
+                    $tasks->whereDate('deal_tasks.created_at', '>=', $value);
+                }elseif ($column == 'created_at_to') {
+                    $tasks->whereDate('deal_tasks.created_at', '<=', $value);
                 }
             }
 

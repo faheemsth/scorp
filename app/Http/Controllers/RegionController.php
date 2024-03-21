@@ -282,6 +282,9 @@ class RegionController extends Controller
     public function save(Request $request)
     {
         
+        // echo '<pre>';
+        // print_r($request->full_number);
+        // die();
         $validator = \Validator::make(
             $request->all(),
             [
@@ -306,7 +309,7 @@ class RegionController extends Controller
             $region->name = $request->name;
             $region->region_manager_id = $request->region_manager_id;
             $region->location = $request->location;
-            $region->phone = $request->phone;
+            $region->phone = $request->full_number;
             $region->email = $request->email;
             $region->brands = $request->brands[0];
             $region->update();
@@ -328,6 +331,8 @@ class RegionController extends Controller
             $data['brands'] = $brands[0];
 
             $region = Region::create($data);
+            $region->phone = $request->full_number;
+            $region->save();
 
             return json_encode([
                 'status' => 'success',

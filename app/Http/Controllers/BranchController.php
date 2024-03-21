@@ -171,7 +171,7 @@ class BranchController extends Controller
             $branch->branch_manager_id       = $request->branch_manager_id;
             $branch->google_link       = $request->google_link;
             $branch->social_media_link       = $request->social_media_link;
-            $branch->phone       = $request->phone;
+            $branch->phone       = $request->full_number;
             $branch->email       = $request->email;
 
 
@@ -266,7 +266,7 @@ class BranchController extends Controller
                 }
                 $branch->google_link       = $request->google_link;
                 $branch->social_media_link       = $request->social_media_link;
-                $branch->phone       = $request->phone;
+                $branch->phone       = $request->full_number;
                 $branch->email       = $request->email;
                 $branch->save();
                 return json_encode([

@@ -320,7 +320,7 @@
                                                 <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-                                                <input type="text" class="form-control" name="lead_phone"
+                                                <input type="text" class="form-control" name="lead_phone" id="phone"
                                                     value="{{ $lead->phone }}" required>
                                             </td>
                                         </tr>
@@ -645,5 +645,19 @@
                 console.error('AJAX request failed:', status, error);
             }
         });
+    });
+</script>
+
+
+<script>
+    // Use the input variable in the rest of your code
+    window.intlTelInput(document.getElementById('phone'), {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+        initialCountry: "pk",
+        separateDialCode: true,
+        formatOnDisplay: true,
+        hiddenInput: "full_number",
+        //placeholderNumberType: "FIXED_LINE",
+       // preferredCountries: ["us", "gb"]
     });
 </script>

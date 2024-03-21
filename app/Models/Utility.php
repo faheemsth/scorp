@@ -1842,7 +1842,7 @@ class Utility extends Model
                 'email' => $user->email,
                 'password' => $user->password,
                 'branch_id' => $user->branch_id,
-                'phone' => $user->phone,
+                'phone' => $user->full_number,
                 'dob' => $user->date_of_birth,
 
                 'gender' => $gender,
@@ -1893,7 +1893,7 @@ class Utility extends Model
                 'name' => $user->name,
                 'email' => $user->email,
                 'branch_id' => $user->branch_id,
-                'phone' => $user->phone,
+                'phone' => $user->full_number,
                 'dob' => $user->date_of_birth,
 
                 'gender' => $gender,

@@ -27,7 +27,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         {!! Form::label('phone', __('Phone'),['class'=>'form-label']) !!}<span class="text-danger pl-1">*</span>
-                        {!! Form::number('phone', $employee->phone, ['class' => 'form-control']) !!}
+                        {!! Form::number('phone', $employee->phone, ['class' => 'form-control', 'id' => 'phone']) !!}
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
@@ -266,6 +266,8 @@ $("#brand_id").on("change", function(){
     })
 </script>
 @endpush
+
+
 
 
 

@@ -148,7 +148,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="phone">{{ __('Phone') }}</label>
-                <input type="text" name="phone" class="form-control" id="phone" value="{{ $branch->phone }}"
+                <input type="tel" name="phone" class="form-control" id="phone" value="{{ $branch->phone }}"
                     placeholder="{{ __('Enter Branch Phone') }}">
                 @error('phone')
                     <span class="invalid-name" role="alert">
@@ -200,7 +200,7 @@
                 data = JSON.parse(response);
 
                 if(data.status == 'success'){
-                    show_toastr('Success', data.msg, 'success');
+                    show_toastr('success', data.msg, 'success');
                     $('#commonModal').modal('hide');
                     $(".modal-backdrop").removeClass("modal-backdrop");
                     $(".block-screen").css('display', 'none');
@@ -319,8 +319,14 @@
 </script>
 
 <script>
-    const input = document.querySelector("#phone");
-    window.intlTelInput(input, {
+    // Use the input variable in the rest of your code
+    window.intlTelInput(document.getElementById('phone'), {
         utilsScript: "{{ asset('js/intel_util.js') }}",
+        initialCountry: "pk",
+        separateDialCode: true,
+        formatOnDisplay: true,
+        hiddenInput: "full_number",
+        //placeholderNumberType: "FIXED_LINE",
+       // preferredCountries: ["us", "gb"]
     });
 </script>

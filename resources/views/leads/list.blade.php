@@ -780,7 +780,7 @@ if (isset($lead->is_active) && $lead->is_active) {
         },
         error: function(xhr, status, error){
             // Handle error response here
-            console.error("Error submitting data:", error);
+            console.error("error submitting data:", error);
         }
     });
 });
@@ -1121,14 +1121,14 @@ if (isset($lead->is_active) && $lead->is_active) {
                     data = JSON.parse(data);
 
                     if (data.status == 'success') {
-                        show_toastr('Success', data.message, 'success');
+                        show_toastr('success', data.message, 'success');
                         $('#commonModal').modal('hide');
                         $('.leads-list-tbody').prepend(data.html);
                         openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
                         // openNav(data.lead.id);
                         return false;
                     } else {
-                        show_toastr('Error', data.message, 'error');
+                        show_toastr('error', data.message, 'error');
                         $(".new-lead-btn").val('Create');
                         $('.new-lead-btn').removeAttr('disabled');
                     }
@@ -1175,14 +1175,14 @@ if (isset($lead->is_active) && $lead->is_active) {
                     data = JSON.parse(data);
 
                     if (data.status == 'success') {
-                        show_toastr('Success', data.message, 'success');
+                        show_toastr('success', data.message, 'success');
                         // openNav(id);
                         $("#commonModal").modal('hide');
                         openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
                         //window.location.href = '/leads/list';
                         return false;
                     } else {
-                        show_toastr('Error', data.message, 'error');
+                        show_toastr('error', data.message, 'error');
                         $(".new-lead-btn").val('Create');
                         $('.new-lead-btn').removeAttr('disabled');
                     }
@@ -1209,7 +1209,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                 success: function(data) {
                     data = JSON.parse(data);
                     if (data.status == 'success') {
-                        show_toastr('Success', 'Stage updated successfully.', 'success');
+                        show_toastr('success', 'Stage updated successfully.', 'success');
                         if (stage_id == 6 || stage_id == 7) {
                             window.location.href = '/leads/list';
                         } else {
@@ -1217,7 +1217,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                             return false;
                         }
                     } else {
-                        show_toastr('Error', data.message, 'error');
+                        show_toastr('error', data.message, 'error');
                     }
                 }
             });
@@ -1416,7 +1416,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     data = JSON.parse(data);
 
                     if (data.status == 'success') {
-                        show_toastr('Success', data.message, 'msg');
+                        show_toastr('success', data.message, 'msg');
                         $('.' + name + '-td').html(data.html);
                     }
                 }
@@ -1583,7 +1583,7 @@ $('.' + name + '-td').html(html);
                         // openNav(data.lead.id);
                         // return false;
                     } else {
-                        show_toastr('Error', data.message, 'error');
+                        show_toastr('error', data.message, 'error');
                         $(".create-discussion-btn").val('Create');
                         $('.create-discussion-btn').removeAttr('disabled');
                     }
@@ -1618,7 +1618,7 @@ $('.' + name + '-td').html(html);
                         // openNav(data.lead.id);
                         // return false;
                     } else {
-                        show_toastr('Error', data.message, 'error');
+                        show_toastr('error', data.message, 'error');
                         $(".create-notes-btn").val('Create');
                         $('.create-notes-btn').removeAttr('disabled');
                     }
@@ -1649,7 +1649,7 @@ $('.' + name + '-td').html(html);
                         // openNav(data.lead.id);
                         // return false;
                     } else {
-                        show_toastr('Error', data.message, 'error');
+                        show_toastr('error', data.message, 'error');
                         $(".update-notes-btn").val('Update');
                         $('.update-notes-btn').removeAttr('disabled');
                     }
@@ -1682,7 +1682,7 @@ $('.' + name + '-td').html(html);
                         // openNav(data.lead.id);
                         // return false;
                     } else {
-                        show_toastr('Error', data.message, 'error');
+                        show_toastr('error', data.message, 'error');
                     }
                 }
             });

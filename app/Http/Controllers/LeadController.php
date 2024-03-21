@@ -501,7 +501,7 @@ class LeadController extends Controller
                 $lead->title       = $request->lead_prefix;
                 $lead->name        = $request->lead_first_name . ' ' . $request->lead_last_name;
                 $lead->email       = $request->lead_email;
-                $lead->phone       = $request->lead_phone;
+                $lead->phone       = $request->full_number;
                 $lead->mobile_phone = $request->lead_mobile_phone;
                 $lead->branch_id      = $request->lead_branch;
                 $lead->brand_id      = $request->brand_id;
@@ -875,7 +875,7 @@ class LeadController extends Controller
                 $lead->title       = $request->lead_prefix;
                 $lead->name        = $request->lead_first_name . ' ' . $request->lead_last_name;
                 $lead->email       = $request->lead_email;
-                $lead->phone       = $request->lead_phone;
+                $lead->phone       = $request->full_number;
                 $lead->mobile_phone = $request->lead_mobile_phone;
 
                 if (isset($request->lead_branch)) {

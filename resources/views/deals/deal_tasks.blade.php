@@ -249,7 +249,7 @@ $setting = \App\Models\Utility::colorset();
                                 </div>
 
 
-                                <div class="col-md-3"> <label for="">Subject</label>
+                                <div class="col-md-3 d-none"> <label for="">Subject</label>
                                     <div class="subject_data" id="filter-names">
                                         <select class="form form-control select2" id="choices-multiple110" name="subjects[]" multiple style="width: 95%;">
                                             <option value="">Select Subject</option>
@@ -274,7 +274,21 @@ $setting = \App\Models\Utility::colorset();
                                     <input type="date" class="form form-control" name="due_date" value="<?= isset($_GET['due_date']) ? $_GET['due_date'] : '' ?>" style="width: 95%; border-color:#aaa">
                                 </div>
 
-                                <div class="col-md-3 mt-4 pt-2 d-flex align-items-end">
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Created at From</label>
+                                    <input type="date" class="form form-control" name="created_at_from"
+                                        value="<?= isset($_GET['created_at_from']) ? $_GET['created_at_from'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
+                                </div>
+
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Created at To</label>
+                                    <input type="date" class="form form-control" name="created_at_to"
+                                        value="<?= isset($_GET['created_at_to']) ? $_GET['created_at_to'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
+                                </div>
+
+                                <div class="col-md-4 mt-4 pt-2 d-flex align-items-end">
                                     <input type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}" class="btn form-btn me-2 btn-dark px-2 py-2" >
                                     <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn mr-2 px-2 py-2 btn-dark" style="color:white;">Reset</a>
                                     <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn mr-2 px-2 py-2 btn-dark" style=" color:white;display:none;">Save Filter</a>
