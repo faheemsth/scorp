@@ -397,7 +397,7 @@ if (!function_exists('BrandsRegionsBranches')) {
                 $brands = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-                $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();           
             } else if ($type == 'company') {
                 $brands = User::where('type', 'company')->where('id', $user->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();

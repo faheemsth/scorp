@@ -129,7 +129,7 @@ class OrganizationController extends Controller
         // if (\Auth::user()->type == 'super admin') {
 
         $start = 0;
-        $num_results_on_page = 50;
+        $num_results_on_page = 25;
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
             $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -168,6 +168,7 @@ class OrganizationController extends Controller
                 $org_query->orWhere('organizations.billing_country', 'like', '%' . $g_search . '%');
             }
 
+            $total_records  = $org_query->count();
             $organizations = $org_query->orderBy('organizations.created_at', 'desc')->skip($start)->take($num_results_on_page)->get();
 
 
@@ -176,12 +177,18 @@ class OrganizationController extends Controller
             $user_type = User::get()->pluck('type', 'id')->toArray();
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('organizations.organization_list', compact('organizations', 'org_types', 'countries', 'user_type'))->render();
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' =>  $num_results_on_page // You need to define $num_results_on_page
+                ])->render();
+
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => $html,
+                    'pagination_html' => $pagination_html
                 ]);
             } else {
-                return view('organizations.index', compact('organizations', 'org_types', 'countries', 'user_type'));
+                return view('organizations.index', compact('organizations', 'org_types', 'countries', 'user_type', 'total_records'));
             }
 
         }else{

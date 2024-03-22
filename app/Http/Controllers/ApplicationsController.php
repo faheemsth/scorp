@@ -116,7 +116,8 @@ class ApplicationsController extends Controller
                 $app_query->orWhere('deal_applications.course', 'like', '%' . $g_search . '%');
             }
 
-            $applications = $app_query->get();
+            $applications = $app_query->skip($start)
+            ->take($num_results_on_page)->get();
 
 
             $universities = University::get()->pluck('name', 'id')->toArray();

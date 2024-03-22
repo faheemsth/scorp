@@ -754,10 +754,12 @@ class LeadController extends Controller
 
 
                 $filter = BrandsRegionsBranchesForEdit($lead->brand_id, $lead->region_id, $lead->branch_id);
+                
                 $companies = $filter['brands'];
                 $Region = $filter['regions'];
                 $branches = $filter['branches'];
                 $employees = $filter['employees'];
+
                 return view('leads.edit', compact('lead', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'companies', 'regions', 'employees'));
                 // return view('leads.edit', compact('lead', 'pipelines', 'sources', 'products', 'users'));
             } else {

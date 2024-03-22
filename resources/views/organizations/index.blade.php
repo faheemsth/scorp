@@ -364,6 +364,13 @@
                             @endforelse
                         </tbody>
                     </table>
+                    <div class="pagination_div">
+                        @if ($total_records > 0)
+                            @include('layouts.pagination', [
+                                'total_pages' => $total_records,
+                            ])
+                        @endif
+                    </div>
                 </div>
 
 
@@ -1080,6 +1087,7 @@ if(curr_url.includes('?')){
                         if (data.status == 'success') {
                             console.log(data.html);
                             $(".organization_tbody").html(data.html);
+                            $(".pagination_div").html(data.pagination_html);
                         }
                     }
                 })
@@ -1103,6 +1111,7 @@ if(curr_url.includes('?')){
                 if (data.status == 'success') {
                     $(".organization_tbody").html('');
                     $(".organization_tbody").html(data.html);
+                    $(".pagination_div").html(data.pagination_html);
                 }
             }
         });

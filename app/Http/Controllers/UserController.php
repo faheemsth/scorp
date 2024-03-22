@@ -702,87 +702,68 @@ class UserController extends Controller
 
         if (\Auth::user()->can('manage employee')) {
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
-            $usersQuery = User::select(['users.*'])->whereNotIn('type', $excludedTypes);
+            $usersQuery = User::select('users.*');
 
-
-            //Filters~
+            // Apply filters~
             if (!empty($_GET['brand'])) {
                 $usersQuery->where('brand_id', $_GET['brand']);
             }
             if (!empty($_GET['region_id'])) {
                 $usersQuery->where('region_id', $_GET['region_id']);
             }
-
             if (!empty($_GET['branch_id'])) {
                 $usersQuery->where('branch_id', $_GET['branch_id']);
             }
-
             if (!empty($_GET['Name'])) {
                 $usersQuery->where('name', 'like', '%' . $_GET['Name'] . '%');
             }
-
             if (!empty($_GET['Designation'])) {
                 $usersQuery->where('type', 'like', '%' . $_GET['Designation'] . '%');
             }
-
-
             if (!empty($_GET['phone'])) {
                 $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
             }
 
-
-            // if (\Auth::user()->type == 'super admin') {
-            //     $usersQuery = User::whereNotIn('type', $excludedTypes);
-            // } else if ($user->type == 'company') {
-            //     $usersQuery->where('brand_id', $user->id);
-            // } else {
-            //     $usersQuery->where('brand_id', $user->brand_id);
-            // }
-
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR' || \Auth::user()->can('level 1')) {
-            } else if (\Auth::user()->type == 'company') {
+            if (\Auth::user()->can('level 1')) {
+                // Permissions for level 1
+            } elseif (\Auth::user()->type == 'company') {
                 $usersQuery->where('brand_id', \Auth::user()->id);
-            } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')) {
+            } elseif (\Auth::user()->can('level 2')) {
                 $usersQuery->whereIn('brand_id', $brand_ids);
-            } else if (\Auth::user()->type == 'Region Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)) {
+            } elseif (\Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)) {
                 $usersQuery->where('region_id', \Auth::user()->region_id);
-            } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)) {
+            } elseif (\Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)) {
                 $usersQuery->where('branch_id', \Auth::user()->branch_id);
             } else {
                 $usersQuery->where('id', \Auth::user()->id);
             }
 
-
+            // Apply search condition
             if (isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
-                $usersQuery->where('users.name', 'like', '%' . $g_search . '%')
-                    ->orWhere('users.email', 'like', '%' . $g_search . '%')
-                    ->orWhere('users.type', 'like', '%' . $g_search . '%')
-                    ->orWhere('users.phone', 'like', '%' . $g_search . '%')
-                    ->orWhere(DB::raw('(SELECT name FROM branches branch WHERE branch.id = users.branch_id)'), 'like', '%' . $g_search . '%')
-                    ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%')
-                    ->orWhere(DB::raw('(SELECT name FROM users brand WHERE brand.id = users.brand_id)'), 'like', '%' . $g_search . '%');
+                $usersQuery->where(function ($query) use ($g_search) {
+                    $query->where('users.name', 'like', '%' . $g_search . '%')
+                        ->orWhere('users.email', 'like', '%' . $g_search . '%')
+                        ->orWhere('users.type', 'like', '%' . $g_search . '%')
+                        ->orWhere('users.phone', 'like', '%' . $g_search . '%')
+                        ->orWhere(DB::raw('(SELECT name FROM branches branch WHERE branch.id = users.branch_id)'), 'like', '%' . $g_search . '%')
+                        ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%')
+                        ->orWhere(DB::raw('(SELECT name FROM users brand WHERE brand.id = users.brand_id)'), 'like', '%' . $g_search . '%');
+                });
             }
 
-
-            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
-                $g_search = $_GET['search'];
-                $usersQuery->where('users.name', 'like', '%' . $g_search . '%')
-                    ->orWhere('users.email', 'like', '%' . $g_search . '%')
-                    ->orWhere('users.type', 'like', '%' . $g_search . '%')
-                    ->orWhere('users.phone', 'like', '%' . $g_search . '%')
-                    ->orWhere(DB::raw('(SELECT name FROM branches branch WHERE branch.id = users.branch_id)'), 'like', '%' . $g_search . '%')
-                    ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%')
-                    ->orWhere(DB::raw('(SELECT name FROM users brand WHERE brand.id = users.brand_id)'), 'like', '%' . $g_search . '%');
-            }
+            // Apply exclusion of user types
+            $usersQuery->whereNotIn('type', $excludedTypes);
 
             $users = $usersQuery
                 ->skip($start)
                 ->take($num_results_on_page)
                 ->orderBy('users.name', 'ASC')
                 ->paginate($num_results_on_page);
+
+           
 
             $brands = User::whereNotIn('type', $excludedTypes)->orderBy('name', 'ASC')->get();
             $brandss = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();

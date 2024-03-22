@@ -220,7 +220,7 @@
                                                 <select class="form-control select2" id="choice-2"
                                                     name="lead_assgigned_user" {{ !\Auth::user()->can('edit assign to lead') ? 'disabled' : '' }}>
                                                     <option value="">Select User</option>
-                                                    @foreach ($users as $key => $user)
+                                                    @foreach ($employees as $key => $user)
                                                         <option value="{{ $key }}"
                                                             <?= $lead->user_id == $key ? 'selected' : '' ?>>
                                                             {{ $user }}</option>
