@@ -106,40 +106,6 @@ if (isset($lead->is_active) && $lead->is_active) {
     @if ($pipeline)
         <div class="row">
 
-            {{-- <div class="row justify-content-center">
-                <div class="col-md-3">
-                    <!-- card -->
-                    <div class="card my-card">
-                        <div class="card-body">
-                            <div class="" style="position: relative;">
-                                <img src="{{ asset('assets/images/tick_mark.png') }}" alt="" style="width: 30px; position: absolute; right: 0px;">
-                            </div>
-                            <div class="d-flex align-items-end justify-content-between mt-4">
-                                <div>
-                                    <h1> {{ isset($total_leads_by_status['opened lead']) ? $total_leads_by_status['opened lead'] : 0}} </h1>
-                                    <h5>Open Leads</h5>
-                                </div>
-                            </div>
-                        </div><!-- end card body -->
-                    </div><!-- end card -->
-                </div>
-                <div class="col-md-3">
-                    <!-- card -->
-                    <div class="card my-card">
-                        <div class="card-body">
-                            <div class="" style="position: relative;">
-                                <img src="{{ asset('assets/images/cross_mark.png') }}" alt="" style="width: 30px; position: absolute; right: 0px;">
-                            </div>
-                            <div class="mt-4">
-                                <h1>{{ isset($total_leads_by_status['closed lead']) ? $total_leads_by_status['closed lead'] : 0}}</h1>
-                                <h5>Close Leads</h5>
-                            </div>
-                        </div><!-- end card body -->
-                    </div><!-- end card -->
-                </div>
-            </div> --}}
-
-
             <div class="col-xl-12">
                 <div class="card my-card" style="max-width: 98%;border-radius:0px; min-height: 250px !important;">
                     <div class="card-body table-border-style" style="padding: 25px 3px;">
