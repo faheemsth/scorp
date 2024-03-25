@@ -176,7 +176,7 @@ if (!function_exists('addLogActivity')) {
         $notification->is_read = 0;
 
         $notification->save();
-        event(new NewNotification($notification));
+       // event(new NewNotification($notification));
     }
 }
 

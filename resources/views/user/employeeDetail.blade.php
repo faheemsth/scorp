@@ -189,6 +189,16 @@
                                                                 </td>
                                                             </tr>
 
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Date of Birth') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                     {{ $employee->dob }}
+                                                                </td>
+                                                            </tr>
+
                                                             <tr>
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Designation') }}
