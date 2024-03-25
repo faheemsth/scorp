@@ -748,480 +748,318 @@ if (isset($lead->is_active) && $lead->is_active) {
     })
 
     $(".add-tags").on("click", function(e){
-    e.preventDefault();
-    $button = $(this);
-    
-    
-    var formData = $("#addTagForm").serialize(); // Serialize form data
-    var url = $("#addTagForm").attr('action'); // Get form action URL
-    var csrfToken = $('meta[name="csrf-token"]').attr('content'); // Get CSRF token
-    $button.prop('disabled', true);
+        e.preventDefault();
+        $button = $(this);
+        
+        
+        var formData = $("#addTagForm").serialize(); // Serialize form data
+        var url = $("#addTagForm").attr('action'); // Get form action URL
+        var csrfToken = $('meta[name="csrf-token"]').attr('content'); // Get CSRF token
+        $button.prop('disabled', true);
 
-    $.ajax({
-        type: "POST",
-        url: url,
-        data: formData,
-        headers: {
-            'X-CSRF-Token': csrfToken // Include CSRF token in headers
-        },
-        success: function(response){
-            data = JSON.parse(response);
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: formData,
+            headers: {
+                'X-CSRF-Token': csrfToken // Include CSRF token in headers
+            },
+            success: function(response){
+                data = JSON.parse(response);
 
-            if(data.status == 'success'){
-                
-                $("#tagModal").hide();
-                $(".modal-backdrop").removeClass('modal-backdrop');
-                $(".sub-check").prop('checked', false);
-                $button.prop('disabled', false);
-                show_toastr('success', data.msg);
-            }
-            // Handle success response here
-            console.log("Data submitted successfully:", response);
-        },
-        error: function(xhr, status, error){
-            // Handle error response here
-            console.error("error submitting data:", error);
-        }
-    });
-});
-
-
-        $(document).ready(function() {
-            let curr_url = window.location.href;
-
-            if(curr_url.includes('?')){
-                $('#save-filter-btn').css('display','inline-block');
+                if(data.status == 'success'){
+                    
+                    $("#tagModal").hide();
+                    $(".modal-backdrop").removeClass('modal-backdrop');
+                    $(".sub-check").prop('checked', false);
+                    $button.prop('disabled', false);
+                    show_toastr('success', data.msg);
+                }
+                // Handle success response here
+                console.log("Data submitted successfully:", response);
+            },
+            error: function(xhr, status, error){
+                // Handle error response here
+                console.error("error submitting data:", error);
             }
         });
-        $(document).on("click", "#import_csv_modal_btn", function() {
-            $("#import_csv").modal('show');
-        })
+    });
+
+
+    $(document).ready(function() {
+        let curr_url = window.location.href;
+
+        if(curr_url.includes('?')){
+            $('#save-filter-btn').css('display','inline-block');
+        }
+    });
+
+
+    $(document).on("click", "#import_csv_modal_btn", function() {
+        $("#import_csv").modal('show');
+    })
 
        // single check
 
-       $(document).on('change', '.main-check', function() {
+    $(document).on('change', '.main-check', function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));
 
-            var selectedIds = $('.sub-check:checked').map(function() {
-                return this.value;
-            }).get();
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
 
-        // console.log(selectedIds.length)
+            // console.log(selectedIds.length)
 
-            if (selectedIds.length > 0) {
-                selectedArr = selectedIds;
-                $("#actions_div").removeClass('d-none');
-                $("#tagModalBtn").removeClass('d-none');
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+            $("#tagModalBtn").removeClass('d-none');
 
-            } else {
-                selectedArr = selectedIds;
+        } else {
+            selectedArr = selectedIds;
 
-                $("#actions_div").addClass('d-none');
-                $("#tagModalBtn").addClass('d-none');
+            $("#actions_div").addClass('d-none');
+            $("#tagModalBtn").addClass('d-none');
+        }
+    });
+
+    $(document).on('change', '.sub-check', function() {
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+            $("#tagModalBtn").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+            $("#tagModalBtn").addClass('d-none');
+        }
+        let commaSeperated = selectedArr.join(",");
+        console.log(commaSeperated)
+        $("#lead_ids").val(commaSeperated);
+
+    });
+
+
+    $(document).on("click", '.delete-bulk-leads', function() {
+        var task_ids = $(".sub-check:checked");
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-bulk-leads?ids=' + selectedIds.join(',');
             }
         });
+    })
 
-        $(document).on('change', '.sub-check', function() {
-            var selectedIds = $('.sub-check:checked').map(function() {
-                return this.value;
-            }).get();
+    $(document).on("change", "#lead-file", function() {
 
-            if (selectedIds.length > 0) {
-                selectedArr = selectedIds;
-                $("#actions_div").removeClass('d-none');
-                $("#tagModalBtn").removeClass('d-none');
-            } else {
-                selectedArr = selectedIds;
+        var extension = $('#lead-file').val().split('.').pop().toLowerCase();
+        var ext = $('#extension').val();
 
-                $("#actions_div").addClass('d-none');
-                $("#tagModalBtn").addClass('d-none');
+        if(ext == 'csv'){
+            if($.inArray(extension, ['csv']) == -1) {
+                alert('Sorry, file extension does not match with selected extension.');
+                return false;
             }
-            let commaSeperated = selectedArr.join(",");
-            console.log(commaSeperated)
-            $("#lead_ids").val(commaSeperated);
-
-        });
-
-
-
-        function massUpdate() {
-            if (selectedArr.length > 0) {
-                $('#mass-update-modal').modal('show')
-            } else {
-                alert('Please choose Tasks!')
+        }else{
+            if($.inArray(extension, ['xls','xlsx']) == -1) {
+                alert('Sorry, file extension does not match with selected extension.');
+                return false;
             }
         }
 
-        $('#bulk_field').on('change', function() {
-
-            if (this.value != '') {
-                $('#field_to_update').html('');
-
-                if (this.value == 'nm') {
-
-                    let field = `<div>
-                                    <input type="text" class="w-50 form-control" placeholder="First Name" name="lead_first_name" value="" required="">
-                                    <input type="text" class="w-50 form-control" placeholder="Last Name" name="lead_last_name" value="" required="">
-                               </div>`;
-                    $('#field_to_update').html(field);
-
-                } else if (this.value == 'ldst') {
-
-                    var stages = <?= json_encode($stages) ?>;
-
-                    let options = '';
-                    for (let i = 0; i < stages.length; i++) {
-                        options += '<option value="' + stages[i].id + '">' + stages[i].name + '</option>';
-                    }
-
-                    let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_stage" required>
-                                    <option value="">Select Status</option>
-                                    ` + options + `
-                                </select>`;
-                    $('#field_to_update').html(field);
-
-                } else if (this.value == 'user_res') {
-
-                    var users = <?= json_encode($users) ?>;
-                    let options = '';
-
-                    $.each(users, function(keyName, keyValue) {
-                        options += '<option value="' + keyName + '">' + keyValue + '</option>';
-                    });
-
-                    let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_assgigned_user">
-                                    <option value="">Select User</option>
-                                    ` + options + `
-                                </select>`;
-                    $('#field_to_update').html(field);
-
-                } else if (this.value == 'loc') {
-
-                    var branches = <?= json_encode($branches) ?>;
-                    let options = '';
-
-                    $.each(branches, function(keyName, keyValue) {
-                        options += '<option value="' + keyName + '">' + keyValue + '</option>';
-                    });
-
-                    let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_branch" required>
-                                    <option value="">Select Location</option>
-                                    ` + options + `
-                                </select>`;
-                    $('#field_to_update').html(field);
-
-                } else if (this.value == 'agy') {
-
-                    var organizations = <?= json_encode($organizations) ?>;
-                    let options = '';
-
-                    $.each(organizations, function(keyName, keyValue) {
-                        options += '<option value="' + keyName + '">' + keyValue + '</option>';
-                    });
-
-                    let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_organization" required>
-                                    <option value="">Select Agency</option>
-                                    ` + options + `
-                                </select>`;
-                    $('#field_to_update').html(field);
-
-                } else if (this.value == 'ldsrc') {
-
-                    var sources = <?= json_encode($sourcess) ?>;
-                    let options = '';
-                    $.each(sources, function(keyName, keyValue) {
-                        options += '<option value="' + keyName + '">' + keyValue + '</option>';
-                    });
-
-                    let field = `<select class="form form-control select2" id="choices-multiple1" name="lead_source" required>
-                                    <option value="">Select Source</option>
-                                    ` + options + `
-                                </select>`;
-                    $('#field_to_update').html(field);
-
-                } else if (this.value == 'email') {
-
-                    let field = `<input type="email" class="form-control" name="lead_email" required>`;
-                    $('#field_to_update').html(field);
-
-                } else if (this.value == 'email_ref') {
-
-                    let field = `<input type="email" class="form-control" name="referrer_email">`;
-                    $('#field_to_update').html(field);
-
-                } else if (this.value == 'phone') {
-
-                    let field =  `<input type="text" class="form-control" name="lead_phone" value="" required>`;
-                    $('#field_to_update').html(field);
-
-                } else if (this.value == 'm_phone') {
-
-                    let field = `<input type="text" class="form-control" name="lead_mobile_phone" >`;
-                    $('#field_to_update').html(field);
-
-                } else if (this.value == 'address') {
-
-                    let field = `<div class="form-floating">
-                                    <textarea class="form-control" placeholder="Street" id="floatingTextarea" name="lead_street"></textarea>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6 col-form">
-                                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="City" name="lead_city" >
-                                    </div>
-                                    <div class="col-6 col-form">
-                                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="State/Province" name="lead_state" >
-                                    </div>
-                                    <div class="col-6 col-form">
-                                        <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Postel Code" name="lead_postal_code" >
-                                    </div>
-                                    <div class="col-6 col-form" style="text-align: left;">
-                                        <select class="form-control select2" id="choice-6" name="lead_country">
-                                            <option>Country...</option>
-                                        </select>
-                                    </div>
-                                </div>`;
-                    $('#field_to_update').html(field);
-
-                } else if (this.value == 'desc') {
-
-                    let field =
-                        `<textarea class="form-control" rows="4" placeholder="description" name="lead_description"></textarea>`;
-                    $('#field_to_update').html(field);
-
-                } else if (this.value == 'tag_list') {
-
-                    let field = ``;
-                    $('#field_to_update').html(field);
-
+        var form = $(this).closest('form')[0]; // Get the form element
+        var formData = new FormData(form); // Pass the form element to FormData constructor
+        $.ajax({
+            url: "{{ route('leads.fetchColumns') }}",
+            method: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                console.log(response);
+                if (response.status == 'success') {
+                    $(".columns-matching").html(response.data);
+                    $(".submit_btn").removeClass('d-none');
                 }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
             }
-
         });
+    })
 
-        $(document).on("click", '.delete-bulk-leads', function() {
-            var task_ids = $(".sub-check:checked");
-            var selectedIds = $('.sub-check:checked').map(function() {
-                return this.value;
-            }).get();
+    var dropdownValues = [];
+    var dropdownKeys = [];
 
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = '/delete-bulk-leads?ids=' + selectedIds.join(',');
-                }
-            });
-        })
+    $(document).on("change", ".lead-columns", function() {
 
-        $(document).on("change", "#lead-file", function() {
+        var key = $(this).attr('data-id');
+        var value = $(this).val();
 
-            var extension = $('#lead-file').val().split('.').pop().toLowerCase();
-            var ext = $('#extension').val();
 
-            if(ext == 'csv'){
-                if($.inArray(extension, ['csv']) == -1) {
-                    alert('Sorry, file extension does not match with selected extension.');
-                    return false;
-                }
-            }else{
-                if($.inArray(extension, ['xls','xlsx']) == -1) {
-                    alert('Sorry, file extension does not match with selected extension.');
-                    return false;
-                }
+        if (value == '') {
+
+            if (key > -1 && key < dropdownValues.length) {
+                dropdownValues.splice(key, 1);
             }
 
-            var form = $(this).closest('form')[0]; // Get the form element
-            var formData = new FormData(form); // Pass the form element to FormData constructor
-            $.ajax({
-                url: "{{ route('leads.fetchColumns') }}",
-                method: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    console.log(response);
-                    if (response.status == 'success') {
-                        $(".columns-matching").html(response.data);
-                        $(".submit_btn").removeClass('d-none');
-                    }
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log(textStatus, errorThrown);
-                }
-            });
-        })
+        } else {
 
-        var dropdownValues = [];
-        var dropdownKeys = [];
-
-        $(document).on("change", ".lead-columns", function() {
-
-            var key = $(this).attr('data-id');
-            var value = $(this).val();
-
-
-            if (value == '') {
-
-                if (key > -1 && key < dropdownValues.length) {
-                    dropdownValues.splice(key, 1);
-                }
-
-            } else {
-
-                if (dropdownValues.indexOf(value) !== -1) {
-                    $(this).val('');
-                    show_toastr('error', 'Field is already assigned. Change the existing feild first', 'error');
-                    return false;
-                }
-
-
-                dropdownValues[key] = value;
-                console.log(dropdownValues);
+            if (dropdownValues.indexOf(value) !== -1) {
+                $(this).val('');
+                show_toastr('error', 'Field is already assigned. Change the existing feild first', 'error');
+                return false;
             }
 
 
-
-
-            return true;
-        })
-
-
-        // $(document).on("submit", "#import_csv", function() {
-        //     var assigned_to = $("#assigned_to").val();
-
-        //     if (assigned_to == undefined || assigned_to == '') {
-        //         show_toastr('error', 'Please assigned the leads', 'error');
-        //         return false;
-        //     }
-        // })
-
-
-        // new lead form submitting...
-        $(document).on("submit", "#lead-creating-form", function(e) {
-
-            e.preventDefault();
-            var formData = $(this).serialize();
-
-            $(".new-lead-btn").val('Processing...');
-           // $('.new-lead-btn').attr('disabled', 'disabled');
-
-            $(".new-lead-btn").prop('disabled', true);
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('leads.store') }}",
-                data: formData,
-                success: function(data) {
-                    data = JSON.parse(data);
-
-                    if (data.status == 'success') {
-                        show_toastr('success', data.message, 'success');
-                        $('#commonModal').modal('hide');
-                        $('.leads-list-tbody').prepend(data.html);
-                        openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
-                        // openNav(data.lead.id);
-                        return false;
-                    } else {
-                        show_toastr('error', data.message, 'error');
-                        $(".new-lead-btn").val('Create');
-                        $('.new-lead-btn').removeAttr('disabled');
-                    }
-                }
-            });
-        });
-
-        function RefreshList() {
-            var ajaxCall = 'true';
-            $(".leads-list-tbody").html('Loading...');
-
-            $.ajax({
-                type: 'GET',
-                url: "/leads/list",
-                data: {
-                    ajaxCall: ajaxCall
-                },
-                success: function(data) {
-                    data = JSON.parse(data);
-
-                    if (data.status == 'success') {
-                        $(".leads-list-tbody").html('');
-                        $('.leads-list-tbody').prepend(data.html);
-                    }
-                },
-            });
+            dropdownValues[key] = value;
+            console.log(dropdownValues);
         }
 
 
-        // new lead form submitting...
-        $(document).on("submit", "#lead-updating-form", function(e) {
 
-            e.preventDefault();
-            var formData = $(this).serialize();
-            var id = $(".lead_id").val();
-            $(".update-lead-btn").val('Processing...');
-            $('.update-lead-btn').attr('disabled', 'disabled');
 
-            $.ajax({
-                type: "POST",
-                url: "/leads/update/" + id,
-                data: formData,
-                success: function(data) {
-                    data = JSON.parse(data);
+        return true;
+    })
 
-                    if (data.status == 'success') {
-                        show_toastr('success', data.message, 'success');
-                        // openNav(id);
-                        $("#commonModal").modal('hide');
-                        openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
-                        //window.location.href = '/leads/list';
+
+
+    // new lead form submitting...
+    $(document).on("submit", "#lead-creating-form", function(e) {
+
+        e.preventDefault();
+        var formData = $(this).serialize();
+
+        $(".new-lead-btn").val('Processing...');
+        // $('.new-lead-btn').attr('disabled', 'disabled');
+
+        $(".new-lead-btn").prop('disabled', true);
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('leads.store') }}",
+            data: formData,
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status == 'success') {
+                    show_toastr('success', data.message, 'success');
+                    $('#commonModal').modal('hide');
+                    $('.leads-list-tbody').prepend(data.html);
+                    openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
+                    // openNav(data.lead.id);
+                    return false;
+                } else {
+                    show_toastr('error', data.message, 'error');
+                    $(".new-lead-btn").val('Create');
+                    $('.new-lead-btn').removeAttr('disabled');
+                }
+            }
+        });
+    });
+
+    function RefreshList() {
+        var ajaxCall = 'true';
+        $(".leads-list-tbody").html('Loading...');
+
+        $.ajax({
+            type: 'GET',
+            url: "/leads/list",
+            data: {
+                ajaxCall: ajaxCall
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status == 'success') {
+                    $(".leads-list-tbody").html('');
+                    $('.leads-list-tbody').prepend(data.html);
+                }
+            },
+        });
+    }
+
+
+    // new lead form submitting...
+    $(document).on("submit", "#lead-updating-form", function(e) {
+
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var id = $(".lead_id").val();
+        $(".update-lead-btn").val('Processing...');
+        $('.update-lead-btn').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: "/leads/update/" + id,
+            data: formData,
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status == 'success') {
+                    show_toastr('success', data.message, 'success');
+                    // openNav(id);
+                    $("#commonModal").modal('hide');
+                    openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
+                    //window.location.href = '/leads/list';
+                    return false;
+                } else {
+                    show_toastr('error', data.message, 'error');
+                    $(".new-lead-btn").val('Create');
+                    $('.new-lead-btn').removeAttr('disabled');
+                }
+            }
+        });
+    });
+
+
+    $(document).on('click', '.lead_stage', function() {
+
+        var lead_id = $(this).attr('data-lead-id');
+        var stage_id = $(this).attr('data-stage-id');
+        var currentBtn = $(this);
+
+
+
+        $.ajax({
+            type: 'GET',
+            url: "{{ route('update-lead-stage') }}",
+            data: {
+                lead_id: lead_id,
+                stage_id: stage_id
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status == 'success') {
+                    show_toastr('success', 'Stage updated successfully.', 'success');
+                    if (stage_id == 6 || stage_id == 7) {
+                        window.location.href = '/leads/list';
+                    } else {
+                        openNav(lead_id);
                         return false;
-                    } else {
-                        show_toastr('error', data.message, 'error');
-                        $(".new-lead-btn").val('Create');
-                        $('.new-lead-btn').removeAttr('disabled');
                     }
+                } else {
+                    show_toastr('error', data.message, 'error');
                 }
-            });
+            }
         });
-
-
-        $(document).on('click', '.lead_stage', function() {
-
-            var lead_id = $(this).attr('data-lead-id');
-            var stage_id = $(this).attr('data-stage-id');
-            var currentBtn = $(this);
-
-
-
-            $.ajax({
-                type: 'GET',
-                url: "{{ route('update-lead-stage') }}",
-                data: {
-                    lead_id: lead_id,
-                    stage_id: stage_id
-                },
-                success: function(data) {
-                    data = JSON.parse(data);
-                    if (data.status == 'success') {
-                        show_toastr('success', 'Stage updated successfully.', 'success');
-                        if (stage_id == 6 || stage_id == 7) {
-                            window.location.href = '/leads/list';
-                        } else {
-                            openNav(lead_id);
-                            return false;
-                        }
-                    } else {
-                        show_toastr('error', data.message, 'error');
-                    }
-                }
-            });
-        });
+    });
 
         /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
         function openNav(lead_id) {
@@ -1710,7 +1548,7 @@ $('.' + name + '-td').html(html);
 
 
         ////////////////////Filters Javascript
-        $("#filter_brand_id").on("change", function() {
+        $("#filter-show #filter_brand_id").on("change", function() {
             var id = $(this).val();
             var type = 'brand';
             var filter = true;
@@ -1741,7 +1579,7 @@ $('.' + name + '-td').html(html);
         });
 
 
-        $(document).on("change", "#filter_region_id, #region_id", function() {
+        $(document).on("change", "#filter-show #filter_region_id, #filter-show #region_id", function() {
             var id = $(this).val();
             var filter = true;
             var type = 'region';
@@ -1771,7 +1609,7 @@ $('.' + name + '-td').html(html);
             });
         });
 
-        $(document).on("change", "#filter_branch_id, #branch_id", function() {
+        $(document).on("change", "#filter-show #filter_branch_id, #filter-show #branch_id", function() {
     
             var id = $(this).val();
 
@@ -1799,53 +1637,53 @@ $('.' + name + '-td').html(html);
         });
 
 
-        $(document).on("change", "#filter_branch_id, #branch_id", function() {
-           getLeads();
-        });
+        // $(document).on("change", "#filter_branch_id, #branch_id", function() {
+        //    getLeads();
+        // });
 
-        function getLeads(){
-            var brand_id = $("#filter_brand_id").val();
-            var region_id = $("#region_id").val();
-            var branch_id = $("#branch_id").val();
+        // function getLeads(){
+        //     var brand_id = $("#filter_brand_id").val();
+        //     var region_id = $("#region_id").val();
+        //     var branch_id = $("#branch_id").val();
 
-            if (typeof region_id === 'undefined') {
-                var region_id = $("#filter_region_id").val();
-            }
+        //     if (typeof region_id === 'undefined') {
+        //         var region_id = $("#filter_region_id").val();
+        //     }
 
-            if (typeof branch_id === 'undefined') {
-                var branch_id = $("#filter_branch_id").val();
-            }
-
-
+        //     if (typeof branch_id === 'undefined') {
+        //         var branch_id = $("#filter_branch_id").val();
+        //     }
 
 
-            var type = 'lead';
 
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('filterData') }}',
-                data: {
-                   brand_id,
-                   region_id,
-                   branch_id,
-                   type
-                },
-                success: function(data) {
-                    data = JSON.parse(data);
 
-                    if (data.status === 'success') {
-                        $('#filter-names').html('');
-                        $("#filter-names").html(data.html);
-                        select2();
-                    } else {
-                        console.error('Server returned an error:', data.message);
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX request failed:', status, error);
-                }
-            });
-        }
+        //     var type = 'lead';
+
+        //     $.ajax({
+        //         type: 'GET',
+        //         url: '{{ route('filterData') }}',
+        //         data: {
+        //            brand_id,
+        //            region_id,
+        //            branch_id,
+        //            type
+        //         },
+        //         success: function(data) {
+        //             data = JSON.parse(data);
+
+        //             if (data.status === 'success') {
+        //                 $('#filter-names').html('');
+        //                 $("#filter-names").html(data.html);
+        //                 select2();
+        //             } else {
+        //                 console.error('Server returned an error:', data.message);
+        //             }
+        //         },
+        //         error: function(xhr, status, error) {
+        //             console.error('AJAX request failed:', status, error);
+        //         }
+        //     });
+        // }
 
 
     </script>

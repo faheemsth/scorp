@@ -347,7 +347,7 @@
         // Subscribe to the 'notifications' channel
         var channel = pusher.subscribe('notifications');
         channel.bind('new.notification', function(data) {
-            show_toastr('success', 'You recieved new notification.', 'success');
+            //show_toastr('success', 'You recieved new notification.', 'success');
         });
 
 

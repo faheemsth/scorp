@@ -984,7 +984,7 @@ $setting = \App\Models\Utility::colorset();
 
 
     ////////////////////Filters Javascript
-    $("#filter_brand_id").on("change", function() {
+    $("#filter-show #filter_brand_id").on("change", function() {
             var id = $(this).val();
             var type = 'brand';
             var filter = true;
@@ -1015,7 +1015,7 @@ $setting = \App\Models\Utility::colorset();
         });
 
 
-        $(document).on("change", "#filter_region_id, #region_id", function() {
+        $(document).on("change", "#filter-show #filter_region_id, #filter-show #region_id", function() {
             var id = $(this).val();
             var filter = true;
             var type = 'region';
@@ -1045,7 +1045,7 @@ $setting = \App\Models\Utility::colorset();
             });
         });
 
-        $(document).on("change", "#filter_branch_id, #branch_id", function() {
+        $(document).on("change", "#filter-show #filter_branch_id, #filter-show #branch_id", function() {
            getTasks();
 
             var id = $(this).val();
