@@ -467,14 +467,14 @@ class LeadController extends Controller
                 ]);
             }
 
-            $is_exist = Lead::where('email', $request->lead_email)->where('brand_id', $request->brand_id)->first();
+            // $is_exist = Lead::where('email', $request->lead_email)->where('brand_id', $request->brand_id)->first();
 
-            if($is_exist){
-                return json_encode([
-                    'status' => 'error',
-                    'message' => 'Email already exist in the same brand.'
-                ]);
-            }
+            // if($is_exist){
+            //     return json_encode([
+            //         'status' => 'error',
+            //         'message' => 'Email already exist in the same brand.'
+            //     ]);
+            // }
 
 
 

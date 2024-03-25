@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewNotification;
+use App\Events\SupportTicketCreated;
 use App\Models\Employee;
+use App\Models\Notification;
 use App\Models\Support;
 use App\Models\SupportReply;
 use App\Models\Ticket;
@@ -15,11 +18,10 @@ class SupportController extends Controller
 {
     public function index()
     {
-        
         if(\Auth::user()->type == 'super admin')
-        {
+        {       
+            
             $support_query = Support::query();
-
             if(isset($_GET['type'])){
                 if($_GET['type'] == 'open'){
                     $support_query->where('status', 'open');
@@ -203,6 +205,9 @@ class SupportController extends Controller
         }
 
         $support->save();
+
+
+        event(new SupportTicketCreated($support));
 
 
 

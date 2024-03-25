@@ -35,6 +35,11 @@ class NewNotification implements ShouldBroadcast
         return new Channel('notifications');
     }
 
+    public function broadcastAs()
+    {
+        return 'new.notification';
+    }
+
     /**
      * Get the data to broadcast.
      *

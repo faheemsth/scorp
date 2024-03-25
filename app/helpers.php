@@ -170,7 +170,7 @@ if (!function_exists('addLogActivity')) {
         }
 
         $notification = new Notification;
-        $notification->user_id = 0;
+        $notification->user_id = \Auth::user()->id;
         $notification->type = 'push notificationn';
         $notification->data = $msg;
         $notification->is_read = 0;
