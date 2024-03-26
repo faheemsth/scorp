@@ -308,6 +308,8 @@
                                             </option>
                                             <option value="deal" {{ $type == 'deal' ? 'selected' : '' }}>Admission
                                             </option>
+                                            <option value="application" {{ $type == 'application' ? 'selected' : '' }}>Application
+                                            </option>
                                         </select>
                                         <input type="hidden" value="{{ $type }}" name="related_type">
                                     @else
@@ -319,6 +321,8 @@
                                             <option value="lead" {{ $type == 'lead' ? 'selected' : '' }}>Lead
                                             </option>
                                             <option value="deal" {{ $type == 'deal' ? 'selected' : '' }}>Admission
+                                            </option>
+                                            <option value="application" {{ $type == 'application' ? 'selected' : '' }}>Application
                                             </option>
                                         </select>
                                     @endif
@@ -342,6 +346,10 @@
 
                                             @if(!empty($deal))
                                                 <option value="{{$deal->id}}" selected>{{$deal->name}}</option>
+                                            @endif
+
+                                            @if(!empty($application))
+                                                <option value="{{$application->id}}" selected>{{$application->application_key}}</option>
                                             @endif
                                     </select>
                                 </div>

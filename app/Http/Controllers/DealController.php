@@ -295,31 +295,20 @@ class DealController extends Controller
             if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || $usr->can('level 1')){
 
             }else if(\Auth::user()->type == 'company'){
+                $deal_simple_query->where('brand_id', \Auth::user()->id);
                 $deals_query->where('brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || $usr->can('level 2')){
+                $deal_simple_query->whereIn('brand_id', $brand_ids);
                 $deals_query->whereIn('brand_id', $brand_ids);
             }else if(\Auth::user()->type == 'Region Manager' || $usr->can('level 3') && !empty(\Auth::user()->region_id)){
+                $deal_simple_query->where('region_id', \Auth::user()->region_id);
                 $deals_query->where('region_id', \Auth::user()->region_id);
             }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || $usr->can('level 4') && !empty(\Auth::user()->branch_id)){
+                $deal_simple_query->where('branch_id', \Auth::user()->branch_id);
                 $deals_query->where('branch_id', \Auth::user()->branch_id);
             }else{
-                $deals_query->where('assigned_to', \Auth::user()->id);
-            }
-
-
-
-            if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || $usr->can('level 1')){
-
-            }else if(\Auth::user()->type == 'company'){
-                $deal_simple_query->where('brand_id', \Auth::user()->id);
-            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || $usr->can('level 2')){
-                $deal_simple_query->whereIn('brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Region Manager' || $usr->can('level 3') && !empty(\Auth::user()->region_id)){
-                $deal_simple_query->where('region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || $usr->can('level 4') && !empty(\Auth::user()->branch_id)){
-                $deal_simple_query->where('branch_id', \Auth::user()->branch_id);
-            }else{
                 $deal_simple_query->where('assigned_to', \Auth::user()->id);
+                $deals_query->where('assigned_to', \Auth::user()->id);
             }
 
             $Alldeals = $deal_simple_query->get();
@@ -363,7 +352,7 @@ class DealController extends Controller
 
             $total_records = $deals_query->count();
 
-            $deals_query->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page);
+            $deals_query->groupBy('deals.id')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page);
             $deals = $deals_query->get();
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();

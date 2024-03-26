@@ -1775,7 +1775,16 @@ Route::get('application/', [ApplicationsController::class, 'application'])->name
 Route::post('/application/order', [ApplicationsController::class, 'order'])->name('application.order')->middleware(['auth', 'XSS']);
 
 Route::get('/update-application-stage', [ApplicationsController::class, 'updateApplicationStage'])->name('update-application-stage')->middleware(['auth', 'XSS']);
+
+Route::get('/application/{id}/notes', [ApplicationsController::class, 'notesCreate'])->name('application.notes.create')->middleware(['auth', 'XSS']);
+Route::post('/application/{id}/notes', [ApplicationsController::class, 'notesStore'])->name('application.notes.store')->middleware(['auth', 'XSS']);
+Route::get('/application/{id}/notes-edit', [ApplicationsController::class, 'notesEdit'])->name('application.notes.edit')->middleware(['auth', 'XSS']);
+Route::post('/application/{id}/notes-update', [ApplicationsController::class, 'notesUpdate'])->name('application.notes.update')->middleware(['auth', 'XSS']);
+Route::get('/application/{id}/notes-delete', [ApplicationsController::class, 'notesDelete'])->name('application.notes.delete')->middleware(['auth', 'XSS']);
+
+
 Route::get('/organization/{id}/taskDeleted', [OrganizationController::class, 'taskDeleted'])->middleware(['auth', 'XSS']);
+
 
 Route::get('/application_stages', [AppStageController::class, 'index'])->name('application_stages.index')->middleware(['auth', 'XSS']);
 Route::get('/application_stages/create', [AppStageController::class, 'create'])->middleware(['auth', 'XSS']);

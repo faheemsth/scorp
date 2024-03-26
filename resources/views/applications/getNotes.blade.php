@@ -48,13 +48,3 @@
     @endforeach
 
     </ul>
-    <script>
-        $('.textareaClassedit').click(function() {
-                var dataId = $(this).data('note-id');
-                var dataNote = $(this).data('note');
-                $('textarea[name="description"]').val(dataNote);
-                $('#note_id').val(dataId);
-                $('#textareaID, #dellhover, .textareaClass').show();
-                $('.textareaClass').toggle("slide");
-            });
-    </script>

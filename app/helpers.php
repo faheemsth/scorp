@@ -165,9 +165,17 @@ if (!function_exists('addLogActivity')) {
             $msg = 'Lead Notes Deleted.';
         }else if(strtolower($data['notification_type']) == 'Lead Converted'){
             $msg = 'Lead Converted.';
+        }else if(strtolower($data['notification_type']) == 'Application Notes Created'){
+            $msg = 'Application Notes Created.';
+        }else if(strtolower($data['notification_type']) == 'Application Notes Updated'){
+            $msg = 'Application Notes Updated.';
+        }else if(strtolower($data['notification_type']) == 'Applicaiton Notes Deleted'){
+            $msg = 'Applicaiton Notes Deleted.';
         }else{
             $msg = 'New record created';
         }
+
+        
 
         $notification = new Notification;
         $notification->user_id = \Auth::user()->id;

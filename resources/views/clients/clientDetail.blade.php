@@ -106,7 +106,7 @@
                 </a>
                 @endif
 
-                @if (\Auth::user()->type == 'super admin')
+                @if (\Auth::user()->can('edit client'))
 
                         <a href="#" data-size="lg" data-url="{{ route('clients.edit', $client->id) }}"
                             data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Client') }}"

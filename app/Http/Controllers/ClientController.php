@@ -294,17 +294,17 @@ class ClientController extends Controller
         if(\Auth::user()->can('edit client'))
         {
             $user = \Auth::user();
-            if($client->created_by == $user->creatorId() || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
-            {
+            // if($client->created_by == $user->creatorId() || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
+            // {
                 $client->customField = CustomField::getData($client, 'client');
                 $customFields        = CustomField::where('module', '=', 'client')->get();
 
                 return view('clients.edit', compact('client', 'customFields'));
-            }
-            else
-            {
-                return response()->json(['error' => __('Invalid Client.')], 401);
-            }
+            // }
+            // else
+            // {
+            //     return response()->json(['error' => __('Invalid Client.')], 401);
+            // }
         }
         else
         {
@@ -314,11 +314,11 @@ class ClientController extends Controller
 
     public function update(User $client, Request $request)
     {
+        
         if(\Auth::user()->can('edit client'))
         {
-            $user = \Auth::user();
-            if($client->created_by == $user->creatorId())
-            {
+            // if($client->created_by == $user->creatorId())
+            // {
                 $validation = [
                     'name' => 'required',
                     'email' => 'required|email|unique:users,email,' . $client->id,
@@ -326,11 +326,8 @@ class ClientController extends Controller
 
                 $post         = [];
                 $post['name'] = $request->name;
-                if(!empty($request->password))
-                {
-                    $validation['password'] = 'required';
-                    $post['password']       = Hash::make($request->password);
-                }
+                $client->name = $request->name;
+                $client->password = Hash::make($request->password);
 
                 $validator = \Validator::make($request->all(), $validation);
                 if($validator->fails())
@@ -339,19 +336,18 @@ class ClientController extends Controller
 
                     return redirect()->back()->with('error', $messages->first());
                 }
-                $post['email'] = $request->email;
-                $post['passport_number'] = $request->passport_number;
-
-                $client->update($post);
+               $client->email = $request->email;
+               $client->passport_number = $request->passport_number;
+                $client->update();
 
                 CustomField::saveData($client, $request->customField);
 
                 return redirect()->back()->with('success', __('Client Updated Successfully!'));
-            }
-            else
-            {
-                return redirect()->back()->with('error', __('Invalid Client.'));
-            }
+            // }
+            // else
+            // {
+            //     return redirect()->back()->with('error', __('Invalid Client.'));
+            // }
         }
         else
         {

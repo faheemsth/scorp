@@ -55,12 +55,13 @@ function show_toastr(type, message) {
 
     $('#liveToast .toast-body').html(message);
 
-    toast.show();
+    //toast.show();
+    $('#liveToast').addClass('show');
 
     // Hide the toast after 5 seconds
     setTimeout(function() {
         toast.hide();
-    }, 10000); // 5000 milliseconds = 5 seconds
+    }, 5000); // 5000 milliseconds = 5 seconds
 }
 
 
