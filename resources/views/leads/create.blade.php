@@ -206,7 +206,7 @@
                                             </td>
                                         </tr>
 
-                                        <tr>
+                                        <tr class="d-none">
                                             <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Agency') }} 
                                             </td>
@@ -300,7 +300,7 @@
                                                 {{ __('Mobile Phone') }} <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-                                                <input type="text" class="form-control" id="phone" name="lead_phone" required>
+                                                <input type="number" class="form-control" id="phone" name="lead_phone" placeholder="00000000000" required>
                                             </td>
                                         </tr>
 
@@ -539,10 +539,40 @@
     });
 
 
+    //////////////////Submitting Form
+    // new lead form submitting...
+    $("#lead-creating-form").on("submit", function(e) {
 
+        e.preventDefault();
+        var formData = $(this).serialize();
 
+        $(".new-lead-btn").val('Processing...');
+        // $('.new-lead-btn').attr('disabled', 'disabled');
 
+        $(".new-lead-btn").prop('disabled', true);
 
+            $.ajax({
+                type: "POST",
+                url: "{{ route('leads.store') }}",
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('success', data.message, 'success');
+                    $('#commonModal').modal('hide');
+                    $('.leads-list-tbody').prepend(data.html);
+                    openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
+                    // openNav(data.lead.id);
+                    return false;
+                } else {
+                    show_toastr('error', data.message, 'error');
+                    $(".new-lead-btn").val('Create');
+                    $('.new-lead-btn').removeAttr('disabled');
+                }
+            }
+        });
+    });
 </script>
 
 
@@ -553,8 +583,6 @@
         initialCountry: "pk",
         separateDialCode: true,
         formatOnDisplay: true,
-        hiddenInput: "full_number",
-        //placeholderNumberType: "FIXED_LINE",
-       // preferredCountries: ["us", "gb"]
+        hiddenInput: "full_number"
     });
 </script>

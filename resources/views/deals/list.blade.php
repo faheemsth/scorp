@@ -400,8 +400,9 @@
                             @php
                             $saved_filters = App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'deals')->get();
                             @endphp
-                              @if(sizeof($saved_filters) > 0)
+                              
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    @if(sizeof($saved_filters) > 0)
                                         @foreach($saved_filters as $filter)
                                         <li class="d-flex align-items-center justify-content-between ps-2">
                                             <div class="col-10">
@@ -421,9 +422,16 @@
 
                                         </li>
                                         @endforeach
+                                        @else 
+                                        <li class="d-flex align-items-center justify-content-center ps-2">
+                                            No Saved Filter Found.
+                                        </li>
+                                        @endif
 
                             </ul>
-                        @endif
+                            
+
+                        
                     </div>
                 </div>
 

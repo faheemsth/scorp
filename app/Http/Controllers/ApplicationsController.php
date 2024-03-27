@@ -41,6 +41,22 @@ class ApplicationsController extends Controller
             $filters['university_id'] = $_GET['universities'];
         }
 
+        if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+            $filters['brand'] = $_GET['brand'];
+        }
+
+        if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
+            $filters['region_id'] = $_GET['region_id'];
+        }
+
+        if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
+            $filters['branch_id'] = $_GET['branch_id'];
+        }
+
+        if (isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user'])) {
+            $filters['assigned_to'] = $_GET['lead_assgigned_user'];
+        }
+
         return $filters;
     }
 
@@ -92,9 +108,7 @@ class ApplicationsController extends Controller
             //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->whereIn('deal_applications.brand_id', $brand_ids);
             // }
 
-            $total_records = $app_query->count();
-            //$filters
-            $app_for_filer = $app_query->get();
+            
 
 
             $filters = $this->ApplicationFilters();
@@ -107,8 +121,21 @@ class ApplicationsController extends Controller
                     $app_query->whereIn('deal_applications.university_id', $value);
                 } elseif ($column == 'created_by') {
                     $app_query->whereIn('deal_applications.created_by', $value);
+                } elseif ($column == 'brand') {
+                    $app_query->where('deals.brand_id', $value);
+                } elseif ($column == 'region_id') {
+                    $app_query->where('deals.region_id', $value);
+                } elseif ($column == 'branch_id') {
+                    $app_query->where('deals.branch_id', $value);
+                }elseif ($column == 'assigned_to') {
+                    $app_query->where('deals.assigned_to', $value);
                 }
             }
+
+
+            $total_records = $app_query->count();
+            //$filters
+            $app_for_filer = $app_query->get();
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
@@ -122,7 +149,8 @@ class ApplicationsController extends Controller
 
 
             $universities = University::get()->pluck('name', 'id')->toArray();
-            $stages = Stage::get()->pluck('name', 'id')->toArray();
+            $stages = Stage::orderBy('order', 'ASC')->get()->pluck('name', 'id')->toArray();
+    
             $brands = User::where('type', 'company')->get();
             $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'applications')->get();
 
@@ -139,8 +167,8 @@ class ApplicationsController extends Controller
                 ]);
             }
 
-
-            return view('applications.index', compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands', 'saved_filters'));
+            $filters = BrandsRegionsBranches();
+            return view('applications.index', compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands', 'saved_filters',  'filters'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }

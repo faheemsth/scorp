@@ -502,8 +502,8 @@ class LeadController extends Controller
                 $lead->title       = $request->lead_prefix;
                 $lead->name        = $request->lead_first_name . ' ' . $request->lead_last_name;
                 $lead->email       = $request->lead_email;
-                $lead->phone       = $request->full_number;
-                $lead->mobile_phone = $request->lead_mobile_phone;
+                $lead->phone       = $request->lead_phone;
+                $lead->mobile_phone = $request->lead_phone;
                 $lead->branch_id      = $request->lead_branch;
                 $lead->brand_id      = $request->brand_id;
                 $lead->region_id      = $request->region_id;
@@ -872,13 +872,16 @@ class LeadController extends Controller
                 }
 
 
+                echo "<pre>";
+                print_r($request->input());
+                die();
 
 
 
                 $lead->title       = $request->lead_prefix;
                 $lead->name        = $request->lead_first_name . ' ' . $request->lead_last_name;
                 $lead->email       = $request->lead_email;
-                $lead->phone       = $request->full_number;
+                $lead->phone       = $request->lead_phone;
                 $lead->mobile_phone = $request->lead_mobile_phone;
 
                 if (isset($request->lead_branch)) {
@@ -960,8 +963,7 @@ class LeadController extends Controller
     public function destroy(Lead $lead)
     {
         if (\Auth::user()->can('delete lead') || \Auth::user()->type == 'super admin') {
-            if ($lead->created_by == \Auth::user()->creatorId() || \Auth::user()->type == 'super admin') {
-                LeadDiscussion::where('lead_id', '=', $lead->id)->delete();
+               LeadDiscussion::where('lead_id', '=', $lead->id)->delete();
                 LeadFile::where('lead_id', '=', $lead->id)->delete();
                 UserLead::where('lead_id', '=', $lead->id)->delete();
                 LeadActivityLog::where('lead_id', '=', $lead->id)->delete();
@@ -985,9 +987,6 @@ class LeadController extends Controller
 
 
                 return redirect()->back()->with('success', __('Lead successfully deleted!'));
-            } else {
-                return redirect()->back()->with('error', __('Permission Denied.'));
-            }
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }

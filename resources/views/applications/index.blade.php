@@ -9,17 +9,17 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
 @endsection
 @push('script-page')
 <script>
-       $(document).on('change', '.sub-check', function() {
+    $(document).on('change', '.sub-check', function() {
         var selectedIds = $('.sub-check:checked').map(function() {
             return this.value;
         }).get();
 
         console.log(selectedIds.length)
 
-        if(selectedIds.length > 0){
+        if (selectedIds.length > 0) {
             selectedArr = selectedIds;
             $("#actions_div").css('display', 'block');
-        }else{
+        } else {
             selectedArr = selectedIds;
 
             $("#actions_div").css('display', 'none');
@@ -86,31 +86,35 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         ALL APPLICATIONS
                     </button>
+                   
+                    <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton1">
                     @if(sizeof($saved_filters) > 0)
-                            <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton1">
-
-                                @foreach($saved_filters as $filter)
-                                <li class="d-flex align-items-center justify-content-between ps-2">
-                                    <div class="col-10">
-                                        <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
-                                        <span class="text-dark"> ({{$filter->count}})</span>
-                                    </div>
-                                    <ul class="w-25" style="list-style: none;">
-                                        <li class="fil fw-bolder">
-                                            <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
-                                            <ul class="submenu" style="border: 1px solid #e9e9e9;
+                        @foreach($saved_filters as $filter)
+                        <li class="d-flex align-items-center justify-content-between ps-2">
+                            <div class="col-10">
+                                <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                <span class="text-dark"> ({{$filter->count}})</span>
+                            </div>
+                            <ul class="w-25" style="list-style: none;">
+                                <li class="fil fw-bolder">
+                                    <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                    <ul class="submenu" style="border: 1px solid #e9e9e9;
                                             box-shadow: 0px 0px 1px #e9e9e9;">
-                                                <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name?>', <?= $filter->id ?>)">Rename</a></li>
-                                                <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
-                                            </ul>
-                                        </li>
+                                        <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name ?>', <?= $filter->id ?>)">Rename</a></li>
+                                        <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
                                     </ul>
-
                                 </li>
-                                @endforeach
-
                             </ul>
-                            @endif
+
+                        </li>
+                        @endforeach
+                        @else
+                        <li class="d-flex align-items-center justify-content-center ps-2">
+                            No Saved Filter Found.
+                        </li>
+                        @endif
+                    </ul>
+                    
                 </div>
             </div>
 
@@ -138,21 +142,21 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                 </button> -->
 
                 <a href="javascript:void(0)" class="btn  btn-dark filter-btn-show px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Filter" class="btn  btn-dark px-0">
-                <i class="ti ti-filter"></i>
-                    </a>
+                    <i class="ti ti-filter"></i>
+                </a>
 
 
-                    @if(auth()->user()->type == 'super admin' || auth()->user()->type == 'Admin Team')
-                        <a href="{{ route('regions.download') }}" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
-                        <i class="ti ti-download" style="font-size:18px"></i>
-                    </a>
-                    @endif
+                @if(auth()->user()->type == 'super admin' || auth()->user()->type == 'Admin Team')
+                <a href="{{ route('regions.download') }}" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
+                    <i class="ti ti-download" style="font-size:18px"></i>
+                </a>
+                @endif
 
-                    @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete application'))
-                    <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Bulk Delete') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; margin-top:10px;">
-                        <i class="ti ti-trash"></i>
-                    </a>
-                    @endif
+                @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete application'))
+                <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Bulk Delete') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; margin-top:10px;">
+                    <i class="ti ti-trash"></i>
+                </a>
+                @endif
 
                 <!-- <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> -->
 
@@ -163,7 +167,70 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
         <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
             <form action="/applications/" method="GET" class="">
                 <div class="row my-3">
-                    <div class="col-md-4"> <label for="">Name</label>
+
+                    @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
+                    <div class="col-md-3 mt-2">
+                        <label for="">Brand</label>
+                        <select name="brand" class="form form-control select2" id="filter_brand_id">
+                            @if (!empty($filters['brands']))
+                            @foreach ($filters['brands'] as $key => $Brand)
+                            <option value="{{ $key }}" {{ !empty($_GET['brand']) && $_GET['brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
+                            @endforeach
+                            @else
+                            <option value="" disabled>No brands available</option>
+                            @endif
+                        </select>
+                    </div>
+                    @endif
+
+
+
+                    @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3'))
+                    <div class="col-md-3 mt-2" id="region_filter_div">
+                        <label for="">Region</label>
+                        <select name="region_id" class="form form-control select2" id="filter_region_id">
+                            @if (!empty($filters['regions']))
+                            @foreach ($filters['regions'] as $key => $region)
+                            <option value="{{ $key }}" {{ !empty($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : '' }}>{{ $region }}</option>
+                            @endforeach
+                            @else
+                            <option value="" disabled>No regions available</option>
+                            @endif
+                        </select>
+                    </div>
+                    @endif
+
+
+                    @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3') || \Auth::user()->can('level 4'))
+                    <div class="col-md-3 mt-2" id="branch_filter_div">
+                        <label for="">Branch</label>
+                        <select name="branch_id" class="form form-control select2" id="filter_branch_id">
+                            @if (!empty($filters['branches']))
+                            @foreach ($filters['branches'] as $key => $branch)
+                            <option value="{{ $key }}" {{ !empty($_GET['branch_id']) && $_GET['branch_id'] == $key ? 'selected' : '' }}>{{ $branch }}</option>
+                            @endforeach
+                            @else
+                            <option value="" disabled>No regions available</option>
+                            @endif
+                        </select>
+                    </div>
+                    @endif
+
+                    <div class="col-md-3 mt-2"> <label for="">Assigned To</label>
+                        <div class="" id="assign_to_div">
+                            <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
+                                @foreach ($filters['employees'] as $key => $user)
+                                <option value="{{ $key }}" <?= isset($_GET['lead_assgigned_user']) && $key == $_GET['lead_assgigned_user'] ? 'selected' : '' ?> class="">{{ $user }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <div class="col-md-3"> <label for="">Name</label>
                         <select class="form form-control select2" id="choices-multiple110" name="applications[]" multiple style="width: 95%;">
                             <option value="">Select Application</option>
                             @foreach ($app_for_filer as $app)
@@ -173,7 +240,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     </div>
 
 
-                    <div class="col-md-4"> <label for="">University</label>
+                    <div class="col-md-3"> <label for="">University</label>
                         <select class="form form-control select2" id="choices-multiple111" name="universities[]" multiple style="width: 95%;">
                             <option value="">Select University</option>
                             @foreach ($universities as $key => $name)
@@ -183,7 +250,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     </div>
 
 
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="">Stages</label>
                         <select name="stages[]" id="stages" class="form form-control select2" multiple style="width: 95%;">
                             <option value="">Select Stage</option>
@@ -192,27 +259,12 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                             @endforeach
                         </select>
                     </div>
-                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 1'))
-                    <div class="col-md-4"> <label for="">Brands</label>
-                        <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple style="width: 95%;">
-                            <option value="">Select Brand</option>
-                            @if (FiltersBrands())
-                                @foreach (FiltersBrands() as $key => $brand)
-                                   <option value="{{ $key }}" <?= isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' ?> class="">{{ $brand }}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
-                    @endif
 
-
-
-
-                    <div class="col-md-4 mt-2">
+                    <div class="col-md-3 mt-2 p-0">
                         <br>
-                        <input type="submit" class="btn form-btn me-2 btn-dark">
-                        <a href="/applications/" class="btn form-btn btn-dark">Reset</a>
-                        <a type="button" id="save-filter-btn" onClick="saveFilter('applications',<?= sizeof($applications) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
+                        <input type="submit" class="btn form-btn btn-sm btn-dark">
+                        <a href="/applications/" class="btn form-btn btn-sm btn-dark">Reset</a>
+                        <a type="button" id="save-filter-btn" onClick="saveFilter('applications',<?= sizeof($applications) ?>)" class="btn form-btn btn-sm bg-dark" style=" color:white;display:none;">Save Filter</a>
                     </div>
                 </div>
                 <div class="row my-4 d-none">
@@ -240,7 +292,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
         </div>
 
         <style>
-            table{
+            table {
                 font-size: 14px !important;
             }
         </style>
@@ -267,46 +319,49 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     </tr>
                 </thead>
                 <tbody class="application_tbody">
-                      @forelse($applications as $app)
-                            @php
-                                $university = \App\Models\University::where('id', $app->university_id)->first();
-                                $deal = \App\Models\Deal::where('id', $app->deal_id)->first();
-                                $users = \App\Models\User::pluck('name', 'id')->toArray();
-                                $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
-                            @endphp
-                            <tr>
-                                 <td>
-                                    <input type="checkbox" name="applications[]" value="{{$app->id}}" class="sub-check">
-                                </td>
-                                <td>
-                                <span style="cursor:pointer" class="hyper-link" @can('view application') onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')" @endcan>
+                    @forelse($applications as $app)
+                    @php
+                    $university = \App\Models\University::where('id', $app->university_id)->first();
+                    $deal = \App\Models\Deal::where('id', $app->deal_id)->first();
+                    $users = \App\Models\User::pluck('name', 'id')->toArray();
+                    $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
+                    @endphp
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="applications[]" value="{{$app->id}}" class="sub-check">
+                        </td>
+                        <td>
+                            <span style="cursor:pointer" class="hyper-link" @can('view application') onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')" @endcan>
                                 {{ strlen($app->name) > 20 ? substr($app->name, 0, 20) . '...' : $app->name }}
                             </span>
-                                </td>
-                                <td>{{ $app['course'] }}</td>
-                                <td>{{ $universities[$app->university_id]  ?? '' }}</td>
-                                <td>{{ isset($app->stage_id) && isset($stages[$app->stage_id]) ? $stages[$app->stage_id] : '' }}</td>
-                                <td> {{ !empty($deal->assigned_to) ? (isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : '') : '' }} </td>
+                        </td>
+                        <td>{{ $app['course'] }}</td>
+                        <td>{{ $universities[$app->university_id]  ?? '' }}</td>
+                        <td>{{ isset($app->stage_id) && isset($stages[$app->stage_id]) ? $stages[$app->stage_id] : '' }}</td>
+                        <td> {{ !empty($deal->assigned_to) ? (isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : '') : '' }} </td>
 
 
-                                <td class="d-none"> {{ $app->intake }} </td>
-                                <td class="d-none"> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }}  </td>
-                                <td class="d-none"> {{ isset($branch->name) ? $branch->name : ''  }} </td>
+                        <td class="d-none"> {{ $app->intake }} </td>
+                        <td class="d-none"> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }} </td>
+                        <td class="d-none"> {{ isset($branch->name) ? $branch->name : ''  }} </td>
 
 
-                            </tr>
-                        @empty
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5">No Record Found.</td>
+                    </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
         <div class="pagination_div">
-        @if ($total_records > 0)
-        @include('layouts.pagination', [
-        'total_pages' => $total_records,
-        'num_results_on_page' => 50,
-        ])
-        @endif
+            @if ($total_records > 0)
+            @include('layouts.pagination', [
+            'total_pages' => $total_records,
+            'num_results_on_page' => 50,
+            ])
+            @endif
         </div>
     </div>
     <div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
@@ -360,8 +415,8 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
     $(document).ready(function() {
         let curr_url = window.location.href;
 
-        if(curr_url.includes('?')){
-            $('#save-filter-btn').css('display','inline-block');
+        if (curr_url.includes('?')) {
+            $('#save-filter-btn').css('display', 'inline-block');
         }
     });
 
@@ -427,7 +482,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
         });
     })
 
-   
+
     $(document).on("click", ".list-global-search-btn", function() {
         var search = $(".list-global-search").val();
         var ajaxCall = 'true';
@@ -452,9 +507,9 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
         })
     })
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         // Attach an event listener to the input field
-        $('.list-global-search').keypress(function (e) {
+        $('.list-global-search').keypress(function(e) {
             // Check if the pressed key is Enter (key code 13)
             if (e.which === 13) {
                 var search = $(".list-global-search").val();
@@ -519,8 +574,8 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
             success: function(data) {
                 data = JSON.parse(data);
                 if (data.status == 'success') {
-                  //  openNav(application_id);
-                    openSidebar('deals/'+application_id+'/detail-application')
+                    //  openNav(application_id);
+                    openSidebar('deals/' + application_id + '/detail-application')
                     return false;
                     // $('.lead_stage').removeClass('current');
                     // currentBtn.addClass('current');
@@ -547,9 +602,99 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = '/delete-bulk-applications?ids='+selectedIds.join(',');
+                window.location.href = '/delete-bulk-applications?ids=' + selectedIds.join(',');
             }
         });
     })
+
+
+    ////////////////////Filters Javascript
+    $("#filter-show #filter_brand_id").on("change", function() {
+            var id = $(this).val();
+            var type = 'brand';
+            var filter = true;
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#region_filter_div').html('');
+                        $("#region_filter_div").html(data.regions);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+
+        $(document).on("change", "#filter-show #filter_region_id, #filter-show #region_id", function() {
+            var id = $(this).val();
+            var filter = true;
+            var type = 'region';
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#branch_filter_div').html('');
+                        $("#branch_filter_div").html(data.branches);
+                        getLeads();
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+        $(document).on("change", "#filter-show #filter_branch_id, #filter-show #branch_id", function() {
+    
+            var id = $(this).val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('filter-branch-users') }}',
+                    data: {
+                        id: id
+                    },
+                    success: function(data){
+                        data = JSON.parse(data);
+
+                        if (data.status === 'success') {
+                            $('#assign_to_div').html('');
+                            $("#assign_to_div").html(data.html);
+                            select2();
+                        } else {
+                            console.error('Server returned an error:', data.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX request failed:', status, error);
+                    }
+                });
+        });
 </script>
 @endpush

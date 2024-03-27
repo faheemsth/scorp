@@ -186,10 +186,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         ALL LEADS
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        {{-- <li><a class="dropdown-item delete-bulk-leads" href="javascript:void(0)">Delete</a>
-                                        </li> --}}
-
-
+                                    
                                         @php
                                         $saved_filters = App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'leads')->get();
                                          @endphp
@@ -213,6 +210,10 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                         </li>
                                         @endforeach
+                                        @else
+                                        <li class="d-flex align-items-center justify-content-center ps-2">
+                                            No Filter Found
+                                        </li>
                                         @endif
 
                                     </ul>
@@ -589,7 +590,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                                 <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                                     <span style="cursor:pointer" class="lead-name hyper-link"
-                                                       @can('view lead') onclick="openNav(<?= $lead->id ?>)" @endcan
+                                                       @can('view lead') onclick="openSidebar('/get-lead-detail?lead_id=<?= $lead->id ?>')" @endcan
                                                         data-lead-id="{{ $lead->id }}">{{ $lead->name }}</span>
                                                 </td>
 
@@ -938,41 +939,6 @@ if (isset($lead->is_active) && $lead->is_active) {
     })
 
 
-
-    // new lead form submitting...
-    $(document).on("submit", "#lead-creating-form", function(e) {
-
-        e.preventDefault();
-        var formData = $(this).serialize();
-
-        $(".new-lead-btn").val('Processing...');
-        // $('.new-lead-btn').attr('disabled', 'disabled');
-
-        $(".new-lead-btn").prop('disabled', true);
-
-        $.ajax({
-            type: "POST",
-            url: "{{ route('leads.store') }}",
-            data: formData,
-            success: function(data) {
-                data = JSON.parse(data);
-
-                if (data.status == 'success') {
-                    show_toastr('success', data.message, 'success');
-                    $('#commonModal').modal('hide');
-                    $('.leads-list-tbody').prepend(data.html);
-                    openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
-                    // openNav(data.lead.id);
-                    return false;
-                } else {
-                    show_toastr('error', data.message, 'error');
-                    $(".new-lead-btn").val('Create');
-                    $('.new-lead-btn').removeAttr('disabled');
-                }
-            }
-        });
-    });
-
     function RefreshList() {
         var ajaxCall = 'true';
         $(".leads-list-tbody").html('Loading...');
@@ -993,39 +959,6 @@ if (isset($lead->is_active) && $lead->is_active) {
             },
         });
     }
-
-
-    // new lead form submitting...
-    $(document).on("submit", "#lead-updating-form", function(e) {
-
-        e.preventDefault();
-        var formData = $(this).serialize();
-        var id = $(".lead_id").val();
-        $(".update-lead-btn").val('Processing...');
-        $('.update-lead-btn').attr('disabled', 'disabled');
-
-        $.ajax({
-            type: "POST",
-            url: "/leads/update/" + id,
-            data: formData,
-            success: function(data) {
-                data = JSON.parse(data);
-
-                if (data.status == 'success') {
-                    show_toastr('success', data.message, 'success');
-                    // openNav(id);
-                    $("#commonModal").modal('hide');
-                    openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
-                    //window.location.href = '/leads/list';
-                    return false;
-                } else {
-                    show_toastr('error', data.message, 'error');
-                    $(".new-lead-btn").val('Create');
-                    $('.new-lead-btn').removeAttr('disabled');
-                }
-            }
-        });
-    });
 
 
     $(document).on('click', '.lead_stage', function() {
@@ -1232,9 +1165,6 @@ if (isset($lead->is_active) && $lead->is_active) {
 
         });
 
-
-
-
         $(document).on("click", ".edit-btn-data", function() {
             var name = $(this).attr('data-name');
             var value = $(this).parent().siblings('.input-group').children('.' + name).val();
@@ -1260,40 +1190,6 @@ if (isset($lead->is_active) && $lead->is_active) {
             });
 
         });
-
-
-
-        $(document).on("click", ".edit-lead-remove", function() {
-
-            var name = $(this).attr('data-name');
-
-            var value = '';
-            if (name == 'organization_id') {
-                value = $('.' + name).val();
-                alert(value);
-            } else if (name == 'sourcess') {
-                value = $('.' + name).val();
-            } else {
-                value = $('.' + name).val();
-            }
-
-
-
-
-            var html = '<div class="d-flex edit-input-field-div">' +
-    '  <div class="input-group border-0 d-flex">' +
-    '<a href="">' +
-    value +
-    '</a>' +
-    '</div>' +
-    '<div class="edit-btn-div">' +
-    '<button class="btn btn-secondary edit-input rounded-0 btn-effect-none" style="padding:7px;"><i class="ti ti-pencil"></i></button>' +
-    '</div>' +
-    '</div>';
-
-$('.' + name + '-td').html(html);
-        });
-
 
         $(document).on("click", ".edit-btn-address", function() {
 

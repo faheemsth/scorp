@@ -530,7 +530,7 @@ var BranchId = '';
     });
 
     // create task
-    $(document).on("submit", "#create-task", function(e) {
+    $("#create-task").on("submit", function(e) {
 
         e.preventDefault();
         var formData = $(this).serialize();
@@ -547,7 +547,7 @@ var BranchId = '';
                 data = JSON.parse(data);
 
                 if (data.status == 'success') {
-                    show_toastr('Success', data.message, 'success');
+                    show_toastr('success', data.message, 'success');
                     $('#commonModal').modal('hide');
                     $(".modal-backdrop").removeClass("modal-backdrop");
                     $(".block-screen").css('display', 'none');

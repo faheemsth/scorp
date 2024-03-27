@@ -509,7 +509,7 @@ class RegionController extends Controller
         $region_id = $_GET['region_id'];
         $regions = Branch::where('region_id', $region_id)->pluck('name', 'id')->toArray();
 
-        $html = '<option value="">Select Region</option>';
+        $html = '<option value="">Select Branch</option>';
         foreach($regions as $key => $region){
             $html .= "<option value='$key'>$region</option>";
         }

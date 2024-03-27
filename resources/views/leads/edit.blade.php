@@ -543,32 +543,6 @@
 </script>
 <script>
     $(".brand_id").on("change", function(){
-        // var id = $(this).val();
-
-        // $.ajax({
-        //     type: 'GET',
-        //     url: '{{ route('lead_companyemployees') }}',
-        //     data: {
-        //         id: id  // Add a key for the id parameter
-        //     },
-        //     success: function(data){
-        //         data = JSON.parse(data);
-
-        //         if (data.status === 'success') {
-        //             $("#assign_to_div").html(data.employees);
-        //             select2();
-        //             $("#branch_div").html(data.branches);
-        //             select2(); // Assuming this is a function to initialize or update a select2 dropdown
-        //         } else {
-        //             console.error('Server returned an error:', data.message);
-        //         }
-        //     },
-        //     error: function(xhr, status, error) {
-        //         console.error('AJAX request failed:', status, error);
-        //     }
-        // });
-
-
         var id = $(this).val();
 
         $.ajax({
@@ -646,6 +620,39 @@
             }
         });
     });
+
+
+    // new lead form submitting...
+    $("#lead-updating-form").on("submit", function(e) {
+
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var id = $(".lead_id").val();
+        $(".update-lead-btn").val('Processing...');
+        $('.update-lead-btn').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: "/leads/update/" + id,
+            data: formData,
+            success: function(data) {
+                data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('success', data.message, 'success');
+                        // openNav(id);
+                        $("#commonModal").modal('hide');
+                        openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
+                        //window.location.href = '/leads/list';
+                        return false;
+                    } else {
+                        show_toastr('error', data.message, 'error');
+                        $(".new-lead-btn").val('Create');
+                        $('.new-lead-btn').removeAttr('disabled');
+                    }
+                }
+            });
+        });
 </script>
 
 
