@@ -292,6 +292,13 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                 Tags
                                             </button>
                                         </li>
+
+
+                                        <li>
+                                            <button type="button" class="btn btn-link send_bulk_email dropdown-item d-none" id="actions_div">
+                                                Send Mail
+                                            </button>
+                                        </li>
                                     </ul>
                                 </div>
                                 
@@ -780,12 +787,12 @@ if (isset($lead->is_active) && $lead->is_active) {
             selectedArr = selectedIds;
             $("#actions_div").removeClass('d-none');
             $("#tagModalBtn").removeClass('d-none');
-
+            $(".send_bulk_email").removeClass('d-none');
         } else {
             selectedArr = selectedIds;
-
             $("#actions_div").addClass('d-none');
             $("#tagModalBtn").addClass('d-none');
+            $(".send_bulk_email").addClass('d-none');
         }
     });
 
@@ -798,11 +805,13 @@ if (isset($lead->is_active) && $lead->is_active) {
             selectedArr = selectedIds;
             $("#actions_div").removeClass('d-none');
             $("#tagModalBtn").removeClass('d-none');
+            $(".send_bulk_email").removeClass('d-none');
         } else {
             selectedArr = selectedIds;
 
             $("#actions_div").addClass('d-none');
             $("#tagModalBtn").addClass('d-none');
+            $(".send_bulk_email").addClass('d-none');
         }
         let commaSeperated = selectedArr.join(",");
         console.log(commaSeperated)
@@ -831,6 +840,30 @@ if (isset($lead->is_active) && $lead->is_active) {
             }
         });
     })
+
+    $(".send_bulk_email").on("click", function() {
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        $.ajax({
+            method: 'POST',
+            url: '{{ route("send.bulk.email") }}',
+            data: {
+                _token: '{{ csrf_token() }}', // Include CSRF token
+                ids: selectedIds  // Pass the selected IDs as data
+            },
+            success: function(response) {
+                console.log(response);
+                // Handle success response
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                // Handle error response
+            }
+        });
+    });
+
 
     $(document).on("change", "#lead-file", function() {
 

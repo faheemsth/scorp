@@ -28,6 +28,7 @@ use App\Models\DealEmail;
 use App\Models\LeadEmail;
 use App\Models\LeadStage;
 use Illuminate\View\View;
+use App\Jobs\SendEmailJob;
 use App\Models\ClientDeal;
 use App\Models\LeadToDeal;
 use App\Models\University;
@@ -3809,5 +3810,28 @@ class LeadController extends Controller
             'status' => 'success',
             'msg' => 'Tag added successfully'
         ]);
+    }
+
+
+    public function sendBulkEmail(Request $request){
+       $data = ['ids' => $request->ids];
+       //SendEmailJob::dispatch($data);
+
+       $lead_emails = Lead::query()->select('email', 'name')->whereIn('id', $request->ids)->get();
+       
+        foreach ($lead_emails as $lead) {
+            try {
+                // Send email to $lead->email using $this->data['subject'] and $this->data['content']
+                // You can use Laravel's Mail facade or any email-sending library of your choice
+                Utility::sendEmailTemplate('email_marketing', [$lead->email], $lead->name);
+
+                // Log a message to the console indicating that the email was sent
+                $message = "Email sent successfully to {$lead->name} ({$lead->email})";
+                \Illuminate\Support\Facades\Log::info($message);
+            } catch (\Exception $e) {
+                // Log any exceptions that occur during the email sending process
+                \Illuminate\Support\Facades\Log::error("Failed to send email to {$lead->name} ({$lead->email}): {$e->getMessage()}");
+            }
+        }
     }
 }

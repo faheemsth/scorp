@@ -907,6 +907,10 @@ Route::put('email_template_store/{id}', [EmailTemplateController::class, 'update
 Route::put('email_template_store/{pid}', [EmailTemplateController::class, 'storeEmailLang'])->name('store.email.language')->middleware(['auth']);
 Route::resource('email_template', EmailTemplateController::class)->middleware(['auth', 'XSS']);
 
+Route::post('email_template_lang/{id}', [EmailTemplateController::class, 'updateEmailContent'])->name('update.email')->middleware(['auth', 'XSS']);
+
+
+Route::post('/leads/send_bulk_email', [LeadController::class, 'sendBulkEmail'])->name('send.bulk.email')->middleware(['auth', 'XSS']);
 
 // End Email Templates
 
