@@ -572,7 +572,7 @@
                                                                 {{ __('Phone') }}
                                                             </td>
                                                             <td class="twitter-td" style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $lead->phone }}
+                                                                {{ $lead->phone ?? ''}}
                                                             </td>
                                                         </tr>
 
@@ -581,7 +581,7 @@
                                                                 {{ __('Email') }}
                                                             </td>
                                                             <td class="twitter-td" style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $lead->email }}
+                                                                {{ $lead->email ?? ''}}
                                                             </td>
                                                         </tr>
 
