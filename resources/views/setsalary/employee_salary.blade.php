@@ -21,7 +21,7 @@
                                 </div>
                                 @can('create set salary')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('employee.basic.salary',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Set Basic Sallary')}}" data-toggle="tooltip" data-original-title="{{__('Basic Salary')}}" class="btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('employee.basic.salary',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Set Basic Sallary')}}" data-toggle="tooltip" data-original-title="{{__('Basic Salary')}}" class="btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>
@@ -52,7 +52,7 @@
                                 </div>
                                 @can('create allowance')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('allowances.create',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Create Allowance')}}" data-bs-toggle="tooltip"  title="{{__('Create')}}" data-original-title="{{__('Create Allowance')}}" class="apply-btn btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('allowances.create',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Create Allowance')}}" data-bs-toggle="tooltip"  title="{{__('Create')}}" data-original-title="{{__('Create Allowance')}}" class="apply-btn btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>
@@ -123,7 +123,7 @@
                                 </div>
                                 @can('create commission')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('commissions.create',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Create Commission')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-original-title="{{__('Create Commission')}}" class="apply-btn btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('commissions.create',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Create Commission')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-original-title="{{__('Create Commission')}}" class="apply-btn btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>
@@ -193,7 +193,7 @@
                                 </div>
                                 @can('create loan')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('loans.create',$employee->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create Loan')}}" data-bs-toggle="tooltip"  title="{{__('Create')}}" data-original-title="{{__('Create Loan')}}" class="apply-btn btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('loans.create',$employee->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create Loan')}}" data-bs-toggle="tooltip"  title="{{__('Create')}}" data-original-title="{{__('Create Loan')}}" class="apply-btn btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>
@@ -268,7 +268,7 @@
                                 </div>
                                 @can('create saturation deduction')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('saturationdeductions.create',$employee->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create Saturation Deduction')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-original-title="{{__('Create Saturation Deduction')}}" class="apply-btn btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('saturationdeductions.create',$employee->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create Saturation Deduction')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-original-title="{{__('Create Saturation Deduction')}}" class="apply-btn btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>
@@ -340,7 +340,7 @@
                                 </div>
                                 @can('create other payment')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('otherpayments.create',$employee->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create Other Payment')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-original-title="{{__('Create Other Payment')}}" class="apply-btn btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('otherpayments.create',$employee->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create Other Payment')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-original-title="{{__('Create Other Payment')}}" class="apply-btn btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>
@@ -409,7 +409,7 @@
                                 </div>
                                 @can('create overtime')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('overtimes.create',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Create Overtime')}}" data-toggle="tooltip" data-original-title="{{__('Create Overtime')}}" class="apply-btn btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('overtimes.create',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Create Overtime')}}" data-toggle="tooltip" data-original-title="{{__('Create Overtime')}}" class="apply-btn btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>

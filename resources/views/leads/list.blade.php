@@ -106,40 +106,6 @@ if (isset($lead->is_active) && $lead->is_active) {
     @if ($pipeline)
         <div class="row">
 
-            {{-- <div class="row justify-content-center">
-                <div class="col-md-3">
-                    <!-- card -->
-                    <div class="card my-card">
-                        <div class="card-body">
-                            <div class="" style="position: relative;">
-                                <img src="{{ asset('assets/images/tick_mark.png') }}" alt="" style="width: 30px; position: absolute; right: 0px;">
-                            </div>
-                            <div class="d-flex align-items-end justify-content-between mt-4">
-                                <div>
-                                    <h1> {{ isset($total_leads_by_status['opened lead']) ? $total_leads_by_status['opened lead'] : 0}} </h1>
-                                    <h5>Open Leads</h5>
-                                </div>
-                            </div>
-                        </div><!-- end card body -->
-                    </div><!-- end card -->
-                </div>
-                <div class="col-md-3">
-                    <!-- card -->
-                    <div class="card my-card">
-                        <div class="card-body">
-                            <div class="" style="position: relative;">
-                                <img src="{{ asset('assets/images/cross_mark.png') }}" alt="" style="width: 30px; position: absolute; right: 0px;">
-                            </div>
-                            <div class="mt-4">
-                                <h1>{{ isset($total_leads_by_status['closed lead']) ? $total_leads_by_status['closed lead'] : 0}}</h1>
-                                <h5>Close Leads</h5>
-                            </div>
-                        </div><!-- end card body -->
-                    </div><!-- end card -->
-                </div>
-            </div> --}}
-
-
             <div class="col-xl-12">
                 <div class="card my-card" style="max-width: 98%;border-radius:0px; min-height: 250px !important;">
                     <div class="card-body table-border-style" style="padding: 25px 3px;">
@@ -324,6 +290,13 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             <!-- Button trigger modal -->
                                             <button type="button" class="btn btn-link dropdown-item d-none" id="tagModalBtn" data-toggle="modal" data-target="#tagModal">
                                                 Tags
+                                            </button>
+                                        </li>
+
+
+                                        <li>
+                                            <button type="button" class="btn btn-link send_bulk_email dropdown-item d-none" id="actions_div">
+                                                Send Mail
                                             </button>
                                         </li>
                                     </ul>
@@ -814,12 +787,12 @@ if (isset($lead->is_active) && $lead->is_active) {
             selectedArr = selectedIds;
             $("#actions_div").removeClass('d-none');
             $("#tagModalBtn").removeClass('d-none');
-
+            $(".send_bulk_email").removeClass('d-none');
         } else {
             selectedArr = selectedIds;
-
             $("#actions_div").addClass('d-none');
             $("#tagModalBtn").addClass('d-none');
+            $(".send_bulk_email").addClass('d-none');
         }
     });
 
@@ -832,11 +805,13 @@ if (isset($lead->is_active) && $lead->is_active) {
             selectedArr = selectedIds;
             $("#actions_div").removeClass('d-none');
             $("#tagModalBtn").removeClass('d-none');
+            $(".send_bulk_email").removeClass('d-none');
         } else {
             selectedArr = selectedIds;
 
             $("#actions_div").addClass('d-none');
             $("#tagModalBtn").addClass('d-none');
+            $(".send_bulk_email").addClass('d-none');
         }
         let commaSeperated = selectedArr.join(",");
         console.log(commaSeperated)
@@ -865,6 +840,30 @@ if (isset($lead->is_active) && $lead->is_active) {
             }
         });
     })
+
+    $(".send_bulk_email").on("click", function() {
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        $.ajax({
+            method: 'POST',
+            url: '{{ route("send.bulk.email") }}',
+            data: {
+                _token: '{{ csrf_token() }}', // Include CSRF token
+                ids: selectedIds  // Pass the selected IDs as data
+            },
+            success: function(response) {
+                console.log(response);
+                // Handle success response
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                // Handle error response
+            }
+        });
+    });
+
 
     $(document).on("change", "#lead-file", function() {
 

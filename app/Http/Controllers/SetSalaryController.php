@@ -20,13 +20,14 @@ class SetSalaryController extends Controller
     {
         if(\Auth::user()->can('manage set salary'))
         {
-            $employees = Employee::where(
-                [
-                    'created_by' => \Auth::user()->creatorId(),
-                ]
-            )->get();
+            $pagination = getPaginationDetail();
+            $start = $pagination['start'];
+            $limit = $pagination['num_results_on_page'];
 
-            return view('setsalary.index', compact('employees'));
+            $query = Employee::query();
+            $total_records = $query->count();
+            $employees = $query->skip($start)->take($limit)->get();
+            return view('setsalary.index', compact('employees', 'total_records'));
         }
         else
         {

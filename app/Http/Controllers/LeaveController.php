@@ -17,19 +17,24 @@ class LeaveController extends Controller
 
         if(\Auth::user()->can('manage leave'))
         {
-            $leaves = Leave::where('created_by', '=', \Auth::user()->creatorId())->get();
-            if(\Auth::user()->type == 'employee')
-            {
+            $pagination = getPaginationDetail();
+            $start = $pagination['start'];
+            $limit = $pagination['num_results_on_page'];
+
+            $query = Leave::query();
+
+            if(\Auth::user()->can('level 1')){
+                $total_records = $query->count();
+                $leaves = $query->skip($start)->take($limit)->get();
+            }else{
                 $user     = \Auth::user();
                 $employee = Employee::where('user_id', '=', $user->id)->first();
-                $leaves   = Leave::where('employee_id', '=', $employee->id)->get();
-            }
-            else
-            {
-                $leaves = Leave::where('created_by', '=', \Auth::user()->creatorId())->get();
+                $total_records = $query->count();
+                $leaves = $query->where('employee_id',  $employee->id)->skip($start)->take($limit)->get();
             }
 
-            return view('leave.index', compact('leaves'));
+
+            return view('leave.index', compact('leaves', 'total_records'));
         }
         else
         {

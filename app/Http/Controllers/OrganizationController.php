@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use App\Models\OrganizationNote;
 use App\Models\OrganizationType;
 use App\Models\CompanyPermission;
+use App\Models\DealApplication;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\OrganizationDiscussion;
@@ -190,8 +191,7 @@ class OrganizationController extends Controller
             } else {
                 return view('organizations.index', compact('organizations', 'org_types', 'countries', 'user_type', 'total_records'));
             }
-
-        }else{
+        } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
@@ -217,7 +217,7 @@ class OrganizationController extends Controller
                 'user_type' => $user_type
             ];
             return view('organizations.organization_create',  $data);
-        }else{
+        } else {
             // return json_encode([
             //     'status' => 'error',
             //     'message' =>  'Permission Denied.'
@@ -236,99 +236,99 @@ class OrganizationController extends Controller
     public function store(Request $request)
     {
 
-     if (\Auth::user()->type == 'super admin' || \Auth::user()->can('create organization')) {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('create organization')) {
 
-        //
-        $validator = \Validator::make(
-            $request->all(),
-            [
-                'organization_name' => 'required',
-                'organization_type' => 'required',
-                'organization_email' => 'required|unique:users,email',
-                'organization_phone' => 'required',
-                //'organization_website' => 'required',
-                //'organization_linkedin' => 'required',
-                //'organization_facebook' => 'required',
-                //'organization_twitter' => 'required',
-                //'organization_billing_street' => 'required',
-                //'organization_billing_city' => 'required',
-                //'organization_billing_state' => 'required',
-                //'organization_billing_postal_code' => 'required',
-                //'organization_billing_country' => 'required',
-               // 'organization_description' => 'required'
-            ]
-        );
+            //
+            $validator = \Validator::make(
+                $request->all(),
+                [
+                    'organization_name' => 'required',
+                    'organization_type' => 'required',
+                    'organization_email' => 'required|unique:users,email',
+                    'organization_phone' => 'required',
+                    //'organization_website' => 'required',
+                    //'organization_linkedin' => 'required',
+                    //'organization_facebook' => 'required',
+                    //'organization_twitter' => 'required',
+                    //'organization_billing_street' => 'required',
+                    //'organization_billing_city' => 'required',
+                    //'organization_billing_state' => 'required',
+                    //'organization_billing_postal_code' => 'required',
+                    //'organization_billing_country' => 'required',
+                    // 'organization_description' => 'required'
+                ]
+            );
 
 
 
-        if ($validator->fails()) {
-            $messages = $validator->getMessageBag();
-            return json_encode([
-                'status' => 'error',
-                'message' => $messages->first()
+            if ($validator->fails()) {
+                $messages = $validator->getMessageBag();
+                return json_encode([
+                    'status' => 'error',
+                    'message' => $messages->first()
+                ]);
+            }
+
+
+
+            //Creating users
+            $user = new User();
+            $user->name = $request->organization_name;
+            $user->type = 'organization';
+            $user->email =  $request->organization_email;
+            $user->password = Hash::make('123456789');
+            $user->is_active = 1;
+            $user->lang = 'en';
+            $user->mode = 'light';
+            $user->created_by = \Auth::user()->id;
+            //$user->passport_number = '';
+            $user->save();
+
+            $org =  Organization::create([
+                'type' => $request->organization_type,
+                'phone' =>  $request->organization_phone,
+                'website' => $request->organization_website,
+                'linkedin' => $request->organization_linkedin,
+                'facebook' => $request->organization_facebook,
+                'twitter' => $request->organization_twitter,
+                'billing_street' => $request->organization_billing_street,
+                'contactname' => $request->contactname,
+                'contactemail' => $request->contactemail,
+                'contactphone' => $request->contactphone,
+                'contactjobroll' => $request->contactjobroll,
+                'billing_country' => $request->organization_billing_country,
+                'description' => $request->organization_description,
             ]);
-        }
+
+            $org->user_id = $user->id;
+            $org->save();
 
 
-
-        //Creating users
-        $user = new User();
-        $user->name = $request->organization_name;
-        $user->type = 'organization';
-        $user->email =  $request->organization_email;
-        $user->password = Hash::make('123456789');
-        $user->is_active = 1;
-        $user->lang = 'en';
-        $user->mode = 'light';
-        $user->created_by = \Auth::user()->id;
-        //$user->passport_number = '';
-        $user->save();
-
-        $org =  Organization::create([
-            'type' => $request->organization_type,
-            'phone' =>  $request->organization_phone,
-            'website' => $request->organization_website,
-            'linkedin' => $request->organization_linkedin,
-            'facebook' => $request->organization_facebook,
-            'twitter' => $request->organization_twitter,
-            'billing_street' => $request->organization_billing_street,
-            'contactname' => $request->contactname,
-            'contactemail' => $request->contactemail,
-            'contactphone' => $request->contactphone,
-            'contactjobroll' => $request->contactjobroll,
-            'billing_country' => $request->organization_billing_country,
-            'description' => $request->organization_description,
-        ]);
-
-        $org->user_id = $user->id;
-        $org->save();
+            //Log
+            $data = [
+                'type' => 'info',
+                'note' => json_encode([
+                    'title' => 'Organization Created',
+                    'message' => 'Organization created successfully'
+                ]),
+                'module_id' => $user->id,
+                'module_type' => 'organization',
+                'notification_type' => 'Organization Created'
+            ];
+            addLogActivity($data);
 
 
-        //Log
-        $data = [
-            'type' => 'info',
-            'note' => json_encode([
-                            'title' => 'Organization Created',
-                            'message' => 'Organization created successfully'
-                        ]),
-            'module_id' => $user->id,
-            'module_type' => 'organization',
-            'notification_type' => 'Organization Created'
-        ];
-        addLogActivity($data);
+            //$org_data = Organization::where('user_id', $user->id)->first();
+            //$html = view('organizations.new_organization', ['org' => $user, 'org_data' => $org_data])->render();
 
-
-        //$org_data = Organization::where('user_id', $user->id)->first();
-        //$html = view('organizations.new_organization', ['org' => $user, 'org_data' => $org_data])->render();
-
-        return json_encode([
-            'status' => 'success',
-            'message' => 'Organization created successfully!.',
-           // 'html' => $html,
-            'org' => $user
-        ]);
-        // return redirect()->back()->with('success', 'Organization created successfully!.');
-        }else{
+            return json_encode([
+                'status' => 'success',
+                'message' => 'Organization created successfully!.',
+                // 'html' => $html,
+                'org' => $user
+            ]);
+            // return redirect()->back()->with('success', 'Organization created successfully!.');
+        } else {
             return json_encode([
                 'status' => 'error',
                 'message' => 'Permission Denied.'
@@ -358,14 +358,13 @@ class OrganizationController extends Controller
         //
         if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit organization')) {
 
-        $org = User::where('id', $id)->first();
-        $org_detail = Organization::where('user_id', $org->id)->first();
-        $org_types = OrganizationType::get()->pluck('name', 'id');
-        $countries = $this->countries_list();
-        return view('organizations.organization_edit', ['org' => $org, 'org_detail' => $org_detail, 'org_types' => $org_types, 'countries' => $countries]);
-        }else{
+            $org = User::where('id', $id)->first();
+            $org_detail = Organization::where('user_id', $org->id)->first();
+            $org_types = OrganizationType::get()->pluck('name', 'id');
+            $countries = $this->countries_list();
+            return view('organizations.organization_edit', ['org' => $org, 'org_detail' => $org_detail, 'org_types' => $org_types, 'countries' => $countries]);
+        } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
-
         }
     }
 
@@ -416,9 +415,9 @@ class OrganizationController extends Controller
         $data = [
             'type' => 'info',
             'note' => json_encode([
-                            'title' => 'Organization Updated',
-                            'message' => 'Organization updated successfully'
-                        ]),
+                'title' => 'Organization Updated',
+                'message' => 'Organization updated successfully'
+            ]),
             'module_id' => $user->id,
             'module_type' => 'organization',
             'notification_type' => 'Organization Updated'
@@ -444,27 +443,26 @@ class OrganizationController extends Controller
     {
 
         if (\Auth::user()->type == 'super admin' || \Auth::user()->can('delete organization')) {
-        //
-        // if (\Auth::user()->type == 'company' || \Auth::user()->type == 'super admin') {
-        $org = User::find($id);
-        $org->delete();
+            //
+            // if (\Auth::user()->type == 'company' || \Auth::user()->type == 'super admin') {
+            $org = User::find($id);
+            $org->delete();
 
-        $org_data = Organization::where('user_id', $id)->first();
-        if ($org_data)
-            $org_data->delete();
+            $org_data = Organization::where('user_id', $id)->first();
+            if ($org_data)
+                $org_data->delete();
 
 
-        // return json_encode([
-        //     'status' => 'success',
-        //     'message' => __('Organization successfully deleted!')
-        // ]);
-        return redirect()->route('organization.index')->with('success', __('Organization successfully deleted!'));
-        // } else {
-        //     return redirect()->back()->with('error', __('Permission Denied.'));
-        // }
-        }else{
+            // return json_encode([
+            //     'status' => 'success',
+            //     'message' => __('Organization successfully deleted!')
+            // ]);
+            return redirect()->route('organization.index')->with('success', __('Organization successfully deleted!'));
+            // } else {
+            //     return redirect()->back()->with('error', __('Permission Denied.'));
+            // }
+        } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
-
         }
     }
 
@@ -712,7 +710,7 @@ class OrganizationController extends Controller
         $validator = \Validator::make(
             $request->all(),
             [
-               // 'title' => 'required',
+                // 'title' => 'required',
                 'description' => 'required'
             ]
         );
@@ -737,7 +735,7 @@ class OrganizationController extends Controller
 
         $id = $request->id;
 
-        if($request->note_id != null && $request->note_id != ''){
+        if ($request->note_id != null && $request->note_id != '') {
             $note = OrganizationNote::where('id', $request->note_id)->first();
             // $note->title = $request->input('title');
             $note->description = $request->input('description');
@@ -746,9 +744,9 @@ class OrganizationController extends Controller
             $data = [
                 'type' => 'info',
                 'note' => json_encode([
-                                'title' => 'Lead Notes Updated',
-                                'message' => 'Lead notes updated successfully'
-                            ]),
+                    'title' => 'Lead Notes Updated',
+                    'message' => 'Lead notes updated successfully'
+                ]),
                 'module_id' => $request->id,
                 'module_type' => 'lead',
                 'notification_type' => 'Lead Notes Updated'
@@ -769,9 +767,9 @@ class OrganizationController extends Controller
         // $note->title = $request->input('title');
         $note->description = $request->input('description');
         $session_id = Session::get('auth_type_id');
-        if($session_id != null){
+        if ($session_id != null) {
             $note->created_by  = $session_id;
-        }else{
+        } else {
             $note->created_by  = \Auth::user()->id;
         }
         $note->organization_id = $id;
@@ -781,9 +779,9 @@ class OrganizationController extends Controller
         $data = [
             'type' => 'info',
             'note' => json_encode([
-                            'title' => 'Notes created',
-                            'message' => 'Noted created successfully'
-                        ]),
+                'title' => 'Notes created',
+                'message' => 'Noted created successfully'
+            ]),
             'module_id' => $id,
             'module_type' => 'lead',
             'notification_type' => 'Notes created'
@@ -867,11 +865,11 @@ class OrganizationController extends Controller
 
     public function GetBranchByType()
     {
-        $type=$_GET['type'];
-        $BranchId=$_GET['id'];
+        $type = $_GET['type'];
+        $BranchId = $_GET['id'];
 
         if ($type == 'lead') {
-            $leads =\App\Models\Lead::where('branch_id',$BranchId)->get()->pluck('name', 'id')->toArray();
+            $leads = \App\Models\Lead::where('branch_id', $BranchId)->get()->pluck('name', 'id')->toArray();
             $html = '<select class="form form-control select2" id="choices-multiple8" name="related_to" > <option value="">Related To</option> ';
             foreach ($leads as $key => $lead) {
                 $html .= '<option value="' . $key . '">' . $lead . '</option> ';
@@ -881,9 +879,7 @@ class OrganizationController extends Controller
                 'status' => 'success',
                 'branches' => $html,
             ]);
-
-
-        }else if ($type == 'organization') {
+        } else if ($type == 'organization') {
             $users = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
             $html = '<select class="form form-control select2" id="choices-multiple8" name="related_to" > <option value="">Related To</option> ';
             foreach ($users as $key => $user) {
@@ -894,9 +890,7 @@ class OrganizationController extends Controller
                 'status' => 'success',
                 'branches' => $html,
             ]);
-
-
-        }else if ($type == 'deal') {
+        } else if ($type == 'deal') {
             $users = Deal::where('branch_id', $BranchId)->get()->pluck('name', 'id')->toArray();
             $html = '<select class="form form-control select2" id="choices-multiple8" name="related_to" > <option value="">Related To</option> ';
             foreach ($users as $key => $user) {
@@ -907,8 +901,23 @@ class OrganizationController extends Controller
                 'status' => 'success',
                 'branches' => $html,
             ]);
-        }else{
-            $branches = User::where('branch_id',$BranchId)->where('type', 'organization')->pluck('name', 'id')->toArray();
+        }else if ($type == 'application') {
+            $users = DealApplication::join('deals', 'deals.id', '=', 'deal_applications.deal_id')
+                        ->where('deals.branch_id', $BranchId)
+                        ->get()
+                        ->pluck('application_key', 'id')
+                        ->toArray();
+            $html = '<select class="form form-control select2" id="choices-multiple8" name="related_to" > <option value="">Related To</option> ';
+            foreach ($users as $key => $user) {
+                $html .= '<option value="' . $key . '">' . $user . '</option> ';
+            }
+            $html .= '</select>';
+            return json_encode([
+                'status' => 'success',
+                'branches' => $html,
+            ]);
+        } else {
+            $branches = User::where('branch_id', $BranchId)->where('type', 'organization')->pluck('name', 'id')->toArray();
             $html = '<select class="form form-control select2" id="branch_id" name="related_to" > <option value="">Related To</option> ';
             foreach ($branches as $key => $branch) {
                 $html .= '<option value="' . $key . '">' . $branch . '</option> ';
@@ -919,15 +928,9 @@ class OrganizationController extends Controller
                 'branches' => $html,
             ]);
         }
-
     }
-    public function taskCreate($id)
+    public function taskCreate(Request $request, $id)
     {
-
-
-
-
-
 
         if (\Auth::user()->can('create task')) {
             $deals = Deal::get()->pluck('name', 'id')->toArray();
@@ -936,47 +939,17 @@ class OrganizationController extends Controller
             $status     = DealTask::$status;
             $users = User::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
 
-            // if(\Auth::user()->type == 'super admin'){
-            //     $branches = Branch::orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            // }else if(\Auth::user()->type == 'company'){
-            //     $branches = Branch::where('brands', \Auth::user()->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            // }else{
-            //         $companies = FiltersBrands();
-            //         $brand_ids = array_keys($companies);
-
-            //         $branch_query = Branch::query();
-
-            //         foreach ($brand_ids as $brandId) {
-            //             $branch_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
-            //         }
-            //         $branches = $branch_query->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            // }
-
-
             $stages = Stage::get()->pluck('name', 'id')->toArray();
-           /// $branches = ['' => 'Select Branch'];
-           // $employees = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();
+            /// $branches = ['' => 'Select Branch'];
+            // $employees = User::where('type', 'employee')->get()->pluck('name', 'id')->toArray();
             $teams = User::where('type', 'team')->get()->pluck('name', 'id')->toArray();
             $user_type = User::get()->pluck('type', 'id')->toArray();
 
-            // $test = \App\Models\CompanyPermission::where('company_id', 3179)->where('active', 'true')->pluck('permitted_company_id');
-            // $companies = User::where('type', 'company')->whereIn('id', $test)->orwhere('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
-            // dd($companies);
 
-                //$companies = [0 => 'Select Brand'] + FiltersBrands();
-                // if(\Auth::user()->type == 'super admin'){
-                //     $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
-                // }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
-                //     $com_permissions = CompanyPermission::where(['user_id' =>  \Auth::user()->id])->pluck('permitted_company_id')->toArray();
-                //     $companies = User::whereIn('id',$com_permissions)->where('type','company')->get()->pluck('name', 'id');
-                // }else if(\Auth::user()->type == 'company'){
-                //     $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
-                // }
-
-                $employees = [];
-                if(\Auth::user()->type == 'company'){
-                   $employees =  User::where('created_by', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-                }
+            $employees = [];
+            if (\Auth::user()->type == 'company') {
+                $employees =  User::where('created_by', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            }
 
 
             $type = '';
@@ -984,19 +957,24 @@ class OrganizationController extends Controller
 
             $relateds = [];
             $organization = null;
-            if(isset($_GET['typeid']) && $_GET['type'] == 'organization'){
-                $organization = User::where('id',$_GET['typeid'])->first();
+            if (isset($_GET['typeid']) && $_GET['type'] == 'organization') {
+                $organization = User::where('id', $_GET['typeid'])->first();
             }
 
             $lead = null;
-            if(isset($_GET['typeid']) && $_GET['type'] == 'lead'){
-                $lead = Lead::where('id',$_GET['typeid'])->first();
+            if (isset($_GET['typeid']) && $_GET['type'] == 'lead') {
+                $lead = Lead::where('id', $_GET['typeid'])->first();
             }
 
 
             $deal = null;
-            if(isset($_GET['typeid']) && $_GET['type'] == 'deal'){
-                $deal = Deal::where('id',$_GET['typeid'])->first();
+            if (isset($_GET['typeid']) && $_GET['type'] == 'deal') {
+                $deal = Deal::where('id', $_GET['typeid'])->first();
+            }
+
+            $application = null;
+            if (isset($_GET['typeid']) && $_GET['type'] == 'application') {
+                $application = DealApplication::where('id', $_GET['typeid'])->first();
             }
 
 
@@ -1011,6 +989,8 @@ class OrganizationController extends Controller
                     $relateds = User::where('type', 'organization')->pluck('name', 'id')->toArray();
                 } else if ($type == 'deal') {
                     $relateds = Deal::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+                }else if ($type == 'application') {
+                    $relateds = DealApplication::orderBy('name', 'ASC')->get()->pluck('application_key', 'id')->toArray();
                 }
             }
             // if(\Auth::user()->type == 'company'){
@@ -1031,7 +1011,7 @@ class OrganizationController extends Controller
             $branches = $filter['branches'];
             $employees = $filter['employees'];
 
-            return view('organizations.tasks', compact('Region','users', 'deals','organization', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds', 'lead', 'deal', 'branches'));
+            return view('organizations.tasks', compact('Region', 'users', 'deals', 'organization', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds', 'lead', 'deal', 'branches', 'application'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -1040,7 +1020,7 @@ class OrganizationController extends Controller
     public function taskStore($id, Request $request)
     {
         $usr = \Auth::user();
-        if ($request->assigned_to == 0){
+        if ($request->assigned_to == 0) {
             return json_encode([
                 'status' => 'error',
                 'message' => 'Assigned to is Required'
@@ -1162,7 +1142,7 @@ class OrganizationController extends Controller
             //     $branches = Branch::where('brands',DealTask::where('id', $id)->first()->brand_id)->where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             // }
 
-           // $branches = Branch::where('id',DealTask::where('id', $id)->first()->branch_id)->get()->pluck('name', 'id')->toArray();
+            // $branches = Branch::where('id',DealTask::where('id', $id)->first()->branch_id)->get()->pluck('name', 'id')->toArray();
             $stages = Stage::get()->pluck('name', 'id')->toArray();
 
 
@@ -1190,7 +1170,7 @@ class OrganizationController extends Controller
             // }else if(\Auth::user()->type == 'company'){
             //     $companies = User::where('type', 'company')->where('id', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
             // }
-           // $companies = FiltersBrands();
+            // $companies = FiltersBrands();
 
             $employees = [];
             // if(\Auth::user()->type == 'company'){
@@ -1210,7 +1190,7 @@ class OrganizationController extends Controller
             $branches = $filter['branches'];
             $employees = $filter['employees'];
 
-            return view('organizations.task_edit', compact('Region','task', 'users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'related_to', 'companies', 'employees'));
+            return view('organizations.task_edit', compact('Region', 'task', 'users', 'deals', 'orgs', 'priorities', 'status', 'branches', 'stages', 'related_to', 'companies', 'employees'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -1259,21 +1239,21 @@ class OrganizationController extends Controller
             //$dealTask->related_type = $request->related_type;
 
             $dealTask->name = $request->task_name;
-            if(isset($request->branch_id)){
+            if (isset($request->branch_id)) {
                 $dealTask->branch_id = $request->branch_id;
             }
 
             //$dealTask->organization_id = isset($request->organization_id) ? $request->organization_id : '';
 
-            if(isset($request->assigned_to)){
+            if (isset($request->assigned_to)) {
                 $dealTask->assigned_to = $request->assigned_to;
             }
-            if(isset($request->brand_id)){
+            if (isset($request->brand_id)) {
                 $dealTask->brand_id = $request->brand_id;
             }
 
             $dealTask->assigned_type = $request->assign_type;
-            if(isset($request->region_id)){
+            if (isset($request->region_id)) {
                 $dealTask->region_id = $request->region_id;
             }
 
@@ -1281,8 +1261,8 @@ class OrganizationController extends Controller
             $dealTask->due_date = isset($request->due_date) ? $request->due_date : '';
             $dealTask->start_date = $request->start_date;
             $dealTask->date = $request->start_date;
-            if(isset($request->status)){
-             $dealTask->status = $request->status;
+            if (isset($request->status)) {
+                $dealTask->status = $request->status;
             }
             $dealTask->remainder_date = $request->remainder_date;
             $dealTask->description = $request->description;
@@ -1410,14 +1390,14 @@ class OrganizationController extends Controller
 
         $html = '';
 
-            $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
-                ->where('branch_id', $branch_id)
-                ->pluck('name', 'id');
-            $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Select Employee</option> ';
-            foreach ($users as $key => $user) {
-                $html .= '<option value="' . $key . '">' . $user . '</option> ';
-            }
-            $html .= '</select>';
+        $users = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+            ->where('branch_id', $branch_id)
+            ->pluck('name', 'id');
+        $html = ' <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to"> <option value="">Select Employee</option> ';
+        foreach ($users as $key => $user) {
+            $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        }
+        $html .= '</select>';
         return json_encode([
             'status' => 'success',
             'html' => $html
@@ -1433,8 +1413,7 @@ class OrganizationController extends Controller
             $users = User::where(['type' => 'organization', 'created_by' => \Auth::user()->id])->get()->pluck('name', 'id')->toArray();
         } else if ($type == 'lead') {
             // $users = \App\Models\Lead::where(['created_by' => \Auth::user()->id])->get()->pluck('name', 'id')->toArray();
-             $users = \App\Models\Lead::where(['brand_id' => $request->brand_id])->get()->pluck('name', 'id')->toArray();
-
+            $users = \App\Models\Lead::where(['brand_id' => $request->brand_id])->get()->pluck('name', 'id')->toArray();
         } else if ($type == 'deal') {
             $users = Deal::where(['created_by' => \Auth::user()->id])->get()->pluck('name', 'id')->toArray();
         }
@@ -1471,5 +1450,4 @@ class OrganizationController extends Controller
             return redirect()->route('organization.index')->with('error', 'Atleast select 1 organization.');
         }
     }
-
 }
