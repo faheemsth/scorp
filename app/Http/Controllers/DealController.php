@@ -1027,7 +1027,7 @@ class DealController extends Controller
     public function destroy(Deal $deal)
     {
         if (\Auth::user()->can('delete deal') ||  \Auth::user()->type == 'super admin') {
-            if ($deal->created_by == \Auth::user()->ownerId() ||  \Auth::user()->type == 'super admin') {
+           // if ($deal->created_by == \Auth::user()->ownerId() ||  \Auth::user()->type == 'super admin') {
                 DealDiscussion::where('deal_id', '=', $deal->id)->delete();
                 DealFile::where('deal_id', '=', $deal->id)->delete();
                 ClientDeal::where('deal_id', '=', $deal->id)->delete();
@@ -1043,9 +1043,9 @@ class DealController extends Controller
                     return redirect()->route('deals.list')->with('success', __('Deal successfully deleted!'));
                 }
                 return redirect()->route('deals.list')->with('success', __('Deal successfully deleted!'));
-            } else {
-                return redirect()->back()->with('error', __('Permission Denied.'));
-            }
+            // } else {
+            //     return redirect()->back()->with('error', __('Permission Denied.'));
+            // }
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }

@@ -113,7 +113,7 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     {{-- @can('view lead') --}}
-                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
+                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Already Converted To Admission') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
                         <i class="fa-brands fa-whatsapp"></i>
                     </a>
                     {{-- @endcan --}}
@@ -124,7 +124,7 @@
                         @if (!empty($deal))
                             <a href="javascript:void(0)" @can('View Deal') @if ($deal->is_active)   onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }}) @else '' @endif @else '' @endcan"
                                 data-size="lg" data-bs-toggle="tooltip"
-                                data-bs-title=" {{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white"
+                                data-bs-title=" {{ __('Already Converted to Admission') }}" class="btn px-2 py-2 btn-dark text-white"
                                 style="background-color: #313949 color:white; width:36px; height: 36px; margin-top:10px;" >
                                 <i class="ti ti-exchange"></i>
                             </a>
@@ -132,7 +132,7 @@
                             @can('convert lead')
                             <a href="#" data-size="lg"
                                 data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
-                                data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] To Deal') }}"
+                                data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] to Admission') }}"
                                 class="btn px-2 py-2 btn-dark text-white"style= "width:36px; height: 36px; margin-top:10px;">
                                 <i class="ti ti-exchange"></i>
                             </a>
