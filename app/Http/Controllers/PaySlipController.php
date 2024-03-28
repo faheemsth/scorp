@@ -23,7 +23,13 @@ class PaySlipController extends Controller
     {
         if(\Auth::user()->can('manage pay slip') || \Auth::user()->type != 'client' || \Auth::user()->type != 'company')
         {
-            $employees = Employee::get();
+            $pagination = getPaginationDetail();
+            $start = $pagination['start'];
+            $limit = $pagination['num_results_on_page'];
+
+            $query = Employee::query();
+            $total_records = $query->count();
+            $employees = $query->skip($start)->take($limit)->get();
 
             $month = [
                 '01' => 'JAN',
@@ -54,7 +60,7 @@ class PaySlipController extends Controller
                 '2030' => '2030',
             ];
 
-            return view('payslip.index', compact('employees', 'month', 'year'));
+            return view('payslip.index', compact('employees', 'total_records','month', 'year'));
         }
         else
         {
