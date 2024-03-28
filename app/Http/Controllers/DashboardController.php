@@ -524,7 +524,6 @@ class DashboardController extends Controller
         $top_brands = $this->AdmissionTopper();
         $top_countries = $this->GetTop3Countries();
         $deals_stage_share_data = $this->getStageShareDeals();
-
         
         //getting subcharts
         $sub_chart_visas = $this->getSubChartVisasData();
@@ -581,7 +580,7 @@ class DashboardController extends Controller
     {
         return [
             $this->getApplicationsData(),
-            $this->getAdmissionsData('Admissions', [4, 5, 6])
+            $this->getAdmissionsData('Deposit', [4, 5, 6])
         ];
     }
 

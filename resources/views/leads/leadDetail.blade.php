@@ -208,8 +208,12 @@
             box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 ">
                 <div class="stages my-2 ">
-                    <h2 class="mb-2 py-2 ps-3">LEAD STATUS: <span class="d-inline-block fw-light ms-1">{{ $lead->stage->name }}</span>
-                    </h2>
+                    <div class="d-flex justify-content-between">
+                        <h2 class="mb-2 py-2 ps-3">LEAD STATUS: <span class="d-inline-block fw-light ms-1">{{ $lead->stage->name }}</span>
+                        </h2>
+
+                        <span class="badge badge-success pb-0" style="height: 24px; margin-top: 5px;">Success</span>
+                    </div>
                     <div class="wizard mb-2" style="background: #EFF3F7;
                     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);">
                         <?php $done = true; ?>

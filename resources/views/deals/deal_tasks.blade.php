@@ -150,31 +150,32 @@ $setting = \App\Models\Utility::colorset();
                             <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2 list-global-search text-truncate" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
 
-                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark d-none" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark d-none d-flex justify-content-center align-items-center">
+                            <i class="ti ti-refresh" style="font-size: 18px"></i>
+                        </button>
 
-                        <button class="btn filter-btn-show p-2 btn-dark"  type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" style="width:36px; height: 36px; ">
+                        <button class="btn filter-btn-show p-2 btn-dark d-flex justify-content-center align-items-center" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" style="width:36px; height: 36px;">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
                         @can('create task')
-                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark" style="width:36px; height: 36px;">
+                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark d-flex justify-content-center align-items-center" style="width:36px; height: 36px;">
                             <i class="ti ti-plus" style="font-size:18px"></i>
                         </button>
                         @endcan
 
-                        <!-- <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> -->
-                        
                         @if(auth()->user()->type == 'super admin' || auth()->user()->type == 'Admin Team')
-                        <a href="{{ route('tasks.download') }}" class="btn p-2 btn-dark" style="color:white; width:36px; height: 36px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" >
-                                <i class="ti ti-download" style="font-size:18px"></i>
+                        <a href="{{ route('tasks.download') }}" class="btn p-2 btn-dark d-flex justify-content-center align-items-center" style="color:white; width:36px; height: 36px;" data-bs-toggle="tooltip" title="Download in Csv">
+                            <i class="ti ti-download" style="font-size:18px"></i>
                         </a>
                         @endif
 
                         @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete task'))
-                        <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Regions') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; ">
+                        <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Tasks') }}" class="btn delete-bulk text-white btn-dark justify-content-center align-items-center px-0 d-none" style="width:36px; height: 36px;">
                             <i class="ti ti-trash"></i>
                         </a>
                         @endif
+
                     </div>
                 </div>
 
@@ -260,7 +261,7 @@ $setting = \App\Models\Utility::colorset();
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-3 mt-2">
                                     <label for="">Status</label>
                                     <select class="form form-control select2" id="status444" name="status" multiple style="width: 95%;">
                                         <option value="">Select Status</option>
@@ -269,7 +270,7 @@ $setting = \App\Models\Utility::colorset();
                                     </select>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-3 mt-2">
                                     <label for="">Due Date</label>
                                     <input type="date" class="form form-control" name="due_date" value="<?= isset($_GET['due_date']) ? $_GET['due_date'] : '' ?>" style="width: 95%; border-color:#aaa">
                                 </div>
@@ -332,6 +333,7 @@ $setting = \App\Models\Utility::colorset();
                                 <th>{{ __('Assigned To') }}</th>
                                 <th>{{ __('Brand') }}</th>
                                 <th>{{ __('Status') }}</th>
+                                <th>{{ __('Update Status') }}</th>
                             </tr>
                         </thead>
                         <tbody class="tasks_tbody">
@@ -375,7 +377,7 @@ $setting = \App\Models\Utility::colorset();
                                     </td>
 
                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
-                                        <span style="cursor:pointer" class="task-name hyper-link" @can('view task') onclick="openNav(<?= $task->id ?>)" @endcan data-task-id="{{ $task->id }}">{{ $task->name }}</span>
+                                        <span style="cursor:pointer" class="task-name hyper-link" @can('view task') onclick="openSidebar('/get-task-detail?task_id=<?= $task->id ?>')" @endcan data-task-id="{{ $task->id }}">{{ $task->name }}</span>
                                     </td>
                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         @if (!empty($task->assigned_to))
@@ -410,9 +412,20 @@ $setting = \App\Models\Utility::colorset();
 
                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         @if ($task->status == 0)
-                                            <span class="badge  text-white" style="background-color:#B3CDE1">{{ __('On Going') }}</span>
+                                            <span class="badge  text-white" style="background-color:#cd9835">{{ __('On Going') }}</span>
                                         @else
                                             <span class="badge text-white" style="background: green; " >{{ __('Completed') }}</span>
+                                        @endif
+                                    </td>
+
+                                    <td>
+                                        @if ($task->status == 0)
+                                        <button class="btn btn-sm btn-dark position-relative"  @can('edit status task') onclick="ChangeTaskStatus({{ $task->id }})" @endcan data-bs-toggle="tooltip" data-bs-placement="top" title="Change Task Status">
+                                            <i class="fa-solid fa-check d-flex justify-content-center align-items-center" style="font-size: 18px;"></i>
+                                        </button>
+
+                                        @else 
+                                        <span class="badge text-white" style="background: green; " >{{ __('Completed') }}</span>
                                         @endif
                                     </td>
 
@@ -1106,6 +1119,49 @@ $setting = \App\Models\Utility::colorset();
             });
         }
 
+
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        function ChangeTaskStatus(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to update the task status.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, update it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('task.status.change') }}",
+                        method: 'POST',
+                        data: {
+                            id: id
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'The task status has been changed successfully.',
+                        }).then(function() {
+                            // Reload the page after the user closes the SweetAlert dialog
+                            window.location.href = window.location.href;
+                        });
+                        },
+
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
+                } else {
+                    console.log("Task status update canceled.");
+                }
+            });
+        }
 
 </script>
 @endpush

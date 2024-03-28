@@ -575,6 +575,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         <th data-resizable-columns-id="users" class="ps-3">{{ __('Assigned to') }}</th>
                                         <th data-resizable-columns-id="created_by">{{ __('Brand') }}</th>
                                         <th data-resizable-columns-id="created_by">{{ __('Branch') }}</th>
+                                        <th data-resizable-columns-id="tag">{{ __('Tag') }}</th>
 
                                         {{-- <th data-resizable-columns-id="actions" style="width: 5%;">{{ __('Action') }}
                                         </th> --}}
@@ -612,6 +613,17 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $users[$lead->brand_id] ?? '' }}</td>
                                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $branches[$lead->branch_id] ?? '' }}</td>
+                                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                                        @php 
+                                                           $lead_tags = \App\Models\LeadTag::where('lead_id', $lead->id)->get();
+                                                        @endphp 
+
+                                                        @forelse($lead_tags as $tag)
+                                                            <span class="badge  text-white" style="background-color:#cd9835">{{ $tag->tag }}</span>
+                                                        @empty
+
+                                                        @endforelse
+                                                    </td>
                                             </tr>
                                         @endforeach
                                     @else
@@ -748,6 +760,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     $(".sub-check").prop('checked', false);
                     $button.prop('disabled', false);
                     show_toastr('success', data.msg);
+                    window.location.href = '/leads/list';
                 }
                 // Handle success response here
                 console.log("Data submitted successfully:", response);

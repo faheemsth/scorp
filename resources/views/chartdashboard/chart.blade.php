@@ -207,7 +207,11 @@
             <div class="card h-100">
                 <div class=" main-line-btn d-flex justify-content-between align-items-center p-4 gap-2">
                     <h6 class="card-title fw-bold">
-                        Admission-Application Chart
+                        @if(isset($_GET['datatype']) && !empty($_GET['datatype']))
+                            {{ $_GET['datatype'] }} Chart
+                        @else
+                            Admission-Application Chart
+                        @endif 
                     </h6>
                     <form action="" class="data-type-form">
                         @if(isset($_GET['brand_id']) && !empty($_GET['brand_id']))

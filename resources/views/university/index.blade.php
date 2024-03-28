@@ -73,6 +73,7 @@
                     @if ($university->country == $key && !$countryFound)
                     @if ($i <= 4) <?php $i++; ?>
                     <div class="">
+                        <a href="/university?name=&country={{ $university->country }}&city=&phone=&note=" class="" style="text-decoration: none;">
                         <div class="card shadow py-2" style="width: 100%; height: 70%;border-radius: 22px;">
                             <div class="card-body" style="display: flex;
                             flex-direction: column;
@@ -89,6 +90,7 @@
                                 </div>
                             </div>
                         </div>
+                        </a>
                     </div>
                 @php
                 if ($i < 5) { echo '<div style="border-left: 3px solid black; height: 80px; width: 5px;margin-top: 1.9rem; " class = "mx-4"></div>' ; } $countryFound=true; @endphp @endif @endif @endforeach @empty @endforelse </div>
@@ -174,23 +176,26 @@
                                 <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2 list-global-search" placeholder="Search this list ..." aria-label="Username" aria-describedby="basic-addon1">
                             </div>
 
-                            <button class="btn p-2 refresh-list btn-dark d-none" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                            <button class="btn p-2 refresh-list btn-dark d-none" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()" style="display: flex; justify-content: center; align-items: center;">
+                                <i class="ti ti-refresh" style="font-size: 18px;"></i>
+                            </button>
 
-
-                            <button class="btn filter-btn-show p-2 btn-dark" style="color:white; color:white; width:36px; height: 36px; margin-top:10px;" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" >
-                                <i class="ti ti-filter" style="font-size:18px"></i>
+                            <button class="btn filter-btn-show p-2 btn-dark" style="color:white; width:36px; height: 36px; margin-top:10px; display: flex; justify-content: center; align-items: center;" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
+                                <i class="ti ti-filter" style="font-size:18px;"></i>
                             </button>
 
                             @can('create university')
-                            <button data-size="lg" data-url="{{ route('university.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-size="lg" title="{{ __('Create University') }}" class="btn  btn-dark p-2" style="color:white; width:36px; height: 36px; margin-top:10px;">
+                            <button data-size="lg" data-url="{{ route('university.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-size="lg" title="{{ __('Create University') }}" class="btn  btn-dark p-2" style="color:white; width:36px; height: 36px; margin-top:10px; display: flex; justify-content: center; align-items: center;">
                                 <i class="ti ti-plus"></i>
                             </button>
                             @endcan
+
                             @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
-                            <a href="{{ route('university.download') }}" class="btn p-2 btn-dark" style=" color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="{{__('Download in Csv')}}" >
-                                <i class="ti ti-download" style="font-size:18px"></i>
+                            <a href="{{ route('university.download') }}" class="btn p-2 btn-dark" style="color:white; width:36px; height: 36px; margin-top:10px; display: flex; justify-content: center; align-items: center;" data-bs-toggle="tooltip" title="{{__('Download in Csv')}}">
+                                <i class="ti ti-download" style="font-size:18px;"></i>
                             </a>
                             @endif
+
                         </div>
                     </div>
 

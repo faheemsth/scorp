@@ -300,6 +300,7 @@ class LeadController extends Controller
         
         $sourcess = Source::get()->pluck('name', 'id');
         $branches = Branch::get()->pluck('name', 'id')->ToArray();
+
         if (request()->filled('ajaxCall') && request()->ajax()) {
             $html = view('leads.leads_list_ajax', compact('leads', 'users', 'branches', 'total_records'))->render();
             $pagination_html = view('layouts.pagination', [
