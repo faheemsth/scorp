@@ -296,6 +296,70 @@
 
 
                                 <div class="row">
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingkeydesc">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekeydesc">
+                                            {{ __('Admissions') }}
+                                        </button>
+                                    </h2>
+                                    <div id="panelsStayOpen-collapsekeydesc" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkeydesc">
+                                        <div class="accordion-body">
+                                            <div style="max-height: 400px; overflow-y: auto;">
+                                                    @php 
+                                                    $admissions = \App\Models\DealApplication::query()
+                                                                ->select('d.id','deal_applications.name', 'contact.passport_number as passport_number', 's.name as stage', \DB::raw("CONCAT(d.intake_month, d.intake_year) AS intake"), 'u.name as assigned_to')
+                                                                ->join('deals as d', 'deal_applications.deal_id', '=', 'd.id')
+                                                                ->join('users as u', 'u.id', '=', 'd.assigned_to')
+                                                                ->join('stages as s', 's.id', '=', 'd.stage_id')
+                                                                ->join('client_deals as cd', 'cd.deal_id', '=', 'd.id')
+                                                                ->join('users as contact', 'contact.id', '=', 'cd.client_id')
+                                                                ->where('deal_applications.id', 4)
+                                                                ->get();
+                                                                                                                @endphp
+                                                    <table class="table table-hover">
+                                                        <thead  style="background-color:rgba(0, 0, 0, .08); font-weight: bold;color:#000000">
+                                                            <tr>
+                                                                <td>{{ __('Name') }}</td>
+                                                                <td>{{ __('Passport Number') }}</td>
+                                                                <td>{{ __('Stage') }}</td>
+                                                                <td>{{ __('Intake') }}</td>
+                                                                <td>{{ __('Assigned To') }}</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody >
+                                                            @forelse($admissions as $admission)
+                                                                <tr>
+                                                                    <td>
+                                                                        
+                                                                        <span style="cursor:pointer" class="deal-name hyper-link" @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $admission->id }})" @endcan data-deal-id="{{ $admission->id }}">
+
+                                                                            @if (strlen($admission->name) > 40)
+                                                                            {{ substr($admission->name, 0, 40) }}...
+                                                                            @else
+                                                                            {{ $admission->name }}
+                                                                            @endif
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>{{ $admission->passport_number }}</td>
+                                                                    <td>{{ $admission->stage }}</td>
+                                                                    <td>{{ $admission->intake }}</td>
+                                                                    <td>{{ $admission->assigned_to }}</td>
+                                                                </tr>
+                                                            @empty
+
+                                                            @endforelse 
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
                                     @can('manage_notes')
                                     <div class="accordion" id="accordionPanelsStayOpenExample">
                                         <div class="accordion-item">

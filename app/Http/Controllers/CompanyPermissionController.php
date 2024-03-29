@@ -19,7 +19,7 @@ class CompanyPermissionController extends Controller
     {
         $employees = array();
         $user = \Auth::user();
-        if (\Auth::user()->type == 'super admin') {
+       // if (\Auth::user()->type == 'super admin') {
             if (isset($_GET['role']) && !empty($_GET['role'])) {
                 $employees = User::where('type', '=', $_GET['role'])->orderBy('name', 'ASC')->get();
             }else{
@@ -38,9 +38,9 @@ class CompanyPermissionController extends Controller
                 }
             }
             return view('company_permission.index')->with(['employees' => $employees, 'permission_arr' => $permission_arr, 'companies' => $companies]);
-        } else {
-            return redirect()->back();
-        }
+        // } else {
+        //     return redirect()->back();
+        // }
     }
 
     public function company_permission_updated(Request $request)

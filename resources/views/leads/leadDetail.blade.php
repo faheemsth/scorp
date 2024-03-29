@@ -212,7 +212,17 @@
                         <h2 class="mb-2 py-2 ps-3">LEAD STATUS: <span class="d-inline-block fw-light ms-1">{{ $lead->stage->name }}</span>
                         </h2>
 
-                        <span class="badge badge-success pb-0" style="height: 24px; margin-top: 5px;">Success</span>
+                        <div class="">
+                        @php 
+                            $lead_tags = \App\Models\LeadTag::where('lead_id', $lead->id)->get();
+                        @endphp 
+
+                        @forelse($lead_tags as $tag)
+                            <span class="badge  text-white" style="background-color:#cd9835">{{ $tag->tag }}</span>
+                        @empty
+
+                        @endforelse
+                        </div>
                     </div>
                     <div class="wizard mb-2" style="background: #EFF3F7;
                     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);">

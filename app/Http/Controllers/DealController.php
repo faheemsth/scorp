@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Session;
 use App\Models\Deal;
+use App\Models\Lead;
 use App\Models\User;
 use App\Models\Label;
 use App\Models\Stage;
@@ -11,6 +12,7 @@ use App\Models\Branch;
 use App\Models\Course;
 use App\Models\Region;
 use App\Models\Source;
+use App\Models\Country;
 use App\Models\Utility;
 use App\Models\DealCall;
 use App\Models\DealFile;
@@ -36,7 +38,6 @@ use App\Models\DealApplication;
 use App\Models\ApplicationStage;
 use App\Models\ClientPermission;
 use App\Models\CompanyPermission;
-use App\Models\Lead;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -2503,7 +2504,7 @@ class DealController extends Controller
         if (\Auth::user()->can('create application')) {
 
             $deal_passport = Deal::select(['users.*'])->join('client_deals', 'client_deals.deal_id', 'deals.id')->join('users', 'users.id', 'client_deals.client_id')->where(['deals.id' => $id])->first();
-
+            
             if (!$deal_passport || empty($deal_passport->passport_number)) {
                 return response()->json(
                     [
@@ -2514,18 +2515,21 @@ class DealController extends Controller
                 );
             }
 
-            $universities = University::pluck('name', 'id');
-             $universities = [0 => 'Select University'] + $universities->toArray();
+            //$universities = University::pluck('name', 'id');
+            // $universities = [0 => 'Select University'] + $universities->toArray();
            // $universities->prepend('Select Institute');
             $stages = ApplicationStage::get()->pluck('name', 'id')->toArray();
-
+            $universities = [];
             $statuses = [
                 'Pending' => 'Pending',
                 'Approved' => 'Approved',
                 'Rejected' => 'Rejected'
             ];
 
-            return view('deals.create-application', compact('universities', 'statuses', 'id', 'deal_passport', 'stages'));
+            $countries = Country::pluck('name', 'name');
+            $countries = [0 => 'Select Country'] + $countries->toArray();
+            
+            return view('deals.create-application', compact('universities', 'statuses', 'id', 'deal_passport', 'stages', 'countries'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }

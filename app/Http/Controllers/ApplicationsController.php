@@ -499,4 +499,19 @@ class ApplicationsController extends Controller
 
         //return redirect()->route('leads.list')->with('success', __('Notes deleted successfully'));
     }
+
+    public function getUniversities(){
+        $country = $_GET['country'];
+        $universities = University::where('country', $country)->pluck('name', 'id')->toArray();
+
+        $html = ' <select class="form form-control select2" id="university" name="university"> <option value="">Select University</option> ';
+            foreach ($universities as $key => $university) {
+                $html .= '<option value="' . $key . '">' . $university . '</option> ';
+            }
+            $html .= '</select>';
+            return json_encode([
+                'status' => 'success',
+                'html' => $html,
+            ]);
+    }
 }

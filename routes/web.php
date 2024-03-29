@@ -726,6 +726,8 @@ Route::get('/leads/get-field/{id}', 'LeadController@fetchLeadField');
 
 Route::get('/deals/get-field/{id}', 'DealController@fetchDealField');
 
+Route::get('/get-universities', [ApplicationsController::class, 'getUniversities'])->name('get_universities');
+
 // Deal Email
 Route::get('/deals/{id}/email', [DealController::class, 'emailCreate'])->name('deals.emails.create')->middleware(['auth', 'XSS']);
 Route::post('/deals/{id}/email', [DealController::class, 'emailStore'])->name('deals.emails.store')->middleware(['auth', 'XSS']);
