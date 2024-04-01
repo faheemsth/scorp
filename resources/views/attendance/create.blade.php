@@ -7,7 +7,7 @@
         </div>
         <div class="form-group col-lg-6 col-md-6">
             {{Form::label('date',__('Date'))}}
-            {{Form::text('date',null,array('class'=>'form-control datepicker'))}}
+            {{Form::date('date',null,array('class'=>'form-control datepicker'))}}
         </div>
         <div class="form-group col-lg-6 col-md-6">
             {{Form::label('clock_in',__('Clock In'))}}

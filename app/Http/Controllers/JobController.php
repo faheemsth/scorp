@@ -21,7 +21,7 @@ class JobController extends Controller
     {
         if(\Auth::user()->can('manage job'))
         {
-            $jobs = Job::where('created_by', '=', \Auth::user()->creatorId())->get();
+            $jobs = Job::get();
 
             $data['total']     = Job::where('created_by', '=', \Auth::user()->creatorId())->count();
             $data['active']    = Job::where('status', 'active')->where('created_by', '=', \Auth::user()->creatorId())->count();
@@ -38,7 +38,7 @@ class JobController extends Controller
     public function create()
     {
 
-        $categories = JobCategory::where('created_by', \Auth::user()->creatorId())->get()->pluck('title', 'id');
+        $categories = JobCategory::get()->pluck('title', 'id');
         $categories->prepend('--', '');
 
         $branches = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -46,9 +46,11 @@ class JobController extends Controller
 
         $status = Job::$status;
 
-        $customQuestion = CustomQuestion::where('created_by', \Auth::user()->creatorId())->get();
+        $customQuestion = CustomQuestion::get();
 
-        return view('job.create', compact('categories', 'status', 'branches', 'customQuestion'));
+        $filters = BrandsRegionsBranches();
+
+        return view('job.create', compact('categories', 'status', 'branches', 'customQuestion', 'filters'));
     }
 
     public function store(Request $request)
@@ -60,7 +62,7 @@ class JobController extends Controller
             $validator = \Validator::make(
                 $request->all(), [
                                    'title' => 'required',
-                                   'branch' => 'required',
+                                   'branch_id' => 'required',
                                    'category' => 'required',
                                    'skill' => 'required',
                                    'position' => 'required|integer',
@@ -80,7 +82,9 @@ class JobController extends Controller
 
             $job                  = new Job();
             $job->title           = $request->title;
-            $job->branch          = $request->branch;
+            $job->brand_id          = $request->brand;
+            $job->region_id          = $request->region_id;
+            $job->branch          = $request->branch_id;
             $job->category        = $request->category;
             $job->skill           = $request->skill;
             $job->position        = $request->position;
@@ -110,8 +114,13 @@ class JobController extends Controller
         $job->applicant  = !empty($job->applicant) ? explode(',', $job->applicant) : '';
         $job->visibility = !empty($job->visibility) ? explode(',', $job->visibility) : '';
         $job->skill      = !empty($job->skill) ? explode(',', $job->skill) : '';
-
-        return view('job.show', compact('status', 'job'));
+        $filters = UserRegionBranch();
+        $html = view('job.show', compact('status', 'job', 'filters'))->render();
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
+       // return view('job.show', compact('status', 'job'));
     }
 
     public function edit(Job $job)
@@ -130,8 +139,10 @@ class JobController extends Controller
         $job->custom_question = explode(',', $job->custom_question);
 
         $customQuestion = CustomQuestion::where('created_by', \Auth::user()->creatorId())->get();
+        $filters = BrandsRegionsBranchesForEdit($job->brand_id, $job->region_id, $job->branch);
 
-        return view('job.edit', compact('categories', 'status', 'branches', 'job', 'customQuestion'));
+
+        return view('job.edit', compact('categories', 'status', 'branches', 'job', 'customQuestion', 'filters'));
     }
 
     public function update(Request $request, Job $job)
@@ -142,7 +153,7 @@ class JobController extends Controller
             $validator = \Validator::make(
                 $request->all(), [
                                    'title' => 'required',
-                                   'branch' => 'required',
+                                   'branch_id' => 'required',
                                    'category' => 'required',
                                    'skill' => 'required',
                                    'position' => 'required|integer',
@@ -161,7 +172,9 @@ class JobController extends Controller
             }
 
             $job->title           = $request->title;
-            $job->branch          = $request->branch;
+            $job->brand_id          = $request->brand;
+            $job->region_id          = $request->region_id;
+            $job->branch          = $request->branch_id;
             $job->category        = $request->category;
             $job->skill           = $request->skill;
             $job->position        = $request->position;

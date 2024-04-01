@@ -34,9 +34,9 @@ class JobApplicationController extends Controller
 
         if(\Auth::user()->can('manage job application'))
         {
-            $stages = JobStage::where('created_by', '=', \Auth::user()->creatorId())->orderBy('order', 'asc')->get();
+            $stages = JobStage::orderBy('order', 'asc')->get();
 
-            $jobs = Job::where('created_by', \Auth::user()->creatorId())->get()->pluck('title', 'id');
+            $jobs = Job::get()->pluck('title', 'id');
             $jobs->prepend('All', '');
 
             if(isset($request->start_date) && !empty($request->start_date))

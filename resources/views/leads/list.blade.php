@@ -426,7 +426,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 
 
-                                @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3'))
+                                @if(\Auth::user()->type == 'company'  || \Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3'))
                                     <div class="col-md-3 mt-2" id="region_filter_div">
                                         <label for="">Region</label>
                                         <select name="region_id" class="form form-control select2" id="filter_region_id">
@@ -442,7 +442,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 @endif
 
 
-                                @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3') || \Auth::user()->can('level 4'))
+                                @if(\Auth::user()->type == 'company'  || \Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3') || \Auth::user()->can('level 4'))
                                     <div class="col-md-3 mt-2" id="branch_filter_div">
                                         <label for="">Branch</label>
                                         <select name="branch_id" class="form form-control select2" id="filter_branch_id">
