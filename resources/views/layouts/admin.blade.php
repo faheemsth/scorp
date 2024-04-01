@@ -84,6 +84,10 @@ $lang=Utility::getValByName('default_language');
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
 
     <style>
+        #content{
+            width: 100%;
+            height: 100vh;
+        }
         .successmg {
             background-color: #28A745 !important;
             color: white !important;
@@ -484,7 +488,7 @@ $lang=Utility::getValByName('default_language');
     @include('partials.admin.header')
 
     <!-- Page Wrapper -->
-    <div id="wrapper" style="position: relative;">
+    <div id="wrapper" style="position: relative; margin-top: 4rem;">
         @include('partials.admin.menucan')
         <!-- [ navigation menu ] end -->
         @include('partials.admin.filter')

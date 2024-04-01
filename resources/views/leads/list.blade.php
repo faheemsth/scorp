@@ -460,9 +460,11 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 <div class="col-md-3 mt-2"> <label for="">Assigned To</label>
                                     <div class="" id="assign_to_div">
                                         <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
+                                            
                                             @foreach ($filters['employees'] as $key => $user)
                                             <option value="{{ $key }}" <?= isset($_GET['lead_assgigned_user']) && $key == $_GET['lead_assgigned_user'] ? 'selected' : '' ?> class="">{{ $user }}</option>
                                             @endforeach
+                                            <option value="null">Not Assign</option>
                                         </select>
                                     </div>
                                 </div>
@@ -511,7 +513,19 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             style="width: 95%; border-color:#aaa">
                                     </div>
 
-                                    <div class="col-md-4 mt-3 d-flex">
+                                    <div class="col-md-3"> <label for="">Tag</label>
+                                        <select class="form form-control select2" id="tags"
+                                            name="tag" style="width: 95%;">
+                                            <option value="">Select Tag</option>
+                                            @foreach ($tags as $key => $tag)
+                                                <option value="{{ $key }}"
+                                                    <?= isset($_GET['tag']) && $key == $_GET['tag'] ? 'selected' : '' ?>
+                                                    class="">{{ $tag }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-5 mt-3 d-flex">
                                         <br>
                                         <input type="submit" class="btn form-btn bg-dark" style=" color:white;">
                                         <a href="/leads/list" style="margin: 0px 3px;" class="btn form-btn bg-dark" style="color:white;">Reset</a>
@@ -996,7 +1010,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                     if (stage_id == 6 || stage_id == 7) {
                         window.location.href = '/leads/list';
                     } else {
-                        openNav(lead_id);
+                        openSidebar('/get-lead-detail?lead_id='+lead_id);
                         return false;
                     }
                 } else {

@@ -49,7 +49,7 @@
 @endphp
 
 
-<nav class="navbar navbar-expand navbar-light topbar  static-top shadow" style="background-color: #B3CDE1;">
+<nav class="navbar navbar-expand navbar-light topbar  static-top shadow" style="background-color: #B3CDE1; position: fixed; top: 0; z-index: 1000; width: 100%;">
     <button id="sidebarToggleTop" class="btn d-md-none ">
         <i class="fa fa-bars"></i>
     </button>

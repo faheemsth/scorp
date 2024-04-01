@@ -218,7 +218,7 @@
                         @endphp 
 
                         @forelse($lead_tags as $tag)
-                            <span class="badge  text-white" style="background-color:#cd9835">{{ $tag->tag }}</span>
+                            <span class="badge  text-white" style="background-color:#cd9835; margin-top: 1rem; margin-right: 1rem;">{{ $tag->tag }}</span>
                         @empty
 
                         @endforelse
