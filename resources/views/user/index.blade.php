@@ -180,7 +180,16 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                             {{ $user->name }}
                                         </span>
                                     </td>
-                                    <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
+                                    <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                        <?php
+                                        $website_link = $user->website_link;
+                                        if (strpos($website_link, 'https://') === false) {
+                                            $website_link = 'https://' . $website_link;
+                                        }
+                                        ?>
+                                        <a href="<?php echo $website_link; ?>"><?php echo $website_link; ?></a>
+                                    </td>
+
                                     <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         @php 
                                             // $project_director = \App\Models\User::join('company_permission', 'company_permission.user_id', '=', 'users.id')

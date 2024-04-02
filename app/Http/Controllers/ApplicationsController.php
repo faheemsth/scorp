@@ -52,6 +52,14 @@ class ApplicationsController extends Controller
         if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
             $filters['branch_id'] = $_GET['branch_id'];
         }
+        
+        if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
+            $filters['created_at_from'] = $_GET['created_at_from'];
+        }
+
+        if (isset($_GET['created_at_to']) && !empty($_GET['created_at_to'])) {
+            $filters['created_at_to'] = $_GET['created_at_to'];
+        }
 
         if (isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user'])) {
             $filters['assigned_to'] = $_GET['lead_assgigned_user'];
@@ -129,6 +137,10 @@ class ApplicationsController extends Controller
                     $app_query->where('deals.branch_id', $value);
                 }elseif ($column == 'assigned_to') {
                     $app_query->where('deals.assigned_to', $value);
+                }elseif ($column == 'created_at_from') {
+                    $app_query->whereDate('deal_applications.created_at', '>=', $value);
+                }elseif ($column == 'created_at_to') {
+                    $app_query->whereDate('deal_applications.created_at', '<=', $value);
                 }
             }
 

@@ -230,7 +230,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
 
 
 
-                    <div class="col-md-3"> <label for="">Name</label>
+                    <div class="col-md-3 mt-2"> <label for="">Name</label>
                         <select class="form form-control select2" id="choices-multiple110" name="applications[]" multiple style="width: 95%;">
                             <option value="">Select Application</option>
                             @foreach ($app_for_filer as $app)
@@ -240,7 +240,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     </div>
 
 
-                    <div class="col-md-3"> <label for="">University</label>
+                    <div class="col-md-3 mt-2"> <label for="">University</label>
                         <select class="form form-control select2" id="choices-multiple111" name="universities[]" multiple style="width: 95%;">
                             <option value="">Select University</option>
                             @foreach ($universities as $key => $name)
@@ -250,7 +250,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     </div>
 
 
-                    <div class="col-md-3">
+                    <div class="col-md-3 mt-2">
                         <label for="">Stages</label>
                         <select name="stages[]" id="stages" class="form form-control select2" multiple style="width: 95%;">
                             <option value="">Select Stage</option>
@@ -258,6 +258,20 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                             <option value="{{ $key }}" <?= isset($_GET['stages']) && in_array($key, $_GET['stages']) ? 'selected' : '' ?> class="">{{ $stage }}</option>
                             @endforeach
                         </select>
+                    </div>
+
+                    <div class="col-md-3 mt-2">
+                        <label for="">Created at From</label>
+                        <input type="date" class="form form-control" name="created_at_from"
+                            value="<?= isset($_GET['created_at_from']) ? $_GET['created_at_from'] : '' ?>"
+                            style="width: 95%; border-color:#aaa">
+                    </div>
+
+                    <div class="col-md-3 mt-2">
+                        <label for="">Created at To</label>
+                        <input type="date" class="form form-control" name="created_at_to"
+                            value="<?= isset($_GET['created_at_to']) ? $_GET['created_at_to'] : '' ?>"
+                            style="width: 95%; border-color:#aaa">
                     </div>
 
                     <div class="col-md-3 mt-2 p-0">

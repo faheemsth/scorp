@@ -575,7 +575,7 @@
 
 
 
-                                <div class="col-md-3">
+                                <div class="col-md-3 mt-2">
                                     <label for="">Name</label>
                                     <select name="name[]" id="deals" class="form form-control select2" multiple style="width: 95%;">
                                         <option value="">Select name</option>
@@ -586,7 +586,7 @@
                                 </div>
 
 
-                                <div class="col-md-3">
+                                <div class="col-md-3 mt-2">
                                     <label for="">Stages</label>
                                     <select name="stages[]" id="stages" class="form form-control select2" multiple style="width: 95%;">
                                         <option value="">Select Pipeline</option>

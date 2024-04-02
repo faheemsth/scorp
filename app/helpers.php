@@ -341,6 +341,10 @@ if (!function_exists('BrandsRegionsBranches')) {
 
         $user = \Auth::user();
         $type = $user->type;
+        //$super_admins = [];
+        //$project_dm = [];
+
+        //$super_admins = User::whereIn('type', ['super admin'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
 
         if(isset($_GET['brand']) && !empty($_GET['brand'])){
             $regions = Region::where('brands', $_GET['brand'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
@@ -358,6 +362,7 @@ if (!function_exists('BrandsRegionsBranches')) {
 
         if ($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || \Auth::user()->can('level 1')) {
             $brands = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+           // $project_dm = User::whereIn('type', ['Project Director', 'Project Manager'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         } else if ($type == 'company') {
             $brands = User::where('type', 'company')->where('id', $user->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $regions = Region::where('brands', $user->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();

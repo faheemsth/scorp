@@ -678,7 +678,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $userArr = User::get()->pluck('name', 'id')->toArray();
-        $html = view('user.userDetail', compact('user', 'userArr'))->render();
+        $html = view('user.userDetail', compact('user', 'userArr',))->render();
         return json_encode([
             'status' => 'success',
             'html' => $html
