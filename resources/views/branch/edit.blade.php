@@ -2,7 +2,7 @@
 
 <div class="modal-body" style="min-height: 35vh;">
 
-    <div class="row">
+    <div class="row align-items-baseline">
         <div class="col-md-6">
             <div class="form-group">
                 {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}
@@ -20,9 +20,13 @@
             <div class="form-group" id="brands_div">
                 @if (
                     \Auth::user()->type == 'super admin' ||
+                     \Auth::user()->type == 'HR' ||
                     \Auth::user()->type == 'Admin Team' ||
                         \Auth::user()->type == 'Project Director' ||
-                        \Auth::user()->type == 'Project Manager')
+                        \Auth::user()->type == 'Project Manager' ||
+                        \Auth::user()->can('level 1') ||
+                        \Auth::user()->can('level 2')
+                        )
                     <label for="branches" class="col-sm-3 col-form-label">Brands<span
                             class="text-danger">*</span></label>
                     {!! Form::select('brands', $brands, $branch->brands, [
@@ -31,7 +35,7 @@
                     ]) !!}
 
                 @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
-                    <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                    <label for="branches" class=" col-form-label">Brands<span
                             class="text-danger">*</span></label>
                     <input type="hidden" name="brands" value="{{ $branch->brands }}">
                     <select class='form-control select2 brand_id' disabled ="brands" id="brands">
@@ -61,11 +65,14 @@
             <div class="form-group" id="region_divs">
                 @if (
                         \Auth::user()->type == 'super admin' ||
+                         \Auth::user()->type == 'HR' ||
                         \Auth::user()->type == 'Admin Team' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||
-                            \Auth::user()->type == 'Regional Manager')
+                            \Auth::user()->type == 'Region Manager' ||
+                            \Auth::user()->can('level 1') ||
+                            \Auth::user()->can('level 2'))
                         <label for="branches" class="col-sm-3 col-form-label">Region<span
                                 class="text-danger">*</span></label>
                         {!! Form::select('region_id', $regions, $branch->region_id, [
@@ -73,7 +80,7 @@
                             'id' => 'region_id',
                         ]) !!}
                     @else
-                        <label for="branches" class="col-sm-3 col-form-label">Region<span
+                        <label for="branches" class=" col-form-label">Region<span
                                 class="text-danger">*</span></label>
                         <input type="hidden" name="region_id" value="{{ $branch->region_id }}">
                         {!! Form::select('region_id', $regions, $branch->region_id, [
@@ -141,7 +148,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="phone">{{ __('Phone') }}</label>
-                <input type="text" name="phone" class="form-control" id="phone" value="{{ $branch->phone }}"
+                <input type="tel" name="phone" class="form-control" id="phone" value="{{ $branch->phone }}"
                     placeholder="{{ __('Enter Branch Phone') }}">
                 @error('phone')
                     <span class="invalid-name" role="alert">
@@ -193,7 +200,7 @@
                 data = JSON.parse(response);
 
                 if(data.status == 'success'){
-                    show_toastr('Success', data.msg, 'success');
+                    show_toastr('success', data.msg, 'success');
                     $('#commonModal').modal('hide');
                     $(".modal-backdrop").removeClass("modal-backdrop");
                     $(".block-screen").css('display', 'none');
@@ -312,8 +319,14 @@
 </script>
 
 <script>
-    const input = document.querySelector("#phone");
-    window.intlTelInput(input, {
+    // Use the input variable in the rest of your code
+    window.intlTelInput(document.getElementById('phone'), {
         utilsScript: "{{ asset('js/intel_util.js') }}",
+        initialCountry: "pk",
+        separateDialCode: true,
+        formatOnDisplay: true,
+        hiddenInput: "full_number",
+        //placeholderNumberType: "FIXED_LINE",
+       // preferredCountries: ["us", "gb"]
     });
 </script>

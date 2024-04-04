@@ -151,6 +151,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
 // ChartGranted
+Route::get('/chartdashboard', function () {
+    return view('chartdashboard.chart');
+ });
 Route::get('/ChartGranted', [VisaChartController::class, 'TestChartGranted']);
 Route::get('/GrantedByCountry', [VisaChartController::class, 'GrantedByCountry']);
 Route::get('/GrantedByUniversty', [VisaChartController::class, 'GrantedByUniversty']);
@@ -723,6 +726,8 @@ Route::get('/leads/get-field/{id}', 'LeadController@fetchLeadField');
 
 Route::get('/deals/get-field/{id}', 'DealController@fetchDealField');
 
+Route::get('/get-universities', [ApplicationsController::class, 'getUniversities'])->name('get_universities');
+
 // Deal Email
 Route::get('/deals/{id}/email', [DealController::class, 'emailCreate'])->name('deals.emails.create')->middleware(['auth', 'XSS']);
 Route::post('/deals/{id}/email', [DealController::class, 'emailStore'])->name('deals.emails.store')->middleware(['auth', 'XSS']);
@@ -904,6 +909,10 @@ Route::put('email_template_store/{id}', [EmailTemplateController::class, 'update
 Route::put('email_template_store/{pid}', [EmailTemplateController::class, 'storeEmailLang'])->name('store.email.language')->middleware(['auth']);
 Route::resource('email_template', EmailTemplateController::class)->middleware(['auth', 'XSS']);
 
+Route::post('email_template_lang/{id}', [EmailTemplateController::class, 'updateEmailContent'])->name('update.email')->middleware(['auth', 'XSS']);
+
+
+Route::post('/leads/send_bulk_email', [LeadController::class, 'sendBulkEmail'])->name('send.bulk.email')->middleware(['auth', 'XSS']);
 
 // End Email Templates
 
@@ -1760,6 +1769,9 @@ Route::get('/organiation/{id}/task-edit', [OrganizationController::class, 'taskE
 Route::post('/organization/{id}/task-update', [OrganizationController::class, 'taskUpdate'])->name('organization.tasks.update')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/task-delete', [OrganizationController::class, 'taskDelete'])->name('organization.task.delete')->middleware(['auth', 'XSS']);
 
+Route::post('/organization/update/{id}', [OrganizationController::class, 'update']);
+
+
 Route::get('/get_branch_by_type', [OrganizationController::class, 'GetBranchByType'])->name('GetBranchByType')->middleware(['auth', 'XSS']);
 
 
@@ -1769,7 +1781,16 @@ Route::get('application/', [ApplicationsController::class, 'application'])->name
 Route::post('/application/order', [ApplicationsController::class, 'order'])->name('application.order')->middleware(['auth', 'XSS']);
 
 Route::get('/update-application-stage', [ApplicationsController::class, 'updateApplicationStage'])->name('update-application-stage')->middleware(['auth', 'XSS']);
+
+Route::get('/application/{id}/notes', [ApplicationsController::class, 'notesCreate'])->name('application.notes.create')->middleware(['auth', 'XSS']);
+Route::post('/application/{id}/notes', [ApplicationsController::class, 'notesStore'])->name('application.notes.store')->middleware(['auth', 'XSS']);
+Route::get('/application/{id}/notes-edit', [ApplicationsController::class, 'notesEdit'])->name('application.notes.edit')->middleware(['auth', 'XSS']);
+Route::post('/application/{id}/notes-update', [ApplicationsController::class, 'notesUpdate'])->name('application.notes.update')->middleware(['auth', 'XSS']);
+Route::get('/application/{id}/notes-delete', [ApplicationsController::class, 'notesDelete'])->name('application.notes.delete')->middleware(['auth', 'XSS']);
+
+
 Route::get('/organization/{id}/taskDeleted', [OrganizationController::class, 'taskDeleted'])->middleware(['auth', 'XSS']);
+
 
 Route::get('/application_stages', [AppStageController::class, 'index'])->name('application_stages.index')->middleware(['auth', 'XSS']);
 Route::get('/application_stages/create', [AppStageController::class, 'create'])->middleware(['auth', 'XSS']);
@@ -1842,3 +1863,15 @@ Route::get('/employees-download', [UserController::class, 'downloadEmployees'])-
 Route::get('/tasks-download', [DealController::class, 'downloadTasks'])->name('tasks.download');
 Route::get('/leads-download', [LeadController::class, 'download'])->name('leads.download');
 Route::get('/deals-download', [DealController::class, 'download'])->name('deals.download');
+
+
+
+
+////////////////////////////////////////////////Filters LEADS
+Route::get('/filter-data', [LeadController::class, 'filterData'])->name('filterData');
+
+Route::get('/filter-regions', [RegionController::class, 'filterRegions'])->name('my-filter-regions');
+Route::get('/filter-branches', [RegionController::class, 'filterBranches'])->name('my-filter-branches');
+
+//////////////////////////////////////////////////Add Tags to Leads
+Route::post('/leads/tag', [LeadController::class, 'addTags'])->name('lead_tags');

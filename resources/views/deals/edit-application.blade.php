@@ -1,5 +1,5 @@
-{{ Form::open(['route' => ['deals.application.update',$application->id], 'id' => 'updating-application']) }}
-<div class="modal-body" style="min-height: 65vh;">
+{{ Form::open(['route' => ['deals.application.update',$application->id], 'method' => 'POST', 'id' => 'updating-application']) }}
+<div class="modal-body">
     <div class="row">
 
         <div class="col-6 form-group py-0">
@@ -53,6 +53,7 @@
 
 <script>
     $("#updating-application").on("submit", function(e) {
+       
                 e.preventDefault();
                 var formData = $(this).serialize();
                 var url = $(this).attr('action');

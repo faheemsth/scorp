@@ -50,7 +50,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2 list-global-search" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                             </div>
 
-                            @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                            @if(\Auth::user()->type == 'super admin'|| \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
                             <button class="btn filter-btn-show p-2 btn-dark" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false" style="width:36px; height: 36px; margin-top:10px;">
                                 <i class="ti ti-filter" style="font-size:18px"></i>
                             </button>
@@ -69,7 +69,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             @endif
 
                             @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete user'))
-                            <a href="javascript:void(0)" id="actions_div" class="btn p-2 d-none delete-bulk btn-dark" style="color:white;" data-bs-toggle="tooltip" title="" data-original-title="Delete in bulk">
+                            <a href="javascript:void(0)" id="actions_div" class="btn p-2 d-none delete-bulk btn-dark" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Delete in bulk">
                                 <i class="ti ti-trash"></i>
                             </a>
                             @endif
@@ -86,7 +86,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                     {{-- Filters --}}
 
 
-                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
                     <div class="filter-data px-3" id="filterToggle" <?= isset($_GET['Brand']) || isset($_GET['Director']) ? '' : 'style="display: none;"' ?>>
                         <form action="/users" method="GET" class="">
                             @php
@@ -94,7 +94,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                             @endphp
 
                             <div class="row my-3 align-items-end">
-                                @if($userType == 'super admin' || $userType == 'Project Director' || $userType == 'Project Manager')
+                                @if($userType == 'super admin'|| $userType == 'Admin Team' || $userType == 'HR' || $userType == 'Project Director' || $userType == 'Project Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
                                 <div class="col-md-4 mt-2">
                                     <label for="">Brand</label>
                                     <select name="Brand" class="form form-control select2" id="filter_brand">
@@ -180,15 +180,26 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                             {{ $user->name }}
                                         </span>
                                     </td>
-                                    <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="{{ $user->website_link }}">{{ $user->website_link }}</a></td>
+                                    <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                        <?php
+                                        $website_link = $user->website_link;
+                                        if (strpos($website_link, 'https://') === false) {
+                                            $website_link = 'https://' . $website_link;
+                                        }
+                                        ?>
+                                        <a href="<?php echo $website_link; ?>"><?php echo $website_link; ?></a>
+                                    </td>
+
                                     <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         @php 
-                                            $project_director = \App\Models\User::join('company_permission', 'company_permission.user_id', '=', 'users.id')
-                                                                ->where('company_permission.permitted_company_id', $user->id)
-                                                                ->where('type', 'Project Director')
-                                                                ->first();
+                                            // $project_director = \App\Models\User::join('company_permission', 'company_permission.user_id', '=', 'users.id')
+                                            //                     ->where('company_permission.permitted_company_id', $user->id)
+                                            //                     ->where('type', 'Project Director')
+                                            //                     ->first();
                                         @endphp 
-                                        {{ $project_director->name ?? '' }}
+                                        {{-- {{ $project_director->name ?? '' }} --}}
+
+                                        {{ $user->project_director}}
                                     </td>
                                 </tr>
                                 @empty

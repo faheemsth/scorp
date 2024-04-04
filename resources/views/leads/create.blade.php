@@ -91,12 +91,14 @@
                                                 class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-
+                    
                                                 {{-- Brand Dropdown --}}
                                                 @if (
                                                     \Auth::user()->type == 'super admin' ||
                                                         \Auth::user()->type == 'Project Director' ||
-                                                        \Auth::user()->type == 'Project Manager')
+                                                        \Auth::user()->type == 'Project Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2'))
                                                             {!! Form::select('brand_id', $companies, 0, [
                                                                 'class' => 'form-control select2 brand_id',
                                                                 'id' => 'brands',
@@ -108,7 +110,7 @@
                                                             <option value="{{$key}}" {{ $key == \Auth::user()->id ? 'selected' : ''}}>{{$comp}}</option>
                                                         @endforeach
                                                     </select>
-                                                @else
+                                                @else 
                                                     <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}">
                                                         <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
                                                             @foreach($companies as $key => $comp)
@@ -134,14 +136,17 @@
                                                         \Auth::user()->type == 'Project Director' ||
                                                         \Auth::user()->type == 'Project Manager' ||
                                                         \Auth::user()->type == 'company' ||
-                                                        \Auth::user()->type == 'Regional Manager')
+                                                        \Auth::user()->type == 'Region Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2' ||
+                                                        \Auth::user()->can('level 3')))
 
                                                             {!! Form::select('region_id', $regions, null, [
                                                                 'class' => 'form-control select2',
                                                                 'id' => 'region_id',
                                                             ]) !!}
 
-                                                @else
+                                                @else 
                                                      <input type="hidden" name="region_id" value="{{ \Auth::user()->region_id }}">
                                                         {!! Form::select('region_id', $regions, \Auth::user()->region_id, [
                                                             'class' => 'form-control select2',
@@ -158,20 +163,24 @@
                                                 class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="branch_div">
-
+                                                
                                                 @if (\Auth::user()->type == 'super admin' ||
                                                         \Auth::user()->type == 'Project Director' ||
                                                         \Auth::user()->type == 'Project Manager' ||
                                                         \Auth::user()->type == 'company' ||
-                                                        \Auth::user()->type == 'Regional Manager' ||
-                                                        \Auth::user()->type == 'Branch Manager')
+                                                        \Auth::user()->type == 'Region Manager' ||
+                                                        \Auth::user()->type == 'Branch Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2') ||
+                                                        \Auth::user()->can('level 3') ||
+                                                        \Auth::user()->can('level 4'))
                                                             <select name="lead_branch" id="branch_id" class="form-control select2 branch_id"
                                                                 onchange="Change(this)">
                                                                     @foreach($branches as $key => $branch)
                                                                         <option value="{{$key}}">{{$branch}}</option>
                                                                     @endforeach
                                                             </select>
-                                                @else
+                                                @else 
                                                          <input type="hidden" name="lead_branch" value="{{ \Auth::user()->branch_id }}">
                                                             <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
                                                                 onchange="Change(this)">
@@ -188,8 +197,8 @@
                                                 {{ __('User Responsible') }} <span
                                                 class="text-danger">*</span>
                                             </td>
-                                            <td class="" style="padding-left: 10px; font-size: 13px;" id="assign_to_div">
-                                                <select class="form-control select2" id="choice-2" name="lead_assgigned_user">
+                                            <td class="" style="padding-left: 10px; font-size: 13px;" id="assign_to_divs">
+                                                <select class="form-control select2" id="choice-222" name="lead_assgigned_user">
                                                     @foreach($employees as $key => $employee)
                                                     <option value="{{$key}}">{{$employee}}</option>
                                                     @endforeach
@@ -197,9 +206,9 @@
                                             </td>
                                         </tr>
 
-                                        <tr>
+                                        <tr class="d-none">
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Agency') }}
+                                                {{ __('Agency') }} 
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choice-7" name="lead_organization">
@@ -279,7 +288,7 @@
 
                                         <tr class="d-none">
                                             <td class="" style="width: 153px; font-size: 13px;">
-                                                {{ __('Email Address (Referrer)') }}
+                                                {{ __('Email Address (Referrer)') }} 
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="email" class="form-control" name="referrer_email">
@@ -291,7 +300,7 @@
                                                 {{ __('Mobile Phone') }} <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-                                                <input type="text" class="form-control" name="lead_phone" required>
+                                                <input type="number" class="form-control" id="phone" name="lead_phone" placeholder="00000000000" required>
                                             </td>
                                         </tr>
 
@@ -338,7 +347,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="" style="width: 115PX; font-size: 13px;padding-right: 20px;">
-                                                Address
+                                                Address 
                                             </td>
                                             <td class="" style="width: 350PX; font-size: 13px; bg-danger">
                                                 <div class="row">
@@ -403,7 +412,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item d-none">
                     <h2 class="accordion-header" id="panelsStayOpen-headingkeytag">
                         <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekeytag">
                             {{ __('TAG LIST') }}
@@ -417,7 +426,7 @@
                                     <tbody>
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Tag List') }}
+                                                {{ __('Tag List') }} 
                                             </td>
                                             <td class="" style="padding-left: 10px;">
                                                 <select name="lead_tags_list" id="choice-6" class="form form-control select2">
@@ -446,35 +455,11 @@
 
 {{Form::close()}}
 
+
 <script>
 
     $(".brand_id").on("change", function(){
-        // var id = $(this).val();
-
-        // $.ajax({
-        //     type: 'GET',
-        //     url: '{{ route('lead_companyemployees') }}',
-        //     data: {
-        //         id: id  // Add a key for the id parameter
-        //     },
-        //     success: function(data){
-        //         data = JSON.parse(data);
-
-        //         if (data.status === 'success') {
-        //             $("#assign_to_div").html(data.employees);
-        //             select2();
-        //             $("#branch_div").html(data.branches);
-        //             select2(); // Assuming this is a function to initialize or update a select2 dropdown
-        //         } else {
-        //             console.error('Server returned an error:', data.message);
-        //         }
-        //     },
-        //     error: function(xhr, status, error) {
-        //         console.error('AJAX request failed:', status, error);
-        //     }
-        // });
-
-
+        
         var id = $(this).val();
 
         $.ajax({
@@ -540,8 +525,8 @@
                 data = JSON.parse(data);
 
                 if (data.status === 'success') {
-                    $('#assign_to_div').html('');
-                    $("#assign_to_div").html(data.html);
+                    $('#assign_to_divs').html('');
+                    $("#assign_to_divs").html(data.html);
                     select2();
                 } else {
                     console.error('Server returned an error:', data.message);
@@ -554,8 +539,50 @@
     });
 
 
+    //////////////////Submitting Form
+    // new lead form submitting...
+    $("#lead-creating-form").on("submit", function(e) {
+
+        e.preventDefault();
+        var formData = $(this).serialize();
+
+        $(".new-lead-btn").val('Processing...');
+        // $('.new-lead-btn').attr('disabled', 'disabled');
+
+        $(".new-lead-btn").prop('disabled', true);
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('leads.store') }}",
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('success', data.message, 'success');
+                    $('#commonModal').modal('hide');
+                    $('.leads-list-tbody').prepend(data.html);
+                    openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
+                    // openNav(data.lead.id);
+                    return false;
+                } else {
+                    show_toastr('error', data.message, 'error');
+                    $(".new-lead-btn").val('Create');
+                    $('.new-lead-btn').removeAttr('disabled');
+                }
+            }
+        });
+    });
+</script>
 
 
-
-
+<script>
+    // Use the input variable in the rest of your code
+    window.intlTelInput(document.getElementById('phone'), {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+        initialCountry: "pk",
+        separateDialCode: true,
+        formatOnDisplay: true,
+        hiddenInput: "full_number"
+    });
 </script>

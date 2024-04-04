@@ -42,9 +42,9 @@ class BranchController extends Controller
                         ->orwhere('brand.name', 'like', '%'.$g_search.'%');
         }
 
-            if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team'){
+            if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR'){
              }else if(\Auth::user()->type == 'company'){
-              $branch_query->whereRaw('brands', [\Auth::user()->id]);
+              $branch_query->where('brands', \Auth::user()->id);
             }else{
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
@@ -171,7 +171,7 @@ class BranchController extends Controller
             $branch->branch_manager_id       = $request->branch_manager_id;
             $branch->google_link       = $request->google_link;
             $branch->social_media_link       = $request->social_media_link;
-            $branch->phone       = $request->phone;
+            $branch->phone       = $request->full_number;
             $branch->email       = $request->email;
 
 
@@ -266,7 +266,7 @@ class BranchController extends Controller
                 }
                 $branch->google_link       = $request->google_link;
                 $branch->social_media_link       = $request->social_media_link;
-                $branch->phone       = $request->phone;
+                $branch->phone       = $request->full_number;
                 $branch->email       = $request->email;
                 $branch->save();
                 return json_encode([
@@ -296,16 +296,9 @@ class BranchController extends Controller
     {
         if(\Auth::user()->can('delete branch'))
         {
-            if($branch->created_by == \Auth::user()->creatorId())
-            {
-                $branch->delete();
+             $branch->delete();
 
-                return redirect()->route('branch.index')->with('success', __('Branch successfully deleted.'));
-            }
-            else
-            {
-                return redirect()->back()->with('error', __('Permission denied.'));
-            }
+            return redirect()->route('branch.index')->with('success', __('Branch successfully deleted.'));
         }
         else
         {

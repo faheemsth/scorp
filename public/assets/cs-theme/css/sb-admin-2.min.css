@@ -2669,7 +2669,7 @@ textarea.form-control.is-invalid {
 .logo img{
     /* width: 100%; */
     width: 200px;
-    height: 55px;
+    height: 31px;
 }
 @media screen and (max-width: 768px){
     .logo img{
@@ -11555,6 +11555,17 @@ a:focus {
     font-size: 15px;
     display: block;
     color:white;
+}
+
+@media only screen and (max-width: 425px) {
+    .sidebar {
+        width: 7.5rem;
+    }
+    .sidebar .nav-item .nav-link {
+        text-align: center;
+        padding: .75rem 0.5rem;
+        width: 6.8rem
+    }
 }
 
 .sidebar .nav-item.active .nav-link {

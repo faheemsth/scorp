@@ -149,8 +149,15 @@
 
 {{ Form::close() }}
 <script>
-    const input = document.querySelector("#phone");
-    window.intlTelInput(input, {
+    window.intlTelInput(document.getElementById('phone'), {
         utilsScript: "{{ asset('js/intel_util.js') }}",
+        initialCountry: "pk",
+    separateDialCode: true,
+    formatOnDisplay: true,
+    hiddenInput: "full_number",
+    placeholderNumberType: "FIXED_LINE",
+    preferredCountries: ["us", "gb"]
     });
+
+    
 </script>

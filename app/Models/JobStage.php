@@ -14,7 +14,7 @@ class JobStage extends Model
 
     public function applications($filter)
     {
-        $application = JobApplication::where('created_by', \Auth::user()->creatorId())->where('is_archive', 0)->where('stage', $this->id);
+        $application = JobApplication::where('is_archive', 0)->where('stage', $this->id);
         $application->where('created_at', '>=', $filter['start_date']);
         $application->where('created_at', '<=', $filter['end_date']);
 

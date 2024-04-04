@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Session;
 use App\Models\Deal;
+use App\Models\Lead;
 use App\Models\User;
 use App\Models\Label;
 use App\Models\Stage;
@@ -11,6 +12,7 @@ use App\Models\Branch;
 use App\Models\Course;
 use App\Models\Region;
 use App\Models\Source;
+use App\Models\Country;
 use App\Models\Utility;
 use App\Models\DealCall;
 use App\Models\DealFile;
@@ -31,6 +33,7 @@ use Illuminate\Http\Request;
 use App\Models\DealDiscussion;
 use App\Models\ProductService;
 use App\Models\TaskDiscussion;
+use App\Events\NewNotification;
 use App\Models\DealApplication;
 use App\Models\ApplicationStage;
 use App\Models\ClientPermission;
@@ -198,6 +201,22 @@ class DealController extends Controller
             $filters['name'] = $_GET['name'];
         }
 
+        if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+            $filters['brand'] = $_GET['brand'];
+        }
+
+        if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
+            $filters['region_id'] = $_GET['region_id'];
+        }
+
+        if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
+            $filters['branch_id'] = $_GET['branch_id'];
+        }
+
+        if (isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user'])) {
+            $filters['deal_assigned_user'] = $_GET['lead_assgigned_user'];
+        }
+
 
         if (isset($_GET['stages']) && !empty($_GET['stages'])) {
             $filters['stage_id'] = $_GET['stages'];
@@ -207,8 +226,12 @@ class DealController extends Controller
             $filters['users'] = $_GET['users'];
         }
 
-        if (isset($_GET['created_at']) && !empty($_GET['created_at'])) {
-            $filters['created_at'] = $_GET['created_at'];
+        if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
+            $filters['created_at_from'] = $_GET['created_at_from'];
+        }
+
+        if (isset($_GET['created_at_to']) && !empty($_GET['created_at_to'])) {
+            $filters['created_at_to'] = $_GET['created_at_to'];
         }
 
         if (isset($_GET['price']) && !empty($_GET['price'])) {
@@ -245,6 +268,8 @@ class DealController extends Controller
 
     public function deal_list()
     {
+        // die('come');
+
         $usr = \Auth::user();
         $cnt_deal = [];
         $comparePrice = '';
@@ -268,34 +293,23 @@ class DealController extends Controller
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
 
-            if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team'){
-
-            }else if(\Auth::user()->type == 'company'){
-                $deals_query->where('brand_id', \Auth::user()->id);
-            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
-                $deals_query->whereIn('brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
-                $deals_query->where('region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
-                $deals_query->where('branch_id', \Auth::user()->branch_id);
-            }else{
-                $deals_query->where('assigned_to', \Auth::user()->id);
-            }
-
-
-
-            if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team'){
+            if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || $usr->can('level 1')){
 
             }else if(\Auth::user()->type == 'company'){
                 $deal_simple_query->where('brand_id', \Auth::user()->id);
-            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+                $deals_query->where('brand_id', \Auth::user()->id);
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || $usr->can('level 2')){
                 $deal_simple_query->whereIn('brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
+                $deals_query->whereIn('brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'Region Manager' || $usr->can('level 3') && !empty(\Auth::user()->region_id)){
                 $deal_simple_query->where('region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+                $deals_query->where('region_id', \Auth::user()->region_id);
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || $usr->can('level 4') && !empty(\Auth::user()->branch_id)){
                 $deal_simple_query->where('branch_id', \Auth::user()->branch_id);
+                $deals_query->where('branch_id', \Auth::user()->branch_id);
             }else{
                 $deal_simple_query->where('assigned_to', \Auth::user()->id);
+                $deals_query->where('assigned_to', \Auth::user()->id);
             }
 
             $Alldeals = $deal_simple_query->get();
@@ -308,8 +322,21 @@ class DealController extends Controller
                     $deals_query->whereIn('created_by', $value);
                 } elseif ($column == 'created_at') {
                     $deals_query->whereDate('deals.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                }elseif ($column == 'brand') {
+                    $deals_query->where('deals.brand_id', $value);
+                }elseif ($column == 'region_id') {
+                    $deals_query->where('deals.region_id', $value);
+                }elseif ($column == 'branch_id') {
+                    $deals_query->where('deals.branch_id', $value);
+                }elseif ($column == 'deal_assigned_user') {
+                    $deals_query->where('deals.assigned_to', $value);
+                }else if($column == 'created_at_from'){
+                    $deals_query->whereDate('deals.created_at', '>=', $value);
+                }else if($column == 'created_at_to'){
+                    $deals_query->whereDate('deals.created_at', '<=', $value);
                 }
             }
+
 
             // $companies = FiltersBrands();
             // $brand_ids = array_keys($companies);
@@ -326,7 +353,7 @@ class DealController extends Controller
 
             $total_records = $deals_query->count();
 
-            $deals_query->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page);
+            $deals_query->groupBy('deals.id')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page);
             $deals = $deals_query->get();
 
             $stages = Stage::get()->pluck('name', 'id')->toArray();
@@ -366,8 +393,9 @@ class DealController extends Controller
             }
 
             // dd($universities);
+            $filters = BrandsRegionsBranches();
 
-            return view('deals.list', compact('Alldeals','deals','universities','pipelines','users','branches','months','years','clients', 'organizations', 'stages', 'users', 'total_records', 'sources', 'brands'));
+            return view('deals.list', compact('Alldeals','deals','universities','pipelines','users','branches','months','years','clients', 'organizations', 'stages', 'users', 'total_records', 'sources', 'brands', 'filters'));
         }
 
 
@@ -660,6 +688,7 @@ class DealController extends Controller
                         ]),
             'module_id' => $deal->id,
             'module_type' => 'deal',
+            'notification_type' => 'Deal Created'
         ];
         addLogActivity($data);
 
@@ -731,6 +760,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $deal->id,
                     'module_type' => 'lead',
+                    'notification_type' => 'Deal Created'
                 ];
                 addLogActivity($data);
 
@@ -843,9 +873,9 @@ class DealController extends Controller
 
 
                 $months = months();
-                $currentYear = date('Y');
+                $currentYear = 2000;
                 $years = [];
-                for ($i = 0; $i < 5; $i++) {
+                for ($i = 0; $i < 100; $i++) {
                     $nextYear = $currentYear + $i;
                     $years[$nextYear] = $nextYear;
                 }
@@ -859,7 +889,8 @@ class DealController extends Controller
                 $branches = $filter['branches'];
                 $users = $filter['employees'];
 
-                return view('deals.edit', compact('deal', 'clients', 'contacts', 'months', 'years', 'companies', 'universities', 'branches', 'pipelines', 'stages', 'users', 'organizations'));
+                $lead = Lead::where('is_converted', $deal->id)->first();
+                return view('deals.edit', compact('deal', 'clients', 'contacts', 'months', 'years', 'companies', 'universities', 'branches', 'pipelines', 'stages', 'users', 'organizations', 'lead'));
             } else {
                 return response()->json(['error' => __('Permission Denied.')], 401);
             }
@@ -903,10 +934,12 @@ class DealController extends Controller
                     $messages = $validator->getMessageBag();
 
                     return json_encode([
-                        'status' => 'success',
+                        'status' => 'error',
                         'message' => $messages->first()
                     ]);
                 }
+
+
 
                 $usr = \Auth::user();
                 $deal->name  = $request->name;
@@ -930,6 +963,18 @@ class DealController extends Controller
                 $deal->save();
 
 
+                $lead = Lead::where('is_converted', $id)->first();
+
+                if(!empty($request->lead_email)){
+                    $lead->email = $request->lead_email;
+                }
+
+                if(!empty($request->lead_phone)){
+                    $lead->phone = $request->full_number;
+                }
+
+                $lead->save();
+                
                 //send email
                 // $clients = User::whereIN('id', array_filter($request->input('contact')))->get()->pluck('email', 'id')->toArray();
 
@@ -950,6 +995,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $deal->id,
                     'module_type' => 'deal',
+                    'notification_type' => 'Deal Updated'
                 ];
                 addLogActivity($data);
 
@@ -982,7 +1028,7 @@ class DealController extends Controller
     public function destroy(Deal $deal)
     {
         if (\Auth::user()->can('delete deal') ||  \Auth::user()->type == 'super admin') {
-            if ($deal->created_by == \Auth::user()->ownerId() ||  \Auth::user()->type == 'super admin') {
+           // if ($deal->created_by == \Auth::user()->ownerId() ||  \Auth::user()->type == 'super admin') {
                 DealDiscussion::where('deal_id', '=', $deal->id)->delete();
                 DealFile::where('deal_id', '=', $deal->id)->delete();
                 ClientDeal::where('deal_id', '=', $deal->id)->delete();
@@ -998,9 +1044,9 @@ class DealController extends Controller
                     return redirect()->route('deals.list')->with('success', __('Deal successfully deleted!'));
                 }
                 return redirect()->route('deals.list')->with('success', __('Deal successfully deleted!'));
-            } else {
-                return redirect()->back()->with('error', __('Permission Denied.'));
-            }
+            // } else {
+            //     return redirect()->back()->with('error', __('Permission Denied.'));
+            // }
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -1029,6 +1075,7 @@ class DealController extends Controller
                     ]),
                     'module_id' => $deal->id,
                     'module_type' => 'Deal',
+                    'notification_type' => 'Lead Updated'
                 ];
                 addLogActivity($data);
                 ActivityLog::create(
@@ -1617,6 +1664,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $deal->id,
                     'module_type' => 'deal',
+                    'notification_type' => 'Deal Notes Created'
                 ];
                 addLogActivity($data);
 
@@ -1753,6 +1801,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $deal->id,
                     'module_type' => 'deal',
+                    'notification_type' => 'Task Created'
                 ];
                 addLogActivity($data);
 
@@ -1910,6 +1959,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $id,
                     'module_type' => 'deal',
+                    'notification_type' => 'Task Updated'
                 ];
                 addLogActivity($data);
 
@@ -2454,7 +2504,7 @@ class DealController extends Controller
         if (\Auth::user()->can('create application')) {
 
             $deal_passport = Deal::select(['users.*'])->join('client_deals', 'client_deals.deal_id', 'deals.id')->join('users', 'users.id', 'client_deals.client_id')->where(['deals.id' => $id])->first();
-
+            
             if (!$deal_passport || empty($deal_passport->passport_number)) {
                 return response()->json(
                     [
@@ -2465,18 +2515,21 @@ class DealController extends Controller
                 );
             }
 
-            $universities = University::pluck('name', 'id');
-             $universities = [0 => 'Select University'] + $universities->toArray();
+            //$universities = University::pluck('name', 'id');
+            // $universities = [0 => 'Select University'] + $universities->toArray();
            // $universities->prepend('Select Institute');
             $stages = ApplicationStage::get()->pluck('name', 'id')->toArray();
-
+            $universities = [];
             $statuses = [
                 'Pending' => 'Pending',
                 'Approved' => 'Approved',
                 'Rejected' => 'Rejected'
             ];
 
-            return view('deals.create-application', compact('universities', 'statuses', 'id', 'deal_passport', 'stages'));
+            $countries = Country::pluck('name', 'name');
+            $countries = [0 => 'Select Country'] + $countries->toArray();
+            
+            return view('deals.create-application', compact('universities', 'statuses', 'id', 'deal_passport', 'stages', 'countries'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -2565,6 +2618,7 @@ class DealController extends Controller
                             ]),
                 'module_id' => $new_app->id,
                 'module_type' => 'application',
+                'notification_type' => 'Stage Updated'
             ];
             addLogActivity($data);
 
@@ -2615,17 +2669,19 @@ class DealController extends Controller
                     'intake_month' => 'required'
                 ]
             );
-                // Default Field Value
-                if ($usr->default_pipeline) {
-                    $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
-                    if (!$pipeline) {
-                        $pipeline = Pipeline::first();
-                    }
-                } elseif (\Auth::user()->type == 'super admin') {
-                    $pipeline = Pipeline::first();
-                } else {
-                    $pipeline = Pipeline::first();
-                }
+           // $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
+
+                // // Default Field Value
+                // if ($usr->default_pipeline) {
+                //     $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
+                //     if (!$pipeline) {
+                //         $pipeline = Pipeline::first();
+                //     }
+                // } elseif (\Auth::user()->type == 'super admin') {
+                //     $pipeline = Pipeline::first();
+                // } else {
+                //     $pipeline = Pipeline::first();
+                // }
             if ($validator->fails()) {
 
                 $messages = $validator->getMessageBag();
@@ -2657,7 +2713,7 @@ class DealController extends Controller
             $application->university_id = $request->university;
             $application->stage_id = $request->status;
             $application->course = $request->course;
-            $application->pipeline_id = $pipeline->id;
+            //$application->pipeline_id = $pipeline->id;
             $application->external_app_id = $request->application_key;
             $application->intake = date('Y-m-d', strtotime($request->intake));
             $application->name = $deal->name . '-' . $request->course . '-' . $university_name . '-' . $request->application_key;
@@ -2699,12 +2755,20 @@ class DealController extends Controller
             $filters['subjects'] = $_GET['subjects'];
         }
 
-        if (isset($_GET['assigned_to']) && !empty($_GET['assigned_to'])) {
-            $filters['assigned_to'] = $_GET['assigned_to'];
+        if (isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user'])) {
+            $filters['assigned_to'] = $_GET['lead_assgigned_user'];
         }
 
-        if (isset($_GET['brands']) && !empty($_GET['brands'])) {
-            $filters['created_by'] = $_GET['brands'];
+        if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+            $filters['brand_id'] = $_GET['brand'];
+        }
+
+        if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
+            $filters['region_id'] = $_GET['region_id'];
+        }
+
+        if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
+            $filters['branch_id'] = $_GET['branch_id'];
         }
 
         if (isset($_GET['due_date']) && !empty($_GET['due_date'])) {
@@ -2714,13 +2778,21 @@ class DealController extends Controller
             $filters['status'] = $_GET['status'];
         }
 
+        if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
+            $filters['created_at_from'] = $_GET['created_at_from'];
+        }
+
+        if (isset($_GET['created_at_to']) && !empty($_GET['created_at_to'])) {
+            $filters['created_at_to'] = $_GET['created_at_to'];
+        }
+
         return $filters;
     }
     public function userTasks()
     {
 
         $start = 0;
-        $num_results_on_page = 50;
+        $num_results_on_page = 25;
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
             $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -2734,15 +2806,15 @@ class DealController extends Controller
 
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            if(\Auth::user()->type == 'super admin'){
+            if(\Auth::user()->type == 'super admin' || \Auth::user()->can('level 1')){
 
             }else if(\Auth::user()->type == 'company'){
                 $tasks->where('deal_tasks.brand_id', \Auth::user()->id);
-            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')){
                 $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
+            }else if(\Auth::user()->type == 'Region Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)){
                 $tasks->where('deal_tasks.region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)){
                 $tasks->where('deal_tasks.branch_id', \Auth::user()->branch_id);
             }else{
                 $tasks->where('deal_tasks.assigned_to', \Auth::user()->id);
@@ -2752,15 +2824,23 @@ class DealController extends Controller
 
             foreach ($filters as $column => $value) {
                 if ($column === 'subjects') {
-                    $tasks->whereIn('deal_tasks.name', $value);
+                    $tasks->whereIn('deal_tasks.id', $value);
                 } elseif ($column === 'assigned_to') {
-                    $tasks->whereIn('assigned_to', $value);
-                } elseif ($column === 'created_by') {
-                    $tasks->whereIn('deal_tasks.brand_id', $value);
+                    $tasks->where('assigned_to', $value);
+                } elseif ($column === 'brand_id') {
+                    $tasks->where('deal_tasks.brand_id', $value);
+                }elseif ($column === 'region_id') {
+                    $tasks->where('deal_tasks.region_id', $value);
+                }elseif ($column === 'branch_id') {
+                    $tasks->where('deal_tasks.branch_id', $value);
                 } elseif ($column == 'due_date') {
                     $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
                 }elseif ($column == 'status') {
                     $tasks->where('status',$value);
+                }elseif ($column == 'created_at_from') {
+                    $tasks->whereDate('deal_tasks.created_at', '>=', $value);
+                }elseif ($column == 'created_at_to') {
+                    $tasks->whereDate('deal_tasks.created_at', '<=', $value);
                 }
             }
 
@@ -3159,8 +3239,10 @@ class DealController extends Controller
 
              //Getting lead stages history
              $stage_histories = StageHistory::where('type', 'deal')->where('type_id', $deal->id)->pluck('stage_id')->toArray();
+            
+             $lead = Lead::where('is_converted', $deal->id)->first();
 
-            $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories'))->render();
+            $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories', 'lead'))->render();
 
             return json_encode([
                 'status' => 'success',
@@ -3310,7 +3392,7 @@ class DealController extends Controller
         return json_encode([
             'status' => 'success',
             'html' => $html,
-            'message' => 'Lead ' . $name . ' updated successfully'
+            'message' => 'Admission ' . $name . ' updated successfully'
         ]);
     }
 
@@ -3371,7 +3453,7 @@ class DealController extends Controller
         return json_encode([
             'status' => 'success',
             'html' => $html,
-            'message' => 'Lead ' . $name . ' updated successfully'
+            'message' => 'Admission ' . $name . ' updated successfully'
         ]);
     }
 
@@ -3516,6 +3598,7 @@ class DealController extends Controller
                         ]),
             'module_id' => $deal_id,
             'module_type' => 'deal',
+            'notification_type' => 'Deal Stage Updated'
         ];
         addLogActivity($data);
 
@@ -3579,6 +3662,7 @@ class DealController extends Controller
                             ]),
                 'module_id' => $task->deal_id,
                 'module_type' => 'deal',
+                'notification_type' => 'Task Updated'
             ];
             addLogActivity($data);
         }
@@ -3782,7 +3866,7 @@ class DealController extends Controller
 
 
     public function downloadTasks(){
-        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->can('level 1')) {
             $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to');
 
             $companies = FiltersBrands();
@@ -3791,11 +3875,11 @@ class DealController extends Controller
 
             }else if(\Auth::user()->type == 'company'){
                 $tasks->where('deal_tasks.brand_id', \Auth::user()->id);
-            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')){
                 $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+            }else if(\Auth::user()->type == 'Regional Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)){
                 $tasks->where('deal_tasks.region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)){
                 $tasks->where('deal_tasks.branch_id', \Auth::user()->branch_id);
             }else{
                 $tasks->where('deal_tasks.assigned_to', \Auth::user()->id);
@@ -3869,15 +3953,15 @@ class DealController extends Controller
         $companies = FiltersBrands();
         $brand_ids = array_keys($companies);
 
-        if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team'){
+        if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || \Auth::user()->can('level 1')){
 
         }else if(\Auth::user()->type == 'company'){
             $deals_query->where('brand_id', \Auth::user()->id);
-        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')){
             $deals_query->whereIn('brand_id', $brand_ids);
-        }else if(\Auth::user()->type == 'Region Manager' && !empty(\Auth::user()->region_id)){
+        }else if(\Auth::user()->type == 'Region Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)){
             $deals_query->where('region_id', \Auth::user()->region_id);
-        }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+        }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)){
             $deals_query->where('branch_id', \Auth::user()->branch_id);
         }else{
             $deals_query->where('assigned_to', \Auth::user()->id);
@@ -3912,8 +3996,8 @@ class DealController extends Controller
         $brands = $companies;
         $users = allUsers();
         $sources = Source::get()->pluck('name', 'id')->toArray();
-       
-        
+
+
         $header = [
             'Sr.No.',
             'Name',
@@ -3929,7 +4013,7 @@ class DealController extends Controller
             $passport_number = isset($client->passport_number) ? $client->passport_number : '';
             $month = !empty($deal->intake_month) ? $deal->intake_month : 'January';
             $year = !empty($deal->intake_year) ? $deal->intake_year : '2023';
-            
+
             $data[] = [
                 'sr_no' => $key+1,
                 'name' => $deal->name,

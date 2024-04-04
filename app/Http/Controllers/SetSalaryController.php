@@ -21,13 +21,14 @@ class SetSalaryController extends Controller
     {
         if(\Auth::user()->can('manage set salary'))
         {
-            $employees = Employee::where(
-                [
-                    'created_by' => \Auth::user()->creatorId(),
-                ]
-            )->get();
+            $pagination = getPaginationDetail();
+            $start = $pagination['start'];
+            $limit = $pagination['num_results_on_page'];
 
-            return view('setsalary.index', compact('employees'));
+            $query = Employee::query();
+            $total_records = $query->count();
+            $employees = $query->skip($start)->take($limit)->get();
+            return view('setsalary.index', compact('employees', 'total_records'));
         }
         else
         {
@@ -39,7 +40,6 @@ class SetSalaryController extends Controller
     {
         if(\Auth::user()->can('edit set salary'))
         {
-
             $payslip_type      = PayslipType::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $allowance_options = AllowanceOption::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $loan_options      = LoanOption::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -220,9 +220,9 @@ class SetSalaryController extends Controller
             return redirect()->back()->with('error', $messages->first());
         }
         $employee = Employee::findOrFail($id);
-        $input    = $request->all();
-        $employee->fill($input)->save();
-
+        $employee->salary_type = $request->salary_type;
+        $employee->salary = $request->salary;
+        $employee->save();
         return redirect()->back()->with('success', 'Employee Salary Updated.');
     }
 

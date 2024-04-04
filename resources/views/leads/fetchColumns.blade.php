@@ -1,9 +1,11 @@
-<div class="row">
+<div class="row align-items-baseline">
     <div class="col-6">
         @if (
             \Auth::user()->type == 'super admin' ||
                 \Auth::user()->type == 'Project Director' ||
-                \Auth::user()->type == 'Project Manager')
+                \Auth::user()->type == 'Project Manager' ||
+                \Auth::user()->can('level 1') ||
+                \Auth::user()->can('level 2'))
             <label for="branches" class="col-form-label">Brands<span class="text-danger">*</span></label>
             <div class="form-group" id="brand_div">
                 {!! Form::select('brand_id', $companies, 0, [
@@ -41,7 +43,10 @@
                 \Auth::user()->type == 'Project Director' ||
                 \Auth::user()->type == 'Project Manager' ||
                 \Auth::user()->type == 'company' ||
-                \Auth::user()->type == 'Regional Manager')
+                \Auth::user()->type == 'Region Manager' ||
+                \Auth::user()->can('level 1') ||
+                \Auth::user()->can('level 2') ||
+                \Auth::user()->can('level 3'))
             <label for="branches" class="col-form-label">Region<span class="text-danger">*</span></label>
             <div class="form-group" id="region_div">
                 {!! Form::select('region_id', $regions, null, [
@@ -67,12 +72,16 @@
                 \Auth::user()->type == 'Project Director' ||
                 \Auth::user()->type == 'Project Manager' ||
                 \Auth::user()->type == 'company' ||
-                \Auth::user()->type == 'Regional Manager' ||
-                \Auth::user()->type == 'Branch Manager')
+                \Auth::user()->type == 'Region Manager' ||
+                \Auth::user()->type == 'Branch Manager' ||
+                \Auth::user()->can('level 1') ||
+                \Auth::user()->can('level 2') ||
+                \Auth::user()->can('level 3') ||
+                \Auth::user()->can('level 4'))
 
             <label for="branches" class="col-form-label">Branch<span class="text-danger">*</span></label>
             <div class="form-group" id="branch_div">
-                <select name="branch_id" id="branch_id" class="form-control select2 branch_id" onchange="Change(this)">
+                <select name="lead_branch" id="lead_branch" class="form-control select2 branch_id" onchange="Change(this)">
                     @foreach ($branches as $key => $branch)
                         <option value="{{ $key }}">{{ $branch }}</option>
                     @endforeach
@@ -81,8 +90,8 @@
         @else
             <label for="branches" class="col-form-label">Branch<span class="text-danger">*</span></label>
             <div class="form-group" id="branch_div">
-                <input type="hidden" name="branch_id" value="{{ \Auth::user()->branch_id }}">
-                <select name="branch_id" id="branch_id" class="form-control select2 branch_id" onchange="Change(this)">
+                <input type="hidden" name="lead_branch" value="{{ \Auth::user()->branch_id }}">
+                <select name="lead_branch" id="branch_id" class="form-control select2 branch_id" onchange="Change(this)">
                     @foreach ($branches as $key => $branch)
                         <option value="{{ $key }}" {{ \Auth::user()->branch_id == $key ? 'selected' : '' }}>
                             {{ $branch }}</option>
@@ -96,7 +105,7 @@
     <div class="col-6">
         <label for="">Lead Assigned to <span class="text-danger">*</span></label>
         <div id="assign_to_div">
-            <select name="assigned_to" id="assigned_to" class="form form-control">
+            <select name="lead_assgigned_user" id="assigned_to" class="form form-control">
                 @foreach ($employees as $key => $employee)
                     <option value="{{ $key }}">{{ $employee }}</option>
                 @endforeach
@@ -124,7 +133,7 @@
     <div class="row">
         <?php foreach($first_row as $key => $row){ ?>
         <div class="col-md-3 mt-3"><label for=""><?= $row ?></label></div>
-        <div class="col-md-3 mt-3">
+        <div class="col-md-3 mt-3 px-2">
             <select name="columns[<?= $row ?>]" id="" data-id="<?= $key ?>"
                 class="form form-control lead-columns">
                 <option value="">Select Column</option>

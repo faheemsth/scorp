@@ -139,20 +139,6 @@
     <li class="breadcrumb-item">{{__('Job Application')}}</li>
 @endsection
 
-@section('action-btn')
-    <div class="float-end">
-        {{--        <a class="btn btn-sm btn-primary" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button" aria-expanded="false" aria-controls="multiCollapseExample1" data-bs-toggle="tooltip" title="{{__('Filter')}}">--}}
-        {{--            <i class="ti ti-filter"></i>--}}
-        {{--        </a>--}}
-
-        @can('create job application')
-            <a href="#" data-size="lg" data-url="{{ route('job-application.create')}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create New Job Application')}}" class="btn btn-sm btn-primary">
-                <i class="ti ti-plus"></i>
-            </a>
-        @endcan
-
-    </div>
-@endsection
 
 @section('content')
 
@@ -193,6 +179,12 @@
                                    title="{{ __('Reset') }}">
                                     <span class="btn-inner--icon"><i class="ti ti-trash-off text-white-off "></i></span>
                                 </a>
+
+                                @can('create job application')
+                                    <a href="#" data-size="lg" data-url="{{ route('job-application.create')}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create New Job Application')}}" class="btn btn-sm btn-primary">
+                                        <i class="ti ti-plus"></i>
+                                    </a>
+                                @endcan
                             </div>
 
                         </div>
@@ -212,7 +204,7 @@
                     $json[] = 'task-list-'.$stage->id;
                 }
             @endphp
-            <div class="row kanban-wrapper horizontal-scroll-cards" data-plugin="dragula" data-containers='{!! json_encode($json) !!}'>
+            <div class="row kanban-wrapper horizontal-scroll-cards" style="overflow-x: scroll; flex-wrap: unset;" data-plugin="dragula" data-containers='{!! json_encode($json) !!}'>
                 @foreach($stages as $stage)
                     @php $applications = $stage->applications($filter) @endphp
 

@@ -37,7 +37,7 @@
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade show active" id="staff" role="tabpanel" aria-labelledby="pills-home-tab">
                     @php
-                        $modules=['user','role','client','product & service','constant unit','constant tax','constant category','company settings', 'system settings', 'crm settings'];
+                        $modules=['user','role', 'level', 'client','product & service','constant unit','constant tax','constant category','company settings', 'system settings', 'crm settings'];
                        if(\Auth::user()->type == 'company'){
                            $modules[] = 'language';
                            $modules[] = 'permission';
@@ -151,6 +151,47 @@
                                                             </div>
                                                         @endif
                                                     @endif
+
+
+                                                    @if($module == 'level')
+                                                        @if($key = array_search('level 1', $permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'level 1',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif 
+
+                                                        @if($key = array_search('level 2', $permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'level 2',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+
+                                                        @if($key = array_search('level 3', $permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'level 3',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+
+                                                        @if($key = array_search('level 4', $permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'level 4',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+
+                                                        @if($key = array_search('level 5', $permissions))
+                                                            <div class="col-md-3 custom-control custom-checkbox">
+                                                                {{Form::checkbox('permissions[]',$key,$role->permission, ['class'=>'form-check-input isscheck staff_checkall isscheck_'.str_replace(' ', '', str_replace('&', '', $module)),'id' =>'permission'.$key])}}
+                                                                {{Form::label('permission'.$key,'level 5',['class'=>'custom-control-label'])}}<br>
+                                                            </div>
+                                                        @endif
+                                                    @endif 
+
+
+                                                    
                                                     @if(in_array('delete payment '.$module,(array) $permissions))
                                                         @if($key = array_search('delete payment '.$module,$permissions))
                                                             <div class="col-md-3 custom-control custom-checkbox">

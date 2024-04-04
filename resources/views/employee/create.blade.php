@@ -7,6 +7,10 @@
     {{Form::open(array('route'=>array('employee.store'),'method'=>'post','enctype'=>'multipart/form-data'))}}
     {{-- <form method="post" action="{{route('employee.store')}}" enctype="multipart/form-data">--}}
     {{-- @csrf--}}
+
+    @csrf
+
+    
 </div>
 <div class="row">
     <div class="col-md-6 ">
@@ -27,7 +31,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             {!! Form::label('dob', __('Date of Birth'),['class'=>'form-label']) !!}<span class="text-danger pl-1">*</span>
-                            {!! Form::text('dob', old('dob'), ['class' => 'form-control datepicker']) !!}
+                            {!! Form::date('dob', old('dob'), ['class' => 'form-control datepicker']) !!}
                         </div>
                     </div>
 
@@ -36,11 +40,11 @@
                             {!! Form::label('gender', __('Gender'),['class'=>'form-label']) !!}<span class="text-danger pl-1">*</span>
                             <div class="d-flex radio-check">
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="g_male" value="Male" name="gender" class="custom-control-input">
+                                    <input type="radio" id="g_male" value="Male" name="gender" class="">
                                     <label class="custom-control-label" for="g_male">{{__('Male')}}</label>
                                 </div>
                                 <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" id="g_female" value="Female" name="gender" class="custom-control-input">
+                                    <input type="radio" id="g_female" value="Female" name="gender" class="">
                                     <label class="custom-control-label" for="g_female">{{__('Female')}}</label>
                                 </div>
                             </div>
@@ -69,41 +73,45 @@
             </div>
             <div class="card-body employee-detail-create-body">
                 <div class="row">
-                    @csrf
                     <div class="form-group col-md-12">
                         {!! Form::label('employee_id', __('Employee ID'),['class'=>'form-label']) !!}
                         {!! Form::text('employee_id', $employeesId, ['class' => 'form-control','disabled'=>'disabled']) !!}
                     </div>
 
                     <div class="form-group col-md-6">
-                        {{ Form::label('branch_id', __('Branch'),['class'=>'form-label']) }}
-                        <!-- {{ Form::select('branch_id', $branches, null, array('class' => 'form-control  select2','required'=>'required')) }}                         -->
-                        <select name="branch_id" id="branch_id" class="form form-control select2">
-                            <option value="">Select Branch</option>
-                            <?php foreach ($branches as $key => $branch) { ?>
-                                <option value="<?= $key ?>"><?= $branch ?></option>
-                            <?php } ?>
-                        </select>
+                        {!! Form::label('brands', __('Brand'),['class'=>'form-label']) !!}
+                        {!! Form::select('brand_id', $brands,null, ['class' => 'form-control select2', 'id' => 'brand_id']) !!}
+                        <input type="hidden" value="" name="brand_id" id="hidden_brand_id">
+                    </div>
 
+
+                    <div class="form-group col-md-6">
+                        <input type="hidden" value="" name="region_id" id="hidden_region_id">
+                        {!! Form::label('regions', __('Region'),['class'=>'form-label']) !!}
+                        <div id="region_div">
+                            {!! Form::select('region_id', $regions,null, ['class' => 'form-control select2', 'id' => 'region_id']) !!}
+                        </div>
                     </div>
 
                     <div class="form-group col-md-6">
-                        {{ Form::label('department_id', __('Department'),['class'=>'form-label']) }}
-                        <select class="form-control select2-multiple" id="department_id" name="department_id" data-toggle="select2" required>
-                            <option value="">{{__('Select any Department')}}</option>
-                        </select>
-
+                        <input type="hidden" value="" name="branch_id" id="hidden_branch_id">
+                        {!! Form::label('branches', __('Branch'),['class'=>'form-label']) !!}
+                        <div class="" id="branch_div">
+                        {!! Form::select('branche_id', $branches,null, ['class' => 'form-control select2', 'id' => 'branch_id']) !!}
+                    </div>
                     </div>
 
-                    <div class="form-group col-md-12">
-                        {{ Form::label('designation_id', __('Designation'),['class'=>'form-label']) }}
-                        <select class="form-control select2-multiple" id="designation_id" name="designation_id" data-toggle="select2" data-placeholder="{{ __('Select Designation ...') }}">
-                            <option value="">{{__('Select any Designation')}}</option>
-                        </select>
+
+                    <div class="form-group col-md-6">
+                        {!! Form::label('roles', __('Role'),['class'=>'form-label']) !!}
+                        {!! Form::select('role', $roles,null, ['class' => 'form-control select2', 'id' => 'role']) !!}
+                        <input type="hidden" name="role" value="" id="hidden_role">
                     </div>
+
+
                     <div class="form-group col-md-12 ">
                         {!! Form::label('company_doj', __('Company Date Of Joining'),['class'=>'form-label']) !!}
-                        {!! Form::text('company_doj', null, ['class' => 'form-control datepicker','required' => 'required']) !!}
+                        {!! Form::date('company_doj', null, ['class' => 'form-control datepicker','required' => 'required']) !!}
                     </div>
                 </div>
             </div>
@@ -182,7 +190,7 @@
 </div>
 <div class="row">
     <div class="col-12">
-        {!! Form::submit('Create', ['class' => 'btn btn-xs badge-blue float-right radius-10px']) !!}
+        {!! Form::submit('Create', ['class' => 'btn btn-xs btn-primary badge-blue float-right radius-10px']) !!}
         {{-- </form>--}}
         {{Form::close()}}
     </div>
@@ -192,41 +200,69 @@
 @push('script-page')
 
 <script>
-    $('#branch_id').on('change', function() {
-        var branch_id = $(this).val();
-        $.ajax({
-            url: '/get-departments',
-            type: 'POST',
-            data: {
-                "branch_id": branch_id,
-                "_token": "{{ csrf_token() }}",
-            },
-            success: function(data) {
+$("#brand_id").on("change", function(){
+        
+        var id = $(this).val();
+        $("#hidden_brand_id").val(id);
 
-                $('#department_id').empty();
-                $('#department_id').append('<option value="">Select Departments</option>');
-                $('#department_id').append(data);
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('filter-regions') }}',
+            data: {
+                id: id
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $('#region_div').html('');
+                    $("#region_div").html(data.html);
+                    select2();
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
             }
-        })
+        });
     });
 
 
-    $('#department_id').on('change', function() {
-        var designation_id = $(this).val();
-        $.ajax({
-            url: '/get_designations',
-            type: 'POST',
-            data: {
-                "designation_id": designation_id,
-                "_token": "{{ csrf_token() }}",
-            },
-            success: function(data) {
+    $(document).on("change", "#region_id", function(){
+        var id = $(this).val();
+        $("#hidden_region_id").val(id);
 
-                $('#designation_id').empty();
-                $('#designation_id').append('<option value="">Select Designations</option>');
-                $('#designation_id').append(data);
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('filter-branches') }}',
+            data: {
+                id: id
+            },
+            success: function(data){
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $('#branch_div').html('');
+                    $("#branch_div").html(data.html);
+                    select2();
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
             }
-        })
+        });
     });
+
+    $(document).on("change", "#branch_id", function(){
+        var id = $(this).val();
+        $("#hidden_branch_id").val(id);
+    });
+
+    $(document).on("change","#role", function(){
+        $("#hidden_role").val($(this).val());
+    })
 </script>
 @endpush

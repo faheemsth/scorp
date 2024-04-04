@@ -16,6 +16,7 @@ use App\Models\IpRestrict;
 use Illuminate\Http\Request;
 use App\Models\EmailTemplate;
 use App\Models\JoiningLetter;
+use App\Models\EmailTemplateLang;
 use Illuminate\Support\Facades\DB;
 use App\Models\GenerateOfferLetter;
 use Illuminate\Support\Facades\Auth;
@@ -574,28 +575,31 @@ class SystemController extends Controller
             $settings                = Utility::settings();
             $timezones               = config('timezones');
             $company_payment_setting = Utility::getCompanyPaymentSetting(\Auth::user()->creatorId());
-
+            
             $EmailTemplates = EmailTemplate::all();
-            $ips = IpRestrict::where('created_by', \Auth::user()->creatorId())->get();
+            $ips = IpRestrict::get();
             // $languages = Utility::languages();
+            $EmailMarketing = EmailTemplateLang::where('subject', 'Email Marketing')->where('lang', 'en')->first();
+
+            
 
             //offer letter
-            $Offerletter=GenerateOfferLetter::all();
-            $currOfferletterLang = GenerateOfferLetter::where('created_by',  \Auth::user()->id)->where('lang', $offerlang)->first();
-
+            $Offerletter=GenerateOfferLetter::where('lang', 'en')->get();
+            $currOfferletterLang = GenerateOfferLetter::where('lang', $offerlang)->first();
+            
             //joining letter
-            $Joiningletter=JoiningLetter::all();
-            $currjoiningletterLang = JoiningLetter::where('created_by',  \Auth::user()->id)->where('lang', $joininglang)->first();
+            $Joiningletter=JoiningLetter::where('lang', 'en')->get();
+            $currjoiningletterLang = JoiningLetter::where('lang', $joininglang)->first();
 
             //Experience Certificate
-            $experience_certificate=ExperienceCertificate::all();
-            $curr_exp_cetificate_Lang = ExperienceCertificate::where('created_by',  \Auth::user()->id)->where('lang', $explang)->first();
+            $experience_certificate=ExperienceCertificate::where('lang', 'en')->get();
+            $curr_exp_cetificate_Lang = ExperienceCertificate::where('lang', $explang)->first();
 
             //NOC
-            $noc_certificate=NOC::all();
-            $currnocLang = NOC::where('created_by',  \Auth::user()->id)->where('lang', $noclang)->first();
+            $noc_certificate=NOC::where('lang', 'en')->get();
+            $currnocLang = NOC::where('lang', $noclang)->first();
 
-            return view('settings.company', compact('settings','company_payment_setting','timezones', 'ips','EmailTemplates','currOfferletterLang','Offerletter','offerlang','Joiningletter','currjoiningletterLang','joininglang','experience_certificate','curr_exp_cetificate_Lang','explang','noc_certificate','currnocLang','noclang'));
+            return view('settings.company', compact('settings','company_payment_setting','timezones', 'ips','EmailTemplates','currOfferletterLang','Offerletter','offerlang','Joiningletter','currjoiningletterLang','joininglang','experience_certificate','curr_exp_cetificate_Lang','explang','noc_certificate','currnocLang','noclang', 'EmailMarketing'));
         }
         else
         {

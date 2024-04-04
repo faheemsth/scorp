@@ -113,7 +113,7 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     {{-- @can('view lead') --}}
-                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
+                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Already Converted To Admission') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
                         <i class="fa-brands fa-whatsapp"></i>
                     </a>
                     {{-- @endcan --}}
@@ -124,7 +124,7 @@
                         @if (!empty($deal))
                             <a href="javascript:void(0)" @can('View Deal') @if ($deal->is_active)   onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }}) @else '' @endif @else '' @endcan"
                                 data-size="lg" data-bs-toggle="tooltip"
-                                data-bs-title=" {{ __('Already Converted To Deal') }}" class="btn px-2 py-2 btn-dark text-white"
+                                data-bs-title=" {{ __('Already Converted to Admission') }}" class="btn px-2 py-2 btn-dark text-white"
                                 style="background-color: #313949 color:white; width:36px; height: 36px; margin-top:10px;" >
                                 <i class="ti ti-exchange"></i>
                             </a>
@@ -132,7 +132,7 @@
                             @can('convert lead')
                             <a href="#" data-size="lg"
                                 data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
-                                data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] To Deal') }}"
+                                data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] to Admission') }}"
                                 class="btn px-2 py-2 btn-dark text-white"style= "width:36px; height: 36px; margin-top:10px;">
                                 <i class="ti ti-exchange"></i>
                             </a>
@@ -146,6 +146,8 @@
                         style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
                         <i class="ti ti-bookmark"></i>
                     </a>
+
+                    
 
                     @can('edit lead')
                     <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}"
@@ -170,6 +172,7 @@
 
                         {!! Form::close() !!}
                     @endcan
+                    
 
                 </div>
             </div>
@@ -205,8 +208,22 @@
             box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 ">
                 <div class="stages my-2 ">
-                    <h2 class="mb-2 py-2 ps-3">LEAD STATUS: <span class="d-inline-block fw-light ms-1">{{ $lead->stage->name }}</span>
-                    </h2>
+                    <div class="d-flex justify-content-between">
+                        <h2 class="mb-2 py-2 ps-3">LEAD STATUS: <span class="d-inline-block fw-light ms-1">{{ $lead->stage->name }}</span>
+                        </h2>
+
+                        <div class="">
+                        @php 
+                            $lead_tags = \App\Models\LeadTag::where('lead_id', $lead->id)->get();
+                        @endphp 
+
+                        @forelse($lead_tags as $tag)
+                            <span class="badge  text-white" style="background-color:#cd9835; margin-top: 1rem; margin-right: 1rem;">{{ $tag->tag }}</span>
+                        @empty
+
+                        @endforelse
+                        </div>
+                    </div>
                     <div class="wizard mb-2" style="background: #EFF3F7;
                     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);">
                         <?php $done = true; ?>

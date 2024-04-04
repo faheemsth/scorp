@@ -1,6 +1,6 @@
 
 {{ Form::model($client, array('route' => array('clients.update', $client->id), 'method' => 'PUT')) }}
-<div class="modal-body" style="min-height: 50vh;">
+<div class="modal-body">
     <div class="row">
         <div class="form-group">
             {{ Form::label('name', __('Name'),['class'=>'form-label']) }}
@@ -16,13 +16,7 @@
             {{ Form::text('passport_number', null, array('class' => 'form-control','placeholder'=>__('Enter passport number'),'required'=>'required')) }}
         </div>
         <div class="form-group">
-            {{ Form::label('password', __('Password'),['class'=>'form-label']) }}
-            {{Form::password('password',array('class'=>'form-control','placeholder'=>__('Enter User Password'),'required'=>'required','minlength'=>"6"))}}
-            @error('password')
-            <small class="invalid-password" role="alert">
-                <strong class="text-danger">{{ $message }}</strong>
-            </small>
-            @enderror
+            {{Form::hidden('password', 'study1234',array('class'=>'form-control','placeholder'=>__('Enter User Password'),'required'=>'required','minlength'=>"6"))}}
         </div>
 
         @if(!$customFields->isEmpty())

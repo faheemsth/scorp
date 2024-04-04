@@ -1,56 +1,62 @@
 @push('css-page')
-<link rel="stylesheet" href="assets/css/customizer.css">
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<link rel="stylesheet" href="{{ asset('css/intel_input.css') }}">
+    <link rel="stylesheet" href="assets/css/customizer.css">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('css/intel_input.css') }}">
 @endpush
 @php
-$users = \Auth::user();
-$logo_dark = \App\Models\Utility::getValByName('company_logo_dark');
-$notifications = \App\Models\Notification::all();
+    $users = \Auth::user();
+    $logo_dark = \App\Models\Utility::getValByName('company_logo_dark');
+    $notifications = \App\Models\Notification::where('user_id', $users->id)->get();
 
-//$profile=asset(Storage::url('uploads/avatar/'));
-$profile = \App\Models\Utility::get_file('uploads/avatar/');
-$languages = \App\Models\Utility::languages();
-$lang = isset($users->lang) ? $users->lang : 'en';
-$setting = \App\Models\Utility::colorset();
-$mode_setting = \App\Models\Utility::mode_layout();
-$adminOption = \App\Models\User::where('type', Session::get('onlyadmin'))->first();
-if (Session::get('is_company_login') == true) {
-$currentUserCompany = \App\Models\User::where('type', 'company')->find(Session::get('auth_type_created_by'));
-} else {
-$currentUserCompany = \App\Models\User::where('type', 'company')->find(\Auth()->user()->created_by);
-}
-// dd(Session::get('auth_type_created_by'));
-$com_permissions = [];
-if ($currentUserCompany != null) {
-
-    if (Session::get('auth_type') == \Auth::user()->type ||
-    Session::get('auth_type') == 'Project Director' ||
-    Session::get('auth_type') == 'Project Manager'){
-      $com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', Session::get('auth_type_id'))->get();
-    }else{
-       $com_permissions = \App\Models\CompanyPermission::where('active', 'true')->where('user_id', \Auth::user()->id)->get();
+    //$profile=asset(Storage::url('uploads/avatar/'));
+    $profile = \App\Models\Utility::get_file('uploads/avatar/');
+    $languages = \App\Models\Utility::languages();
+    $lang = isset($users->lang) ? $users->lang : 'en';
+    $setting = \App\Models\Utility::colorset();
+    $mode_setting = \App\Models\Utility::mode_layout();
+    $adminOption = \App\Models\User::where('type', Session::get('onlyadmin'))->first();
+    if (Session::get('is_company_login') == true) {
+        $currentUserCompany = \App\Models\User::where('type', 'company')->find(Session::get('auth_type_created_by'));
+    } elseif (\Auth::user()->type == 'super admin') {
+        $currentUserCompany = \App\Models\User::where('type', 'company')->first();
+    } else {
+        $currentUserCompany = \App\Models\User::findOrFail(\Auth::user()->brand_id);
     }
-}
 
-$all_companies = App\Models\User::orderBy('name', 'asc')->where('type', 'company')
-->pluck('name', 'id')
-->toArray();
+    // dd(Session::get('auth_type_created_by'));
+    $com_permissions = [];
+    if ($currentUserCompany != null) {
+        if (
+            Session::get('auth_type') == \Auth::user()->type ||
+            Session::get('auth_type') == 'Project Director' ||
+            Session::get('auth_type') == 'Project Manager'
+        ) {
+            $com_permissions = \App\Models\CompanyPermission::where('active', 'true')
+                ->where('user_id', Session::get('auth_type_id'))
+                ->get();
+        } else {
+            $com_permissions = \App\Models\CompanyPermission::where('active', 'true')
+                ->where('user_id', \Auth::user()->id)
+                ->get();
+        }
+    }
 
-$unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
-->where('seen', 0)
-->count();
+    $all_companies = App\Models\User::orderBy('name', 'asc')->where('type', 'company')->pluck('name', 'id')->toArray();
+
+    $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
+        ->where('seen', 0)
+        ->count();
 @endphp
 
 
-<nav class="navbar navbar-expand navbar-light topbar  static-top shadow" style="background-color: #B3CDE1;">
+<nav class="navbar navbar-expand navbar-light topbar  static-top shadow" style="background-color: #B3CDE1; position: fixed; top: 0; z-index: 1000; width: 100%;">
     <button id="sidebarToggleTop" class="btn d-md-none ">
         <i class="fa fa-bars"></i>
     </button>
     <div class="logo ms-md-2">
         <a href="#">
-            <!-- <img src="{{ asset('assets/cs-theme/assets/images/scorp-logo.png') }}" alt=""> -->
-            <img id="image" src="{{ asset('storage/uploads/logo').'/'.(isset($logo_dark) && !empty($logo_dark)?$logo_dark:'assets/cs-theme/assets/images/scorp-logo.png') }}" class="big-logo">
+            <img src="{{ asset('storage/uploads/logo/1-logo-dark.png') }}" alt="">
+            <!--<img id="image" src="{{ asset('storage/uploads/logo') . '/' . (isset($logo_dark) && !empty($logo_dark) ? $logo_dark : asset('storage/uploads/logo/1-logo-dark.png')) }}" class="big-logo">-->
         </a>
     </div>
     <!-- Sidebar Toggle (Topbar) -->
@@ -64,15 +70,18 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
     <ul class="navbar-nav ml-auto align-items-center">
 
         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-        <li class="nav-item dropdown no-arrow d-sm-none">
-            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <li class="nav-item dropdown no-arrow d-none">
+            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-search fa-fw"></i>
             </a>
             <!-- Dropdown - Messages -->
-            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in d-none" aria-labelledby="searchDropdown">
+            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in d-none"
+                aria-labelledby="searchDropdown">
                 <form class="form-inline mr-auto w-100 navbar-search">
                     <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                            aria-label="Search" aria-describedby="basic-addon2">
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="button">
                                 <i class="fas fa-search fa-sm"></i>
@@ -84,15 +93,18 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
         </li>
 
         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-        <li class="nav-item dropdown no-arrow d-sm-none">
-            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <li class="nav-item dropdown no-arrow d-none">
+            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
                 <i class="fas fa-search fa-fw"></i>
             </a>
             <!-- Dropdown - Messages -->
-            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in d-none" aria-labelledby="searchDropdown">
+            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in d-none"
+                aria-labelledby="searchDropdown">
                 <form class="form-inline mr-auto w-100 navbar-search">
                     <div class="input-group">
-                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+                        <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                            aria-label="Search" aria-describedby="basic-addon2">
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="button">
                                 <i class="fas fa-search fa-sm"></i>
@@ -103,74 +115,92 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
             </div>
         </li>
 
-        <li>
-        @if (Session::get('is_company_login') == true)
-            <a href="javascript::void(0)" onclick="LoginBack({{ Session::get('auth_type_id') }})" data-toggle="tooltip" title="Back To Your Account!" class="btn btn-dark mx-1" style="width: 100px; height: 42px;">Go Back</a>
-        @endif
+        <li class="d-none d-md-inline-block">
+            @if (Session::get('is_company_login') == true)
+                <a href="javascript::void(0)" onclick="LoginBack({{ Session::get('auth_type_id') }})"
+                    data-toggle="tooltip" title="Back To Your Account!" class="btn btn-dark mx-1"
+                    style="width: 100px; height: 42px;">Go Back</a>
+            @endif
         </li>
 
-        <div class="" style="width: 300px; margin-right: 10px;">
+        <div class="d-none d-md-inline-block" style="width: 300px; margin-right: 10px;">
 
-        @if (\Auth::user()->type == 'super admin')
-        <select name="company" id="company" class="form form-select select2" style="width:100% !important" onChange="loginWithCompany();">
-            <option value="">Select Companies</option>
-            <option value="{{ Auth::id() }}" {{ Auth::id() == 1? 'selected':'' }}>{{ Auth::user()->name }}</option>
-            @foreach ($all_companies as $key => $comp)
-            <option value="{{ $key }}">{{ $comp }}</option>
-            @endforeach
-        </select>
-        @elseif(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
-        @if ($currentUserCompany != null)
-        <select name="company" id="company" class="form form-select select2" style="width:100% !important" onChange="loginWithCompany();">
-            <option value="">Select Companies</option>
-            @foreach ($all_companies as $key => $comp)
-            <!--@if ($key == $currentUserCompany->id)-->
-            <!--    <option value="{{ $key }}" selected><a-->
-            <!--            href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a></option>-->
-            <!--@endif-->
-            @foreach ($com_permissions as $com_per)
-            @if ($com_per->permitted_company_id == $key)
-            <option value="{{ $key }}"><a href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a></option>
+            @if (\Auth::user()->type == 'super admin')
+                <select name="company" id="company" class="form form-select select2" style="width:100% !important"
+                    onChange="loginWithCompany();">
+                    <option value="">Select Companies</option>
+                    <option value="{{ Auth::id() }}" {{ Auth::id() == 1 ? 'selected' : '' }}>{{ Auth::user()->name }}
+                    </option>
+                    @foreach ($all_companies as $key => $comp)
+                        <option value="{{ $key }}">{{ $comp }}</option>
+                    @endforeach
+                </select>
+            @elseif(\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director')
+                @if ($currentUserCompany != null)
+                    <select name="company" id="company" class="form form-select select2" style="width:100% !important"
+                        onChange="loginWithCompany();">
+                        <option value="">Select Companies</option>
+                        @foreach ($all_companies as $key => $comp)
+                            <!--@if ($key == $currentUserCompany->id)
+-->
+                            <!--    <option value="{{ $key }}" selected><a-->
+                            <!--            href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a></option>-->
+                            <!--
+@endif-->
+                            @foreach ($com_permissions as $com_per)
+                                @if ($com_per->permitted_company_id == $key)
+                                    <option value="{{ $key }}"><a
+                                            href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a>
+                                    </option>
+                                @endif
+                            @endforeach
+                        @endforeach
+                    </select>
+                @endif
+            @else
+                @if (Session::get('is_company_login') == true && Session::get('auth_type') == 'super admin')
+                    <select name="company" id="company" class="form form-select select2" style="width:100% !important"
+                        onChange="loginWithCompany();">
+                        <option value="">Select Companies</option>
+                        @if (!empty($adminOption))
+                            <option value="{{ $adminOption->id }}">{{ $adminOption->name }}</option>
+                        @endif
+                        @foreach ($all_companies as $key => $comp)
+                            <option value="{{ $key }}" {{ Auth::id() == $key ? 'selected' : '' }}>
+                                {{ $comp }}</option>
+                        @endforeach
+                    </select>
+                @elseif (Session::get('auth_type') == \Auth::user()->type ||
+                        Session::get('auth_type') == 'Project Director' ||
+                        Session::get('auth_type') == 'Project Manager')
+                    <select name="company" id="company" class="form form-select select2"
+                        style="width:100% !important" onChange="loginWithCompany();">
+                        <option value="">Select Companies</option>
+                        @foreach ($all_companies as $key => $comp)
+                            @foreach ($com_permissions as $com_per)
+                                @if ($com_per->permitted_company_id == $key)
+                                    <option value="{{ $key }}" {{ Auth::id() == $key ? 'selected' : '' }}><a
+                                            href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a>
+                                    </option>
+                                @endif
+                            @endforeach
+                        @endforeach
+                    </select>
+                @endif
             @endif
-            @endforeach
-            @endforeach
-        </select>
-        @endif
-        @else
-        @if (Session::get('is_company_login') == true && Session::get('auth_type') == 'super admin')
-        <select name="company" id="company" class="form form-select select2" style="width:100% !important" onChange="loginWithCompany();">
-            <option value="">Select Companies</option>
-            @if (!empty($adminOption))
-            <option value="{{ $adminOption->id }}">{{ $adminOption->name }}</option>
-            @endif
-            @foreach ($all_companies as $key => $comp)
-            <option value="{{ $key }}" {{ Auth::id() == $key? 'selected':'' }}>{{ $comp }}</option>
-            @endforeach
-        </select>
-        @elseif (Session::get('auth_type') == \Auth::user()->type ||
-        Session::get('auth_type') == 'Project Director' ||
-        Session::get('auth_type') == 'Project Manager')
-        <select name="company" id="company" class="form form-select select2" style="width:100% !important" onChange="loginWithCompany();">
-            <option value="">Select Companies</option>
-            @foreach ($all_companies as $key => $comp)
-            @foreach ($com_permissions as $com_per)
-            @if ($com_per->permitted_company_id == $key)
-            <option value="{{ $key }}" {{ Auth::id() == $key? 'selected':'' }}><a href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a>
-            </option>
-            @endif
-            @endforeach
-            @endforeach
-        </select>
-        @endif
-        @endif
         </div>
 
         <!-- Global Search -->
-        <form action="{{ route('global-search') }}" method="GET" id="globalSearchForm" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 d-none me-1" style="margin:auto !important;">
+        <form action="{{ route('global-search') }}" method="GET" id="globalSearchForm"
+            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 d-none me-1"
+            style="margin:auto !important;">
             <div class="input-group " style="border: none;border-radius: 0px;">
-                <input style="border: none;border-radius: 0px;" type="text" name="search" class="form-control bg-light m-0" placeholder="Search for..." value="{{ isset($_GET['search']) ? $_GET['search'] : '' }}">
+                <input style="border: none;border-radius: 0px;" type="text" name="search"
+                    class="form-control bg-light m-0" placeholder="Search for..."
+                    value="{{ isset($_GET['search']) ? $_GET['search'] : '' }}">
                 <div class="input-group-append" style="border: none;border-radius: 0px;">
-                    <span class="input-group-text bg-light" id="global-search-btn" style="border: none;border-radius: 0px;">
+                    <span class="input-group-text bg-light" id="global-search-btn"
+                        style="border: none;border-radius: 0px;">
                         <i class="ti ti-search" style="font-size: 18px"></i> <!-- Add your search icon here -->
                     </span>
                 </div>
@@ -182,60 +212,70 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
 
         <!-- Nav Item - Alerts -->
         <li class="nav-item dropdown no-arrow mx-1">
-            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" style="height: 2rem !important;" href="#" id="alertsDropdown"
+                role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa-solid fa-bell" style="font-size: 19px; color: #000;"></i>
                 <!-- Counter - Alerts -->
-                <span class="badge badge-danger badge-counter"></span>
+                <span class="badge badge-danger badge-counter">{{ count($notifications) }}</span>
             </a>
             <!-- Dropdown - User Information -->
-            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown" style="width: 225px !important;">
-                {{-- @foreach($notifications as $notification)
-                    {!! $notification->data !!}
-                @endforeach --}}
-                <ul style="max-height: 300px; overflow-y: scroll;">
-
-                    @foreach($notifications as $notification)
-                    {!! $notification->data !!}
-                    @endforeach
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown"
+                style="width: 300px; max-height: 300px; overflow-y: auto;">
+                <div class="dropdown-header">
+                    Notifications
+                </div>
+                <ul class="list-group list-group-flush">
+                    @forelse($notifications as $notification)
+                        <li class="list-group-item" style="color: #000 !important;"> {!! $notification->data !!}</li>
+                    @empty
+                        <li class="list-group-item text-center" style="color: #000 !important;">No notifications</li>
+                    @endforelse
                 </ul>
             </div>
         </li>
+
         <!-- Nav Item - Messages -->
-        <li class="nav-item dropdown no-arrow mx-1">
-            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <li class="nav-item dropdown no-arrow mx-1 d-none d-md-inline-block">
+            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa-regular fa-circle-question" style="font-size: 19px; color: #000;"></i>
                 <!-- Counter - Messages -->
                 <span class="badge badge-danger badge-counter"></span>
             </a>
             <!-- Dropdown - Messages -->
-            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
+            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                aria-labelledby="messagesDropdown">
                 <!-- Content for Messages Dropdown -->
             </div>
-            </li>
+        </li>
 
-            <li class="nav-item dropdown no-arrow">
-                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    @if(\Auth::user()->avatar == null || \Auth::user()->avatar == '')
-                        <img class="img-profile rounded-circle" src="{{ asset('assets/images/user/default.jpg') }}" alt="Default Avatar">
-                    @else
-                        <img class="img-profile rounded-circle" src="{{ asset('storage/uploads/avatar').'/'.Auth::user()->avatar }}" alt="User Avatar">
-                    @endif
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                @if (\Auth::user()->avatar == null || \Auth::user()->avatar == '')
+                    <img class="img-profile rounded-circle" src="{{ asset('assets/images/user/default.jpg') }}"
+                        alt="Default Avatar">
+                @else
+                    <img class="img-profile rounded-circle"
+                        src="{{ asset('storage/uploads/avatar') . '/' . Auth::user()->avatar }}" alt="User Avatar">
+                @endif
+            </a>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="{{ route('profile') }}">
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Profile
                 </a>
-                <!-- Dropdown - User Information -->
-                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="{{ route('profile') }}">
-                        <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Profile
-                    </a>
-                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
-                        <i class="fa fa-sign-out fa-sm fa-fw mr-2 text-gray-400"></i>
-                        {{ __('Logout') }}
-                    </a>
-                    <form id="frm-logout" action="{{ route('logout') }}" method="POST" class="d-none">
-                        {{ csrf_field() }}
-                    </form>
-                </div>
-            </li>
+                <a class="dropdown-item" href="{{ route('logout') }}"
+                    onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+                    <i class="fa fa-sign-out fa-sm fa-fw mr-2 text-gray-400"></i>
+                    {{ __('Logout') }}
+                </a>
+                <form id="frm-logout" action="{{ route('logout') }}" method="POST" class="d-none">
+                    {{ csrf_field() }}
+                </form>
+            </div>
+        </li>
 
     </ul>
 
@@ -245,34 +285,81 @@ $unseenCounter = App\Models\ChMessage::where('to_id', Auth::user()->id)
 </nav>
 
 @push('script-page')
-<script>
-    $(document).ready(function() {
+    <script>
+        $(document).ready(function() {
 
-        $("#global-search-btn").on("click", function() {
-            $("#globalSearchForm").submit();
-        });
+            $("#global-search-btn").on("click", function() {
+                $("#globalSearchForm").submit();
+            });
 
-        $('#global-search-bt').keydown(function(event) {
-            if (event.keyCode === 13) {
-                $('#globalSearchForm').submit();
+            $('#global-search-bt').keydown(function(event) {
+                if (event.keyCode === 13) {
+                    $('#globalSearchForm').submit();
+                }
+            });
+
+
+            // $("#globalSearchDropdown").on("change", function() {
+            //     $("#globalSearchForm").submit();
+            // })
+        })
+
+        function loginWithCompany() {
+            let value = $('#company').val();
+            if (value !== '') {
+                window.location.href = "{{ url('logged_in_as_company') }}/" + value;
             }
+        }
+
+        function LoginBack(value) {
+            window.location.href = "{{ url('logged_in_as_user') }}/" + value;
+        }
+    </script>
+@endpush
+@push('script-page')
+    <script src="https://js.pusher.com/7.0.3/pusher.min.js"></script>
+    <script>
+        // Get Pusher credentials from .env
+        const pusherAppKey = '{{ env('PUSHER_APP_KEY') }}';
+        const pusherCluster = '{{ env('PUSHER_APP_CLUSTER') }}';
+
+        // alert(pusherAppKey);
+        //Pusher.logToConsole = true;
+
+        console.log('Pusher App Key:', pusherAppKey);
+        console.log('Pusher Cluster:', pusherCluster);
+
+        // Initialize Pusher with credentials
+        // Initialize Pusher with credentials and enable debug mode
+        var pusher = new Pusher(pusherAppKey, {
+            cluster: pusherCluster,
+            encrypted: false, // Ensure secure connection
+            authEndpoint: '/pusher/auth', // Your authentication endpoint
+            // Enable debug mode
+            logToConsole: true
         });
 
 
-        // $("#globalSearchDropdown").on("change", function() {
-        //     $("#globalSearchForm").submit();
-        // })
-    })
+        pusher.connection.bind('error', function(err) {
+            console.error('Pusher error:', err);
+        });
 
-    function loginWithCompany() {
-        let value = $('#company').val();
-        if (value !== '') {
-            window.location.href = "{{ url('logged_in_as_company') }}/" + value;
-        }
-    }
+        // Subscribe to the 'notifications' channel
+        var channel = pusher.subscribe('notifications');
+        channel.bind('new.notification', function(data) {
+            //show_toastr('success', 'You recieved new notification.', 'success');
+        });
 
-    function LoginBack(value) {
-        window.location.href = "{{ url('logged_in_as_user') }}/" + value;
-    }
-</script>
+
+        @if(Auth::check() && Auth::user()->type === 'super admin')
+            // Subscribe to the channel for super admin users
+            var channel = pusher.subscribe('super-admins');
+
+            // Bind to the event on the super admins channel
+            channel.bind('ticket.created', function(data) {
+                show_toastr('success', 'You received a new ticket.', 'success');
+            });
+        @endif
+
+    </script>
 @endpush

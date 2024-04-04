@@ -5,15 +5,17 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Stage;
+use App\Models\Utility;
+use App\Models\Pipeline;
 use App\Models\ClientDeal;
 use App\Models\University;
+use App\Models\ActivityLog;
+use App\Models\ApplicationNote;
+use App\Models\SavedFilter;
 use App\Models\StageHistory;
 use Illuminate\Http\Request;
 use App\Models\DealApplication;
-use App\Models\Pipeline;
-use App\Models\ActivityLog;
-use App\Models\Utility;
-
+use Session;
 
 class ApplicationsController extends Controller
 {
@@ -39,41 +41,65 @@ class ApplicationsController extends Controller
             $filters['university_id'] = $_GET['universities'];
         }
 
+        if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+            $filters['brand'] = $_GET['brand'];
+        }
+
+        if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
+            $filters['region_id'] = $_GET['region_id'];
+        }
+
+        if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
+            $filters['branch_id'] = $_GET['branch_id'];
+        }
+        
+        if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
+            $filters['created_at_from'] = $_GET['created_at_from'];
+        }
+
+        if (isset($_GET['created_at_to']) && !empty($_GET['created_at_to'])) {
+            $filters['created_at_to'] = $_GET['created_at_to'];
+        }
+
+        if (isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user'])) {
+            $filters['assigned_to'] = $_GET['lead_assgigned_user'];
+        }
+
         return $filters;
     }
 
-    public function index(){
+    public function index()
+    {
         $usr = \Auth::user();
 
-         //////////////pagination calculation
-         $start = 0;
-         $num_results_on_page = 50;
-         if (isset($_GET['page'])) {
-             $page = $_GET['page'];
-             $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
-             $start = ($page - 1) * $num_results_on_page;
-         } else {
-             $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
-         }
+        //////////////pagination calculation
+        $start = 0;
+        $num_results_on_page = 25;
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = ($page - 1) * $num_results_on_page;
+        } else {
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+        }
 
-         /////////////////end pagination calculation
+        /////////////////end pagination calculation
 
-         if ($usr->can('view application') || $usr->type == 'super admin' || $usr->type == 'company' || $usr->type == 'Admin Team') {
+        if ($usr->can('view application') || $usr->type == 'super admin' || $usr->type == 'company' || $usr->type == 'Admin Team' || $usr->can('level 1')) {
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
             $app_query = DealApplication::select(['deal_applications.*']);
             $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
-            if(\Auth::user()->type == 'super admin' || $usr->type == 'Admin Team'){
-
-            }else if(\Auth::user()->type == 'company'){
+            if (\Auth::user()->type == 'super admin' || $usr->type == 'Admin Team' || $usr->can('level 1')) {
+            } else if (\Auth::user()->type == 'company') {
                 $app_query->where('deals.brand_id', \Auth::user()->id);
-            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
+            } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || $usr->can('level 2')) {
                 $app_query->whereIn('deals.brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+            } else if (\Auth::user()->type == 'Region Manager' || $usr->can('level 3') && !empty(\Auth::user()->region_id)) {
                 $app_query->where('deals.region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+            } else if (\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || $usr->can('level 4') && !empty(\Auth::user()->branch_id)) {
                 $app_query->where('deals.branch_id', \Auth::user()->branch_id);
-            }else{
+            } else {
                 $app_query->where('deals.assigned_to', \Auth::user()->id);
             }
 
@@ -85,14 +111,12 @@ class ApplicationsController extends Controller
             // if(\Auth::user()->type == 'super admin'){
             //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id');
             // }else{
-                //  $companies = FiltersBrands();
-                // $brand_ids = array_keys($companies);
+            //  $companies = FiltersBrands();
+            // $brand_ids = array_keys($companies);
             //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->whereIn('deal_applications.brand_id', $brand_ids);
             // }
 
-            $total_records = $app_query->count();
-            //$filters
-            $app_for_filer = $app_query->get();
+            
 
 
             $filters = $this->ApplicationFilters();
@@ -103,10 +127,27 @@ class ApplicationsController extends Controller
                     $app_query->whereIn('deal_applications.stage_id', $value);
                 } elseif ($column == 'university_id') {
                     $app_query->whereIn('deal_applications.university_id', $value);
-                }elseif ($column == 'created_by') {
+                } elseif ($column == 'created_by') {
                     $app_query->whereIn('deal_applications.created_by', $value);
+                } elseif ($column == 'brand') {
+                    $app_query->where('deals.brand_id', $value);
+                } elseif ($column == 'region_id') {
+                    $app_query->where('deals.region_id', $value);
+                } elseif ($column == 'branch_id') {
+                    $app_query->where('deals.branch_id', $value);
+                }elseif ($column == 'assigned_to') {
+                    $app_query->where('deals.assigned_to', $value);
+                }elseif ($column == 'created_at_from') {
+                    $app_query->whereDate('deal_applications.created_at', '>=', $value);
+                }elseif ($column == 'created_at_to') {
+                    $app_query->whereDate('deal_applications.created_at', '<=', $value);
                 }
             }
+
+
+            $total_records = $app_query->count();
+            //$filters
+            $app_for_filer = $app_query->get();
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
@@ -115,38 +156,45 @@ class ApplicationsController extends Controller
                 $app_query->orWhere('deal_applications.course', 'like', '%' . $g_search . '%');
             }
 
-            $applications = $app_query->get();
+            $applications = $app_query->skip($start)
+                ->take($num_results_on_page)->get();
 
 
             $universities = University::get()->pluck('name', 'id')->toArray();
-            $stages = Stage::get()->pluck('name', 'id')->toArray();
+            $stages = Stage::orderBy('order', 'ASC')->get()->pluck('name', 'id')->toArray();
+    
             $brands = User::where('type', 'company')->get();
+            $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'applications')->get();
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('applications.applications_list_ajax',  compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands'))->render();
-
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' => $num_results_on_page,
+                ])->render();
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => $html,
+                    'pagination_html' => $pagination_html
                 ]);
             }
 
-
-            return view('applications.index', compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands'));
-
-         }else{
+            $filters = BrandsRegionsBranches();
+            return view('applications.index', compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands', 'saved_filters',  'filters'));
+        } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
-         }
+        }
     }
 
-    public function getDealApplication(){
+    public function getDealApplication()
+    {
         $id = $_GET['id'];
         $applications = DealApplication::where('deal_id', $id)->pluck('application_key', 'id');
 
         $html = '<option value=""> Select Application</option>';
 
-        foreach($applications as $key => $app){
-            $html .= '<option value="'.$key.'">'.$app.'</option>';
+        foreach ($applications as $key => $app) {
+            $html .= '<option value="' . $key . '">' . $app . '</option>';
         }
 
         return json_encode([
@@ -155,7 +203,8 @@ class ApplicationsController extends Controller
         ]);
     }
 
-    public function updateApplicationStage(){
+    public function updateApplicationStage()
+    {
         $application_id = $_GET['application_id'];
         $stage_id = $_GET['stage_id'];
         DealApplication::where('id', $application_id)->update(['stage_id' => $stage_id]);
@@ -173,11 +222,12 @@ class ApplicationsController extends Controller
         $data = [
             'type' => 'info',
             'note' => json_encode([
-                            'title' => 'Stage Updated',
-                            'message' => 'Application stage updated successfully.'
-                        ]),
+                'title' => 'Stage Updated',
+                'message' => 'Application stage updated successfully.'
+            ]),
             'module_id' => $application_id,
             'module_type' => 'application',
+            'notification_type' => 'application stage update'
         ];
         addLogActivity($data);
 
@@ -186,18 +236,19 @@ class ApplicationsController extends Controller
         ]);
     }
 
-    public function deleteBulkApplications(Request $request){
-        if($request->ids != null){
+    public function deleteBulkApplications(Request $request)
+    {
+        if ($request->ids != null) {
             DealApplication::whereIn('id', explode(',', $request->ids))->delete();
             return redirect()->route('applications.index')->with('success', 'Application deleted successfully');
-        }else{
+        } else {
             return redirect()->route('applications.index')->with('error', 'Atleast select 1 application.');
         }
     }
 
     public function application()
     {
-        $usr=\Auth::user();
+        $usr = \Auth::user();
         $pipeline = Pipeline::get();
         if ($usr->can('manage deal') || $usr->type == 'super admin') {
             if ($usr->default_pipeline) {
@@ -262,7 +313,7 @@ class ApplicationsController extends Controller
 
         if ($usr->can('move application')) {
             $post       = $request->all();
-            $deal       = DealApplication::where('id',$post['app'])->where('deal_id',$post['deal_id'])->first();
+            $deal       = DealApplication::where('id', $post['app'])->where('deal_id', $post['deal_id'])->first();
             $clients    = ClientDeal::select('client_id')->where('deal_id', '=', $deal->deal_id)->get()->pluck('client_id')->toArray();
             $deal_users = $deal->users->pluck('id')->toArray();
             $usrs       = User::whereIN('id', array_merge($deal_users, $clients))->get()->pluck('email', 'id')->toArray();
@@ -270,7 +321,7 @@ class ApplicationsController extends Controller
             if ($deal->stage_id != $post['stage_id']) {
 
                 $newStage = Stage::find($post['stage_id']);
-                $from=Stage::find($deal->stage_id)->name;
+                $from = Stage::find($deal->stage_id)->name;
                 //Log
 
                 $data = [
@@ -281,6 +332,7 @@ class ApplicationsController extends Controller
                     ]),
                     'module_id' => $deal->deal_id,
                     'module_type' => 'Application',
+                    'notification_type' => 'lead updated'
                 ];
                 addLogActivity($data);
 
@@ -320,7 +372,7 @@ class ApplicationsController extends Controller
                 Utility::sendEmailTemplate('Move Deal', $usrs, $dArr);
             }
             foreach ($post['order'] as $key => $item) {
-                $deal           = DealApplication::where('id',$post['app'])->where('deal_id',$item)->first();
+                $deal           = DealApplication::where('id', $post['app'])->where('deal_id', $item)->first();
                 $deal->order    = $key;
                 $deal->stage_id = $post['stage_id'];
                 $deal->save();
@@ -328,5 +380,150 @@ class ApplicationsController extends Controller
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
         }
+    }
+
+
+    public function notesCreate($id)
+    {
+        $application = DealApplication::find($id);
+        return view('leads.notes', compact('application'));
+    }
+
+
+    public function notesStore(Request $request, $id)
+    {
+
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                // 'title' => 'required',
+                'description' => 'required'
+            ]
+        );
+
+        if ($validator->fails()) {
+            $messages = $validator->getMessageBag();
+            return json_encode([
+                'status' => 'error',
+                'message' =>  $messages->first()
+            ]);
+        }
+
+        // this is application id
+        $id = $request->id;
+
+
+        if ($request->note_id != null && $request->note_id != '') {
+            $note = ApplicationNote::where('id', $request->note_id)->first();
+            // $note->title = $request->input('title');
+            $note->description = $request->input('description');
+            $note->update();
+
+            $data = [
+                'type' => 'info',
+                'note' => json_encode([
+                    'title' => 'Application Notes Updated',
+                    'message' => 'Application notes updated successfully'
+                ]),
+                'module_id' => $request->id,
+                'module_type' => 'application',
+                'notification_type' => 'Application Notes Updated'
+            ];
+            addLogActivity($data);
+
+
+            $notes = ApplicationNote::where('application_id', $id)->orderBy('created_at', 'DESC')->get();
+            $html = view('leads.getNotes', compact('notes'))->render();
+
+            return json_encode([
+                'status' => 'success',
+                'html' => $html,
+                'message' =>  __('Notes updated successfully')
+            ]);
+        }
+
+        $note = new ApplicationNote();
+        // $note->title = $request->input('title');
+        $note->description = $request->input('description');
+        $session_id = Session::get('auth_type_id');
+        if ($session_id != null) {
+            $note->created_by  = $session_id;
+        } else {
+            $note->created_by  = \Auth::user()->id;
+        }
+        $note->application_id = $id;
+        $note->save();
+
+
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                'title' => 'Notes created',
+                'message' => 'Application notes created successfully'
+            ]),
+            'module_id' => $id,
+            'module_type' => 'application',
+            'notification_type' => 'Application Notes Created'
+        ];
+        addLogActivity($data);
+
+
+        $notes = ApplicationNote::where('application_id', $id)->orderBy('created_at', 'DESC')->get();
+        $html = view('applications.getNotes', compact('notes'))->render();
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html,
+            'message' =>  __('Notes added successfully')
+        ]);
+
+        //return redirect()->back()->with('success', __('Notes added successfully'));
+    }
+
+    public function notesDelete(Request $request, $id)
+    {
+
+        $note = ApplicationNote::where('id', $id)->first();
+        $note->delete();
+
+        $notes = ApplicationNote::where('application_id', $request->application_id)->orderBy('created_at', 'DESC')->get();
+        $html = view('applications.getNotes', compact('notes'))->render();
+
+
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                'title' => 'Applicaiton Notes Deleted',
+                'message' => 'Applicaiton notes deleted successfully'
+            ]),
+            'module_id' => $request->application_id,
+            'module_type' => 'Applicaiton',
+            'notification_type' => 'Applicaiton Notes Deleted'
+        ];
+        addLogActivity($data);
+
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html,
+            'message' =>  __('Notes deleted successfully')
+        ]);
+
+        //return redirect()->route('leads.list')->with('success', __('Notes deleted successfully'));
+    }
+
+    public function getUniversities(){
+        $country = $_GET['country'];
+        $universities = University::where('country', $country)->pluck('name', 'id')->toArray();
+
+        $html = ' <select class="form form-control select2" id="university" name="university"> <option value="">Select University</option> ';
+            foreach ($universities as $key => $university) {
+                $html .= '<option value="' . $key . '">' . $university . '</option> ';
+            }
+            $html .= '</select>';
+            return json_encode([
+                'status' => 'success',
+                'html' => $html,
+            ]);
     }
 }

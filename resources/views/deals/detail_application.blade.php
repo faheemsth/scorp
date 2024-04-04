@@ -35,7 +35,7 @@
                 @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit application') || \Auth::user()->can('delete application'))
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @can('edit application')
-                    <a href="#" data-size="lg" data-url="{{ route('deals.application.edit', $application->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Application') }}" class="btn text-white px-2 btn-dark">
+                    <a href="#" data-size="lg" data-url="{{ route('deals.application.edit', $application->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Application') }}" class="btn text-white px-2 btn-dark" style="width: 36px; height: 36px;">
                         <i class="ti ti-pencil"></i>
                     </a>
                     @endcan
@@ -46,7 +46,7 @@
                     'route' => ['deals.application.destroy', $application->id],
                     'id' => 'delete-form-' . $application->id,
                     ]) !!}
-                    <a href="#" class="btn px-2 bg-danger  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i class="ti ti-trash text-white"></i></a>
+                    <a href="#" class="btn px-2 bg-danger  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}" style="width: 36px; height: 36px;"><i class="ti ti-trash text-white"></i></a>
 
                     {!! Form::close() !!}
                     @endcan
@@ -86,9 +86,7 @@
                 <div class="stages mt-2 bg-white">
                     <h2 class="mb-3">Application STATUS: <span class="d-inline-block fw-light">{{ $stages[$application->stage_id] }}</span>
                     </h2>
-                    <div class="wizard mb-2" style="    background: #EFF3F7;
-                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-                };">
+                    <div class="wizard mb-2" style="background: #EFF3F7; box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);">
                         <?php $done = true; ?>
                         @forelse ($stages as $key => $stage)
                         <?php
@@ -104,18 +102,17 @@
 
                         ?>
                         <style>
-                            .missedup{
-                                background-color:#e0e0e0 !important;
-                                color:white !important;
+                            .missedup {
+                                background-color: #e0e0e0 !important;
+                                color: white !important;
                             }
-                            .missedup::after{
+
+                            .missedup::after {
                                 border-left-color: #e0e0e0 !important;
                             }
-                          </style>
+                        </style>
 
-                        <a type="button" data-application-id="{{ $application->id }}" data-stage-id="{{ $key }}"
-                            class="@can('edit stage application') application_stage @endcan {{ $is_missed == true ? 'missedup' : ($application->stage_id == $key ? 'current' : ($done == true ? 'done' : '')) }} "
-                            style="font-size:13px">{{ $stage }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
+                        <a type="button" data-application-id="{{ $application->id }}" data-stage-id="{{ $key }}" class="@can('edit stage application') application_stage @endcan {{ $is_missed == true ? 'missedup' : ($application->stage_id == $key ? 'current' : ($done == true ? 'done' : '')) }} " style="font-size:13px">{{ $stage }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
                         @empty
                         @endforelse
                     </div>
@@ -125,6 +122,10 @@
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link pills-link active" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab" aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
+                            </li>
+
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link pills-link" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-related" type="button" role="tab" aria-controls="pills-details" aria-selected="true">{{ __('Related') }}</button>
                             </li>
                         </ul>
                     </div>
@@ -223,7 +224,7 @@
                                                                     {{ __('Brand') }}
                                                                 </td>
                                                                 <td class="status-td" style="padding-left: 10px; font-size: 14px;">
-                                                                   {{  App\Models\User::find(App\Models\Deal::find($application->deal_id)->brand_id)->name ?? ''}}
+                                                                    {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->brand_id)->name ?? ''}}
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -231,7 +232,7 @@
                                                                     {{ __('Branch') }}
                                                                 </td>
                                                                 <td class="status-td" style="padding-left: 10px; font-size: 14px;">
-                                                                   {{ App\Models\Branch::find(App\Models\Deal::find($application->deal_id)->branch_id)->name  ?? ''}}
+                                                                    {{ App\Models\Branch::find(App\Models\Deal::find($application->deal_id)->branch_id)->name  ?? ''}}
                                                                 </td>
                                                             </tr>
 
@@ -289,12 +290,305 @@
                                     </div>
                                 </div>
                             </div>
+
+
+                            <div class="tab-pane fade" id="pills-related" role="tabpanel" aria-labelledby="pills-details-tab">
+
+
+                                <div class="row">
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingkeydesc">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekeydesc">
+                                            {{ __('Admissions') }}
+                                        </button>
+                                    </h2>
+                                    <div id="panelsStayOpen-collapsekeydesc" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkeydesc">
+                                        <div class="accordion-body">
+                                            <div style="max-height: 400px; overflow-y: auto;">
+                                                    @php 
+                                                    $admissions = \App\Models\DealApplication::query()
+                                                                ->select('d.id','deal_applications.name', 'contact.passport_number as passport_number', 's.name as stage', \DB::raw("CONCAT(d.intake_month, d.intake_year) AS intake"), 'u.name as assigned_to')
+                                                                ->join('deals as d', 'deal_applications.deal_id', '=', 'd.id')
+                                                                ->join('users as u', 'u.id', '=', 'd.assigned_to')
+                                                                ->join('stages as s', 's.id', '=', 'd.stage_id')
+                                                                ->join('client_deals as cd', 'cd.deal_id', '=', 'd.id')
+                                                                ->join('users as contact', 'contact.id', '=', 'cd.client_id')
+                                                                ->where('deal_applications.id', 4)
+                                                                ->get();
+                                                                                                                @endphp
+                                                    <table class="table table-hover">
+                                                        <thead  style="background-color:rgba(0, 0, 0, .08); font-weight: bold;color:#000000">
+                                                            <tr>
+                                                                <td>{{ __('Name') }}</td>
+                                                                <td>{{ __('Passport Number') }}</td>
+                                                                <td>{{ __('Stage') }}</td>
+                                                                <td>{{ __('Intake') }}</td>
+                                                                <td>{{ __('Assigned To') }}</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody >
+                                                            @forelse($admissions as $admission)
+                                                                <tr>
+                                                                    <td>
+                                                                        
+                                                                        <span style="cursor:pointer" class="deal-name hyper-link" @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $admission->id }})" @endcan data-deal-id="{{ $admission->id }}">
+
+                                                                            @if (strlen($admission->name) > 40)
+                                                                            {{ substr($admission->name, 0, 40) }}...
+                                                                            @else
+                                                                            {{ $admission->name }}
+                                                                            @endif
+                                                                        </span>
+                                                                    </td>
+                                                                    <td>{{ $admission->passport_number }}</td>
+                                                                    <td>{{ $admission->stage }}</td>
+                                                                    <td>{{ $admission->intake }}</td>
+                                                                    <td>{{ $admission->assigned_to }}</td>
+                                                                </tr>
+                                                            @empty
+
+                                                            @endforelse 
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                    @can('manage_notes')
+                                    <div class="accordion" id="accordionPanelsStayOpenExample">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="panelsStayOpen-headingnote">
+                                                <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsenote">
+                                                    {{ __('Notes') }}
+                                                </button>
+                                            </h2>
+                                            <div id="panelsStayOpen-collapsenote" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingnote">
+                                                <div class="accordion-body">
+                                                    <div class="card">
+                                                        {{ Form::model($application, array('route' => array('application.notes.store', $application->id), 'method' => 'POST', 'id' => 'create-notes' ,'style' => 'z-index: 9999999 !important;')) }}
+                                                        <input type="hidden" id="application_id" value="{{ $application->id }}">
+                                                        <textarea name="note_description" id="note_description" cols="95" class="form-control @can('create_notes') textareaClass @endcan" readonly style="cursor: pointer"></textarea>
+                                                        <span id="textareaID" style="display: none;">
+                                                            <div class="card-header px-0 pt-0" style="padding-bottom: 18px;">
+
+                                                                <textarea name="description" id="description" class="form form-control" cols="10" rows="1"></textarea>
+                                                                <input type="hidden" id="note_id" name="note_id">
+                                                                <div class="d-flex justify-content-end mt-2">
+                                                                    <button type="button" id="cancelNote" class="btn btn-secondary mx-2">Cancel</button>
+                                                                    <button type="button" class="btn btn-secondary create-notes-btn">Save</button>
+                                                                </div>
+
+
+                                                            </div>
+                                                        </span>
+                                                        {{ Form::close() }}
+                                                        <div class="card-body px-0 py-0">
+                                                            <ul class="list-group list-group-flush mt-2 note-tbody">
+                                                                @php
+                                                                $notes = \App\Models\ApplicationNote::where('application_id', $application->id)
+                                                                ->orderBy('created_at', 'DESC')
+                                                                ->get();
+                                                                @endphp
+
+                                                                @foreach ($notes as $note)
+                                                                <li class="list-group-item px-3" id="lihover">
+                                                                    <div class="d-block d-sm-flex align-items-start">
+                                                                        <div class="w-100">
+                                                                            <div class="d-flex align-items-center justify-content-between">
+                                                                                <div class="mb-3 mb-sm-0">
+                                                                                    <p class="">
+                                                                                        {{ $note->description }}
+                                                                                    </p>
+                                                                                    <span class="text-muted text-sm">{{ $note->created_at }}
+                                                                                    </span><br>
+                                                                                    <span class="text-muted text-sm"><i class="step__icon fa fa-user" aria-hidden="true"></i>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
+                                                                                    </span>
+                                                                                </div>
+
+                                                                                <style>
+                                                                                    #editable {
+                                                                                        display: none;
+                                                                                    }
+
+                                                                                    #lihover:hover #editable {
+                                                                                        display: flex;
+                                                                                    }
+                                                                                </style>
+                                                                                <div class="d-flex gap-3" id="dellhover">
+                                                                                    <i class="ti ti-pencil textareaClassedit" data-note="{{ $note->description }}" data-note-id="{{ $note->id }}" id="editable" style="font-size: 20px;cursor:pointer;"></i>
+                                                                                    <script></script>
+                                                                                    <i class="ti ti-trash delete-notes" id="editable" data-note-id="{{ $note->id }}" style="font-size: 20px;cursor:pointer;"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endcan
+
+
+
+                                    @can('manage_task')
+                                    <div class="accordion" id="accordionTasks">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="accordionTasks-heading">
+                                                <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#accordionTasks-collapse">
+                                                    <span>{{ __('Tasks') }}</span>
+                                                    @can('create_task')
+                                                    <a data-size="lg" data-url="/organiation/1/task?type=application&typeid={{$application->id}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Task') }}" class="btn p-2 text-white" style="background-color: #313949; color: #fff !important; position: absolute; right: 0;">
+                                                        <i class="ti ti-plus"></i>
+                                                    </a>
+                                                    @endcan
+                                                </button>
+                                            </h2>
+
+                                            <div id="accordionTasks-collapse" class="accordion-collapse collapse show" aria-labelledby="accordionTasks-heading">
+                                                <div class="accordion-body">
+                                                    <div class="card">
+                                                        <div class="card-body px-0">
+                                                            <ul class="list-group list-group-flush mt-2 notes-tbody">
+                                                                <!-- List of tasks will be displayed here -->
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @endcan
+
+                                </div>
+
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+    <script>
+        $(document).ready(function() {
+
+            //Fall2201075
+
+            $('.textareaClass').click(function() {
+                $('#textareaID, .textareaClass').toggle("slide");
+            });
+
+            $('#create-notes').submit(function(event) {
+                event.preventDefault(); // Prevents the default form submission
+                $('#textareaID, .textareaClass').toggle("slide");
+            });
+
+            $('#cancelNote').click(function() {
+                $('textarea[name="description"]').val('');
+                $('#note_id').val('');
+                $('#textareaID, .textareaClass').toggle("slide");
+            });
+            $('.textareaClassedit').click(function() {
+                var dataId = $(this).data('note-id');
+                var dataNote = $(this).data('note');
+                $('textarea[name="description"]').val(dataNote);
+                $('#note_id').val(dataId);
+                $('#textareaID, #dellhover, .textareaClass').show();
+                $('.textareaClass').toggle("slide");
+            });
 
 
+            ////////////////////////////Form Submission
+            //saving notes
+            // Bind event handler directly to the button element
+            $(".create-notes-btn").on("click", function(e) {
+                e.preventDefault();
+
+                // Serialize form data
+                var formData = $("#create-notes").serialize();
+                var id = $('#application_id').val();
+
+                $(".create-notes-btn").val('Processing...');
+                $('.create-notes-btn').attr('disabled', 'disabled');
+
+                $.ajax({
+                    type: "POST",
+                    url: "/application/" + id + "/notes",
+                    data: formData,
+                    success: function(data) {
+                        data = JSON.parse(data);
+
+                        if (data.status == 'success') {
+                            show_toastr('success', data.message, 'success');
+                            $('#commonModal').modal('hide');
+                            $('.note-tbody').html(data.html);
+                            $('#note_id').val('');
+                            $('#description').val('');
+                        } else {
+                            show_toastr('error', data.message, 'error');
+                            $(".create-notes-btn").val('Create');
+                            $('.create-notes-btn').removeAttr('disabled');
+                        }
+                    }
+                });
+            });
+
+
+            //delete-notes
+            $(document).on("click", '.delete-notes', function(e) {
+                e.preventDefault();
+
+                var id = $(this).attr('data-note-id');
+                var application_id = $('#application_id').val();
+                var currentBtn = '';
+
+                // Show confirmation dialog
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: 'You are about to delete this note. This action cannot be undone.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // User confirmed, proceed with deletion
+                        $.ajax({
+                            type: "GET",
+                            url: "/application/" + id + "/notes-delete",
+                            data: {
+                                id: id,
+                                application_id: application_id
+                            },
+                            success: function(data) {
+                                data = JSON.parse(data);
+
+                                if (data.status == 'success') {
+                                    show_toastr('success', data.message, 'success');
+                                    $('.note-tbody').html(data.html);
+                                } else {
+                                    show_toastr('error', data.message, 'error');
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+
+
+        });
+    </script>

@@ -129,7 +129,7 @@
                     <input type="hidden" name="deal-id" class="deal-id" value="{{ $deal->id }}">
 
                     <div class="lead-basic-info">
-                        <p class="pb-0 mb-0 fw-normal">{{ __('Deal') }}</p>
+                        <p class="pb-0 mb-0 fw-normal">{{ __('Admission') }}</p>
                         <div class="d-flex align-items-baseline ">
                             @if (strlen($deal->name) > 40)
                             <h4>{{ substr($deal->name, 0, 40) }}...</h4>
@@ -144,13 +144,13 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @if (\Auth::user()->can('edit deal'))
-                            @if (!empty($deal->phone))
-                                <a href="https://wa.me/{{ formatPhoneNumber($deal->phone) }}?text=Hello ! Dear {{ $deal->name }}"
-                                    target="_blank" data-size="lg" data-bs-toggle="tooltip"
-                                    data-bs-title="{{ __('Already Converted To Deal') }}" class="btn btn-dark text-white"
-                                    style="background-color: #313949">
-                                    <i class=""></i>
-                                </a>
+                            @if (!empty($lead->phone))
+                            <a href="https://wa.me/{{ formatPhoneNumber($lead->phone) }}?text=Hello ! Dear {{ $deal->name }}"
+                                target="_blank" data-size="lg" data-bs-toggle="tooltip"
+                                data-bs-title="{{ __('Contact on whatsapp') }}" class="btn btn-dark text-white"
+                                style="background-color: #313949">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a> 
                             @endif
                     @endif
                     @if (\Auth::user()->can('edit deal'))
@@ -373,7 +373,9 @@
                                                                 {{ $deal->intake_month }}
                                                             </td>
                                                         </tr>
+                                                        
 
+                                                        
                                                         <tr>
                                                             <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Intake Year') }}
@@ -447,7 +449,7 @@
                                                             </td>
                                                             <td class="drive_link-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                {{-- <div class="d-flex align-items-center edit-input-field-div">
+                                                                <div class="d-flex align-items-center edit-input-field-div">
                                                                     <div class="input-group border-0 drive_link d-flex align-items-center">
                                                                         @if (isset($deal->drive_link) && !empty($deal->drive_link))
                                                                         <a href="{{ $deal->drive_link }}" target="blank" style="font-size: 14px; color: rgb(46, 134, 249);">
@@ -460,16 +462,16 @@
                                                                     <div class="edit-btn-div">
                                                                         <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="drive_link"><i class="ti ti-pencil"></i></button>
                                                                     </div>
-                                                                </div> --}}
-                                                                @if (isset($deal->drive_link) && !empty($deal->drive_link))
+                                                                </div>
+                                                                {{-- @if (isset($deal->drive_link) && !empty($deal->drive_link))
                                                                 <a href="{{ $deal->drive_link }}" target="blank" style="font-size: 14px; color: rgb(46, 134, 249);">
                                                                     {{ $deal->drive_link }}
                                                                 </a>
                                                                 @else
                                                                 <a href="{{ $deal->drive_link }}">
-                                                                {{ isset($deal->drive_link) ? $deal->drive_link : '' }}
+                                                                {{ isset($deal->drive_link) ? $deal->drive_link : '' }} --}}
                                                             </a>
-                                                                @endif
+                                                                {{-- @endif --}}
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -564,6 +566,26 @@
 
                                                             </td>
                                                         </tr>
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Phone') }}
+                                                            </td>
+                                                            <td class="twitter-td" style="padding-left: 10px; font-size: 14px;">
+                                                                {{ $lead->phone ?? ''}}
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Email') }}
+                                                            </td>
+                                                            <td class="twitter-td" style="padding-left: 10px; font-size: 14px;">
+                                                                {{ $lead->email ?? ''}}
+                                                            </td>
+                                                        </tr>
+
+
                                                         <tr>
                                                             <td class="" style="width: 150px; font-size: 14px;">
                                                                 {{ __('Admission Created') }}

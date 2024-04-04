@@ -1,7 +1,7 @@
 <form action="{{ url('branch') }}" id="create-branch" method="post" novalidate>
     @csrf
     <div class="modal-body" style="min-height: 35vh;">
-        <div class="row">
+        <div class="row align-items-baseline">
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="name">{{ __('Name') }}</label>
@@ -21,9 +21,12 @@
                         
                         @if (
                         \Auth::user()->type == 'super admin' ||
+                        \Auth::user()->type == 'HR' ||
                             \Auth::user()->type == 'Admin Team' ||
                             \Auth::user()->type == 'Project Director' ||
-                            \Auth::user()->type == 'Project Manager')
+                            \Auth::user()->type == 'Project Manager' ||
+                            \Auth::user()->can('level 1') ||
+                            \Auth::user()->can('level 2'))
                         <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                 class="text-danger">*</span></label>
                         {!! Form::select('brands', $brands, 0, [
@@ -61,11 +64,14 @@
 
                         @if (
                         \Auth::user()->type == 'super admin' ||
+                         \Auth::user()->type == 'HR' ||
                         \Auth::user()->type == 'Admin Team' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||
-                            \Auth::user()->type == 'Regional Manager')
+                            \Auth::user()->type == 'Region Manager' ||
+                            \Auth::user()->can('level 1') ||
+                            \Auth::user()->can('level 2') )
                         <label for="branches" class="col-sm-3 col-form-label">Region<span
                                 class="text-danger">*</span></label>
                         {!! Form::select('region_id', $regions, null, [
@@ -249,7 +255,7 @@
               data = JSON.parse(response);
 
               if(data.status == 'success'){
-                show_toastr('Success', data.msg, 'success');
+                show_toastr('success', data.msg, 'success');
                   $('#commonModal').modal('hide');
                   $(".modal-backdrop").removeClass("modal-backdrop");
                   $(".block-screen").css('display', 'none');
@@ -273,8 +279,14 @@
 </script>
 
 <script>
-    const input = document.querySelector("#phone");
-    window.intlTelInput(input, {
+    // Use the input variable in the rest of your code
+    window.intlTelInput(document.getElementById('phone'), {
         utilsScript: "{{ asset('js/intel_util.js') }}",
+        initialCountry: "pk",
+        separateDialCode: true,
+        formatOnDisplay: true,
+        hiddenInput: "full_number",
+        placeholderNumberType: "FIXED_LINE",
+        preferredCountries: ["us", "gb"]
     });
 </script>

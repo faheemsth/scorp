@@ -84,6 +84,15 @@ $lang=Utility::getValByName('default_language');
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css">
 
     <style>
+        #content{
+            width: 100%;
+            height: 100vh;
+        }
+        .successmg {
+            background-color: #28A745 !important;
+            color: white !important;
+        }
+
         .All-leads {
             border: 1px solid #c3c3c363;
             background-color: transparent;
@@ -132,6 +141,7 @@ $lang=Utility::getValByName('default_language');
             -moz-border-radius: 0px !important;
             border-radius: 0px !important;
         }
+
         .stages h2 {
             font-size: 16px;
             line-height: 14px;
@@ -308,7 +318,7 @@ $lang=Utility::getValByName('default_language');
             background-color: #eee;
         }
 
-        .iti--show-flags{
+        .iti--show-flags {
             width: 100% !important;
         }
 
@@ -381,6 +391,7 @@ $lang=Utility::getValByName('default_language');
         *ul {
             list-style: none !important;
         }
+
         .bold {
             font-weight: bold;
         }
@@ -444,21 +455,23 @@ $lang=Utility::getValByName('default_language');
             border-radius: 50%;
             background-color: #FFF;
         }
-        table tr td{
+
+        table tr td {
             font: 14px !important;
         }
-        table th{
+
+        table th {
             font-size: 14px !important;
         }
+
         #body::-webkit-scrollbar {
-        width: 0px;
-        display:none;
-    }
-    table{
-        overflow-x:scroll !important;
-    }
+            width: 0px;
+            display: none;
+        }
 
-
+        table {
+            overflow-x: scroll !important;
+        }
     </style>
 </head>
 
@@ -475,21 +488,21 @@ $lang=Utility::getValByName('default_language');
     @include('partials.admin.header')
 
     <!-- Page Wrapper -->
-    <div id="wrapper" style="position: relative;">
+    <div id="wrapper" style="position: relative; margin-top: 4rem;">
         @include('partials.admin.menucan')
         <!-- [ navigation menu ] end -->
-       @include('partials.admin.filter')
-       <div style="    position: fixed;
+        @include('partials.admin.filter')
+        <div style="    position: fixed;
        left: 17px;
        bottom: 25px;
        border-radius: 50%;
        display: flex;
        justify-content: center;
        align-items: center;">
-        </button>
+            </button>
 
-    </div>
-        <div id="mySidenav" style="z-index: 1065; padding-left:5px; box-shadow: -5px 0px 30px 0px #aaa;" class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>" style="padding-left: 5px"></div>
+        </div>
+        <div id="RightSidebar" style="z-index: 1065; padding-left:5px; box-shadow: -5px 0px 30px 0px #aaa;" class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>" style="padding-left: 5px"></div>
 
 
         <!-- Modal -->
@@ -582,16 +595,16 @@ $lang=Utility::getValByName('default_language');
     </div>
 
 
-  <script>
-      function myFunction() {
-        var x = document.getElementById("myDIV");
-        if (x.style.display === "none") {
-          x.style.display = "block";
-        } else {
-          x.style.display = "none";
+    <script>
+        function myFunction() {
+            var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
         }
-      }
-  </script>
+    </script>
 
 
     <div class="modal fade" id="commonModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 2000;">
@@ -608,12 +621,13 @@ $lang=Utility::getValByName('default_language');
     </div>
     <div class="position-fixed top-0 end-0 p-3" style="z-index: 99999">
         <div id="liveToast" class="toast text-white fade" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
+            <div class="d-flex justify-content-between"> <!-- Corrected class name -->
                 <div class="toast-body"> </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white mt-2 mr-2" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
     </div>
+
 
     @include('partials.admin.footer')
 

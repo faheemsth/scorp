@@ -11,6 +11,16 @@
 @push('css-page')
     <link rel="stylesheet" href="{{ asset('css/summernote/summernote-bs4.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/dragula.min.css') }}" id="main-style-link">
+<style>
+    .form-control:focus{
+                    border: none !important;
+                    outline:none !important;
+                }
+   
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
+</style>
 @endpush
 @push('script-page')
     <script src="{{ asset('css/summernote/summernote-bs4.js') }}"></script>
@@ -266,11 +276,11 @@
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL LEAD
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <!-- <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a class="dropdown-item" href="#">Action</a></li>
                                 <li><a class="dropdown-item" href="#">Another action</a></li>
                                 <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
+                            </ul> -->
                         </div>
                     </div>
                     <div class="col-8 d-flex justify-content-end gap-2">
@@ -333,7 +343,7 @@
 
 
 
-                <div class="my-4 mx-4">
+                <div class="my-4 mx-4 d-none">
                     <div class="enries_per_page" style="max-width: 300px; display: flex;">
 
                         <?php

@@ -1,6 +1,6 @@
 <style>
     table tr td {
-        font-size: 14px
+        font-size: 14px;
     }
 
     .form-select {
@@ -35,9 +35,10 @@
     }
 
     .row {
-        padding: 6px
+        padding: 6px;
     }
-    .choices{
+
+    .choices {
         width: 100%;
     }
 </style>
@@ -51,24 +52,15 @@
             <div class="accordion" id="accordionPanelsStayOpenExample">
                 <!-- Open Accordion Item -->
                 <div class="accordion-item">
-                    <!--<h2 class="accordion-header" id="panelsStayOpen-headinginfo">-->
-                    <!--    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse"-->
-                    <!--        data-bs-target="#panelsStayOpen-collapseinfo">-->
-                    <!--        {{ __('N') }}-->
-                    <!--    </button>-->
-                    <!--</h2>-->
-
                     <div id="panelsStayOpen-collapseinfo" class="accordion-collapse collapse show"
                         aria-labelledby="panelsStayOpen-headinginfo">
                         <div class="accordion-body">
-
                             <div class="mt-1" style="margin-left: 10px; width: 65%;">
                                 <input type="hidden" value="{{ optional($regions)->id ?? '' }}" name="id">
                                 <table class="w-100">
                                     <tbody>
                                         <tr>
-                                            <td class=""
-                                                style="width: 150px;  font-size: 13px;">
+                                            <td style="width: 150px; font-size: 13px;">
                                                 {{ __('Name') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
@@ -77,32 +69,29 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class=""
-                                                style="width: 150px;  font-size: 13px;">
+                                            <td style="width: 150px; font-size: 13px;">
                                                 {{ __('Brands') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
-                                                @php 
-                                                    if(isset($regions)){
-                                                        $brand_ids =  $regions->brands ?? '';
-                                                
-                                                        if(!empty($brand_ids)){
-                                                            $brand_ids = explode(',', $brand_ids);
-                                                        }
-                                                    }
-                                                @endphp 
+                                                @php
+                                                if(isset($regions)){
+                                                $brand_ids = $regions->brands ?? '';
+                                                if(!empty($brand_ids)){
+                                                $brand_ids = explode(',', $brand_ids);
+                                                }
+                                                }
+                                                @endphp
                                                 <select class="form form-control select2" id="choices-multiple55"
                                                     name="brands[]" style="width: 100% !important;" required>
                                                     <option value="">Select Brand</option>
-                                                        @foreach ($brands as $key => $brand)
-                                                        <option value="{{ $key }}" {{ in_array($key, $brand_ids) ? 'selected' : ''}}>{{ $brand }}</option>
-                                                        @endforeach
+                                                    @foreach ($brands as $key => $brand)
+                                                    <option value="{{ $key }}" {{ in_array($key, $brand_ids) ? 'selected' : ''}}>{{ $brand }}</option>
+                                                    @endforeach
                                                 </select>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class=""
-                                                style="width: 150px;  font-size: 13px;">
+                                            <td style="width: 150px; font-size: 13px;">
                                                 {{ __('Location') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
@@ -110,22 +99,17 @@
                                                     value="{{ optional($regions)->location ?? '' }}" name="location">
                                             </td>
                                         </tr>
-
-
                                         <tr>
-                                            <td class=""
-                                                style="width: 150px;  font-size: 13px;">
+                                            <td style="width: 150px; font-size: 13px;">
                                                 {{ __('Phone') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
                                                 <input type="text" class="form-control" id="phone" placeholder="Enter Phone"
-                                                    value="{{ optional($regions)->phone ?? '' }}" name="phone">
+                                                    value="{{ $regions->phone }}" name="phone">
                                             </td>
                                         </tr>
-
                                         <tr>
-                                            <td class=""
-                                                style="width: 150px;  font-size: 13px;">
+                                            <td style="width: 150px; font-size: 13px;">
                                                 {{ __('Email') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
@@ -134,7 +118,7 @@
                                             </td>
                                         </tr>
                                         <tr class="d-none">
-                                            <td style="width: 150px;  font-size: 13px;">
+                                            <td style="width: 150px; font-size: 13px;">
                                                 {{ __('Region Manager') }}
                                             </td>
                                             <td class="d-flex gap-1 mb-1" style="padding-left: 10px; font-size: 13px;">
@@ -153,7 +137,6 @@
                                                 </select>
                                             </td>
                                         </tr>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -171,9 +154,17 @@
 </div>
 
 {{ Form::close() }}
+
 <script>
-    const input = document.querySelector("#phone");
-    window.intlTelInput(input, {
-        utilsScript: "{{ asset('js/intel_util.js') }}",
-    });
+        // Use the input variable in the rest of your code
+        window.intlTelInput(document.getElementById('phone'), {
+            utilsScript: "{{ asset('js/intel_util.js') }}",
+            initialCountry: "pk",
+            separateDialCode: true,
+            formatOnDisplay: true,
+            hiddenInput: "full_number",
+            placeholderNumberType: "FIXED_LINE",
+            preferredCountries: ["us", "gb"]
+        });
 </script>
+

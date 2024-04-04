@@ -59,7 +59,7 @@ class ClientController extends Controller
             $user    = \Auth::user();
 
             $start = 0;
-            $num_results_on_page = 50;
+            $num_results_on_page = 25;
             if (isset($_GET['page'])) {
                 $page = $_GET['page'];
                 $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -70,33 +70,46 @@ class ClientController extends Controller
 
 
            // $clients = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'client')->skip($start)->take($num_results_on_page)->get();
-
-            $client_query = User::select(['users.*'])->join('client_deals', 'client_deals.client_id', 'users.id')->join('deals', 'deals.id', 'client_deals.deal_id');
-
+            $client_query = User::select('users.*')->where('users.type', 'client');
             if (!empty($_GET['name'])) {
                 $client_query->where('users.name', 'like', '%' . $_GET['name'] . '%');
             }
-
+            
             if (!empty($_GET['email'])) {
                 $client_query->where('users.email', 'like', '%' . $_GET['email'] . '%');
             }
+            
+            if (isset($_GET['search']) && !empty($_GET['search'])) {
+                $g_search = $_GET['search'];
+                $client_query->where(function ($query) use ($g_search) {
+                    $query->where('users.name', 'like', '%' . $g_search . '%')
+                          ->orWhere('users.passport_number', 'like', '%' . $g_search . '%');
+                });
+            }
 
-            $companies = FiltersBrands();
-            $brand_ids = array_keys($companies);
-            $client_query->whereIn('deals.brand_id', $brand_ids);
 
-
-            $total_records = $client_query->count();
-            $clients = $client_query->orderBy('created_at', 'DESC')->skip($start)->take($num_results_on_page)->get();
+        $total_records = $client_query->count();
+       
+         // Paginate the results
+        $clients = $client_query
+            ->orderBy('users.created_at', 'DESC')
+            ->skip($start)
+            ->take($num_results_on_page)
+            ->get();
+       
 
             // $clients = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'client')->skip($start)->take($num_results_on_page)->get();
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
                 $html = view('clients.clients_list_ajax', compact('clients', 'total_records'))->render();
-
+                $pagination_html = view('layouts.pagination', [
+                    'total_pages' => $total_records,
+                    'num_results_on_page' =>  $num_results_on_page
+                ])->render();
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => $html,
+                    'pagination_html' => $pagination_html 
                 ]);
             }
 
@@ -281,17 +294,17 @@ class ClientController extends Controller
         if(\Auth::user()->can('edit client'))
         {
             $user = \Auth::user();
-            if($client->created_by == $user->creatorId() || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
-            {
+            // if($client->created_by == $user->creatorId() || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
+            // {
                 $client->customField = CustomField::getData($client, 'client');
                 $customFields        = CustomField::where('module', '=', 'client')->get();
 
                 return view('clients.edit', compact('client', 'customFields'));
-            }
-            else
-            {
-                return response()->json(['error' => __('Invalid Client.')], 401);
-            }
+            // }
+            // else
+            // {
+            //     return response()->json(['error' => __('Invalid Client.')], 401);
+            // }
         }
         else
         {
@@ -301,11 +314,11 @@ class ClientController extends Controller
 
     public function update(User $client, Request $request)
     {
+        
         if(\Auth::user()->can('edit client'))
         {
-            $user = \Auth::user();
-            if($client->created_by == $user->creatorId())
-            {
+            // if($client->created_by == $user->creatorId())
+            // {
                 $validation = [
                     'name' => 'required',
                     'email' => 'required|email|unique:users,email,' . $client->id,
@@ -313,11 +326,8 @@ class ClientController extends Controller
 
                 $post         = [];
                 $post['name'] = $request->name;
-                if(!empty($request->password))
-                {
-                    $validation['password'] = 'required';
-                    $post['password']       = Hash::make($request->password);
-                }
+                $client->name = $request->name;
+                $client->password = Hash::make($request->password);
 
                 $validator = \Validator::make($request->all(), $validation);
                 if($validator->fails())
@@ -326,19 +336,18 @@ class ClientController extends Controller
 
                     return redirect()->back()->with('error', $messages->first());
                 }
-                $post['email'] = $request->email;
-                $post['passport_number'] = $request->passport_number;
-
-                $client->update($post);
+               $client->email = $request->email;
+               $client->passport_number = $request->passport_number;
+                $client->update();
 
                 CustomField::saveData($client, $request->customField);
 
                 return redirect()->back()->with('success', __('Client Updated Successfully!'));
-            }
-            else
-            {
-                return redirect()->back()->with('error', __('Invalid Client.'));
-            }
+            // }
+            // else
+            // {
+            //     return redirect()->back()->with('error', __('Invalid Client.'));
+            // }
         }
         else
         {

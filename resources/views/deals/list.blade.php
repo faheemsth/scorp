@@ -217,6 +217,14 @@
             left: 0 !important;
         }
     }
+    .form-control:focus{
+                    border: none !important;
+                    outline:none !important;
+                }
+   
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
 </style>
 <style>
     .form-controls,
@@ -250,11 +258,11 @@
         display: block;
     }
 
-    .choices__inner {
+    /* .choices__inner {
         border: 1px solid #ccc !important;
         min-height: auto;
         padding: 4px !important;
-    }
+    } */
 
     .fil:hover .submenu {
         display: block;
@@ -381,7 +389,7 @@
                 {{-- topbar --}}
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                     <div class="col-4">
-                        <p class="mb-0 pb-0 ps-1">ADMISSIONS</p>
+                        <p class="mb-0 pb-0 ps-1">Admissions</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL ADMISSIONS
@@ -392,8 +400,9 @@
                             @php
                             $saved_filters = App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'deals')->get();
                             @endphp
-                              @if(sizeof($saved_filters) > 0)
+                              
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    @if(sizeof($saved_filters) > 0)
                                         @foreach($saved_filters as $filter)
                                         <li class="d-flex align-items-center justify-content-between ps-2">
                                             <div class="col-10">
@@ -413,9 +422,16 @@
 
                                         </li>
                                         @endforeach
+                                        @else 
+                                        <li class="d-flex align-items-center justify-content-center ps-2">
+                                            No Saved Filter Found.
+                                        </li>
+                                        @endif
 
                             </ul>
-                        @endif
+                            
+
+                        
                     </div>
                 </div>
 
@@ -493,8 +509,73 @@
                     <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                         <form action="/deals/list" method="GET" class="">
 
-                            <div class="row my-3">
-                                <div class="col-md-4">
+                            <div class="row my-3 filbar">
+                                @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
+                                    <div class="col-md-3 mt-2">
+                                        <label for="">Brand</label>
+                                        <select name="brand" class="form form-control select2" id="filter_brand_id">
+                                            @if (!empty($filters['brands']))
+                                                @foreach ($filters['brands'] as $key => $Brand)
+                                                <option value="{{ $key }}" {{ !empty($_GET['brand']) && $_GET['brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No brands available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+
+
+                                @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3'))
+                                    <div class="col-md-3 mt-2" id="region_filter_div">
+                                        <label for="">Region</label>
+                                        <select name="region_id" class="form form-control select2" id="filter_region_id">
+                                            @if (!empty($filters['regions']))
+                                                @foreach   ($filters['regions'] as $key => $region)
+                                                <option value="{{ $key }}" {{ !empty($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : '' }}>{{ $region }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+
+                                @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3') || \Auth::user()->can('level 4'))
+                                    <div class="col-md-3 mt-2" id="branch_filter_div">
+                                        <label for="">Branch</label>
+                                        <select name="branch_id" class="form form-control select2" id="filter_branch_id">
+                                            @if (!empty($filters['branches']))
+                                                @foreach ($filters['branches'] as $key => $branch)
+                                                <option value="{{ $key }}" {{ !empty($_GET['branch_id']) && $_GET['branch_id'] == $key ? 'selected' : '' }}>{{ $branch }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+                                <div class="col-md-3 mt-2"> <label for="">Assigned To</label>
+                                    <div class="" id="assign_to_div">
+                                        <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
+                                            @foreach ($filters['employees'] as $key => $user)
+                                            <option value="{{ $key }}" <?= isset($_GET['lead_assgigned_user']) && $key == $_GET['lead_assgigned_user'] ? 'selected' : '' ?> class="">{{ $user }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+
+                                <div class="col-md-3 mt-2">
                                     <label for="">Name</label>
                                     <select name="name[]" id="deals" class="form form-control select2" multiple style="width: 95%;">
                                         <option value="">Select name</option>
@@ -505,7 +586,7 @@
                                 </div>
 
 
-                                <div class="col-md-4">
+                                <div class="col-md-3 mt-2">
                                     <label for="">Stages</label>
                                     <select name="stages[]" id="stages" class="form form-control select2" multiple style="width: 95%;">
                                         <option value="">Select Pipeline</option>
@@ -514,26 +595,20 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                <div class="col-md-4"> <label for="">Brands</label>
-                                    <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple style="width: 95%;">
-                                        <option value="">Select Brand</option>
-                                        @if (FiltersBrands())
-                                            @foreach (FiltersBrands() as $key => $brand)
-                                               <option value="{{ $key }}" <?= isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' ?> class="">{{ $brand }}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
+
+
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Created at From</label>
+                                    <input type="date" class="form form-control" name="created_at_from"
+                                        value="<?= isset($_GET['created_at_from']) ? $_GET['created_at_from'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
                                 </div>
-                                @endif
-                                <style>
-                                    .form-control:focus {
-                                        border: 1px solid rgb(209, 209, 209) !important;
-                                    }
-                                </style>
-                                <div class="col-md-4 mt-2">
-                                    <label for="">Created at</label>
-                                    <input type="date" class="form form-control" name="created_at" value="<?= isset($_GET['created_at']) ? $_GET['created_at'] : '' ?>" style="width: 95%; border-color:#aaa">
+
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Created at To</label>
+                                    <input type="date" class="form form-control" name="created_at_to"
+                                        value="<?= isset($_GET['created_at_to']) ? $_GET['created_at_to'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
                                 </div>
 
                                 <div class="col-md-4 mt-3">
@@ -1499,5 +1574,94 @@
                 }
             });
         })
+
+         ////////////////////Filters Javascript
+         $("#filter_brand_id").on("change", function() {
+            var id = $(this).val();
+            var type = 'brand';
+            var filter = true;
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#region_filter_div').html('');
+                        $("#region_filter_div").html(data.regions);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+
+        $(document).on("change", "#filter_region_id, #region_id", function() {
+            var id = $(this).val();
+            var filter = true;
+            var type = 'region';
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#branch_filter_div').html('');
+                        $("#branch_filter_div").html(data.branches);
+                        getLeads();
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+        $(document).on("change", "#filter_branch_id, #branch_id", function() {
+    
+            var id = $(this).val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('filter-branch-users') }}',
+                    data: {
+                        id: id
+                    },
+                    success: function(data){
+                        data = JSON.parse(data);
+
+                        if (data.status === 'success') {
+                            $('#assign_to_div').html('');
+                            $("#assign_to_div").html(data.html);
+                            select2();
+                        } else {
+                            console.error('Server returned an error:', data.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX request failed:', status, error);
+                    }
+                });
+        });
     </script>
     @endpush

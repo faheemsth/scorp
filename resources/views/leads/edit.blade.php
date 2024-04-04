@@ -111,7 +111,9 @@
                                                 @if (
                                                     \Auth::user()->type == 'super admin' ||
                                                         \Auth::user()->type == 'Project Director' ||
-                                                        \Auth::user()->type == 'Project Manager')
+                                                        \Auth::user()->type == 'Project Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2'))
 
                                                     <select class="form-control select2 brand_id" id="choices-1011"
                                                         name="brand_id" {{ !\Auth::user()->can('edit brand lead') ? 'disabled' : '' }}>
@@ -152,7 +154,10 @@
                                                         \Auth::user()->type == 'Project Director' ||
                                                         \Auth::user()->type == 'Project Manager' ||
                                                         \Auth::user()->type == 'company' ||
-                                                        \Auth::user()->type == 'Regional Manager')
+                                                        \Auth::user()->type == 'Region Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2') ||
+                                                        \Auth::user()->can('level 3'))
 
                                                             {!! Form::select('region_id', $regions, $lead->region_id, [
                                                                 'class' => 'form-control select2',
@@ -182,8 +187,12 @@
                                                         \Auth::user()->type == 'Project Director' ||
                                                         \Auth::user()->type == 'Project Manager' ||
                                                         \Auth::user()->type == 'company' ||
-                                                        \Auth::user()->type == 'Regional Manager' ||
-                                                        \Auth::user()->type == 'Branch Manager')
+                                                        \Auth::user()->type == 'Region Manager' ||
+                                                        \Auth::user()->type == 'Branch Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2') ||
+                                                        \Auth::user()->can('level 3') ||
+                                                        \Auth::user()->can('level 4'))
                                                             <select name="lead_branch" id="branch_id" class="form-control select2 branch_id"
                                                                 onchange="Change(this)" {{ !\Auth::user()->can('edit branch lead') ? 'disabled' : '' }}>
                                                                     @foreach($branches as $key => $branch)
@@ -211,7 +220,7 @@
                                                 <select class="form-control select2" id="choice-2"
                                                     name="lead_assgigned_user" {{ !\Auth::user()->can('edit assign to lead') ? 'disabled' : '' }}>
                                                     <option value="">Select User</option>
-                                                    @foreach ($users as $key => $user)
+                                                    @foreach ($employees as $key => $user)
                                                         <option value="{{ $key }}"
                                                             <?= $lead->user_id == $key ? 'selected' : '' ?>>
                                                             {{ $user }}</option>
@@ -311,7 +320,7 @@
                                                 <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-                                                <input type="text" class="form-control" name="lead_phone"
+                                                <input type="text" class="form-control" name="lead_phone" id="phone"
                                                     value="{{ $lead->phone }}" required>
                                             </td>
                                         </tr>
@@ -435,7 +444,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item d-none">
                     <h2 class="accordion-header" id="panelsStayOpen-headingkeytag">
                         <button class="accordion-button p-2" type="button" data-bs-toggle="collapse"
                             data-bs-target="#panelsStayOpen-collapsekeytag">
@@ -534,32 +543,6 @@
 </script>
 <script>
     $(".brand_id").on("change", function(){
-        // var id = $(this).val();
-
-        // $.ajax({
-        //     type: 'GET',
-        //     url: '{{ route('lead_companyemployees') }}',
-        //     data: {
-        //         id: id  // Add a key for the id parameter
-        //     },
-        //     success: function(data){
-        //         data = JSON.parse(data);
-
-        //         if (data.status === 'success') {
-        //             $("#assign_to_div").html(data.employees);
-        //             select2();
-        //             $("#branch_div").html(data.branches);
-        //             select2(); // Assuming this is a function to initialize or update a select2 dropdown
-        //         } else {
-        //             console.error('Server returned an error:', data.message);
-        //         }
-        //     },
-        //     error: function(xhr, status, error) {
-        //         console.error('AJAX request failed:', status, error);
-        //     }
-        // });
-
-
         var id = $(this).val();
 
         $.ajax({
@@ -636,5 +619,52 @@
                 console.error('AJAX request failed:', status, error);
             }
         });
+    });
+
+
+    // new lead form submitting...
+    $("#lead-updating-form").on("submit", function(e) {
+
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var id = $(".lead_id").val();
+        $(".update-lead-btn").val('Processing...');
+        $('.update-lead-btn').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: "/leads/update/" + id,
+            data: formData,
+            success: function(data) {
+                data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('success', data.message, 'success');
+                        // openNav(id);
+                        $("#commonModal").modal('hide');
+                        openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
+                        //window.location.href = '/leads/list';
+                        return false;
+                    } else {
+                        show_toastr('error', data.message, 'error');
+                        $(".new-lead-btn").val('Create');
+                        $('.new-lead-btn').removeAttr('disabled');
+                    }
+                }
+            });
+        });
+</script>
+
+
+<script>
+    // Use the input variable in the rest of your code
+    window.intlTelInput(document.getElementById('phone'), {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+        initialCountry: "pk",
+        separateDialCode: true,
+        formatOnDisplay: true,
+        hiddenInput: "full_number",
+        //placeholderNumberType: "FIXED_LINE",
+       // preferredCountries: ["us", "gb"]
     });
 </script>

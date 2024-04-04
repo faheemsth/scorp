@@ -98,7 +98,7 @@
                       </a>
                     @endcan
 
-                    @can('delete brand')
+                    @can('delete user')
                     {!! Form::open(['method' => 'DELETE','class'=>'mb-0' , 'route' => ['users.destroy', $user['id']],'id'=>'delete-form-'.$user['id']]) !!}
                     <a href="#!" class="btn px-2 py-2 btn-danger text-white bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
                         <i class="ti ti-archive"></i>
@@ -164,6 +164,26 @@
                                                                 </td>
                                                             </tr>
 
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Project Director') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $userArr[$user->project_director_id] ?? '' }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Project Manager') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                     {{ $userArr[$user->project_manager_id] ?? '' }}
+                                                                </td>
+                                                            </tr>
+
+
                                                             <tr>
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Domain Link') }}
@@ -178,7 +198,13 @@
                                                                     {{ __('Webiste Link') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                <a href=" {{ $user->website_link }}" class="" target="_blank"> {{ $user->website_link }}</a>
+                                                                <?php
+                                                                    $website_link = $user->website_link;
+                                                                    if (strpos($website_link, 'https://') === false) {
+                                                                        $website_link = 'https://' . $website_link;
+                                                                    }
+                                                                    ?>
+                                                                    <a href="<?php echo $website_link; ?>" target="_blank"><?php echo $website_link; ?></a>
                                                                 </td>
                                                             </tr>
 

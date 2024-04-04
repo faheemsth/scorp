@@ -543,6 +543,7 @@ class InvoiceController extends Controller
                         ];
                         $resp = Utility::sendEmailTemplate('customer_invoice_sent', [$customer->id => $customer->email], $customerArr);
                         return redirect()->back()->with('success', __('Invoice successfully sent.') .(($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
+    
                     }else{
                         return redirect()->back()->with('success', __('Invoice successfully sent.'));
                     }

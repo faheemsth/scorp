@@ -329,4 +329,16 @@ class EmailTemplateController extends Controller
             }
         }
     }
+
+    public function updateEmailContent(Request $request, $id){
+        $email = EmailTemplateLang::where('id', $id)->first();
+        $email->content = $request->content;
+        $email->save();
+        return response()->json(
+            [
+                'is_success' => true,
+                'success' => __('Status successfully updated!'),
+            ], 200
+        );
+    }
 }

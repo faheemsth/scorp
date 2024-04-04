@@ -35,7 +35,7 @@
         </td>
         <td>
             <span style="cursor:pointer" class="task-name hyper-link"
-                @can('view task') onclick="openNav(<?= $task->id ?>)" @endcan
+                @can('view task') onclick="openSidebar('/get-task-detail?task_id=<?= $task->id ?>')" @endcan
                 data-task-id="{{ $task->id }}">{{ $task->name }}</span>
         </td>
         <td>
