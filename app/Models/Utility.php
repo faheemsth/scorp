@@ -1252,12 +1252,11 @@ class Utility extends Model
                     // get email content language base
                     $content = EmailTemplateLang::where('parent_id', '=', $template->id)->where('lang', 'LIKE', $usr->lang)->first();
                     
-                    //$content->from = $template->from;
-                    // echo "<pre>";
-                    // print_r($template->from);
-                    // die();
+                    $content->from = $template->from;
+                   
                     if (!empty($content->content)) {
                         $content->content = self::replaceVariable($content->content, $obj);
+                        
                         try {
 
                             config([
@@ -1271,8 +1270,10 @@ class Utility extends Model
                                 'mail.from.name' => env('MAIL_FROM_NAME'),
                             ]);
 
-                           
-                            Mail::to($mailTo)->send(new CommonEmailTemplate($content, $settings));
+                            
+                            //$mailTo = 'sanaullah.se17@gmail.com';                           
+                             Mail::to($mailTo)->send(new CommonEmailTemplate($content, $settings));
+                            //die();
                         } catch (\Exception $e) {
                             $error = $e->getMessage();
                         }
@@ -1415,6 +1416,8 @@ class Utility extends Model
             '{contract_subject}',
             '{contract_start_date}',
             '{contract_end_date}',
+            '{student_name}',
+            '{sender}'
 
 
 
@@ -1564,6 +1567,10 @@ class Utility extends Model
             'contract_subject' => '-',
             'contract_start_date' => '-',
             'contract_end_date' => '-',
+            'student_name' => '-',
+            'sender' => '-'
+            
+            
 
 
 
