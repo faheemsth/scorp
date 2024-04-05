@@ -128,20 +128,25 @@ class LeadController extends Controller
 
 
 
-        if(isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user']) && $_GET['lead_assgigned_user'] != 'null'){
+       // if(isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user']) && $_GET['lead_assgigned_user'] != 'null'){
             if (isset($_GET['brand']) && !empty($_GET['brand'])) {
                 $filters['brand_id'] = $_GET['brand'];
             }
-    
+
             if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
                 $filters['region_id'] = $_GET['region_id'];
             }
-    
+
             if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
                 $filters['branch_id'] = $_GET['branch_id'];
             }
+        //}
+        if(isset($_GET['lead_assgigned_user']) && $_GET['lead_assgigned_user'] == 'null'){
+            unset($filters['brand_id']);
+            unset($filters['region_id']);
+            unset($filters['branch_id']);
         }
-        
+
 
         if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
             $filters['created_at_from'] = $_GET['created_at_from'];

@@ -974,7 +974,7 @@ class DealController extends Controller
                 }
 
                 $lead->save();
-                
+
                 //send email
                 // $clients = User::whereIN('id', array_filter($request->input('contact')))->get()->pluck('email', 'id')->toArray();
 
@@ -2504,7 +2504,7 @@ class DealController extends Controller
         if (\Auth::user()->can('create application')) {
 
             $deal_passport = Deal::select(['users.*'])->join('client_deals', 'client_deals.deal_id', 'deals.id')->join('users', 'users.id', 'client_deals.client_id')->where(['deals.id' => $id])->first();
-            
+
             if (!$deal_passport || empty($deal_passport->passport_number)) {
                 return response()->json(
                     [
@@ -2528,7 +2528,7 @@ class DealController extends Controller
 
             $countries = Country::pluck('name', 'name');
             $countries = [0 => 'Select Country'] + $countries->toArray();
-            
+
             return view('deals.create-application', compact('universities', 'statuses', 'id', 'deal_passport', 'stages', 'countries'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
@@ -3239,7 +3239,7 @@ class DealController extends Controller
 
              //Getting lead stages history
              $stage_histories = StageHistory::where('type', 'deal')->where('type_id', $deal->id)->pluck('stage_id')->toArray();
-            
+
              $lead = Lead::where('is_converted', $deal->id)->first();
 
             $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories', 'lead'))->render();

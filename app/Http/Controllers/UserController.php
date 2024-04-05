@@ -28,7 +28,7 @@ use App\Models\GenerateOfferLetter;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\ExperienceCertificate;
-
+use App\Models\Notification;
 
 
 class UserController extends Controller
@@ -53,7 +53,7 @@ class UserController extends Controller
             $user_query = User::select(['users.id','users.name', 'users.website_link', 'project_director.name as project_director'])
                          ->where('users.type', 'company')
                          ->leftjoin('users as project_director', 'project_director.id', '=', 'users.project_director_id');
-               
+
             if (\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Admin Team' && \Auth::user()->type != 'HR') {
                 $companies = FiltersBrands();
                 $brand_ids = array_keys($companies);
@@ -84,7 +84,7 @@ class UserController extends Controller
 
 
 
-           
+
 
             $total_records = $user_query->count();
             $users = $user_query->orderBy('users.name', 'ASC')
@@ -159,7 +159,7 @@ class UserController extends Controller
             //         ]));
             //     }
             // }
-            
+
             $projectDirectors = allUsers();
             $Brands = User::where('type', 'company')->pluck('name', 'id')->toArray();
             $ProjectDirector = User::where('type', 'Project Director')->pluck('name', 'id')->toArray();
@@ -295,8 +295,8 @@ class UserController extends Controller
             $new_permission->active = 'false';
             $new_permission->created_by = \Auth::user()->id;
             $new_permission->save();
-            
-            
+
+
             // Send Email
             $setings = Utility::settings();
             if ($setings['new_user'] == 1) {
@@ -763,7 +763,7 @@ class UserController extends Controller
                 ->orderBy('users.name', 'ASC')
                 ->paginate($num_results_on_page);
 
-           
+
 
             $brands = User::whereNotIn('type', $excludedTypes)->orderBy('name', 'ASC')->get();
             $brandss = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
@@ -1084,7 +1084,7 @@ class UserController extends Controller
                     // return redirect()->back()->with('error', $messages->first());
                 }
 
-                
+
                 $role = Role::findByName($request->role);
                 //$role = Role::findByName('company');
                 $input         = $request->all();
@@ -1144,13 +1144,13 @@ class UserController extends Controller
                         'role' => 'required',
                     ]
                 );
-                
+
                 $role = Role::findByName($request->role);
                 $input         = $request->all();
                 $input['type'] = $role->name;
-                
+
                 $user->fill($input)->save();
-                
+
                 $user->branch_id = $request->branch_id;
                 $user->date_of_birth =  $request->dob;
                 $user->phone = $request->phone;
@@ -1497,7 +1497,7 @@ class UserController extends Controller
         $all_users = User::pluck('name', 'id')->toArray();
 
 
-        //header 
+        //header
         $header = [
             'Sr.No.',
             'Name',
@@ -1614,4 +1614,89 @@ class UserController extends Controller
         downloadCSV($header, $data, 'Employees.csv');
         return true;
     }
+
+    private function notificationFilters()
+    {
+        $filters = [];
+        if (isset($_GET['notification_user']) && !empty($_GET['notification_user'])) {
+            $filters['user_id'] = $_GET['notification_user'];
+        }
+        return $filters;
+    }
+    public function notifications(Request $request)
+    {
+        $start = 0;
+        $num_results_on_page = 25;
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = ($page - 1) * $num_results_on_page;
+        } else {
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+        }
+        $filters = $this->notificationFilters();
+        $Notify=Notification::with('Notifier')->whereHas('Notifier', function ($query) { $query->whereNotNull('id'); });
+
+
+        foreach ($filters as $column => $value) {
+            if ($column === 'user_id') {
+                $Notify->where('user_id', $value);
+            }
+        }
+
+        if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
+            $g_search = $_GET['search'];
+            $Notify->whereHas('Notifier', function ($query) use ($g_search) {
+                $query->where('name' , 'like', '%' . $g_search . '%');
+            });
+        }
+
+        $users=Notification::with('Notifier')->select('user_id')->distinct()->whereHas('Notifier', function ($query) { $query->whereNotNull('id'); })->get();
+
+        $total_records = $Notify->count();
+        $Notifications = $Notify->skip($start)->take($num_results_on_page)->get();
+        $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'notifications')->get();
+        if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+            $html = view('notifications.notifications_ajax', compact('Notifications','total_records','users','saved_filters'))->render();
+
+            return json_encode([
+                'status' => 'success',
+                'html' => $html
+            ]);
+        }
+        return view('notifications.notifications_list', compact('Notifications','total_records','users','saved_filters'));
+
+    }
+
+    public function deleteBulkNotifications(Request $request){
+        Notification::whereIn('id', explode(',', $request->ids))->delete();
+        return back()->with('success', 'Notifications deleted successfully');
+    }
+
+    public function NotificationStatusChange(Request $request)
+    {
+       if(!empty($request->input('id'))){
+        Notification::findorfail($request->input('id'))->update(['is_read'=>'1']);
+        return json_encode([
+            'status' => 'success',
+            'message' => 'Update User Tasks Successfully '
+        ]);
+       }
+    }
+
+    public function getnotificationsDetails()
+    {
+        $taskId = $_GET['notification_id'];
+
+        $task = Notification::with('Notifier')->whereHas('Notifier', function ($query) { $query->whereNotNull('id'); })->FindOrFail($taskId);
+
+        $html = view('notifications.notifications_details', compact('task'))->render();
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
+    }
+
+
 }

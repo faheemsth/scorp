@@ -852,8 +852,10 @@ Route::get('/update-deal-stage', [DealController::class, 'updateDealStage'])->na
 Route::get('user/{id}/plan', [UserController::class, 'upgradePlan'])->name('plan.upgrade')->middleware(['auth', 'XSS']);
 Route::get('user/{id}/plan/{pid}', [UserController::class, 'activePlan'])->name('plan.active')->middleware(['auth', 'XSS']);
 Route::get('/{uid}/notification/seen', [UserController::class, 'notificationSeen'])->name('notification.seen');
-
-
+Route::get('/notifications', [UserController::class, 'notifications'])->name('notifications');
+Route::get("/delete-bulk-notifications", [UserController::class, 'deleteBulkNotifications'])->name('deleteBulkNotifications');
+Route::post('notifications-status-change', [UserController::class, 'NotificationStatusChange'])->name('NotificationStatusChange');
+Route::get('/get-notifications-detail', [UserController::class, 'getnotificationsDetails'])->name('get-notifications-detail');
 
 // Route::get('/leads/{id}/notes', [LeadController::class, 'notesCreate'])->name('leads.notes.create')->middleware(['auth','XSS']);
 // Route::post('/leads/{id}/notes', [LeadController::class, 'notesStore'])->name('leads.notes.store')->middleware(['auth','XSS']);

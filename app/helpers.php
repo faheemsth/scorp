@@ -175,7 +175,7 @@ if (!function_exists('addLogActivity')) {
             $msg = 'New record created';
         }
 
-        
+
 
         $notification = new Notification;
         $notification->user_id = \Auth::user()->id;
@@ -245,7 +245,7 @@ if (!function_exists('FiltersBrands')) {
         }
 
         if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR' || \Auth::user()->can('level 1')) {
-           
+
         } else if (\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')) {
             $permittedCompanies = allPermittedCompanies();
             $brands->whereIn('id', $permittedCompanies);
@@ -379,6 +379,9 @@ if (!function_exists('BrandsRegionsBranches')) {
         if(isset($_GET['brand']) && !empty($_GET['brand'])){
             $regions = Region::where('brands', $_GET['brand'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         }
+        if(isset($_GET['brand_id']) && !empty($_GET['brand_id'])){
+            $regions = Region::where('brands', $_GET['brand_id'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+        }
 
         if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
             $branches = Branch::where('region_id', $_GET['region_id'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
@@ -457,7 +460,7 @@ if (!function_exists('BrandsRegionsBranches')) {
                 $brands = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $branches = Branch::where('region_id', $region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-                $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();           
+                $employees = User::where('branch_id', $branch_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             } else if ($type == 'company') {
                 $brands = User::where('type', 'company')->where('id', $user->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
                 $regions = Region::where('brands', $brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
@@ -542,7 +545,7 @@ function accessLevel()
  * Calculates pagination details based on the current page and number of results per page.
  * If 'page' and 'num_results_on_page' parameters are provided in the GET request,
  * calculates the start index for fetching results accordingly.
- * 
+ *
  * @return array An array containing pagination details:
  *               - 'start': The start index for fetching results.
  *               - 'num_results_on_page': The number of results to display on each page.
@@ -552,13 +555,13 @@ function getPaginationDetail(){
     // Pagination calculation
     $start = 0; // Default start index
     $num_results_on_page = 25; // Default number of results per page
-    
+
     if (isset($_GET['page'])) {
         $page = $_GET['page']; // Current page number
-        
+
         // If 'num_results_on_page' parameter is provided, update $num_results_on_page
         $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
-        
+
         // Calculate the start index based on the current page and number of results per page
         $start = ($page - 1) * $num_results_on_page;
     } else {
@@ -585,10 +588,10 @@ function getPaginationDetail(){
 function UserRegionBranch(){
     // Retrieve users and format them as 'name' => 'id'
     $users = User::pluck('name', 'id')->toArray();
-    
+
     // Retrieve regions and format them as 'name' => 'id'
     $regions = Region::pluck('name', 'id')->toArray();
-    
+
     // Retrieve branches and format them as 'name' => 'id'
     $branches = Branch::pluck('name', 'id')->toArray();
 
