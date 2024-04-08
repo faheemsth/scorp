@@ -295,7 +295,7 @@ $setting = \App\Models\Utility::colorset();
                                                 <button class="btn btn-sm btn-dark position-relative"
                                                     @can('edit status task') onclick="ChangeNotificationStatus({{ $task->id }})" @endcan
                                                     data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Change Task Status">
+                                                    title="Change Notification Status">
                                                     <i class="fa-solid fa-check d-flex justify-content-center align-items-center"
                                                         style="font-size: 18px;"></i>
                                                 </button>
@@ -1006,7 +1006,7 @@ $setting = \App\Models\Utility::colorset();
         function ChangeNotificationStatus(id) {
             Swal.fire({
                 title: 'Are you sure?',
-                text: 'You are about to update the task status.',
+                text: 'You are about to update the Notification status.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -1027,7 +1027,7 @@ $setting = \App\Models\Utility::colorset();
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success!',
-                                text: 'The task status has been changed successfully.',
+                                text: 'The task Notification has been changed successfully.',
                             }).then(function() {
                                 // Reload the page after the user closes the SweetAlert dialog
                                 window.location.href = window.location.href;
