@@ -609,6 +609,7 @@ class LeadController extends Controller
                             'lead_stage' => $stage->name,
 
                         ];
+                        
 
                         $resp = Utility::sendEmailTemplate('lead_assigned', [$usrEmail->id => $usrEmail->email], $leadAssignArr);
                         //$resp['is_success'] = true;
@@ -897,9 +898,9 @@ class LeadController extends Controller
                 }
 
 
-                echo "<pre>";
-                print_r($request->input());
-                die();
+                // echo "<pre>";
+                // print_r($request->input());
+                // die();
 
 
 
@@ -3849,7 +3850,12 @@ class LeadController extends Controller
             try {
                 // Send email to $lead->email using $this->data['subject'] and $this->data['content']
                 // You can use Laravel's Mail facade or any email-sending library of your choice
-                Utility::sendEmailTemplate('email_marketing', [$lead->email], $lead->name);
+                
+                $arr = [
+                    'student_name' => $lead->name,
+                    'sender' => \Auth::user()->name
+                    ];
+                Utility::sendEmailTemplate('email_marketing', [$lead->email], $arr);
 
                 // Log a message to the console indicating that the email was sent
                 $message = "Email sent successfully to {$lead->name} ({$lead->email})";
@@ -3859,5 +3865,11 @@ class LeadController extends Controller
                 \Illuminate\Support\Facades\Log::error("Failed to send email to {$lead->name} ({$lead->email}): {$e->getMessage()}");
             }
         }
+        
+        
+        return json_encode([
+                    'status' => 'success',
+                    'message' => 'Email Sent successfully.'
+                    ]);
     }
 }

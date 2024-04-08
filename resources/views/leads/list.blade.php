@@ -883,6 +883,8 @@ if (isset($lead->is_active) && $lead->is_active) {
             },
             success: function(response) {
                 console.log(response);
+                response = JSON.parse(response);
+                show_toastr('success', response.message);
                 // Handle success response
             },
             error: function(xhr, status, error) {
@@ -1539,7 +1541,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                     type: 'GET',
                     url: '{{ route('filter-branch-users') }}',
                     data: {
-                        id: id
+                        id: id,
+                        page: 'lead_list'
                     },
                     success: function(data){
                         data = JSON.parse(data);
