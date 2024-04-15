@@ -419,7 +419,7 @@ class UserController extends Controller
                 //     }
                 // }
 
-                return redirect()->route('users.index')->with('success', __('User successfully deleted .'));
+                return back()->with('success', __('User successfully deleted .'));
             } else {
                 return redirect()->back()->with('error', __('Something is wrong.'));
             }
@@ -1637,6 +1637,14 @@ class UserController extends Controller
         $filters = $this->notificationFilters();
         $Notify=Notification::with('Notifier')->whereHas('Notifier', function ($query) { $query->whereNotNull('id'); });
 
+        if (\Auth::user()->type != 'super admin') {
+            $Notify->where('user_id', \Auth::id());
+        }
+
+        if (!empty($request->id)) {
+            $id = substr($request->id, 0, -1);
+            $result = $Notify->where('id', 'like', "%$id%")->get();
+        }
 
         foreach ($filters as $column => $value) {
             if ($column === 'user_id') {
@@ -1652,6 +1660,7 @@ class UserController extends Controller
         }
 
         $users=Notification::with('Notifier')->select('user_id')->distinct()->whereHas('Notifier', function ($query) { $query->whereNotNull('id'); })->get();
+
 
         $total_records = $Notify->count();
         $Notifications = $Notify->skip($start)->take($num_results_on_page)->get();

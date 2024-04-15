@@ -180,7 +180,7 @@ class LeadController extends Controller
         // Filters
         $filters = $this->leadsFilter();
 
-        if ($usr->can('manage lead') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
+        if ($usr->can('view lead') || $usr->can('manage lead') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
 
             if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
                 $pipeline = Pipeline::get();
@@ -609,7 +609,7 @@ class LeadController extends Controller
                             'lead_stage' => $stage->name,
 
                         ];
-                        
+
 
                         $resp = Utility::sendEmailTemplate('lead_assigned', [$usrEmail->id => $usrEmail->email], $leadAssignArr);
                         //$resp['is_success'] = true;
@@ -3850,7 +3850,7 @@ class LeadController extends Controller
             try {
                 // Send email to $lead->email using $this->data['subject'] and $this->data['content']
                 // You can use Laravel's Mail facade or any email-sending library of your choice
-                
+
                 $arr = [
                     'student_name' => $lead->name,
                     'sender' => \Auth::user()->name
@@ -3865,8 +3865,8 @@ class LeadController extends Controller
                 \Illuminate\Support\Facades\Log::error("Failed to send email to {$lead->name} ({$lead->email}): {$e->getMessage()}");
             }
         }
-        
-        
+
+
         return json_encode([
                     'status' => 'success',
                     'message' => 'Email Sent successfully.'

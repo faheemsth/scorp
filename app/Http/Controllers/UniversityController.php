@@ -11,7 +11,7 @@ use App\Models\Stage;
 use App\Models\University;
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Gate;
 class UniversityController extends Controller
 {
     /**
@@ -32,7 +32,7 @@ class UniversityController extends Controller
             $start = 0;
         }
 
-        if (\Auth::user()->type == 'super admin' || \Auth::user()->can('manage university')) {
+        if (\Auth::user()->type == 'super admin' || Gate::check('show university') || Gate::check('manage university')) {
 
             $universities = University::when(!empty($_GET['name']), function ($query) {
                 return $query->where('name', 'like', '%' . $_GET['name'] . '%');

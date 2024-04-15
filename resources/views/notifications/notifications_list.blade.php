@@ -233,7 +233,7 @@ $setting = \App\Models\Utility::colorset();
                                         }
 
                                     @endphp
-                                    <tr>
+                                    <tr class="<?php echo (!empty($_GET['id']) && $_GET['id'] == $task->id) ? 'bg-info' : ''; ?>">
                                         <td>
                                             <input type="checkbox" name="tasks[]" value="{{ $task->id }}"
                                                 class="sub-check">

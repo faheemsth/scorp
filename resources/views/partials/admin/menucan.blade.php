@@ -239,7 +239,8 @@ styl
                         <a class="collapse-item" style="color: white; font-size: 13px;" href="{{route('form_builder.index')}}">{{__('Form Builder')}}</a>
         </li> --}}
         @endcan
-        @can('manage university')
+        {{-- @can('manage university') --}}
+        @if (Gate::check('show university') || Gate::check('manage university'))
         <li class="emp nav-item {{ Request::route()->getName() == 'university.list' || Request::route()->getName() == 'university.index' || Request::route()->getName() == 'university.show' ? ' active' : '' }}">
             <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('university.index') }}">
                 <img src="{{ asset('assets/cs-theme/icons/Layer_1 (7).png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
@@ -247,7 +248,8 @@ styl
 
                 {{ __('Toolkit') }}</a>
         </li>
-        @endcan
+        @endif
+        {{-- @endcan --}}
         @can('manage courses')
         {{-- <li class=" {{ (Request::route()->getName() == 'course.list' || Request::route()->getName() == 'course.index' || Request::route()->getName() == 'course.show') ? ' active' : '' }}">
         <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('course.index') }}">{{__('Courses')}}</a>
