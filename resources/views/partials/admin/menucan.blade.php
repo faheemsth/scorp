@@ -139,11 +139,17 @@ styl
         @endcan
         {{-- //// --}}
         <!--------------------- Start CRM ----------------------------------->
-        @can('show crm dashboard')
+        {{-- @can('show crm dashboard') --}}
         @if (Gate::check('manage lead') ||
         Gate::check('manage task') ||
+        Gate::check('show crm dashboard') ||
         Gate::check('manage deal') ||
         Gate::check('manage application') ||
+
+        Gate::check('view application') ||
+        Gate::check('view lead') ||
+        Gate::check('view deal') ||
+
         Gate::check('manage client') ||
         Gate::check('manage courses') ||
         Gate::check('manage university') ||
@@ -171,7 +177,8 @@ styl
                                   ? 'show'
                                   : '' }}">
 
-                        @can('manage task')
+
+                        @if (Gate::check('view task'))
                         <li class="emp nav-item {{ Request::route()->getName() == 'deals.get.user.tasks' ? ' active' : '' }}">
                             <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('deals.get.user.tasks') }}">
                                 <img src="{{ asset('assets/cs-theme/icons/to-do-list-13177 1.png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
@@ -179,8 +186,11 @@ styl
 
                                 {{ __('Tasks') }}</a>
                         </li>
-                        @endcan
-                        @can('manage lead')
+                        @endif
+
+
+
+                        @if (Gate::check('view lead'))
                         <li class="emp nav-item {{ Request::route()->getName() == 'leads.list' || Request::route()->getName() == 'leads.index' || Request::route()->getName() == 'leads.show' ? ' active' : '' }}">
                             <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('leads.list') }}">
                                 <img src="{{ asset('assets/cs-theme/icons/Layer_1.png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
@@ -188,16 +198,18 @@ styl
 
                                 {{ __('Leads') }}</a>
                         </li>
-                        @endcan
-                        @can('manage deal')
+                        @endif
+
+                        @if (Gate::check('view deal'))
                         <li class="emp nav-item {{ Request::route()->getName() == 'deals.list' || Request::route()->getName() == 'deals.index' || Request::route()->getName() == 'deals.show' ? ' active' : '' }}">
                             <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('deals.list') }}">
                                 <img src="{{ asset('assets/cs-theme/icons/edit-icon 1.png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
                                 <img src="{{ asset('assets/cs-theme/icons/admiblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
                                 Admissions</a>
                         </li>
-                        @endcan
-                        @can('manage application')
+                        @endif
+
+                        @if (Gate::check('view application'))
                         <li class="emp nav-item {{ Request::route()->getName() == 'applications.index' ? ' active' : '' }}">
                             <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('applications.index') }}">
                                 <img src="{{ asset('assets/cs-theme/icons/result-pass-icon 1.png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
@@ -205,8 +217,10 @@ styl
 
                                 Applications</a>
                         </li>
-                        @endcan
-                        @can('manage client')
+                        @endif
+
+
+                        @if (Gate::check('manage client'))
                         <li class="emp nav-item {{ Request::route()->getName() == 'clients.index' || Request::segment(1) == 'clients' || Request::route()->getName() == 'clients.edit' ? ' active' : '' }}">
                             <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('clients.index') }}">
                                 {{-- <img src="{{ asset('assets/cs-theme/icons/Layer_1 (1).png') }}"
@@ -218,7 +232,8 @@ styl
 
                                 {{ __('Contacts') }}</a>
                         </li>
-                        @endcan
+                        @endif
+
                         @can('manage form builder')
                         {{-- <li class=" {{ (Request::segment(1) == 'form_builder' || Request::segment(1) == 'form_response')?'active open':''}}">
                         <a class="collapse-item" style="color: white; font-size: 13px;" href="{{route('form_builder.index')}}">{{__('Form Builder')}}</a>
@@ -257,7 +272,7 @@ styl
 </div>
 </li>
 @endif
-@endcan
+{{-- @endcan --}}
 
 
 @if (Gate::check('manage user') ||
