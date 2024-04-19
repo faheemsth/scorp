@@ -90,6 +90,15 @@
         color:#313949 !important;
     }
 </style>
+<style>
+    .indivbtn {
+        position: absolute;
+        bottom: 6px;
+        right: 10px;
+        z-index: 1000;
+    }
+</style>
+
 <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
 <div class="container-fluid ps-2 mx-0 pe-0">
     <div class="row">
@@ -147,7 +156,7 @@
                         <i class="ti ti-bookmark"></i>
                     </a>
 
-                    
+
 
                     @can('edit lead')
                     <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}"
@@ -172,7 +181,7 @@
 
                         {!! Form::close() !!}
                     @endcan
-                    
+
 
                 </div>
             </div>
@@ -213,9 +222,9 @@
                         </h2>
 
                         <div class="">
-                        @php 
+                        @php
                             $lead_tags = \App\Models\LeadTag::where('lead_id', $lead->id)->get();
-                        @endphp 
+                        @endphp
 
                         @forelse($lead_tags as $tag)
                             <span class="badge  text-white" style="background-color:#cd9835; margin-top: 1rem; margin-right: 1rem;">{{ $tag->tag }}</span>
@@ -883,6 +892,45 @@
 
                                 <div class="row">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                     <div id="discussion_note">
                                         <div class="row">
 
@@ -897,7 +945,6 @@
                                                                 {{ __('Notes') }}
                                                             </button>
                                                         </h2>
-
                                                         <div id="panelsStayOpen-collapsenote"
                                                             class="accordion-collapse collapse show"
                                                             aria-labelledby="panelsStayOpen-headingnote">
@@ -907,161 +954,80 @@
                                                                 <div class="">
 
                                                                     <div class="col-12">
-                                                                        <div class="card">
-                                                                            <textarea name="" id="" cols="95" class="form-control @can('create notes') textareaClass @endcan " readonly style="cursor: pointer"></textarea>
-                                                                            <span id="textareaID" style="display: none;">
-                                                                                <div class="card-header px-0 pt-0"
-                                                                                    style="padding-bottom: 18px;">
-                                                                                    {{ Form::model($lead, array('route' => array('leads.notes.store', $lead->id), 'method' => 'POST', 'id' => 'create-notes' ,'style' => 'z-index: 9999999 !important;')) }}
-                                                                                    <textarea name="description" id="description" class="form form-control" cols="10" rows="1"></textarea>
-                                                                                    <input type="hidden" id="note_id" name="note_id">
-                                                                                    <div class="d-flex justify-content-end mt-2">
-                                                                                        <button type="button" id="cancelNote" class="btn btn-secondary mx-2">Cancel</button>
-                                                                                        <button type="submit" class="btn btn-secondary">Save</button>
-                                                                                    </div>
-                                                                                    {{ Form::close() }}
+
+
+                                                                        <div class="card position-relative">
+                                                                            {{ Form::model($lead, array('route' => array('leads.notes.store', $lead->id), 'method' => 'POST', 'id' => 'create-notes' ,'style' => 'z-index: 9999999 !important;')) }}
+                                                                            <textarea class="form-control" style="height: 120px;" name="description" id="description"
+                                                                                placeholder="Click here add your Notes Comments..."></textarea>
+                                                                            <input type="hidden" id="id" value="{{ $lead->id }}" name="id">
+                                                                            <div class="row justify-content-end indivbtn">
+                                                                                <div class="col-auto px-0">
+                                                                                    <button class="btn  btn-outline-dark text-dark"
+                                                                                        id="cancelDiscussion">Cancel</button>
                                                                                 </div>
-                                                                            </span>
-                                                                            <!-- <div class="card-header "
-                                                                              >
-                                                                                <div class="d-flex justify-content-end">
-                                                                                    <div class="float-end">
-                                                                                        @can('create notes')
-                                                                                            <a data-size="lg"
-                                                                                                data-url="{{ route('leads.notes.create', $lead->id) }}"
-                                                                                                data-ajax-popup="true"
-                                                                                                data-bs-toggle="tooltip"
-                                                                                                title="{{ __('Add Message') }}"
-                                                                                                class="btn px-2 text-white"
-                                                                                                style="background-color: #313949;">
-                                                                                                <i class="ti ti-plus"></i>
-                                                                                            </a>
-                                                                                        @endcan
-                                                                                    </div>
+                                                                                <div class="col-auto ">
+                                                                                    <button class="btn btn-dark text-white"
+                                                                                        id="SaveDiscussion">Save</button>
                                                                                 </div>
-                                                                            </div> -->
-                                                                            <div class="card-body px-0 py-0">
+                                                                            </div>
+                                                                            {{ Form::close() }}
+                                                                        </div>
+                                                                        <div class="card-body px-0 py-0">
                                                                             @php
                                                                                 $notes = \App\Models\LeadNote::where('lead_id', $lead->id)
                                                                                     ->orderBy('created_at', 'DESC')
                                                                                     ->get();
                                                                             @endphp
-                                                                                <ul class="list-group list-group-flush mt-2 note-tbody">
+                                                                                <span class="list-group list-group-flush mt-2 note-tbody">
 
                                                                                 @foreach ($notes as $note)
 
 
-                                                                                    <li class="list-group-item px-3 pb-0"
-                                                                                        id="lihover">
+                                                                                <div
+                                                                                style="border-top:1px solid black;border-bottom:1px solid black ">
+                                                                                <div class="row my-2 justify-content-between px-4">
+                                                                                    <div class="col-8">
+                                                                                        <div class="row align-items-center">
+                                                                                            {{-- <div class="col-2 text-center">
 
-                                                                                        <div class="d-block d-sm-flex align-items-start">
-                                                                                            <div class="w-100">
-                                                                                                <div
-                                                                                                    class="d-flex align-items-center justify-content-between w-100">
-                                                                                                    <div class="mb-3 mb-sm-0 w-50 pb-3">
-                                                                                                        <p class="mb-0">
-                                                                                                            {{ $note->description }}
-                                                                                                        </p>
-                                                                                                        <span
-                                                                                                            class="text-muted text-sm">{{ $note->created_at }}
-                                                                                                        </span><br>
-                                                                                                        <span
-                                                                                                            class="text-muted text-sm"><i class="step__icon fa fa-user me-2" aria-hidden="true"></i>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
-                                                                                                        </span>
-                                                                                                    </div>
+                                                                                            </div> --}}
+                                                                                            <div class="col-8">
+                                                                                                <h5 class="mb-0">
+                                                                                                    {{ \App\Models\User::where('id', $note->created_by)->first()->name }}</h5>
+                                                                                                <p class="mb-0">{{ optional(App\models\User::find($note->created_by))->type }}</p>
 
-                                                                                                    <style>
-                                                                                                        #editable {
-                                                                                                            display: none;
-                                                                                                        }
-
-                                                                                                        #lihover:hover #editable {
-                                                                                                            display: flex;
-                                                                                                        }
-                                                                                                    </style>
-                                                                                                    <div class="d-flex gap-3"
-                                                                                                        id="dellhover">
-                                                                                                        <i class="ti ti-pencil textareaClassedit"
-                                                                                                            data-note="{{ $note->description }}"
-                                                                                                            data-note-id="{{ $note->id }}"
-                                                                                                            id="editable"
-                                                                                                            style="font-size: 20px;cursor:pointer;"></i>
-                                                                                                        <script></script>
-                                                                                                        <i class="ti ti-trash delete-notes"
-                                                                                                            id="editable"
-                                                                                                            data-note-id="{{ $note->id }}"
-                                                                                                            style="font-size: 20px;cursor:pointer;"></i>
-                                                                                                    </div>
-                                                                                                </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </li>
+                                                                                    </div>
+                                                                                    <div class="col-4 text-end">
+                                                                                        @php
+                                                                                        $dateTime = new DateTime($note->created_at);
+                                                                                    @endphp
+                                                                                    <p>{{ $dateTime->format('Y-m-d H:i:s') }}</p>
+                                                                                    </div>
+                                                                                    <div class="col-12 my-2">
+                                                                                        <p>{{ $note->description }}</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="d-flex gap-1 justify-content-end pb-2 px-3" id="dellhover">
+                                                                                    <div class="btn btn-outline-dark text-dark textareaClassedit"
+                                                                                        data-note="{{ $note->description }}"
+                                                                                        data-note-id="{{ $note->id }}"
+                                                                                        id="editable"
+                                                                                        style="font-size: ;">Edit</div>
+
+                                                                                    <div class="delete-notes btn btn-dark  text-white" id="editable"
+                                                                                        style="font-size: ;"
+                                                                                        data-note-id="{{ $note->id }}">Delete</div>
+                                                                                </div>
+
+                                                                            </div>
                                                                                 @endforeach
 
-                                                                                </ul>
-                                                                               {{-- <table class="table">
-                                                                                    <thead class="table-bordered">
-                                                                                        <tr>
-                                                                                            <!-- <th scope="col">Title</th> -->
-                                                                                            <th scope="col">Description
-                                                                                            </th>
-                                                                                            <th scope="col">Date Added
-                                                                                            </th>
-                                                                                            <th scope="col">Added By
-                                                                                            </th>
-                                                                                            <th scope="col">Action</th>
+                                                                                </span>
 
-                                                                                        </tr>
-                                                                                    </thead>
-                                                                                    <tbody class="notes-tbody">
-
-
-                                                                                        @forelse($notes as $note)
-                                                                                            <tr>
-
-
-                                                                                                <!-- <td>{{ $note->title }}
-                                                                                                </td> -->
-                                                                                                <td
-                                                                                                    style="white-space: normal;">
-                                                                                                    {{ $note->description }}
-                                                                                                </td>
-                                                                                                <td>{{ $note->created_at }}
-                                                                                                </td>
-                                                                                                <td>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
-                                                                                                </td>
-                                                                                                <td
-                                                                                                    style="text-align: -webkit-center;">
-                                                                                                    @can('edit notes')
-                                                                                                        <a data-url="{{ route('leads.notes.edit', $note->id) }}"
-                                                                                                            data-ajax-popup="true"
-                                                                                                            data-bs-toggle="tooltip"
-                                                                                                            title="{{ __('Drive Link') }}"
-                                                                                                            class="btn btn-sm text-white mx-2"
-                                                                                                            style="background-color: #313949;">
-                                                                                                            <i
-                                                                                                                class="ti ti-pencil "></i>
-                                                                                                        </a>
-                                                                                                    @endcan
-                                                                                                    @can('delete notes')
-                                                                                                        <a href="javascript:void(0)"
-                                                                                                            class="btn btn-sm text-white"
-                                                                                                            data-note-id="{{ $note->id }}"
-                                                                                                            style="background-color: #313949;">
-                                                                                                            <i
-                                                                                                                class="ti ti-trash "></i>
-                                                                                                        </a>
-                                                                                                    @endcan
-                                                                                                </td>
-
-                                                                                            </tr>
-                                                                                        @empty
-                                                                                        @endforelse
-
-                                                                                    </tbody>
-                                                                                </table> --}}
                                                                             </div>
-                                                                        </div>
                                                                     </div>
                                                                 </div>
 

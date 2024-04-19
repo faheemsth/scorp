@@ -2774,8 +2774,12 @@ class DealController extends Controller
         if (isset($_GET['due_date']) && !empty($_GET['due_date'])) {
             $filters['due_date'] = $_GET['due_date'];
         }
-        if (isset($_GET['status']) && !empty($_GET['status'])) {
-            $filters['status'] = $_GET['status'];
+        if (isset($_GET['status']) && $_GET['status'] !== '') {
+            if ($_GET['status'] != '0') {
+                $filters['status'] = $_GET['status'];
+            } else {
+                $filters['status'] = 0;
+            }
         }
 
         if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {

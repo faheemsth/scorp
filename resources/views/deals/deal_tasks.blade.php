@@ -819,6 +819,7 @@ $setting = \App\Models\Utility::colorset();
         });
     }
 
+
     $(document).on("submit", "#taskDiscussion", function(e) {
         e.preventDefault();
         var formData = $(this).serialize();
@@ -826,7 +827,6 @@ $setting = \App\Models\Utility::colorset();
 
         $(".create-discussion-btn").val('Processing...');
         $('.create-discussion-btn').attr('disabled', 'disabled');
-
         $.ajax({
             type: "POST",
             url: "/tasks/" + id + "/discussions",
@@ -835,7 +835,7 @@ $setting = \App\Models\Utility::colorset();
                 data = JSON.parse(data);
 
                 console.log(data);
-
+                $('#taskDiscussionInput').val('');
                 if (data.status == 'success') {
                     show_toastr('Success', data.message, 'success');
                     $('#commonModal').modal('hide');
