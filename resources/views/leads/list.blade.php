@@ -363,7 +363,9 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                 <select class="form form-control select2 selectTage" name="tagid" id="tagSelect" style="width: 95%;">
                                                     <option value="">Select Tag</option>
                                                     @foreach ($tags as $key => $tag)
+                                                        @if (!empty($tag))
                                                         <option value="{{ $tag }}" <?= isset($_GET['tag']) && $key == $_GET['tag'] ? 'selected' : '' ?> class="">{{ $tag }}</option>
+                                                        @endif
                                                     @endforeach
                                                     <option value="other">Other</option>
                                                 </select>
@@ -1760,7 +1762,7 @@ function deleteTage()
             // Generate options HTML by iterating over object keys
             var optionsHTML = '';
             for (var key in selectOptions) {
-                if (selectOptions.hasOwnProperty(key)) {
+                if (selectOptions.hasOwnProperty(key) && key.trim() !== '') {
                     optionsHTML += `<option value="${key}" ${tagName === key ? 'selected' : ''}>${key}</option>`;
                 }
             }
