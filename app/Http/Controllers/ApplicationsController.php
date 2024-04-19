@@ -52,7 +52,7 @@ class ApplicationsController extends Controller
         if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
             $filters['branch_id'] = $_GET['branch_id'];
         }
-        
+
         if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
             $filters['created_at_from'] = $_GET['created_at_from'];
         }
@@ -74,7 +74,7 @@ class ApplicationsController extends Controller
 
         //////////////pagination calculation
         $start = 0;
-        $num_results_on_page = 25;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
             $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -116,7 +116,7 @@ class ApplicationsController extends Controller
             //     $app_query->join('deals', 'deals.id', 'deal_applications.deal_id')->whereIn('deal_applications.brand_id', $brand_ids);
             // }
 
-            
+
 
 
             $filters = $this->ApplicationFilters();
@@ -162,7 +162,7 @@ class ApplicationsController extends Controller
 
             $universities = University::get()->pluck('name', 'id')->toArray();
             $stages = Stage::orderBy('order', 'ASC')->get()->pluck('name', 'id')->toArray();
-    
+
             $brands = User::where('type', 'company')->get();
             $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'applications')->get();
 

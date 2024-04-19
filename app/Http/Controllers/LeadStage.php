@@ -16,7 +16,7 @@ class LeadStage extends Model
     public function lead()
     {
         $start = 0;
-        $num_results_on_page = 50;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
             $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -63,7 +63,7 @@ class LeadStage extends Model
 
     public function lead_count(){
         $start = 0;
-        $num_results_on_page = 50;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
             $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;

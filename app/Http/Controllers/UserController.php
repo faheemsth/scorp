@@ -38,7 +38,7 @@ class UserController extends Controller
     {
         $user = \Auth::user();
 
-        $num_results_on_page = 25;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
@@ -689,7 +689,7 @@ class UserController extends Controller
     {
 
         $user = \Auth::user();
-        $num_results_on_page = 25;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
@@ -1626,7 +1626,7 @@ class UserController extends Controller
     public function notifications(Request $request)
     {
         $start = 0;
-        $num_results_on_page = 25;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
             $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;

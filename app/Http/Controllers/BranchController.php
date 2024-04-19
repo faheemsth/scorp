@@ -15,7 +15,7 @@ class BranchController extends Controller
     {
         if(\Auth::user()->can('manage branch'))
         {
-        $num_results_on_page = 25;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
@@ -59,14 +59,14 @@ class BranchController extends Controller
             ///Filter Data
             if(isset($_GET['brand_id']) && !empty($_GET['brand_id'])){
                 $branch_query->where('brands', $_GET['brand_id']);
-            }   
+            }
 
             if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
                 $branch_query->where('region_id', $_GET['region_id']);
             }
 
             if(isset($_GET['id']) && !empty($_GET['branch_id'])){
-                
+
             }
 
 
@@ -131,7 +131,7 @@ class BranchController extends Controller
         $brands = $filter['brands'];
         $regions = $filter['regions'];
         $branches = $filter['branches'];
-        
+
         if(\Auth::user()->can('create branch'))
         {
             return view('branch.create',compact('branchmanager','regions', 'brands'));
@@ -209,11 +209,11 @@ class BranchController extends Controller
       //  $region = Region::where('id', $branch->region_id)->first();
 
     //    $brands = User::where('id',$branch->brands)->where('type', 'company')->pluck('name', 'id')->toArray();
-        
+
         $filter = BrandsRegionsBranchesForEdit($branch->brands, $branch->region_id, 0);
         $brands = $filter['brands'];
         $regions = $filter['regions'];
-        
+
         if(\Auth::user()->can('edit branch'))
         {
             // if($branch->created_by == \Auth::user()->creatorId())
@@ -367,7 +367,7 @@ class BranchController extends Controller
 
     public function download(){
         $branch_query = Branch::select(['branches.*']);
-       
+
 
             if(\Auth::user()->type == 'super admin'){
            }else if(\Auth::user()->type == 'company'){

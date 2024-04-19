@@ -80,7 +80,7 @@ $setting = \App\Models\Utility::colorset();
                     border: none !important;
                     outline:none !important;
                 }
-   
+
     .filbar .form-control:focus{
                     border: 1px solid rgb(209, 209, 209) !important;
                 }
@@ -105,38 +105,63 @@ $setting = \App\Models\Utility::colorset();
         <div class="card my-card">
             <div class="card-body">
                 <div class="row align-items-center ">
-                    <div class="col-12 col-md-4 pb-2">
-                        <p class="mb-0 pb-0 ps-1">Tasks</p>
-                        <div class="dropdown ">
-                            <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                ALL TASKS
-                            </button>
-                            @if(sizeof($saved_filters) > 0)
-                            <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton1">
+                    <div class="col-12 col-md-4 pb-2 d-flex">
+                        <span>
+                            <p class="mb-0 pb-0 ps-1">Tasks</p>
+                            <div class="dropdown ">
+                                <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ALL TASKS
+                                </button>
+                                @if(sizeof($saved_filters) > 0)
+                                <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton1">
 
-                                @foreach($saved_filters as $filter)
-                                <li class="d-flex align-items-center justify-content-between ps-2">
-                                    <div class="col-10">
-                                        <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
-                                        <span class="text-dark"> ({{$filter->count}})</span>
-                                    </div>
-                                    <ul class="w-25" style="list-style: none;">
-                                        <li class="fil fw-bolder">
-                                            <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
-                                            <ul class="submenu" style="border: 1px solid #e9e9e9;
-                                            box-shadow: 0px 0px 1px #e9e9e9;">
-                                                <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name?>', <?= $filter->id ?>)">Rename</a></li>
-                                                <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
+                                    @foreach($saved_filters as $filter)
+                                    <li class="d-flex align-items-center justify-content-between ps-2">
+                                        <div class="col-10">
+                                            <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                            <span class="text-dark"> ({{$filter->count}})</span>
+                                        </div>
+                                        <ul class="w-25" style="list-style: none;">
+                                            <li class="fil fw-bolder">
+                                                <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                                <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                                box-shadow: 0px 0px 1px #e9e9e9;">
+                                                    <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name?>', <?= $filter->id ?>)">Rename</a></li>
+                                                    <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
 
-                                </li>
-                                @endforeach
+                                    </li>
+                                    @endforeach
 
-                            </ul>
-                            @endif
-                        </div>
+                                </ul>
+                                @endif
+                            </div>
+                        </span>
+                        <span class="ml-3">
+                            <p class="mb-0 pb-0 ps-1">Limit</p>
+                            <form action="{{ url('deals/get-user-tasks') }}" method="GET" id="paginationForm">
+                                <input type="hidden" name="num_results_on_page" id="num_results_on_page" value="{{ $_GET['num_results_on_page'] ?? '' }}">
+                                <input type="hidden" name="page" id="page" value="{{ $_GET['page'] ?? 1 }}">
+                                <select name="perPage" onchange="submitForm()" style="width: 100px; margin-right: 1rem;border: 1px solid lightgray;border-radius: 1px;padding: 2.5px 5px;">
+                                    <option value="50" {{ Request::get('perPage') == 50 || Request::get('num_results_on_page') == 50 ? 'selected' : '' }}>50</option>
+                                    <option value="100" {{ Request::get('perPage') == 100 || Request::get('num_results_on_page') == 100 ? 'selected' : '' }}>100</option>
+                                    <option value="150" {{ Request::get('perPage') == 150 || Request::get('num_results_on_page') == 150 ? 'selected' : '' }}>150</option>
+                                    <option value="200" {{ Request::get('perPage') == 200 || Request::get('num_results_on_page') == 200 ? 'selected' : '' }}>200</option>
+                                </select>
+                            </form>
+
+                            <script>
+                                function submitForm() {
+                                    var selectValue = document.querySelector('select[name="perPage"]').value;
+                                    document.getElementById("num_results_on_page").value = selectValue;
+                                    document.getElementById("page").value = {{ $_GET['page'] ?? 1 }};
+                                    document.getElementById("paginationForm").submit();
+                                }
+                            </script>
+
+                        </span>
                     </div>
 
 
@@ -179,10 +204,15 @@ $setting = \App\Models\Utility::colorset();
                     </div>
                 </div>
 
-                <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+                <div class="filter-data px-3" id="filter-show"
+                <?= isset($_GET) && !empty($_GET) && empty($_GET['perPage']) ? '' : 'style="display: none;"' ?>>
                     <form action="/deals/get-user-tasks" method="GET" class="">
+                        <input type="hidden" name="assigned_by_me" value="{{ $_GET['assigned_by_me'] ?? '' }}">
+                        @if (!empty($_GET['num_results_on_page']))
+                          <input type="hidden" name="num_results_on_page" id="num_results_on_page" value="{{ $_GET['num_results_on_page'] }}">
+                        @endif
 
-
+                        <input type="hidden" name="page" id="page" value="{{ $_GET['page'] ?? 1 }}">
                         <div class="row my-3 ">
                             @php
                             $type = \Auth::user()->type;
@@ -238,7 +268,7 @@ $setting = \App\Models\Utility::colorset();
                                     </div>
                                 @endif
 
-                                
+
                                 <div class="col-md-3 mt-2"> <label for="">Assigned To</label>
                                     <div class="" id="assign_to_div">
                                         <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
@@ -267,6 +297,7 @@ $setting = \App\Models\Utility::colorset();
                                         <option value="">Select Status</option>
                                         <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Completed</option>
                                         <option value="0" <?= isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : '' ?>>On Going</option>
+                                        <option value="2" <?= isset($_GET['status']) && $_GET['status'] == '2' ? 'selected' : '' ?>>Overdue</option>
                                     </select>
                                 </div>
 
@@ -290,6 +321,11 @@ $setting = \App\Models\Utility::colorset();
                                 </div>
 
                                 <div class="col-md-4 mt-4 pt-2 d-flex align-items-end">
+                                    @if (!empty($_GET['assigned_by_me']))
+                                    <a href="/deals/get-user-tasks?<?php echo isset($_GET['created_at_from']) ? 'created_at_from=' . $_GET['created_at_from'] : ''; ?><?php echo isset($_GET['brand']) ? '&brand=' . $_GET['brand'] : ''; ?><?php echo isset($_GET['region_id']) ? '&region_id=' . $_GET['region_id'] : ''; ?><?php echo isset($_GET['branch_id']) ? '&branch_id=' . $_GET['branch_id'] : ''; ?><?php echo isset($_GET['due_date']) ? '&due_date=' . $_GET['due_date'] : ''; ?><?php echo isset($_GET['created_at_to']) ? '&created_at_to=' . $_GET['created_at_to'] : ''; ?><?php echo isset($_GET['lead_assgigned_user']) ? '&lead_assgigned_user=' . $_GET['lead_assgigned_user'] : ''; ?>" data-bs-toggle="tooltip" title="{{__('Assigned By Me')}}" class="btn form-btn mr-2 px-2 py-2 btn-danger" style="color:white;">Reset Assigned By Me</a>
+                                    @else
+                                    <a href="/deals/get-user-tasks?assigned_by_me=true<?php echo isset($_GET['created_at_from']) ? '&created_at_from=' . $_GET['created_at_from'] : ''; ?><?php echo isset($_GET['brand']) ? '&brand=' . $_GET['brand'] : ''; ?><?php echo isset($_GET['region_id']) ? '&region_id=' . $_GET['region_id'] : ''; ?><?php echo isset($_GET['branch_id']) ? '&branch_id=' . $_GET['branch_id'] : ''; ?><?php echo isset($_GET['due_date']) ? '&due_date=' . $_GET['due_date'] : ''; ?><?php echo isset($_GET['created_at_to']) ? '&created_at_to=' . $_GET['created_at_to'] : ''; ?><?php echo isset($_GET['lead_assgigned_user']) ? '&lead_assgigned_user=' . $_GET['lead_assgigned_user'] : ''; ?>" data-bs-toggle="tooltip" title="{{__('Assigned By Me')}}" class="btn form-btn mr-2 px-2 py-2 btn-dark" style="color:white;">Assigned By Me</a>
+                                    @endif
                                     <input type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}" class="btn form-btn me-2 btn-dark px-2 py-2" >
                                     <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn mr-2 px-2 py-2 btn-dark" style="color:white;">Reset</a>
                                     <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn mr-2 px-2 py-2 btn-dark" style=" color:white;display:none;">Save Filter</a>
@@ -405,10 +441,10 @@ $setting = \App\Models\Utility::colorset();
                                         @endif
                                         @endif
 
-                                        
+
                                     </td>
 
-                                    
+
 
                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         @if ($task->status == 0)
@@ -424,12 +460,12 @@ $setting = \App\Models\Utility::colorset();
                                             <i class="fa-solid fa-check d-flex justify-content-center align-items-center" style="font-size: 18px;"></i>
                                         </button>
 
-                                        @else 
+                                        @else
                                         <span class="badge text-white" style="background: green; " >{{ __('Completed') }}</span>
                                         @endif
                                     </td>
 
-                                    
+
                                 </tr>
                                 @empty
                                 <tr>
@@ -439,7 +475,7 @@ $setting = \App\Models\Utility::colorset();
                         </tbody>
                     </table>
                 </div>
-                
+
                 <div class="pagination_div">
                 @if ($total_records > 0)
                 @include('layouts.pagination', [
@@ -1164,4 +1200,5 @@ $setting = \App\Models\Utility::colorset();
         }
 
 </script>
+
 @endpush

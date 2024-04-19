@@ -801,6 +801,7 @@ Route::post('/deals/{id}/notes', [DealController::class, 'notesStore'])->name('d
 Route::get('/deals/{id}/notes-edit', [DealController::class, 'notesEdit'])->name('deals.notes.edit')->middleware(['auth', 'XSS']);
 Route::post('/deals/{id}/notes-update', [DealController::class, 'notesUpdate'])->name('deals.notes.update')->middleware(['auth', 'XSS']);
 Route::get('/deals/{id}/notes-delete', [DealController::class, 'notesDelete'])->name('deals.notes.delete')->middleware(['auth', 'XSS']);
+Route::get('/MassUpdate', [LeadController::class, 'MassUpdate'])->name('MassUpdate')->middleware(['auth', 'XSS']);
 
 
 
@@ -1878,3 +1879,6 @@ Route::get('/filter-branches', [RegionController::class, 'filterBranches'])->nam
 
 //////////////////////////////////////////////////Add Tags to Leads
 Route::post('/leads/tag', [LeadController::class, 'addTags'])->name('lead_tags');
+Route::get('/delete_tage', [LeadController::class, 'delete_tage'])->name('delete_tage');
+
+

@@ -59,7 +59,7 @@ class ClientController extends Controller
             $user    = \Auth::user();
 
             $start = 0;
-            $num_results_on_page = 25;
+            $num_results_on_page = env("RESULTS_ON_PAGE");
             if (isset($_GET['page'])) {
                 $page = $_GET['page'];
                 $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -74,11 +74,11 @@ class ClientController extends Controller
             if (!empty($_GET['name'])) {
                 $client_query->where('users.name', 'like', '%' . $_GET['name'] . '%');
             }
-            
+
             if (!empty($_GET['email'])) {
                 $client_query->where('users.email', 'like', '%' . $_GET['email'] . '%');
             }
-            
+
             if (isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
                 $client_query->where(function ($query) use ($g_search) {
@@ -89,14 +89,14 @@ class ClientController extends Controller
 
 
         $total_records = $client_query->count();
-       
+
          // Paginate the results
         $clients = $client_query
             ->orderBy('users.created_at', 'DESC')
             ->skip($start)
             ->take($num_results_on_page)
             ->get();
-       
+
 
             // $clients = User::where('created_by', '=', $user->creatorId())->where('type', '=', 'client')->skip($start)->take($num_results_on_page)->get();
 
@@ -109,7 +109,7 @@ class ClientController extends Controller
                 return json_encode([
                     'status' => 'success',
                     'html' => $html,
-                    'pagination_html' => $pagination_html 
+                    'pagination_html' => $pagination_html
                 ]);
             }
 
@@ -314,7 +314,7 @@ class ClientController extends Controller
 
     public function update(User $client, Request $request)
     {
-        
+
         if(\Auth::user()->can('edit client'))
         {
             // if($client->created_by == $user->creatorId())

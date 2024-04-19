@@ -73,7 +73,7 @@
                                     </select>
                                 </div>
                             </div>
-                            @else 
+                            @else
                             <div class="form-group row ">
                                 <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                     class="text-danger">*</span></label>
@@ -99,7 +99,7 @@
                                     \Auth::user()->can('level 1') ||
                                     \Auth::user()->can('level 2') ||
                                     \Auth::user()->can('level 3'))
-                        
+
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Region<span
                                         class="text-danger">*</span></label>
@@ -111,7 +111,7 @@
                                     </div>
                                 </div>
 
-                            @else 
+                            @else
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Region<span
                                         class="text-danger">*</span></label>
@@ -149,7 +149,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                            @else 
+                            @else
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Branch<span
                                         class="text-danger">*</span></label>
@@ -164,7 +164,7 @@
                                     </div>
                                 </div>
                             @endif
-                            
+
 
                             <div class="form-group row d-none">
                                 <label for="type" class="col-sm-3 col-form-label">Assign Type <span
@@ -298,7 +298,7 @@
                                     </label>
                                 <div class="col-sm-6">
                                     @if (isset($type) && !empty($type))
-                                        <select class="form form-control select2 related_type" disabled 
+                                        <select class="form form-control select2 related_type" disabled
                                             id="choices-multiple6" name="related_type">
                                             <option value="">Select type</option>
                                             <option value="organization"
@@ -313,7 +313,7 @@
                                         </select>
                                         <input type="hidden" value="{{ $type }}" name="related_type">
                                     @else
-                                        <select class="form form-control select2 related_type" id="choices-multiple6" 
+                                        <select class="form form-control select2 related_type" id="choices-multiple6"
                                             name="related_type">
                                             <option value="">Select type</option>
                                              <option value="organization"  {{ $type == 'organi' ? 'selected' : '' }} >
@@ -470,7 +470,7 @@ var BranchId = '';
         });
     }
 
-   
+
     // change brand for region
     $("#brands").on("change", function() {
         var id = $(this).val();
@@ -554,7 +554,7 @@ var BranchId = '';
                     openSidebar('/get-task-detail?task_id=' + data.task_id);
                     return false;
                 } else {
-                    show_toastr('Error', data.message, 'error');
+                    toastr.error(data.message);
                     $(".create-task-btn").val('Create');
                     $('.create-task-btn').removeAttr('disabled');
                 }
@@ -562,3 +562,6 @@ var BranchId = '';
         });
     });
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

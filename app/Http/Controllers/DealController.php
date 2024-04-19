@@ -275,7 +275,7 @@ class DealController extends Controller
         $comparePrice = '';
 
         $start = 0;
-        $num_results_on_page = 25;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
             $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -2792,7 +2792,12 @@ class DealController extends Controller
     {
 
         $start = 0;
-        $num_results_on_page = 25;
+        if(!empty($_GET['perPage']))
+        {
+        $num_results_on_page = $_GET['perPage'];
+        }else{
+            $num_results_on_page = env("RESULTS_ON_PAGE");
+        }
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
             $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -2836,7 +2841,11 @@ class DealController extends Controller
                 } elseif ($column == 'due_date') {
                     $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
                 }elseif ($column == 'status') {
-                    $tasks->where('status',$value);
+                    if($value == '2'){
+                        $tasks->where('status', 0)->whereDate('due_date', 'LIKE', '%' . substr(\Carbon\Carbon::now()->subDay()->format('Y-m-d'), 0, 10) . '%');
+                    }else{
+                        $tasks->where('status',$value);
+                    }
                 }elseif ($column == 'created_at_from') {
                     $tasks->whereDate('deal_tasks.created_at', '>=', $value);
                 }elseif ($column == 'created_at_to') {
@@ -2846,6 +2855,9 @@ class DealController extends Controller
 
             if(!isset($_GET['status'])){
                 $tasks->where('status', 0);
+            }
+            if (!empty($_GET['assigned_by_me']) && $_GET['assigned_by_me'] == true) {
+                $tasks->where('deal_tasks.created_by', \Auth::id());
             }
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {

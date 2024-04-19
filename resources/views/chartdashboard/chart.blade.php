@@ -211,7 +211,7 @@
                             {{ $_GET['datatype'] }} Chart
                         @else
                             Admission-Application Chart
-                        @endif 
+                        @endif
                     </h6>
                     <form action="" class="data-type-form">
                         @if(isset($_GET['brand_id']) && !empty($_GET['brand_id']))
@@ -242,45 +242,45 @@
                 <div class="card-body pe-0">
                     <div class="row mx-auto px-2">
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_visas)->total }}</a></h4>
-                            <a href="#" class="text-dark">Visas</a>
+                            <h4><a href="{!! url('deals/list?stages[]=7&stages[]=8&stages[]=9') !!}" class="text-dark">{{ json_decode($sub_chart_visas)->total }}</a></h4>
+                            <a href="{!! url('deals/list?stages[]=7&stages[]=8&stages[]=9') !!}" class="text-dark">Visas</a>
                             <div id="subchartvisas" style="width: 150px; height: 70px"></div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_deposit)->total }} </a></h4>
-                            <a href="#" class="text-dark">Deposit</a>
+                            <h4><a href="{!! url('deals/list?stages[]=4&stages[]=5&stages[]=6') !!}" class="text-dark">{{ json_decode($sub_chart_deposit)->total }} </a></h4>
+                            <a href="{!! url('deals/list?stages[]=4&stages[]=5&stages[]=6') !!}" class="text-dark">Deposit</a>
                             <div id="subchartdeposit" style="width: 150px; height: 70px"></div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_applications)->total }}</a></h4>
-                            <a href="#" class="text-dark">Applications</a>
+                            <h4><a href="{!! url('applications') !!}" class="text-dark">{{ json_decode($sub_chart_applications)->total }}</a></h4>
+                            <a href="{!! url('applications') !!}" class="text-dark">Applications</a>
                             <div id="subchartapplications" style="width: 150px; height: 70px"></div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_admissions)->total }}</a></h4>
-                            <a href="#" class="text-dark">Admissions</a>
+                            <h4><a href="{!! url('deals/list') !!}" class="text-dark">{{ json_decode($sub_chart_admissions)->total }}</a></h4>
+                            <a href="{!! url('deals/list') !!}" class="text-dark">Admissions</a>
                             <div id="subchartadmissions" style="width: 150px; height: 70px"></div>
                         </div>
                     </div>
                     <div class="row mx-auto px-2">
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_assignedleads)->total }}</a></h4>
-                            <a href="#" class="text-dark">Assigned Leads</a>
+                            <h4><a href="{!! url('leads/list?Assigned=true') !!}" class="text-dark">{{ json_decode($sub_chart_assignedleads)->total }}</a></h4>
+                            <a href="{!! url('leads/list?Assigned=true') !!}" class="text-dark">Assigned Leads</a>
                             <div id="subchartassignedleads" style="width: 150px; height: 70px"></div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_unassignedleads)->total }}</a></h4>
-                            <a href="#" class="text-dark">Unassigned Leads </a>
+                            <h4><a href="{!! url('leads/list?Unassigned=true') !!}" class="text-dark">{{ json_decode($sub_chart_unassignedleads)->total }}</a></h4>
+                            <a href="{!! url('leads/list?Unassigned=true') !!}" class="text-dark">Unassigned Leads </a>
                             <div id="subchartunassignedleads" style="width: 150px; height: 70px"></div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_qualifiedleads)->total }}</a></h4>
-                            <a href="#" class="text-dark">Qualified Leads</a>
+                            <h4><a href="{!! url('leads/list?stages[]=7') !!}" class="text-dark">{{ json_decode($sub_chart_qualifiedleads)->total }}</a></h4>
+                            <a href="{!! url('leads/list?stages[]=7') !!}" class="text-dark">Qualified Leads</a>
                             <div id="subchartqualifiedleads" style="width: 150px; height: 70px"></div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 col-xl-3">
-                            <h4><a href="#" class="text-dark">{{ json_decode($sub_chart_unqualifiedleads)->total }}</a></h4>
-                            <a href="#" class="text-dark">Unqualified Leads</a>
+                            <h4><a href="{!! url('leads/list?stages[]=6') !!}" class="text-dark">{{ json_decode($sub_chart_unqualifiedleads)->total }}</a></h4>
+                            <a href="{!! url('leads/list?stages[]=6') !!}" class="text-dark">Unqualified Leads</a>
                             <div id="subchartunqualifiedleads" style="width: 150px; height: 70px"></div>
                         </div>
                     </div>

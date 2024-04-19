@@ -14,7 +14,7 @@ class RegionController extends Controller
     public function index()
     {
 
-        $num_results_on_page = 25;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
@@ -140,13 +140,13 @@ class RegionController extends Controller
 
             //get region of the branch
             $regions = Region::select(['regions.id'])->join('branches', 'branches.region_id', '=', 'regions.id')->where('branches.id', $id)->pluck('id')->toArray();
-            
+
             $brand_ids = Region::select(['regions.brands'])->join('branches', 'branches.region_id', '=', 'regions.id')->where('branches.id', $id)->pluck('brands')->toArray();
 
-            //super admins 
+            //super admins
             $admins = User::whereIn('type', ['super admin'])->pluck('name', 'id')->toArray();
 
-            //project directors 
+            //project directors
             $project_directors = User::whereIn('type', ['Project Director', 'Project Manager'])->where('brand_id', $brand_ids)->pluck('name', 'id')->toArray();
 
             $regional_managers = User::where('type', 'Region Manager')->whereIn('region_id', $regions)->pluck('name', 'id')->toArray();
@@ -158,7 +158,7 @@ class RegionController extends Controller
                 ->toArray();
 
             $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="assigned_to" > <option value="">Select User</option> ';
-            
+
             foreach ($admins as $key => $user) {
                 $html .= '<option value="' . $key . '">' . $user . '</option> ';
             }
@@ -309,7 +309,7 @@ class RegionController extends Controller
 
     public function save(Request $request)
     {
-        
+
         // echo '<pre>';
         // print_r($request->full_number);
         // die();
