@@ -406,7 +406,12 @@
                                                                 <td class="td"
                                                                     style="padding-left: 20px; font-size: 14px;">
 
-                                                                    @php
+                                                                    <span
+                                                                    @if (!empty(\App\Models\Lead::where('id', $task->related_to)->first()))
+                                                                    style="cursor: pointer" onclick="openSidebar('/get-lead-detail?lead_id=<?= \App\Models\Lead::where('id', $task->related_to)->first()->id ?>')"
+                                                                    @endif
+                                                                    >
+                                                                        @php
 
                                                                         if ($task->related_type == 'organization') {
                                                                             echo optional(
@@ -428,6 +433,7 @@
                                                                             )->name;
                                                                         }
                                                                     @endphp
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -492,10 +498,10 @@
                                                                 placeholder="Click here add your Tasks Comments..." name="comment"></textarea>
                                                             <input type="hidden" id="id" name="id">
                                                             <div class="row justify-content-end indivbtn">
-                                                                <div class="col-auto px-0">
+                                                                {{-- <div class="col-auto px-0">
                                                                     <button class="btn  btn-outline-dark text-dark"
                                                                         id="cancelDiscussion">Cancel</button>
-                                                                </div>
+                                                                </div> --}}
                                                                 <div class="col-auto ">
                                                                     <button class="btn btn-dark text-white"
                                                                         id="SaveDiscussion">Save</button>
@@ -557,7 +563,7 @@
                                     </div>
 
 
-                                    <div class="accordion-item">
+                                    {{-- <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeytag">
                                             <button class="accordion-button p-2" type="button"
                                                 data-bs-toggle="collapse"
@@ -587,7 +593,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 

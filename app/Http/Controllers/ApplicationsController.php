@@ -486,7 +486,7 @@ class ApplicationsController extends Controller
         $note = ApplicationNote::where('id', $id)->first();
         $note->delete();
 
-        $notes = ApplicationNote::where('application_id', $request->application_id)->orderBy('created_at', 'DESC')->get();
+        $notes = ApplicationNote::where('application_id', $note->application_id)->orderBy('created_at', 'DESC')->get();
         $html = view('applications.getNotes', compact('notes'))->render();
 
 

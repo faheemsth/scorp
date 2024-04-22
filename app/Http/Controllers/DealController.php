@@ -2845,10 +2845,12 @@ class DealController extends Controller
                 } elseif ($column == 'due_date') {
                     $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
                 }elseif ($column == 'status') {
-                    if($value == '2'){
-                        $tasks->where('status', 0)->whereDate('due_date', 'LIKE', '%' . substr(\Carbon\Carbon::now()->subDay()->format('Y-m-d'), 0, 10) . '%');
-                    }else{
-                        $tasks->where('status',$value);
+                         if($value == '2'){
+                        $tasks->where('status', 0)->where('due_date', '<', now());
+                    }elseif($value == '1'){
+                        $tasks->where('status', 1);
+                    }elseif($value == '0'){
+                        $tasks->where('status', 0)->where('status', '!=', 1)->where('due_date', '>=', now());
                     }
                 }elseif ($column == 'created_at_from') {
                     $tasks->whereDate('deal_tasks.created_at', '>=', $value);

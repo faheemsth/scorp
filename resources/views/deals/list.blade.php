@@ -221,7 +221,7 @@
                     border: none !important;
                     outline:none !important;
                 }
-   
+
     .filbar .form-control:focus{
                     border: 1px solid rgb(209, 209, 209) !important;
                 }
@@ -400,7 +400,7 @@
                             @php
                             $saved_filters = App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'deals')->get();
                             @endphp
-                              
+
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     @if(sizeof($saved_filters) > 0)
                                         @foreach($saved_filters as $filter)
@@ -422,16 +422,16 @@
 
                                         </li>
                                         @endforeach
-                                        @else 
+                                        @else
                                         <li class="d-flex align-items-center justify-content-center ps-2">
                                             No Saved Filter Found.
                                         </li>
                                         @endif
 
                             </ul>
-                            
 
-                        
+
+
                     </div>
                 </div>
 
@@ -468,7 +468,7 @@
                         <a href="javascript:void(0)" class="btn p-2 filter-btn-show btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Filter" class="btn  btn-dark px-0">
                         <i class="ti ti-filter"></i>
                         </a>
-<!-- 
+<!--
                         <a  href="{{ url('/deals') }}" data-bs-toggle="tooltip" title="{{ __('Deals View') }}" class="btn px-2 btn-dark d-flex align-items-center">
                             {{-- <i class="ti ti-plus" style="font-size:18px"></i> --}}
                             <i class="fa-solid fa-border-all" style="font-size:18px"></i>
@@ -676,7 +676,7 @@
                                     <td>
                                         <input type="checkbox" name="deals[]" value="{{$deal->id}}" class="sub-check">
                                     </td>
-                                    
+
                                     <td style="width: 100px !important; ">
                                         <span style="cursor:pointer" class="deal-name hyper-link" @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})" @endcan data-deal-id="{{ $deal->id }}">
 
@@ -1399,6 +1399,7 @@
 
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
+                        $('.create-notes-btn').removeAttr('disabled');
                         $('#commonModal').modal('hide');
                         $('.note-body').html(data.html);
                         $('textarea[name="description"]').val('');
@@ -1433,6 +1434,7 @@
 
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
+                        $('.update-notes-btn').removeAttr('disabled');
                         $('#commonModal').modal('hide');
                         $('.note-body').html(data.html);
                         $('textarea[name="description"]').val('');
@@ -1638,7 +1640,7 @@
         });
 
         $(document).on("change", "#filter_branch_id, #branch_id", function() {
-    
+
             var id = $(this).val();
 
                 $.ajax({

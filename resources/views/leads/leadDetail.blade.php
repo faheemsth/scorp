@@ -962,10 +962,10 @@
                                                                                 placeholder="Click here add your Notes Comments..."></textarea>
                                                                             <input type="hidden" id="id" value="{{ $lead->id }}" name="id">
                                                                             <div class="row justify-content-end indivbtn">
-                                                                                <div class="col-auto px-0">
+                                                                                {{-- <div class="col-auto px-0">
                                                                                     <button class="btn  btn-outline-dark text-dark"
                                                                                         id="cancelDiscussion">Cancel</button>
-                                                                                </div>
+                                                                                </div> --}}
                                                                                 <div class="col-auto ">
                                                                                     <button class="btn btn-dark text-white"
                                                                                         id="SaveDiscussion">Save</button>
@@ -1041,7 +1041,7 @@
                                                     <!-- Open Accordion Item -->
                                                     <div class="accordion-item">
                                                         <h2 class="d-flex justify-between align-items-center accordion-header" id="panelsStayOpen-headingnote">
-                                                            <button class="accordion-button p-2" type="button"
+                                                            <button class="accordion-button px-2 py-3 " type="button"
                                                                 data-bs-toggle="collapse"
                                                                 data-bs-target="#panelsStayOpen-collapsetasks">
 
@@ -1068,17 +1068,11 @@
                                                         <div id="panelsStayOpen-collapsetasks"
                                                             class="accordion-collapse collapse show"
                                                             aria-labelledby="panelsStayOpen-headingnote">
-                                                            <div class="accordion-body">
-
-
+                                                            @if(!empty($tasks) && $tasks->count() > 0)
+                                                                <div class="accordion-body">
                                                                 <div class="">
                                                                     <div class="col-12">
                                                                         <div class="card">
-                                                                            <div class="card-header ">
-                                                                                <div class="d-flex justify-content-end">
-
-                                                                                </div>
-                                                                            </div>
                                                                             <div class="card-body px-0">
                                                                                 <ul class="list-group list-group-flush mt-2 notes-tbody">
                                                                                    @php
@@ -1250,8 +1244,8 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-
-                                                            </div>
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 @endcan

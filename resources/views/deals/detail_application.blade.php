@@ -306,7 +306,7 @@
                                     <div id="panelsStayOpen-collapsekeydesc" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkeydesc">
                                         <div class="accordion-body">
                                             <div style="max-height: 400px; overflow-y: auto;">
-                                                    @php 
+                                                    @php
                                                     $admissions = \App\Models\DealApplication::query()
                                                                 ->select('d.id','deal_applications.name', 'contact.passport_number as passport_number', 's.name as stage', \DB::raw("CONCAT(d.intake_month, d.intake_year) AS intake"), 'u.name as assigned_to')
                                                                 ->join('deals as d', 'deal_applications.deal_id', '=', 'd.id')
@@ -331,7 +331,7 @@
                                                             @forelse($admissions as $admission)
                                                                 <tr>
                                                                     <td>
-                                                                        
+
                                                                         <span style="cursor:pointer" class="deal-name hyper-link" @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $admission->id }})" @endcan data-deal-id="{{ $admission->id }}">
 
                                                                             @if (strlen($admission->name) > 40)
@@ -348,7 +348,7 @@
                                                                 </tr>
                                                             @empty
 
-                                                            @endforelse 
+                                                            @endforelse
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -360,7 +360,7 @@
                                 </div>
 
 
-                                    @can('manage_notes')
+                                    @can('manage notes')
                                     <div class="accordion" id="accordionPanelsStayOpenExample">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header" id="panelsStayOpen-headingnote">
@@ -370,24 +370,34 @@
                                             </h2>
                                             <div id="panelsStayOpen-collapsenote" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingnote">
                                                 <div class="accordion-body">
-                                                    <div class="card">
+
+
+                                                    <style>
+                                                        .indivbtn {
+                                                            position: absolute;
+                                                            bottom: 6px;
+                                                            right: 10px;
+                                                            z-index: 1000;
+                                                        }
+                                                    </style>
+
+                                                    <div class="card position-relative">
                                                         {{ Form::model($application, array('route' => array('application.notes.store', $application->id), 'method' => 'POST', 'id' => 'create-notes' ,'style' => 'z-index: 9999999 !important;')) }}
-                                                        <input type="hidden" id="application_id" value="{{ $application->id }}">
-                                                        <textarea name="note_description" id="note_description" cols="95" class="form-control @can('create_notes') textareaClass @endcan" readonly style="cursor: pointer"></textarea>
-                                                        <span id="textareaID" style="display: none;">
-                                                            <div class="card-header px-0 pt-0" style="padding-bottom: 18px;">
-
-                                                                <textarea name="description" id="description" class="form form-control" cols="10" rows="1"></textarea>
-                                                                <input type="hidden" id="note_id" name="note_id">
-                                                                <div class="d-flex justify-content-end mt-2">
-                                                                    <button type="button" id="cancelNote" class="btn btn-secondary mx-2">Cancel</button>
-                                                                    <button type="button" class="btn btn-secondary create-notes-btn">Save</button>
-                                                                </div>
-
-
+                                                        <textarea class="form-control" style="height: 120px;" name="description" id="note_description"
+                                                            placeholder="Click here add your Notes Comments..."></textarea>
+                                                        <input type="hidden" id="application_id" value="{{ $application->id }}" name="id">
+                                                        <input type="hidden" id="note_id"  name="note_id">
+                                                        <div class="row justify-content-end indivbtn">
+                                                            {{-- <div class="col-auto px-0">
+                                                                <button class="btn  btn-outline-dark text-dark"
+                                                                    id="cancelNote">Cancel</button>
+                                                            </div> --}}
+                                                            <div class="col-auto ">
+                                                                <button class="btn btn-dark text-white create-notes-btn">Save</button>
                                                             </div>
-                                                        </span>
+                                                        </div>
                                                         {{ Form::close() }}
+                                                    </div>
                                                         <div class="card-body px-0 py-0">
                                                             <ul class="list-group list-group-flush mt-2 note-tbody">
                                                                 @php
@@ -397,38 +407,32 @@
                                                                 @endphp
 
                                                                 @foreach ($notes as $note)
-                                                                <li class="list-group-item px-3" id="lihover">
-                                                                    <div class="d-block d-sm-flex align-items-start">
-                                                                        <div class="w-100">
-                                                                            <div class="d-flex align-items-center justify-content-between">
-                                                                                <div class="mb-3 mb-sm-0">
-                                                                                    <p class="">
-                                                                                        {{ $note->description }}
-                                                                                    </p>
-                                                                                    <span class="text-muted text-sm">{{ $note->created_at }}
-                                                                                    </span><br>
-                                                                                    <span class="text-muted text-sm"><i class="step__icon fa fa-user" aria-hidden="true"></i>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
-                                                                                    </span>
-                                                                                </div>
+                                                                <div style="border-top:1px solid black;border-bottom:1px solid black ">
+                                                                    <div class="row my-2 justify-content-between px-4">
+                                                                        <div class="col-8">
+                                                                            <div class="row align-items-center">
 
-                                                                                <style>
-                                                                                    #editable {
-                                                                                        display: none;
-                                                                                    }
+                                                                                <div class="col-8">
+                                                                                    <h4 class="mb-0">
+                                                                                        {{ \App\Models\User::where('id', $note->created_by)->first()->name }}</h4>
+                                                                                    <p class="mb-0">super admin</p>
 
-                                                                                    #lihover:hover #editable {
-                                                                                        display: flex;
-                                                                                    }
-                                                                                </style>
-                                                                                <div class="d-flex gap-3" id="dellhover">
-                                                                                    <i class="ti ti-pencil textareaClassedit" data-note="{{ $note->description }}" data-note-id="{{ $note->id }}" id="editable" style="font-size: 20px;cursor:pointer;"></i>
-                                                                                    <script></script>
-                                                                                    <i class="ti ti-trash delete-notes" id="editable" data-note-id="{{ $note->id }}" style="font-size: 20px;cursor:pointer;"></i>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
+                                                                        <div class="col-4 text-end">
+                                                                            <p>{{ $note->created_at }}</p>
+                                                                        </div>
+                                                                        <div class="col-12 my-2">
+                                                                            <p>{{ $note->description }}</p>
+                                                                        </div>
                                                                     </div>
-                                                                </li>
+                                                                    <div class="d-flex gap-1 justify-content-end pb-2 px-3" id="dellhover">
+                                                                        <div class="btn btn-outline-dark text-dark textareaClassedit" data-note="{{ $note->description }}" data-note-id="{{ $note->id }}" id="editable" style="font-size: ;">Edit</div>
+
+                                                                        <div class="delete-notes btn btn-dark  text-white" id="editable" style="font-size: ;" data-note-id="{{ $note->id }}">Delete</div>
+                                                                    </div>
+                                                                </div>
                                                                 @endforeach
                                                             </ul>
                                                         </div>
@@ -441,29 +445,187 @@
 
 
 
-                                    @can('manage_task')
+                                    @can('manage task')
                                     <div class="accordion" id="accordionTasks">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header" id="accordionTasks-heading">
-                                                <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#accordionTasks-collapse">
+                                                <button class="accordion-button px-2 py-3" type="button" data-bs-toggle="collapse" data-bs-target="#accordionTasks-collapse">
                                                     <span>{{ __('Tasks') }}</span>
-                                                    @can('create_task')
+                                                    @can('create task')
                                                     <a data-size="lg" data-url="/organiation/1/task?type=application&typeid={{$application->id}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Add Task') }}" class="btn p-2 text-white" style="background-color: #313949; color: #fff !important; position: absolute; right: 0;">
                                                         <i class="ti ti-plus"></i>
                                                     </a>
                                                     @endcan
                                                 </button>
                                             </h2>
-
+                                    @php $tasks = App\Models\DealTask::where(['related_to' => $application->id, 'related_type' => 'application'])->orderBy('status')->get(); @endphp
                                             <div id="accordionTasks-collapse" class="accordion-collapse collapse show" aria-labelledby="accordionTasks-heading">
                                                 <div class="accordion-body">
-                                                    <div class="card">
-                                                        <div class="card-body px-0">
-                                                            <ul class="list-group list-group-flush mt-2 notes-tbody">
-                                                                <!-- List of tasks will be displayed here -->
-                                                            </ul>
-                                                        </div>
-                                                    </div>
+                                                    <ul class="list-group list-group-flush mt-2 notes-tbody">
+                                                        @if (!empty($tasks) && $tasks->count( ) > 0)
+                                                        <div class="">
+                                                          <div class="col-12">
+                                                              <div class="card">
+                                                                  <div class="card-body px-0">
+                                                                      <ul class="list-group list-group-flush mt-2 notes-tbody">
+                                                                          @php
+                                                                          $section=1;
+                                                                          $section2=1;
+                                                                      @endphp
+                                                                          @foreach($tasks as $task)
+                                                                          @if ($task->status == 1)
+                                                                          <div class="ps-3 py-2 d-flex gap-2 align-items-baseline" style="border-bottom: 1px solid rgb(192, 192, 192);">
+                                                                              <i class="fa-regular fa-square-check" style="color: #000000;"></i>
+                                                                              <h6 class="fw-bold">
+                                                                                  {{ $section == 1 ? 'Closed Activity': '' }}
+                                                                              </h6>
+                                                                          </div>
+                                                                              <li class="list-group-item px-3"
+                                                                                  id="lihover">
+                                                                                  <div class="d-block d-sm-flex align-items-start">
+                                                                                      <div class="w-100">
+                                                                                          <div
+                                                                                              class="d-flex align-items-center justify-content-between">
+                                                                                              <div class="mb-3 mb-sm-0">
+                                                                                                  <h5 class="mb-0">
+                                                                                                      {{ $task->name }}
+
+                                                                                                  </h5>
+                                                                                                  <span
+                                                                                                      class="text-muted text-sm">
+                                                                                                      {{ $task->created_at }}
+                                                                                                  </span><br>
+                                                                                                  <span
+                                                                                                      class="text-muted text-sm"><i class="step__icon fa fa-user" aria-hidden="true"></i>
+                                                                                                      {{ \App\Models\User::where('id', $task->assigned_to)->first()->name }}
+
+                                                                                                      <span class="d-flex">
+                                                                                                          <div>Status</div>
+                                                                                                          <div class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }} ml-5">
+                                                                                                            {{ $task->status == 1 ? 'Completed' : 'On Going' }}
+                                                                                                      </div>
+                                                                                                      </span>
+                                                                                                      {{--  --}}
+                                                                                                  </span>
+                                                                                              </div>
+
+                                                                                              <style>
+                                                                                                  #editable {
+                                                                                                      display: none;
+                                                                                                  }
+
+                                                                                                  #lihover:hover #editable {
+                                                                                                      display: flex;
+                                                                                                  }
+                                                                                              </style>
+                                                                                          <div class="d-flex gap-3" id="dellhover">
+
+                                                                                                  <a data-size="lg"
+                                                                                                  data-url="{{ route('organiation.tasks.edit', $task->id) }}"
+                                                                                                  data-ajax-popup="true"
+                                                                                                  data-bs-toggle="tooltip"
+                                                                                                  title="{{ __('Update Task') }}"
+                                                                                                  id="editable"
+                                                                                                  class="btn textareaClassedit">
+                                                                                                  <i
+                                                                                                      class="ti ti-pencil" style="font-size: 20px;margin-right: -30px;color: white"></i>
+                                                                                              </a>
+
+
+                                                                                              <a href="javascript:void(0)"
+                                                                                                  class="btn"
+                                                                                                  id="editable"
+                                                                                                  onclick="deleteTask({{ $task->id }}, {{ $application->id }}, 'lead');">
+                                                                                                  <i class="ti ti-trash " style="font-size: 20px;color: white"></i>
+                                                                                              </a>
+
+                                                                                          </div>
+
+                                                                                          </div>
+                                                                                      </div>
+                                                                                  </div>
+                                                                              </li>
+                                                                              @php
+                                                                                          $section++;
+                                                                                      @endphp
+                                                                                  @elseif ($task->status == 0)
+
+                                                                                  <div class="ps-3 py-2 d-flex gap-2 align-items-baseline" style="border-bottom: 1px solid rgb(192, 192, 192);">
+                                                                                      <i class="fa-regular fa-square-check" style="color: #000000;"></i>
+                                                                                      <h6 class="fw-bold">
+                                                                                          {{ $section2 == 1 ? 'Open Activity': '' }}
+                                                                                      </h6>
+                                                                                  </div>
+                                                                                      <li class="list-group-item px-3"
+                                                                                          id="lihover">
+                                                                                          <div class="d-block d-sm-flex align-items-start">
+                                                                                              <div class="w-100">
+                                                                                                  <div
+                                                                                                      class="d-flex align-items-center justify-content-between">
+                                                                                                      <div class="mb-3 mb-sm-0">
+                                                                                                          <h5 class="mb-0">
+                                                                                                              {{ $task->name }}
+
+                                                                                                          </h5>
+                                                                                                          <span
+                                                                                                              class="text-muted text-sm">
+                                                                                                              {{ $task->created_at }}
+                                                                                                          </span><br>
+                                                                                                          <span
+                                                                                                              class="text-muted text-sm"><i class="step__icon fa fa-user" aria-hidden="true"></i>
+                                                                                                              {{ \App\Models\User::where('id', $task->assigned_to)->first()->name }}
+
+                                                                                                              <span class="d-flex">
+                                                                                                                  <div>Status</div>
+                                                                                                                  <div class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }} ml-5">
+                                                                                                                    {{ $task->status == 1 ? 'Completed' : 'On Going' }}
+                                                                                                              </div>
+                                                                                                              </span>
+                                                                                                              {{--  --}}
+                                                                                                          </span>
+                                                                                                      </div>
+
+
+                                                                                                  <div class="d-flex gap-3" id="dellhover">
+
+                                                                                                          <a data-size="lg"
+                                                                                                          data-url="{{ route('organiation.tasks.edit', $task->id) }}"
+                                                                                                          data-ajax-popup="true"
+                                                                                                          data-bs-toggle="tooltip"
+                                                                                                          title="{{ __('Update Task') }}"
+                                                                                                          id="editable"
+                                                                                                          class="btn textareaClassedit">
+                                                                                                          <i
+                                                                                                              class="ti ti-pencil" style="font-size: 20px;margin-right: -30px;"></i>
+                                                                                                      </a>
+
+
+                                                                                                      <a href="javascript:void(0)"
+                                                                                                          class="btn"
+                                                                                                          id="editable"
+                                                                                                          onclick="deleteTask({{ $task->id }}, {{ $application->id }}, 'lead');">
+                                                                                                          <i class="ti ti-trash " style="font-size: 20px;"></i>
+                                                                                                      </a>
+
+                                                                                                  </div>
+
+                                                                                                  </div>
+                                                                                              </div>
+                                                                                          </div>
+                                                                                      </li>
+                                                                                      @php
+                                                                                          $section2++;
+                                                                                      @endphp
+                                                                                  @endif
+                                                                          @endforeach
+
+                                                                          </ul>
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+                                                         </div>
+                                                        @endif
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
@@ -485,28 +647,11 @@
         $(document).ready(function() {
 
             //Fall2201075
-
-            $('.textareaClass').click(function() {
-                $('#textareaID, .textareaClass').toggle("slide");
-            });
-
-            $('#create-notes').submit(function(event) {
-                event.preventDefault(); // Prevents the default form submission
-                $('#textareaID, .textareaClass').toggle("slide");
-            });
-
-            $('#cancelNote').click(function() {
-                $('textarea[name="description"]').val('');
-                $('#note_id').val('');
-                $('#textareaID, .textareaClass').toggle("slide");
-            });
             $('.textareaClassedit').click(function() {
                 var dataId = $(this).data('note-id');
                 var dataNote = $(this).data('note');
                 $('textarea[name="description"]').val(dataNote);
                 $('#note_id').val(dataId);
-                $('#textareaID, #dellhover, .textareaClass').show();
-                $('.textareaClass').toggle("slide");
             });
 
 
@@ -532,10 +677,12 @@
 
                         if (data.status == 'success') {
                             show_toastr('success', data.message, 'success');
+                            $('#note_description').val('');
+                            $('.create-notes-btn').removeAttr('disabled');
                             $('#commonModal').modal('hide');
                             $('.note-tbody').html(data.html);
-                            $('#note_id').val('');
                             $('#description').val('');
+                            $('#note_id').val('');
                         } else {
                             show_toastr('error', data.message, 'error');
                             $(".create-notes-btn").val('Create');

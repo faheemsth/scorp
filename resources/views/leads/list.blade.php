@@ -299,8 +299,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 {{-- <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> --}}
 
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="far fa-clone" style="font-size: 14px;"></i><span class="visually-hidden">Toggle Dropdown</span>
+                                    <button type="button" class="btn btn-dark dropdown-toggle-split rounded-1" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="far fa-clone" style="font-size: 15px;"></i><span class="visually-hidden">Toggle Dropdown</span>
                                     </button>
                                     <ul class="dropdown-menu">
                                         <!-- Dropdown menu items -->
@@ -367,7 +367,10 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                         <option value="{{ $tag }}" <?= isset($_GET['tag']) && $key == $_GET['tag'] ? 'selected' : '' ?> class="">{{ $tag }}</option>
                                                         @endif
                                                     @endforeach
-                                                    <option value="other">Other</option>
+                                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                                      <option value="other">Other</option>
+                                                    @endif
+
                                                 </select>
                                             </div>
 
@@ -1775,7 +1778,9 @@ function deleteTage()
                     <select class="form form-control select2 selectTage" name="tagid" id="tagSelectupdate" style="width: 95%;">
                         <option value="">Select Tag</option>
                         ${optionsHTML}
-                        <option value="other">Other</option>
+                        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                         <option value="other">Other</option>
+                        @endif
                     </select>
                 </div>
                 <div class="form-group inputTageupdate" style="display: none">
@@ -1784,7 +1789,7 @@ function deleteTage()
                     <input type="text" name="tags" id="tagNameInput" class="form form-control" style="width: 95%;">
                 </div>
             `);
-
+            select2();
             $('#UpdateTageModal').modal('show');
             $('#tagSelectupdate').on('change', function() {
                 var inputTag = $('#tagNameInput');
