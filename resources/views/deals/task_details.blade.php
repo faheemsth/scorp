@@ -431,6 +431,10 @@
                                                                             echo \App\Models\Deal::findOrFail(
                                                                                 $task->related_to,
                                                                             )->name;
+                                                                        } elseif ($task->related_type == 'application') {
+                                                                            echo \App\Models\Deal::findOrFail(
+                                                                                $task->related_to,
+                                                                            )->name;
                                                                         }
                                                                     @endphp
                                                                     </span>
