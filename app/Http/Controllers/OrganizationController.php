@@ -1020,27 +1020,27 @@ class OrganizationController extends Controller
     public function taskStore($id, Request $request)
     {
         $usr = \Auth::user();
-        if ($request->assigned_to == 0) {
-            return json_encode([
-                'status' => 'error',
-                'message' => 'Assigned to is Required'
-            ]);
-        }
         if (\Auth::user()->can('create task')) {
 
-            $validator = \Validator::make(
-                $request->all(),
-                [
-                    'task_name' => 'required',
-                    'brand_id' => 'required',
-                    'region_id' => 'required',
-                    'branch_id' => 'required',
-                    'assign_type' => 'required',
-                    'assigned_to' => 'required',
-                    'due_date' => 'required',
-                    'start_date' => 'required',
-                ]
-            );
+            $rules = [
+                'task_name' => 'required',
+                'brand_id' => 'required|integer|min:1',
+                'region_id' => 'required|integer|min:1',
+                'branch_id' => 'required|integer|min:1',
+                'assigned_to' => 'required|integer|min:1',
+                'assign_type' => 'required',
+                'due_date' => 'required',
+                'start_date' => 'required',
+            ];
+
+            $messages = [
+                'brand_id.min' => 'The brand id must be Required',
+                'region_id.min' => 'The Region id must be Required',
+                'branch_id.min' => 'The branch id must be Required',
+                'assigned_to.min' => 'The Assigned id must be Required',
+            ];
+
+            $validator = \Validator::make($request->all(), $rules, $messages);
 
 
             if ($validator->fails()) {
@@ -1202,20 +1202,14 @@ class OrganizationController extends Controller
 
         if (\Auth::user()->can('edit task')) {
 
-            $validator = \Validator::make(
-                $request->all(),
-                [
-                    'task_name' => 'required',
-                    //'brand_id' => 'required',
-                    //'assigned_to' => 'required',
-                    // 'assign_type' => 'required',
-                    'due_date' => 'required',
-                    'start_date' => 'required',
-                    //'related_type' => 'required',
-                    //'related_to' => 'required',
-                    'visibility' => 'required',
-                ]
-            );
+            $rules = [
+                'task_name' => 'required',
+                'due_date' => 'required',
+                'start_date' => 'required',
+                'visibility' => 'required',
+            ];
+
+            $validator = \Validator::make($request->all(), $rules);
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
