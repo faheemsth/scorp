@@ -346,8 +346,9 @@ class DealController extends Controller
             //if list global search
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
+                $deals_query->join('client_deals', 'client_deals.deal_id', '=', 'deals.id')->join('users', 'users.id', '=', 'client_deals.client_id');
                 $deals_query->Where('deals.name', 'like', '%' . $g_search . '%');
-                //$deals_query->orWhere('deals.email', 'like', '%' . $g_search . '%');
+                $deals_query->orWhere('users.passport_number', 'like', '%' . $g_search . '%');
                 $deals_query->orWhere('deals.phone', 'like', '%' . $g_search . '%');
             }
 
