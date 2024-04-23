@@ -2575,7 +2575,7 @@ class DealController extends Controller
             )->name;
             $brandName=optional(User::find($deal->brand_id))->name;
             $branchname=optional(Branch::find($deal->branch_id))->name;
-            $is_exist = DealApplication::where(['application_key' => $userName .'-'. $passport_number . '-' . $university_name .'-'. $request->intake_month .'-'. $request->id])->first();
+            $is_exist = DealApplication::where('application_key', 'LIKE', '%' . $userName . '-' . $passport_number . '-' . $university_name . '-' . $request->intake_month . '-' . $request->id . '%')->first();
 
 
             if ($passport_number && $is_exist) {
@@ -2586,7 +2586,7 @@ class DealController extends Controller
             }
 
             $new_app = DealApplication::create([
-                'application_key' =>  $userName .'-'. $passport_number . '-' . $university_name .'-'. $request->intake_month .'-'. $request->id,
+                'application_key' => $userName . '-' . $passport_number . '-' . $university_name . '-' . $request->intake_month . '-' . $request->id,
                 'deal_id' => $request->id,
                 'university_id' => (int)$request->university,
                 'course' => $request->course,
