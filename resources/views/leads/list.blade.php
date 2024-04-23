@@ -322,6 +322,14 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             </button> --}}
                                         </li>
                                         @endif
+                                        
+                                        <li>
+                                            <!-- Button trigger modal -->
+                                            <button type="button" class="btn btn-link dropdown-item d-none" id="massAssignModalBtn" data-toggle="modal" data-target="#massAssignModal">
+                                                Mass Assign
+                                            </button>
+                                        </li>
+
 
                                         <li>
                                             <!-- Button trigger modal -->
@@ -673,7 +681,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         @foreach ($leads as $lead)
                                             <tr>
                                                 <td><input type="checkbox" name="leads[]" value="{{ $lead->id }}"
-                                                        class="sub-check"></td>
+                                                        data-brand-id="{{$lead->brand_id}}"  data-brand-name="{{ $filters['brands'][$lead->brand_id] ?? '' }}" class="sub-check"></td>
 
 
                                                 <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
@@ -749,57 +757,7 @@ if (isset($lead->is_active) && $lead->is_active) {
 
     </div>
 
-    <div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-lg my-0" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Mass Update</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="{{ route('update-bulk-deals') }}" method="POST">
-                    @csrf
-                    <div class="modal-body" style="min-height: 40vh;">
-                        <div class="row">
-                            <div class="col-md-6">
-                                    <select name="bulk_field" id="bulk_field" class="form form-control">
-                                        <option value="">Select Field</option>
-                                        <option value="nm">Name</option>
-                                        <option value="ldst">Lead Status</option>
-                                        <!-- <option value="ast">Assign Type</option> -->
-                                        <option value="user_res">User Reponsible</option>
-                                        <option value="loc">Location</option>
-                                        <option value="agy">Agency</option>
-                                        <option value="ldsrc">Lead Source</option>
-                                        <option value="email">Email Address</option>
-                                        <option value="email_ref">Email Address (Referrer) </option>
-                                        <option value="phone">Phone</option>
-                                        <option value="m_phone">Mobile Phone</option>
-                                        <!-- <option value="mail_opt">Email opt out</option> -->
-                                        <option value="address">Address</option>
-                                        <option value="desc">Description</option>
-                                        <!-- <option value="tag_list">Tag List</option> -->
-
-                                    </select>
-                            </div>
-                            <input name='lead_ids' id="lead_ids" hidden>
-                            <div class="col-md-6" id="field_to_update">
-
-                            </div>
-                        </div>
-
-                    </div>
-                    <br>
-                    <div class="modal-footer">
-                        <input type="submit" class="btn btn-dark px-2" value="Update">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
+    
 
 
     <div class="modal" id="UpdateTageModal" tabindex="-1" role="dialog">
@@ -839,6 +797,85 @@ if (isset($lead->is_active) && $lead->is_active) {
         </div>
     </div>
 
+    <div class="modal" id="massAssignModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-md my-0" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Mass Update</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('update-bulk-leads') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="row" id="bulk-assign">
+                        @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
+                        <div class="col-md-12 mt-2" id="brand_id_div">
+                            <label for="">Brand</label>
+                            <select name="brand" class="form form-control select2" id="filter_brand_id">
+                                @foreach ($filters['brands'] ?? [] as $key => $Brand)
+                                <option value="{{ $key }}" {{ !empty($_GET['brand']) && $_GET['brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
+                                @endforeach
+                                @empty($filters['brands'])
+                                <option value="" disabled>No brands available</option>
+                                @endempty
+                            </select>
+                        </div>
+                        @endif
+
+                        @if(\Auth::user()->type == 'company'  || \Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3'))
+                        <div class="col-md-12 mt-2" id="region_bulkassign_div">
+                            <label for="">Region</label>
+                            <select name="region_id" class="form form-control select2" id="filter_region_id">
+                                @foreach   ($filters['regions'] ?? [] as $key => $region)
+                                <option value="{{ $key }}" {{ !empty($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : '' }}>{{ $region }}</option>
+                                @endforeach
+                                @empty($filters['regions'])
+                                <option value="" disabled>No regions available</option>
+                                @endempty
+                            </select>
+                        </div>
+                        @endif
+
+                        @if(\Auth::user()->type == 'company'  || \Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3') || \Auth::user()->can('level 4'))
+                        <div class="col-md-12 mt-2" id="branch_bulkassign_div">
+                            <label for="">Branch</label>
+                            <select name="branch_id" class="form form-control select2" id="filter_branch_id">
+                                @foreach ($filters['branches'] ?? [] as $key => $branch)
+                                <option value="{{ $key }}" {{ !empty($_GET['branch_id']) && $_GET['branch_id'] == $key ? 'selected' : '' }}>{{ $branch }}</option>
+                                @endforeach
+                                @empty($filters['branches'])
+                                <option value="" disabled>No regions available</option>
+                                @endempty
+                            </select>
+                        </div>
+                        @endif
+
+                        <div class="col-md-12 mt-2"> <label for="">Assigned To</label>
+                            <div class="" id="bulkassign_to_div">
+                                <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
+                                    @foreach ($filters['employees'] ?? [] as $key => $user)
+                                    <option value="{{ $key }}" <?= isset($_GET['lead_assgigned_user']) && $key == $_GET['lead_assgigned_user'] ? 'selected' : '' ?> class="">{{ $user }}</option>
+                                    @endforeach
+                                    <option value="null">Not Assign</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <input type="hidden" class="" id="mySelectedIds" name="selectedIds">
+                        
+                        </div>
+                    </div>
+                    <br>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-dark px-2" value="Update">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
 @endsection
@@ -847,24 +884,24 @@ if (isset($lead->is_active) && $lead->is_active) {
     <script>
 
 function deleteTage()
-        {
-            $.ajax({
-            type: "GET",
-            url: '{{ url('delete_tage') }}',
-            data: {id : $('#tagIdInput').val()},
-            success: function(response){
-                data = JSON.parse(response);
+    {
+        $.ajax({
+        type: "GET",
+        url: '{{ url('delete_tage') }}',
+        data: {id : $('#tagIdInput').val()},
+        success: function(response){
+            data = JSON.parse(response);
 
-                if(data.status == 'success'){
-                    $("#UpdateTageModal").hide();
-                    show_toastr('success', data.msg);
-                    window.location.href = '/leads/list';
+            if(data.status == 'success'){
+                $("#UpdateTageModal").hide();
+                show_toastr('success', data.msg);
+                window.location.href = '/leads/list';
 
-                }
-            },
-        });
+            }
+        },
+    });
 
-        }
+    }
 
     $(".add-filter").on("click", function() {
         $(".filter-data").toggle();
@@ -879,6 +916,48 @@ function deleteTage()
 
         $("#selectedIds").val(selectedIds);
     })
+
+    
+
+    $("#massAssignModalBtn").on("click", function() {
+    $(".sub-check").prop('checked', $(this).prop('checked'));
+
+    var selectedIds = $('.sub-check:checked').map(function() {
+        return this.value;
+    }).get();
+
+    var brandIds = $('.sub-check:checked').map(function() {
+        return $(this).data('brand-id');
+    }).get();
+
+    var brandNames = $('.sub-check:checked').map(function() {
+        return $(this).data('brand-name');
+    }).get();
+
+    $("#mySelectedIds").val(selectedIds);
+
+    // Check if all brandIds are the same
+    var areBrandIdsSame = brandIds.every(function(element) {
+        return element === brandIds[0];
+    });
+
+    if (!areBrandIdsSame) {
+        show_toastr('error', 'Brand Ids should be the same');
+        return false;
+    }
+
+    var brandId = brandIds[0];
+    var brandName = brandNames[0];
+
+    var html = '<label for="">Brand</label>' +
+                '<select name="brand" class="form form-control select2" id="filter_brand_id">' +
+                '<option value="">Select Brand</option>' +
+                '<option value="' + brandId + '">' + brandName + '</option>' +
+                '</select>';
+    $("#brand_id_div").html(html);
+    select2();  
+});
+
 
     $(".add-tags").on("click", function(e){
         e.preventDefault();
@@ -948,6 +1027,7 @@ function deleteTage()
             selectedArr = selectedIds;
             $("#actions_div").removeClass('d-none');
             $("#tagModalBtn").removeClass('d-none');
+            $("#massAssignModalBtn").removeClass('d-none');
             $(".send_bulk_email").removeClass('d-none');
             var url = $(this).data('url') + '?' + $.param({ids: selectedIds});
             $('.update-bulk-leads').data('url', url);
@@ -956,6 +1036,7 @@ function deleteTage()
             selectedArr = selectedIds;
             $("#actions_div").addClass('d-none');
             $("#tagModalBtn").addClass('d-none');
+            $("#massAssignModalBtn").addClass('d-none');
             $(".send_bulk_email").addClass('d-none');
             $(".update-bulk-leads").addClass('d-none');
         }
@@ -970,6 +1051,7 @@ function deleteTage()
             selectedArr = selectedIds;
             $("#actions_div").removeClass('d-none');
             $("#tagModalBtn").removeClass('d-none');
+            $("#massAssignModalBtn").removeClass('d-none');
             $(".send_bulk_email").removeClass('d-none');
             $(".update-bulk-leads").removeClass('d-none');
         } else {
@@ -977,6 +1059,7 @@ function deleteTage()
 
             $("#actions_div").addClass('d-none');
             $("#tagModalBtn").addClass('d-none');
+            $("#massAssignModalBtn").addClass('d-none');
             $(".send_bulk_email").addClass('d-none');
             $(".update-bulk-leads").addClass('d-none');
         }
@@ -1624,7 +1707,7 @@ function deleteTage()
 
 
         ////////////////////Filters Javascript
-        $("#filter-show #filter_brand_id").on("change", function() {
+        $("#filter-show #filter_brand_id, #bulk-assign #filter_brand_id").on("change", function() {
             var id = $(this).val();
             var type = 'brand';
             var filter = true;
@@ -1639,7 +1722,6 @@ function deleteTage()
                 },
                 success: function(data) {
                     data = JSON.parse(data);
-
                     if (data.status === 'success') {
                         $('#region_filter_div').html('');
                         $("#region_filter_div").html(data.regions);
@@ -1713,6 +1795,92 @@ function deleteTage()
                 });
         });
 
+
+        $(document).on("change", "#bulk-assign #filter_brand_id" ,function() {
+            var id = $(this).val();
+            var type = 'brand';
+            var filter = true;
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if (data.status === 'success') {
+                        $('#region_bulkassign_div').html('');
+                        $("#region_bulkassign_div").html(data.regions);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+        $(document).on("change", "#bulk-assign #region_id, #bulk-assign #filter_region_id", function() {
+            var id = $(this).val();
+            var filter = true;
+            var type = 'region';
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#branch_bulkassign_div').html('');
+                        $("#branch_bulkassign_div").html(data.branches);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+        $(document).on("change", "#bulk-assign #branch_id, #bulk-assign #filter_branch_id", function() {
+
+            var id = $(this).val();
+            
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('filter-branch-users') }}',
+                    data: {
+                        id: id,
+                        page: 'lead_list'
+                    },
+                    success: function(data){
+                        data = JSON.parse(data);
+
+                        if (data.status === 'success') {
+                            $('#bulkassign_to_div').html('');
+                            $("#bulkassign_to_div").html(data.html);
+                            select2();
+                        } else {
+                            console.error('Server returned an error:', data.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX request failed:', status, error);
+                    }
+                });
+        });
 
         // $(document).on("change", "#filter_branch_id, #branch_id", function() {
         //    getLeads();

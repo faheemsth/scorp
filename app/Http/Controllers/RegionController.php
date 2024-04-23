@@ -218,7 +218,6 @@ class RegionController extends Controller
 
             $regions = Region::where('brands', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $filter = $_GET['filter'] ?? '';
-
             $html = '<label for="region_id">Region';
 
             // Checking if $filter is not empty and is true
