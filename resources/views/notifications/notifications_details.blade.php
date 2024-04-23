@@ -15,7 +15,7 @@
 
 
                     <div class="lead-basic-info">
-                        <p class="pb-0 mb-0 fw-normal">{{ __('Task') }}</p>
+                        <p class="pb-0 mb-0 fw-normal">{{ __('Notifications') }}</p>
                         <div class="d-flex align-items-baseline ">
                             <h5 class="fw-bold">{{ $task->name }}</h5>
                         </div>
@@ -42,58 +42,6 @@
 
             </div>
 
-
-            <div class=" lead-info d-flex justify-content-between py-3 text-center overflow-auto">
-                <div class="col-sm-2">
-                    <small class="mb-2" >{{ __('Date Due') }}</small>
-                    <!-- <span class="px-3 text-white " style="border-radius: 6px;
-                    background: #22A9E3; padding-top: 2px; padding-bottom: 4px"> -->
-                    @php
-                            $due_date = strtotime($task->due_date);
-                            $current_date = strtotime(date('Y-m-d'));
-                            $status = strtolower($task->status);
-                            $color_code = '';
-
-                            if ($due_date > $current_date && $status === '0') {
-                                // Ongoing feture time
-                                $color_code = '#B3CDE1;';
-                            } elseif ($due_date === $current_date && $status === '0') {
-                                // Today date time
-                                $color_code = '#E89D25';
-                            } elseif ($due_date < $current_date && $status === '0') {
-                                // Past date time
-                                $color_code = 'red';
-                            } elseif ($status === '1') {
-                                // Completed task
-                                $color_code = 'green';
-                            }
-                            $message=Carbon\Carbon::parse($due_date)->diffForHumans();
-                    @endphp
-                    <span class="px-3 text-white" style="border-radius: 6px;background-color:{{ $color_code }};
-                            padding-top: 4px; padding-bottom: 8px">
-                        <span
-                            class="">
-                            {{ $message }}
-                        </span>
-
-                    </span>
-                </div>
-                <div class="col-sm-2">
-                    <small style="margin-bottom: 4px;">{{ __('Priority') }}</small>
-                    <span>{{ __('Medium') }}</span>
-                </div>
-                <div class="col-sm-2">
-                    <small style="margin-bottom: 4px;">{{ __('Status') }}</small>
-                    <span>{{ $task->status == 1 ? 'Completed' : 'On Going' }}</span>
-                </div>
-                <div class="col-sm-2">
-                    <small style="margin-bottom: 4px;">{{ __('Progress') }}</small>
-                    <span>{{ strtolower($task->status) == '0' ? '0' : '100' }}</span>
-                </div>
-                <div class="col-sm-2">
-                    <small style="margin-bottom: 4px;">{{ __('Assigned To') }}</small>
-                </div>
-            </div>
 
 
             <div class="lead-content my-2">
@@ -122,7 +70,7 @@
                                             <button class="accordion-button p-2" type="button"
                                                 data-bs-toggle="collapse"
                                                 data-bs-target="#panelsStayOpen-collapsekeyone">
-                                                {{ __('Task Details') }}
+                                                {{ __('Notifications Details') }}
                                             </button>
                                         </h2>
 
@@ -232,7 +180,7 @@
         function ChangeTaskStatus(id) {
             Swal.fire({
                 title: 'Are you sure?',
-                text: 'You are about to update the task status.',
+                text: 'You are about to update the Notifications status.',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -253,7 +201,7 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Success!',
-                            text: 'The task status has been changed successfully.',
+                            text: 'The Notifications status has been changed successfully.',
                         }).then(function() {
                             // Reload the page after the user closes the SweetAlert dialog
                             window.location.href = window.location.href;

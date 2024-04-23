@@ -128,20 +128,20 @@ class LeadController extends Controller
 
 
 
-       // if(isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user']) && $_GET['lead_assgigned_user'] != 'null'){
-            if (isset($_GET['brand']) && !empty($_GET['brand'])) {
-                $filters['brand_id'] = $_GET['brand'];
-            }
+        // if(isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user']) && $_GET['lead_assgigned_user'] != 'null'){
+        if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+            $filters['brand_id'] = $_GET['brand'];
+        }
 
-            if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
-                $filters['region_id'] = $_GET['region_id'];
-            }
+        if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
+            $filters['region_id'] = $_GET['region_id'];
+        }
 
-            if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
-                $filters['branch_id'] = $_GET['branch_id'];
-            }
+        if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
+            $filters['branch_id'] = $_GET['branch_id'];
+        }
         //}
-        if(isset($_GET['lead_assgigned_user']) && $_GET['lead_assgigned_user'] == 'null'){
+        if (isset($_GET['lead_assgigned_user']) && $_GET['lead_assgigned_user'] == 'null') {
             unset($filters['brand_id']);
             unset($filters['region_id']);
             unset($filters['branch_id']);
@@ -168,7 +168,11 @@ class LeadController extends Controller
 
         // Pagination calculation
         $start = 0;
-        $num_results_on_page = 25;
+        if (!empty($_GET['perPage'])) {
+            $num_results_on_page = $_GET['perPage'];
+        } else {
+            $num_results_on_page = env("RESULTS_ON_PAGE");
+        }
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
             $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -180,7 +184,7 @@ class LeadController extends Controller
         // Filters
         $filters = $this->leadsFilter();
 
-        if ($usr->can('manage lead') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
+        if ($usr->can('view lead') || $usr->can('manage lead') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
 
             if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
                 $pipeline = Pipeline::get();
@@ -210,6 +214,12 @@ class LeadController extends Controller
                 ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'leads.user_id')
                 ->leftJoin('lead_tags as tag', 'tag.lead_id', '=', 'leads.id');
 
+            if (!empty($_GET['Assigned'])) {
+                $leads_query->whereNotNull('leads.user_id');
+            }
+            if (!empty($_GET['Unassigned'])) {
+                $leads_query->whereNull('leads.user_id');
+            }
             // Apply user type-based filtering
             $userType = \Auth::user()->type;
             if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
@@ -245,9 +255,9 @@ class LeadController extends Controller
                         $leads_query->whereIn('stage_id', $value);
                         break;
                     case 'lead_assgigned_user':
-                        if($value == null){
+                        if ($value == null) {
                             $leads_query->whereNull('leads.user_id');
-                        }else{
+                        } else {
                             $leads_query->where('leads.user_id', $value);
                         }
                         break;
@@ -281,9 +291,8 @@ class LeadController extends Controller
             }
 
             // Apply default filters when $_GET is empty
-            if (empty($_GET)) {
-                $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead'])
-                    ->where('leads.is_converted', 0);
+            if (!(!empty($_GET['stages']) && (in_array("6", $_GET['stages']) || in_array("7", $_GET['stages'])))) {
+                $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead'])->where('leads.is_converted', 0);
             }
 
             // Count total records and retrieve paginated leads
@@ -306,6 +315,8 @@ class LeadController extends Controller
 
     public function lead_list()
     {
+        //  print_r($_GET);
+        // die('come');
         $usr = \Auth::user();
 
         $executed_data = $this->executeLeadQuery();
@@ -361,7 +372,11 @@ class LeadController extends Controller
         }
 
         $filters = BrandsRegionsBranches();
-        $tags = LeadTag::pluck('tag', 'tag')->toArray();
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') {
+            $tags = LeadTag::pluck('tag', 'tag')->toArray();
+        } else {
+            $tags = LeadTag::where('created_by', \Auth::id())->pluck('tag', 'tag')->toArray();
+        }
 
         return view('leads.list', compact('pipelines', 'branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status', 'assign_to', 'filters', 'tags'));
     }
@@ -419,6 +434,60 @@ class LeadController extends Controller
             return response()->json(['error' => __('Permission Denied.')], 401);
         }
     }
+
+
+
+
+
+
+
+    public function MassUpdate()
+    {
+
+        if (\Auth::user()->can('create lead') || \Auth::user()->type == 'super admin') {
+
+
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+
+            // $query = Branch::query();
+            // $region_query = Region::query();
+
+            // foreach ($brand_ids as $brandId) {
+            //     $query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+            //     $region_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
+            // }
+
+            // $branches = $query->pluck('name', 'id')->toArray();
+            // $regions = $region_query->pluck('name', 'id')->toArray();
+
+            $regions = [];
+            $branches = [];
+
+            $users = allUsers();
+            $companies = FiltersBrands();
+
+            //leads stages
+            $stages = LeadStage::get()->pluck('name', 'id');
+
+            //if not company
+            $organizations = User::where('type', 'organization')->get()->pluck('name', 'id');
+            $sources = Source::get()->pluck('name', 'id');
+            $countries = countries();
+
+
+            $filter = BrandsRegionsBranches();
+            $companies = $filter['brands'];
+            $regions = $filter['regions'];
+            $branches = $filter['branches'];
+            $employees = $filter['employees'];
+
+            return view('leads.create', compact('users', 'companies', 'stages', 'branches', 'organizations', 'sources', 'countries', 'regions', 'employees'));
+        } else {
+            return response()->json(['error' => __('Permission Denied.')], 401);
+        }
+    }
+
 
     public function getCompanyEmployees()
     {
@@ -609,7 +678,7 @@ class LeadController extends Controller
                             'lead_stage' => $stage->name,
 
                         ];
-                        
+
 
                         $resp = Utility::sendEmailTemplate('lead_assigned', [$usrEmail->id => $usrEmail->email], $leadAssignArr);
                         //$resp['is_success'] = true;
@@ -3820,25 +3889,61 @@ class LeadController extends Controller
         // echo "<pre>";
         // print_r($request->input());
         // die();
-        $ids = explode(',', $request->selectedIds);
 
-        foreach ($ids as $id) {
-            $new_tag = new \App\Models\LeadTag();
-            $new_tag->lead_id = $id;
-            $new_tag->tag = $request->tags;
-            $new_tag->created_by = \Auth::user()->id;
-            $new_tag->created_at = date('Y-m-d h:i:s');
-            $new_tag->updated_at = date('Y-m-d h:i:s');
-            $new_tag->save();
+        if (!empty($request->input('id'))) {
+
+
+            if ($request->input('tagid') == 'other') {
+
+                $new_tag = new \App\Models\LeadTag();
+                $new_tag->lead_id = LeadTag::find($request->input('id'))->lead_id;
+                $new_tag->tag = !empty($request->tags) ? $request->tags : $request->tagid;
+                $new_tag->created_by = \Auth::user()->id;
+                $new_tag->created_at = date('Y-m-d h:i:s');
+                $new_tag->updated_at = date('Y-m-d h:i:s');
+                $new_tag->save();
+            } else {
+                $new_tag = LeadTag::find($request->input('id'));
+                $new_tag->tag = !empty($request->tags) ? $request->tags : $request->tagid;
+                $new_tag->save();
+            }
+            return json_encode([
+                'status' => 'success',
+                'msg' => 'Tag Update successfully'
+            ]);
+        } else {
+            $ids = explode(',', $request->selectedIds);
+
+            foreach ($ids as $id) {
+                $new_tag = new \App\Models\LeadTag();
+                $new_tag->lead_id = $id;
+                $new_tag->tag = !empty($request->tags) ? $request->tags : $request->tagid;
+                $new_tag->created_by = \Auth::user()->id;
+                $new_tag->created_at = date('Y-m-d h:i:s');
+                $new_tag->updated_at = date('Y-m-d h:i:s');
+                $new_tag->save();
+            }
+
+            return json_encode([
+                'status' => 'success',
+                'msg' => 'Tag added successfully'
+            ]);
         }
-
-        return json_encode([
-            'status' => 'success',
-            'msg' => 'Tag added successfully'
-        ]);
     }
 
 
+    public function delete_tage(Request $request)
+    {
+        if (!empty($request->input('id'))) {
+
+            LeadTag::find($request->input('id'))->delete();
+
+            return json_encode([
+                'status' => 'success',
+                'msg' => 'Tag Delete successfully'
+            ]);
+        }
+    }
     public function sendBulkEmail(Request $request)
     {
         $data = ['ids' => $request->ids];
@@ -3850,11 +3955,11 @@ class LeadController extends Controller
             try {
                 // Send email to $lead->email using $this->data['subject'] and $this->data['content']
                 // You can use Laravel's Mail facade or any email-sending library of your choice
-                
+
                 $arr = [
                     'student_name' => $lead->name,
                     'sender' => \Auth::user()->name
-                    ];
+                ];
                 Utility::sendEmailTemplate('email_marketing', [$lead->email], $arr);
 
                 // Log a message to the console indicating that the email was sent
@@ -3865,11 +3970,11 @@ class LeadController extends Controller
                 \Illuminate\Support\Facades\Log::error("Failed to send email to {$lead->name} ({$lead->email}): {$e->getMessage()}");
             }
         }
-        
-        
+
+
         return json_encode([
-                    'status' => 'success',
-                    'message' => 'Email Sent successfully.'
-                    ]);
+            'status' => 'success',
+            'message' => 'Email Sent successfully.'
+        ]);
     }
 }

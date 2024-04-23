@@ -37,7 +37,7 @@ class UserController extends Controller
     {
         $user = \Auth::user();
 
-        $num_results_on_page = 25;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
@@ -107,13 +107,13 @@ class UserController extends Controller
                             ->orWhere('users.website_link', 'like', '%' . $g_search . '%')
                             ->orWhere(DB::raw('(SELECT name FROM users p WHERE p.id = users.project_director_id)'), 'like', '%' . $g_search . '%');
                     });
-                
+
                 $users = $user_query
                     ->skip($start)
                     ->take($num_results_on_page)
                     ->orderBy('users.name', 'ASC')
                     ->paginate($num_results_on_page);
-                
+
             }
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
@@ -678,7 +678,7 @@ class UserController extends Controller
     {
 
         $user = \Auth::user();
-        $num_results_on_page = 25;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
@@ -692,8 +692,8 @@ class UserController extends Controller
         if (\Auth::user()->can('manage employee')) {
             $excludedTypes = ['super admin', 'company', 'team', 'client'];
             $usersQuery = User::select(['users.*'])->whereNotIn('type', $excludedTypes);
-            
-            
+
+
             //Filters
             if (!empty($_GET['brand'])) {
                 $usersQuery->where('brand_id', $_GET['brand']);
@@ -719,7 +719,7 @@ class UserController extends Controller
                 $usersQuery->where('phone', 'like', '%' . $_GET['phone'] . '%');
             }
 
-           
+
             if (\Auth::user()->type == 'super admin') {
                 $usersQuery = User::whereNotIn('type', $excludedTypes);
             } else if ($user->type == 'company') {
@@ -735,7 +735,7 @@ class UserController extends Controller
             //             $query->where('users.name', 'like', '%' . $g_search . '%')
             //                 ->orWhere('users.website_link', 'like', '%' . $g_search . '%')
             //                 ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%');
-            //         });                
+            //         });
             // }
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
@@ -744,7 +744,7 @@ class UserController extends Controller
                             ->orWhere('users.email', 'like', '%' . $g_search . '%')
                             ->orWhere('users.type', 'like', '%' . $g_search . '%')
                             ->orWhere('users.phone', 'like', '%' . $g_search . '%')
-                            ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%');                   
+                            ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%');
             }
 
             $users = $usersQuery

@@ -178,7 +178,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                         </style>
 
                         <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                            <div class="col-4">
+                            <div class="col-4 d-flex">
+                                <span>
                                 <p class="mb-0 pb-0 ps-1">Leads</p>
                                 <div class="dropdown">
                                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
@@ -186,7 +187,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         ALL LEADS
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                    
+
                                         @php
                                         $saved_filters = App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'leads')->get();
                                          @endphp
@@ -218,6 +219,29 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                     </ul>
                                 </div>
+                                </span>
+                                <span class="ml-3">
+                                    <p class="mb-0 pb-0 ps-1">Limit</p>
+                                    <form action="{{ url('leads/list') }}" method="GET" id="paginationForm">
+                                        <input type="hidden" name="num_results_on_page" id="num_results_on_page" value="{{ $_GET['num_results_on_page'] ?? '' }}">
+                                        <input type="hidden" name="page" id="page" value="{{ $_GET['page'] ?? 1 }}">
+                                        <select name="perPage" onchange="submitForm()" style="width: 100px; margin-right: 1rem;border: 1px solid lightgray;border-radius: 1px;padding: 2.5px 5px;">
+                                            <option value="50" {{ Request::get('perPage') == 50 || Request::get('num_results_on_page') == 50 ? 'selected' : '' }}>50</option>
+                                            <option value="100" {{ Request::get('perPage') == 100 || Request::get('num_results_on_page') == 100 ? 'selected' : '' }}>100</option>
+                                            <option value="150" {{ Request::get('perPage') == 150 || Request::get('num_results_on_page') == 150 ? 'selected' : '' }}>150</option>
+                                            <option value="200" {{ Request::get('perPage') == 200 || Request::get('num_results_on_page') == 200 ? 'selected' : '' }}>200</option>
+                                        </select>
+                                    </form>
+
+                                    <script>
+                                        function submitForm() {
+                                            var selectValue = document.querySelector('select[name="perPage"]').value;
+                                            document.getElementById("num_results_on_page").value = selectValue;
+                                            document.getElementById("page").value = {{ $_GET['page'] ?? 1 }};
+                                            document.getElementById("paginationForm").submit();
+                                        }
+                                    </script>
+                                </span>
                             </div>
                             {{-- /// --}}
 
@@ -273,10 +297,10 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 
                                 {{-- <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> --}}
-                                
+
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-dark dropdown-toggle dropdown-toggle-split" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="far fa-clone" style="font-size: 14px;"></i><span class="visually-hidden">Toggle Dropdown</span>
+                                    <button type="button" class="btn btn-dark dropdown-toggle-split rounded-1" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="far fa-clone" style="font-size: 15px;"></i><span class="visually-hidden">Toggle Dropdown</span>
                                     </button>
                                     <ul class="dropdown-menu">
                                         <!-- Dropdown menu items -->
@@ -287,6 +311,18 @@ if (isset($lead->is_active) && $lead->is_active) {
                                             </button>
                                         </li>
                                         @endif
+
+                                        @if(auth()->user()->can('edit lead'))
+                                        <li>
+                                            {{-- <button data-size="lg" data-url="{{ route('MassUpdate') }}" id="actions_div" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Mass Update') }}"
+                                            class="btn btn-link assigned_to update-bulk-leads d-none dropdown-item"  >
+                                                Mass Update
+                                            </button> --}}
+                                            {{-- <button type="button" class="btn btn-link assigned_to update-bulk-leads d-none dropdown-item" id="actions_div">
+                                            </button> --}}
+                                        </li>
+                                        @endif
+
                                         <li>
                                             <!-- Button trigger modal -->
                                             <button type="button" class="btn btn-link dropdown-item d-none" id="tagModalBtn" data-toggle="modal" data-target="#tagModal">
@@ -302,9 +338,9 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         </li>
                                     </ul>
                                 </div>
-                                
-                                
-                                
+
+
+
                             </div>
                         </div>
 
@@ -321,10 +357,43 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <form action="{{ route('lead_tags') }}" method="POST" id="addTagForm">
                                         <div class="modal-body">
                                             <input type="hidden" value="" name="selectedIds" id="selectedIds">
+
                                             <div class="form-group">
                                                 <label for="">Tag</label>
+                                                <select class="form form-control select2 selectTage" name="tagid" id="tagSelect" style="width: 95%;">
+                                                    <option value="">Select Tag</option>
+                                                    @foreach ($tags as $key => $tag)
+                                                        @if (!empty($tag))
+                                                        <option value="{{ $tag }}" <?= isset($_GET['tag']) && $key == $_GET['tag'] ? 'selected' : '' ?> class="">{{ $tag }}</option>
+                                                        @endif
+                                                    @endforeach
+                                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                                                      <option value="other">Other</option>
+                                                    @endif
+
+                                                </select>
+                                            </div>
+
+                                            <div class="form-group inputTage" style="display: none">
+                                                <label for="">New Tag</label>
                                                 <input type="text" name="tags" class="form form-control">
                                             </div>
+
+                                            <script>
+                                                document.addEventListener("DOMContentLoaded", function() {
+                                                    const selectTag = document.getElementById('tagSelect');
+                                                    const inputTag = document.querySelector('.inputTage');
+
+                                                    selectTag.addEventListener('change', function() {
+                                                        if (this.value === 'other') {
+                                                            inputTag.style.display = 'block';
+                                                        } else {
+                                                            inputTag.style.display = 'none';
+                                                        }
+                                                    });
+                                                });
+                                            </script>
+
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -399,8 +468,12 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 
                         <div class="filter-data px-3" id="filter-show"
-                            <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+                            <?= isset($_GET) && !empty($_GET) && empty($_GET['perPage']) ? '' : 'style="display: none;"' ?>>
                             <form action="/leads/list" method="GET" class="">
+                                @if (!empty($_GET['num_results_on_page']))
+                                   <input type="hidden" name="num_results_on_page" id="num_results_on_page" value="{{ $_GET['num_results_on_page'] }}">
+                                @endif
+                                <input type="hidden" name="page" id="page" value="{{ $_GET['page'] ?? 1 }}">
                                 <div class="row my-3 align-items-end">
                                 @php
                                 $type = \Auth::user()->type;
@@ -460,7 +533,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                 <div class="col-md-3 mt-2"> <label for="">Assigned To</label>
                                     <div class="" id="assign_to_div">
                                         <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
-                                            
+
                                             @foreach ($filters['employees'] as $key => $user)
                                             <option value="{{ $key }}" <?= isset($_GET['lead_assgigned_user']) && $key == $_GET['lead_assgigned_user'] ? 'selected' : '' ?> class="">{{ $user }}</option>
                                             @endforeach
@@ -628,12 +701,13 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $users[$lead->brand_id] ?? '' }}</td>
                                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $branches[$lead->branch_id] ?? '' }}</td>
                                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
-                                                        @php 
+                                                        @php
                                                            $lead_tags = \App\Models\LeadTag::where('lead_id', $lead->id)->get();
-                                                        @endphp 
+                                                        @endphp
 
                                                         @forelse($lead_tags as $tag)
-                                                            <span class="badge  text-white" style="background-color:#cd9835">{{ $tag->tag }}</span>
+
+                                                        <span class="badge text-white {{ \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' ? 'tag-badge' :''}}" data-tag-id="{{ $tag->id }}" data-tag-name="{{ $tag->tag }}" style="background-color:#cd9835;cursor:pointer;">{{ $tag->tag }}</span>
                                                         @empty
 
                                                         @endforelse
@@ -728,10 +802,69 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 
 
+    <div class="modal" id="UpdateTageModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tags Update</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="UpdateTagForm">
+                    <div class="modal-body" id="sheraz">
+
+                    </div>
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            const selectTag = document.getElementById('tagSelectupdate');
+                            const inputTag = document.querySelector('.inputTageupdate');
+
+                            selectTag.addEventListener('change', function() {
+                                if (this.value === 'other') {
+                                    inputTag.style.display = 'block';
+                                } else {
+                                    inputTag.style.display = 'none';
+                                }
+                            });
+                        });
+                    </script>
+                    <br>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-dark px-2" value="Update">
+                        <a class="btn btn-danger text-white" onclick="deleteTage()">Delete</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
 @endsection
 
 @push('script-page')
     <script>
+
+function deleteTage()
+        {
+            $.ajax({
+            type: "GET",
+            url: '{{ url('delete_tage') }}',
+            data: {id : $('#tagIdInput').val()},
+            success: function(response){
+                data = JSON.parse(response);
+
+                if(data.status == 'success'){
+                    $("#UpdateTageModal").hide();
+                    show_toastr('success', data.msg);
+                    window.location.href = '/leads/list';
+
+                }
+            },
+        });
+
+        }
 
     $(".add-filter").on("click", function() {
         $(".filter-data").toggle();
@@ -750,8 +883,8 @@ if (isset($lead->is_active) && $lead->is_active) {
     $(".add-tags").on("click", function(e){
         e.preventDefault();
         $button = $(this);
-        
-        
+
+
         var formData = $("#addTagForm").serialize(); // Serialize form data
         var url = $("#addTagForm").attr('action'); // Get form action URL
         var csrfToken = $('meta[name="csrf-token"]').attr('content'); // Get CSRF token
@@ -768,7 +901,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                 data = JSON.parse(response);
 
                 if(data.status == 'success'){
-                    
+
                     $("#tagModal").hide();
                     $(".modal-backdrop").removeClass('modal-backdrop');
                     $(".sub-check").prop('checked', false);
@@ -816,11 +949,15 @@ if (isset($lead->is_active) && $lead->is_active) {
             $("#actions_div").removeClass('d-none');
             $("#tagModalBtn").removeClass('d-none');
             $(".send_bulk_email").removeClass('d-none');
+            var url = $(this).data('url') + '?' + $.param({ids: selectedIds});
+            $('.update-bulk-leads').data('url', url);
+            $(".update-bulk-leads").removeClass('d-none');
         } else {
             selectedArr = selectedIds;
             $("#actions_div").addClass('d-none');
             $("#tagModalBtn").addClass('d-none');
             $(".send_bulk_email").addClass('d-none');
+            $(".update-bulk-leads").addClass('d-none');
         }
     });
 
@@ -834,12 +971,14 @@ if (isset($lead->is_active) && $lead->is_active) {
             $("#actions_div").removeClass('d-none');
             $("#tagModalBtn").removeClass('d-none');
             $(".send_bulk_email").removeClass('d-none');
+            $(".update-bulk-leads").removeClass('d-none');
         } else {
             selectedArr = selectedIds;
 
             $("#actions_div").addClass('d-none');
             $("#tagModalBtn").addClass('d-none');
             $(".send_bulk_email").addClass('d-none');
+            $(".update-bulk-leads").addClass('d-none');
         }
         let commaSeperated = selectedArr.join(",");
         console.log(commaSeperated)
@@ -1534,7 +1673,7 @@ if (isset($lead->is_active) && $lead->is_active) {
         });
 
         $(document).on("change", "#filter-show #filter_branch_id, #filter-show #branch_id", function() {
-    
+
             var id = $(this).val();
 
                 $.ajax({
@@ -1612,4 +1751,88 @@ if (isset($lead->is_active) && $lead->is_active) {
 
 
     </script>
+    <script>
+    // JavaScript part
+
+    $(document).ready(function() {
+    $('.tag-badge').click(function() {
+        var tagId = $(this).data('tag-id');
+        var tagName = $(this).data('tag-name');
+        var selectOptions = <?php echo json_encode($tags); ?>;
+
+        // Check if selectOptions is an object
+        if (typeof selectOptions === 'object' && selectOptions !== null) {
+            // Generate options HTML by iterating over object keys
+            var optionsHTML = '';
+            for (var key in selectOptions) {
+                if (selectOptions.hasOwnProperty(key) && key.trim() !== '') {
+                    optionsHTML += `<option value="${key}" ${tagName === key ? 'selected' : ''}>${key}</option>`;
+                }
+            }
+
+            // Append the options to the select element
+            $('#sheraz').append(`
+                <input type="hidden" value="${tagId}" name="id" id="tagIdInput">
+                <div class="form-group">
+                    <label for="">Tag</label>
+                    <select class="form form-control select2 selectTage" name="tagid" id="tagSelectupdate" style="width: 95%;">
+                        <option value="">Select Tag</option>
+                        ${optionsHTML}
+                        @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                         <option value="other">Other</option>
+                        @endif
+                    </select>
+                </div>
+                <div class="form-group inputTageupdate" style="display: none">
+                    <input type="hidden" value="${tagName}" name="tagName" id="tagIdInput">
+                    <label for="">New Tag</label>
+                    <input type="text" name="tags" id="tagNameInput" class="form form-control" style="width: 95%;">
+                </div>
+            `);
+            select2();
+            $('#UpdateTageModal').modal('show');
+            $('#tagSelectupdate').on('change', function() {
+                var inputTag = $('#tagNameInput');
+                if (this.value === 'other') {
+                    inputTag.closest('.inputTageupdate').show();
+                } else {
+                    inputTag.closest('.inputTageupdate').hide();
+                }
+            });
+        } else {
+            console.error("Error: selectOptions is not an object.");
+        }
+    });
+});
+
+
+
+
+
+</script>
+<script>
+    $(document).ready(function () {
+        $('#UpdateTagForm').submit(function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+            $.ajax({
+                url: '{{ url("leads/tag") }}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    data = JSON.parse(response);
+                    show_toastr('success', data.msg);
+                    $("#UpdateTageModal").hide();
+                    window.location.href = '/leads/list';
+                },
+
+            });
+        });
+    });
+</script>
+
+
 @endpush

@@ -524,7 +524,7 @@ class DashboardController extends Controller
         $top_brands = $this->AdmissionTopper();
         $top_countries = $this->GetTop3Countries();
         $deals_stage_share_data = $this->getStageShareDeals();
-        
+
         //getting subcharts
         $sub_chart_visas = $this->getSubChartVisasData();
         $sub_chart_deposit = $this->getSubChartDepositData();
@@ -687,7 +687,7 @@ class DashboardController extends Controller
         foreach ($months as $month) {
             $monthNumber = Carbon::parse("first day of $month")->format('m');
 
-            $query = Deal::join('stages as s', 'deals.stage_id', '=', 's.id')
+            $query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id')
                 ->whereYear('deals.created_at', $year)
                 ->whereMonth('deals.created_at', $monthNumber)
                 ->when(!empty($stageIds), function ($query) use ($stageIds) {
@@ -743,8 +743,19 @@ class DashboardController extends Controller
         foreach ($months as $month) {
             $monthNumber = Carbon::parse("first day of $month")->format('m');
 
-            $query = Lead::whereYear('leads.created_at', $year)
-                ->whereMonth('leads.created_at', $monthNumber);
+
+                $query = Lead::select('leads.*')->whereYear('leads.created_at', $year)->whereMonth('leads.created_at', $monthNumber)
+                ->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')
+                ->join('users', 'users.id', '=', 'leads.brand_id')
+                ->join('branches', 'branches.id', '=', 'leads.branch_id')
+                ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'leads.user_id')
+                ->leftJoin('lead_tags as tag', 'tag.lead_id', '=', 'leads.id');
+                if($name == 'Assigned Leads' || $name == 'Unassigned Leads')
+                {
+                    $query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead'])->where('leads.is_converted', 0);
+                }
+
+
 
             if (\Auth::user()->can('level 1') || \Auth::user()->can('level 2')) {
                 $companies = FiltersBrands();
@@ -764,7 +775,7 @@ class DashboardController extends Controller
             if ($filter == 'Unassigned Lead') {
                 $query->whereNull('user_id');
             } else if ($filter == 'Qualified Lead') {
-                $query->whereIn('stage_id', [5]);
+                $query->whereIn('stage_id', [7]);
             } else if ($filter == 'Unqualified Lead') {
                 $query->whereIn('stage_id', [6]);
             } else { // Unassigned leads
@@ -994,8 +1005,8 @@ class DashboardController extends Controller
     private function GetTop3Regions()
     {
         $results = DB::table(DB::raw('(
-                                        SELECT 
-                                            CASE 
+                                        SELECT
+                                            CASE
                                                 WHEN @prev_region = region_id THEN @rank
                                                 ELSE @rank := @rank + 1
                                             END AS rank,
@@ -1003,7 +1014,7 @@ class DashboardController extends Controller
                                             name,
                                             total_deals
                                         FROM (
-                                            SELECT 
+                                            SELECT
                                                 d.region_id,
                                                 COALESCE(u.name, "others") AS name,
                                                 COUNT(*) AS total_deals
@@ -1039,8 +1050,8 @@ class DashboardController extends Controller
     private function GetTop3Brands()
     {
         $results = DB::table(DB::raw('(
-    SELECT 
-        CASE 
+    SELECT
+        CASE
             WHEN @prev_brand = brand_id THEN @rank
             ELSE @rank := @rank + 1
         END AS `rank`,
@@ -1048,7 +1059,7 @@ class DashboardController extends Controller
         brand_name,
         total_deals
     FROM (
-        SELECT 
+        SELECT
             d.brand_id,
             COALESCE(u.name, "other_brand") AS brand_name,
             COUNT(*) AS total_deals
@@ -1085,8 +1096,8 @@ class DashboardController extends Controller
     private function GetTop3Countries()
     {
         $results = DB::table(DB::raw('(
-    SELECT 
-        CASE 
+    SELECT
+        CASE
             WHEN @prev_country = country THEN @rank
             ELSE @rank := @rank + 1
         END AS `rank`,
@@ -1094,7 +1105,7 @@ class DashboardController extends Controller
         COALESCE(country, "others") AS name,
         total_deals
     FROM (
-        SELECT 
+        SELECT
             l.country,
             COUNT(*) AS total_deals
         FROM deals d

@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-
 @section('page-title')
 {{ __('Organizations') }}
 @endsection

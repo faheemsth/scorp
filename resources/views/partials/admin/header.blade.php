@@ -226,7 +226,7 @@
                 </div>
                 <ul class="list-group list-group-flush">
                     @forelse($notifications as $notification)
-                        <li class="list-group-item" style="color: #000 !important;"><a href="{{ url('notifications') }}">{!! $notification->data !!}</a></li>
+                        <li class="list-group-item <?php echo (!empty($_GET['id']) && $_GET['id'] == $notification->id) ? 'active' : ''; ?>" style="color: #000 !important;"><a href="{{ url('notifications?id=') . $notification->id }}">{!! $notification->data !!}</a></li>
                     @empty
                         <li class="list-group-item text-center" style="color: #000 !important;">No notifications</li>
                     @endforelse

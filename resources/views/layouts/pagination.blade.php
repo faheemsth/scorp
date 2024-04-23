@@ -53,20 +53,25 @@
     .pagination .currentpage a:hover {
         background-color: #313949;
     }
-    .desc{
+
+    .desc {
         position: relative;
     }
 
-    .desc > p{
+    .desc>p {
         margin-top: 1rem;
     }
 </style>
 <div class="pagination-footer">
     <?php $page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
 
-    $num_results_on_page =25;
+    if (!empty($_GET['perPage'])) {
+        $num_results_on_page = $_GET['perPage'];
+    } else {
+        $num_results_on_page = env("RESULTS_ON_PAGE");
+    }
     $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
-    $record_start = ( ($page - 1) * $num_results_on_page);
+    $record_start = ($page - 1) * $num_results_on_page;
     $record_end = $record_start + $num_results_on_page;
     //$record_start += 1;
     ?>
@@ -81,53 +86,56 @@
     if (ceil($total_pages / $num_results_on_page) > 0) : ?>
 
 
-        
-
-        <?php
-        // Check if 'ajax' parameter is present
-        if (isset($_GET['ajaxCall'])) {
-            unset($_GET['ajaxCall']); // Remove 'ajax' parameter if present
-        }
-
-        if (isset($_GET['page'])) {
-            $all_params = $_GET;
-            unset($all_params['page']);
-            $all_params['num_results_on_page'] = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
-            $url = request()->url() . '?' . http_build_query($all_params);
-        } else {
-            $all_params = $_GET;
-            $all_params['num_results_on_page'] = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
-            $url = request()->url() . '?' . http_build_query($all_params);
-        }
 
 
-        ?>
-        <ul class="pagination">
-            <?php if ($page > 1) : ?>
-                <li class="prev"><a href="<?= $url ?>&1=1&page=<?php echo $page - 1 ?>">Prev</a></li>
-            <?php endif; ?>
+    <?php
+    // Check if 'ajax' parameter is present
+    if (isset($_GET['ajaxCall'])) {
+        unset($_GET['ajaxCall']); // Remove 'ajax' parameter if present
+    }
 
-            <?php if ($page > 3) : ?>
-                <li class="start"><a href="<?= $url ?>&1=1&page=1">1</a></li>
-                <li class="dots">...</li>
-            <?php endif; ?>
+    if (isset($_GET['page'])) {
+        $all_params = $_GET;
+        unset($all_params['page']);
+        $all_params['num_results_on_page'] = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+        $url = request()->url() . '?' . http_build_query($all_params);
+    } else {
+        $all_params = $_GET;
+        $all_params['num_results_on_page'] = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+        $url = request()->url() . '?' . http_build_query($all_params);
+    }
 
-            <?php if ($page - 2 > 0) : ?><li class="page"><a href="<?= $url ?>&1=1&page=<?php echo $page - 2 ?>"><?php echo $page - 2 ?></a></li><?php endif; ?>
-            <?php if ($page - 1 > 0) : ?><li class="page"><a href="<?= $url ?>&1=1&page=<?php echo $page - 1 ?>"><?php echo $page - 1 ?></a></li><?php endif; ?>
+    ?>
+    <ul class="pagination">
+        <?php if ($page > 1) : ?>
+        <li class="prev"><a href="<?= $url ?>&1=1&page=<?php echo $page - 1; ?>">Prev</a></li>
+        <?php endif; ?>
 
-            <li class="currentpage"><a href="<?= $url ?>&1=1&page=<?php echo $page ?>"><?php echo $page ?></a></li>
+        <?php if ($page > 3) : ?>
+        <li class="start"><a href="<?= $url ?>&1=1&page=1">1</a></li>
+        <li class="dots">...</li>
+        <?php endif; ?>
 
-            <?php if ($page + 1 < ceil($total_pages / $num_results_on_page) + 1) : ?><li class="page"><a href="<?= $url ?>&1=1&page=<?php echo $page + 1 ?>"><?php echo $page + 1 ?></a></li><?php endif; ?>
-            <?php if ($page + 2 < ceil($total_pages / $num_results_on_page) + 1) : ?><li class="page"><a href="<?= $url ?>&1=1&page=<?php echo $page + 2 ?>"><?php echo $page + 2 ?></a></li><?php endif; ?>
+        <?php if ($page - 2 > 0) : ?><li class="page"><a href="<?= $url ?>&1=1&page=<?php echo $page - 2; ?>"><?php echo $page - 2; ?></a>
+        </li><?php endif; ?>
+        <?php if ($page - 1 > 0) : ?><li class="page"><a
+                href="<?= $url ?>&1=1&page=<?php echo $page - 1; ?>"><?php echo $page - 1; ?></a></li><?php endif; ?>
 
-            <?php if ($page < ceil($total_pages / $num_results_on_page) - 2) : ?>
-                <li class="dots">...</li>
-                <li class="end"><a href="<?= $url ?>&1=1&page=<?php echo ceil($total_pages / $num_results_on_page) ?>"><?php echo ceil($total_pages / $num_results_on_page) ?></a></li>
-            <?php endif; ?>
+        <li class="currentpage"><a href="<?= $url ?>&1=1&page=<?php echo $page; ?>"><?php echo $page; ?></a></li>
 
-            <?php if ($page < ceil($total_pages / $num_results_on_page)) : ?>
-                <li class="next"><a href="<?= $url ?>&1=1&page=<?php echo $page + 1 ?>">Next</a></li>
-            <?php endif; ?>
-        </ul>
+        <?php if ($page + 1 < ceil($total_pages / $num_results_on_page) + 1) : ?><li class="page"><a
+                href="<?= $url ?>&1=1&page=<?php echo $page + 1; ?>"><?php echo $page + 1; ?></a></li><?php endif; ?>
+        <?php if ($page + 2 < ceil($total_pages / $num_results_on_page) + 1) : ?><li class="page"><a
+                href="<?= $url ?>&1=1&page=<?php echo $page + 2; ?>"><?php echo $page + 2; ?></a></li><?php endif; ?>
+
+        <?php if ($page < ceil($total_pages / $num_results_on_page) - 2) : ?>
+        <li class="dots">...</li>
+        <li class="end"><a href="<?= $url ?>&1=1&page=<?php echo ceil($total_pages / $num_results_on_page); ?>"><?php echo ceil($total_pages / $num_results_on_page); ?></a></li>
+        <?php endif; ?>
+
+        <?php if ($page < ceil($total_pages / $num_results_on_page)) : ?>
+        <li class="next"><a href="<?= $url ?>&1=1&page=<?php echo $page + 1; ?>">Next</a></li>
+        <?php endif; ?>
+    </ul>
     <?php endif; ?>
 </div>
