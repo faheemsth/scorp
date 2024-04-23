@@ -24,7 +24,8 @@
         <td>{{ $deal->stage->name }}</td>
         <td>
             @php
-                $lead = \App\Models\Lead::join('client_deals', 'client_deals.client_id', 'leads.is_converted')->where('client_deals.deal_id', $deal->id)->first();
+                //$lead = \App\Models\Lead::join('client_deals', 'client_deals.client_id', 'leads.is_converted')->where('client_deals.deal_id', $deal->id)->first();
+                $lead = \App\Models\Lead::where('is_converted', $deal->id)->first();
                 $source = isset($lead->sources) && isset($sources[$lead->sources]) ? $sources[$lead->sources] : '';
             @endphp
 

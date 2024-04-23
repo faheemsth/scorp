@@ -586,6 +586,7 @@
                                 </div>
 
 
+
                                 <div class="col-md-3 mt-2">
                                     <label for="">Stages</label>
                                     <select name="stages[]" id="stages" class="form form-control select2" multiple style="width: 95%;">
@@ -691,7 +692,8 @@
                                     <td>{{ $deal->stage->name }}</td>
                                     <td>
                                         @php
-                                        $lead = \App\Models\Lead::join('client_deals', 'client_deals.client_id', 'leads.is_converted')->where('client_deals.deal_id', $deal->id)->first();
+                                        //$lead = \App\Models\Lead::join('client_deals', 'client_deals.client_id', 'leads.is_converted')->where('client_deals.deal_id', $deal->id)->first();
+                                        $lead = \App\Models\Lead::where('is_converted', $deal->id)->first();
                                         $source = isset($lead->sources) && isset($sources[$lead->sources]) ? $sources[$lead->sources] : '';
                                         @endphp
 
@@ -1190,7 +1192,7 @@
                 data: formData,
                 success: function(data) {
                     data = JSON.parse(data);
-
+                    //alert(data.status);
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
                         $('#commonModal').modal('hide');
