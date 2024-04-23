@@ -185,27 +185,14 @@ class LeadController extends Controller
         $filters = $this->leadsFilter();
 
         if ($usr->can('view lead') || $usr->can('manage lead') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
+            
 
-            if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
-                $pipeline = Pipeline::get();
-            } else {
-                if (\Auth::user()->default_pipeline) {
-                    $pipeline = Pipeline::where('id', '=', \Auth::user()->default_pipeline)->first();
-
-                    if (!$pipeline) {
-                        $pipeline = Pipeline::first();
-                    }
-                } else {
-                    $pipeline = Pipeline::first();
-                }
-            }
+            $pipeline = Pipeline::first();
 
             // Initialize variables
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-
-
-
+            
             // Build the leads query
             $leads_query = Lead::select('leads.*')
                 ->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')
@@ -316,10 +303,11 @@ class LeadController extends Controller
     public function lead_list()
     {
         //  print_r($_GET);
-        // die('come');
+        //die('come');
         $usr = \Auth::user();
 
         $executed_data = $this->executeLeadQuery();
+    
         $leads = $executed_data['leads'];
         $total_records = $executed_data['total_records'];
         $brands = $executed_data['companies'];
@@ -329,7 +317,6 @@ class LeadController extends Controller
 
         $users = allUsers();
         $stages = LeadStage::get();
-        $pipelines = Pipeline::get()->pluck('name', 'id');
         $organizations = User::where('type', 'organization')->pluck('name', 'id');
 
         $sourcess = Source::get()->pluck('name', 'id');
@@ -378,7 +365,7 @@ class LeadController extends Controller
             $tags = LeadTag::where('created_by', \Auth::id())->pluck('tag', 'tag')->toArray();
         }
 
-        return view('leads.list', compact('pipelines', 'branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status', 'assign_to', 'filters', 'tags'));
+        return view('leads.list', compact('branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status', 'assign_to', 'filters', 'tags'));
     }
 
 
@@ -771,96 +758,35 @@ class LeadController extends Controller
     {
 
         if (\Auth::user()->can('edit lead') || \Auth::user()->type == 'super admin') {
+            $organizations = User::where('type', 'organization')->get()->pluck('name', 'id');
+            $sources        = Source::get()->pluck('name', 'id');
+            $countries = countries();
+            $users = allUsers();
+            $stages = LeadStage::get()->pluck('name', 'id');
+            $lead->products = '';
+            $lead->sources  = explode(',', $lead->sources);
+            $regions =  Region::where('id', $lead->region_id)->pluck('name', 'id')->toArray();
+            $branches =  Branch::where('id', $lead->branch_id)->get()->pluck('name', 'id')->toArray();
+            $companies = FiltersBrands();
+            $filter = BrandsRegionsBranchesForEdit($lead->brand_id, $lead->region_id, $lead->branch_id);
+            $companies = $filter['brands'];
+            $Region = $filter['regions'];
+            $branches = $filter['branches'];
+            $employees = $filter['employees'];
 
-
-            if (\Auth::user()->type == 'super admin') {
-                $pipelines = Pipeline::get()->pluck('name', 'id');
-                $pipelines->prepend(__('Select Pipeline'), '');
-                $sources        = Source::get()->pluck('name', 'id');
-                $products       = ProductService::get()->pluck('name', 'id');
-                $users          = User::where('type', '!=', 'client')->where('type', '!=', 'company')->where('id', '!=', \Auth::user()->id)->get()->pluck('name', 'id');
-                $lead->sources  = $lead->sources;
-                $lead->products = explode(',', $lead->products);
-                $stages = LeadStage::get()->pluck('name', 'id');
-                $regions =  Region::where('id', $lead->region_id)->pluck('name', 'id')->toArray();
-                $branches =  Branch::where('id', $lead->branch_id)->get()->pluck('name', 'id')->toArray();
-                $organizations = User::where('type', 'organization')->get()->pluck('name', 'id');
-                $sources = Source::get()->pluck('name', 'id');
-                $countries = $this->countries_list();
-
-
-                $companies = FiltersBrands();
-
-
-                $filter = BrandsRegionsBranchesForEdit($lead->brand_id, $lead->region_id, $lead->branch_id);
-                $companies = $filter['brands'];
-                $Region = $filter['regions'];
-                $branches = $filter['branches'];
-                $employees = $filter['employees'];
-
-                return view('leads.edit', compact('companies', 'lead', 'pipelines', 'sources', 'products', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'regions', 'employees'));
-            } else if (\Auth::user()->can('edit lead') || $lead->created_by == \Auth::user()->creatorId()) {
-
-                // $pipelines = Pipeline::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-                // $pipelines->prepend(__('Select Pipeline'), '');
-                // $sources        = Source::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-                // $products       = ProductService::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-                // $users          = User::where('created_by', '=', \Auth::user()->creatorId())->where('type', '!=', 'client')->where('type', '!=', 'company')->where('id', '!=', \Auth::user()->id)->get()->pluck('name', 'id');
-                // $lead->sources  = explode(',', $lead->sources);
-                // $lead->products = explode(',', $lead->products);
-
-                $pipelines = Pipeline::get()->pluck('name', 'id');
-                $pipelines->prepend(__('Select Pipeline'), '');
-                $sources        = Source::get()->pluck('name', 'id');
-                $products       = ProductService::get()->pluck('name', 'id');
-                $users = allUsers();
-
-
-                $lead->sources  = explode(',', $lead->sources);
-                $lead->products = explode(',', $lead->products);
-
-                //leads stages
-                $stages = LeadStage::get()->pluck('name', 'id');
-
-                //if not company
-                // $branch_creator_id = '';
-                // if (\Auth::user()->type == 'company') {
-                //     $branch_creator_id = \Auth::user()->id;
-                // } else {
-                //     $branch_creator_id = User::where('id', \Auth::user()->created_by)->first()->id;
-                // }
-                $organizations = User::where('type', 'organization')->get()->pluck('name', 'id');
-                $sources = Source::get()->pluck('name', 'id');
-                $countries = countries();
-                $companies = FiltersBrands();
-                $brand_ids = array_keys($companies);
-
-                // $query = Branch::query();
-                // $region_query = Region::query();
-
-                // foreach ($brand_ids as $brandId) {
-                //     $query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
-                //     $region_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
-                // }
-
-                // $branches = $query->pluck('name', 'id')->toArray();
-                // $regions = $query->pluck('name', 'id')->toArray();
-                $regions =  Region::where('id', $lead->region_id)->pluck('name', 'id')->toArray();
-                $branches =  Branch::where('id', $lead->branch_id)->get()->pluck('name', 'id')->toArray();
-
-
-                $filter = BrandsRegionsBranchesForEdit($lead->brand_id, $lead->region_id, $lead->branch_id);
-
-                $companies = $filter['brands'];
-                $Region = $filter['regions'];
-                $branches = $filter['branches'];
-                $employees = $filter['employees'];
-
-                return view('leads.edit', compact('lead', 'users', 'stages', 'branches', 'organizations', 'sources', 'countries', 'companies', 'regions', 'employees'));
-                // return view('leads.edit', compact('lead', 'pipelines', 'sources', 'products', 'users'));
-            } else {
-                return response()->json(['error' => __('Permission Denied.')], 401);
-            }
+            $data = [
+                'lead' => $lead,
+                'users' => $users,
+                'stages' => $stages,
+                'branches' => $branches,
+                'organizations' => $organizations,
+                'sources' => $sources,
+                'countries' => $countries,
+                'companies' => $companies,
+                'regions' => $regions,
+                'employees' => $employees
+            ];
+            return view('leads.edit', $data);
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
         }
