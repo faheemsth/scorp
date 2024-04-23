@@ -14,8 +14,8 @@
     }
   });
 </script>
-<script src="{{ asset('js/chatify/code.js') }}"></script>
-<script>
+<!-- <script src="{{ asset('js/chatify/code.js') }}"></script> -->
+<!-- <script>
   // Messenger global variable - 0 by default
   messenger = "{{ @$id }}";
-</script>
+</script> -->

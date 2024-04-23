@@ -29,19 +29,19 @@ $lang=Utility::getValByName('default_language');
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="url" content="{{ url('').'/'.config('chatify.path') }}" data-user="{{ Auth::user()->id }}">
+    <!-- <meta name="url" content="{{ url('').'/'.config('chatify.path') }}" data-user="{{ Auth::user()->id }}"> -->
     <link rel="icon" href="{{$logo.'/'.(isset($company_favicon) && !empty($company_favicon)?$company_favicon:'favicon.png')}}" type="image" sizes="16x16">
 
     <!-- Favicon icon -->
     {{-- <link rel="icon" href="{{ asset('assets/images/favicon.svg') }}" type="image/x-icon"/>--}}
     <!-- Calendar-->
     @stack('css-page')
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins/main.css') }}">
+    <!-- <link rel="stylesheet" href="{{ asset('assets/css/plugins/main.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins/style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/plugins/style.css') }}"> -->
+    <!-- <link rel="stylesheet" href="{{ asset('assets/css/plugins/flatpickr.min.css') }}"> -->
 
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins/animate.min.css') }}">
+    <!-- <link rel="stylesheet" href="{{ asset('assets/css/plugins/animate.min.css') }}"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 
@@ -53,7 +53,7 @@ $lang=Utility::getValByName('default_language');
     <link rel="stylesheet" href="{{ asset('assets/fonts/material.css') }}">
 
     <!--bootstrap switch-->
-    <link rel="stylesheet" href="{{ asset('assets/css/plugins/bootstrap-switch-button.min.css') }}">
+    <!-- <link rel="stylesheet" href="{{ asset('assets/css/plugins/bootstrap-switch-button.min.css') }}"> -->
 
     <!-- vendor css -->
     @if ($SITE_RTL == 'on')
