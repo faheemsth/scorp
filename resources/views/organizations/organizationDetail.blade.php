@@ -875,7 +875,7 @@
                                                                                                         </span>
                                                                                                     </div>
 
-                                                                                                    <style>
+                                                                                                    {{-- <style>
                                                                                                         #editable {
                                                                                                             display: none;
                                                                                                         }
@@ -883,7 +883,7 @@
                                                                                                         #lihover:hover #editable {
                                                                                                             display: flex;
                                                                                                         }
-                                                                                                    </style>
+                                                                                                    </style> --}}
                                                                                                     <div class="d-flex gap-3"
                                                                                                         id="dellhover">
                                                                                                         <i class="ti ti-pencil textareaClassedit"
@@ -1018,7 +1018,7 @@
                                                                                                                     </span>
                                                                                                                 </div>
 
-                                                                                                                <style>
+                                                                                                                {{-- <style>
                                                                                                                     #editable {
                                                                                                                         display: none;
                                                                                                                     }
@@ -1026,7 +1026,7 @@
                                                                                                                     #lihover:hover #editable {
                                                                                                                         display: flex;
                                                                                                                     }
-                                                                                                                </style>
+                                                                                                                </style> --}}
                                                                                                                 <div class="d-flex gap-3"
                                                                                                                     id="dellhover">
 
@@ -1110,7 +1110,7 @@
                                                                                                                     </span>
                                                                                                                 </div>
 
-                                                                                                                <style>
+                                                                                                                {{-- <style>
                                                                                                                     #editable {
                                                                                                                         display: none;
                                                                                                                     }
@@ -1118,7 +1118,7 @@
                                                                                                                     #lihover:hover #editable {
                                                                                                                         display: flex;
                                                                                                                     }
-                                                                                                                </style>
+                                                                                                                </style> --}}
                                                                                                                 <div class="d-flex gap-3"
                                                                                                                     id="dellhover">
 

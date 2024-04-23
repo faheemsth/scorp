@@ -1118,15 +1118,7 @@
                                                                                                             </span>
                                                                                                         </div>
 
-                                                                                                        <style>
-                                                                                                            #editable {
-                                                                                                                display: none;
-                                                                                                            }
 
-                                                                                                            #lihover:hover #editable {
-                                                                                                                display: flex;
-                                                                                                            }
-                                                                                                        </style>
                                                                                                     <div class="d-flex gap-3" id="dellhover">
 
                                                                                                             <a data-size="lg"
@@ -1195,15 +1187,8 @@
                                                                                                             </span>
                                                                                                         </div>
 
-                                                                                                        <style>
-                                                                                                            #editable {
-                                                                                                                display: none;
-                                                                                                            }
 
-                                                                                                            #lihover:hover #editable {
-                                                                                                                display: flex;
-                                                                                                            }
-                                                                                                        </style>
+
                                                                                                     <div class="d-flex gap-3" id="dellhover">
 
                                                                                                             <a data-size="lg"

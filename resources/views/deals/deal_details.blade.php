@@ -959,7 +959,7 @@
                                                                                                 </span>
                                                                                             </div>
 
-                                                                                            <style>
+                                                                                            {{-- <style>
                                                                                                 #editable {
                                                                                                     display: none;
                                                                                                 }
@@ -967,7 +967,7 @@
                                                                                                 #lihover:hover #editable {
                                                                                                     display: flex;
                                                                                                 }
-                                                                                            </style>
+                                                                                            </style> --}}
                                                                                         <div class="d-flex gap-3" id="dellhover">
 
                                                                                                 <a data-size="lg"

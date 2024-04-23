@@ -415,7 +415,7 @@
                                                                                 <div class="col-8">
                                                                                     <h4 class="mb-0">
                                                                                         {{ \App\Models\User::where('id', $note->created_by)->first()->name }}</h4>
-                                                                                    <p class="mb-0">super admin</p>
+                                                                                    <p class="mb-0">{{ \App\Models\User::where('id', $note->created_by)->first()->type }}</p>
 
                                                                                 </div>
                                                                             </div>
@@ -509,7 +509,7 @@
                                                                                                   </span>
                                                                                               </div>
 
-                                                                                              <style>
+                                                                                              {{-- <style>
                                                                                                   #editable {
                                                                                                       display: none;
                                                                                                   }
@@ -517,7 +517,7 @@
                                                                                                   #lihover:hover #editable {
                                                                                                       display: flex;
                                                                                                   }
-                                                                                              </style>
+                                                                                              </style> --}}
                                                                                           <div class="d-flex gap-3" id="dellhover">
 
                                                                                                   <a data-size="lg"
