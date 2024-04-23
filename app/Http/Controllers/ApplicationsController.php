@@ -11,6 +11,7 @@ use App\Models\ClientDeal;
 use App\Models\University;
 use App\Models\ActivityLog;
 use App\Models\ApplicationNote;
+use App\Models\ApplicationStage;
 use App\Models\SavedFilter;
 use App\Models\StageHistory;
 use Illuminate\Http\Request;
@@ -161,7 +162,7 @@ class ApplicationsController extends Controller
 
 
             $universities = University::get()->pluck('name', 'id')->toArray();
-            $stages = Stage::orderBy('order', 'ASC')->get()->pluck('name', 'id')->toArray();
+            $stages = ApplicationStage::orderBy('order', 'ASC')->get()->pluck('name', 'id')->toArray();
 
             $brands = User::where('type', 'company')->get();
             $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'applications')->get();
