@@ -3675,68 +3675,37 @@ class LeadController extends Controller
 
     public function updateBulkLead(Request $request)
     {
+       
+       // dd($request->input());
 
-        $ids = explode(',', $request->lead_ids);
+        $ids = explode(',', $request->selectedIds);
+    
 
-        if (isset($request->lead_first_name)) {
-
-            Lead::whereIn('id', $ids)->update(['name' => $request->lead_first_name . ' ' . $request->lead_last_name]);
-            return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
-        } elseif (isset($request->lead_stage)) {
-
-            Lead::whereIn('id', $ids)->update(['stage_id' => $request->lead_stage]);
-            return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
-        } elseif (isset($request->lead_assgigned_user)) {
-
-            Lead::whereIn('id', $ids)->update(['user_id' => $request->lead_assgigned_user]);
-            return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
-        } elseif (isset($request->lead_branch)) {
-
-            Lead::whereIn('id', $ids)->update(['branch_id' => $request->lead_branch]);
-            return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
-        } elseif (isset($request->lead_organization)) {
-
-            Lead::whereIn('id', $ids)->update(['organization_id' => $request->lead_organization]);
-            return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
-        } elseif (isset($request->lead_source)) {
-
-            Lead::whereIn('id', $ids)->update(['sources' => $request->lead_source]);
-            return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
-        } elseif (isset($request->lead_email)) {
-
-            Lead::whereIn('id', $ids)->update(['email' => $request->lead_email]);
-            return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
-        } elseif (isset($request->referrer_email)) {
-
-            Lead::whereIn('id', $ids)->update(['referrer_email' => $request->referrer_email]);
-            return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
-        } elseif (isset($request->lead_phone)) {
-
-            Lead::whereIn('id', $ids)->update(['phone' => $request->lead_phone]);
-            return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
-        } elseif (isset($request->lead_mobile_phone)) {
-
-            Lead::whereIn('id', $ids)->update(['mobile_phone' => $request->lead_mobile_phone]);
-            return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
-        } elseif (isset($request->lead_description)) {
-
-            Lead::whereIn('id', $ids)->update(['keynotes' => $request->lead_description]);
-            return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
-        } elseif (isset($request->lead_tags_list)) {
-
-            Lead::whereIn('id', $ids)->update(['tags' => $request->lead_tags_list]);
-            return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
-        } elseif (isset($request->lead_street)) {
-
-            Lead::whereIn('id', $ids)->update([
-                'street' => $request->lead_street,
-                'city' => $request->lead_city,
-                'state' => $request->lead_state,
-                'postal_code' => $request->lead_postal_code,
-                'country' => $request->lead_country
-            ]);
-            return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
+        if($ids){
+            if(isset($request->brand) && !empty($request->brand)){
+                Lead::whereIn('id', $ids)->update([
+                    'brand_id' => $request->brand, 
+                    'region_id' => $request->region_id, 
+                    'branch_id' => $request->branch_id, 
+                    'user_id' => $request->lead_assgigned_user
+                ]);
+            }else if(isset($request->region_id) && !empty($request->region_id)){
+                Lead::whereIn('id', $ids)->update([
+                    //'brand_id' => $request->brand, 
+                    'region_id' => $request->region_id, 
+                    'branch_id' => $request->branch_id, 
+                    'user_id' => $request->lead_assgigned_user
+                ]);
+            }else if(isset($request->branch_id) && !empty($request->branch_id)){
+                Lead::whereIn('id', $ids)->update([
+                    //'brand_id' => $request->brand, 
+                    //'region_id' => $request->region_id, 
+                    'branch_id' => $request->branch_id, 
+                    'user_id' => $request->lead_assgigned_user
+                ]);
+            }
         }
+        return redirect()->route('leads.list')->with('success', 'Leads updated successfully');
     }
 
 
