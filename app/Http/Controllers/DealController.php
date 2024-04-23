@@ -305,8 +305,8 @@ class DealController extends Controller
                 $deal_simple_query->where('region_id', \Auth::user()->region_id);
                 $deals_query->where('region_id', \Auth::user()->region_id);
             }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || $usr->can('level 4') && !empty(\Auth::user()->branch_id)){
-                $deal_simple_query->where('branch_id', \Auth::user()->branch_id);
-                $deals_query->where('branch_id', \Auth::user()->branch_id);
+                $deal_simple_query->where('deals.branch_id', \Auth::user()->branch_id);
+                $deals_query->where('deals.branch_id', \Auth::user()->branch_id);
             }else{
                 $deal_simple_query->where('assigned_to', \Auth::user()->id);
                 $deals_query->where('assigned_to', \Auth::user()->id);
@@ -346,9 +346,10 @@ class DealController extends Controller
             //if list global search
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
-                $deals_query->join('client_deals', 'client_deals.deal_id', '=', 'deals.id')->join('users', 'users.id', '=', 'client_deals.client_id');
+                $deals_query->join('client_deals', 'client_deals.deal_id', '=', 'deals.id')->join('users', 'users.id', '=', 'deals.assigned_to');
                 $deals_query->Where('deals.name', 'like', '%' . $g_search . '%');
                 $deals_query->orWhere('users.passport_number', 'like', '%' . $g_search . '%');
+                $deals_query->orWhere('users.name', 'like', '%' . $g_search . '%');
                 $deals_query->orWhere('deals.phone', 'like', '%' . $g_search . '%');
             }
 
