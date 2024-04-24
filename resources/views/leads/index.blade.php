@@ -16,7 +16,7 @@
                     border: none !important;
                     outline:none !important;
                 }
-   
+
     .filbar .form-control:focus{
                     border: 1px solid rgb(209, 209, 209) !important;
                 }
@@ -376,7 +376,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-sm-12">
 
                 @php
@@ -597,3 +597,202 @@
         $("#body").css('overflow', 'visible');
     }
 </script>
+<script>
+        //saving discussion
+    $(document).on("submit", "#create-discussion", function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var id = $('.lead-id').val();
+
+        $(".create-discussion-btn").val('Processing...');
+        $('.create-discussion-btn').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: "/leads/" + id + "/discussions",
+            data: formData,
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status == 'success') {
+                    show_toastr('Success', data.message, 'success');
+                    $('#commonModal').modal('hide');
+                    $('.list-group-flush').html(data.html);
+                    // openNav(data.lead.id);
+                    // return false;
+                } else {
+                    show_toastr('error', data.message, 'error');
+                    $(".create-discussion-btn").val('Create');
+                    $('.create-discussion-btn').removeAttr('disabled');
+                }
+            }
+        });
+    })
+
+
+        //saving notes
+    $(document).on("submit", "#create-notes", function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var id = $('.lead-id').val();
+
+        $(".create-notes-btn").val('Processing...');
+        $('.create-notes-btn').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: "/leads/" + id + "/notes",
+            data: formData,
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status == 'success') {
+                    show_toastr('Success', data.message, 'success');
+                    $('#commonModal').modal('hide');
+                    $('.note-tbody').html(data.html);
+                    $('#note_id').val('');
+                    $('#description').val('');
+
+                    // openNav(data.lead.id);
+                    // return false;
+                } else {
+                    show_toastr('error', data.message, 'error');
+                    $(".create-notes-btn").val('Create');
+                    $('.create-notes-btn').removeAttr('disabled');
+                }
+            }
+        });
+    })
+
+
+    $(document).on("submit", "#update-notes", function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var id = $('.lead-id').val();
+
+        $(".update-notes-btn").val('Processing...');
+        $('.update-notes-btn').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: "/leads/" + id + "/notes-update",
+            data: formData,
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status == 'success') {
+                    show_toastr('Success', data.message, 'success');
+                    $('#commonModal').modal('hide');
+                    $('.note-tbody').html(data.html);
+                    // openNav(data.lead.id);
+                    // return false;
+                } else {
+                    show_toastr('error', data.message, 'error');
+                    $(".update-notes-btn").val('Update');
+                    $('.update-notes-btn').removeAttr('disabled');
+                }
+            }
+        });
+    })
+
+
+        //delete-notes
+    $(document).on("click", '.delete-notes', function(e) {
+        e.preventDefault();
+
+        var id = $(this).attr('data-note-id');
+        var lead_id = $('.lead-id').val();
+        var currentBtn = '';
+
+
+            Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+            $.ajax({
+                type: "GET",
+                url: "/leads/" + id + "/notes-delete",
+                data: {
+                    id,
+                    lead_id
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('.note-tbody').html(data.html);
+                        // openNav(data.lead.id);
+                        // return false;
+                    } else {
+                        show_toastr('error', data.message, 'error');
+                    }
+                }
+            });
+        }
+        });
+
+        })
+        $(document).on("change", "#bulk-assign #region_id, #bulk-assign #filter_region_id", function() {
+            var id = $(this).val();
+            var filter = true;
+            var type = 'region';
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#branch_bulkassign_div').html('');
+                        $("#branch_bulkassign_div").html(data.branches);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+        $(document).on("change", "#bulk-assign #branch_id, #bulk-assign #filter_branch_id", function() {
+
+            var id = $(this).val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('filter-branch-users') }}',
+                    data: {
+                        id: id,
+                        page: 'lead_list'
+                    },
+                    success: function(data){
+                        data = JSON.parse(data);
+
+                        if (data.status === 'success') {
+                            $('#bulkassign_to_div').html('');
+                            $("#bulkassign_to_div").html(data.html);
+                            select2();
+                        } else {
+                            console.error('Server returned an error:', data.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX request failed:', status, error);
+                    }
+                });
+        });
+    </script>

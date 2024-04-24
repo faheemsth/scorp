@@ -524,6 +524,7 @@
         });
     });
 </script>
+
 <script>
     /* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
     function openNav(deal_id) {
@@ -584,3 +585,153 @@
         $('#change-pipeline').submit();
     });
 </script>
+<script>
+        //saving discussion
+        $(document).on("submit", "#create-discussion", function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            var id = $('.deal-id').val();
+
+            $(".create-discussion-btn").val('Processing...');
+            $('.create-discussion-btn').attr('disabled', 'disabled');
+
+            $.ajax({
+                type: "POST",
+                url: "/deals/" + id + "/discussions",
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('#commonModal').modal('hide');
+                        $('.list-group-flush').html(data.html);
+                        $(".discussion_count").text(data.total_discussions);
+                        // openNav(data.lead.id);
+                        return false;
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                        $(".create-discussion-btn").val('Create');
+                        $('.create-discussion-btn').removeAttr('disabled');
+                    }
+                }
+            });
+        })
+
+        //saving notes
+        $(document).on("submit", "#create-notes", function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            var id = $('.deal-id').val();
+
+            $(".create-notes-btn").val('Processing...');
+            $('.create-notes-btn').attr('disabled', 'disabled');
+
+            $.ajax({
+                type: "POST",
+                url: "/deals/" + id + "/notes",
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('.create-notes-btn').removeAttr('disabled');
+                        $('#commonModal').modal('hide');
+                        $('.note-body').html(data.html);
+                        $('textarea[name="description"]').val('');
+                        $('#note_id').val('');
+
+                        // openNav(data.lead.id);
+                        // return false;
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                        $(".create-notes-btn").val('Create');
+                        $('.create-notes-btn').removeAttr('disabled');
+                    }
+                }
+            });
+        })
+
+
+        $(document).on("submit", "#update-notes", function(e) {
+            e.preventDefault();
+            var formData = $(this).serialize();
+            var id = $('.deal-id').val();
+
+            $(".update-notes-btn").val('Processing...');
+            $('.update-notes-btn').attr('disabled', 'disabled');
+
+            $.ajax({
+                type: "POST",
+                url: "/deals/" + id + "/notes-update",
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('.update-notes-btn').removeAttr('disabled');
+                        $('#commonModal').modal('hide');
+                        $('.note-body').html(data.html);
+                        $('textarea[name="description"]').val('');
+
+                        $('#note_id').val('');
+
+                        // openNav(data.lead.id);
+                        // return false;
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                        $(".update-notes-btn").val('Update');
+                        $('.update-notes-btn').removeAttr('disabled');
+                    }
+                }
+            });
+        })
+
+
+        //delete-notes
+        $(document).on("click", '.delete-notes', function(e) {
+            e.preventDefault();
+
+            var id = $(this).attr('data-note-id');
+            var deal_id = $('.deal-id').val();
+            var currentBtn = '';
+            Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+            $.ajax({
+                type: "GET",
+                url: "/deals/" + id + "/notes-delete",
+                data: {
+                    id,
+                    deal_id
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('.note-body').html(data.html);
+                        $('textarea[name="description"]').val('');
+                        $('#note_id').val('');
+
+                        // openNav(data.lead.id);
+                        // return false;
+                    } else {
+                        show_toastr('Error', data.message, 'error');
+                    }
+                }
+            });
+        }
+      });
+
+        })
+    </script>
