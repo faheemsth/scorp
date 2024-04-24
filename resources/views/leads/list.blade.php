@@ -925,8 +925,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                     show_toastr('Success', data.message, 'success');
                     $('#commonModal').modal('hide');
                     $('.note-tbody').html(data.html);
-                    // openNav(data.lead.id);
-                    // return false;
+                    $('#note_id').val('');
+                    $('#description').val('');
                 } else {
                     show_toastr('error', data.message, 'error');
                     $(".update-notes-btn").val('Update');
@@ -969,8 +969,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
                         $('.note-tbody').html(data.html);
-                        // openNav(data.lead.id);
-                        // return false;
+                        $('#note_id').val('');
+                        $('#description').val('');
                     } else {
                         show_toastr('error', data.message, 'error');
                     }

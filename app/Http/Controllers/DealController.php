@@ -3507,7 +3507,8 @@ class DealController extends Controller
 
 
         $id = $request->id;
-        if($request->note_id != null && $request->note_id != ''){
+        $note = DealNote::where('id', $request->note_id)->first();
+        if($request->note_id != null && $request->note_id != '' && !empty($note)){
             $note = DealNote::where('id', $request->note_id)->first();
             $note->title = $request->input('title');
             $note->description = $request->input('description');

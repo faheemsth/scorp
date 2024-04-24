@@ -960,7 +960,7 @@
                                                                             {{ Form::model($lead, array('route' => array('leads.notes.store', $lead->id), 'method' => 'POST', 'id' => 'create-notes' ,'style' => 'z-index: 9999999 !important;')) }}
                                                                             <textarea class="form-control" style="height: 120px;" name="description" id="description"
                                                                                 placeholder="Click here add your Notes Comments..."></textarea>
-                                                                            <input type="hidden" id="id" value="{{ $lead->id }}" name="id">
+                                                                            <input type="hidden" id="note_id" value="" name="note_id">
                                                                             <div class="row justify-content-end indivbtn">
                                                                                 {{-- <div class="col-auto px-0">
                                                                                     <button class="btn  btn-outline-dark text-dark"
