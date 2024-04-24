@@ -185,14 +185,14 @@ class LeadController extends Controller
         $filters = $this->leadsFilter();
 
         if ($usr->can('view lead') || $usr->can('manage lead') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team') {
-            
+
 
             $pipeline = Pipeline::first();
 
             // Initialize variables
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-            
+
             // Build the leads query
             $leads_query = Lead::select('leads.*')
                 ->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')
@@ -307,7 +307,7 @@ class LeadController extends Controller
         $usr = \Auth::user();
 
         $executed_data = $this->executeLeadQuery();
-    
+
         $leads = $executed_data['leads'];
         $total_records = $executed_data['total_records'];
         $brands = $executed_data['companies'];
@@ -1092,31 +1092,31 @@ class LeadController extends Controller
 
     private function excelSheetDataSaved($request, $file, $pipeline, $stage)
     {
-        // dd($request->input());
-
-
         $usr = \Auth::user();
         $column_arr = [];
         $spreadsheet = IOFactory::load($file->getPathname());
         $worksheet = $spreadsheet->getActiveSheet();
         $key = 0;
 
-        //$assigned_user = isset($request->lead_assgigned_user) ? $request->lead_assgigned_user : $request->assigned_to;
+        // Extract column mapping
         foreach ($worksheet->getRowIterator() as $line) {
             if ($key == 0) {
                 foreach ($line->getCellIterator() as $column_key => $column) {
                     $column = preg_replace('/[^\x20-\x7E]/', '', $column);
+                    if (empty($_POST['columns'][$column])) {
+                        continue;
+                    }
                     $column_arr[$column_key] = $_POST['columns'][$column];
                 }
                 $key++;
                 continue;
             }
 
-
-            $lead  = new Lead();
+            $lead = new Lead();
             $test = [];
-            foreach ($line->getCellIterator() as $column_key => $column) {
 
+            // Assign attributes to leads, then check if the email already exists in the database or if it's a new lead.
+            foreach ($line->getCellIterator() as $column_key => $column) {
                 $column = preg_replace('/[^\x20-\x7E]/', '', $column);
                 if (!empty($column_arr[$column_key])) {
                     $test[$column_arr[$column_key]] = $column;
@@ -1124,92 +1124,59 @@ class LeadController extends Controller
                 }
             }
 
+            // Check if the lead exists
             $lead_exist = Lead::where('email', $lead->email)->first();
-
             if ($lead_exist) {
-                $lead = Lead::where('email', $lead->email)->first();
-            } else {
-                $lead  = new Lead();
+                $lead = $lead_exist;
             }
 
-            $test = [];
-            foreach ($line->getCellIterator() as $column_key => $column) {
+            // Set default values if certain fields are not present
+            $lead->email = in_array('email', $column_arr) ? $lead->email : '';
+            $lead->subject = in_array('subject', $column_arr) ? $lead->subject : '';
 
-                $column = preg_replace('/[^\x20-\x7E]/', '', $column);
-                if (!empty($column_arr[$column_key])) {
-                    $test[$column_arr[$column_key]] = $column;
-                    $lead->{$column_arr[$column_key]} = $column;
-                }
-            }
-
-            //if no email found
-            if (!in_array('email', $column_arr)) {
-                $lead->email = '';
-            }
-
-            if (!in_array('subject', $column_arr)) {
-                $lead->subject = '';
-            }
-
-            $lead->user_id     = $request->lead_assgigned_user;
-            $lead->brand_id     = $request->brand_id;
-            $lead->region_id    = $request->region_id;
-            $lead->branch_id     = $request->lead_branch;
-
+            $lead->user_id = $request->lead_assgigned_user;
+            $lead->brand_id = $request->brand_id;
+            $lead->region_id = $request->region_id;
+            $lead->branch_id = $request->lead_branch;
             $lead->pipeline_id = $pipeline->id;
 
             if (!isset($stage->id)) {
                 return redirect()->back()->with('error', 'Please create lead stage first');
             }
 
-            $lead->stage_id    = $stage->id;
-            $lead->created_by  = \Auth::user()->id;
-            $lead->date        = date('Y-m-d');
-
-            //dd($lead);
-
+            $lead->stage_id = $stage->id;
+            $lead->created_by = \Auth::user()->id;
+            $lead->date = date('Y-m-d');
             if (!empty($lead->name) || !empty($lead->email) || !empty($lead->phone) || !empty($lead->subject) || !empty($lead->notes)) {
                 $lead->save();
-                UserLead::create(
-                    [
-                        'user_id' => $usr->id,
-                        'lead_id' => $lead->id,
-                    ]
-                );
+             
+                if(in_array('notes', $column_arr)){
+                    $notes = new LeadNote();
+                    $notes->description = str_replace('"', '', $test['notes']) ?? '';
+                    $notes->created_by = auth()->id();
+                    $notes->lead_id =$lead->id;
+                    $notes->save();
+                }
+
+                UserLead::create([
+                    'user_id' => $usr->id,
+                    'lead_id' => $lead->id,
+                ]);
 
                 $usrEmail = User::find($request->lead_assgigned_user);
 
                 // Send Email
                 $setings = Utility::settings();
                 if ($setings['lead_assigned'] == 1) {
-
-                    $usrEmail = User::find($request->lead_assgigned_user);
                     $leadAssignArr = [
                         'lead_name' => $lead->name,
                         'lead_email' => $lead->email,
                         'lead_subject' => $lead->subject,
                         'lead_pipeline' => $pipeline->name,
                         'lead_stage' => $stage->name,
-
                     ];
 
                     $resp = Utility::sendEmailTemplate('lead_assigned', [$usrEmail->id => $usrEmail->email], $leadAssignArr);
-
-                    //return redirect()->back()->with('success', __('Lead successfully created!') . (($resp['is_success'] == false && !empty($resp['error'])) ? '<br> <span class="text-danger">' . $resp['error'] . '</span>' : ''));
-                }
-
-                //Slack Notification
-                $setting  = Utility::settings($usr->id);
-                if (isset($setting['lead_notification']) && $setting['lead_notification'] == 1) {
-                    $msg = __("New Lead created by") . ' ' . $usr->name . '.';
-                    Utility::send_slack_msg($msg);
-                }
-
-                //Telegram Notification
-                $setting  = Utility::settings($usr->id);
-                if (isset($setting['telegram_lead_notification']) && $setting['telegram_lead_notification'] == 1) {
-                    $msg = __("New Lead created by") . ' ' . $usr->name . '.';
-                    Utility::send_telegram_msg($msg);
                 }
             }
         }
@@ -1220,22 +1187,41 @@ class LeadController extends Controller
 
     private function csvSheetDataSaved($request, $file, $pipeline, $stage)
     {
-        // dd($request);
         $usr = \Auth::user();
         $column_arr = [];
         $handle = fopen($file->getPathname(), 'r');
         $key = 0;
+
         while ($line = fgets($handle)) {
-            $line = explode(",", $line);
+
+             // Remove BOM
+             if (substr($line, 0, 3) == pack('CCC', 0xEF, 0xBB, 0xBF)) {
+                $line = substr($line, 3);
+            }
+
+            // Remove null bytes
+            $clean_line = str_replace("\x00", '', $line);
+
+            // Decode UTF-16LE
+            $clean_line = utf8_encode(utf8_decode($clean_line));
+
+            $clean_line = str_replace('??', '', $clean_line);
+            $delimater = $this->getFileDelimiter($file, 1);
+            $line = explode($delimater, $clean_line);
+
             if ($key == 0) {
                 foreach ($line as $column_key => $column) {
                     $column = preg_replace('/[^\x20-\x7E]/', '', $column);
+
+                    if (empty($_POST['columns'][$column])) {
+                        continue;
+                    }
+
                     $column_arr[$column_key] = $_POST['columns'][$column];
                 }
                 $key++;
                 continue;
             }
-
 
             $lead  = new Lead();
             $test = [];
@@ -1244,15 +1230,16 @@ class LeadController extends Controller
                 $column = preg_replace('/[^\x20-\x7E]/', '', $column);
                 if (!empty($column_arr[$column_key])) {
                     $test[$column_arr[$column_key]] = $column;
-                    $lead->{$column_arr[$column_key]} = $column;
+                    $lead->{$column_arr[$column_key]} = str_replace('"','', $column);
                 }
             }
-
-
-            $lead_exist = Lead::where('email', $lead->email)->first();
+            
+            $lead_exist = Lead::where('email', $test['email'] ?? '')->first();
             if ($lead_exist) {
                 continue;
             }
+
+           
             //if no email found
             if (!in_array('email', $column_arr)) {
                 $lead->email = '';
@@ -1263,9 +1250,9 @@ class LeadController extends Controller
             }
 
             $lead->user_id     = $request->lead_assgigned_user;
-            $lead->brand_id     = $request->brand_id;
-            $lead->region_id    = $request->region_id;
-            $lead->branch_id     = $request->lead_branch;
+            $lead->brand_id    = $request->brand_id;
+            $lead->region_id   = $request->region_id;
+            $lead->branch_id   = $request->lead_branch;
 
             $lead->pipeline_id = $pipeline->id;
             if (!isset($stage->id)) {
@@ -1275,9 +1262,18 @@ class LeadController extends Controller
             $lead->stage_id    = $stage->id;
             $lead->created_by  = $usr->id;
             $lead->date        = date('Y-m-d');
+
+            
             if (!empty($lead->name) || !empty($lead->email) || !empty($lead->phone) || !empty($lead->subject) || !empty($lead->notes)) {
                 $lead->save();
-
+                //dd($test);
+                if(in_array('notes', $column_arr)){
+                    $notes = new LeadNote();
+                    $notes->description = str_replace('"', '', $test['notes']) ?? '';
+                    $notes->created_by = auth()->id();
+                    $notes->lead_id =$lead->id;
+                    $notes->save();
+                }
                 UserLead::create(
                     [
                         'user_id' => $usr->id,
@@ -1293,11 +1289,11 @@ class LeadController extends Controller
 
                     $usrEmail = User::find($request->lead_assgigned_user);
                     $leadAssignArr = [
-                        'lead_name' => $lead->name,
-                        'lead_email' => $lead->email,
-                        'lead_subject' => $lead->subject,
+                        'lead_name'     => $lead->name,
+                        'lead_email'    => $lead->email,
+                        'lead_subject'  => $lead->subject,
                         'lead_pipeline' => $pipeline->name,
-                        'lead_stage' => $stage->name,
+                        'lead_stage'    => $stage->name,
 
                     ];
 
@@ -1307,18 +1303,18 @@ class LeadController extends Controller
                 }
 
                 //Slack Notification
-                $setting  = Utility::settings($usr->id);
-                if (isset($setting['lead_notification']) && $setting['lead_notification'] == 1) {
-                    $msg = __("New Lead created by") . ' ' . $usr->name . '.';
-                    Utility::send_slack_msg($msg);
-                }
+                // $setting  = Utility::settings($usr->id);
+                // if (isset($setting['lead_notification']) && $setting['lead_notification'] == 1) {
+                //     $msg = __("New Lead created by") . ' ' . $usr->name . '.';
+                //     Utility::send_slack_msg($msg);
+                // }
 
                 //Telegram Notification
-                $setting  = Utility::settings($usr->id);
-                if (isset($setting['telegram_lead_notification']) && $setting['telegram_lead_notification'] == 1) {
-                    $msg = __("New Lead created by") . ' ' . $usr->name . '.';
-                    Utility::send_telegram_msg($msg);
-                }
+                // $setting  = Utility::settings($usr->id);
+                // if (isset($setting['telegram_lead_notification']) && $setting['telegram_lead_notification'] == 1) {
+                //     $msg = __("New Lead created by") . ' ' . $usr->name . '.';
+                //     Utility::send_telegram_msg($msg);
+                // }
             }
             //$lead->save();
         }
@@ -1330,11 +1326,13 @@ class LeadController extends Controller
 
 
 
+
+
     public function importCsv(Request $request)
     {
         $usr = \Auth::user();
 
-        if ($usr->can('edit lead')) {
+       // if ($usr->can('edit lead')) {
             $file = $request->file('leads_file');
 
             $column_arr = [];
@@ -1462,9 +1460,9 @@ class LeadController extends Controller
                 return redirect()->back()->with('success', __('Lead successfully created!'));
             else
                 return redirect()->back()->with('error', __('Went something wrong.'));
-        } else {
-            return redirect()->back()->with('error', __('Permission Denied.'));
-        }
+        // } else {
+        //     return redirect()->back()->with('error', __('Permission Denied.'));
+        // }
     }
 
     public static function convert_from_latin1_to_utf8_recursively($dat)
@@ -1495,6 +1493,9 @@ class LeadController extends Controller
             foreach ($row->getCellIterator() as $cell) {
                 $cellValue = $cell->getValue();
                 $clean_string = preg_replace('/[^\x20-\x7E]/', '', $cellValue);
+                if (empty($clean_string)) {
+                    continue;
+                }
                 $cleaned_row[] = $clean_string;
             }
             $first_row = $cleaned_row;
@@ -1503,22 +1504,72 @@ class LeadController extends Controller
         return $first_row;
     }
 
+    function getFileDelimiter($file, $checkLines = 2)
+    {
+        $file = new SplFileObject($file);
+        $delimiters = array(
+            ",",
+            "\t",
+            ";",
+            "|",
+            ":"
+        );
+        $results = array();
+        $i = 0;
+        while ($file->valid() && $i <= $checkLines) {
+            $line = $file->fgets();
+            foreach ($delimiters as $delimiter) {
+                $regExp = '/[' . $delimiter . ']/';
+                $fields = preg_split($regExp, $line);
+                if (count($fields) > 1) {
+                    if (!empty($results[$delimiter])) {
+                        $results[$delimiter]++;
+                    } else {
+                        $results[$delimiter] = 1;
+                    }
+                }
+            }
+            $i++;
+        }
+        $results = array_keys($results, max($results));
+        return $results[0];
+    }
+
 
     public function readCsvHeader($file)
     {
+
+        // $delimater = $this->getFileDelimiter($file, 1);
+
         $handle = fopen($file->getPathname(), 'r');
         $first_row = [];
 
         while ($line = fgets($handle)) {
+            // Remove BOM
+            if (substr($line, 0, 3) == pack('CCC', 0xEF, 0xBB, 0xBF)) {
+                $line = substr($line, 3);
+            }
 
-            $fields = explode(",", $line);
-            foreach ($fields as $field) {
+            // Remove null bytes
+            $clean_line = str_replace("\x00", '', $line);
+
+            // Decode UTF-16LE
+            $clean_line = utf8_encode(utf8_decode($clean_line));
+
+            $clean_line = str_replace('??', '', $clean_line);
+            $delimater = $this->getFileDelimiter($file, 1);
+            $fields = explode($delimater, $clean_line);
+
+
+            $fields = explode($delimater, $line);
+
+            foreach ($fields as $field) {;
                 $clean_string = preg_replace('/[^\x20-\x7E]/', '', $field);
-                $first_row[] = $clean_string;
+                if (!empty($clean_string))
+                    $first_row[] = $clean_string;
             }
             break;
         }
-
         fclose($handle);
 
         return $first_row;
@@ -1584,6 +1635,7 @@ class LeadController extends Controller
 
     public function fileUpload($id, Request $request)
     {
+
 
         if (\Auth::user()->can('edit lead')) {
             $lead = Lead::find($id);
@@ -2510,7 +2562,6 @@ class LeadController extends Controller
     public function convertToDeal($id, Request $request)
     {
 
-
         $validator = \Validator::make(
             $request->all(),
             [
@@ -2584,6 +2635,12 @@ class LeadController extends Controller
             ->first();
         if (empty($stage)) {
             return redirect()->back()->with('error', __('Please Create Stage for This Pipeline.'));
+        }
+
+        //check if deal already exist
+        $lead_converted = Lead::where('id', $lead->id)->first();
+        if($lead_converted->converted != 0){
+            return redirect()->back()->with('success', __('Lead successfully converted'));
         }
 
         $deal              = new Deal();
@@ -2768,20 +2825,20 @@ class LeadController extends Controller
 
 
         //Slack Notification
-        $setting  = Utility::settings(\Auth::user()->creatorId());
-        $leadUsers = Lead::where('id', '=', $lead->id)->first();
-        if (isset($setting['leadtodeal_notification']) && $setting['leadtodeal_notification'] == 1) {
-            $msg = __("Deal converted through lead") . '' . $leadUsers->name . '.';
-            Utility::send_slack_msg($msg);
-        }
+        // $setting  = Utility::settings(\Auth::user()->creatorId());
+        // $leadUsers = Lead::where('id', '=', $lead->id)->first();
+        // if (isset($setting['leadtodeal_notification']) && $setting['leadtodeal_notification'] == 1) {
+        //     $msg = __("Deal converted through lead") . '' . $leadUsers->name . '.';
+        //     Utility::send_slack_msg($msg);
+        // }
 
         //Telegram Notification
-        $setting  = Utility::settings(\Auth::user()->creatorId());
-        $leadUsers = Lead::where('id', '=', $lead->id)->first();
-        if (isset($setting['telegram_leadtodeal_notification']) && $setting['telegram_leadtodeal_notification'] == 1) {
-            $msg = __("Deal converted through lead") . '' . $leadUsers->name . '.';
-            Utility::send_telegram_msg($msg);
-        }
+        // $setting  = Utility::settings(\Auth::user()->creatorId());
+        // $leadUsers = Lead::where('id', '=', $lead->id)->first();
+        // if (isset($setting['telegram_leadtodeal_notification']) && $setting['telegram_leadtodeal_notification'] == 1) {
+        //     $msg = __("Deal converted through lead") . '' . $leadUsers->name . '.';
+        //     Utility::send_telegram_msg($msg);
+        // }
 
 
         return redirect()->back()->with('success', __('Lead successfully converted'));
@@ -3092,7 +3149,7 @@ class LeadController extends Controller
             $lead_stages = $stageCnt;
 
 
-            $tasks = \App\Models\DealTask::where(['related_to' => $lead->id, 'related_type' => 'lead'])->orderBy('status')->get();
+            $tasks = DealTask::where(['related_to' => $lead->id, 'related_type' => 'lead'])->orderBy('status')->get();
             $branches = Branch::get()->pluck('name', 'id');
             $users = allUsers();
             $log_activities = getLogActivity($lead->id, 'lead');
@@ -3601,32 +3658,32 @@ class LeadController extends Controller
 
     public function updateBulkLead(Request $request)
     {
-       
-       // dd($request->input());
+
+        // dd($request->input());
 
         $ids = explode(',', $request->selectedIds);
-    
 
-        if($ids){
-            if(isset($request->brand) && !empty($request->brand)){
+
+        if ($ids) {
+            if (isset($request->brand) && !empty($request->brand)) {
                 Lead::whereIn('id', $ids)->update([
-                    'brand_id' => $request->brand, 
-                    'region_id' => $request->region_id, 
-                    'branch_id' => $request->branch_id, 
+                    'brand_id' => $request->brand,
+                    'region_id' => $request->region_id,
+                    'branch_id' => $request->branch_id,
                     'user_id' => $request->lead_assgigned_user
                 ]);
-            }else if(isset($request->region_id) && !empty($request->region_id)){
+            } else if (isset($request->region_id) && !empty($request->region_id)) {
                 Lead::whereIn('id', $ids)->update([
                     //'brand_id' => $request->brand, 
-                    'region_id' => $request->region_id, 
-                    'branch_id' => $request->branch_id, 
+                    'region_id' => $request->region_id,
+                    'branch_id' => $request->branch_id,
                     'user_id' => $request->lead_assgigned_user
                 ]);
-            }else if(isset($request->branch_id) && !empty($request->branch_id)){
+            } else if (isset($request->branch_id) && !empty($request->branch_id)) {
                 Lead::whereIn('id', $ids)->update([
                     //'brand_id' => $request->brand, 
                     //'region_id' => $request->region_id, 
-                    'branch_id' => $request->branch_id, 
+                    'branch_id' => $request->branch_id,
                     'user_id' => $request->lead_assgigned_user
                 ]);
             }
