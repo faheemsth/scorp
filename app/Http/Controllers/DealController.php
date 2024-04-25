@@ -2847,15 +2847,20 @@ class DealController extends Controller
                 } elseif ($column == 'due_date') {
                     $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
                 }elseif ($column == 'status') {
-                    if (is_array($value)) {
-                        if (in_array(2, $value)) {
+                    if(gettype($value) == 'array'){
+                        if(in_array(2, $value)){
                             $tasks->where('status', 0)->where('due_date', '<', now());
-                        } else {
+                        }else{
                             $tasks->whereIn('status', $value);
                         }
-                    } else {
-                        $tasks->where('status', $value);
+                    }else{
+                        if($value == 2){
+                            $tasks->where('status', 0)->where('due_date', '<', now());
+                        }else{
+                            $tasks->where('status', $value);
+                        }
                     }
+
                 }elseif ($column == 'created_at_from') {
                     $tasks->whereDate('deal_tasks.created_at', '>=', $value);
                 }elseif ($column == 'created_at_to') {
