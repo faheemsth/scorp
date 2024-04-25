@@ -77,7 +77,7 @@
                                 </select>
                             </div>
                         </div>
-                        @else 
+                        @else
                         <div class="form-group row ">
                             <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                 class="text-danger">*</span></label>
@@ -102,8 +102,8 @@
                                     \Auth::user()->type == 'Region Manager' ||
                                     \Auth::user()->can('level 1') ||
                                     \Auth::user()->can('level 2') ||
-                                    \Auth::user()->can('level 3')) 
-                        
+                                    \Auth::user()->can('level 3'))
+
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Region<span
                                         class="text-danger">*</span></label>
@@ -114,7 +114,7 @@
                                         ]) !!}
                                     </div>
                                 </div>
-                            @else 
+                            @else
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Region<span
                                         class="text-danger">*</span></label>
@@ -155,7 +155,7 @@
                                     </select>
                                 </div>
                             </div>
-                        @else 
+                        @else
                             <div class="form-group row ">
                                 <label for="branches" class="col-sm-3 col-form-label">Branch<span
                                     class="text-danger">*</span></label>
@@ -182,6 +182,18 @@
                                     @foreach($employees as $key => $employee)
                                     <option value="{{$key}}" {{ $key == $task->assigned_to ? 'selected' : '' }}>{{$employee}}</option>
                                     @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="type" class="col-sm-3 col-form-label">Task Status<span
+                                class="text-danger">*</span></label>
+                            <div class="col-sm-6">
+                                <select class="form form-control select2" id="choices-multiple5" name="status" {{ !\Auth::user()->can('edit assign to task') ? 'disabled' : '' }}>
+                                    <option value="">Select Status</option>
+                                    <option value="0" {{ $task->status == '0' ? 'selected':'' }}>On Going</option>
+                                    <option value="1" {{ $task->status == '1' ? 'selected':'' }}>Completed
+                                    </option>
                                 </select>
                             </div>
                         </div>
