@@ -44,9 +44,10 @@ function daterange() {
 
 
 function show_toastr(type, message) {
+   
+
     var f = document.getElementById('liveToast');
     var toast = new bootstrap.Toast(f);
-
     if (type == 'success') {
         $('#liveToast').addClass('successmg');
     } else {
@@ -55,8 +56,8 @@ function show_toastr(type, message) {
 
     $('#liveToast .toast-body').html(message);
 
-    //toast.show();
-    $('#liveToast').addClass('show');
+    toast.show();
+    //$('#liveToast').addClass('show');
 
     // Hide the toast after 5 seconds
     setTimeout(function() {
