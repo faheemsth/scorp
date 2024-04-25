@@ -68,7 +68,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form action="{{ url('leads/import-csv') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ url('leads/import-csv') }}" method="POST" id="importCsvForm" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body pt-0">
                     <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
@@ -87,7 +87,7 @@
                                 <div class="col-md-6">
                                     <div class="form-groups mt-2 pe-3">
                                         <label for="lead-file" class="form-label">{{ __('Column') }}</label>
-                                        <input type="file" name="leads_file" id="lead-file" class="form-control" accept=".csv,.xls" />
+                                        <input type="file" name="leads_file" id="lead-file" class="form-control" accept="*" />
                                     </div>
                                 </div>
                             </div>
@@ -103,7 +103,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
-                    <button type="submit" class="btn btn-dark submit_btn">{{ __('Create') }}</button>
+                    <button type="button" class="btn btn-dark submit_btn" id="submit_btn">{{ __('Create') }}</button>
                 </div>
             </form>
 
