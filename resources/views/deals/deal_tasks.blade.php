@@ -293,7 +293,7 @@ $setting = \App\Models\Utility::colorset();
 
                                 <div class="col-md-3 mt-2">
                                     <label for="">Status</label>
-                                    <select class="form form-control select2" id="status444" name="status" multiple style="width: 95%;">
+                                    <select class="form form-control select2" id="status444" name="status[]" multiple style="width: 95%;">
                                         <option value="">Select Status</option>
                                         <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Completed</option>
                                         <option value="0" <?php echo isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : (isset($_GET['status']) && ($_GET['status'] == '1' || $_GET['status'] == '2') ? '' : 'selected') ?>>On Going</option>
@@ -320,7 +320,7 @@ $setting = \App\Models\Utility::colorset();
                                         style="width: 95%; border-color:#aaa">
                                 </div>
 
-                                <div class="col-md-4 mt-4 pt-2 d-flex align-items-end">
+                                <div class="col-md-12 mt-4 pt-2 d-flex align-items-end">
                                     @if (!empty($_GET['assigned_by_me']))
                                     <a href="/deals/get-user-tasks?<?php echo isset($_GET['created_at_from']) ? 'created_at_from=' . $_GET['created_at_from'] : ''; ?><?php echo isset($_GET['brand']) ? '&brand=' . $_GET['brand'] : ''; ?><?php echo isset($_GET['region_id']) ? '&region_id=' . $_GET['region_id'] : ''; ?><?php echo isset($_GET['branch_id']) ? '&branch_id=' . $_GET['branch_id'] : ''; ?><?php echo isset($_GET['due_date']) ? '&due_date=' . $_GET['due_date'] : ''; ?><?php echo isset($_GET['created_at_to']) ? '&created_at_to=' . $_GET['created_at_to'] : ''; ?><?php echo isset($_GET['lead_assgigned_user']) ? '&lead_assgigned_user=' . $_GET['lead_assgigned_user'] : ''; ?>" data-bs-toggle="tooltip" title="{{__('Assigned By Me')}}" class="btn form-btn mr-2 px-2 py-2 btn-danger" style="color:white;">Reset Assigned By Me</a>
                                     @else

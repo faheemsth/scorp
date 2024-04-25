@@ -2796,7 +2796,7 @@ class DealController extends Controller
     }
     public function userTasks()
     {
-
+        //dd($_GET);
         $start = 0;
         if(!empty($_GET['perPage']))
         {
@@ -2832,7 +2832,7 @@ class DealController extends Controller
             }
 
             $filters = $this->TasksFilter();
-
+           // dd($filters);
             foreach ($filters as $column => $value) {
                 if ($column === 'subjects') {
                     $tasks->whereIn('deal_tasks.id', $value);
@@ -2847,12 +2847,11 @@ class DealController extends Controller
                 } elseif ($column == 'due_date') {
                     $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
                 }elseif ($column == 'status') {
-                         if($value == '2'){
+                    //dd($value);
+                    if(in_array(2, $value)){
                         $tasks->where('status', 0)->where('due_date', '<', now());
-                    }elseif($value == '1'){
-                        $tasks->where('status', 1);
-                    }elseif($value == '0'){
-                        $tasks->where('status', 0)->where('status', '!=', 1)->where('due_date', '>=', now());
+                    }else{
+                        $tasks->whereIn('status', $value);
                     }
                 }elseif ($column == 'created_at_from') {
                     $tasks->whereDate('deal_tasks.created_at', '>=', $value);
