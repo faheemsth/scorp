@@ -947,7 +947,7 @@
                                                                                                 </span><br>
                                                                                                 <span
                                                                                                     class="text-muted text-sm"><i class="step__icon fa fa-user" aria-hidden="true"></i>
-                                                                                                    {{ \App\Models\User::where('id', $task->assigned_to)->first()->name }}
+                                                                                                    {{ optional(\App\Models\User::where('id', $task->assigned_to)->first())->name }}
 
                                                                                                     <span class="d-flex">
                                                                                                         <div>Status</div>
@@ -1023,7 +1023,7 @@
                                                                                                         </span><br>
                                                                                                         <span
                                                                                                             class="text-muted text-sm"><i class="step__icon fa fa-user" aria-hidden="true"></i>
-                                                                                                            {{ \App\Models\User::where('id', $task->assigned_to)->first()->name }}
+                                                                                                            {{ optional(\App\Models\User::where('id', $task->assigned_to)->first())->name }}
 
                                                                                                             <span class="d-flex">
                                                                                                                 <div>Status</div>
