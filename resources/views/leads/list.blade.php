@@ -837,6 +837,19 @@ if (isset($lead->is_active) && $lead->is_active) {
     });
 
 
+    $(document).on("click", '#submit_btn', function(){
+        var brand = $("#brands").val();
+        var region_id = $("#region_id").val();
+        var branch_id = $("#branch_id").val();
+        var assign_to = $("#assigned_to").val();
+        var user_id = $("#user_id").val();
+        if(brand == 0 || region_id == 'undefined' || region_id == 0 || branch_id == 'undefined' || branch_id == 0 || user_id == 'undefined' || user_id == 0){
+            show_toastr('error', 'Please fill all the required fields');
+            return false;
+        }        
+        $("#importCsvForm").submit();
+    });
+
 
 
         //saving discussion

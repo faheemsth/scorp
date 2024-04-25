@@ -1125,7 +1125,7 @@ class LeadController extends Controller
             }
 
             // Check if the lead exists
-            $lead_exist = Lead::where('email', $lead->email)->first();
+            $lead_exist = Lead::where('email', $lead->email)->where('brand_id', $request->brand_id)->first();
             if ($lead_exist) {
                 $lead = $lead_exist;
             }
@@ -1234,7 +1234,7 @@ class LeadController extends Controller
                 }
             }
             
-            $lead_exist = Lead::where('email', $test['email'] ?? '')->first();
+            $lead_exist = Lead::where('email', $test['email'] ?? '')->where('brand_id', $request->brand_id)->first();
             if ($lead_exist) {
                 continue;
             }
