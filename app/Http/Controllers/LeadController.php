@@ -590,6 +590,7 @@ class LeadController extends Controller
                 if ($lead_exist) {
                     return json_encode([
                         'status' => 'error',
+                        'htmlead' => '<span style="cursor:pointer" id="leadLink" class="lead-name hyper-link" onclick="openSidebar(\'/get-lead-detail?lead_id=' . $lead_exist->id . '\')" data-lead-id="' . $lead_exist->id . '">' . $lead_exist->name . '</span>',
                         'message' => __('Lead already exist.')
                     ]);
                 }
@@ -1165,7 +1166,7 @@ class LeadController extends Controller
             $lead->date = date('Y-m-d');
             if (!empty($lead->name) || !empty($lead->email) || !empty($lead->phone) || !empty($lead->subject) || !empty($lead->notes)) {
                 $lead->save();
-             
+
                 if(in_array('notes', $column_arr)){
                     $notes = new LeadNote();
                     $notes->description = str_replace('"', '', $test['notes']) ?? '';
@@ -1249,13 +1250,13 @@ class LeadController extends Controller
                     $lead->{$column_arr[$column_key]} = str_replace('"','', $column);
                 }
             }
-            
+
             $lead_exist = Lead::where('email', $test['email'] ?? '')->where('brand_id', $request->brand_id)->where('region_id', $request->region_id)->where('branch_id', $request->branch_id)->first();
             if ($lead_exist) {
                 continue;
             }
 
-           
+
             //if no email found
             if (!in_array('email', $column_arr)) {
                 $lead->email = '';
@@ -1279,7 +1280,7 @@ class LeadController extends Controller
             $lead->created_by  = $usr->id;
             $lead->date        = date('Y-m-d');
 
-            
+
             if (!empty($lead->name) || !empty($lead->email) || !empty($lead->phone) || !empty($lead->subject) || !empty($lead->notes)) {
                 $lead->save();
                 //dd($test);
@@ -3690,15 +3691,15 @@ class LeadController extends Controller
                 ]);
             } else if (isset($request->region_id) && !empty($request->region_id)) {
                 Lead::whereIn('id', $ids)->update([
-                    //'brand_id' => $request->brand, 
+                    //'brand_id' => $request->brand,
                     'region_id' => $request->region_id,
                     'branch_id' => $request->branch_id,
                     'user_id' => $request->lead_assgigned_user
                 ]);
             } else if (isset($request->branch_id) && !empty($request->branch_id)) {
                 Lead::whereIn('id', $ids)->update([
-                    //'brand_id' => $request->brand, 
-                    //'region_id' => $request->region_id, 
+                    //'brand_id' => $request->brand,
+                    //'region_id' => $request->region_id,
                     'branch_id' => $request->branch_id,
                     'user_id' => $request->lead_assgigned_user
                 ]);
