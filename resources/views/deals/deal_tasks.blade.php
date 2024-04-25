@@ -295,9 +295,9 @@ $setting = \App\Models\Utility::colorset();
                                     <label for="">Status</label>
                                     <select class="form form-control select2" id="status444" name="status[]" multiple style="width: 95%;">
                                         <option value="">Select Status</option>
-                                        <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Completed</option>
-                                        <option value="0" <?php echo isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : (isset($_GET['status']) && ($_GET['status'] == '1' || $_GET['status'] == '2') ? '' : 'selected') ?>>On Going</option>
-                                        <option value="2" <?= isset($_GET['status']) && $_GET['status'] == '2' ? 'selected' : '' ?>>Overdue</option>
+                                        <option value="1" <?= isset($_GET['status']) &&  ( gettype($_GET['status']) == 'array' ? in_array(1, $_GET['status']) : ($_GET['status'] == 1)) ? 'selected' : '' ?>>Completed</option>
+                                        <option value="0" <?=isset($_GET['status']) && ( gettype($_GET['status']) == 'array' ? in_array(0, $_GET['status']) : ($_GET['status'] == 0)) ? 'selected' : '' ?>>On Going</option>
+                                        <option value="2" <?= isset($_GET['status']) && ( gettype($_GET['status']) == 'array' ? in_array(2, $_GET['status']) : ($_GET['status'] == 2))  ? 'selected' : '' ?>>Overdue</option>
                                     </select>
                                 </div>
 
