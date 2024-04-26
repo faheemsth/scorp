@@ -2314,7 +2314,12 @@ class LeadController extends Controller
             addLogActivity($data);
 
 
-            $notes = LeadNote::where('lead_id', $id)->orderBy('created_at', 'DESC')->get();
+            $notesQuery = LeadNote::where('lead_id', $id);
+
+            if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+                    $notesQuery->where('created_by', \Auth::user()->id);
+            }
+            $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
             $html = view('leads.getNotes', compact('notes'))->render();
 
             return json_encode([
@@ -2349,7 +2354,13 @@ class LeadController extends Controller
         addLogActivity($data);
 
 
-        $notes = LeadNote::where('lead_id', $id)->orderBy('created_at', 'DESC')->get();
+        $notesQuery = LeadNote::where('lead_id', $id);
+
+        if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+                $notesQuery->where('created_by', \Auth::user()->id);
+        }
+        $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
+
         $html = view('leads.getNotes', compact('notes'))->render();
 
         return json_encode([
@@ -2422,7 +2433,11 @@ class LeadController extends Controller
         $note = LeadNote::where('id', $id)->first();
         $note->delete();
 
-        $notes = LeadNote::where('lead_id', $request->lead_id)->orderBy('created_at', 'DESC')->get();
+        $notesQuery = LeadNote::where('lead_id', $request->lead_id);
+        if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+                $notesQuery->where('created_by', \Auth::user()->id);
+        }
+        $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
         $html = view('leads.getNotes', compact('notes'))->render();
 
 

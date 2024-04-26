@@ -401,9 +401,11 @@
                                                         <div class="card-body px-0 py-0">
                                                             <ul class="list-group list-group-flush mt-2 note-tbody">
                                                                 @php
-                                                                $notes = \App\Models\ApplicationNote::where('application_id', $application->id)
-                                                                ->orderBy('created_at', 'DESC')
-                                                                ->get();
+                                                                $notesQuery = \App\Models\ApplicationNote::where('application_id', $application->id);
+                                                                if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+                                                                    $notesQuery->where('created_by', \Auth::user()->id);
+                                                                }
+                                                                $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
                                                                 @endphp
 
                                                                 @foreach ($notes as $note)

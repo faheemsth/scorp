@@ -975,10 +975,15 @@
                                                                         </div>
                                                                         <div class="card-body px-0 py-0">
                                                                             @php
-                                                                                $notes = \App\Models\LeadNote::where('lead_id', $lead->id)
-                                                                                    ->orderBy('created_at', 'DESC')
-                                                                                    ->get();
+                                                                            $notesQuery = \App\Models\LeadNote::where('lead_id', $lead->id);
+
+                                                                            if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+                                                                                $notesQuery->where('created_by', \Auth::user()->id);
+                                                                            }
+
+                                                                            $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
                                                                             @endphp
+
                                                                                 <span class="list-group list-group-flush mt-2 note-tbody">
 
                                                                                 @foreach ($notes as $note)

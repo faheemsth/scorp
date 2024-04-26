@@ -3258,7 +3258,12 @@ class DealController extends Controller
             $users = User::get()->pluck('name', 'id')->toArray();
             $clientDeal = ClientDeal::where('deal_id', $deal->id)->first();
             $discussions = DealDiscussion::select('deal_discussions.id', 'deal_discussions.comment', 'deal_discussions.created_at', 'users.name', 'users.avatar')->join('users', 'deal_discussions.created_by', 'users.id')->where(['deal_id' => $deal->id])->orderBy('deal_discussions.created_by', 'DESC')->get()->toArray();
-            $notes = DealNote::where('deal_id', $deal->id)->orderBy('created_at', 'DESC')->get();
+
+            $notesQuery = DealNote::where('deal_id', $deal->id);
+            if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+                $notesQuery->where('created_by', \Auth::user()->id);
+            }
+            $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
 
             $applications = DealApplication::where('deal_id', $deal->id)->get();
             $tasks = DealTask::where(['related_to' => $deal->id, 'related_type' => 'deal'])->orderBy('status')->get();
@@ -3521,7 +3526,12 @@ class DealController extends Controller
             $note->description = $request->input('description');
             $note->update();
 
-            $notes = DealNote::where('deal_id', $id)->orderBy('created_at', 'DESC')->get();
+            $notesQuery = DealNote::where('deal_id', $id);
+            if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+                $notesQuery->where('created_by', \Auth::user()->id);
+            }
+            $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
+
             $html = view('deals.getNotes', compact('notes'))->render();
 
             return json_encode([
@@ -3537,7 +3547,12 @@ class DealController extends Controller
         $note->deal_id = $id;
         $note->save();
 
-        $notes = DealNote::where('deal_id', $id)->orderBy('created_at', 'DESC')->get();
+        $notesQuery = DealNote::where('deal_id', $id);
+        if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+            $notesQuery->where('created_by', \Auth::user()->id);
+        }
+        $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
+
         $html = view('deals.getNotes', compact('notes'))->render();
 
         return json_encode([
@@ -3597,7 +3612,11 @@ class DealController extends Controller
         $note = DealNote::where('id', $id)->first();
         $note->delete();
 
-        $notes = DealNote::where('deal_id', $request->deal_id)->orderBy('created_at', 'DESC')->get();
+        $notesQuery = DealNote::where('deal_id', $request->deal_id);
+        if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+            $notesQuery->where('created_by', \Auth::user()->id);
+        }
+        $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
         $html = view('leads.getNotes', compact('notes'))->render();
 
         return json_encode([

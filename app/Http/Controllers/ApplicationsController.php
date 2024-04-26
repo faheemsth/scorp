@@ -433,7 +433,11 @@ class ApplicationsController extends Controller
             addLogActivity($data);
 
 
-            $notes = ApplicationNote::where('application_id', $id)->orderBy('created_at', 'DESC')->get();
+            $notesQuery = ApplicationNote::where('application_id', $id);
+            if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+                    $notesQuery->where('created_by', \Auth::user()->id);
+                }
+            $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
             $html = view('leads.getNotes', compact('notes'))->render();
 
             return json_encode([
@@ -469,7 +473,11 @@ class ApplicationsController extends Controller
         addLogActivity($data);
 
 
-        $notes = ApplicationNote::where('application_id', $id)->orderBy('created_at', 'DESC')->get();
+        $notesQuery = ApplicationNote::where('application_id', $id);
+        if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+                $notesQuery->where('created_by', \Auth::user()->id);
+            }
+        $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
         $html = view('applications.getNotes', compact('notes'))->render();
 
         return json_encode([
@@ -487,7 +495,11 @@ class ApplicationsController extends Controller
         $note = ApplicationNote::where('id', $id)->first();
         $note->delete();
 
-        $notes = ApplicationNote::where('application_id', $note->application_id)->orderBy('created_at', 'DESC')->get();
+        $notesQuery = ApplicationNote::where('application_id', $id);
+        if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+                $notesQuery->where('created_by', \Auth::user()->id);
+            }
+        $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
         $html = view('applications.getNotes', compact('notes'))->render();
 
 
