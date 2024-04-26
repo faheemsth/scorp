@@ -262,7 +262,7 @@
                                                                     {{ $client->passport_number ?? '' }}
                                                                 </td>
                                                             </tr>
-
+                                                           @if($client->brand_id == Auth::user()->brand_id)
                                                             <tr>
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
@@ -270,7 +270,7 @@
                                                                 </td>
                                                                 <td class=""
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                   <a href="{{ $client->email }}" target="_blank" >{{ $client->email }}</a> 
+                                                                   <a href="{{ $client->email }}" target="_blank" >{{ $client->email }}</a>
                                                                 </td>
                                                             </tr>
 
@@ -284,6 +284,29 @@
                                                                     {{ isset($lead->phone) ? $lead->phone : '' }}
                                                                 </td>
                                                             </tr>
+                                                            @elseif(\Auth::user()->type == 'super admin')
+                                                             <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Email') }}
+                                                                </td>
+                                                                <td class=""
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                   <a href="{{ $client->email }}" target="_blank" >{{ $client->email }}</a>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Phone') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ isset($lead->phone) ? $lead->phone : '' }}
+                                                                </td>
+                                                            </tr>
+                                                            @endif
                                                         </tbody>
                                                     </table>
                                                 </div>
