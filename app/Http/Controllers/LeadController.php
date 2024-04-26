@@ -577,8 +577,23 @@ class LeadController extends Controller
             // End Default Field Value
 
             if (empty($stage)) {
-                return redirect()->back()->with('error', __('Please Create Stage for This Pipeline.'));
+                return json_encode([
+                    'status' => 'error',
+                    'message' => __('Please Create Stage for This Pipeline.')
+                ]);
             } else {
+
+
+
+
+                $lead_exist = Lead::where('email', $request->lead_email)->where('brand_id', $request->brand_id)->where('region_id', $request->region_id)->where('branch_id', $request->lead_branch)->first();
+                if ($lead_exist) {
+                    return json_encode([
+                        'status' => 'error',
+                        'message' => __('Lead already exist.')
+                    ]);
+                }
+
                 $lead              = new Lead();
                 $lead->title       = $request->lead_prefix;
                 $lead->name        = $request->lead_first_name . ' ' . $request->lead_last_name;
@@ -1125,9 +1140,10 @@ class LeadController extends Controller
             }
 
             // Check if the lead exists
-            $lead_exist = Lead::where('email', $lead->email)->where('brand_id', $request->brand_id)->first();
+            $lead_exist = Lead::where('email', $lead->email)->where('brand_id', $request->brand_id)->where('region_id', $request->region_id)->where('branch_id', $request->branch_id)->first();
             if ($lead_exist) {
-                $lead = $lead_exist;
+                continue;
+                //$lead = $lead_exist;
             }
 
             // Set default values if certain fields are not present
@@ -1234,7 +1250,7 @@ class LeadController extends Controller
                 }
             }
             
-            $lead_exist = Lead::where('email', $test['email'] ?? '')->where('brand_id', $request->brand_id)->first();
+            $lead_exist = Lead::where('email', $test['email'] ?? '')->where('brand_id', $request->brand_id)->where('region_id', $request->region_id)->where('branch_id', $request->branch_id)->first();
             if ($lead_exist) {
                 continue;
             }
