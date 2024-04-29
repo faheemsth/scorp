@@ -495,7 +495,7 @@ class ApplicationsController extends Controller
         $note = ApplicationNote::where('id', $id)->first();
         $note->delete();
 
-        $notesQuery = ApplicationNote::where('application_id', $id);
+        $notesQuery = ApplicationNote::where('application_id', $request->application_id);
         if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
                 $notesQuery->where('created_by', \Auth::user()->id);
             }
