@@ -143,7 +143,8 @@ $setting = \App\Models\Utility::colorset();
                             <p class="mb-0 pb-0 ps-1">Limit</p>
                             <form action="{{ url('deals/get-user-tasks') }}" method="GET" id="paginationForm">
                                 <input type="hidden" name="num_results_on_page" id="num_results_on_page" value="{{ $_GET['num_results_on_page'] ?? '' }}">
-                                <input type="hidden" name="page" id="page" value="{{ $_GET['page'] ?? 1 }}">
+                                {{-- <input type="hidden" name="page" id="page" value="{{ $_GET['page'] ?? 1 }}"> --}}
+                                <input type="hidden" name="page" id="page" value="">
                                 <select name="perPage" onchange="submitForm()" style="width: 100px; margin-right: 1rem;border: 1px solid lightgray;border-radius: 1px;padding: 2.5px 5px;">
                                     <option value="50" {{ Request::get('perPage') == 50 || Request::get('num_results_on_page') == 50 ? 'selected' : '' }}>50</option>
                                     <option value="100" {{ Request::get('perPage') == 100 || Request::get('num_results_on_page') == 100 ? 'selected' : '' }}>100</option>
@@ -156,7 +157,8 @@ $setting = \App\Models\Utility::colorset();
                                 function submitForm() {
                                     var selectValue = document.querySelector('select[name="perPage"]').value;
                                     document.getElementById("num_results_on_page").value = selectValue;
-                                    document.getElementById("page").value = {{ $_GET['page'] ?? 1 }};
+                                    // document.getElementById("page").value = {{ $_GET['page'] ?? 1 }};
+                                    document.getElementById("page").value = 1;
                                     document.getElementById("paginationForm").submit();
                                 }
                             </script>

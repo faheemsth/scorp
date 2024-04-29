@@ -225,7 +225,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                                     <p class="mb-0 pb-0 ps-1">Limit</p>
                                     <form action="{{ url('leads/list') }}" method="GET" id="paginationForm">
                                         <input type="hidden" name="num_results_on_page" id="num_results_on_page" value="{{ $_GET['num_results_on_page'] ?? '' }}">
-                                        <input type="hidden" name="page" id="page" value="{{ $_GET['page'] ?? 1 }}">
+                                        {{-- <input type="hidden" name="page" id="page" value="{{ $_GET['page'] ?? 1 }}"> --}}
+                                        <input type="hidden" name="page" id="page" value="1">
                                         <select name="perPage" onchange="submitForm()" style="width: 100px; margin-right: 1rem;border: 1px solid lightgray;border-radius: 1px;padding: 2.5px 5px;">
                                             <option value="50" {{ Request::get('perPage') == 50 || Request::get('num_results_on_page') == 50 ? 'selected' : '' }}>50</option>
                                             <option value="100" {{ Request::get('perPage') == 100 || Request::get('num_results_on_page') == 100 ? 'selected' : '' }}>100</option>
@@ -238,7 +239,8 @@ if (isset($lead->is_active) && $lead->is_active) {
                                         function submitForm() {
                                             var selectValue = document.querySelector('select[name="perPage"]').value;
                                             document.getElementById("num_results_on_page").value = selectValue;
-                                            document.getElementById("page").value = {{ $_GET['page'] ?? 1 }};
+                                            // document.getElementById("page").value = {{ $_GET['page'] ?? 1 }};
+                                            document.getElementById("page").value = 1;
                                             document.getElementById("paginationForm").submit();
                                         }
                                     </script>
@@ -846,7 +848,7 @@ if (isset($lead->is_active) && $lead->is_active) {
         if(brand == 0 || region_id == 'undefined' || region_id == 0 || branch_id == 'undefined' || branch_id == 0 || user_id == 'undefined' || user_id == 0){
             show_toastr('error', 'Please fill all the required fields');
             return false;
-        }        
+        }
         $("#importCsvForm").submit();
     });
 
