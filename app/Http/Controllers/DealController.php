@@ -302,8 +302,8 @@ class DealController extends Controller
                 $deal_simple_query->whereIn('brand_id', $brand_ids);
                 $deals_query->whereIn('brand_id', $brand_ids);
             }else if(\Auth::user()->type == 'Region Manager' || $usr->can('level 3') && !empty(\Auth::user()->region_id)){
-                $deal_simple_query->where('region_id', \Auth::user()->region_id);
-                $deals_query->where('region_id', \Auth::user()->region_id);
+                $deal_simple_query->where('deals.region_id', \Auth::user()->region_id);
+                $deals_query->where('deals.region_id', \Auth::user()->region_id);
             }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || $usr->can('level 4') && !empty(\Auth::user()->branch_id)){
                 $deal_simple_query->where('deals.branch_id', \Auth::user()->branch_id);
                 $deals_query->where('deals.branch_id', \Auth::user()->branch_id);
@@ -2849,13 +2849,13 @@ class DealController extends Controller
                 }elseif ($column == 'status') {
                     if(gettype($value) == 'array'){
                         if(in_array(2, $value)){
-                            $tasks->where('status', 0)->where('due_date', '<', now());
+                            $tasks->where('status', 0)->whereDate('deal_tasks.due_date', '<', now());
                         }else{
                             $tasks->whereIn('status', $value);
                         }
                     }else{
                         if($value == 2){
-                            $tasks->where('status', 0)->where('due_date', '<', now());
+                            $tasks->where('status', 0)->whereDate('deal_tasks.due_date', '<', now());
                         }else{
                             $tasks->where('status', $value);
                         }
@@ -3259,9 +3259,20 @@ class DealController extends Controller
             $clientDeal = ClientDeal::where('deal_id', $deal->id)->first();
             $discussions = DealDiscussion::select('deal_discussions.id', 'deal_discussions.comment', 'deal_discussions.created_at', 'users.name', 'users.avatar')->join('users', 'deal_discussions.created_by', 'users.id')->where(['deal_id' => $deal->id])->orderBy('deal_discussions.created_by', 'DESC')->get()->toArray();
 
-            $notesQuery = DealNote::where('deal_id', $deal->id);
-            if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
-                $notesQuery->where('created_by', \Auth::user()->id);
+            $notesQuery = DealNote::select('deal_notes.*')
+            ->join('deals', 'deals.id', '=', 'deal_notes.deal_id')
+            ->where('deal_notes.deal_id', $deal->id);
+
+            if (\Auth::user()->can('level 1')) {
+
+            } elseif (\Auth::user()->can('level 2')) {
+                $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+            } elseif (\Auth::user()->can('level 3')) {
+                $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+            } elseif (\Auth::user()->can('level 4')) {
+                $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+            } else {
+                $notesQuery->where('deal_notes.created_by', \Auth::user()->id);
             }
             $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
 
@@ -3526,9 +3537,20 @@ class DealController extends Controller
             $note->description = $request->input('description');
             $note->update();
 
-            $notesQuery = DealNote::where('deal_id', $id);
-            if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
-                $notesQuery->where('created_by', \Auth::user()->id);
+            $notesQuery = DealNote::select('deal_notes.*')
+            ->join('deals', 'deals.id', '=', 'deal_notes.deal_id')
+            ->where('deal_notes.deal_id', $id);
+
+            if (\Auth::user()->can('level 1')) {
+
+            } elseif (\Auth::user()->can('level 2')) {
+                $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+            } elseif (\Auth::user()->can('level 3')) {
+                $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+            } elseif (\Auth::user()->can('level 4')) {
+                $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+            } else {
+                $notesQuery->where('deal_notes.created_by', \Auth::user()->id);
             }
             $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
 
@@ -3547,9 +3569,20 @@ class DealController extends Controller
         $note->deal_id = $id;
         $note->save();
 
-        $notesQuery = DealNote::where('deal_id', $id);
-        if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
-            $notesQuery->where('created_by', \Auth::user()->id);
+        $notesQuery = DealNote::select('deal_notes.*')
+        ->join('deals', 'deals.id', '=', 'deal_notes.deal_id')
+        ->where('deal_notes.deal_id', $id);
+
+        if (\Auth::user()->can('level 1')) {
+
+        } elseif (\Auth::user()->can('level 2')) {
+            $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+        } elseif (\Auth::user()->can('level 3')) {
+            $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+        } elseif (\Auth::user()->can('level 4')) {
+            $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+        } else {
+            $notesQuery->where('deal_notes.created_by', \Auth::user()->id);
         }
         $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
 
@@ -3612,9 +3645,20 @@ class DealController extends Controller
         $note = DealNote::where('id', $id)->first();
         $note->delete();
 
-        $notesQuery = DealNote::where('deal_id', $request->deal_id);
-        if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
-            $notesQuery->where('created_by', \Auth::user()->id);
+        $notesQuery = DealNote::select('deal_notes.*')
+        ->join('deals', 'deals.id', '=', 'deal_notes.deal_id')
+        ->where('deal_notes.deal_id', $request->deal_id);
+
+        if (\Auth::user()->can('level 1')) {
+
+        } elseif (\Auth::user()->can('level 2')) {
+            $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+        } elseif (\Auth::user()->can('level 3')) {
+            $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+        } elseif (\Auth::user()->can('level 4')) {
+            $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+        } else {
+            $notesQuery->where('deal_notes.created_by', \Auth::user()->id);
         }
         $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
         $html = view('leads.getNotes', compact('notes'))->render();
