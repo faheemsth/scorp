@@ -81,7 +81,7 @@
                                         <td class="action ">
                                             @can('edit institute category')
                                             <div class="action-btn  ms-2">
-                                                <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para"
+                                                <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center "
                                                     data-url="{{ route('institute-category.edit', $category->id) }}"
                                                     data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
                                                     title="{{ __('Edit') }}"
@@ -89,17 +89,17 @@
                                                     <i class="ti ti-pencil text-white"></i>
                                                 </a>
                                             </div>
-                                            @endcan 
-                                        
+                                            @endcan
+
                                             @can('delete institute category')
                                             <div class="action-btn  ms-2">
-                                              
+
                                                 {!! Form::open(['method' => 'DELETE', 'route' => ['institute-category.destroy', $category->id]]) !!}
                                                 <a href="#" class="btn btn-sm btn-danger mx-1 align-items-center bs-pass-para"
                                                     data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i
                                                         class="ti ti-trash text-white"></i></a>
                                                 {!! Form::close() !!}
-                                               
+
                                             </div>
                                             @endcan
                                         </td>
@@ -107,6 +107,12 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        @if ($total_records > 0)
+                        @include('layouts.pagination', [
+                        'total_pages' => $total_records,
+                        'num_results_on_page' => 50,
+                        ])
+                        @endif
                     </div>
                 </div>
             </div>

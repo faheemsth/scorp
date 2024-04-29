@@ -33,9 +33,25 @@ class PipelineController extends Controller
     {
         if(\Auth::user()->can('create pipeline'))
         {
-            $pipelines = Pipeline::where('created_by', '=', \Auth::user()->creatorId())->get();
 
-            return view('pipelines.index')->with('pipelines', $pipelines);
+
+            $start = 0;
+            $num_results_on_page = env("RESULTS_ON_PAGE");
+            if (isset($_GET['page'])) {
+                $page = $_GET['page'];
+                $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+                $start = ($page - 1) * $num_results_on_page;
+            } else {
+                $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            }
+
+            $pipelines_query =  Pipeline::where('created_by', '=', \Auth::user()->creatorId());
+            $total_records = $pipelines_query->count();
+
+            $pipelines_query->skip($start)->take($num_results_on_page);
+            $pipelines = $pipelines_query->get();
+
+            return view('pipelines.index',compact('pipelines','total_records'));
         }
         else
         {

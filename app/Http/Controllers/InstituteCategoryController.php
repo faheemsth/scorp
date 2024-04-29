@@ -16,11 +16,23 @@ class InstituteCategoryController extends Controller
     {
         //
         if (\Auth::user()->type == 'super admin' || \Auth::user()->can('manage institute category')) {
-        $institute_categories = InstituteCategory::all();
-        $data = [
-            'institute_categories' => $institute_categories
-        ];
-        return view('institute_category.index', $data);
+        $start = 0;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = ($page - 1) * $num_results_on_page;
+        } else {
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+        }
+
+        $institute_categories_query = InstituteCategory::query();
+        $total_records = $institute_categories_query->count();
+
+        $institute_categories_query->skip($start)->take($num_results_on_page);
+        $institute_categories = $institute_categories_query->get();
+
+        return view('institute_category.index', compact('institute_categories','total_records'));
         }else{
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -71,7 +83,7 @@ class InstituteCategoryController extends Controller
     public function show($id)
     {
         //
-       
+
     }
 
     /**
@@ -87,7 +99,7 @@ class InstituteCategoryController extends Controller
         $category = InstituteCategory::findOrFail($id);
         return view('institute_category.edit',['category' => $category]);
         }else{
-            return redirect()->back()->with('error', __('Permission Denied.')); 
+            return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
 
@@ -107,7 +119,7 @@ class InstituteCategoryController extends Controller
         $category->update();
 
         return redirect()->route('institute-category.index')->with('success', 'Insitute Category updated successfully');
-    
+
         }else{
             return redirect()->back()->with('error', __('Permission Denied.'));
         }

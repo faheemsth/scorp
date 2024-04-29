@@ -26,9 +26,25 @@ class SourceController extends Controller
     {
         if(\Auth::user()->can('manage source'))
         {
-            $sources = Source::where('created_by', '=', \Auth::user()->ownerId())->get();
 
-            return view('sources.index')->with('sources', $sources);
+            $start = 0;
+            $num_results_on_page = env("RESULTS_ON_PAGE");
+            if (isset($_GET['page'])) {
+                $page = $_GET['page'];
+                $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+                $start = ($page - 1) * $num_results_on_page;
+            } else {
+                $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            }
+
+            $Source_query = Source::where('created_by', '=', \Auth::user()->ownerId());
+            $total_records = $Source_query->count();
+
+            $Source_query->skip($start)->take($num_results_on_page);
+            $sources = $Source_query->get();
+
+
+            return view('sources.index', compact('sources','total_records'));
         }
         else
         {

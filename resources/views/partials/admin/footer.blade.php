@@ -30,7 +30,7 @@
 <script src="{{ asset('assets/js/plugins/bootstrap-switch-button.min.js') }}"></script>
 
 <script src="{{ asset('assets/js/plugins/sweetalert2.all.min.js') }}"></script>
-<script src="{{ asset('assets/js/plugins/simple-datatables.js') }}"></script>
+{{-- <script src="{{ asset('assets/js/plugins/simple-datatables.js') }}"></script> --}}
 
 <!-- Apex Chart -->
 <script src="{{ asset('assets/js/plugins/apexcharts.min.js') }}"></script>
@@ -152,7 +152,7 @@
         // $("#main").css("margin-right", '0');
         $(".block-screen").css('display', 'none');
         // $("#body").css('overflow', 'visible');
-        
+
     }
 </script>
 

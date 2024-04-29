@@ -71,7 +71,7 @@
                                                 @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit organization_type'))
                                                     <div class="action-btn  ms-2">
                                                         <a href="#"
-                                                        class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para"
+                                                        class="btn btn-sm btn-dark mx-1 align-items-center "
                                                             data-url="{{ route('organization-type.edit', $type->id) }}"
                                                             data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
                                                             title="{{ __('Edit') }}"
@@ -98,6 +98,12 @@
 
                             </tbody>
                         </table>
+                        @if ($total_records > 0)
+                        @include('layouts.pagination', [
+                        'total_pages' => $total_records,
+                        'num_results_on_page' => 50,
+                        ])
+                        @endif
                     </div>
                 </div>
             </div>

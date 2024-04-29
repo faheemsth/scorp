@@ -14,10 +14,24 @@ class OrganizationTypeController extends Controller
      */
     public function index()
     {
-        
-        //\Auth::user()->can('manage announcement')
-        $types = OrganizationType::get();
-        return view('organizationTypes.index', compact('types'));
+
+        $start = 0;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+            $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            $start = ($page - 1) * $num_results_on_page;
+        } else {
+            $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+        }
+
+        $types_query = OrganizationType::query();
+        $total_records = $types_query->count();
+
+        $types_query->skip($start)->take($num_results_on_page);
+        $types = $types_query->get();
+
+        return view('organizationTypes.index', compact('types','total_records'));
     }
 
     /**
@@ -51,25 +65,25 @@ class OrganizationTypeController extends Controller
          //
          if(\Auth::user()->type == 'super admin' || \Auth::user()->can('create organization_type'))
          {
- 
+
              $validator = \Validator::make(
                  $request->all(), [
                                     'name' => 'required|max:20'
                                 ]
              );
- 
+
              if($validator->fails())
              {
                  $messages = $validator->getMessageBag();
- 
+
                  return redirect()->route('organization-type.index')->with('error', $messages->first());
              }
- 
+
              $org_type              = new OrganizationType();
              $org_type->name        = $request->name;
              $org_type->created_by = \Auth::user()->id;
              $org_type->save();
- 
+
              return redirect()->route('organization-type.index')->with('success', __('Organization type successfully created!'));
          }
          else
@@ -102,7 +116,7 @@ class OrganizationTypeController extends Controller
          if(\Auth::user()->type == 'super admin' || \Auth::user()->can('edit course duration'))
          {
              $type = OrganizationType::find($id);
- 
+
              return view('organizationTypes.edit', compact('type'));
          }
          else
@@ -119,7 +133,7 @@ class OrganizationTypeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    { 
+    {
         //
         if(\Auth::user()->type == 'super admin' || \Auth::user()->can('edit organization_type'))
         {
@@ -163,7 +177,7 @@ class OrganizationTypeController extends Controller
          if(\Auth::user()->type == 'super admin' || \Auth::user()->can('delete organization_type'))
          {
              OrganizationType::find($id)->delete();
- 
+
              return redirect()->route('organization-type.index')->with('success', __('Organization Type successfully deleted!'));
          }
          else

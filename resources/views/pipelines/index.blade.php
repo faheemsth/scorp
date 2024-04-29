@@ -39,13 +39,13 @@
                                     <td>{{ $pipeline->name }}</td>
                                     <td class="Action">
                                         <span class="d-flex">
-                                             
+
                                             @can('delete pipeline')
                                                     {!! Form::open(['method' => 'DELETE', 'route' => ['pipelines.destroy', $pipeline->id]]) !!}
                                                     <a href="#" class="btn btn-sm btn-danger mx-1 align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}"><i class="ti ti-trash text-white"></i></a>
                                                     {!! Form::close() !!}
                                             @endcan
-                                        
+
                                             @can('edit pipeline')
                                                 <a href="#" class="btn btn-sm bg-dark d-inline-flex align-items-center" data-url="{{ URL::to('pipelines/'.$pipeline->id.'/edit') }}" data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-title="{{__('Edit Pipeline')}}">
                                                     <i class="ti ti-pencil text-white"></i>
@@ -58,6 +58,12 @@
                             @endforeach
                             </tbody>
                         </table>
+                        @if ($total_records > 0)
+                        @include('layouts.pagination', [
+                        'total_pages' => $total_records,
+                        'num_results_on_page' => 50,
+                        ])
+                        @endif
                     </div>
                 </div>
             </div>
