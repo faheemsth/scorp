@@ -52,12 +52,14 @@
 
             <div class="col-md-3 mt-2">
                 <label for="">Assigned To</label>
-                <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
-                    @foreach ($filters['employees'] as $key => $user)
-                        <option value="{{ $key }}" <?= (isset($_GET['lead_assgigned_user']) && $key == $_GET['lead_assgigned_user']) ? 'selected' : '' ?>>{{ $user }}</option>
-                    @endforeach
-                    <option value="null" {{ (isset($_GET['lead_assgigned_user']) && $_GET['lead_assgigned_user'] == 'null') ? 'selected' : '' }}>Not Assign</option>
-                </select>
+                <span id="assign_to_div">
+                    <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
+                        @foreach ($filters['employees'] as $key => $user)
+                            <option value="{{ $key }}" <?= (isset($_GET['lead_assgigned_user']) && $key == $_GET['lead_assgigned_user']) ? 'selected' : '' ?>>{{ $user }}</option>
+                        @endforeach
+                        <option value="null" {{ (isset($_GET['lead_assgigned_user']) && $_GET['lead_assgigned_user'] == 'null') ? 'selected' : '' }}>Not Assign</option>
+                    </select>
+                </span>
             </div>
 
             <div class="col-md-3"> <label for="">Name</label>

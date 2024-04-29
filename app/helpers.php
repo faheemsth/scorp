@@ -315,7 +315,7 @@ if (!function_exists('FiltersBranchUsers')) {
          $regional_managers = User::where('type', 'Region Manager')->whereIn('region_id', $regions)->pluck('name', 'id')->toArray();
 
 
-        $users = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client'])->where('branch_id', $id)->pluck('name', 'id')->toArray();
+         $users = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client', 'team'])->where('branch_id', $id)->pluck('name', 'id')->toArray();
         $html = ' <select class="form form-control user_id select2" id="user_id" name="lead_assgigned_user"> <option value="">Select User</option> ';
 
         if(isset($_GET['page']) && $_GET['page'] == 'lead_list'){
