@@ -1,4 +1,4 @@
-<div class="row align-items-baseline">
+<div class="row">
     <div class="col-6">
         @if (
             \Auth::user()->type == 'super admin' ||
@@ -104,7 +104,7 @@
 
     <div class="col-6">
         <label for="">Lead Assigned to <span class="text-danger">*</span></label>
-        <div id="assign_to_div">
+        <div id="assign_to_div_lead">
             <select name="lead_assgigned_user" id="assigned_to" class="form form-control">
                 @foreach ($employees as $key => $employee)
                     <option value="{{ $key }}">{{ $employee }}</option>
@@ -133,7 +133,7 @@
     <div class="row">
         <?php foreach($first_row as $key => $row){ ?>
         <div class="col-md-3 mt-3"><label for=""><?= $row ?></label></div>
-        <div class="col-md-3 mt-3 px-2">
+        <div class="col-md-3 mt-3">
             <select name="columns[<?= $row ?>]" id="" data-id="<?= $key ?>"
                 class="form form-control lead-columns">
                 <option value="">Select Column</option>
@@ -220,8 +220,8 @@
                 data = JSON.parse(data);
 
                 if (data.status === 'success') {
-                    $('#assign_to_div').html('');
-                    $("#assign_to_div").html(data.html);
+                    $('#assign_to_div_lead').html('');
+                    $("#assign_to_div_lead").html(data.html).css('margin-top', '6px');
                     select2();
                 } else {
                     console.error('Server returned an error:', data.message);
