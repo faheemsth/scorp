@@ -129,8 +129,8 @@
                 <select name="company" id="company" class="form form-select select2" style="width:100% !important"
                     onChange="loginWithCompany();">
                     <option value="">Select Companies</option>
-                    <option value="{{ Auth::id() }}" {{ Auth::id() == 1 ? 'selected' : '' }}>{{ Auth::user()->name }}
-                    </option>
+                    {{-- <option value="{{ Auth::id() }}" {{ Auth::id() == 1 ? 'selected' : '' }}>{{ Auth::user()->name }}
+                    </option> --}}
                     @foreach ($all_companies as $key => $comp)
                         <option value="{{ $key }}">{{ $comp }}</option>
                     @endforeach
