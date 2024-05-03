@@ -560,7 +560,7 @@
                                                                                                         <div class="btn btn-dark  text-white"
                                                                                                             id="editable"
                                                                                                             style="font-size: ;"
-                                                                                                            onclick="deleteTask({{ $task->id }}, {{ $application->id }}, 'lead');">
+                                                                                                            onclick="deleteTask({{ $task->id }}, {{ $application->id }}, 'application');">
                                                                                                             Delete
                                                                                                         </div>
                                                                                                     </div>
@@ -658,7 +658,7 @@
                                                                                     <div class="btn btn-dark  text-white"
                                                                                         id="editable"
                                                                                         style="font-size: ;"
-                                                                                        onclick="deleteTask({{ $task->id }}, {{ $application->id }}, 'lead');">
+                                                                                        onclick="deleteTask({{ $task->id }}, {{ $application->id }}, 'application');">
                                                                                         Delete</div>
                                                                                 </div>
                                                                             </div>

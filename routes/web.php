@@ -138,6 +138,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\SaturationDeductionController;
 use App\Http\Controllers\ProductServiceCategoryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -751,6 +752,7 @@ Route::resource('stages', StageController::class);
 Route::resource('pipelines', PipelineController::class);
 Route::resource('labels', LabelController::class);
 Route::resource('sources', SourceController::class);
+Route::resource('tages', TagController::class);
 Route::resource('payments', PaymentController::class);
 Route::resource('custom_fields', CustomFieldController::class);
 

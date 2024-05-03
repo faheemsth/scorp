@@ -408,35 +408,27 @@
 
                                                                     <span
                                                                     @if (!empty(\App\Models\Lead::where('id', $task->related_to)->first()))
-                                                                    style="cursor: pointer" onclick="openSidebar('/get-lead-detail?lead_id=<?= \App\Models\Lead::where('id', $task->related_to)->first()->id ?>')"
-                                                                    @endif
-                                                                    >
-                                                                        @php
 
-                                                                        if ($task->related_type == 'organization') {
-                                                                            echo optional(
-                                                                                \App\Models\User::where(
-                                                                                    'id',
-                                                                                    $task->related_to,
-                                                                                )->first(),
-                                                                            )->name;
-                                                                        } elseif ($task->related_type == 'lead') {
-                                                                            echo optional(
-                                                                                \App\Models\Lead::where(
-                                                                                    'id',
-                                                                                    $task->related_to,
-                                                                                )->first(),
-                                                                            )->name;
-                                                                        } elseif ($task->related_type == 'deal') {
-                                                                            echo \App\Models\Deal::findOrFail(
-                                                                                $task->related_to,
-                                                                            )->name;
-                                                                        } elseif ($task->related_type == 'application') {
-                                                                            echo \App\Models\Deal::findOrFail(
-                                                                                $task->related_to,
-                                                                            )->name;
-                                                                        }
-                                                                    @endphp
+                                                                    @if($task->related_type == 'organization')
+                                                                    style="cursor: pointer" onclick="openNav(<?= \App\Models\Lead::where('id', $task->related_to)->first()->id ?>)"
+                                                                    @elseif ($task->related_type == 'lead')
+                                                                    style="cursor: pointer" onclick="openSidebar('/get-lead-detail?lead_id=<?= \App\Models\Lead::where('id', $task->related_to)->first()->id ?>')"
+                                                                    @elseif ($task->related_type == 'deal')
+                                                                    style="cursor: pointer" onclick="openSidebar('/get-deal-detail?deal_id=<?= \App\Models\Lead::where('id', $task->related_to)->first()->id ?>')"
+                                                                    @elseif ($task->related_type == 'application')
+                                                                    style="cursor: pointer" onclick="openSidebar('/deals/{{ $task->related_to }}/detail-application');"
+                                                                    @endif
+
+                                                                @endif
+                                                                    >
+                                                                       @if ($task->related_type == 'organization')
+                                                                            {{ optional(\App\Models\User::find($task->related_to))->name }}
+                                                                       @elseif ($task->related_type == 'lead')
+                                                                            {{ optional(\App\Models\Lead::find($task->related_to))->name }}
+                                                                       @elseif (in_array($task->related_type, ['deal', 'application']))
+                                                                            {{ optional(\App\Models\Deal::find($task->related_to))->name }}
+                                                                       @endif
+
                                                                     </span>
                                                                 </td>
                                                             </tr>

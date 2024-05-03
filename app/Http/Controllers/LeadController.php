@@ -12,6 +12,7 @@ use App\Models\Label;
 use App\Models\Stage;
 use App\Models\Branch;
 use App\Models\Course;
+use App\Models\DealNote;
 use App\Models\Region;
 use App\Models\Source;
 use App\Models\LeadTag;
@@ -519,13 +520,6 @@ class LeadController extends Controller
         $usr = \Auth::user();
         if ($usr->can('create lead') ||  \Auth::user()->type == 'super admin') {
 
-            if ($request->lead_assgigned_user == 0) {
-
-                return json_encode([
-                    'status' => 'error',
-                    'message' => 'User Responsible Is Required',
-                ]);
-            }
             $validator = \Validator::make(
                 $request->all(),
                 [
@@ -878,13 +872,7 @@ class LeadController extends Controller
         $from = LeadStage::find($lead->stage_id)->name;
         if (\Auth::user()->can('edit lead') || \Auth::user()->type == 'super admin') {
             if ($lead->created_by == \Auth::user()->creatorId() || \Auth::user()->can('edit lead') || \Auth::user()->type == 'super admin') {
-                if ($request->lead_assgigned_user == 0) {
 
-                    return json_encode([
-                        'status' => 'error',
-                        'message' => 'User Responsible Is Required',
-                    ]);
-                }
                 $validator = \Validator::make(
                     $request->all(),
                     [
@@ -894,8 +882,8 @@ class LeadController extends Controller
                         'lead_phone' => 'required',
                         'brand_id' => 'required',
                         'region_id' => 'required',
-                        'lead_branch' => 'required',
-                        'lead_assgigned_user' => 'required',
+                        'lead_organization' => 'required',
+                        'lead_source' => 'required',
                         'lead_email' => 'required',
                     ]
                 );
@@ -909,9 +897,7 @@ class LeadController extends Controller
                 }
 
 
-                // echo "<pre>";
-                // print_r($request->input());
-                // die();
+
 
 
 
@@ -2697,7 +2683,31 @@ class LeadController extends Controller
         $deal->organization_id = gettype($lead->organization_id) == 'string' ? 0 : $lead->organization_id;
         $deal->organization_link = $lead->organization_link;
         $deal->save();
-        // end create deal
+        // end create deal oishfsoidifsoifsd siofhsio sdifbsodf sdfohsdf
+
+        $tasks = DealTask::where(['related_to' => $lead->id, 'related_type' => 'lead'])->orderBy('status')->get();
+        if(!empty($tasks) && $tasks->count() > 0)
+        {
+            foreach($tasks as $task)
+            {
+                $task->related_to = $deal->id;
+                $task->related_type = 'deal';
+                $task->save();
+            }
+        }
+
+
+        $LeadNotes = LeadNote::where('lead_id', $lead->id)->get();
+        if(!empty($tasks) && $tasks->count() > 0)
+        {
+            foreach($LeadNotes as $LeadNote)
+            {   $DealNotes = new DealNote();
+                $DealNotes->description = $LeadNote->description;
+                $DealNotes->created_by = $LeadNote->created_by;
+                $DealNotes->deal_id = $deal->id;
+                $DealNotes->save();
+            }
+        }
 
         // Make entry in ClientDeal Table
         ClientDeal::create(

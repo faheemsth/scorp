@@ -1156,7 +1156,7 @@
                                                                                                             <div class="d-flex gap-1 justify-content-end pb-2 px-3"
                                                                                                                 id="dellhover">
                                                                                                                 <button
-                                                                                                                    class="btn btn-outline-dark text-dark textareaClassedit spnier-updbtn"
+                                                                                                                    class="btn btn-outline-dark text-dark textareaClassedit"
                                                                                                                     data-size="lg"
                                                                                                                     data-url="{{ route('organiation.tasks.edit', $task->id) }}"
                                                                                                                     data-ajax-popup="true"
@@ -1254,7 +1254,7 @@
                                                                                         <div class="d-flex gap-1 justify-content-end pb-2 px-3"
                                                                                             id="dellhover">
                                                                                             <button
-                                                                                                class="btn btn-outline-dark text-dark textareaClassedit spnier-updbtn"
+                                                                                                class="btn btn-outline-dark text-dark textareaClassedit "
                                                                                                 data-size="lg"
                                                                                                 data-url="{{ route('organiation.tasks.edit', $task->id) }}"
                                                                                                 data-ajax-popup="true"

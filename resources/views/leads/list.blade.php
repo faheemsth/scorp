@@ -1439,8 +1439,73 @@ if (isset($lead->is_active) && $lead->is_active) {
     });
 
 
-    $(document).ready(function() {
-        $('.tag-badge').click(function() {
+
+
+
+    $(document).ready(function () {
+        $('#UpdateTagForm').submit(function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+            $.ajax({
+                url: '{{ url("leads/tag") }}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    data = JSON.parse(response);
+                    show_toastr('success', data.msg);
+                    $("#UpdateTageModal").hide();
+                    window.location.href = '/leads/list';
+                },
+
+            });
+        });
+    });
+    </script>
+    <script>
+        $(document).ready(function () {
+        $(".Update").on("click", function(e){
+        e.preventDefault();
+        $button = $(this);
+
+
+        var formData = $("#UpdateTagForm").serialize(); // Serialize form data
+        var url = $("#UpdateTagForm").attr('action'); // Get form action URL
+        var csrfToken = $('meta[name="csrf-token"]').attr('content'); // Get CSRF token
+        $button.prop('disabled', true);
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: formData,
+            headers: {
+                'X-CSRF-Token': csrfToken // Include CSRF token in headers
+            },
+            success: function(response){
+                data = JSON.parse(response);
+
+                if(data.status == 'success'){
+
+                    $("#tagModal").hide();
+                    $(".modal-backdrop").removeClass('modal-backdrop');
+                    $(".sub-check").prop('checked', false);
+                    $button.prop('disabled', false);
+                    show_toastr('success', data.msg);
+                    window.location.href = '/leads/list';
+                }
+                // Handle success response here
+                console.log("Data submitted successfully:", response);
+            },
+            error: function(xhr, status, error){
+                // Handle error response here
+                console.error("error submitting data:", error);
+            }
+        });
+    });
+
+    $('.tag-badge').click(function() {
             var tagId = $(this).data('tag-id');
             var tagName = $(this).data('tag-name');
             var selectOptions = <?php echo json_encode($tags); ?>;
@@ -1488,29 +1553,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                 console.error("Error: selectOptions is not an object.");
             }
         });
-    });
 
-
-    $(document).ready(function () {
-        $('#UpdateTagForm').submit(function (event) {
-            event.preventDefault();
-            var formData = new FormData(this);
-            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
-            $.ajax({
-                url: '{{ url("leads/tag") }}',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    data = JSON.parse(response);
-                    show_toastr('success', data.msg);
-                    $("#UpdateTageModal").hide();
-                    window.location.href = '/leads/list';
-                },
-
-            });
-        });
     });
     </script>
 @endpush

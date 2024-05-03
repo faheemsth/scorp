@@ -262,7 +262,7 @@
                                 <select name="country[]" id="choices-multiple333" class="form form-control select2" multiple style="width: 95%;">
                                     <option value="">Select user</option>
                                     @foreach ($countries as $key => $country)
-                                    <option value="{{ $country }}" <?= isset($_GET['country']) && in_array($country, $_GET['country']) ? 'selected' : '' ?> class="">{{ $country }}</option>
+                                        <option value="{{ $country }}" <?= isset($_GET['country']) && is_array($_GET['country']) && in_array($country, $_GET['country']) ? 'selected' : '' ?> class="">{{ $country }}</option>
                                     @endforeach
                                 </select>
                             </div>

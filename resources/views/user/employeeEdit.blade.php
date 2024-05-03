@@ -23,9 +23,9 @@
                     <select name="role" id="roles" class="form form-control select2">
                         @foreach($roles as $role)
                         <option value="{{$role}}" {{ $role == $user->type ? "selected":"" }}>{{ $role }}</option>
-                        @endforeach 
+                        @endforeach
                     </select>
-                
+
                     @error('role')
                         <small class="invalid-role" role="alert">
                             <strong class="text-danger">{{ $message }}</strong>
@@ -33,10 +33,9 @@
                     @enderror
                 </div>
 
-                <div class="form-group col-md-6" id="brand_div" >
+                <div class="form-group col-md-6 {{ \Auth::user()->type == 'HR' ? 'd-none' : ''}}" id="brand_div" >
                     @if (
                         \Auth::user()->type == 'super admin' ||
-                         \Auth::user()->type == 'HR' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->can('level 1') ||
@@ -102,7 +101,7 @@
 
 
                 <div class="form-group col-md-6 {{ $user->type == 'Project Director' || $user->type == 'Project Manager' ? 'd-none' : ''}}" id="branch_div">
-                    
+
                     @if (
                         \Auth::user()->type == 'super admin' ||
                             \Auth::user()->type == 'Project Director' ||
@@ -256,7 +255,7 @@
         var role = $(this).text();
         if (role == 'Project Director' || role == 'Project Manager') {
             $("#region_div, #branch_div").addClass('d-none');
-            
+
         } else {
             $("#region_div, #branch_div").removeClass('d-none');
         }
@@ -282,7 +281,7 @@
                 if (data.status === 'success') {
                     $('#region_div').html('');
                     $("#region_div").html(data.regions);
-                    select2();                       
+                    select2();
                 } else {
                     console.error('Server returned an error:', data.message);
                 }
@@ -328,9 +327,9 @@
 
         // Serialize form data
         var formData = $(this).serialize();
-            
+
         $(".update-employee").text('Updating...').prop("disabled", true);
-    
+
         // AJAX request
         $.ajax({
             type: "POST",

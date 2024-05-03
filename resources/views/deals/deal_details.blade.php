@@ -1130,7 +1130,7 @@
                                                                                                             <div class="d-flex gap-1 justify-content-end pb-2 px-3"
                                                                                                                 id="dellhover">
                                                                                                                 <button
-                                                                                                                    class="btn btn-outline-dark text-dark textareaClassedit spnier-updbtn"
+                                                                                                                    class="btn btn-outline-dark text-dark textareaClassedit "
                                                                                                                     data-size="lg"
                                                                                                                     data-url="{{ route('organiation.tasks.edit', $task->id) }}"
                                                                                                                     data-ajax-popup="true"
@@ -1142,7 +1142,7 @@
                                                                                                                 <div class="btn btn-dark  text-white"
                                                                                                                     id="editable"
                                                                                                                     style="font-size: ;"
-                                                                                                                    onclick="deleteTask({{ $task->id }}, {{ $deal->id }}, 'lead');">
+                                                                                                                    onclick="deleteTask({{ $task->id }}, {{ $deal->id }}, 'deal');">
                                                                                                                     Delete
                                                                                                                 </div>
                                                                                                             </div>
@@ -1228,7 +1228,7 @@
                                                                                         <div class="d-flex gap-1 justify-content-end pb-2 px-3"
                                                                                             id="dellhover">
                                                                                             <button
-                                                                                                class="btn btn-outline-dark text-dark textareaClassedit spnier-updbtn"
+                                                                                                class="btn btn-outline-dark text-dark textareaClassedit "
                                                                                                 data-size="lg"
                                                                                                 data-url="{{ route('organiation.tasks.edit', $task->id) }}"
                                                                                                 data-ajax-popup="true"
@@ -1240,7 +1240,7 @@
                                                                                             <div class="btn btn-dark  text-white"
                                                                                                 id="editable"
                                                                                                 style="font-size: ;"
-                                                                                                onclick="deleteTask({{ $task->id }}, {{ $deal->id }}, 'lead');">
+                                                                                                onclick="deleteTask({{ $task->id }}, {{ $deal->id }}, 'deal');">
                                                                                                 Delete</div>
                                                                                         </div>
                                                                                     </div>

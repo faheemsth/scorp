@@ -123,7 +123,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="UpdateTagForm">
+                <form action="{{ route('lead_tags') }}" method="POST" id="UpdateTagForm">
                 <div class="modal-body" id="sheraz">
 
                 </div>
@@ -143,7 +143,7 @@
                 </script>
                 <br>
                 <div class="modal-footer">
-                    <input type="submit" class="btn btn-dark px-2" value="Update">
+                    <input type="submit" class="btn btn-dark px-2 Update" value="Update">
                     <a class="btn btn-danger text-white" onclick="deleteTage()">Delete</a>
                 </div>
             </form>

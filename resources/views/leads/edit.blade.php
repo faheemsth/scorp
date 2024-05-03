@@ -372,7 +372,7 @@
                                                 Address
                                             </td>
                                             <td class="" style="width: 350PX;  font-size: 13px; bg-danger">
-                                                
+
                                                 <div class="row">
                                                     <div class="col-12 col-form" style="text-align: left;">
                                                         <select class="form-control select2" id="choice-6"
@@ -402,7 +402,7 @@
                                                             id="formGroupExampleInput" placeholder="Postel Code"
                                                             name="lead_postal_code" value="{{ $lead->postal_code }}">
                                                     </div>
-                                                   
+
                                                     <div class="col-6 col-form">
                                                         <input type="text" class="form form-control" name="lead_street" value="{{ $lead->street }}" placeholder="Address...">
                                                     </div>
@@ -647,8 +647,8 @@
                         return false;
                     } else {
                         show_toastr('error', data.message, 'error');
-                        $(".new-lead-btn").val('Create');
-                        $('.new-lead-btn').removeAttr('disabled');
+                        $(".update-lead-btn").val('Update');
+                        $('.update-lead-btn').removeAttr('disabled');
                     }
                 }
             });
