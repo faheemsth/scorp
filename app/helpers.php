@@ -10,6 +10,7 @@ use App\Models\Notification;
 use App\Models\StageHistory;
 use App\Events\NewNotification;
 use App\Models\CompanyPermission;
+    use App\Models\LeadTag;
 
 if (!function_exists('countries')) {
     function countries()
@@ -375,7 +376,19 @@ if (!function_exists('BrandsRegionsBranches')) {
         //$project_dm = [];
 
         //$super_admins = User::whereIn('type', ['super admin'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-
+        if(!empty(request()->segment(1)) && !empty(request()->segment(2)))
+        {
+            if(request()->segment(1).'/'.request()->segment(2) == 'tages/edit')
+            {
+                $leadTag=LeadTag::find(request()->segment(3));
+                if(!empty($leadTag))
+                {
+                    $regions = Region::where('brands', $leadTag->brand_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                    $branches = Branch::where('region_id', $leadTag->region_id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                    $employees = User::where('branch_id', $leadTag->branch_id)->whereNotIn('type', ['client', 'company', 'super admin'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+                }
+            }
+        }
         if(isset($_GET['brand']) && !empty($_GET['brand'])){
             $regions = Region::where('brands', $_GET['brand'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         }

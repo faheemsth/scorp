@@ -752,9 +752,11 @@ Route::resource('stages', StageController::class);
 Route::resource('pipelines', PipelineController::class);
 Route::resource('labels', LabelController::class);
 Route::resource('sources', SourceController::class);
-Route::resource('tages', TagController::class);
 Route::resource('payments', PaymentController::class);
 Route::resource('custom_fields', CustomFieldController::class);
+Route::resource('tages', TagController::class);
+Route::get('/tages/edit/{id}', [TagController::class, 'edit'])->name('tages.edit');
+Route::post('/tages/update', [TagController::class, 'update'])->name('tages.updated');
 
 
 
