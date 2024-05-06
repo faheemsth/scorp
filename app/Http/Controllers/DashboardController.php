@@ -74,11 +74,14 @@ class DashboardController extends Controller
     {
         if (Auth::check()) {
             if (Auth::user()->type == 'super admin') {
-                return redirect()->route('client.dashboard.view');
+                // return redirect()->route('client.dashboard.view');
+                return redirect('profile');
             } elseif (Auth::user()->type == 'client') {
-                return redirect()->route('client.dashboard.view');
+                // return redirect()->route('client.dashboard.view');
+                return redirect('profile');
             } else {
                 if (\Auth::user()->can('show account dashboard')) {
+                    return redirect('profile');
                     $data['latestIncome']  = Revenue::where('created_by', '=', \Auth::user()->creatorId())->orderBy('id', 'desc')->limit(5)->get();
                     $data['latestExpense'] = Payment::where('created_by', '=', \Auth::user()->creatorId())->orderBy('id', 'desc')->limit(5)->get();
                     $currentYer           = date('Y');
@@ -138,8 +141,8 @@ class DashboardController extends Controller
 
                     return view('dashboard.account-dashboard', $data);
                 } else {
-
-                    return $this->hrm_dashboard_index();
+                    return redirect('profile');
+                    // return $this->hrm_dashboard_index();
                 }
             }
         } else {
