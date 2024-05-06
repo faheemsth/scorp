@@ -255,7 +255,7 @@
                                                     <option value="">Select source</option>
                                                     @foreach ($sources as $key => $source)
                                                         <option value="{{ $key }}"
-                                                            <?= $lead->sources == $key ? 'selected' : '' ?>>
+                                                            <?= $lead->sources['0'] == $key ? 'selected' : '' ?>>
                                                             {{ $source }}</option>
                                                     @endforeach
                                                 </select>

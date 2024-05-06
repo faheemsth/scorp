@@ -257,6 +257,16 @@
                                                                     {{ $users[$task->assigned_to] }}
                                                                 </td>
                                                             </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px;  font-size: 14px;">
+                                                                    {{ __('Assigned By') }}
+                                                                </td>
+                                                                <td class="td"
+                                                                    style="padding-left: 20px; font-size: 14px;">
+                                                                    {{ $users[$task->created_by] }}
+                                                                </td>
+                                                            </tr>
 
                                                             {{-- <tr>
                                                                 <td class="" style="  font-size: 14px;">

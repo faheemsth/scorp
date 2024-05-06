@@ -1382,6 +1382,7 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
                             <!-- End of Open Accordion Item -->
 
                             <div class="tab-pane fade" id="pills-activity" role="tabpanel"
