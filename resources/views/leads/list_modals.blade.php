@@ -18,36 +18,12 @@
                             <option value="">Select Tag</option>
                             @foreach ($tags as $key => $tag)
                             @if (!empty($tag))
-                            <option value="{{ $tag }}" <?= isset($_GET['tag']) && $key == $_GET['tag'] ? 'selected' : '' ?> class="">{{ $tag }}</option>
+                            <option value="{{ $tag }}" <?= isset($_GET['tag']) && $key == $_GET['tag'] ? 'selected' : '' ?> class="">{{ $key }}</option>
                             @endif
                             @endforeach
-                            @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                            <option value="other">Other</option>
-                            @endif
-
+                            {{-- @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') --}}
                         </select>
                     </div>
-
-                    <div class="form-group inputTage" style="display: none">
-                        <label for="">New Tag</label>
-                        <input type="text" name="tags" class="form form-control">
-                    </div>
-
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function() {
-                            const selectTag = document.getElementById('tagSelect');
-                            const inputTag = document.querySelector('.inputTage');
-
-                            selectTag.addEventListener('change', function() {
-                                if (this.value === 'other') {
-                                    inputTag.style.display = 'block';
-                                } else {
-                                    inputTag.style.display = 'none';
-                                }
-                            });
-                        });
-                    </script>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -127,20 +103,6 @@
                 <div class="modal-body" id="sheraz">
 
                 </div>
-                <script>
-                    document.addEventListener("DOMContentLoaded", function() {
-                        const selectTag = document.getElementById('tagSelectupdate');
-                        const inputTag = document.querySelector('.inputTageupdate');
-
-                        selectTag.addEventListener('change', function() {
-                            if (this.value === 'other') {
-                                inputTag.style.display = 'block';
-                            } else {
-                                inputTag.style.display = 'none';
-                            }
-                        });
-                    });
-                </script>
                 <br>
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-dark px-2 Update" value="Update">

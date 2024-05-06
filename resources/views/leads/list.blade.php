@@ -419,11 +419,11 @@ if (isset($lead->is_active) && $lead->is_active) {
 
                                                 <td class="lead-info-cell">
                                                     @php
-                                                        $lead_tags = \App\Models\LeadTag::where('lead_id', $lead->id)->get();
+                                                        $lead_tags = \App\Models\LeadTag::whereIn('id', explode(',', $lead->tag_ids))->get();
                                                     @endphp
 
                                                     @forelse($lead_tags as $tag)
-                                                        <span class="badge text-white {{ \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' ? 'tag-badge' :''}}" data-tag-id="{{ $tag->id }}" data-tag-name="{{ $tag->tag }}" style="background-color:#cd9835;cursor:pointer;">
+                                                    <span class="badge text-white tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $lead->id }}" style="background-color:#cd9835;cursor:pointer;">
                                                             {{ $tag->tag }}
                                                         </span>
                                                     @empty
@@ -461,7 +461,7 @@ if (isset($lead->is_active) && $lead->is_active) {
         $.ajax({
             type: "GET",
             url: '{{ url('delete_tage') }}',
-            data: {id : $('#tagIdInput').val()},
+            data: {lead_id : $('#lead_id').val(),old_tag_id : $('#old_tag_id').val()},
             success: function(response) {
                 data = JSON.parse(response);
 
@@ -1248,7 +1248,7 @@ if (isset($lead->is_active) && $lead->is_active) {
     $(document).ready(function() {
     $('.tag-badge').click(function() {
         var tagId = $(this).data('tag-id');
-        var tagName = $(this).data('tag-name');
+        var tagName = $(this).data('lead-id');
         var selectOptions = <?php echo json_encode($tags); ?>;
 
         // Check if selectOptions is an object
@@ -1506,8 +1506,9 @@ if (isset($lead->is_active) && $lead->is_active) {
     });
 
     $('.tag-badge').click(function() {
+            $('#sheraz').html('');
             var tagId = $(this).data('tag-id');
-            var tagName = $(this).data('tag-name');
+            var leadId = $(this).data('lead-id');
             var selectOptions = <?php echo json_encode($tags); ?>;
 
             // Check if selectOptions is an object
@@ -1516,41 +1517,24 @@ if (isset($lead->is_active) && $lead->is_active) {
                 var optionsHTML = '';
                 for (var key in selectOptions) {
                     if (selectOptions.hasOwnProperty(key) && key.trim() !== '') {
-                        optionsHTML += `<option value="${key}" ${tagName === key ? 'selected' : ''}>${key}</option>`;
+                        optionsHTML += `<option value="${selectOptions[key]}" ${tagId === selectOptions[key] ? 'selected' : ''}>${key}</option>`;
                     }
                 }
 
                 // Append the options to the select element
                 $('#sheraz').append(`
-                    <input type="hidden" value="${tagId}" name="id" id="tagIdInput">
+                    <input type="hidden" value="${tagId}" name="old_tag_id" id="old_tag_id">
                     <div class="form-group">
                         <label for="">Tag</label>
-                        <select class="form form-control select2 selectTage" name="tagid" id="tagSelectupdate" style="width: 95%;">
+                        <select class="form form-control select2 selectTage" name="new_tag_id" id="tagSelectupdate" style="width: 95%;">
                             <option value="">Select Tag</option>
                             ${optionsHTML}
-                            @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                            <option value="other">Other</option>
-                            @endif
                         </select>
                     </div>
-                    <div class="form-group inputTageupdate" style="display: none">
-                        <input type="hidden" value="${tagName}" name="tagName" id="tagIdInput">
-                        <label for="">New Tag</label>
-                        <input type="text" name="tags" id="tagNameInput" class="form form-control" style="width: 95%;">
-                    </div>
+                    <input type="hidden" value="${leadId}" name="lead_id" id="lead_id">
                 `);
                 select2();
                 $('#UpdateTageModal').modal('show');
-                $('#tagSelectupdate').on('change', function() {
-                    var inputTag = $('#tagNameInput');
-                    if (this.value === 'other') {
-                        inputTag.closest('.inputTageupdate').show();
-                    } else {
-                        inputTag.closest('.inputTageupdate').hide();
-                    }
-                });
-            } else {
-                console.error("Error: selectOptions is not an object.");
             }
         });
 

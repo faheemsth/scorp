@@ -361,11 +361,10 @@ class LeadController extends Controller
 
         $filters = BrandsRegionsBranches();
         if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') {
-            $tags = LeadTag::pluck('tag', 'tag')->toArray();
+            $tags = LeadTag::pluck('id', 'tag')->toArray();
         } else {
-            $tags = LeadTag::where('created_by', \Auth::id())->pluck('tag', 'tag')->toArray();
+            $tags = LeadTag::where('branch_id', \Auth::user()->branch_id)->pluck('id', 'tag')->toArray();
         }
-
         return view('leads.list', compact('branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status', 'assign_to', 'filters', 'tags'));
     }
 
@@ -3879,63 +3878,66 @@ class LeadController extends Controller
 
     public function addTags(Request $request)
     {
-
-        // echo "<pre>";
-        // print_r($request->input());
-        // die();
-
-        if (!empty($request->input('id'))) {
-
-
-            if ($request->input('tagid') == 'other') {
-
-                $new_tag = new \App\Models\LeadTag();
-                $new_tag->lead_id = LeadTag::find($request->input('id'))->lead_id;
-                $new_tag->tag = !empty($request->tags) ? $request->tags : $request->tagid;
-                $new_tag->created_by = \Auth::user()->id;
-                $new_tag->created_at = date('Y-m-d h:i:s');
-                $new_tag->updated_at = date('Y-m-d h:i:s');
-                $new_tag->save();
-            } else {
-                $new_tag = LeadTag::find($request->input('id'));
-                $new_tag->tag = !empty($request->tags) ? $request->tags : $request->tagid;
-                $new_tag->save();
-            }
+        $ids = explode(',', $request->selectedIds);
+        $Leads = Lead::whereIn('id', $ids)->get();
+        if(!empty($ids) && !empty($Leads) && $Leads->count() > 0){
+                foreach ($Leads as $Lead) {
+                    $Lead->tag_ids = $Lead->tag_ids ? $Lead->tag_ids . ',' . $request->tagid : $request->tagid;
+                    $Lead->save();
+                }
             return json_encode([
-                'status' => 'success',
-                'msg' => 'Tag Update successfully'
+                    'status' => 'success',
+                    'msg' => 'Tag added successfully'
             ]);
-        } else {
-            $ids = explode(',', $request->selectedIds);
+        }else{
+            if (!empty($request->old_tag_id) && !empty($request->new_tag_id) && !empty($request->lead_id)) {
+                if($request->old_tag_id == $request->new_tag_id)
+                {
+                  return json_encode([
+                        'status' => 'success',
+                        'msg' => 'Tag Update successfully'
+                  ]);
 
-            foreach ($ids as $id) {
-                $new_tag = new \App\Models\LeadTag();
-                $new_tag->lead_id = $id;
-                $new_tag->tag = !empty($request->tags) ? $request->tags : $request->tagid;
-                $new_tag->created_by = \Auth::user()->id;
-                $new_tag->created_at = date('Y-m-d h:i:s');
-                $new_tag->updated_at = date('Y-m-d h:i:s');
-                $new_tag->save();
+                }else{
+
+                  $Leads = Lead::find($request->lead_id)->tag_ids;
+                  $leadArray = explode(',', $Leads);
+                  $index = array_search($request->old_tag_id, $leadArray);
+                  if ($index !== false) {
+                      unset($leadArray[$index]);
+                  }
+                  $newLeads = implode(',', $leadArray);
+                  $Lead = Lead::where('id', $request->lead_id)->first();
+                  $Lead->tag_ids = $newLeads ? $newLeads . ',' . $request->new_tag_id : $request->new_tag_id;
+                  $Lead->save();
+                    return json_encode([
+                        'status' => 'success',
+                        'msg' => 'Tag Update successfully'
+                    ]);
+                }
             }
-
-            return json_encode([
-                'status' => 'success',
-                'msg' => 'Tag added successfully'
-            ]);
         }
-    }
 
+    }
 
     public function delete_tage(Request $request)
     {
-        if (!empty($request->input('id'))) {
+        if (!empty($request->old_tag_id) && !empty($request->lead_id)) {
 
-            LeadTag::find($request->input('id'))->delete();
-
-            return json_encode([
-                'status' => 'success',
-                'msg' => 'Tag Delete successfully'
-            ]);
+            $Leads = Lead::find($request->lead_id)->tag_ids;
+            $leadArray = explode(',', $Leads);
+            $index = array_search($request->old_tag_id, $leadArray);
+            if ($index !== false) {
+                unset($leadArray[$index]);
+            }
+            $newLeads = implode(',', $leadArray);
+            $Lead = Lead::where('id', $request->lead_id)->first();
+            $Lead->tag_ids = $newLeads;
+            $Lead->save();
+              return json_encode([
+                  'status' => 'success',
+                  'msg' => 'Tag Delete successfully'
+              ]);
         }
     }
     public function sendBulkEmail(Request $request)
