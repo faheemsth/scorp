@@ -1204,6 +1204,11 @@ class OrganizationController extends Controller
 
             $rules = [
                 'task_name' => 'required',
+                'brand_id' => 'required|integer|min:1',
+                'region_id' => 'required|integer|min:1',
+                'branch_id' => 'required|integer|min:1',
+                'assigned_to' => 'required|integer|min:1',
+                'assign_type' => 'required',
                 'due_date' => 'required',
                 'start_date' => 'required',
                 'visibility' => 'required',
