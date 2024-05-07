@@ -33,7 +33,7 @@
                     @enderror
                 </div>
 
-                <div class="form-group col-md-6 {{ \Auth::user()->type == 'HR' ? 'd-none' : ''}}" id="brand_div" >
+                <div class="form-group col-md-6" id="brand_div" >
                     @if (
                         \Auth::user()->type == 'super admin' ||
                             \Auth::user()->type == 'Project Director' ||
