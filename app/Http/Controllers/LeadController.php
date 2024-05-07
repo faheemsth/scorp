@@ -528,7 +528,7 @@ class LeadController extends Controller
                     'brand_id' => 'required',
                     'region_id' => 'required',
                     'lead_branch' => 'required',
-                    'lead_assgigned_user' => 'required',
+                    'lead_assigned_user' => 'required',
                     'lead_phone' => 'required',
                     //'lead_email' => 'required|unique:leads,email',
                 ]
@@ -610,7 +610,7 @@ class LeadController extends Controller
                 $lead->tags = $request->lead_tags_list;
                 $lead->stage_id    = $request->lead_stage;
                 $lead->subject     = $request->lead_first_name . ' ' . $request->lead_last_name;
-                $lead->user_id     = $request->lead_assgigned_user;
+                $lead->user_id     = $request->lead_assigned_user;
                 $lead->pipeline_id = $pipeline->id;
 
                 $session_id = Session::get('auth_type_id');
