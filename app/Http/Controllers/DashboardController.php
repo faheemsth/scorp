@@ -519,7 +519,7 @@ class DashboardController extends Controller
         if (!Auth::check()) {
             return redirect('login');
         }
-
+        return redirect('profile');
         $filter_data = BrandsRegionsBranches();
 
         $chart_data = $this->getChartData();
