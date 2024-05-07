@@ -317,26 +317,48 @@ if (!function_exists('FiltersBranchUsers')) {
 
 
          $users = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client', 'team'])->where('branch_id', $id)->pluck('name', 'id')->toArray();
-        $html = ' <select class="form form-control user_id select2" id="user_id" name="lead_assgigned_user"> <option value="">Select User</option> ';
+        // $html = ' <select class="form form-control user_id select2" id="user_id" name="lead_assgigned_user"> <option value="">Select User</option> ';
+
+        // if(isset($_GET['page']) && $_GET['page'] == 'lead_list'){
+        //     $html .= '<option value="null">Not Assign</option> ';
+        // }
+
+        // foreach ($admins as $key => $user) {
+        //     $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        // }
+
+        // foreach ($project_directors as $key => $user) {
+        //     $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        // }
+
+        // foreach ($regional_managers as $key => $user) {
+        //     $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        // }
+
+        // foreach ($users as $key => $user) {
+        //     $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        // }
+        // $html .= '</select>';
+
+        // return $html;
+        $html = '';
 
         if(isset($_GET['page']) && $_GET['page'] == 'lead_list'){
             $html .= '<option value="null">Not Assign</option> ';
         }
 
-        foreach ($admins as $key => $user) {
-            $html .= '<option value="' . $key . '">' . $user . '</option> ';
-        }
-
-        foreach ($project_directors as $key => $user) {
-            $html .= '<option value="' . $key . '">' . $user . '</option> ';
-        }
-
-        foreach ($regional_managers as $key => $user) {
-            $html .= '<option value="' . $key . '">' . $user . '</option> ';
-        }
-
-        foreach ($users as $key => $user) {
-            $html .= '<option value="' . $key . '">' . $user . '</option> ';
+        $html = '<select class="form form-control user_id select2" id="user_id" name="lead_assigned_user">';
+        $html .= '<option value="">Select User</option>';
+        $html .= '<option value="null">Not Assign</option>';
+        $unique_users = [];
+        $users_lists = [$admins, $project_directors, $regional_managers, $users];
+        foreach ($users_lists as $users) {
+            foreach ($users as $key => $user) {
+                if (!isset($unique_users[$key])) {
+                    $unique_users[$key] = $user;
+                    $html .= '<option value="' . $key . '">' . $user . '</option>';
+                }
+            }
         }
         $html .= '</select>';
 
