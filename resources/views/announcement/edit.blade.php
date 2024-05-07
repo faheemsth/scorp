@@ -54,7 +54,7 @@
             <div class="form-group">
                 {{Form::label('employee_id',__('Employee'),['class'=>'form-label'])}}
                 <div id="employee_div">
-                    <select class="form-control select" name="lead_assgigned_user[]" id="employee_id" placeholder="Select Employee" >
+                    <select class="form-control select" name="lead_assigned_user[]" id="employee_id" placeholder="Select Employee" >
                         <option value="">{{__('Select Employee')}}</option>
                         @foreach ($employees as $employee)
                         <option value="{{$employee->id}}" {{ $employee->id == $announcement->employee_id ? 'selected' : ''}}>{{$employee->name}}</option>

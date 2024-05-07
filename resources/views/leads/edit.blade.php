@@ -218,7 +218,7 @@
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="assign_to_div">
                                                 <select class="form-control select2" id="choice-2"
-                                                    name="lead_assgigned_user" {{ !\Auth::user()->can('edit assign to lead') ? 'disabled' : '' }}>
+                                                    name="lead_assigned_user" {{ !\Auth::user()->can('edit assign to lead') ? 'disabled' : '' }}>
                                                     <option value="">Select User</option>
                                                     @foreach ($employees as $key => $user)
                                                         <option value="{{ $key }}"

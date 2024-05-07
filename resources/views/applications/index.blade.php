@@ -86,7 +86,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         ALL APPLICATIONS
                     </button>
-                   
+
                     <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton1">
                     @if(sizeof($saved_filters) > 0)
                         @foreach($saved_filters as $filter)
@@ -114,7 +114,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         </li>
                         @endif
                     </ul>
-                    
+
                 </div>
             </div>
 
@@ -218,9 +218,9 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
 
                     <div class="col-md-3 mt-2"> <label for="">Assigned To</label>
                         <div class="" id="assign_to_div">
-                            <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
+                            <select name="lead_assigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
                                 @foreach ($filters['employees'] as $key => $user)
-                                <option value="{{ $key }}" <?= isset($_GET['lead_assgigned_user']) && $key == $_GET['lead_assgigned_user'] ? 'selected' : '' ?> class="">{{ $user }}</option>
+                                <option value="{{ $key }}" <?= isset($_GET['lead_assigned_user']) && $key == $_GET['lead_assigned_user'] ? 'selected' : '' ?> class="">{{ $user }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -685,7 +685,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
         });
 
         $(document).on("change", "#filter-show #filter_branch_id, #filter-show #branch_id", function() {
-    
+
             var id = $(this).val();
 
                 $.ajax({

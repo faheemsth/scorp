@@ -198,7 +198,7 @@
                                                 class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;" id="assign_to_divs">
-                                                <select class="form-control select2" id="choice-222" name="lead_assgigned_user">
+                                                <select class="form-control select2" id="choice-222" name="lead_assigned_user">
                                                     @foreach($employees as $key => $employee)
                                                     <option value="{{$key}}">{{$employee}}</option>
                                                     @endforeach

@@ -105,7 +105,7 @@
     <div class="col-6">
         <label for="">Lead Assigned to <span class="text-danger">*</span></label>
         <div id="assign_to_div_lead">
-            <select name="lead_assgigned_user" id="assigned_to" class="form form-control">
+            <select name="lead_assigned_user" id="assigned_to" class="form form-control">
                 @foreach ($employees as $key => $employee)
                     <option value="{{ $key }}">{{ $employee }}</option>
                 @endforeach

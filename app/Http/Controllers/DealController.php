@@ -213,8 +213,8 @@ class DealController extends Controller
             $filters['branch_id'] = $_GET['branch_id'];
         }
 
-        if (isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user'])) {
-            $filters['deal_assigned_user'] = $_GET['lead_assgigned_user'];
+        if (isset($_GET['lead_assigned_user']) && !empty($_GET['lead_assigned_user'])) {
+            $filters['deal_assigned_user'] = $_GET['lead_assigned_user'];
         }
 
 
@@ -2757,8 +2757,8 @@ class DealController extends Controller
             $filters['subjects'] = $_GET['subjects'];
         }
 
-        if (isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user'])) {
-            $filters['assigned_to'] = $_GET['lead_assgigned_user'];
+        if (isset($_GET['lead_assigned_user']) && !empty($_GET['lead_assigned_user'])) {
+            $filters['assigned_to'] = $_GET['lead_assigned_user'];
         }
 
         if (isset($_GET['brand']) && !empty($_GET['brand'])) {

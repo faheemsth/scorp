@@ -560,9 +560,9 @@
 
                                 <div class="col-md-3 mt-2"> <label for="">Assigned To</label>
                                     <div class="" id="assign_to_div">
-                                        <select name="lead_assgigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
+                                        <select name="lead_assigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
                                             @foreach ($filters['employees'] as $key => $user)
-                                            <option value="{{ $key }}" <?= isset($_GET['lead_assgigned_user']) && $key == $_GET['lead_assgigned_user'] ? 'selected' : '' ?> class="">{{ $user }}</option>
+                                            <option value="{{ $key }}" <?= isset($_GET['lead_assigned_user']) && $key == $_GET['lead_assigned_user'] ? 'selected' : '' ?> class="">{{ $user }}</option>
                                             @endforeach
                                         </select>
                                     </div>

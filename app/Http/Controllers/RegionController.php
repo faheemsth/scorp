@@ -157,7 +157,7 @@ class RegionController extends Controller
                 ->pluck('name', 'id')
                 ->toArray();
 
-            $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="assigned_to" > <option value="">Select User</option> ';
+            $html = ' <select class="form form-control lead_assigned_user select2" id="choices-multiple4" name="assigned_to" > <option value="">Select User</option> ';
 
             foreach ($admins as $key => $user) {
                 $html .= '<option value="' . $key . '">' . $user . '</option> ';

@@ -317,7 +317,7 @@ if (!function_exists('FiltersBranchUsers')) {
 
 
          $users = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client', 'team'])->where('branch_id', $id)->pluck('name', 'id')->toArray();
-        // $html = ' <select class="form form-control user_id select2" id="user_id" name="lead_assgigned_user"> <option value="">Select User</option> ';
+        // $html = ' <select class="form form-control user_id select2" id="user_id" name="lead_assigned_user"> <option value="">Select User</option> ';
 
         // if(isset($_GET['page']) && $_GET['page'] == 'lead_list'){
         //     $html .= '<option value="null">Not Assign</option> ';

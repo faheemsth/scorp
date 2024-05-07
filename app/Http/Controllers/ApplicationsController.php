@@ -62,8 +62,8 @@ class ApplicationsController extends Controller
             $filters['created_at_to'] = $_GET['created_at_to'];
         }
 
-        if (isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user'])) {
-            $filters['assigned_to'] = $_GET['lead_assgigned_user'];
+        if (isset($_GET['lead_assigned_user']) && !empty($_GET['lead_assigned_user'])) {
+            $filters['assigned_to'] = $_GET['lead_assigned_user'];
         }
 
         return $filters;

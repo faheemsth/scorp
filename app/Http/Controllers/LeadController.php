@@ -119,8 +119,8 @@ class LeadController extends Controller
             $filters['users'] = $_GET['users'];
         }
 
-        if (isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user'])) {
-            $filters['lead_assgigned_user'] = $_GET['lead_assgigned_user'];
+        if (isset($_GET['lead_assigned_user']) && !empty($_GET['lead_assigned_user'])) {
+            $filters['lead_assigned_user'] = $_GET['lead_assigned_user'];
         }
 
         if (isset($_GET['subject']) && !empty($_GET['subject'])) {
@@ -129,7 +129,7 @@ class LeadController extends Controller
 
 
 
-        // if(isset($_GET['lead_assgigned_user']) && !empty($_GET['lead_assgigned_user']) && $_GET['lead_assgigned_user'] != 'null'){
+        // if(isset($_GET['lead_assigned_user']) && !empty($_GET['lead_assigned_user']) && $_GET['lead_assigned_user'] != 'null'){
         if (isset($_GET['brand']) && !empty($_GET['brand'])) {
             $filters['brand_id'] = $_GET['brand'];
         }
@@ -142,7 +142,7 @@ class LeadController extends Controller
             $filters['branch_id'] = $_GET['branch_id'];
         }
         //}
-        if (isset($_GET['lead_assgigned_user']) && $_GET['lead_assgigned_user'] == 'null') {
+        if (isset($_GET['lead_assigned_user']) && $_GET['lead_assigned_user'] == 'null') {
             unset($filters['brand_id']);
             unset($filters['region_id']);
             unset($filters['branch_id']);
@@ -242,7 +242,7 @@ class LeadController extends Controller
                     case 'stage_id':
                         $leads_query->whereIn('stage_id', $value);
                         break;
-                    case 'lead_assgigned_user':
+                    case 'lead_assigned_user':
                         if ($value == null) {
                             $leads_query->whereNull('leads.user_id');
                         } else {
@@ -487,7 +487,7 @@ class LeadController extends Controller
         $branches = Branch::whereRaw('FIND_IN_SET(?, brands)', [$id])->pluck('name', 'id')->toArray();
 
 
-        $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="assigned_to" > <option value="">Select User</option> ';
+        $html = ' <select class="form form-control lead_assigned_user select2" id="choices-multiple4" name="assigned_to" > <option value="">Select User</option> ';
         foreach ($employees as $key => $user) {
             $html .= '<option value="' . $key . '">' . $user . '</option> ';
         }
@@ -659,8 +659,8 @@ class LeadController extends Controller
                 ];
                 addLogActivity($data);
 
-                if (isset($request->lead_assgigned_user) && !empty($request->lead_assgigned_user)) {
-                    $usrEmail = User::find($request->lead_assgigned_user);
+                if (isset($request->lead_assigned_user) && !empty($request->lead_assigned_user)) {
+                    $usrEmail = User::find($request->lead_assigned_user);
 
                     // Send Email
                     $setings = Utility::settings();
@@ -918,8 +918,8 @@ class LeadController extends Controller
                     $lead->brand_id      = $request->brand_id;
                 }
 
-                if (isset($request->lead_assgigned_user)) {
-                    $lead->user_id     = $request->lead_assgigned_user;
+                if (isset($request->lead_assigned_user)) {
+                    $lead->user_id     = $request->lead_assigned_user;
                 }
 
                 $lead->organization_id = $request->lead_organization;;
@@ -1126,7 +1126,7 @@ class LeadController extends Controller
             }
 
             // Check if the lead exists
-            $lead_exist = Lead::where('email', $lead->email)->where('brand_id', $request->brand_id)->where('region_id', $request->region_id)->where('branch_id', $request->branch_id)->first();
+            $lead_exist = Lead::where('email', $lead->email)->where('brand_id', $request->brand_id)->where('region_id', $request->region_id)->where('branch_id', $request->lead_branch)->first();
             if ($lead_exist) {
                 continue;
                 //$lead = $lead_exist;
@@ -1136,7 +1136,7 @@ class LeadController extends Controller
             $lead->email = in_array('email', $column_arr) ? $lead->email : '';
             $lead->subject = in_array('subject', $column_arr) ? $lead->subject : '';
 
-            $lead->user_id = $request->lead_assgigned_user;
+            $lead->user_id = $request->lead_assigned_user;
             $lead->brand_id = $request->brand_id;
             $lead->region_id = $request->region_id;
             $lead->branch_id = $request->lead_branch;
@@ -1149,7 +1149,7 @@ class LeadController extends Controller
             $lead->stage_id = $stage->id;
             $lead->created_by = \Auth::user()->id;
             $lead->date = date('Y-m-d');
-            if (!empty($lead->name) || !empty($lead->email) || !empty($lead->phone) || !empty($lead->subject) || !empty($lead->notes)) {
+            if (!empty($test['name']) || !empty($test['email']) || !empty($test['phone']) || !empty($test['subject']) || !empty($test['notes'])) {
                 $lead->save();
 
                 if(in_array('notes', $column_arr)){
@@ -1165,7 +1165,7 @@ class LeadController extends Controller
                     'lead_id' => $lead->id,
                 ]);
 
-                $usrEmail = User::find($request->lead_assgigned_user);
+                $usrEmail = User::find($request->lead_assigned_user);
 
                 // Send Email
                 $setings = Utility::settings();
@@ -1236,22 +1236,24 @@ class LeadController extends Controller
                 }
             }
 
-            $lead_exist = Lead::where('email', $test['email'] ?? '')->where('brand_id', $request->brand_id)->where('region_id', $request->region_id)->where('branch_id', $request->branch_id)->first();
-            if ($lead_exist) {
-                continue;
+            if (filter_var($test['email'] ?? '', FILTER_VALIDATE_EMAIL)) {
+                $lead_exist = Lead::where('email', $test['email'])
+                    ->where('brand_id', $request->brand_id)
+                    ->where('region_id', $request->region_id)
+                    ->where('branch_id', $request->lead_branch)
+                    ->first();
+
+                if ($lead_exist) {
+                    // Duplicate record found, skip this iteration
+                    continue;
+                }
+            } else {
+                // Invalid email, handle the error as needed
             }
+            $lead->email = $test['email'] ?? '';
+            $lead->subject = $test['subject'] ?? 'Default Subject';
 
-
-            //if no email found
-            if (!in_array('email', $column_arr)) {
-                $lead->email = '';
-            }
-
-            if (!in_array('subject', $column_arr)) {
-                $lead->subject = 'Default Subject';
-            }
-
-            $lead->user_id     = $request->lead_assgigned_user;
+            $lead->user_id     = $request->lead_assigned_user;
             $lead->brand_id    = $request->brand_id;
             $lead->region_id   = $request->region_id;
             $lead->branch_id   = $request->lead_branch;
@@ -1266,7 +1268,7 @@ class LeadController extends Controller
             $lead->date        = date('Y-m-d');
 
 
-            if (!empty($lead->name) || !empty($lead->email) || !empty($lead->phone) || !empty($lead->subject) || !empty($lead->notes)) {
+            if (!empty($test['name']) || !empty($test['email']) || !empty($test['phone']) || !empty($test['subject']) || !empty($test['notes'])) {
                 $lead->save();
                 //dd($test);
                 if(in_array('notes', $column_arr)){
@@ -1283,13 +1285,13 @@ class LeadController extends Controller
                     ]
                 );
 
-                $usrEmail = User::find($request->lead_assgigned_user);
+                $usrEmail = User::find($request->lead_assigned_user);
 
                 // Send Email
                 $setings = Utility::settings();
                 if ($setings['lead_assigned'] == 1) {
 
-                    $usrEmail = User::find($request->lead_assgigned_user);
+                    $usrEmail = User::find($request->lead_assigned_user);
                     $leadAssignArr = [
                         'lead_name'     => $lead->name,
                         'lead_email'    => $lead->email,
@@ -3711,21 +3713,21 @@ class LeadController extends Controller
                     'brand_id' => $request->brand,
                     'region_id' => $request->region_id,
                     'branch_id' => $request->branch_id,
-                    'user_id' => $request->lead_assgigned_user
+                    'user_id' => $request->lead_assigned_user
                 ]);
             } else if (isset($request->region_id) && !empty($request->region_id)) {
                 Lead::whereIn('id', $ids)->update([
                     //'brand_id' => $request->brand,
                     'region_id' => $request->region_id,
                     'branch_id' => $request->branch_id,
-                    'user_id' => $request->lead_assgigned_user
+                    'user_id' => $request->lead_assigned_user
                 ]);
             } else if (isset($request->branch_id) && !empty($request->branch_id)) {
                 Lead::whereIn('id', $ids)->update([
                     //'brand_id' => $request->brand,
                     //'region_id' => $request->region_id,
                     'branch_id' => $request->branch_id,
-                    'user_id' => $request->lead_assgigned_user
+                    'user_id' => $request->lead_assigned_user
                 ]);
             }
         }

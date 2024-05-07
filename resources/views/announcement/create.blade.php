@@ -15,7 +15,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 {{Form::label('branch_id',__('Brand'),['class'=>'form-label'])}}
-                
+
                 <select class="form-control select2 brand_id" id="choices-1011" name="brand_id">
                     <option value="" >Select Brand</option>
                     @foreach($companies as $key => $company)
@@ -54,7 +54,7 @@
             <div class="form-group">
                 {{Form::label('employee_id',__('Employee'),['class'=>'form-label'])}}
                 <div id="employee_div">
-                    <select class="form-control select" name="lead_assgigned_user[]" id="employee_id" placeholder="Select Employee" >
+                    <select class="form-control select" name="lead_assigned_user[]" id="employee_id" placeholder="Select Employee" >
                         <option value="">{{__('Select Employee')}}</option>
 
                     </select>
