@@ -49,7 +49,7 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-
+use App\Models\SavedFilter;
 class LeadController extends Controller
 {
     /**
@@ -195,7 +195,7 @@ class LeadController extends Controller
             $brand_ids = array_keys($companies);
 
             // Build the leads query
-            $leads_query = Lead::select('leads.*')
+            $leads_query = Lead::select('leads.id','leads.name','leads.brand_id','leads.email','leads.branch_id','leads.phone','leads.user_id','leads.stage_id','leads.tag_ids')
                 ->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')
                 ->join('users', 'users.id', '=', 'leads.brand_id')
                 ->join('branches', 'branches.id', '=', 'leads.branch_id')
@@ -380,16 +380,17 @@ class LeadController extends Controller
         $sourcess = Source::get()->pluck('name', 'id');
         $branches = Branch::get()->pluck('name', 'id')->ToArray();
         $stages = LeadStage::get();
+        $saved_filters =SavedFilter::where('created_by', \Auth::id())->where('module', 'leads')->get();
         if (request()->filled('ajaxCall') && request()->ajax()) {
             return json_encode([
                 'status' => 'success',
-                'html' => view('leads.leads_list_ajax', compact('leads', 'users', 'branches', 'total_records'))->render(),
+                'html' => view('leads.leads_list_ajax', compact('leads', 'users', 'branches', 'total_records','saved_filters'))->render(),
                 'pagination_html' => view('layouts.pagination', compact('total_records', 'num_results_on_page','total_pages'))->render()
             ]);
         }
         $filters = BrandsRegionsBranches();
         $tags = (\Auth::check() && ($user = \Auth::user()) && in_array($user->type, ['super admin', 'Admin Team', 'Project Director', 'Project Manager'])) ? LeadTag::pluck('id', 'tag')->toArray() : (\Auth::check() && ($user = \Auth::user()) && property_exists($user, 'branch_id') ? LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray() : []);
-        return view('leads.list', compact('stages','branches', 'pipeline', 'leads', 'users', 'total_records', 'sourcess', 'filters', 'tags'));
+        return view('leads.list', compact('saved_filters','stages','branches', 'pipeline', 'leads', 'users', 'total_records', 'sourcess', 'filters', 'tags'));
     }
 
 

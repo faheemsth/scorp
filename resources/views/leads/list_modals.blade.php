@@ -100,7 +100,7 @@
                 </button>
             </div>
                 <form action="{{ route('lead_tags') }}" method="POST" id="UpdateTagForm">
-                <div class="modal-body" id="sheraz">
+                <div class="modal-body" id="TagModalBody">
 
                 </div>
                 <br>

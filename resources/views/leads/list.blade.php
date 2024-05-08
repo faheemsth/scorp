@@ -1,52 +1,13 @@
 @extends('layouts.admin')
 
-
-@if (\Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' || \Auth::user()->can('level 2'))
-    @php
-        $com_permissions = [];
-        $com_permissions = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->get();
-
-    @endphp
-@endif
-
-<?php
-// $lead = \App\Models\Lead::first();
-// if (isset($lead->is_active) && $lead->is_active) {
-//     $calenderTasks = [];
-//     $deal = \App\Models\Deal::where('id', '=', $lead->is_converted)->first();
-//     $stageCnt = \App\Models\LeadStage::where('pipeline_id', '=', $lead->pipeline_id)->get();
-
-//     $i = 0;
-//     foreach ($stageCnt as $stage) {
-//         $i++;
-//         if ($stage->id == $lead->stage_id) {
-//             break;
-//         }
-//     }
-//     $precentage = number_format(($i * 100) / count($stageCnt));
-
-//     $lead_stages = $stageCnt;
-// }
-
-?>
-
-
-
-<?php $setting = \App\Models\Utility::colorset(); ?>
-{{-- <link rel="stylesheet" href="{{ asset('css/customsidebar.css') }}"> --}}
 @section('page-title')
-    {{ __('Manage Leads') }}
-    @if (\Auth::user()->type != 'super admin')
-
-    @if ($pipeline)
-    - {{ $pipeline->first()->name }}
-    @endif
-
+    @if (\Auth::user()->type != 'super admin' && isset($pipeline))
+        - {{ $pipeline->first()->name }}
+    @else
+        {{ isset($lead->name) ? $lead->name : __('Manage Leads') }}
     @endif
 @endsection
-@section('page-title')
-    {{ isset($lead->name) ? $lead->name : '' }}
-@endsection
+
 
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
@@ -186,10 +147,6 @@
                                         ALL LEADS
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-
-                                        @php
-                                        $saved_filters = App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'leads')->get();
-                                         @endphp
                                        @if(sizeof($saved_filters) > 0)
                                         @foreach($saved_filters as $filter)
                                         <li class="d-flex align-items-center justify-content-between ps-2">
@@ -416,18 +373,10 @@
                                                 <td class="lead-info-cell">
                                                     {{ $branches[$lead->branch_id] ?? '' }}
                                                 </td>
-
                                                 <td class="lead-info-cell">
-                                                    @php
-                                                        $lead_tags = \App\Models\LeadTag::whereIn('id', explode(',', $lead->tag_ids))->get();
-                                                    @endphp
-
-                                                    @forelse($lead_tags as $tag)
-                                                        <span class="badge text-white tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $lead->id }}" style="background-color:#cd9835;cursor:pointer;">
-                                                            {{ $tag->tag }}
-                                                        </span>
-                                                    @empty
-                                                    @endforelse
+                                                    @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $lead->tag_ids))->get() as $tag)
+                                                        <span class="badge text-white tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $lead->id }}" style="background-color:#cd9835;cursor:pointer;">{{ $tag->tag }}</span>
+                                                    @endforeach
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -477,10 +426,6 @@
     $(".add-filter").on("click", function() {
         $(".filter-data").toggle();
     })
-
-
-
-
     $("#tagModalBtn").on("click", function(){
         $(".sub-check").prop('checked', $(this).prop('checked'));
 
@@ -490,7 +435,6 @@
 
         $("#selectedIds").val(selectedIds);
     })
-
 
     $("#massAssignModalBtn").on("click", function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));
@@ -518,7 +462,6 @@
             show_toastr('error', 'Brand Ids should be the same');
             return false;
         }
-
         var brandId = brandIds[0];
         var brandName = brandNames[0];
 
@@ -530,13 +473,9 @@
         $("#brand_id_div").html(html);
         select2();
     });
-
-
     $(".add-tags").on("click", function(e){
         e.preventDefault();
         $button = $(this);
-
-
         var formData = $("#addTagForm").serialize(); // Serialize form data
         var url = $("#addTagForm").attr('action'); // Get form action URL
         var csrfToken = $('meta[name="csrf-token"]').attr('content'); // Get CSRF token
@@ -551,9 +490,7 @@
             },
             success: function(response){
                 data = JSON.parse(response);
-
                 if(data.status == 'success'){
-
                     $("#tagModal").hide();
                     $(".modal-backdrop").removeClass('modal-backdrop');
                     $(".sub-check").prop('checked', false);
@@ -561,40 +498,26 @@
                     show_toastr('success', data.msg);
                     window.location.href = '/leads/list';
                 }
-                // Handle success response here
-                console.log("Data submitted successfully:", response);
             },
-            error: function(xhr, status, error){
-                // Handle error response here
-                console.error("error submitting data:", error);
-            }
         });
     });
-
-
     $(document).ready(function() {
         let curr_url = window.location.href;
-
         if(curr_url.includes('?')){
             $('#save-filter-btn').css('display','inline-block');
         }
     });
-
-
     $(document).on("click", "#import_csv_modal_btn", function() {
         $("#import_csv").modal('show');
     })
 
        // single check
-
     $(document).on('change', '.main-check', function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));
 
         var selectedIds = $('.sub-check:checked').map(function() {
             return this.value;
         }).get();
-
-            // console.log(selectedIds.length)
 
         if (selectedIds.length > 0) {
             selectedArr = selectedIds;
@@ -668,7 +591,6 @@
         var selectedIds = $('.sub-check:checked').map(function() {
             return this.value;
         }).get();
-
         $.ajax({
             method: 'POST',
             url: '{{ route("send.bulk.email") }}',
@@ -680,18 +602,12 @@
                 console.log(response);
                 response = JSON.parse(response);
                 show_toastr('success', response.message);
-                // Handle success response
             },
-            error: function(xhr, status, error) {
-                console.error(xhr.responseText);
-                // Handle error response
-            }
         });
     });
 
 
     $(document).on("change", "#lead-file", function() {
-
         var extension = $('#lead-file').val().split('.').pop().toLowerCase();
         var ext = $('#extension').val();
 
@@ -722,9 +638,6 @@
                     $(".submit_btn").removeClass('d-none');
                 }
             },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.log(textStatus, errorThrown);
-            }
         });
     })
 
@@ -752,13 +665,9 @@
 
 
     $(document).on('click', '.lead_stage', function() {
-
         var lead_id = $(this).attr('data-lead-id');
         var stage_id = $(this).attr('data-stage-id');
         var currentBtn = $(this);
-
-
-
         $.ajax({
             type: 'GET',
             url: "{{ route('update-lead-stage') }}",
@@ -807,7 +716,6 @@
             }
         })
     })
-
     $(document).ready(function () {
         // Attach an event listener to the input field
         $('.list-global-search').keypress(function (e) {
@@ -837,8 +745,6 @@
             }
         });
     });
-
-
     $(document).on("click", '#submit_btn', function(){
         var brand = $("#brands").val();
         var region_id = $("#region_id").val();
@@ -851,31 +757,23 @@
         }
         $("#importCsvForm").submit();
     });
-
-
-
         //saving discussion
     $(document).on("submit", "#create-discussion", function(e) {
         e.preventDefault();
         var formData = $(this).serialize();
         var id = $('.lead-id').val();
-
         $(".create-discussion-btn").val('Processing...');
         $('.create-discussion-btn').attr('disabled', 'disabled');
-
         $.ajax({
             type: "POST",
             url: "/leads/" + id + "/discussions",
             data: formData,
             success: function(data) {
                 data = JSON.parse(data);
-
                 if (data.status == 'success') {
                     show_toastr('Success', data.message, 'success');
                     $('#commonModal').modal('hide');
                     $('.list-group-flush').html(data.html);
-                    // openNav(data.lead.id);
-                    // return false;
                 } else {
                     show_toastr('error', data.message, 'error');
                     $(".create-discussion-btn").val('Create');
@@ -884,8 +782,6 @@
             }
         });
     })
-
-
         //saving notes
     $(document).on("submit", "#create-notes", function(e) {
         e.preventDefault();
@@ -901,16 +797,12 @@
             data: formData,
             success: function(data) {
                 data = JSON.parse(data);
-
                 if (data.status == 'success') {
                     show_toastr('Success', data.message, 'success');
                     $('#commonModal').modal('hide');
                     $('.note-tbody').html(data.html);
                     $('#note_id').val('');
                     $('#description').val('');
-
-                    // openNav(data.lead.id);
-                    // return false;
                 } else {
                     show_toastr('error', data.message, 'error');
                     $(".create-notes-btn").val('Create');
@@ -919,23 +811,18 @@
             }
         });
     })
-
-
     $(document).on("submit", "#update-notes", function(e) {
         e.preventDefault();
         var formData = $(this).serialize();
         var id = $('.lead-id').val();
-
         $(".update-notes-btn").val('Processing...');
         $('.update-notes-btn').attr('disabled', 'disabled');
-
         $.ajax({
             type: "POST",
             url: "/leads/" + id + "/notes-update",
             data: formData,
             success: function(data) {
                 data = JSON.parse(data);
-
                 if (data.status == 'success') {
                     show_toastr('Success', data.message, 'success');
                     $('#commonModal').modal('hide');
@@ -950,17 +837,12 @@
             }
         });
     })
-
-
         //delete-notes
     $(document).on("click", '.delete-notes', function(e) {
         e.preventDefault();
-
         var id = $(this).attr('data-note-id');
         var lead_id = $('.lead-id').val();
         var currentBtn = '';
-
-
             Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -995,8 +877,6 @@
         });
 
         })
-
-
         ////////////////////Filters Javascript
         $("#filter-show #filter_brand_id, #bulk-assign #filter_brand_id").on("change", function() {
             var id = $(this).val();
@@ -1017,13 +897,8 @@
                         $('#region_filter_div').html('');
                         $("#region_filter_div").html(data.regions);
                         select2();
-                    } else {
-                        console.error('Server returned an error:', data.message);
                     }
                 },
-                error: function(xhr, status, error) {
-                    console.error('AJAX request failed:', status, error);
-                }
             });
         });
 
@@ -1042,26 +917,18 @@
                 },
                 success: function(data) {
                     data = JSON.parse(data);
-
                     if (data.status === 'success') {
                         $('#branch_filter_div').html('');
                         $("#branch_filter_div").html(data.branches);
                         getLeads();
                         select2();
-                    } else {
-                        console.error('Server returned an error:', data.message);
                     }
                 },
-                error: function(xhr, status, error) {
-                    console.error('AJAX request failed:', status, error);
-                }
             });
         });
 
         $(document).on("change", "#filter-show #filter_branch_id, #filter-show #branch_id", function() {
-
             var id = $(this).val();
-
                 $.ajax({
                     type: 'GET',
                     url: '{{ route('filter-branch-users') }}',
@@ -1071,27 +938,18 @@
                     },
                     success: function(data){
                         data = JSON.parse(data);
-
                         if (data.status === 'success') {
                             $('#assign_to_div').html('');
                             $("#assign_to_div").html(data.html);
                             select2();
-                        } else {
-                            console.error('Server returned an error:', data.message);
                         }
                     },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX request failed:', status, error);
-                    }
                 });
         });
-
-
         $(document).on("change", "#bulk-assign #filter_brand_id" ,function() {
             var id = $(this).val();
             var type = 'brand';
             var filter = true;
-
             $.ajax({
                 type: 'GET',
                 url: '{{ route('region_brands') }}',
@@ -1106,13 +964,8 @@
                         $('#region_bulkassign_div').html('');
                         $("#region_bulkassign_div").html(data.regions);
                         select2();
-                    } else {
-                        console.error('Server returned an error:', data.message);
                     }
                 },
-                error: function(xhr, status, error) {
-                    console.error('AJAX request failed:', status, error);
-                }
             });
         });
 
@@ -1130,25 +983,17 @@
                 },
                 success: function(data) {
                     data = JSON.parse(data);
-
                     if (data.status === 'success') {
                         $('#branch_bulkassign_div').html('');
                         $("#branch_bulkassign_div").html(data.branches);
                         select2();
-                    } else {
-                        console.error('Server returned an error:', data.message);
                     }
                 },
-                error: function(xhr, status, error) {
-                    console.error('AJAX request failed:', status, error);
-                }
             });
         });
 
         $(document).on("change", "#bulk-assign #branch_id, #bulk-assign #filter_branch_id", function() {
-
             var id = $(this).val();
-
                 $.ajax({
                     type: 'GET',
                     url: '{{ route('filter-branch-users') }}',
@@ -1158,92 +1003,14 @@
                     },
                     success: function(data){
                         data = JSON.parse(data);
-
                         if (data.status === 'success') {
                             $('#bulkassign_to_div').html('');
                             $("#bulkassign_to_div").html(data.html);
                             select2();
-                        } else {
-                            console.error('Server returned an error:', data.message);
                         }
                     },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX request failed:', status, error);
-                    }
                 });
         });
-
-        // $(document).on("change", "#filter_branch_id, #branch_id", function() {
-        //    getLeads();
-        // });
-
-        // function getLeads(){
-        //     var brand_id = $("#filter_brand_id").val();
-        //     var region_id = $("#region_id").val();
-        //     var branch_id = $("#branch_id").val();
-
-        //     if (typeof region_id === 'undefined') {
-        //         var region_id = $("#filter_region_id").val();
-        //     }
-
-        //     if (typeof branch_id === 'undefined') {
-        //         var branch_id = $("#filter_branch_id").val();
-        //     }
-
-
-
-
-        //     var type = 'lead';
-
-        //     $.ajax({
-        //         type: 'GET',
-        //         url: '{{ route('filterData') }}',
-        //         data: {
-        //            brand_id,
-        //            region_id,
-        //            branch_id,
-        //            type
-        //         },
-        //         success: function(data) {
-        //             data = JSON.parse(data);
-
-        //             if (data.status === 'success') {
-        //                 $('#filter-names').html('');
-        //                 $("#filter-names").html(data.html);
-        //                 select2();
-        //             } else {
-        //                 console.error('Server returned an error:', data.message);
-        //             }
-        //         },
-        //         error: function(xhr, status, error) {
-        //             console.error('AJAX request failed:', status, error);
-        //         }
-        //     });
-        // }
-
-
-    </script>
-    <script>
-    // JavaScript part
-
-    $(document).ready(function() {
-    $('.tag-badge').click(function() {
-        var tagId = $(this).data('tag-id');
-        var tagName = $(this).data('lead-id');
-        var selectOptions = <?php echo json_encode($tags); ?>;
-
-        // Check if selectOptions is an object
-        if (typeof selectOptions === 'object' && selectOptions !== null) {
-            // Generate options HTML by iterating over object keys
-            var optionsHTML = '';
-            for (var key in selectOptions) {
-                if (selectOptions.hasOwnProperty(key) && key.trim() !== '') {
-                    optionsHTML += `<option value="${key}" ${tagName === key ? 'selected' : ''}>${key}</option>`;
-                }
-            }
-        });
-
-    })
 
     ////////////////////Filters Javascript
     $("#filter-show #filter_brand_id, #bulk-assign #filter_brand_id").on("change", function() {
@@ -1265,13 +1032,8 @@
                     $('#region_filter_div').html('');
                     $("#region_filter_div").html(data.regions);
                     select2();
-                } else {
-                    console.error('Server returned an error:', data.message);
                 }
             },
-            error: function(xhr, status, error) {
-                console.error('AJAX request failed:', status, error);
-            }
         });
     });
 
@@ -1290,26 +1052,18 @@
             },
             success: function(data) {
                 data = JSON.parse(data);
-
                 if (data.status === 'success') {
                     $('#branch_filter_div').html('');
                     $("#branch_filter_div").html(data.branches);
                     getLeads();
                     select2();
-                } else {
-                    console.error('Server returned an error:', data.message);
                 }
             },
-            error: function(xhr, status, error) {
-                console.error('AJAX request failed:', status, error);
-            }
         });
     });
 
     $(document).on("change", "#filter-show #filter_branch_id, #filter-show #branch_id", function() {
-
         var id = $(this).val();
-
             $.ajax({
                 type: 'GET',
                 url: '{{ route('filter-branch-users') }}',
@@ -1324,13 +1078,8 @@
                         $('#assign_to_div').html('');
                         $("#assign_to_div").html(data.html);
                         select2();
-                    } else {
-                        console.error('Server returned an error:', data.message);
                     }
                 },
-                error: function(xhr, status, error) {
-                    console.error('AJAX request failed:', status, error);
-                }
             });
     });
 
@@ -1339,7 +1088,6 @@
         var id = $(this).val();
         var type = 'brand';
         var filter = true;
-
         $.ajax({
             type: 'GET',
             url: '{{ route('region_brands') }}',
@@ -1354,13 +1102,8 @@
                     $('#region_bulkassign_div').html('');
                     $("#region_bulkassign_div").html(data.regions);
                     select2();
-                } else {
-                    console.error('Server returned an error:', data.message);
                 }
             },
-            error: function(xhr, status, error) {
-                console.error('AJAX request failed:', status, error);
-            }
         });
     });
 
@@ -1383,19 +1126,13 @@
                     $('#branch_bulkassign_div').html('');
                     $("#branch_bulkassign_div").html(data.branches);
                     select2();
-                } else {
-                    console.error('Server returned an error:', data.message);
                 }
             },
-            error: function(xhr, status, error) {
-                console.error('AJAX request failed:', status, error);
-            }
         });
     });
 
     $(document).on("change", "#bulk-assign #branch_id, #bulk-assign #filter_branch_id", function() {
         var id = $(this).val();
-
         $.ajax({
             type: 'GET',
             url: '{{ route('filter-branch-users') }}',
@@ -1409,20 +1146,11 @@
                 if (data.status === 'success') {
                     $('#bulkassign_to_div').html(data.html);
                     select2();
-                } else {
-                    console.error('Server returned an error:', data.message);
                 }
             },
-            error: function(xhr, status, error) {
-                console.error('AJAX request failed:', status, error);
-            }
         });
     });
-
-
-
-
-
+// update tage post request
     $(document).ready(function () {
         $('#UpdateTagForm').submit(function (event) {
             event.preventDefault();
@@ -1440,23 +1168,20 @@
                     $("#UpdateTageModal").hide();
                     window.location.href = '/leads/list';
                 },
-
             });
         });
     });
     </script>
     <script>
         $(document).ready(function () {
+        // update tage modal show
         $(".Update").on("click", function(e){
         e.preventDefault();
         $button = $(this);
-
-
         var formData = $("#UpdateTagForm").serialize(); // Serialize form data
         var url = $("#UpdateTagForm").attr('action'); // Get form action URL
         var csrfToken = $('meta[name="csrf-token"]').attr('content'); // Get CSRF token
         $button.prop('disabled', true);
-
         $.ajax({
             type: "POST",
             url: url,
@@ -1466,9 +1191,7 @@
             },
             success: function(response){
                 data = JSON.parse(response);
-
                 if(data.status == 'success'){
-
                     $("#tagModal").hide();
                     $(".modal-backdrop").removeClass('modal-backdrop');
                     $(".sub-check").prop('checked', false);
@@ -1476,22 +1199,15 @@
                     show_toastr('success', data.msg);
                     window.location.href = '/leads/list';
                 }
-                // Handle success response here
-                console.log("Data submitted successfully:", response);
             },
-            error: function(xhr, status, error){
-                // Handle error response here
-                console.error("error submitting data:", error);
-            }
         });
     });
 
     $('.tag-badge').click(function() {
-            $('#sheraz').html('');
+            $('#TagModalBody').html('');
             var tagId = $(this).data('tag-id');
             var leadId = $(this).data('lead-id');
             var selectOptions = <?php echo json_encode($tags); ?>;
-
             // Check if selectOptions is an object
             if (typeof selectOptions === 'object' && selectOptions !== null) {
                 // Generate options HTML by iterating over object keys
@@ -1501,9 +1217,8 @@
                         optionsHTML += `<option value="${selectOptions[key]}" ${tagId === selectOptions[key] ? 'selected' : ''}>${key}</option>`;
                     }
                 }
-
                 // Append the options to the select element
-                $('#sheraz').append(`
+                $('#TagModalBody').append(`
                     <input type="hidden" value="${tagId}" name="old_tag_id" id="old_tag_id">
                     <div class="form-group">
                         <label for="">Tag</label>
@@ -1518,7 +1233,6 @@
                 $('#UpdateTageModal').modal('show');
             }
         });
-
     });
     </script>
 @endpush

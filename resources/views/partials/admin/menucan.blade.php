@@ -1,11 +1,5 @@
 @php
 use App\Models\Utility;
-// $logo=asset(Storage::url('uploads/logo/'));
-$logo = \App\Models\Utility::get_file('uploads/logo/');
-$company_logo = Utility::getValByName('company_logo_dark');
-$company_logos = Utility::getValByName('company_logo_light');
-$company_small_logo = Utility::getValByName('company_small_logo');
-$setting = \App\Models\Utility::colorset();
 $mode_setting = \App\Models\Utility::mode_layout();
 $emailTemplate = \App\Models\EmailTemplate::first();
 $lang = Auth::user()->lang;
@@ -48,9 +42,8 @@ $lang = Auth::user()->lang;
 <a href="#" class="b-brand">
 {{-- <img src="{{ asset(Storage::url('uploads/logo/'.$logo)) }}" alt="{{ env('APP_NAME') }}" class="logo logo-lg" /> --}}
 @if ($mode_setting['cust_darklayout'] && $mode_setting['cust_darklayout'] == 'on')
-<img src="{{ $logo . '/' . (isset($company_logos) && !empty($company_logos) ? $company_logos : 'logo-dark.png') }}" alt="{{ config('app.name', 'ERPGo-SaaS') }}" class="logo logo-lg">
+
 @else
-<img src="{{ $logo . '/' . (isset($company_logo) && !empty($company_logo) ? $company_logo : 'logo-dark.png') }}" alt="{{ config('app.name', 'ERPGo-SaaS') }}" class="logo logo-lg">
 
 </a>
 styl
@@ -766,19 +759,12 @@ Gate::check('super admin') ||
                         {{ __('Role') }}</a>
                 </li>
                 @endcan
-
-
             </ul>
         </div>
     </div>
 </li>
 @endif
 {{-- end setting  --}}
-
-
-
-
-
 {{-- support  --}}
 <li class=" nav-item {{ Request::segment(1) == 'support' ? 'active' : '' }}">
     <a href="{{ route('support.index') }}" class="nav-link">
@@ -789,20 +775,5 @@ Gate::check('super admin') ||
     </a>
 </li>
 {{-- end support  --}}
-
-
-
-
-
 </ul>
-
 </div>
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Toggle the div on button click
-        $("#reporthrm").click(function() {
-            $("#subhrmreport").toggle();
-        });
-    });
-</script>

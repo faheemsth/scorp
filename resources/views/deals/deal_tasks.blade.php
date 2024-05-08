@@ -1,7 +1,6 @@
 @extends('layouts.admin')
 
 <?php
-$brands = FiltersBrands();
 $setting = \App\Models\Utility::colorset();
 
 ?>
@@ -216,11 +215,6 @@ $setting = \App\Models\Utility::colorset();
 
                         <input type="hidden" name="page" id="page" value="{{ $_GET['page'] ?? 1 }}">
                         <div class="row my-3 ">
-                            @php
-                            $type = \Auth::user()->type;
-                            $access_levels = accessLevel();
-                            $filters = BrandsRegionsBranches();
-                            @endphp
 
                             @if(in_array($type, $access_levels['first']))
                                 <div class="col-md-3 mt-2">
@@ -433,10 +427,6 @@ $setting = \App\Models\Utility::colorset();
                                             {{ $users[$task->assigned_to] }}
                                         </span>
                                         @else
-                                        <?php
-                                        $assigned_user = \App\Models\User::findOrFail($task->assigned_to);
-                                        ?>
-
                                         <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{ $task->brand_id }}+'/user_detail')">
                                             {{ isset($users[$task->brand_id]) ? $users[$task->brand_id] : '' }}
                                         </span>
@@ -495,95 +485,8 @@ $setting = \App\Models\Utility::colorset();
         </div>
     </div>
 </div>
-
-<div class="modal" id="update-status-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Update Status</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ route('update-bulk-task-status') }}" method="POST">
-                @csrf
-                <div class="modal-body">
-                    <select name="status" id="bulk_status" class="form form-control">
-                        <option value="">Select Status</option>
-                        <option value="0">On Going</option>
-                        <option value="1">Completed</option>
-                    </select>
-
-                    <input type="hidden" class="task_ids" value="" name="task_ids">
-                </div>
-                <div class="modal-footer">
-                    <input type="submit" class="btn btn-primary" value="Update Status">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg my-0" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Mass Update</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ route('update-bulk-task') }}" method="POST">
-                @csrf
-                <div class="modal-body" style="min-height: 40vh;">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <select name="bulk_field" id="bulk_field" class="form form-control">
-                                <option value="">Select Field</option>
-                                <option value="tm">Task Name</option>
-                                <option value="ofc">Office</option>
-                                <!-- <option value="ast">Assign Type</option> -->
-                                <option value="asto">Assigned To</option>
-                                <option value="ts">Task Status</option>
-                                <option value="dd">Due Date</option>
-                                <option value="sd">Start Date</option>
-                                <option value="rd">Reminder Date</option>
-                                <!-- <option value="rt">Related Type</option>
-                                <option value="rto">Related To</option> -->
-                                <option value="des">Description</option>
-                                <option value="per">Permissions</option>
-                            </select>
-                        </div>
-                        <input name='tasks_ids' id="tasks_ids" hidden>
-                        <div class="col-md-6" id="field_to_update">
-
-                        </div>
-                    </div>
-
-                </div>
-                <br>
-
-                <div class="modal-footer">
-                    <input type="submit" class="btn btn-dark px-2" value="Update">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
 @endsection
-
-
-
-
-
-
-
 @push('script-page')
-{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> --}}
 
 <script>
     let selectedArr = [];
@@ -617,7 +520,6 @@ $setting = \App\Models\Utility::colorset();
                 data = JSON.parse(data);
 
                 if (data.status == 'success') {
-                    console.log(data.html);
                     $(".tasks_tbody").html(data.html);
                 }
             }
@@ -708,29 +610,6 @@ $setting = \App\Models\Utility::colorset();
         $(".add-discussion-div").addClass('d-none');
         $(".block-screen").css('display', 'block');
         $("#body").css('overflow', 'hidden');
-
-        // var csrf_token = $('meta[name="csrf-token"]').attr('content');
-
-        // $.ajax({
-        //     url: "/leads/getDiscussions",
-        //     data: {
-        //         lead_id,
-        //         _token: csrf_token,
-        //     },
-        //     type: "POST",
-        //     cache: false,
-        //     success: function(data) {
-        //         data = JSON.parse(data);
-        //         //console.log(data);
-
-        //         if (data.status) {
-        //             $(".discussion-list-group").html(data.content);
-        //             $(".lead_id").val(lead_id);
-
-
-        //         }
-        //     }
-        // });
 
     }
 
@@ -877,95 +756,6 @@ $setting = \App\Models\Utility::colorset();
         } else {
             $(".assigned_to_type").addClass('d-none');
         }
-    });
-
-    $('#bulk_field').on('change', function() {
-
-        if(this.value != ''){
-            $('#field_to_update').html('');
-
-            if(this.value == 'tm'){
-
-                let field = '<input type="text" class="form-control" id="task-name" value="" placeholder="Task Name" name="task_name" required>';
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'ofc'){
-
-                var branches = <?= json_encode($branches) ?>;
-                console.log(branches)
-                let options = '';
-                for(let i = 0; i < branches.length; i++){
-                    options += '<option value="'+branches[i].id+'">'+branches[i].name+'</option>';
-                }
-
-                let field = `<select class="form form-control select2" id="choices-multiple1" name="branch_id" required>
-                                <option value="">Select Office</option>
-                                `+options+`
-                            </select>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'ast'){
-
-            }else if(this.value == 'asto'){
-                var assign_users = <?= json_encode($assign_to) ?>;
-                // console.log(branches)
-                let options = '';
-                for(let i = 0; i < assign_users.length; i++){
-                    options += '<option value="'+assign_users[i].id+'">'+assign_users[i].name+'</option>';
-                }
-
-                let field = `<select class="form form-control select2" id="choices-multiple1" name="assigned_to" required>
-                                <option value="">Select person</option>
-                                `+options+`
-                            </select>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'ts'){
-
-                let field = `<select class="form form-control select2" id="choices-multiple5" name="status" required>
-                                <option value="">Select Status</option>
-                                <option value="0">On Going</option>
-                                <option value="1">Completed</option>
-                            </select>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'dd'){
-
-                let field = `<input type="date" class="form form-control"
-                                    name="due_date" required>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'sd'){
-
-                let field = `<input type="date" class="form form-control"
-                                    name="start_date" required>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'rd'){
-
-                let field = `<div class="col-sm-6 d-flex"><input type="date" class="form form-control"
-                                    name="remainder_date" required>
-                                <input type="time" class="form form-control"
-                                    name="remainder_time" required></div>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'des'){
-
-                let field =  `<textarea name="description" id="" cols="30" rows="3" class="form form-control" required></textarea>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'per'){
-
-                let field = `<select class="form form-control select2" id="choices-multiple8" name="visibility" required>
-                                <option value="">Select Visibility</option>
-                                <option value="public" >public</option>
-                                <option value="private">private</option>
-                            </select>`;
-                $('#field_to_update').html(field);
-
-            }
-        }
-
     });
 
     $(document).on('change', '.main-check', function() {
