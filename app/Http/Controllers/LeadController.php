@@ -881,8 +881,8 @@ class LeadController extends Controller
                         'lead_phone' => 'required',
                         'brand_id' => 'required',
                         'region_id' => 'required',
-                        'lead_organization' => 'required',
-                        'lead_source' => 'required',
+                        // 'lead_organization' => 'required',
+                        // 'lead_source' => 'required',
                         'lead_email' => 'required',
                     ]
                 );
