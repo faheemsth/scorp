@@ -301,71 +301,95 @@ class LeadController extends Controller
         }
     }
 
+    // public function lead_list()
+    // {
+    //     //  print_r($_GET);
+    //     //die('come');
+    //     $usr = \Auth::user();
+
+    //     $executed_data = $this->executeLeadQuery();
+
+    //     $leads = $executed_data['leads'];
+    //     $total_records = $executed_data['total_records'];
+    //     $brands = $executed_data['companies'];
+    //     $companies = $executed_data['companies'];
+    //     $pipeline = $executed_data['pipeline'];
+    //     $num_results_on_page = $executed_data['num_results_on_page'];
+
+    //     $users = allUsers();
+    //     $stages = LeadStage::get();
+    //     $organizations = User::where('type', 'organization')->pluck('name', 'id');
+
+    //     $sourcess = Source::get()->pluck('name', 'id');
+    //     $branches = Branch::get()->pluck('name', 'id')->ToArray();
+
+    //     if (request()->filled('ajaxCall') && request()->ajax()) {
+    //         $html = view('leads.leads_list_ajax', compact('leads', 'users', 'branches', 'total_records'))->render();
+    //         $pagination_html = view('layouts.pagination', [
+    //             'total_pages' => $total_records,
+    //             'num_results_on_page' =>  $num_results_on_page // You need to define $num_results_on_page
+    //         ])->render();
+    //         return json_encode([
+    //             'status' => 'success',
+    //             'html' => $html,
+    //             'pagination_html' =>  $pagination_html
+    //         ]);
+    //     }
+
+    //     $total_leads_by_status_records = Lead::select([
+    //         'lead_stages.type',
+    //         DB::raw('count(leads.id) as total_leads')
+    //     ])
+    //         ->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')
+    //         ->groupBy('lead_stages.type')
+    //         ->get();
+    //     $total_leads_by_status = [];
+    //     foreach ($total_leads_by_status_records as $status) {
+    //         $total_leads_by_status[$status->type] = $status->total_leads;
+    //     }
+
+    //     $assign_to = [];
+    //     if (\Auth::user()->type == 'super admin') {
+    //         $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+    //             ->pluck('name', 'id')->toArray();
+    //     } else {
+    //         $companies = FiltersBrands();
+    //         $brand_ids = array_keys($companies);
+
+    //         $assign_to = User::whereIn('brand_id', $brand_ids)->pluck('name', 'id')->toArray();
+    //     }
+
+    //     $filters = BrandsRegionsBranches();
+    //     if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') {
+    //         $tags = LeadTag::pluck('id', 'tag')->toArray();
+    //     } else {
+    //         $tags = LeadTag::where('branch_id', \Auth::user()->branch_id)->pluck('id', 'tag')->toArray();
+    //     }
+    //     return view('leads.list', compact('branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status', 'assign_to', 'filters', 'tags'));
+    // }
     public function lead_list()
     {
-        //  print_r($_GET);
-        //die('come');
         $usr = \Auth::user();
-
         $executed_data = $this->executeLeadQuery();
-
         $leads = $executed_data['leads'];
         $total_records = $executed_data['total_records'];
-        $brands = $executed_data['companies'];
-        $companies = $executed_data['companies'];
+        $total_pages = $executed_data['total_records'];
         $pipeline = $executed_data['pipeline'];
         $num_results_on_page = $executed_data['num_results_on_page'];
-
         $users = allUsers();
-        $stages = LeadStage::get();
-        $organizations = User::where('type', 'organization')->pluck('name', 'id');
-
         $sourcess = Source::get()->pluck('name', 'id');
         $branches = Branch::get()->pluck('name', 'id')->ToArray();
-
+        $stages = LeadStage::get();
         if (request()->filled('ajaxCall') && request()->ajax()) {
-            $html = view('leads.leads_list_ajax', compact('leads', 'users', 'branches', 'total_records'))->render();
-            $pagination_html = view('layouts.pagination', [
-                'total_pages' => $total_records,
-                'num_results_on_page' =>  $num_results_on_page // You need to define $num_results_on_page
-            ])->render();
             return json_encode([
                 'status' => 'success',
-                'html' => $html,
-                'pagination_html' =>  $pagination_html
+                'html' => view('leads.leads_list_ajax', compact('leads', 'users', 'branches', 'total_records'))->render(),
+                'pagination_html' => view('layouts.pagination', compact('total_records', 'num_results_on_page','total_pages'))->render()
             ]);
         }
-
-        $total_leads_by_status_records = Lead::select([
-            'lead_stages.type',
-            DB::raw('count(leads.id) as total_leads')
-        ])
-            ->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')
-            ->groupBy('lead_stages.type')
-            ->get();
-        $total_leads_by_status = [];
-        foreach ($total_leads_by_status_records as $status) {
-            $total_leads_by_status[$status->type] = $status->total_leads;
-        }
-
-        $assign_to = [];
-        if (\Auth::user()->type == 'super admin') {
-            $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
-                ->pluck('name', 'id')->toArray();
-        } else {
-            $companies = FiltersBrands();
-            $brand_ids = array_keys($companies);
-
-            $assign_to = User::whereIn('brand_id', $brand_ids)->pluck('name', 'id')->toArray();
-        }
-
         $filters = BrandsRegionsBranches();
-        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') {
-            $tags = LeadTag::pluck('id', 'tag')->toArray();
-        } else {
-            $tags = LeadTag::where('branch_id', \Auth::user()->branch_id)->pluck('id', 'tag')->toArray();
-        }
-        return view('leads.list', compact('branches', 'pipeline', 'leads', 'users', 'stages', 'total_records', 'companies', 'organizations', 'sourcess', 'brands', 'total_leads_by_status', 'assign_to', 'filters', 'tags'));
+        $tags = (\Auth::check() && ($user = \Auth::user()) && in_array($user->type, ['super admin', 'Admin Team', 'Project Director', 'Project Manager'])) ? LeadTag::pluck('id', 'tag')->toArray() : (\Auth::check() && ($user = \Auth::user()) && property_exists($user, 'branch_id') ? LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray() : []);
+        return view('leads.list', compact('stages','branches', 'pipeline', 'leads', 'users', 'total_records', 'sourcess', 'filters', 'tags'));
     }
 
 

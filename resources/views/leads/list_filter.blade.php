@@ -96,7 +96,9 @@
                 <select class="form form-control select2" id="tags" name="tag" style="width: 95%;">
                     <option value="">Select Tag</option>
                     @foreach ($tags as $key => $tag)
-                        <option value="{{ $key }}" <?= (isset($_GET['tag']) && $key == $_GET['tag']) ? 'selected' : '' ?>>{{ $tag }}</option>
+                      @if ($key != '')
+                         <option value="{{ $tag }}" <?= (isset($_GET['tag']) && $tag == $_GET['tag']) ? 'selected' : '' ?>>{{ $key }}</option>
+                      @endif
                     @endforeach
                 </select>
             </div>

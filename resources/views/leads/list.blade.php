@@ -10,23 +10,23 @@
 @endif
 
 <?php
-$lead = \App\Models\Lead::first();
-if (isset($lead->is_active) && $lead->is_active) {
-    $calenderTasks = [];
-    $deal = \App\Models\Deal::where('id', '=', $lead->is_converted)->first();
-    $stageCnt = \App\Models\LeadStage::where('pipeline_id', '=', $lead->pipeline_id)->get();
+// $lead = \App\Models\Lead::first();
+// if (isset($lead->is_active) && $lead->is_active) {
+//     $calenderTasks = [];
+//     $deal = \App\Models\Deal::where('id', '=', $lead->is_converted)->first();
+//     $stageCnt = \App\Models\LeadStage::where('pipeline_id', '=', $lead->pipeline_id)->get();
 
-    $i = 0;
-    foreach ($stageCnt as $stage) {
-        $i++;
-        if ($stage->id == $lead->stage_id) {
-            break;
-        }
-    }
-    $precentage = number_format(($i * 100) / count($stageCnt));
+//     $i = 0;
+//     foreach ($stageCnt as $stage) {
+//         $i++;
+//         if ($stage->id == $lead->stage_id) {
+//             break;
+//         }
+//     }
+//     $precentage = number_format(($i * 100) / count($stageCnt));
 
-    $lead_stages = $stageCnt;
-}
+//     $lead_stages = $stageCnt;
+// }
 
 ?>
 
@@ -423,7 +423,7 @@ if (isset($lead->is_active) && $lead->is_active) {
                                                     @endphp
 
                                                     @forelse($lead_tags as $tag)
-                                                    <span class="badge text-white tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $lead->id }}" style="background-color:#cd9835;cursor:pointer;">
+                                                        <span class="badge text-white tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $lead->id }}" style="background-color:#cd9835;cursor:pointer;">
                                                             {{ $tag->tag }}
                                                         </span>
                                                     @empty
@@ -995,25 +995,6 @@ if (isset($lead->is_active) && $lead->is_active) {
         });
 
         })
-
-
-        function getOrganization() {
-            var html = '';
-            <?php foreach($organizations as $key => $org) { ?>
-            html += '<option value="{{ $key }}">{{ $org }}</option>';
-            <?php } ?>
-            return html;
-        }
-
-        function getSources() {
-            var html = '';
-
-            <?php foreach($sourcess as $key => $label) { ?>
-            html += '<option value="{{ $key }}">{{ $label }}</option>';
-            <?php } ?>
-            return html;
-        }
-
 
 
         ////////////////////Filters Javascript
