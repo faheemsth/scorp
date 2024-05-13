@@ -1201,8 +1201,8 @@
                                                                         </button>
                                                                     </h2>
 
-                                                                    @foreach ($tasks as $task2)
-                                                                        @if ($task2->status == 0)
+                                                                    @foreach ($tasks as $task)
+                                                                        @if ($task->status == 0)
                                                                             <div id="panelsStayOpen-collapseOneddsd"
                                                                                 class="accordion-collapse collapse show"
                                                                                 aria-labelledby="panelsStayOpen-headingOneddsd">

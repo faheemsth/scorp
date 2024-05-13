@@ -288,31 +288,25 @@ class DealController extends Controller
 
         if ($usr->can('view deal') || $usr->can('manage deal') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Admin Team') {
             //whole query
-            $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
-            $deal_simple_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
+            $deals_query = Deal::select('deals.id','deals.name','deals.stage_id','deals.assigned_to','deals.intake_month','deals.intake_year')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
 
             if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || $usr->can('level 1')){
 
             }else if(\Auth::user()->type == 'company'){
-                $deal_simple_query->where('brand_id', \Auth::user()->id);
                 $deals_query->where('brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || $usr->can('level 2')){
-                $deal_simple_query->whereIn('brand_id', $brand_ids);
                 $deals_query->whereIn('brand_id', $brand_ids);
             }else if(\Auth::user()->type == 'Region Manager' || $usr->can('level 3') && !empty(\Auth::user()->region_id)){
-                $deal_simple_query->where('deals.region_id', \Auth::user()->region_id);
                 $deals_query->where('deals.region_id', \Auth::user()->region_id);
             }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || $usr->can('level 4') && !empty(\Auth::user()->branch_id)){
-                $deal_simple_query->where('deals.branch_id', \Auth::user()->branch_id);
                 $deals_query->where('deals.branch_id', \Auth::user()->branch_id);
             }else{
-                $deal_simple_query->where('assigned_to', \Auth::user()->id);
                 $deals_query->where('assigned_to', \Auth::user()->id);
             }
 
-            $Alldeals = $deal_simple_query->get();
+            $Alldeals = $deals_query->get();
             foreach ($filters as $column => $value) {
                 if ($column === 'name') {
                     $deals_query->whereIn('name', $value);
