@@ -1151,14 +1151,15 @@ class LeadController extends Controller
             }
 
             // Check if the lead exists
-            $lead_exist = Lead::where('email', $lead->email)->where('brand_id', $request->brand_id)->where('region_id', $request->region_id)->where('branch_id', $request->lead_branch)->first();
-            if ($lead_exist) {
-                continue;
-                //$lead = $lead_exist;
+            if (filter_var($test['email'] ?? '', FILTER_VALIDATE_EMAIL)) {
+                $lead_exist = Lead::where('email', $lead->email)->where('brand_id', $request->brand_id)->where('region_id', $request->region_id)->where('branch_id', $request->lead_branch)->first();
+                if ($lead_exist) {
+                    continue;
+                }
+                $lead->email = in_array('email', $column_arr) ? $lead->email : '';
+            } else {
+                $lead->email = 'N/A';
             }
-
-            // Set default values if certain fields are not present
-            $lead->email = in_array('email', $column_arr) ? $lead->email : '';
             $lead->subject = in_array('subject', $column_arr) ? $lead->subject : '';
 
             $lead->user_id = $request->lead_assigned_user;
@@ -1269,13 +1270,13 @@ class LeadController extends Controller
                     ->first();
 
                 if ($lead_exist) {
-                    // Duplicate record found, skip this iteration
                     continue;
                 }
+                $lead->email = $test['email'];
             } else {
-                // Invalid email, handle the error as needed
+                $lead->email = 'N/A';
             }
-            $lead->email = $test['email'] ?? '';
+
             $lead->subject = $test['subject'] ?? 'Default Subject';
 
             $lead->user_id     = $request->lead_assigned_user;
