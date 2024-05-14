@@ -3,6 +3,12 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/intel_input.css') }}">
 @endpush
+<style>
+    .hyper-link:hover {
+        color: blue;
+        transition: color 0.3s ease;
+    }
+</style>
 @php
     $users = \Auth::user();
     $logo_dark = \App\Models\Utility::getValByName('company_logo_dark');

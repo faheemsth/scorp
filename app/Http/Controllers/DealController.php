@@ -3146,6 +3146,17 @@ class DealController extends Controller
         return true;
     }
 
+    public function UpdateFromTaskDiscussion(Request $request)
+    {
+        $usr= \Auth::user();
+        $discussions = !empty($request->id) ? TaskDiscussion::find($request->id):'';
+        $html = view('deals.getDiscussionsFom', compact('discussions'))->render();
+        return json_encode([
+            'status' => 'success',
+            'html' => $html,
+            'message' => __('Message successfully added!')
+        ]);
+    }
     public function getTaskDetails()
     {
 

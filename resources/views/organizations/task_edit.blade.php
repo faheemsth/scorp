@@ -183,6 +183,9 @@
                                     <option value="{{$key}}" {{ $key == $task->assigned_to ? 'selected' : '' }}>{{$employee}}</option>
                                     @endforeach
                                 </select>
+                                 @if(!\Auth::user()->can('edit assign to task'))
+                                    <input type="hidden" name="assigned_to" value="{{ $task->assigned_to }}">
+                                 @endif
                             </div>
                         </div>
                         <div class="form-group row">
@@ -322,7 +325,7 @@
 
 
             {{-- Organizaiton Description --}}
-            <div class="accordion-item">
+            <div class="accordion-item d-none">
                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">
                     <button class="accordion-button " type="button" data-bs-toggle="collapse"
                         data-bs-target="#panelsStayOpen-description" aria-expanded="ture"

@@ -2385,6 +2385,20 @@ class LeadController extends Controller
         //return redirect()->back()->with('success', __('Notes added successfully'));
     }
 
+    public function UpdateFromLeadsNoteForm(Request $request)
+    {
+        $note = LeadNote::where('id', $request->id)->first();
+
+        $html = view('leads.getNotesForm', compact('note'))->render();
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html,
+            'message' =>  __('Notes added successfully')
+        ]);
+    }
+
+
     public function notesEdit($id)
     {
         $note = LeadNote::where('id', $id)->first();

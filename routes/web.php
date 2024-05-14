@@ -798,6 +798,7 @@ Route::post('/leads/{id}/notes', [LeadController::class, 'notesStore'])->name('l
 Route::get('/leads/{id}/notes-edit', [LeadController::class, 'notesEdit'])->name('leads.notes.edit')->middleware(['auth', 'XSS']);
 Route::post('/leads/{id}/notes-update', [LeadController::class, 'notesUpdate'])->name('leads.notes.update')->middleware(['auth', 'XSS']);
 Route::get('/leads/{id}/notes-delete', [LeadController::class, 'notesDelete'])->name('leads.notes.delete')->middleware(['auth', 'XSS']);
+Route::post('/update/from/leadsNoteForm', [LeadController::class, 'UpdateFromLeadsNoteForm']);
 
 
 Route::get('/deals/{id}/notes', [DealController::class, 'notesCreate'])->name('deals.notes.create')->middleware(['auth', 'XSS']);
@@ -1766,6 +1767,7 @@ Route::get('university/{id}/university_detail', [UniversityController::class, 'u
 
 Route::get('/get-task-detail', [DealController::class, 'getTaskDetails'])->name('get-task-detail');
 Route::post('task-status-change', [DealController::class, 'TaskStatusChange'])->name('task.status.change');
+Route::post('update/from/TaskDiscussion', [DealController::class, 'UpdateFromTaskDiscussion']);
 
 Route::get('/get-organization-detail', [OrganizationController::class, 'getOrganizationDetails'])->name('get-organization-detail');
 

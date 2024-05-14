@@ -22,12 +22,11 @@
             <p>{{ $dateTime->format('Y-m-d H:i:s') }}</p>
         </div>
         <div class="col-12 my-2">
-            <p>{{ $discussion['comment'] }}</p>
+            <p>{!! $discussion['comment'] !!}</p>
         </div>
     </div>
     <div class="d-flex gap-1 justify-content-end pb-2 px-3" id="dellhover">
         <div class="btn btn-sm btn-outline-dark text-dark textareaClassedit"
-            data-comment="{{ $discussion['comment'] }}"
             data-id="{{ $discussion['id'] }}"
             id="editable"
             style="font-size: ;">Edit</div>
@@ -41,15 +40,35 @@
 @endforeach
 <script>
     $(document).ready(function() {
+    $('.textareaClassedit').click(function() {
+        var dataId = $(this).data('id');
+        $.ajax({
+                url: "{{ url('update/from/TaskDiscussion') }}",
+                method: 'POST',
+                data: {
+                    id: dataId
+                },
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                },
 
-        $('.textareaClassedit').click(function() {
-            var dataId = $(this).data('id');
-            var dataComment = $(this).data('comment');
-            $('textarea[name="comment"]').val(dataComment);
-            $('#id').val(dataId);
-            $('#textareaID, #dellhover, .textareaClass').show();
-            $('.textareaClass').toggle("slide");
-        });
+                success: function(data) {
+                    data = JSON.parse(data);
+                    if (data.status === 'success') {
+                        $("#taskduscussedformdata").html('');
+                        $("#taskduscussedformdata").html(data.html);
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
 
+
+                },
+
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+
+    });
     });
 </script>

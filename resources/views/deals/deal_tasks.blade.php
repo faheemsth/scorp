@@ -487,7 +487,19 @@ $setting = \App\Models\Utility::colorset();
 </div>
 @endsection
 @push('script-page')
-
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#taskDiscussionInput').summernote({
+            height: 150, // Set the height to 600 pixels
+            focus: true,
+            toolbar: [
+                ['link', ['link']],
+    ]
+        });
+    });
+</script>
 <script>
     let selectedArr = [];
     $(document).ready(function() {
@@ -697,11 +709,17 @@ $setting = \App\Models\Utility::colorset();
                 console.log(data);
 
                 if (data.status == 'success') {
+                   $('#taskDiscussionInput').val('');
+                   $('#id').val('');
                     show_toastr('Success', data.message, 'success');
                     $('#commonModal').modal('hide');
                     $('.list-group-flush').html(data.html);
-                    // openNav(data.lead.id);
-                    // return false;
+                    var content = $('#taskDiscussionInput').summernote('code');
+                    $('#taskDiscussionInput').val(encodeURIComponent(content));
+                    // Reset Summernote editor
+                    $('#taskDiscussionInput').summernote('code', ''); // Set empty content
+                    // Continue with form submission
+                    return true;
                 } else {
                     show_toastr('Error', data.message, 'error');
                     $(".create-discussion-btn").val('Create');
@@ -731,13 +749,18 @@ $setting = \App\Models\Utility::colorset();
                 console.log(data);
                 $('#taskDiscussionInput').val('');
                 if (data.status == 'success') {
+                    $('#id').val('');
                     show_toastr('Success', data.message, 'success');
                     $('#commonModal').modal('hide');
                     $('.list-group-flush').html(data.html);
-                    // openNav(data.lead.id);
-                    // return false;
+                    var content = $('#taskDiscussionInput').summernote('code');
+                    $('#taskDiscussionInput').val(encodeURIComponent(content));
+                    // Reset Summernote editor
+                    $('#taskDiscussionInput').summernote('code', ''); // Set empty content
+                    // Continue with form submission
+                    return true;
                 } else {
-                    show_toastr('Error', data.message, 'error');
+                    show_toastr('error', data.message, 'error');
                     $(".create-discussion-btn").val('Create');
                     $('.create-discussion-btn').removeAttr('disabled');
                 }

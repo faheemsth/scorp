@@ -1,7 +1,7 @@
 <style>
     .indivbtn {
         position: absolute;
-        bottom: 6px;
+        bottom: 12px;
         right: 10px;
         z-index: 1000;
     }
@@ -416,7 +416,7 @@
                                                                 <td class="td"
                                                                     style="padding-left: 20px; font-size: 14px;">
 
-                                                                    <span
+                                                                    <span class="hyper-link"
                                                                     @if (!empty(\App\Models\Lead::where('id', $task->related_to)->first()))
 
                                                                     @if($task->related_type == 'organization')
@@ -498,16 +498,12 @@
                                             <div class="accordion-body">
                                                 <div class="">
                                                     <div class="col-12">
-                                                        <div class="card position-relative">
+                                                        <div class="card position-relative" id="taskduscussedformdata">
                                                             {{ Form::model($task, ['route' => ['tasks.discussion.store', $task->id], 'method' => 'POST', 'id' => 'taskDiscussion']) }}
-                                                            <textarea class="form-control" style="height: 120px;" id="taskDiscussionInput"
-                                                                placeholder="Click here add your Tasks Comments..." name="comment"></textarea>
+                                                            <textarea class="form-control" style="height: 220px; width: 300px;" id="taskDiscussionInput" placeholder="Click here to add your Tasks Comments..." name="comment"></textarea>
+
                                                             <input type="hidden" id="id" name="id">
                                                             <div class="row justify-content-end indivbtn">
-                                                                {{-- <div class="col-auto px-0">
-                                                                    <button class="btn  btn-outline-dark text-dark"
-                                                                        id="cancelDiscussion">Cancel</button>
-                                                                </div> --}}
                                                                 <div class="col-auto ">
                                                                     <button class="btn btn-dark text-white"
                                                                         id="SaveDiscussion">Save</button>
@@ -542,12 +538,11 @@
                                                                         <p>{{ $dateTime->format('Y-m-d H:i:s') }}</p>
                                                                         </div>
                                                                         <div class="col-12 my-2">
-                                                                            <p>{{ $discussion['comment'] }}</p>
+                                                                            <p>{!! $discussion['comment'] !!}</p>
                                                                         </div>
                                                                     </div>
                                                                     <div class="d-flex gap-1 justify-content-end pb-2 px-3" id="dellhover">
                                                                         <div class="btn btn-sm btn-outline-dark text-dark textareaClassedit"
-                                                                            data-comment="{{ $discussion['comment'] }}"
                                                                             data-id="{{ $discussion['id'] }}"
                                                                             id="editable"
                                                                             style="font-size: ;">Edit</div>
@@ -744,11 +739,32 @@
 
             $('.textareaClassedit').click(function() {
                 var dataId = $(this).data('id');
-                var dataComment = $(this).data('comment');
-                $('textarea[name="comment"]').val(dataComment);
-                $('#id').val(dataId);
-                $('#textareaID, #dellhover, .textareaClass').show();
-                $('.textareaClass').toggle("slide");
+                $.ajax({
+                        url: "{{ url('update/from/TaskDiscussion') }}",
+                        method: 'POST',
+                        data: {
+                            id: dataId
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+
+                        success: function(data) {
+                            data = JSON.parse(data);
+                            if (data.status === 'success') {
+                                $("#taskduscussedformdata").html('');
+                                $("#taskduscussedformdata").html(data.html);
+                            } else {
+                                console.error('Server returned an error:', data.message);
+                            }
+
+
+                        },
+
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
 
             });
 
@@ -822,17 +838,18 @@
             });
         });
     </script>
-    <script>
-        $(document).ready(function() {
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#taskDiscussionInput').summernote({
+            height: 150, // Set the height to 600 pixels
+            focus: true,
+            toolbar: [
+                ['link', ['link']],
 
-            $('.textareaClassedit').click(function() {
-                var dataId = $(this).data('id');
-                var dataComment = $(this).data('comment');
-                $('textarea[name="comment"]').val(dataComment);
-                $('#id').val(dataId);
-                $('#textareaID, #dellhover, .textareaClass').show();
-                $('.textareaClass').toggle("slide");
-            });
-
+    ]
         });
-    </script>
+    });
+</script>
+

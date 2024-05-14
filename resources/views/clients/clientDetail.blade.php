@@ -233,7 +233,8 @@
 
 
 
-                                    @if($is_show)
+                                    {{-- @if($is_show) --}}
+                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' && \Auth::user()->type != 'Product Coordinator')
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                             <button class="accordion-button p-2" type="button"
@@ -262,8 +263,8 @@
                                                                     {{ $client->passport_number ?? '' }}
                                                                 </td>
                                                             </tr>
-                                                           @if($client->brand_id == Auth::user()->brand_id)
-                                                            <tr>
+                                                           {{-- @if($client->brand_id == Auth::user()->brand_id) --}}
+                                                            {{-- <tr>
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
                                                                     {{ __('Email') }}
@@ -283,8 +284,8 @@
                                                                     style="padding-left: 10px; font-size: 14px;">
                                                                     {{ isset($lead->phone) ? $lead->phone : '' }}
                                                                 </td>
-                                                            </tr>
-                                                            @elseif(\Auth::user()->type == 'super admin')
+                                                            </tr> --}}
+                                                            {{-- @elseif(\Auth::user()->type == 'super admin') --}}
                                                              <tr>
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
@@ -306,7 +307,7 @@
                                                                     {{ isset($lead->phone) ? $lead->phone : '' }}
                                                                 </td>
                                                             </tr>
-                                                            @endif
+                                                            {{-- @endif --}}
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -493,13 +494,17 @@
                                                                                         @endphp
 
                                                                                         <tr>
-                                                                                            <td>@php
+                                                                                            <td>
+                                                                                             <span style="cursor:pointer" class="deal-name hyper-link" id="hyper-link" @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})" @endcan data-deal-id="{{ $deal->id }}">
+                                                                                                @php
                                                                                                 $name = $deal->name;
                                                                                                 if (strlen($name) > 15) {
                                                                                                     $name = substr($name, 0, 15) . '...';
                                                                                                 }
                                                                                                 echo $name;
-                                                                                            @endphp </td>
+                                                                                            @endphp
+                                                                                              </span>
+                                                                                            </td>
 
                                                                                             <td>{{ '1-' . (empty($deal->intake_month) ? 'Jan' : $deal->intake_month) . '-' . (empty($deal->intakeYear) ? date('Y') : $deal->intakeYear) }}</td>
                                                                                             <td>{{ !empty($deal->brand_id) ? (isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '') : '' }}</td>
@@ -558,7 +563,11 @@
                                                                             $app_stage = \App\Models\ApplicationStage::pluck('name', 'id')->toArray();
                                                                         @endphp
                                                                         <tr>
-                                                                            <td>{{ $universities[$app->university_id] ?? '' }}</td>
+                                                                            <td>
+                                                                            <span style="cursor:pointer" class="hyper-link" id="hyper-link" @can('view application') onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')" @endcan>
+                                                                                {{ $universities[$app->university_id] ?? '' }}
+                                                                            </span>
+                                                                            </td>
                                                                             <td> {{ $app->intake }} </td>
                                                                             <td> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }}  </td>
                                                                             <td> {{ isset($branch->name) ? $branch->name : ''  }} </td>

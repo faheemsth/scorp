@@ -81,19 +81,21 @@
     form {
         margin: 0px !important;
     }
+
     .card-header .nav-pills .nav-link:focus,
-    .card-header .nav-pills .nav-link.active{
+    .card-header .nav-pills .nav-link.active {
         color: #ffffff !important;
-    background: #313949 !important;
+        background: #313949 !important;
     }
-    .card-header .nav-item .nav-link{
-        color:#313949 !important;
+
+    .card-header .nav-item .nav-link {
+        color: #313949 !important;
     }
 </style>
 <style>
     .indivbtn {
         position: absolute;
-        bottom: 6px;
+        bottom: 12px;
         right: 10px;
         z-index: 1000;
     }
@@ -122,7 +124,10 @@
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     {{-- @can('view lead') --}}
-                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" title="{{ __('Already Converted To Admission') }}" class="btn px-2 py-2 btn-dark text-white" style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
+                    <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}"
+                        target="_blank" data-size="lg" data-bs-toggle="tooltip"
+                        title="{{ __('Already Converted To Admission') }}" class="btn px-2 py-2 btn-dark text-white"
+                        style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
                         <i class="fa-brands fa-whatsapp"></i>
                     </a>
                     {{-- @endcan --}}
@@ -131,27 +136,30 @@
                     @can('edit lead')
 
                         @if (!empty($deal))
-                            <a href="javascript:void(0)" @can('View Deal') @if ($deal->is_active)   onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }}) @else '' @endif @else '' @endcan"
+                            <a href="javascript:void(0)"
+                                @can('View Deal') @if ($deal->is_active)   onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }}) @else '' @endif @else '' @endcan"
                                 data-size="lg" data-bs-toggle="tooltip"
-                                data-bs-title=" {{ __('Already Converted to Admission') }}" class="btn px-2 py-2 btn-dark text-white"
-                                style="background-color: #313949 color:white; width:36px; height: 36px; margin-top:10px;" >
+                                data-bs-title=" {{ __('Already Converted to Admission') }}"
+                                class="btn px-2 py-2 btn-dark text-white"
+                                style="background-color: #313949 color:white; width:36px; height: 36px; margin-top:10px;">
                                 <i class="ti ti-exchange"></i>
                             </a>
                         @else
                             @can('convert lead')
-                            <a href="#" data-size="lg"
-                                data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
-                                data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] to Admission') }}"
-                                class="btn px-2 py-2 btn-dark text-white"style= "width:36px; height: 36px; margin-top:10px;">
-                                <i class="ti ti-exchange"></i>
-                            </a>
+                                <a href="#" data-size="lg"
+                                    data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
+                                    data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] to Admission') }}"
+                                    class="btn px-2 py-2 btn-dark text-white"style="width:36px; height: 36px; margin-top:10px;">
+                                    <i class="ti ti-exchange"></i>
+                                </a>
                             @endcan
                         @endif
 
                     @endcan
 
                     <a href="#" data-url="{{ URL::to('leads/' . $lead->id . '/labels') }}" data-ajax-popup="true"
-                        data-size="lg" data-bs-toggle="tooltip" title="{{ __('Label') }}" class="btn px-2 py-2 text-white"
+                        data-size="lg" data-bs-toggle="tooltip" title="{{ __('Label') }}"
+                        class="btn px-2 py-2 text-white"
                         style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
                         <i class="ti ti-bookmark"></i>
                     </a>
@@ -159,11 +167,13 @@
 
 
                     @can('edit lead')
-                    <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}"
-                        data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Lead') }}" title="Update Lead" data-original-title="{{ __('Update Lead') }}"
-                        class="btn px-2 py-2 text-white" style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
-                        <i class="ti ti-pencil"></i>
-                    </a>
+                        <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}"
+                            data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Lead') }}"
+                            title="Update Lead" data-original-title="{{ __('Update Lead') }}"
+                            class="btn px-2 py-2 text-white"
+                            style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
+                            <i class="ti ti-pencil"></i>
+                        </a>
                     @endcan
 
                     @can('delete lead')
@@ -173,9 +183,9 @@
                             'id' => 'delete-form-' . $lead->id,
                         ]) !!}
 
-                        <a href="#" data-bs-toggle="tooltip" title="{{__('Delete')}}"
-                            class="btn px-2 py-2 text-white bs-pass-para bg-danger"style= "width:36px; height: 36px; margin-top:10px;">
-                            <i class="ti ti-trash" ></i>
+                        <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}"
+                            class="btn px-2 py-2 text-white bs-pass-para bg-danger"style="width:36px; height: 36px; margin-top:10px;">
+                            <i class="ti ti-trash"></i>
                         </a>
 
 
@@ -212,28 +222,31 @@
             </div>
 
             {{-- Stages --}}
-            <div class="lead-content my-2" style="border-radius: 8px;
+            <div class="lead-content my-2"
+                style="border-radius: 8px;
             background: #FFF;
             box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 ">
                 <div class="stages my-2 ">
                     <div class="d-flex justify-content-between">
-                        <h2 class="mb-2 py-2 ps-3">LEAD STATUS: <span class="d-inline-block fw-light ms-1">{{ $lead->stage->name }}</span>
+                        <h2 class="mb-2 py-2 ps-3">LEAD STATUS: <span
+                                class="d-inline-block fw-light ms-1">{{ $lead->stage->name }}</span>
                         </h2>
 
                         <div class="">
-                        @php
-                            $lead_tags = \App\Models\LeadTag::where('lead_id', $lead->id)->get();
-                        @endphp
+                            @php
+                                $lead_tags = \App\Models\LeadTag::where('lead_id', $lead->id)->get();
+                            @endphp
 
-                        @forelse($lead_tags as $tag)
-                            <span class="badge  text-white" style="background-color:#cd9835; margin-top: 1rem; margin-right: 1rem;">{{ $tag->tag }}</span>
-                        @empty
-
-                        @endforelse
+                            @forelse($lead_tags as $tag)
+                                <span class="badge  text-white"
+                                    style="background-color:#cd9835; margin-top: 1rem; margin-right: 1rem;">{{ $tag->tag }}</span>
+                            @empty
+                            @endforelse
                         </div>
                     </div>
-                    <div class="wizard mb-2" style="background: #EFF3F7;
+                    <div class="wizard mb-2"
+                        style="background: #EFF3F7;
                     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);">
                         <?php $done = true; ?>
                         @forelse ($lead_stages as $stage)
@@ -250,19 +263,22 @@
 
                             ?>
 
-                          <style>
-                            .missedup{
-                                background-color:#e0e0e0 !important;
-                                color:white !important;
-                            }
-                            .missedup::after{
-                                border-left-color: #e0e0e0 !important;
-                            }
-                          </style>
+                            <style>
+                                .missedup {
+                                    background-color: #e0e0e0 !important;
+                                    color: white !important;
+                                }
+
+                                .missedup::after {
+                                    border-left-color: #e0e0e0 !important;
+                                }
+                            </style>
 
                             <a type="button" data-lead-id="{{ $lead->id }}" data-stage-id="{{ $stage->id }}"
                                 class="@can('edit stage lead') lead_stage @endcan {{ $is_missed == true ? 'missedup' : ($lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '')) }}"
-                                style="font-size:13px;"> {{ $stage->name }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
+                                style="font-size:13px;"> {{ $stage->name }} @if ($is_missed == true)
+                                    <i class="fa fa-close text-danger"></i>
+                                @endif </a>
                         @empty
                         @endforelse
                     </div>
@@ -273,19 +289,20 @@
                     <div class="card-header p-1 bg-white">
                         <ul class="nav nav-pills mb-1" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link active fw-bold" id="pills-details-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-details" type="button" role="tab"
+                                <button class="nav-link pills-link active fw-bold" id="pills-details-tab"
+                                    data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab"
                                     aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link text-dark fw-bold" id="pills-related-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-related" type="button" role="tab"
-                                    aria-controls="pills-related" aria-selected="false">{{ __('Related') }}</button>
+                                <button class="nav-link pills-link text-dark fw-bold" id="pills-related-tab"
+                                    data-bs-toggle="pill" data-bs-target="#pills-related" type="button"
+                                    role="tab" aria-controls="pills-related"
+                                    aria-selected="false">{{ __('Related') }}</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link text-dark fw-bold" id="pills-activity-tab" data-bs-toggle="pill"
-                                    data-bs-target="#pills-activity" type="button" role="tab"
-                                    aria-controls="pills-activity"
+                                <button class="nav-link pills-link text-dark fw-bold" id="pills-activity-tab"
+                                    data-bs-toggle="pill" data-bs-target="#pills-activity" type="button"
+                                    role="tab" aria-controls="pills-activity"
                                     aria-selected="false">{{ __('Timeline') }}</button>
                             </li>
                         </ul>
@@ -345,7 +362,8 @@
                                                                     {{ __('Lead Stage') }}
                                                                 </td>
                                                                 <td style="padding-left: 10px; font-size: 14px;">
-                                                                    <div class="text-white" style="background-color:#B3CDE1;width: 200px;">
+                                                                    <div class="text-white"
+                                                                        style="background-color:#B3CDE1;width: 200px;">
                                                                         <p class="mb-0"
                                                                             style="padding-left: 10px; font-size: 14px;">
                                                                             {{ $lead->stage->name }}
@@ -388,8 +406,14 @@
 
                                                             @php
                                                                 $org_name = '';
-                                                                if (isset($lead->organization_id) && !empty($lead->organization_id)) {
-                                                                    $org = \App\Models\User::where('id', $lead->organization_id)->first();
+                                                                if (
+                                                                    isset($lead->organization_id) &&
+                                                                    !empty($lead->organization_id)
+                                                                ) {
+                                                                    $org = \App\Models\User::where(
+                                                                        'id',
+                                                                        $lead->organization_id,
+                                                                    )->first();
 
                                                                     if ($org) {
                                                                         $org_name = $org->name;
@@ -407,11 +431,16 @@
                                                                     class="edit-td">
 
                                                                     <div class="d-flex edit-input-field-div">
-                                                                        <div class="input-group border-0 organization_id">
+                                                                        <div
+                                                                            class="input-group border-0 organization_id">
                                                                             {{ $org_name }}
                                                                         </div>
                                                                         <div class="edit-btn-div">
-                                                                            <button class="btn btn-secondary rounded-0 btn-effect-none edit-input" name="organization_id" style="padding: 7px;"><i class="ti ti-pencil"></i></button>
+                                                                            <button
+                                                                                class="btn btn-secondary rounded-0 btn-effect-none edit-input"
+                                                                                name="organization_id"
+                                                                                style="padding: 7px;"><i
+                                                                                    class="ti ti-pencil"></i></button>
                                                                         </div>
                                                                     </div>
 
@@ -454,9 +483,9 @@
                                                                         </div>
                                                                     </div> --}}
                                                                     <span
-                                                                    style="width: 300px; word-wrap: break-word; font-size: 14px; color: blue; text-decoration: underline;">
-                                                                    {{ substr($sources, 0, 60) }}{{ strlen($sources) > 70 ? '...' : '' }}
-                                                                </span>
+                                                                        style="width: 300px; word-wrap: break-word; font-size: 14px; color: blue; text-decoration: underline;">
+                                                                        {{ substr($sources, 0, 60) }}{{ strlen($sources) > 70 ? '...' : '' }}
+                                                                    </span>
 
 
                                                             </tr>
@@ -497,29 +526,28 @@
                                                                 </td>
                                                                 <td class="drive_link-td"
                                                                     style="padding-left: 10px; font-size: 14px; width:300px">
-                                                                <a href="">
-                                                                    <div class="d-flex edit-input-field-div">
-                                                                        <div class="input-group  drive_link"
-                                                                            style="width: 316px;border: none;">
+                                                                    <a href="">
+                                                                        <div class="d-flex edit-input-field-div">
+                                                                            <div class="input-group  drive_link"
+                                                                                style="width: 316px;border: none;">
 
-                                                                            <a href="{{ $lead->drive_link }}"
-                                                                                style="width: 300px; word-wrap: break-word; font-size: 12px; color: blue; text-decoration: underline;"
-                                                                                target="_blank">
-                                                                                <span
-                                                                                    style="width: 300px; word-wrap: break-word; font-size: 12px; color: blue; text-decoration: underline;">
-                                                                                    {{ substr($lead->drive_link, 0, 60) }}{{ strlen($lead->drive_link) > 70 ? '...' : '' }}
-                                                                                </span>
-                                                                            </a>
+                                                                                <a href="{{ $lead->drive_link }}"
+                                                                                    style="width: 300px; word-wrap: break-word; font-size: 12px; color: blue; text-decoration: underline;"
+                                                                                    target="_blank">
+                                                                                    <span
+                                                                                        style="width: 300px; word-wrap: break-word; font-size: 12px; color: blue; text-decoration: underline;">
+                                                                                        {{ substr($lead->drive_link, 0, 60) }}{{ strlen($lead->drive_link) > 70 ? '...' : '' }}
+                                                                                    </span>
+                                                                                </a>
 
+                                                                            </div>
+                                                                            <div class="edit-btn-div">
+                                                                                <a class="btn btn-dark  text-white px-2 py-2 edit-input"
+                                                                                    name="drive_link"><i
+                                                                                        class="ti ti-pencil"></i></a>
+                                                                            </div>
                                                                         </div>
-                                                                        <div class="edit-btn-div">
-                                                                            <a
-                                                                                class="btn btn-dark  text-white px-2 py-2 edit-input"
-                                                                                name="drive_link"><i
-                                                                                    class="ti ti-pencil"></i></a>
-                                                                        </div>
-                                                                    </div>
-                                                                </a>
+                                                                    </a>
                                                                     {{-- <a href="{{ $lead->drive_link }}"
                                                                         style="width: 300px; word-wrap: break-word; font-size: 14px; color: blue; text-decoration: underline;"
                                                                         target="_blank">
@@ -608,9 +636,11 @@
                                                                         </div>
                                                                     </div>
                                                                 </td> --}}
-                                                              <td>
-                                                                <a href="mailto:{{ $lead->email }}" style="font-size: 14px;"> {{ $lead->email }}</a>
-                                                              </td>
+                                                                <td>
+                                                                    <a href="mailto:{{ $lead->email }}"
+                                                                        style="font-size: 14px;">
+                                                                        {{ $lead->email }}</a>
+                                                                </td>
                                                             </tr>
 
                                                             <tr class="d-none">
@@ -692,7 +722,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <tr class="d-none" >
+                                                            <tr class="d-none">
                                                                 <td class=""
                                                                     style="width: 130px; font-size: 14px;">
                                                                     {{ __('Email Opted Out') }}
@@ -717,10 +747,10 @@
                                                                 </td>
                                                                 <td>
                                                                     <div
-                                                                    class="d-flex align-items-baseline edit-input-field-div">
-                                                                    <input type="checkbox" name=""
-                                                                        id="" value=""
-                                                                        class="mx-3 my-1">
+                                                                        class="d-flex align-items-baseline edit-input-field-div">
+                                                                        <input type="checkbox" name=""
+                                                                            id="" value=""
+                                                                            class="mx-3 my-1">
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -934,7 +964,7 @@
                                     <div id="discussion_note">
                                         <div class="row">
 
-                                        @can('manage notes')
+                                            @can('manage notes')
                                                 <div class="accordion" id="accordionPanelsStayOpenExample">
                                                     <!-- Open Accordion Item -->
                                                     <div class="accordion-item">
@@ -956,16 +986,14 @@
                                                                     <div class="col-12">
 
 
-                                                                        <div class="card position-relative">
-                                                                            {{ Form::model($lead, array('route' => array('leads.notes.store', $lead->id), 'method' => 'POST', 'id' => 'create-notes' ,'style' => 'z-index: 9999999 !important;')) }}
+                                                                        <div class="card position-relative"
+                                                                            id="leadsNoteForm">
+                                                                            {{ Form::model($lead, ['route' => ['leads.notes.store', $lead->id], 'method' => 'POST', 'id' => 'create-notes', 'style' => 'z-index: 9999999 !important;']) }}
                                                                             <textarea class="form-control" style="height: 120px;" name="description" id="description"
                                                                                 placeholder="Click here add your Notes Comments..."></textarea>
-                                                                            <input type="hidden" id="note_id" value="" name="note_id">
+                                                                            <input type="hidden" id="note_id"
+                                                                                value="" name="note_id">
                                                                             <div class="row justify-content-end indivbtn">
-                                                                                {{-- <div class="col-auto px-0">
-                                                                                    <button class="btn  btn-outline-dark text-dark"
-                                                                                        id="cancelDiscussion">Cancel</button>
-                                                                                </div> --}}
                                                                                 <div class="col-auto ">
                                                                                     <button class="btn btn-dark text-white"
                                                                                         id="SaveDiscussion">Save</button>
@@ -975,65 +1003,95 @@
                                                                         </div>
                                                                         <div class="card-body px-0 py-0">
                                                                             @php
-                                                                            $notesQuery = \App\Models\LeadNote::where('lead_id', $lead->id);
+                                                                                $notesQuery = \App\Models\LeadNote::where(
+                                                                                    'lead_id',
+                                                                                    $lead->id,
+                                                                                );
 
-                                                                            if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
-                                                                                $notesQuery->where('created_by', \Auth::user()->id);
-                                                                            }
+                                                                                if (
+                                                                                    \Auth::user()->type !=
+                                                                                        'super admin' &&
+                                                                                    \Auth::user()->type !=
+                                                                                        'Project Director' &&
+                                                                                    \Auth::user()->type !=
+                                                                                        'Project Manager'
+                                                                                ) {
+                                                                                    $notesQuery->where(
+                                                                                        'created_by',
+                                                                                        \Auth::user()->id,
+                                                                                    );
+                                                                                }
 
-                                                                            $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
+                                                                                $notes = $notesQuery
+                                                                                    ->orderBy('created_at', 'DESC')
+                                                                                    ->get();
                                                                             @endphp
 
-                                                                                <span class="list-group list-group-flush mt-2 note-tbody">
+                                                                            <span
+                                                                                class="list-group list-group-flush mt-2 note-tbody">
 
                                                                                 @foreach ($notes as $note)
-
-
-                                                                                <div
-                                                                                style="border-top:1px solid black;border-bottom:1px solid black ">
-                                                                                <div class="row my-2 justify-content-between ps-4">
-                                                                                    <div class="col-12 my-2">
-                                                                                        <p class="text-dark" style="font-size: 18px;">{{ $note->description }}</p>
-                                                                                    </div>
-                                                                                    <div class="col-8">
-                                                                                        <div class="row align-items-center">
-                                                                                            {{-- <div class="col-2 text-center">
+                                                                                    <div
+                                                                                        style="border-top:1px solid black;border-bottom:1px solid black ">
+                                                                                        <div
+                                                                                            class="row my-2 justify-content-between ps-4">
+                                                                                            <div class="col-12 my-2">
+                                                                                                <p class="text-dark"
+                                                                                                    style="font-size: 18px;">
+                                                                                                    {!! $note->description !!}
+                                                                                                </p>
+                                                                                            </div>
+                                                                                            <div class="col-8">
+                                                                                                <div
+                                                                                                    class="row align-items-center">
+                                                                                                    {{-- <div class="col-2 text-center">
 
                                                                                             </div> --}}
-                                                                                            <div class="col-8">
-                                                                                                <p class="mb-0 text-secondary">
-                                                                                                    {{ \App\Models\User::where('id', $note->created_by)->first()->name }}</p>
-                                                                                                <p class="mb-0">{{ optional(App\models\User::find($note->created_by))->type }}</p>
+                                                                                                    <div class="col-8">
+                                                                                                        <p
+                                                                                                            class="mb-0 text-secondary">
+                                                                                                            {{ \App\Models\User::where('id', $note->created_by)->first()->name }}
+                                                                                                        </p>
+                                                                                                        <p class="mb-0">
+                                                                                                            {{ optional(App\models\User::find($note->created_by))->type }}
+                                                                                                        </p>
 
+                                                                                                    </div>
+                                                                                                </div>
                                                                                             </div>
+                                                                                            <div
+                                                                                                class="col-4 text-end px-1">
+                                                                                                @php
+                                                                                                    $dateTime = new DateTime(
+                                                                                                        $note->created_at,
+                                                                                                    );
+                                                                                                @endphp
+                                                                                                <p>{{ $dateTime->format('Y-m-d H:i:s') }}
+                                                                                                </p>
+                                                                                            </div>
+
                                                                                         </div>
+                                                                                        <div class="d-flex gap-1 justify-content-end pb-2 px-3"
+                                                                                            id="dellhover">
+                                                                                            <div class="btn btn-outline-dark text-dark textareaClassedit"
+                                                                                                data-note-id="{{ $note->id }}"
+                                                                                                id="editable"
+                                                                                                style="font-size: ;">Edit
+                                                                                            </div>
+
+                                                                                            <div class="delete-notes btn btn-dark  text-white"
+                                                                                                id="editable"
+                                                                                                style="font-size: ;"
+                                                                                                data-note-id="{{ $note->id }}">
+                                                                                                Delete</div>
+                                                                                        </div>
+
                                                                                     </div>
-                                                                                    <div class="col-4 text-end px-1">
-                                                                                        @php
-                                                                                        $dateTime = new DateTime($note->created_at);
-                                                                                    @endphp
-                                                                                    <p>{{ $dateTime->format('Y-m-d H:i:s') }}</p>
-                                                                                    </div>
-
-                                                                                </div>
-                                                                                <div class="d-flex gap-1 justify-content-end pb-2 px-3" id="dellhover">
-                                                                                    <div class="btn btn-outline-dark text-dark textareaClassedit"
-                                                                                        data-note="{{ $note->description }}"
-                                                                                        data-note-id="{{ $note->id }}"
-                                                                                        id="editable"
-                                                                                        style="font-size: ;">Edit</div>
-
-                                                                                    <div class="delete-notes btn btn-dark  text-white" id="editable"
-                                                                                        style="font-size: ;"
-                                                                                        data-note-id="{{ $note->id }}">Delete</div>
-                                                                                </div>
-
-                                                                            </div>
                                                                                 @endforeach
 
-                                                                                </span>
+                                                                            </span>
 
-                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
 
@@ -1046,7 +1104,8 @@
                                                 <div class="accordion" id="accordionPanelsStayOpenExample">
                                                     <!-- Open Accordion Item -->
                                                     <div class="accordion-item">
-                                                        <h2 class="d-flex justify-between align-items-center accordion-header" id="panelsStayOpen-headingnote">
+                                                        <h2 class="d-flex justify-between align-items-center accordion-header"
+                                                            id="panelsStayOpen-headingnote">
                                                             <button class="accordion-button px-2 py-3 " type="button"
                                                                 data-bs-toggle="collapse"
                                                                 data-bs-target="#panelsStayOpen-collapsetasks">
@@ -1055,8 +1114,7 @@
                                                                     @can('create task')
                                                                         <a data-size="lg"
                                                                             data-url="/organiation/1/task?type=lead&typeid={{ $lead->id }}"
-                                                                            data-ajax-popup="true"
-                                                                            data-bs-toggle="tooltip"
+                                                                            data-ajax-popup="true" data-bs-toggle="tooltip"
                                                                             title="{{ __('Add Task') }}"
                                                                             class="btn p-2 text-white"
                                                                             style="background-color: #313949; color: #fff !important;">
@@ -1114,7 +1172,11 @@
                                                                                                                     class="col-12 my-2">
                                                                                                                     <p class="text-dark"
                                                                                                                         style="font-size: 18px;">
-                                                                                                                        {{ $task->name }}
+                                                                                                                        <span
+                                                                                                                            style="cursor:pointer"
+                                                                                                                            class="task-name hyper-link"
+                                                                                                                            @can('view task') onclick="openSidebar('/get-task-detail?task_id=<?= $task->id ?>')" @endcan
+                                                                                                                            data-task-id="{{ $task->id }}">{{ $task->name }}</span>
                                                                                                                     </p>
                                                                                                                 </div>
                                                                                                                 <div
@@ -1215,7 +1277,11 @@
                                                                                             <div class="col-12 my-2">
                                                                                                 <p class="text-dark"
                                                                                                     style="font-size: 18px;">
-                                                                                                    {{ $task->name }}
+                                                                                                    <span
+                                                                                                        style="cursor:pointer"
+                                                                                                        class="task-name hyper-link"
+                                                                                                        @can('view task') onclick="openSidebar('/get-task-detail?task_id=<?= $task->id ?>')" @endcan
+                                                                                                        data-task-id="{{ $task->id }}">{{ $task->name }}</span>
                                                                                                 </p>
                                                                                             </div>
                                                                                             <div class="col-8">
@@ -1287,93 +1353,86 @@
                                                         @endforeach
                                                         @endif
                                                     </div>
-                                                    </div>
-                                                @endcan
-
-
                                             </div>
+                                        @endcan
+                                        <div class="accordion d-none" id="accordionPanelsStayOpenExample">
+                                            <!-- Open Accordion Item -->
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="panelsStayOpen-headingdisc">
+                                                    <button class="accordion-button p-2" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#panelsStayOpen-collapsedisc">
+                                                        {{ __('Discussion') }}
+                                                    </button>
+                                                </h2>
 
-                                            <div class="accordion d-none" id="accordionPanelsStayOpenExample">
-                                                <!-- Open Accordion Item -->
-                                                <div class="accordion-item">
-                                                    <h2 class="accordion-header" id="panelsStayOpen-headingdisc">
-                                                        <button class="accordion-button p-2" type="button"
-                                                            data-bs-toggle="collapse"
-                                                            data-bs-target="#panelsStayOpen-collapsedisc">
-                                                            {{ __('Discussion') }}
-                                                        </button>
-                                                    </h2>
-
-                                                    <div id="panelsStayOpen-collapsedisc"
-                                                        class="accordion-collapse collapse show"
-                                                        aria-labelledby="panelsStayOpen-headingdisc">
-                                                        <div class="accordion-body">
+                                                <div id="panelsStayOpen-collapsedisc"
+                                                    class="accordion-collapse collapse show"
+                                                    aria-labelledby="panelsStayOpen-headingdisc">
+                                                    <div class="accordion-body">
 
 
-                                                            <div class="">
+                                                        <div class="">
 
-                                                                <div class="col-12">
-                                                                    <div class="card">
-                                                                        <div class="card-header "
-                                                                            >
-                                                                            <div class="d-flex justify-content-end">
-                                                                                <div class="float-end">
-                                                                                    <a data-size="lg"
-                                                                                        data-url="{{ route('leads.discussions.create', $lead->id) }}"
-                                                                                        data-ajax-popup="true"
-                                                                                        data-bs-toggle="tooltip"
-                                                                                        title="{{ __('Add Message') }}"
-                                                                                        class="btn p-2 text-white"
-                                                                                        style="background-color: #313949;">
-                                                                                        <i class="ti ti-plus"></i>
-                                                                                    </a>
-                                                                                </div>
+                                                            <div class="col-12">
+                                                                <div class="card">
+                                                                    <div class="card-header ">
+                                                                        <div class="d-flex justify-content-end">
+                                                                            <div class="float-end">
+                                                                                <a data-size="lg"
+                                                                                    data-url="{{ route('leads.discussions.create', $lead->id) }}"
+                                                                                    data-ajax-popup="true"
+                                                                                    data-bs-toggle="tooltip"
+                                                                                    title="{{ __('Add Message') }}"
+                                                                                    class="btn p-2 text-white"
+                                                                                    style="background-color: #313949;">
+                                                                                    <i class="ti ti-plus"></i>
+                                                                                </a>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="card-body px-0">
-                                                                            <ul
-                                                                                class="list-group list-group-flush mt-2">
-                                                                                @if (!$lead->discussions->isEmpty())
-                                                                                    @foreach ($lead->discussions as $discussion)
-                                                                                        <li class="list-group-item px-0"
-                                                                                            style="list-style: none;">
-                                                                                            <div
-                                                                                                class="d-block d-sm-flex align-items-start">
-                                                                                                <img src="@if ($discussion->user->avatar) {{ asset('/storage/uploads/avatar/' . $discussion->user->avatar) }} @else {{ asset('/storage/uploads/avatar/avatar.png') }} @endif"
-                                                                                                    class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
-                                                                                                    alt="image">
-                                                                                                <div class="w-100">
+                                                                    </div>
+                                                                    <div class="card-body px-0">
+                                                                        <ul class="list-group list-group-flush mt-2">
+                                                                            @if (!$lead->discussions->isEmpty())
+                                                                                @foreach ($lead->discussions as $discussion)
+                                                                                    <li class="list-group-item px-0"
+                                                                                        style="list-style: none;">
+                                                                                        <div
+                                                                                            class="d-block d-sm-flex align-items-start">
+                                                                                            <img src="@if ($discussion->user->avatar) {{ asset('/storage/uploads/avatar/' . $discussion->user->avatar) }} @else {{ asset('/storage/uploads/avatar/avatar.png') }} @endif"
+                                                                                                class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
+                                                                                                alt="image">
+                                                                                            <div class="w-100">
+                                                                                                <div
+                                                                                                    class="d-flex align-items-center justify-content-between">
                                                                                                     <div
-                                                                                                        class="d-flex align-items-center justify-content-between">
-                                                                                                        <div
-                                                                                                            class="mb-3 mb-sm-0">
-                                                                                                            <h6
-                                                                                                                class="mb-0">
-                                                                                                                {{ $discussion->comment }}
-                                                                                                            </h6>
-                                                                                                            <span
-                                                                                                                class="text-muted text-sm">{{ $discussion->user->name }}</span>
-                                                                                                        </div>
-                                                                                                        <div
-                                                                                                            class="form-check form-switch form-switch-right mb-2">
-                                                                                                            {{ $discussion->created_at->diffForHumans() }}
-                                                                                                        </div>
+                                                                                                        class="mb-3 mb-sm-0">
+                                                                                                        <h6
+                                                                                                            class="mb-0">
+                                                                                                            {{ $discussion->comment }}
+                                                                                                        </h6>
+                                                                                                        <span
+                                                                                                            class="text-muted text-sm">{{ $discussion->user->name }}</span>
+                                                                                                    </div>
+                                                                                                    <div
+                                                                                                        class="form-check form-switch form-switch-right mb-2">
+                                                                                                        {{ $discussion->created_at->diffForHumans() }}
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                        </li>
-                                                                                    @endforeach
-                                                                                @else
-                                                                                    <li class="text-center">
-                                                                                        {{ __(' No Data Available.!') }}
+                                                                                        </div>
                                                                                     </li>
-                                                                                @endif
-                                                                            </ul>
-                                                                        </div>
+                                                                                @endforeach
+                                                                            @else
+                                                                                <li class="text-center">
+                                                                                    {{ __(' No Data Available.!') }}
+                                                                                </li>
+                                                                            @endif
+                                                                        </ul>
                                                                     </div>
                                                                 </div>
-
                                                             </div>
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1383,93 +1442,144 @@
                                 </div>
                             </div>
                         </div>
-                            <!-- End of Open Accordion Item -->
+                    </div>
+                    <!-- End of Open Accordion Item -->
 
-                            <div class="tab-pane fade" id="pills-activity" role="tabpanel"
-                                aria-labelledby="pills-activity-tab">
+                    <div class="tab-pane fade" id="pills-activity" role="tabpanel"
+                        aria-labelledby="pills-activity-tab">
 
-                                <div class="accordion" id="accordionPanelsStayOpenExample">
-                                    <!-- Open Accordion Item -->
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="panelsStayOpen-headingactive">
-                                            <button class="accordion-button p-2" type="button"
-                                                data-bs-toggle="collapse"
-                                                data-bs-target="#panelsStayOpen-collapseactive">
-                                                {{ __('Timeline') }}
-                                            </button>
-                                        </h2>
+                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                            <!-- Open Accordion Item -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="panelsStayOpen-headingactive">
+                                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#panelsStayOpen-collapseactive">
+                                        {{ __('Timeline') }}
+                                    </button>
+                                </h2>
 
-                                        <div id="panelsStayOpen-collapseactive"
-                                            class="accordion-collapse collapse show"
-                                            aria-labelledby="panelsStayOpen-headingactive">
-                                            <div class="accordion-body">
-                                                <!-- Accordion Content -->
+                                <div id="panelsStayOpen-collapseactive" class="accordion-collapse collapse show"
+                                    aria-labelledby="panelsStayOpen-headingactive">
+                                    <div class="accordion-body">
+                                        <!-- Accordion Content -->
 
 
-                                                <div class="mt-1">
-                                                    <div class="timeline-wrapper">
-                                                        <ul class="StepProgress">
-                                                            @foreach ($log_activities as $activity)
-                                                                @php
-                                                                    $remark = json_decode($activity->note);
-                                                                @endphp
+                                        <div class="mt-1">
+                                            <div class="timeline-wrapper">
+                                                <ul class="StepProgress">
+                                                    @foreach ($log_activities as $activity)
+                                                        @php
+                                                            $remark = json_decode($activity->note);
+                                                        @endphp
 
-                                                                <li class="StepProgress-item is-done">
-                                                                    <div class="bold time">{{ $activity->created_at }}</div>
-                                                                    <div class="bold" style="text-align: left; margin-left: 80px;">
-                                                                          <p class="bold" style="margin-bottom: 0rem; color: #000000;">{{ $remark->title }}</p>
-                                                                          <p class="m-0">{{ $remark->message }}</p>
-                                                                          <span class="text-muted text-sm" style="cursor: pointer;" @can('show employee') onclick="openSidebar('/user/employee/{{ isset($activity->created_by) ? $activity->created_by : '' }}/show')"  @endcan ><i class="step__icon fa fa-user me-2" aria-hidden="true"></i>{{ isset($users[$activity->created_by]) ? $users[$activity->created_by] : '' }}</span>
-                                                                    </div>
-                                                                </li>
+                                                        <li class="StepProgress-item is-done">
+                                                            <div class="bold time">{{ $activity->created_at }}</div>
+                                                            <div class="bold"
+                                                                style="text-align: left; margin-left: 80px;">
+                                                                <p class="bold"
+                                                                    style="margin-bottom: 0rem; color: #000000;">
+                                                                    {{ $remark->title }}</p>
+                                                                <p class="m-0">{{ $remark->message }}</p>
+                                                                <span class="text-muted text-sm"
+                                                                    style="cursor: pointer;"
+                                                                    @can('show employee') onclick="openSidebar('/user/employee/{{ isset($activity->created_by) ? $activity->created_by : '' }}/show')"  @endcan><i
+                                                                        class="step__icon fa fa-user me-2"
+                                                                        aria-hidden="true"></i>{{ isset($users[$activity->created_by]) ? $users[$activity->created_by] : '' }}</span>
+                                                            </div>
+                                                        </li>
+                                                    @endforeach
 
-                                                            @endforeach
-
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                                <!-- End of Accordion Content -->
+                                                </ul>
                                             </div>
                                         </div>
+                                        <!-- End of Accordion Content -->
                                     </div>
-                                    <!-- End of Open Accordion Item -->
-
-                                    <!-- Add More Accordion Items Here -->
-
                                 </div>
-
                             </div>
+                            <!-- End of Open Accordion Item -->
+
+                            <!-- Add More Accordion Items Here -->
+
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</div>
+</div>
 
 <script>
-        $(document).ready(function() {
-            $('.textareaClass').click(function() {
-                $('#textareaID, .textareaClass').toggle("slide");
-            });
-
-            $('#create-notes').submit(function(event) {
-                event.preventDefault(); // Prevents the default form submission
-                $('#textareaID, .textareaClass').toggle("slide");
-            });
-
-            $('#cancelNote').click(function() {
-                $('textarea[name="description"]').val('');
-                $('#note_id').val('');
-                $('#textareaID, .textareaClass').toggle("slide");
-            });
-            $('.textareaClassedit').click(function() {
-                var dataId = $(this).data('note-id');
-                var dataNote = $(this).data('note');
-                $('textarea[name="description"]').val(dataNote);
-                $('#note_id').val(dataId);
-                $('#textareaID, #dellhover, .textareaClass').show();
-                $('.textareaClass').toggle("slide");
-            });
+    $(document).ready(function() {
+        $('.textareaClass').click(function() {
+            $('#textareaID, .textareaClass').toggle("slide");
         });
+
+        $('#create-notes').submit(function(event) {
+            event.preventDefault(); // Prevents the default form submission
+            $('#textareaID, .textareaClass').toggle("slide");
+        });
+
+        $('#cancelNote').click(function() {
+            $('textarea[name="description"]').val('');
+            $('#note_id').val('');
+            $('#textareaID, .textareaClass').toggle("slide");
+        });
+        $('.textareaClassedit').click(function() {
+            var dataId = $(this).data('note-id');
+            var dataNote = $(this).data('note');
+            $('textarea[name="description"]').val(dataNote);
+            $('#note_id').val(dataId);
+            $('#textareaID, #dellhover, .textareaClass').show();
+            $('.textareaClass').toggle("slide");
+        });
+    });
+</script>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#description').summernote({
+            height: 150, // Set the height to 600 pixels
+            focus: true,
+            toolbar: [
+                ['link', ['link']],
+            ]
+        });
+    });
+</script>
+<script>
+    $('.textareaClassedit').click(function() {
+        var dataId = $(this).data('note-id');
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        $.ajax({
+            url: "{{ url('update/from/leadsNoteForm') }}",
+            method: 'POST',
+            data: {
+                id: dataId
+            },
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status === 'success') {
+                    $("#leadsNoteForm").html('');
+                    $("#leadsNoteForm").html(data.html);
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+
+
+            },
+
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+
+    });
 </script>

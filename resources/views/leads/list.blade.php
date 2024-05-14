@@ -405,6 +405,8 @@
 @endsection
 
 @push('script-page')
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script>
     function deleteTage() {
         $.ajax({
@@ -802,7 +804,10 @@
                     $('#commonModal').modal('hide');
                     $('.note-tbody').html(data.html);
                     $('#note_id').val('');
-                    $('#description').val('');
+                    var content = $('#description').summernote('code');
+                    $('#description').val(encodeURIComponent(content));
+                    $('#description').summernote('code', ''); // Set empty content
+                    return true;
                 } else {
                     show_toastr('error', data.message, 'error');
                     $(".create-notes-btn").val('Create');
