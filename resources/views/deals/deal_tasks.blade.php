@@ -34,6 +34,39 @@ $setting = \App\Models\Utility::colorset();
     .form-control:focus {
         border: 1px solid rgb(209, 209, 209) !important;
     }
+    #SaveDiscussion{
+    margin-bottom: 1px;
+    }
+    .note-toolbar > .btn-group {
+    position: absolute;
+    top: 105px;
+    z-index: 1000;
+    }
+
+    .note-toolbar > .btn-group > .note-btn > .note-icon-link {
+        font-size: 22px;
+        position: relative;
+        padding-right: 10px;
+        padding-bottom: 6px;
+    }
+
+    .note-toolbar > .btn-group > .note-btn > .note-icon-link::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 2px;
+        height: 50%;
+        background-color: darkgray;
+        transform: translateY(-50%);
+    }
+
+    .note-btn::after {
+        content: " Add a title";
+        font-size: 15px;
+        color: darkgray;
+        margin-left: 5px;
+    }
 </style>
 <style>
     /* .red-cross {

@@ -920,7 +920,7 @@
                             <div class="tab-pane fade" id="pills-related" role="tabpanel"
                                 aria-labelledby="pills-related-tab">
 
-                                <div class="row">
+                                <div >
 
 
 
@@ -962,7 +962,7 @@
 
 
                                     <div id="discussion_note">
-                                        <div class="row">
+                                        <div>
 
                                             @can('manage notes')
                                                 <div class="accordion" id="accordionPanelsStayOpenExample">
@@ -983,7 +983,7 @@
 
                                                                 <div class="">
 
-                                                                    <div class="col-12">
+                                                                    <div>
 
 
                                                                         <div class="card position-relative"
