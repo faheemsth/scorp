@@ -150,11 +150,11 @@ styl
         Gate::check('manage form builder') ||
         Gate::check('manage contract'))
         <li class="nav-item">
-            <a class="nav-link {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' ? '' : 'collapsed' }} " href="#" data-toggle="collapse" data-target="#collapsefour" aria-expanded="true" aria-controls="collapsefour">
+            <a class="nav-link {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' || Request::segment(2) == 'marketing' ? '' : 'collapsed' }} " href="#" data-toggle="collapse" data-target="#collapsefour" aria-expanded="true" aria-controls="collapsefour">
                 <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px" style="margin-top:-5px" alt="" srcset="">
                 <span>{{ __('CRM System') }}</span>
             </a>
-            <div id="collapsefour" class="collapse {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' ? 'show' : '' }}" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+            <div id="collapsefour" class="collapse {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' || Request::segment(2) == 'marketing' ? 'show' : '' }}" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                 <div class="  collapse-inner rounded">
                     <ul class="
                               {{ Request::segment(1) == 'stages' ||
@@ -257,6 +257,21 @@ styl
                 {{ __('Organizations') }}</a>
         </li>
         @endcan
+
+
+
+
+
+        <li class="emp nav-item {{ Request::route()->getName() == 'email.marketing.list' || Request::route()->getName() == 'email.marketing.list' || Request::route()->getName() == 'email.marketing.list' ? ' active' : '' }}">
+            <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('email.marketing.list') }}">
+                <img src="{{ asset('assets/cs-theme/icons/organization-01-1 1.png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+                <img src="{{ asset('assets/cs-theme/icons/orgblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+
+                {{ __('Email Marketing') }}</a>
+        </li>
+
+
+
         @can('company')
         <li class=" d-none" style="display: none;" {{ Request::route()->getName() == 'contract.index' || Request::route()->getName() == 'contract.show' ? 'active' : '' }}">
             <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('contract.index') }}">{{ __('Contract') }}</a>

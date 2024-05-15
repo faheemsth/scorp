@@ -139,6 +139,7 @@ use App\Http\Controllers\SaturationDeductionController;
 use App\Http\Controllers\ProductServiceCategoryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\EmailMarketingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -889,7 +890,19 @@ Route::get('/organization/{id}/notes-edit', [OrganizationController::class, 'not
 Route::post('/organization/{id}/notes-update', [OrganizationController::class, 'notesUpdate'])->name('organization.notes.update')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/notes-delete', [OrganizationController::class, 'notesDelete'])->name('organization.notes.delete')->middleware(['auth', 'XSS']);
 Route::get('organization/{id}/drive-link', [OrganizationController::class, 'driveLink'])->name('organization.drive.link')->middleware(['auth', 'XSS']);
-Route::post('organization/{id}/drive-link-update', [OrganizationController::class, 'driveLinkUpdate'])->name('organization.drive.link-update')->middleware(['auth', 'XSS']);;
+Route::post('organization/{id}/drive-link-update', [OrganizationController::class, 'driveLinkUpdate'])->name('organization.drive.link-update')->middleware(['auth', 'XSS']);
+
+
+Route::get('email/marketing/list', [EmailMarketingController::class, 'list'])->name('email.marketing.list')->middleware(['auth', 'XSS']);
+Route::get('email/marketing/form', [EmailMarketingController::class, 'inset'])->name('email.marketing.inset')->middleware(['auth', 'XSS']);
+Route::post('email/marketing/form', [EmailMarketingController::class, 'save'])->name('email.marketing.save')->middleware(['auth', 'XSS']);
+Route::get('email/marketing/update', [EmailMarketingController::class, 'update'])->name('email.marketing.update')->middleware(['auth', 'XSS']);
+Route::post('email/marketing/updateSave', [EmailMarketingController::class, 'updateSave'])->name('email.marketing.updateSave')->middleware(['auth', 'XSS']);
+Route::get('email/marketing/delete', [EmailMarketingController::class, 'delete'])->name('email.marketing.delete')->middleware(['auth', 'XSS']);
+
+
+Route::get('email/marketing/show', [EmailMarketingController::class, 'show'])->name('email.marketing.show')->middleware(['auth', 'XSS']);
+
 
 
 Route::resource('organization-type', OrganizationTypeController::class)->middleware(['auth', 'XSS']);
