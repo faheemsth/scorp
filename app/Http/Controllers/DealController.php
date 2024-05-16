@@ -2570,7 +2570,7 @@ class DealController extends Controller
             )->name;
             $brandName=optional(User::find($deal->brand_id))->name;
             $branchname=optional(Branch::find($deal->branch_id))->name;
-            $is_exist = DealApplication::where('application_key', 'LIKE', '%' . $userName . '-' . $passport_number . '-' . $university_name . '-' . $request->intake_month . '-' . $request->id . '%')->first();
+            $is_exist = DealApplication::where('application_key', 'LIKE', '%' . $userName . '-' . $passport_number . '-' . $university_name . '%')->first();
 
 
             if ($passport_number && $is_exist) {
@@ -2581,7 +2581,7 @@ class DealController extends Controller
             }
 
             $new_app = DealApplication::create([
-                'application_key' => $userName . '-' . $passport_number . '-' . $university_name . '-' . $request->intake_month . '-' . $request->id,
+                'application_key' => $userName . '-' . $passport_number . '-' . $university_name,
                 'deal_id' => $request->id,
                 'university_id' => (int)$request->university,
                 'course' => $request->course,
@@ -3177,6 +3177,12 @@ class DealController extends Controller
         $users = User::get()->pluck('name', 'id')->toArray();
         $deals = Deal::get()->pluck('name', 'id')->toArray();
         $stages = Stage::get()->pluck('name', 'id')->toArray();
+        $universites = University::get()->pluck('name', 'id')->toArray();
+        $organizations = User::where('type', 'organization')->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+        $leads = Lead::where('branch_id', $task->branch_id)->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+        $deals = Deal::where('branch_id', $task->branch_id)->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+        $toolkits = University::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+        $applications = DealApplication::join('deals', 'deals.id', '=', 'deal_applications.deal_id')->where('deals.branch_id', $task->branch_id)->orderBy('deal_applications.name', 'ASC')->pluck('deal_applications.application_key', 'deal_applications.id')->toArray();
 
         $discussions = TaskDiscussion::select('task_discussions.id', 'task_discussions.comment', 'task_discussions.created_at', 'users.name', 'users.avatar')
             ->join('users', 'task_discussions.created_by', 'users.id')
@@ -3186,7 +3192,7 @@ class DealController extends Controller
             ->toArray();
             $log_activities = getLogActivity($taskId, 'task');
 
-        $html = view('deals.task_details', compact('task', 'branches', 'users', 'deals', 'stages','log_activities', 'discussions'))->render();
+        $html = view('deals.task_details', compact('applications','organizations','leads','deals','toolkits','universites','task', 'branches', 'users', 'deals', 'stages','log_activities', 'discussions'))->render();
 
         return json_encode([
             'status' => 'success',
@@ -3349,6 +3355,8 @@ class DealController extends Controller
 
         $deal_id = $_GET['deal_id'];
         $deal = Deal::where('id', $deal_id)->first();
+        $Brands = User::where('type', 'company')->pluck('name', 'id')->toArray();
+        $regions = Region::pluck('name', 'id')->toArray();
 
         if ($deal->is_active) {
 
@@ -3387,7 +3395,7 @@ class DealController extends Controller
 
              $lead = Lead::where('is_converted', $deal->id)->first();
 
-            $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories', 'lead'))->render();
+            $html = view('deals.deal_details', compact('regions','Brands','deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories', 'lead'))->render();
 
             return json_encode([
                 'status' => 'success',

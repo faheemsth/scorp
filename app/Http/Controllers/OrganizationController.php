@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\University;
 use Session;
 use App\Models\Deal;
 use App\Models\Lead;
@@ -904,8 +905,7 @@ class OrganizationController extends Controller
         }else if ($type == 'application') {
             $users = DealApplication::join('deals', 'deals.id', '=', 'deal_applications.deal_id')
                         ->where('deals.branch_id', $BranchId)
-                        ->get()
-                        ->pluck('application_key', 'id')
+                        ->pluck('deal_applications.application_key', 'deal_applications.id')
                         ->toArray();
             $html = '<select class="form form-control select2" id="choices-multiple8" name="related_to" > <option value="">Related To</option> ';
             foreach ($users as $key => $user) {
@@ -915,6 +915,18 @@ class OrganizationController extends Controller
             return json_encode([
                 'status' => 'success',
                 'branches' => $html,
+            ]);
+        }else if ($type == 'toolkit') {
+            $Universites = University::pluck('name', 'id')->toArray();
+            $html = '<select class="form form-control select2" id="branch_id" name="related_to" > <option value="">Related To</option> ';
+            foreach ($Universites as $key => $branch) {
+                $html .= '<option value="' . $key . '">' . $branch . '</option> ';
+            }
+            $html .= '</select>';
+            return json_encode([
+                'status' => 'success',
+                'University' => 'success',
+                'Universites' => $html,
             ]);
         } else {
             $branches = User::where('branch_id', $BranchId)->where('type', 'organization')->pluck('name', 'id')->toArray();
@@ -977,6 +989,11 @@ class OrganizationController extends Controller
                 $application = DealApplication::where('id', $_GET['typeid'])->first();
             }
 
+            $University = null;
+            if (isset($_GET['typeid']) && $_GET['type'] == 'toolkit') {
+                $University = University::where('id', $_GET['typeid'])->first();
+            }
+
 
 
             if (isset($_GET['type']) && isset($_GET['typeid'])) {
@@ -1010,8 +1027,7 @@ class OrganizationController extends Controller
             $Region = $filter['regions'];
             $branches = $filter['branches'];
             $employees = $filter['employees'];
-
-            return view('organizations.tasks', compact('Region', 'users', 'deals', 'organization', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds', 'lead', 'deal', 'branches', 'application'));
+            return view('organizations.tasks', compact('University','Region', 'users', 'deals', 'organization', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds', 'lead', 'deal', 'branches', 'application'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -1157,10 +1173,15 @@ class OrganizationController extends Controller
             if ($task->related_type == 'organization') {
                 $related_to = User::where('type', 'organization')->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
             } else if ($task->related_type == 'lead') {
-                $related_to = \App\Models\Lead::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+                $related_to = \App\Models\Lead::where('branch_id', $task->branch_id)->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
             } else if ($task->related_type == 'deal') {
-                $related_to = Deal::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+                $related_to = Deal::where('branch_id', $task->branch_id)->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+            } else if ($task->related_type == 'toolkit') {
+                $related_to = University::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+            } else if ($task->related_type == 'application') {
+                $related_to = DealApplication::join('deals', 'deals.id', '=', 'deal_applications.deal_id')->where('deals.branch_id', $task->branch_id)->orderBy('deal_applications.name', 'ASC')->get()->pluck('name', 'id')->toArray();
             }
+
 
             // if(\Auth::user()->type == 'super admin'){
             //     $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
@@ -1233,8 +1254,8 @@ class OrganizationController extends Controller
                 $is_status_change = true;
             }
             // $dealTask->deal_id = $request->related_to;
-            //$dealTask->related_to = $request->related_to;
-            //$dealTask->related_type = $request->related_type;
+            $dealTask->related_to = $request->related_to;
+            $dealTask->related_type = $request->related_type;
 
             $dealTask->name = $request->task_name;
             if (isset($request->branch_id)) {
@@ -1414,6 +1435,8 @@ class OrganizationController extends Controller
             $users = \App\Models\Lead::where(['brand_id' => $request->brand_id])->get()->pluck('name', 'id')->toArray();
         } else if ($type == 'deal') {
             $users = Deal::where(['created_by' => \Auth::user()->id])->get()->pluck('name', 'id')->toArray();
+        }else if ($type == 'toolkit') {
+            $users = University::pluck('name', 'id')->toArray();
         }
 
         $html = '<select class="form form-control related_to select2" id="choices-multiple7" name="related_to"><option value="">Related to</option> ';

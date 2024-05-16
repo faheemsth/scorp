@@ -274,13 +274,16 @@
                                 <select class="form form-control select2 related_type"
                                     id="choices-multiple6" name="related_type">
                                     <option value="">Select type</option>
-                                    <option value="organization"
-                                        {{ $task->related_type == 'organization' ? 'selected' : '' }}>Organization
-                                    </option>
-                                    <option value="lead" {{ $task->related_type == 'lead' ? 'selected' : '' }}>Lead
-                                    </option>
-                                    <option value="deal" {{ $task->related_type == 'deal' ? 'selected' : '' }}>Deal
-                                    </option>
+                                             <option value="organization"  {{ $task->related_type == 'organization' ? 'selected' : '' }} >
+                                                Organization</option>
+                                            <option value="lead" {{ $task->related_type == 'lead' ? 'selected' : '' }}>Lead
+                                            </option>
+                                            <option value="deal" {{ $task->related_type == 'deal' ? 'selected' : '' }}>Admission
+                                            </option>
+                                            <option value="application" {{ $task->related_type == 'application' ? 'selected' : '' }}>Application
+                                            </option>
+                                            <option value="toolkit" {{ $task->related_type == 'toolkit' ? 'selected' : '' }}>Toolkit
+                                            </option>
                                 </select>
                             </div>
                         </div>
@@ -288,7 +291,7 @@
                         <div class="form-group row">
                             <label for="website" class="col-sm-3 col-form-label">Related To <span
                                     class="text-danger">*</span></label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" id="related_to_div">
 
                                 <select class="form form-control related_to" id="choices-multiple7"
                                     name="related_to">
@@ -392,26 +395,39 @@
         })
 
 
-        $(".related_type").on('change', function() {
-            var type = $(this).val();
+        $("#choices-multiple6").on("change", function() {
+        // var type = $(this).val();
+        // Id = BranchId
 
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('organization.task.related_to', 1) }}',
-                data: {
-                    type
-                },
-                success: function(data) {
-                    data = JSON.parse(data);
-                    if (data.status == 'success') {
-                        $(".related_to").html(data.html);
-                        $(".related_to").addClass('select2');
-                        select2();
+        var id = $("#branch_id").val();
+        var type = $(this).val();
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('GetBranchByType') }}',
+            data: {
+                id: id,
+                type: type
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                    if (data.status === 'success') {
+                         $('#related_to_div').html('');
+                        if(data.University === 'success')
+                        {
+                           $("#related_to_div").html(data.Universites);
+                           select2();
+                        }else{
+                           $("#related_to_div").html(data.branches);
+                           select2();
+                        }
+
                     }
                 }
-            })
 
-        })
+        });
+    });
+
 
         $(document).on("submit", "#update-task", function(e) {
             e.preventDefault();

@@ -310,6 +310,8 @@
                                             </option>
                                             <option value="application" {{ $type == 'application' ? 'selected' : '' }}>Application
                                             </option>
+                                            <option value="toolkit" {{ $type == 'toolkit' ? 'selected' : '' }}>Toolkit
+                                            </option>
                                         </select>
                                         <input type="hidden" value="{{ $type }}" name="related_type">
                                     @else
@@ -323,6 +325,8 @@
                                             <option value="deal" {{ $type == 'deal' ? 'selected' : '' }}>Admission
                                             </option>
                                             <option value="application" {{ $type == 'application' ? 'selected' : '' }}>Application
+                                            </option>
+                                            <option value="toolkit" {{ $type == 'toolkit' ? 'selected' : '' }}>Toolkit
                                             </option>
                                         </select>
                                     @endif
@@ -350,6 +354,9 @@
 
                                             @if(!empty($application))
                                                 <option value="{{$application->id}}" selected>{{$application->application_key}}</option>
+                                            @endif
+                                            @if(!empty($University))
+                                                <option value="{{$University->id}}" selected>{{$University->name}}</option>
                                             @endif
                                     </select>
                                 </div>
@@ -437,9 +444,16 @@ var BranchId = '';
             success: function(data) {
                 data = JSON.parse(data);
                     if (data.status === 'success') {
-                        $('#related_to_div').html('');
-                        $("#related_to_div").html(data.branches);
-                        select2();
+                         $('#related_to_div').html('');
+                        if(data.University === 'success')
+                        {
+                           $("#related_to_div").html(data.Universites);
+                           select2();
+                        }else{
+                           $("#related_to_div").html(data.branches);
+                           select2();
+                        }
+
                     }
                 }
 

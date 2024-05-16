@@ -1821,7 +1821,7 @@ Route::post('/application/{id}/notes-update', [ApplicationsController::class, 'n
 Route::get('/application/{id}/notes-delete', [ApplicationsController::class, 'notesDelete'])->name('application.notes.delete')->middleware(['auth', 'XSS']);
 
 
-Route::get('/organization/{id}/taskDeleted', [OrganizationController::class, 'taskDeleted'])->middleware(['auth', 'XSS']);
+Route::get('/organization/{id}/taskDeleted', [OrganizationController::class, 'taskDeleted'])->name('tasks.destroy')->middleware(['auth', 'XSS']);
 
 
 Route::get('/application_stages', [AppStageController::class, 'index'])->name('application_stages.index')->middleware(['auth', 'XSS']);

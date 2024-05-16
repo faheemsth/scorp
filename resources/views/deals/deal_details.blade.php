@@ -362,19 +362,43 @@
                                                                 </td>
                                                                 <td class="name-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-
-                                                                    {{-- <div class="d-flex align-items-center edit-input-field-div">
-                                                                    <div class="input-group border-0 name d-flex align-items-center">
-                                                                        {{ $deal->name }}
-                                                                    </div>
-                                                                    <div class="edit-btn-div">
-                                                                        <button class="btn btn-sm btn-secondary rounded-0 btn-effect-none edit-input" name="name"><i class="ti ti-pencil"></i></button>
-                                                                    </div>
-                                                                </div> --}}
                                                                     {{ $deal->name }}
                                                                 </td>
                                                             </tr>
-
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Passport Number') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    @php
+                                                                    $client = \App\Models\User::join('client_deals', 'client_deals.client_id', 'users.id')->where('client_deals.deal_id', $deal->id)->first();
+                                                                    $passport_number = isset($client->passport_number) ? $client->passport_number : '';
+                                                                    @endphp
+                                                                    {{ $passport_number }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Brand') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $Brands[$deal->brand_id] }}
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Region') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $regions[$deal->region_id] }}
+                                                                </td>
+                                                            </tr>
                                                             <tr>
                                                                 <td class=""
                                                                     style="width: 150px; font-size: 14px;">

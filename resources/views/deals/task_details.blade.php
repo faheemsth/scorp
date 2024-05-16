@@ -50,15 +50,21 @@
                             <i class="ti ti-pencil"></i>
                         </button>
                     @endcan
-
                     @can('delete task')
-                        <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-danger text-white"
-                            title="{{ __('Delete') }}" style="width:36px; height: 36px; margin-top:12px;">
+                        {!! Form::open([
+                            'method' => 'GET',
+                            'route' => ['tasks.destroy', $task->id],
+                            'id' => 'delete-form-' . $task->id,
+                        ]) !!}
+
+                        <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}"
+                            class="btn px-2 py-2 text-white bs-pass-para bg-danger"style="width:36px; height: 36px; margin-top:12px;">
                             <i class="ti ti-trash"></i>
                         </a>
+                        {!! Form::close() !!}
                     @endcan
+
                 </div>
-                {{-- @endif --}}
             </div>
 
 
@@ -417,26 +423,29 @@
                                                                     style="padding-left: 20px; font-size: 14px;">
 
                                                                     <span class="hyper-link"
-                                                                    @if (!empty(\App\Models\Lead::where('id', $task->related_to)->first()))
 
-                                                                    @if($task->related_type == 'organization')
-                                                                    style="cursor: pointer" onclick="openNav(<?= \App\Models\Lead::where('id', $task->related_to)->first()->id ?>)"
-                                                                    @elseif ($task->related_type == 'lead')
-                                                                    style="cursor: pointer" onclick="openSidebar('/get-lead-detail?lead_id=<?= \App\Models\Lead::where('id', $task->related_to)->first()->id ?>')"
-                                                                    @elseif ($task->related_type == 'deal')
-                                                                    style="cursor: pointer" onclick="openSidebar('/get-deal-detail?deal_id=<?= \App\Models\Lead::where('id', $task->related_to)->first()->id ?>')"
-                                                                    @elseif ($task->related_type == 'application')
-                                                                    style="cursor: pointer" onclick="openSidebar('/deals/{{ $task->related_to }}/detail-application');"
-                                                                    @endif
-
-                                                                @endif
+                                                                        @if($task->related_type == 'organization')
+                                                                        style="cursor: pointer" onclick="openNav(<?= optional(\App\Models\Lead::where('id', $task->related_to)->first())->id ?>)"
+                                                                        @elseif ($task->related_type == 'lead')
+                                                                        style="cursor: pointer" onclick="openSidebar('/get-lead-detail?lead_id=<?= optional(\App\Models\Lead::where('id', $task->related_to)->first())->id ?>')"
+                                                                        @elseif ($task->related_type == 'deal')
+                                                                        style="cursor: pointer" onclick="openSidebar('/get-deal-detail?deal_id=<?= optional(\App\Models\Lead::where('id', $task->related_to)->first())->id ?>')"
+                                                                        @elseif ($task->related_type == 'application')
+                                                                        style="cursor: pointer" onclick="openSidebar('/deals/{{ $task->related_to }}/detail-application');"
+                                                                        @elseif ($task->related_type == 'toolkit')
+                                                                        style="cursor: pointer" onclick="openSidebar('/university/{{ $task->related_to }}/university_detail');"
+                                                                        @endif
                                                                     >
                                                                        @if ($task->related_type == 'organization')
-                                                                            {{ optional(\App\Models\User::find($task->related_to))->name }}
+                                                                            {{ $organizations[$task->related_to] }}
                                                                        @elseif ($task->related_type == 'lead')
-                                                                            {{ optional(\App\Models\Lead::find($task->related_to))->name }}
-                                                                       @elseif (in_array($task->related_type, ['deal', 'application']))
-                                                                            {{ optional(\App\Models\Deal::find($task->related_to))->name }}
+                                                                            {{ $leads[$task->related_to] }}
+                                                                       @elseif ($task->related_type ==  'application')
+                                                                            {{ $applications[$task->related_to] }}
+                                                                       @elseif ($task->related_type == 'deal')
+                                                                            {{ $deals[$task->related_to] }}
+                                                                       @elseif ($task->related_type == 'toolkit')
+                                                                            {{ $universites[$task->related_to] }}
                                                                        @endif
 
                                                                     </span>
