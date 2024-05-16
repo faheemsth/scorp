@@ -620,25 +620,25 @@ class DealController extends Controller
             ->leftJoin('users as clientUser', 'clientUser.id', '=', 'client_deals.client_id');
             if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || $usr->can('level 1')){
             }else if(\Auth::user()->type == 'company'){
-                $deals_query->where('brand_id', \Auth::user()->id);
+                $deals_query->where('deals.brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || $usr->can('level 2')){
-                $deals_query->whereIn('brand_id', array_keys(FiltersBrands()));
+                $deals_query->whereIn('deals.brand_id', array_keys(FiltersBrands()));
             }else if(\Auth::user()->type == 'Region Manager' || $usr->can('level 3') && !empty(\Auth::user()->region_id)){
                 $deals_query->where('deals.region_id', \Auth::user()->region_id);
             }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || $usr->can('level 4') && !empty(\Auth::user()->branch_id)){
                 $deals_query->where('deals.branch_id', \Auth::user()->branch_id);
             }else{
-                $deals_query->where('assigned_to', \Auth::user()->id);
+                $deals_query->where('deals.assigned_to', \Auth::user()->id);
             }
 
             $Alldeals = $deals_query->get();
             foreach ($filters as $column => $value) {
                 if ($column === 'name') {
-                    $deals_query->whereIn('name', $value);
+                    $deals_query->whereIn('deals.name', $value);
                 } elseif ($column === 'stage_id') {
-                    $deals_query->whereIn('stage_id', $value);
+                    $deals_query->whereIn('deals.stage_id', $value);
                 } elseif ($column == 'users') {
-                    $deals_query->whereIn('created_by', $value);
+                    $deals_query->whereIn('deals.created_by', $value);
                 } elseif ($column == 'created_at') {
                     $deals_query->whereDate('deals.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
                 }elseif ($column == 'brand') {
