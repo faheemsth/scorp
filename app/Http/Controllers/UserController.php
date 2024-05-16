@@ -50,7 +50,7 @@ class UserController extends Controller
         }
         if (\Auth::user()->can('manage user')) {
 
-            $user_query = User::select(['users.id','users.name', 'users.website_link', 'project_director.name as project_director'])
+            $user_query = User::select(['users.id','users.name', 'users.website_link', 'project_director.name as project_director','users.email'])
                          ->where('users.type', 'company')
                          ->leftjoin('users as project_director', 'project_director.id', '=', 'users.project_director_id');
 
@@ -251,6 +251,7 @@ class UserController extends Controller
             $user['domain_link'] = $request->domain_link;
             $user['website_link'] = $request->website_link;
             $user['drive_link'] = $request->drive_link;
+            $user['email'] = $request->email;
             $user['project_director_id'] = $request->project_director;
 
             $user->save();
@@ -372,6 +373,7 @@ class UserController extends Controller
             $user = User::findOrFail($id);
             $user->name = $request->name;
             $user->website_link = $request->website_link;
+            $user->email = $request->email;
             $user->drive_link = $request->drive_link;
             $user->save();
             return json_encode([

@@ -234,7 +234,7 @@
 
 
                                     {{-- @if($is_show) --}}
-                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' && \Auth::user()->type != 'Product Coordinator')
+                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Product Coordinator')
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                             <button class="accordion-button p-2" type="button"
@@ -495,7 +495,16 @@
 
                                                                                         <tr>
                                                                                             <td>
-                                                                                             <span style="cursor:pointer" class="deal-name hyper-link" id="hyper-link" @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})" @endcan data-deal-id="{{ $deal->id }}">
+                                                                                             <span
+                                                                                                @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Product Coordinator')
+                                                                                                    onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})"
+                                                                                                    style="cursor:pointer"
+                                                                                                    id="hyper-link"
+                                                                                                    class="deal-name hyper-link"
+                                                                                                @else
+                                                                                                    class="deal-name"
+                                                                                                @endif
+                                                                                                 data-deal-id="{{ $deal->id }}">
                                                                                                 @php
                                                                                                 $name = $deal->name;
                                                                                                 if (strlen($name) > 15) {
@@ -564,7 +573,14 @@
                                                                         @endphp
                                                                         <tr>
                                                                             <td>
-                                                                            <span style="cursor:pointer" class="hyper-link" id="hyper-link" @can('view application') onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')" @endcan>
+                                                                            <span
+                                                                            @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Product Coordinator')
+                                                                              onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')"
+                                                                              style="cursor:pointer"
+                                                                              id="hyper-link"
+                                                                              class="hyper-link"
+                                                                            @endif
+                                                                            >
                                                                                 {{ $universities[$app->university_id] ?? '' }}
                                                                             </span>
                                                                             </td>

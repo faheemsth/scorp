@@ -257,21 +257,6 @@ styl
                 {{ __('Organizations') }}</a>
         </li>
         @endcan
-
-
-
-
-
-        <li class="emp nav-item {{ Request::route()->getName() == 'email.marketing.list' || Request::route()->getName() == 'email.marketing.list' || Request::route()->getName() == 'email.marketing.list' ? ' active' : '' }}">
-            <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('email.marketing.list') }}">
-                <img src="{{ asset('assets/cs-theme/icons/organization-01-1 1.png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
-                <img src="{{ asset('assets/cs-theme/icons/orgblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
-
-                {{ __('Email Marketing') }}</a>
-        </li>
-
-
-
         @can('company')
         <li class=" d-none" style="display: none;" {{ Request::route()->getName() == 'contract.index' || Request::route()->getName() == 'contract.show' ? 'active' : '' }}">
             <a class="collapse-item" style="color: white; font-size: 13px;" href="{{ route('contract.index') }}">{{ __('Contract') }}</a>
@@ -774,6 +759,13 @@ Gate::check('super admin') ||
                         {{ __('Role') }}</a>
                 </li>
                 @endcan
+                <li class="emp nav-item{{ Request::segment(1) == 'email_template_lang' || Request::segment(1) == 'email_template_lang' ? ' active' : '' }} ">
+                    <a class="collapse-item" style="color:white; font-size: 13px;" href="{{ url('email_template_lang/0/en') }}">
+                        <img src="{{ asset('assets/cs-theme/icons/Layer_1 (6).png') }}" id="icon1" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+                        <img src="{{ asset('assets/cs-theme/icons/rolesblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+
+                        {{ __('Email Template') }}</a>
+                </li>
             </ul>
         </div>
     </div>

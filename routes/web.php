@@ -936,6 +936,15 @@ Route::post('email_template_lang/{id}', [EmailTemplateController::class, 'update
 
 Route::post('/leads/send_bulk_email', [LeadController::class, 'sendBulkEmail'])->name('send.bulk.email')->middleware(['auth', 'XSS']);
 
+Route::get('email_template_type_list', [EmailTemplateController::class, 'email_template_type_list'])->name('email_template_type_list')->middleware(['auth', 'XSS']);
+Route::get('email_template_type_create', [EmailTemplateController::class, 'email_template_type_create'])->name('email_template_type_create')->middleware(['auth', 'XSS']);
+Route::post('email_template_type_save', [EmailTemplateController::class, 'email_template_type_save'])->name('email_template_type_save')->middleware(['auth', 'XSS']);
+Route::get('email_template_type_show', [EmailTemplateController::class, 'email_template_type_show'])->name('email_template_type_show')->middleware(['auth', 'XSS']);
+Route::get('email_template_type_update', [EmailTemplateController::class, 'email_template_type_update'])->name('email_template_type_update')->middleware(['auth', 'XSS']);
+Route::post('email_template_type_updateSave', [EmailTemplateController::class, 'email_template_type_updateSave'])->name('email_template_type_updateSave')->middleware(['auth', 'XSS']);
+Route::get('email_template_type_delete', [EmailTemplateController::class, 'email_template_type_delete'])->name('email_template_type_delete')->middleware(['auth', 'XSS']);
+
+
 // End Email Templates
 
 // HRM

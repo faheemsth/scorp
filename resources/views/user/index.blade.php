@@ -165,6 +165,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     <th>Name</th>
                                     <th>Website Link</th>
                                     <th>Project Director</th>
+                                    <th>Email</th>
                                 </tr>
                             </thead>
 
@@ -191,15 +192,18 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     </td>
 
                                     <td style="max-width: 130px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
-                                        @php 
+                                        @php
                                             // $project_director = \App\Models\User::join('company_permission', 'company_permission.user_id', '=', 'users.id')
                                             //                     ->where('company_permission.permitted_company_id', $user->id)
                                             //                     ->where('type', 'Project Director')
                                             //                     ->first();
-                                        @endphp 
+                                        @endphp
                                         {{-- {{ $project_director->name ?? '' }} --}}
 
                                         {{ $user->project_director}}
+                                    </td>
+                                    <td>
+                                        {{ $user->email ?? '' }}
                                     </td>
                                 </tr>
                                 @empty
@@ -353,10 +357,10 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
         // Serialize form data
         var formData = $(this).serialize();
-        
+
         $(".update-brand").text('Updating...');
         $(".update-brand").prop("disabled", true);
-    
+
         // AJAX request
         $.ajax({
             type: "POST",

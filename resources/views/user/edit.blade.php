@@ -63,6 +63,19 @@
             </div>
         </div>
 
+        <div class="col-md-6">
+            <div class="form-group">
+                {{Form::label('name',__('Email'),['class'=>'form-label']) }}
+                <span class="text-danger">*</span>
+                {{Form::email('email',$user->email,array('class'=>'form-control','placeholder'=>__('Enter Email...'),'required'=>'required'))}}
+                @error('email')
+                <small class="invalid-name" role="alert">
+                    <strong class="text-danger">{{ $message }}</strong>
+                </small>
+                @enderror
+            </div>
+        </div>
+
     </div>
 
 </div>
