@@ -704,7 +704,7 @@ Gate::check('super admin') ||
                 @endif
 
 
-                @can('manage crm settings')
+                {{-- @can('manage crm settings')
                 <li style="" class="emp nav-item {{ Request::segment(1) == 'sources' || Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
 
                     <a class="collapse-item" style="color:white; font-size: 13px;" href="{{ route('sources.index') }}   ">
@@ -714,7 +714,7 @@ Gate::check('super admin') ||
                         {{ __('CRM System Setup') }}
                     </a>
                 </li>
-                @endcan
+                @endcan --}}
 
                 @can('manage company settings')
                 <li class="emp {{ Request::segment(1) == 'settings' ? ' active show' : '' }}">
@@ -723,6 +723,15 @@ Gate::check('super admin') ||
 
                         <i class="fa-solid fa-gears" id="icon2" style="color: #2e82d0;font-size: 15px;"></i>
                         {{ __('System Settings') }}</a>
+                </li>
+                <li style="" class="emp nav-item {{ Request::segment(1) == 'sources' || Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
+
+                    <a class="collapse-item" style="color:white; font-size: 13px;" href="{{ route('sources.index') }}   ">
+                        <img src="{{ asset('assets/cs-theme/icons/administrator-developer-icon 1.png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
+                        <img src="{{ asset('assets/cs-theme/icons/crmsysblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
+
+                        {{ __('CRM System Setup') }}
+                    </a>
                 </li>
                 @endcan
                 @can('manage company plan')

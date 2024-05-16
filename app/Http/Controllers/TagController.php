@@ -38,6 +38,20 @@ class TagController extends Controller
             }
 
             $Source_query = LeadTag::where('tag', '!=', '');
+            if (\Auth::check()) {
+                $user = \Auth::user();
+
+                if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                    $tags = $Source_query->pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                    $tags = $Source_query->whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Region Manager'])) {
+                    $tags = $Source_query->where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                } else {
+                    $tags = $Source_query->where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                }
+
+            }
             $total_records = $Source_query->count();
 
             $Source_query->orderBy('created_at', 'desc')->skip($start)->take($num_results_on_page);
