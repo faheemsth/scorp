@@ -45,8 +45,6 @@ use App\Models\ProductService;
 use App\Models\DealApplication;
 use App\Models\LeadActivityLog;
 use App\Models\CompanyPermission;
-use App\Models\EmailTemplate;
-use App\Models\EmailTemplateLang;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
@@ -3989,9 +3987,7 @@ class LeadController extends Controller
         $data = ['ids' => $request->ids];
         //SendEmailJob::dispatch($data);
 
-       
-
-        $lead_emails = Lead::query()->select('email', 'name')->whereIn('id', explode(',', $request->ids))->get();
+        $lead_emails = Lead::query()->select('email', 'name')->whereIn('id', $request->ids)->get();
 
         foreach ($lead_emails as $lead) {
             try {
@@ -4002,14 +3998,10 @@ class LeadController extends Controller
                     'student_name' => $lead->name,
                     'sender' => \Auth::user()->name
                 ];
-               $emailstatus =    Utility::sendEmailTemplate_New($request->content, [$lead->email], $arr,$request->from,$request->subject);
-
-                 
+                Utility::sendEmailTemplate('email_marketing', [$lead->email], $arr);
 
                 // Log a message to the console indicating that the email was sent
                 $message = "Email sent successfully to {$lead->name} ({$lead->email})";
-
-                
                 \Illuminate\Support\Facades\Log::info($message);
             } catch (\Exception $e) {
                 // Log any exceptions that occur during the email sending process
@@ -4022,117 +4014,5 @@ class LeadController extends Controller
             'status' => 'success',
             'message' => 'Email Sent successfully.'
         ]);
-    }
-    public function sendBulkEmailGet(Request $request)
-    {
-        
-        if ($request->templateID) {
-           $id = $request->templateID;
-        }else{
-            $id = 0;
-        }
-        
-
-        
-
-        $cr_brand_id = \Auth::user()->brand_id;
-
-        if($cr_brand_id){
-             
-            $brandEmail =   User::where('brand_id', $cr_brand_id)->first()->email;
-        }else{
-            $brandEmail =   '';
-        }
-
-        $lang = 'en';
-        $usr = \Auth::user();
-        $leads_query = EmailTemplate::query();
-        if (
-            $usr->can('view lead') ||
-            $usr->can('manage lead') ||
-            \Auth::user()->type == 'super admin' ||
-            \Auth::user()->type == 'Admin Team'
-        ) {
-            $companies = FiltersBrands();
-            $brand_ids = array_keys($companies);
-
-            $userType = \Auth::user()->type;
-
-            if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
-                // No additional conditions, leave $leads_query as it is
-            } elseif ($userType === 'company') {
-                $leads_query->where('brand_id', \Auth::user()->id);
-            } elseif (in_array($userType, ['Project Director', 'Project Manager']) || \Auth::user()->can('level 2')) {
-                $leads_query->whereIn('brand_id', $brand_ids);
-            } elseif (($userType === 'Region Manager' || \Auth::user()->can('level 3')) && !empty(\Auth::user()->region_id)) {
-                $leads_query->where('region_id', \Auth::user()->region_id);
-            } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || (\Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id))) {
-                $leads_query->where('branch_id', \Auth::user()->branch_id);
-            } else {
-                $leads_query->where('user_id', \Auth::user()->id);
-            }
-
-            $leads_query->where('id',$id)->groupBy('id')->orderBy('created_at', 'desc');
-        }
-        $EmailTemplates = $leads_query->get();
-
-
-        if($id != 0 && $EmailTemplates->count() < 1)
-        {
-            return redirect()->back()->with('error', 'Permission denied.');
-        }
-
-            $languages         = Utility::languages();
-            $emailTemplate     = EmailTemplate::first();
-//             $currEmailTempLang = EmailTemplateLang::where('lang', $lang)->first();
-            $currEmailTempLang = EmailTemplateLang::where('parent_id', '=', $id)->where('lang', $lang)->first();
-
-            if(!isset($currEmailTempLang) || empty($currEmailTempLang))
-            {
-//                $currEmailTempLang       = EmailTemplateLang::where('parent_id', '=', $id)->where('lang', 'en')->first();
-                $currEmailTempLang = EmailTemplateLang::where('lang', $lang)->first();
-                if(empty($currEmailTempLang)){
-                    return redirect()->back()->with('error', 'This Email Template Lang Not Exist.');
-                }
-
-                $currEmailTempLang->lang = $lang;
-            }
-
-                $emailTemplate     = EmailTemplate::where('id', '=', $id)->first();
-
-            $usr = \Auth::user();
-            $leads_query = EmailTemplate::query();
-            if (
-                $usr->can('view lead') ||
-                $usr->can('manage lead') ||
-                \Auth::user()->type == 'super admin' ||
-                \Auth::user()->type == 'Admin Team'
-            ) {
-                $companies = FiltersBrands();
-                $brand_ids = array_keys($companies);
-
-                $userType = \Auth::user()->type;
-
-                if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
-                    // No additional conditions, leave $leads_query as it is
-                } elseif ($userType === 'company') {
-                    $leads_query->where('brand_id', \Auth::user()->id);
-                } elseif (in_array($userType, ['Project Director', 'Project Manager']) || \Auth::user()->can('level 2')) {
-                    $leads_query->whereIn('brand_id', $brand_ids);
-                } elseif (($userType === 'Region Manager' || \Auth::user()->can('level 3')) && !empty(\Auth::user()->region_id)) {
-                    $leads_query->where('region_id', \Auth::user()->region_id);
-                } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || (\Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id))) {
-                    $leads_query->where('branch_id', \Auth::user()->branch_id);
-                } else {
-                    $leads_query->where('user_id', \Auth::user()->id);
-                }
-
-                $leads_query->groupBy('id')->orderBy('created_at', 'desc');
-            }
-            $EmailTemplates = $leads_query->get();
-            return view('leads.emailTemplate', compact('emailTemplate', 'languages', 'currEmailTempLang','EmailTemplates','brandEmail'));
-
-
-
     }
 }

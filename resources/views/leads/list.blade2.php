@@ -628,41 +628,23 @@
         });
     })
 
-    // Function to open a URL in a new tab with GET parameters
-function openInNewTab(url, params) {
-  const queryString = new URLSearchParams(params).toString();
-  const fullUrl = `${url}?${queryString}`;
-  const win = window.open(fullUrl, '_blank');
-  win.focus();
-}
-
-// // Example usage
-// const url = 'http://localhost:3000/process';
-// const params = { ids: selectedIds };
-// openInNewTab(url, params);
-
     $(".send_bulk_email").on("click", function() {
         var selectedIds = $('.sub-check:checked').map(function() {
             return this.value;
         }).get();
-
-
-        const url = '{{ route("send.bulk.email.get") }}';
-        const params = { ids: selectedIds };
-        openInNewTab(url, params);
-        // $.ajax({
-        //     method: 'POST',
-        //     url: '{{ route("send.bulk.email") }}',
-        //     data: {
-        //         _token: '{{ csrf_token() }}', // Include CSRF token
-        //         ids: selectedIds  // Pass the selected IDs as data
-        //     },
-        //     success: function(response) {
-        //         console.log(response);
-        //         response = JSON.parse(response);
-        //         show_toastr('success', response.message);
-        //     },
-        // });
+        $.ajax({
+            method: 'POST',
+            url: '{{ route("send.bulk.email") }}',
+            data: {
+                _token: '{{ csrf_token() }}', // Include CSRF token
+                ids: selectedIds  // Pass the selected IDs as data
+            },
+            success: function(response) {
+                console.log(response);
+                response = JSON.parse(response);
+                show_toastr('success', response.message);
+            },
+        });
     });
 
 

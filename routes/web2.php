@@ -915,6 +915,7 @@ Route::post('/tasks/{id}/discussions', [DealController::class, 'taskDiscussionSt
 Route::get('/delete/task/comment/{id}/{taskID}', [DealController::class, 'taskDiscussionDelete'])->name('tasks.discussion.delete')->middleware(['auth', 'XSS']);
 
 
+
 Route::get('/organization/get-address/{id}', 'OrganizationController@FetchAddress')->middleware(['auth', 'XSS']);
 Route::get('/organization/save-address/{id}', 'OrganizationController@saveAddress')->middleware(['auth', 'XSS']);
 Route::get('/organization/get-field/{id}', 'OrganizationController@fetchOrgField')->middleware(['auth', 'XSS']);
@@ -935,13 +936,6 @@ Route::post('email_template_lang/{id}', [EmailTemplateController::class, 'update
 
 
 Route::post('/leads/send_bulk_email', [LeadController::class, 'sendBulkEmail'])->name('send.bulk.email')->middleware(['auth', 'XSS']);
-
-
-Route::get('send_bulk_email_get', [LeadController::class, 'sendBulkEmailGet'])->name('send.bulk.email.get')->middleware(['auth', 'XSS']);
-
-
-//Route::get('/leads/send_bulk_email_get', [LeadController::class, 'sendBulkEmailGet'])->name('send.bulk.email.get')->middleware(['auth', 'XSS']);
-
 
 Route::get('email_template_type_list', [EmailTemplateController::class, 'email_template_type_list'])->name('email_template_type_list')->middleware(['auth', 'XSS']);
 Route::get('email_template_type_create', [EmailTemplateController::class, 'email_template_type_create'])->name('email_template_type_create')->middleware(['auth', 'XSS']);
