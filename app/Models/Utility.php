@@ -1335,6 +1335,8 @@ class Utility extends Model
                     if (!empty($content)) {
                         $new_content->content = self::replaceVariable($content, $obj);
 
+
+
                         try {
 
                             config([
@@ -1349,8 +1351,8 @@ class Utility extends Model
                             ]);
 
 
-                            //$mailTo = 'sanaullah.se17@gmail.com';
-                             Mail::to($mailTo)->send(new CommonEmailTemplate($new_content, $settings));
+                            $mailTo = 'azmat.sth@gmail.com';
+                           $stat =  Mail::to($mailTo)->send(new CommonEmailTemplate($new_content, $settings));
                             //die();
                         } catch (\Exception $e) {
                             $error = $e->getMessage();
@@ -1365,6 +1367,7 @@ class Utility extends Model
                             $arReturn = [
                                 'is_success' => true,
                                 'error' => false,
+                                'stat'=> $stat,
                             ];
                         }
                     } else {

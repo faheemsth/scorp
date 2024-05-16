@@ -311,7 +311,7 @@
                                 <div class="accordion-body">
                                     <!-- Accordion Content -->
                                     <div class="mt-1" style="margin-left: 10px; width: 65%;">
-        
+
                                         <table class="w-100">
                                             <tbody>
                                                 <tr>
@@ -321,11 +321,11 @@
                                                     </td>
                                                     <td class="" style="padding-left: 10px; font-size: 13px;">
                                                         <input type="email" class="form-control" name="lead_email"
-                                                            value="{{ $lead->email }}" required>
+                                                            value="{{ $lead->email ?? '' }}" required>
                                                     </td>
                                                 </tr>
-    
-        
+
+
                                                 <tr>
                                                     <td style="width: 150px;  font-size: 13px;">
                                                         {{ __('Mobile Phone') }}
@@ -333,21 +333,21 @@
                                                     </td>
                                                     <td class="" style="padding-left: 10px; font-size: 13px;">
                                                         <input type="text" class="form-control" id="phone" name="lead_phone"
-                                                            value="{{ $lead->phone }}" required>
+                                                            value="{{ $lead->phone ?? '' }}" required>
                                                     </td>
                                                 </tr>
-        
+
                                                 <tr class="d-none">
                                                     <td class="" style="width: 100px; font-size: 13px;">
                                                         {{ __('Mobile Phone') }}
                                                     </td>
                                                     <td class="" style="padding-left: 10px; font-size: 13px;">
                                                         <input type="text" class="form-control" name="lead_mobile_phone"
-                                                            value="{{ $lead->mobile_phone }}">
-        
+                                                            value="{{ $lead->mobile_phone ?? '' }}">
+
                                                     </td>
                                                 </tr>
-        
+
                                                 <tr class="d-none">
                                                     <td class="" style="width: 100px; font-size: 13px;">
                                                         {{ __('Email Opted Out') }}
@@ -359,8 +359,8 @@
                                             </tbody>
                                         </table>
                                     </div>
-        
-        
+
+
                                 </div>
                             </div>
                         </div>
