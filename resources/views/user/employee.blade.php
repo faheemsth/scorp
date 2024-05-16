@@ -313,7 +313,8 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                         <input type="checkbox" name="employee_ids[]" value="{{ $employee->id }}" class="sub-check">
                                     </td>
                                     <td >
-                                        <img class="img-fluid rounded-3 shadow-sm" src="{{ $employee->avatar ? asset('storage/uploads/avatar/' . $employee->avatar) : asset('assets/images/user/default.jpg') }}" width="50" height="50" alt="{{ $employee->avatar ? 'User Avatar' : 'Default Avatar' }}">
+                                        <style> .fixed-size-image { width: 50px;height: 50px;object-fit: cover;} </style>
+                                        <img class="img-fluid rounded-3 shadow-sm fixed-size-image" src="{{ $employee->avatar ? asset('storage/uploads/avatar/' . $employee->avatar) : asset('assets/images/user/default.jpg') }}" width="50" height="50" alt="{{ $employee->avatar ? 'User Avatar' : 'Default Avatar' }}">
 
                                     </td>
                                     <td class="text-start">
