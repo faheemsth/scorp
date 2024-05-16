@@ -479,15 +479,36 @@ $setting = \App\Models\Utility::colorset();
                                         @endif
                                     </td>
 
-                                    <td>
+                                    <td class="d-flex">
                                         @if ($task->status == 0)
-                                        <button class="btn btn-sm btn-dark position-relative"  @can('edit status task') onclick="ChangeTaskStatus({{ $task->id }})" @endcan data-bs-toggle="tooltip" data-bs-placement="top" title="Change Task Status">
+                                        <button class="btn btn-sm btn-dark position-relative mx-1" style="width:36px; height: 36px; margin-top:12px;"  @can('edit status task') onclick="ChangeTaskStatus({{ $task->id }})" @endcan data-bs-toggle="tooltip" data-bs-placement="top" title="Change Task Status">
                                             <i class="fa-solid fa-check d-flex justify-content-center align-items-center" style="font-size: 18px;"></i>
                                         </button>
 
                                         @else
-                                        <span class="badge text-white" style="background: green; " >{{ __('Completed') }}</span>
+                                        <span class="badge text-white mx-1" style="background: green; " >{{ __('Completed') }}</span>
                                         @endif
+                                        @can('edit task')
+                                            <button href="#" data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}"
+                                                data-ajax-popup="true" data-bs-toggle="tooltip"
+                                                title="{{ __('Edit Task') }}"class="btn px-2 btn-dark text-white mx-1"
+                                                style="width:36px; height: 36px; margin-top:12px;">
+                                                <i class="ti ti-pencil"></i>
+                                            </button>
+                                        @endcan
+                                        @can('delete task')
+                                            {!! Form::open([
+                                                'method' => 'GET',
+                                                'route' => ['tasks.destroy', $task->id],
+                                                'id' => 'delete-form-' . $task->id,
+                                            ]) !!}
+
+                                            <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}"
+                                                class="btn px-2 py-2 text-white bs-pass-para bg-danger mx-1"style="width:36px; height: 36px; margin-top:12px;">
+                                                <i class="ti ti-trash"></i>
+                                            </a>
+                                            {!! Form::close() !!}
+                                        @endcan
                                     </td>
 
 

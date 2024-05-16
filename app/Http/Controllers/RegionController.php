@@ -152,7 +152,8 @@ class RegionController extends Controller
             $regional_managers = User::where('type', 'Region Manager')->whereIn('region_id', $regions)->pluck('name', 'id')->toArray();
 
 
-            $employees = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client'])->where('branch_id', $id)
+            //$employees = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client'])->where('branch_id', $id)
+            $employees = User::whereNotIn('type', ['super admin', 'company','client'])->where('branch_id', $id)
                 ->where('type', '!=', 'company')
                 ->pluck('name', 'id')
                 ->toArray();
