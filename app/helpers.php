@@ -316,31 +316,9 @@ if (!function_exists('FiltersBranchUsers')) {
          $regional_managers = User::where('type', 'Region Manager')->whereIn('region_id', $regions)->pluck('name', 'id')->toArray();
 
 
-         $users = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client', 'team'])->where('branch_id', $id)->pluck('name', 'id')->toArray();
-        // $html = ' <select class="form form-control user_id select2" id="user_id" name="lead_assigned_user"> <option value="">Select User</option> ';
+        // $users = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client', 'team'])->where('branch_id', $id)->pluck('name', 'id')->toArray();
+        $users = User::whereNotIn('type', ['super admin', 'company', 'client', 'team'])->where('branch_id', $id)->pluck('name', 'id')->toArray();
 
-        // if(isset($_GET['page']) && $_GET['page'] == 'lead_list'){
-        //     $html .= '<option value="null">Not Assign</option> ';
-        // }
-
-        // foreach ($admins as $key => $user) {
-        //     $html .= '<option value="' . $key . '">' . $user . '</option> ';
-        // }
-
-        // foreach ($project_directors as $key => $user) {
-        //     $html .= '<option value="' . $key . '">' . $user . '</option> ';
-        // }
-
-        // foreach ($regional_managers as $key => $user) {
-        //     $html .= '<option value="' . $key . '">' . $user . '</option> ';
-        // }
-
-        // foreach ($users as $key => $user) {
-        //     $html .= '<option value="' . $key . '">' . $user . '</option> ';
-        // }
-        // $html .= '</select>';
-
-        // return $html;
         $html = '';
 
         if(isset($_GET['page']) && $_GET['page'] == 'lead_list'){
