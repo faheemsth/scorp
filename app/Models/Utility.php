@@ -1224,7 +1224,7 @@ class Utility extends Model
 
     public static function sendEmailTemplate($emailTemplate, $mailTo, $obj)
     {
-       
+
         $usr = Auth::user();
 
         //Remove Current Login user Email don't send mail to them
@@ -1251,12 +1251,12 @@ class Utility extends Model
 
                     // get email content language base
                     $content = EmailTemplateLang::where('parent_id', '=', $template->id)->where('lang', 'LIKE', $usr->lang)->first();
-                    
+
                     $content->from = $template->from;
-                   
+
                     if (!empty($content->content)) {
                         $content->content = self::replaceVariable($content->content, $obj);
-                        
+
                         try {
 
                             config([
@@ -1270,8 +1270,8 @@ class Utility extends Model
                                 'mail.from.name' => env('MAIL_FROM_NAME'),
                             ]);
 
-                            
-                            //$mailTo = 'sanaullah.se17@gmail.com';                           
+
+                            //$mailTo = 'sanaullah.se17@gmail.com';
                              Mail::to($mailTo)->send(new CommonEmailTemplate($content, $settings));
                             //die();
                         } catch (\Exception $e) {
@@ -1314,7 +1314,7 @@ class Utility extends Model
 
     public static function sendEmailTemplate_New($content, $mailTo, $obj,$from,$subject)
     {
-       
+
         $usr = Auth::user();
 
         //Remove Current Login user Email don't send mail to them
@@ -1323,18 +1323,18 @@ class Utility extends Model
         $mailTo = array_values($mailTo);
        // if ($usr->type != 'Super Admin') {
 
-             
- 
-                 
+
+
+
                     $settings = self::settings();
                     $new_content = new \stdClass();
-                    
+
                     $new_content->from = $from;
                     $new_content->subject = $subject;
-                   
+
                     if (!empty($content)) {
                         $new_content->content = self::replaceVariable($content, $obj);
-                        
+
                         try {
 
                             config([
@@ -1348,8 +1348,8 @@ class Utility extends Model
                                 'mail.from.name' => env('MAIL_FROM_NAME'),
                             ]);
 
-                            
-                            //$mailTo = 'sanaullah.se17@gmail.com';                           
+
+                            //$mailTo = 'sanaullah.se17@gmail.com';
                              Mail::to($mailTo)->send(new CommonEmailTemplate($new_content, $settings));
                             //die();
                         } catch (\Exception $e) {
@@ -1375,8 +1375,8 @@ class Utility extends Model
                     }
 
                     return $arReturn;
-                 
-             
+
+
         //}
     }
 
@@ -1638,8 +1638,8 @@ class Utility extends Model
             'contract_end_date' => '-',
             'student_name' => '-',
             'sender' => '-'
-            
-            
+
+
 
 
 

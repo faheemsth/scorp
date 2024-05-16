@@ -391,7 +391,18 @@ class LeadController extends Controller
             ]);
         }
         $filters = BrandsRegionsBranches();
-        $tags = (\Auth::check() && ($user = \Auth::user()) && in_array($user->type, ['super admin', 'Admin Team', 'Project Director', 'Project Manager'])) ? LeadTag::pluck('id', 'tag')->toArray() : (\Auth::check() && ($user = \Auth::user()) && property_exists($user, 'branch_id') ? LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray() : []);
+        $tags = [];
+
+        if (\Auth::check()) {
+            $user = \Auth::user();
+
+            if (in_array($user->type, ['super admin', 'Admin Team', 'Project Director', 'Project Manager'])) {
+                $tags = LeadTag::pluck('id', 'tag')->toArray();
+            } elseif (property_exists($user, 'branch_id')) {
+                $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+            }
+        }
+
         return view('leads.list', compact('saved_filters','stages','branches', 'pipeline', 'leads', 'users', 'total_records', 'sourcess', 'filters', 'tags'));
     }
 
@@ -3989,7 +4000,7 @@ class LeadController extends Controller
         $data = ['ids' => $request->ids];
         //SendEmailJob::dispatch($data);
 
-       
+
 
         $lead_emails = Lead::query()->select('email', 'name')->whereIn('id', explode(',', $request->ids))->get();
 
@@ -4002,14 +4013,14 @@ class LeadController extends Controller
                     'student_name' => $lead->name,
                     'sender' => \Auth::user()->name
                 ];
-               $emailstatus =    Utility::sendEmailTemplate_New($request->content, [$lead->email], $arr,$request->from,$request->subject);
+                $emailstatus =    Utility::sendEmailTemplate_New($request->content, [$lead->email], $arr,$request->from,$request->subject);
 
-                 
+
 
                 // Log a message to the console indicating that the email was sent
                 $message = "Email sent successfully to {$lead->name} ({$lead->email})";
 
-                
+
                 \Illuminate\Support\Facades\Log::info($message);
             } catch (\Exception $e) {
                 // Log any exceptions that occur during the email sending process
@@ -4025,20 +4036,20 @@ class LeadController extends Controller
     }
     public function sendBulkEmailGet(Request $request)
     {
-        
+
         if ($request->templateID) {
            $id = $request->templateID;
         }else{
             $id = 0;
         }
-        
 
-        
+
+
 
         $cr_brand_id = \Auth::user()->brand_id;
 
         if($cr_brand_id){
-             
+
             $brandEmail =   User::where('brand_id', $cr_brand_id)->first()->email;
         }else{
             $brandEmail =   '';
