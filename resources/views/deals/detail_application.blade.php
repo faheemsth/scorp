@@ -135,16 +135,16 @@
                         <div class="tab-content" id="pills-tabContent">
                             {{-- Details Pill Start --}}
                             <div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab">
-
-                                <div class="accordion accordion-flush" id="accordionFlushExample">
+                            {{-- details --}}
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
                                     <div class="accordion-item">
-                                        <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
-                                            <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekeyone">
+                                        <h2 class="accordion-header" id="panelsStayOpen-headingkey-details">
+                                            <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekey-details">
                                                 {{ __('Details') }}
                                             </button>
                                         </h2>
 
-                                        <div id="panelsStayOpen-collapsekeyone" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkeyone">
+                                        <div id="panelsStayOpen-collapsekey-details" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkey-details">
                                             <div class="accordion-body">
 
                                                 <div class="table-responsive mt-1" style="margin-left: 10px;">
@@ -159,7 +159,17 @@
                                                                     {{ $application->id }}
                                                                 </td>
                                                             </tr>
+                                                            <tr>
+                                                                <td class="" style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Status') }}
+                                                                </td>
+                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
 
+                                                                    {{ isset($application->stage_id) && isset($stages[$application->stage_id]) ? $stages[$application->stage_id] : '' }}
+
+
+                                                                </td>
+                                                            </tr>
                                                             <tr>
                                                                 <td class="" style="width: 150px; font-size: 14px;">
                                                                     {{ __('Application Name') }}
@@ -172,20 +182,20 @@
 
                                                             <tr>
                                                                 <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Application Key') }}
-                                                                </td>
-                                                                <td class="application_key-td" style="padding-left: 10px; font-size: 14px;">
-
-                                                                    {{$application->application_key}}
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
                                                                     {{ __('University') }}
                                                                 </td>
                                                                 <td class="university_name-td" style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $universities[$application->university_id] ?? '' }}
+
+                                                                    @if(isset($universities[$application->university_id]))
+                                                                        <span style="cursor:pointer" class="hyper-link"
+                                                                            @can('show university') onclick="openSidebar('/university/{{$application->university_id}}/university_detail')" @endcan>
+                                                                            {{ $universities[$application->university_id] }}
+                                                                        </span>
+                                                                    @else
+                                                                        {{ __(" ") }}
+                                                                    @endif
+
+
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -208,42 +218,18 @@
 
                                                                 </td>
                                                             </tr>
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Student ID') }}
-                                                                </td>
-                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                    {{ $application->deal_id}}
 
-                                                                </td>
-                                                            </tr>
+
 
                                                             <tr>
                                                                 <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Brand') }}
+                                                                    {{ __('Drive Link') }}
                                                                 </td>
                                                                 <td class="status-td" style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->brand_id)->name ?? ''}}
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Branch') }}
-                                                                </td>
-                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ App\Models\Branch::find(App\Models\Deal::find($application->deal_id)->branch_id)->name  ?? ''}}
-                                                                </td>
-                                                            </tr>
+                                                                    @if (App\Models\Deal::find($application->deal_id)->drive_link)
 
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Assigned To') }}
-                                                                </td>
-                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
-                                                                    @if (App\Models\Deal::find($application->deal_id)->assigned_to)
-
-                                                                    {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->assigned_to)->name }}
+                                                                    {{ App\Models\Deal::find($application->deal_id)->drive_link }}
                                                                     @else
                                                                     {{__(" ")}}
                                                                     @endif
@@ -251,17 +237,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Status') }}
-                                                                </td>
-                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
 
-                                                                    {{ isset($application->stage_id) && isset($stages[$application->stage_id]) ? $stages[$application->stage_id] : '' }}
-
-
-                                                                </td>
-                                                            </tr>
 
                                                             <tr>
                                                                 <td class="" style="width: 150px; font-size: 14px;">
@@ -286,9 +262,239 @@
                                                     </table>
                                                 </div>
                                             </div>
+                                     </div>
+                                </div>
+                            </div>
+                            {{-- additional details --}}
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingkey-additional">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekey-additional">
+                                            {{ __('Additional Details') }}
+                                        </button>
+                                    </h2>
+
+                                    <div id="panelsStayOpen-collapsekey-additional" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkey-additional">
+                                        <div class="accordion-body">
+
+                                            <div class="table-responsive mt-1" style="margin-left: 10px;">
+
+                                                <table>
+                                                    <tbody>
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Brand') }}
+                                                            </td>
+                                                            <td class="status-td" style="padding-left: 10px; font-size: 14px;">
+                                                                @if (App\Models\User::find(App\Models\Deal::find($application->deal_id)->brand_id)->name)
+
+                                                                <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/{{ App\Models\Deal::find($application->deal_id)->brand_id }}/user_detail')">
+                                                                    {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->brand_id)->name ?? ''}}
+                                                                </span>
+                                                                @else
+                                                                {{__(" ")}}
+                                                                @endif
+
+
+
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Region') }}
+                                                            </td>
+                                                            <td class="status-td" style="padding-left: 10px; font-size: 14px;">
+                                                                @if (App\Models\Region::find(App\Models\Deal::find($application->deal_id)->region_id)->name)
+
+                                                                <span style="cursor:pointer" class="hyper-link" @can('view region') onclick="openSidebar('/regions/{{ App\Models\Deal::find($application->deal_id)->region_id }}/show')" @endcan>
+                                                                    {{ App\Models\Region::find(App\Models\Deal::find($application->deal_id)->region_id)->name ?? ''}}
+                                                                </span>
+                                                                @else
+                                                                {{__(" ")}}
+                                                                @endif
+
+
+
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Branch') }}
+                                                            </td>
+                                                            <td class="status-td" style="padding-left: 10px; font-size: 14px;">
+                                                                @if (App\Models\Branch::where('region_id', App\Models\Deal::find($application->deal_id)->region_id)->first()->name)
+
+                                                                <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/branch/{{ App\Models\Branch::where('region_id', App\Models\Deal::find($application->deal_id)->region_id)->first()->id }}/show')">
+                                                                    {{ App\Models\Branch::where('region_id', App\Models\Deal::find($application->deal_id)->region_id)->first()->name  ?? ''}}
+                                                                </span>
+                                                                @else
+                                                                {{__(" ")}}
+                                                                @endif
+
+
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Assigned To') }}
+                                                            </td>
+                                                            <td class="status-td" style="padding-left: 10px; font-size: 14px;">
+                                                                @if (App\Models\Deal::find($application->deal_id)->assigned_to)
+
+                                                                <span style="cursor:pointer" class="hyper-link" @can('view employee') onclick="openSidebar('/user/employee/{{ App\Models\Deal::find($application->deal_id)->assigned_to }}/show')" @endcan>
+                                                                    {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->assigned_to)->name }}
+                                                                </span>
+                                                                @else
+                                                                {{__(" ")}}
+                                                                @endif
+
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Aggency') }}
+                                                            </td>
+                                                            <td class="updated_at-td" style="padding-left: 10px; font-size: 14px;">
+                                                                {{  App\Models\Source::find(App\Models\Deal::find($application->deal_id)->sources)->name ?? ''}}
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            {{-- Admission details --}}
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingkey-Admission">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekey-Admission">
+                                            {{ __('Admission Details') }}
+                                        </button>
+                                    </h2>
+
+                                    <div id="panelsStayOpen-collapsekey-Admission" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkey-Admission">
+                                        <div class="accordion-body">
+
+                                            <div class="table-responsive mt-1" style="margin-left: 10px;">
+
+                                                <table>
+                                                    <tbody>
+
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Name') }}
+                                                            </td>
+                                                            <td class="status-td" style="padding-left: 10px; font-size: 14px;">
+
+                                                                @if (App\Models\Deal::find($application->deal_id)->name)
+
+                                                                <span style="cursor:pointer" class="deal-name hyper-link" @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $application->deal_id }})" @endcan data-deal-id="{{ $application->deal_id }}">
+
+                                                                    {{ App\Models\Deal::find($application->deal_id)->name ?? '' }}
+                                                                </span>
+                                                                @else
+                                                                {{__(" ")}}
+                                                                @endif
+
+
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Passport') }}
+                                                            </td>
+                                                            <td class="status-td" style="padding-left: 10px; font-size: 14px;">
+
+                                                                @php
+                                                                $client = \App\Models\User::join('client_deals', 'client_deals.client_id', 'users.id')->where('client_deals.deal_id', $application->deal_id)->first();
+                                                                $passport_number = isset($client->passport_number) ? $client->passport_number : '';
+                                                                @endphp
+                                                                {{ $passport_number }}
+
+
+                                                            </td>
+                                                        </tr>
+
+
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- Contact  details --}}
+
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="panelsStayOpen-headingkey-Contact">
+                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekey-Contact">
+                                            {{ __('Contact  Details') }}
+                                        </button>
+                                    </h2>
+
+                                    <div id="panelsStayOpen-collapsekey-Contact" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkey-Contact">
+                                        <div class="accordion-body">
+
+                                            <div class="table-responsive mt-1" style="margin-left: 10px;">
+
+                                                <table>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Name') }}
+                                                            </td>
+                                                            <td class="updated_at-td" style="padding-left: 10px; font-size: 14px;">
+                                                                @if ($client->name)
+
+                                                                <span style="cursor:pointer" class="hyper-link" @can('view employee') onclick="openSidebar('/user/employee/{{ $client->client_id }}/show')" @endcan>
+                                                                    {{ $client->name }}
+                                                                </span>
+                                                                @else
+                                                                {{__(" ")}}
+                                                                @endif
+
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Phone') }}
+                                                            </td>
+                                                            <td class="updated_at-td" style="padding-left: 10px; font-size: 14px;">
+                                                                {{ $client->phone }}
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td class="" style="width: 150px; font-size: 14px;">
+                                                                {{ __('Email') }}
+                                                            </td>
+                                                            <td class="updated_at-td" style="padding-left: 10px; font-size: 14px;">
+                                                                {{ $client->email }}
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
                             </div>
 
 
@@ -297,67 +503,7 @@
 
                                 <div class="row">
 
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="panelsStayOpen-headingkeydesc">
-                                        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekeydesc">
-                                            {{ __('Admissions') }}
-                                        </button>
-                                    </h2>
-                                    <div id="panelsStayOpen-collapsekeydesc" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkeydesc">
-                                        <div class="accordion-body">
-                                            <div style="max-height: 400px; overflow-y: auto;">
-                                                    @php
-                                                    $admissions = \App\Models\DealApplication::query()
-                                                                ->select('d.id','deal_applications.name', 'contact.passport_number as passport_number', 's.name as stage', \DB::raw("CONCAT(d.intake_month, d.intake_year) AS intake"), 'u.name as assigned_to')
-                                                                ->join('deals as d', 'deal_applications.deal_id', '=', 'd.id')
-                                                                ->join('users as u', 'u.id', '=', 'd.assigned_to')
-                                                                ->join('stages as s', 's.id', '=', 'd.stage_id')
-                                                                ->join('client_deals as cd', 'cd.deal_id', '=', 'd.id')
-                                                                ->join('users as contact', 'contact.id', '=', 'cd.client_id')
-                                                                ->where('deal_applications.id', 4)
-                                                                ->get();
-                                                                                                                @endphp
-                                                    <table class="table table-hover">
-                                                        <thead  style="background-color:rgba(0, 0, 0, .08); font-weight: bold;color:#000000">
-                                                            <tr>
-                                                                <td>{{ __('Name') }}</td>
-                                                                <td>{{ __('Passport Number') }}</td>
-                                                                <td>{{ __('Stage') }}</td>
-                                                                <td>{{ __('Intake') }}</td>
-                                                                <td>{{ __('Assigned To') }}</td>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody >
-                                                            @forelse($admissions as $admission)
-                                                                <tr>
-                                                                    <td>
 
-                                                                        <span style="cursor:pointer" class="deal-name hyper-link" @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $admission->id }})" @endcan data-deal-id="{{ $admission->id }}">
-
-                                                                            @if (strlen($admission->name) > 40)
-                                                                            {{ substr($admission->name, 0, 40) }}...
-                                                                            @else
-                                                                            {{ $admission->name }}
-                                                                            @endif
-                                                                        </span>
-                                                                    </td>
-                                                                    <td>{{ $admission->passport_number }}</td>
-                                                                    <td>{{ $admission->stage }}</td>
-                                                                    <td>{{ $admission->intake }}</td>
-                                                                    <td>{{ $admission->assigned_to }}</td>
-                                                                </tr>
-                                                            @empty
-
-                                                            @endforelse
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-
-
-                                        </div>
-                                    </div>
-
-                                </div>
 
 
                                     @can('manage notes')

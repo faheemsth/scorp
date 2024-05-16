@@ -1024,6 +1024,35 @@ class DealController extends Controller
     public function destroy(Deal $deal)
     {
         if (\Auth::user()->can('delete deal') ||  \Auth::user()->type == 'super admin') {
+             // reopen the old lead
+             $lead = Lead::where('is_converted', $deal->id)->first();
+
+             if (!empty($lead)) {
+                 // Add Stage History
+                 $data_for_stage_history = [
+                     'stage_id' => $lead->stage_id,
+                     'type_id' => $lead->id,
+                     'type' => 'lead'
+                 ];
+                 addLeadHistory($data_for_stage_history);
+
+                 // Add Log Activity
+                 $data = [
+                     'type' => 'info',
+                     'note' => json_encode([
+                         'title' => 'Lead Reopen',
+                         'message' => 'Lead Reopen successfully'
+                     ]),
+                     'module_id' => $lead->id,
+                     'module_type' => 'lead',
+                     'notification_type' => 'Lead Reopen'
+                 ];
+                 addLogActivity($data);
+
+                 // Update lead
+                 $lead->is_converted = 0;
+                 $lead->save();
+             }
            // if ($deal->created_by == \Auth::user()->ownerId() ||  \Auth::user()->type == 'super admin') {
                 DealDiscussion::where('deal_id', '=', $deal->id)->delete();
                 DealFile::where('deal_id', '=', $deal->id)->delete();
