@@ -266,14 +266,328 @@ class DealController extends Controller
         return $users;
     }
 
+    // public function deal_list()
+    // {
+    //     // die('come');
+
+    //     $usr = \Auth::user();
+    //     $cnt_deal = [];
+    //     $comparePrice = '';
+
+    //     $start = 0;
+    //     $num_results_on_page = env("RESULTS_ON_PAGE");
+    //     if (isset($_GET['page'])) {
+    //         $page = $_GET['page'];
+    //         $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+    //         $start = ($page - 1) * $num_results_on_page;
+    //     } else {
+    //         $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+    //     }
+
+    //     $filters = $this->dealFilters();
+
+    //     if ($usr->can('view deal') || $usr->can('manage deal') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Admin Team') {
+    //         //whole query
+    //         $deals_query = Deal::select('deals.id','deals.name','deals.stage_id','deals.assigned_to','deals.intake_month','deals.intake_year')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
+    //         $companies = FiltersBrands();
+    //         $brand_ids = array_keys($companies);
+
+    //         if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || $usr->can('level 1')){
+
+    //         }else if(\Auth::user()->type == 'company'){
+    //             $deals_query->where('brand_id', \Auth::user()->id);
+    //         }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || $usr->can('level 2')){
+    //             $deals_query->whereIn('brand_id', $brand_ids);
+    //         }else if(\Auth::user()->type == 'Region Manager' || $usr->can('level 3') && !empty(\Auth::user()->region_id)){
+    //             $deals_query->where('deals.region_id', \Auth::user()->region_id);
+    //         }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || $usr->can('level 4') && !empty(\Auth::user()->branch_id)){
+    //             $deals_query->where('deals.branch_id', \Auth::user()->branch_id);
+    //         }else{
+    //             $deals_query->where('assigned_to', \Auth::user()->id);
+    //         }
+
+    //         $Alldeals = $deals_query->get();
+    //         foreach ($filters as $column => $value) {
+    //             if ($column === 'name') {
+    //                 $deals_query->whereIn('name', $value);
+    //             } elseif ($column === 'stage_id') {
+    //                 $deals_query->whereIn('stage_id', $value);
+    //             } elseif ($column == 'users') {
+    //                 $deals_query->whereIn('created_by', $value);
+    //             } elseif ($column == 'created_at') {
+    //                 $deals_query->whereDate('deals.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+    //             }elseif ($column == 'brand') {
+    //                 $deals_query->where('deals.brand_id', $value);
+    //             }elseif ($column == 'region_id') {
+    //                 $deals_query->where('deals.region_id', $value);
+    //             }elseif ($column == 'branch_id') {
+    //                 $deals_query->where('deals.branch_id', $value);
+    //             }elseif ($column == 'deal_assigned_user') {
+    //                 $deals_query->where('deals.assigned_to', $value);
+    //             }else if($column == 'created_at_from'){
+    //                 $deals_query->whereDate('deals.created_at', '>=', $value);
+    //             }else if($column == 'created_at_to'){
+    //                 $deals_query->whereDate('deals.created_at', '<=', $value);
+    //             }
+    //         }
+
+
+    //         // $companies = FiltersBrands();
+    //         // $brand_ids = array_keys($companies);
+    //         // $deals_query->whereIn('brand_id', $brand_ids);
+    //         // $deals_query->orWhere('assigned_to', \Auth::user()->id);
+
+    //         //if list global search
+    //         if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
+    //             $g_search = $_GET['search'];
+    //             $deals_query->join('client_deals', 'client_deals.deal_id', '=', 'deals.id')->join('users', 'users.id', '=', 'deals.assigned_to');
+    //             $deals_query->Where('deals.name', 'like', '%' . $g_search . '%');
+    //             $deals_query->orWhere('users.passport_number', 'like', '%' . $g_search . '%');
+    //             $deals_query->orWhere('users.name', 'like', '%' . $g_search . '%');
+    //             $deals_query->orWhere('deals.phone', 'like', '%' . $g_search . '%');
+    //         }
+
+    //         $total_records = $deals_query->count();
+
+    //         $deals_query->groupBy('deals.id')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page);
+    //         $deals = $deals_query->get();
+
+    //         $stages = Stage::get()->pluck('name', 'id')->toArray();
+    //         $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
+    //         $brands = $companies;
+    //         $users = allUsers();
+    //         $sources = Source::get()->pluck('name', 'id')->toArray();
+    //         $months = months();
+    //         $currentYear = date('Y');
+    //         $years = [];
+    //         for ($i = 0; $i < 5; $i++) {
+    //             $nextYear = $currentYear + $i;
+    //             $years[$nextYear] = $nextYear;
+    //         }
+    //         $universities = University::get()->pluck('name', 'id')->toArray();
+
+    //         $clients = array();
+    //         $branches = array();
+    //         $branches = Branch::get()->pluck('name', 'id')->toArray();
+    //         if (\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team') {
+    //             $clients      = User::where('type', 'client')->get()->pluck('name', 'id');
+    //         } else {
+    //             $clients      = User::where('created_by', '=', \Auth::user()->ownerId())->where('type', 'client')->get()->pluck('name', 'id');
+    //         }
+
+    //         $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
+    //         $pipelines = Pipeline::get()->pluck('name', 'id')->toArray();
+    //         $stages = Stage::get()->pluck('name', 'id')->toArray();
+
+    //         if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+    //             $html = view('deals.deals_list_ajax', compact('deals','pipelines','users','stages','branches','universities', 'organizations', 'stages', 'users', 'total_records', 'sources'))->render();
+
+    //             return json_encode([
+    //                 'status' => 'success',
+    //                 'html' => $html
+    //             ]);
+    //         }
+
+    //         // dd($universities);
+    //         $filters = BrandsRegionsBranches();
+
+    //         return view('deals.list', compact('Alldeals','deals','universities','pipelines','users','branches','months','years','clients', 'organizations', 'stages', 'users', 'total_records', 'sources', 'brands', 'filters'));
+    //     }
+
+
+    //     if ($usr->can('manage deal') || \Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team') {
+    //         if (\Auth::user()->type == 'super admin') {
+    //             $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
+
+    //             foreach ($filters as $column => $value) {
+    //                 if ($column === 'name') {
+    //                     $deals_query->whereIn('name', $value);
+    //                 } elseif ($column === 'deals.stage_id') {
+    //                     $deals_query->whereIn('stage_id', $value);
+    //                 } elseif ($column === 'price') {
+    //                     $value = str_replace($comparePrice, '', $value);
+    //                     $deals_query->where('price', $comparePrice, $value);
+    //                 } elseif ($column == 'users') {
+    //                     $deals_query->whereIn('created_by', $value);
+    //                 } elseif ($column == 'created_at') {
+    //                     $deals_query->whereDate('created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+    //                 }
+    //             }
+    //             $pipeline = Pipeline::get();
+    //             $pipelines = Pipeline::get()->pluck('name', 'id');
+    //             $id_deals = $usr->deals->pluck('id');
+    //             $deals = $deals_query->where('deals.pipeline_id', '=', $pipeline[0]->id)->orderBy('deals.order')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
+
+    //             // $deals = Deal::select('deals.*')->orderBy('deals.created_ats', 'desc')->skip($start)->take($num_results_on_page)->get();
+    //         } else {
+
+    //             if ($usr->default_pipeline) {
+    //                 //$pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
+    //                 $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
+    //                 if (!$pipeline) {
+    //                     $pipeline = Pipeline::first();
+    //                 }
+    //             } else {
+    //                 $pipeline = Pipeline::first();
+    //             }
+
+    //             // $pipelines = Pipeline::get()->pluck('name', 'id');
+    //             $pipelines = Pipeline::get()->pluck('name', 'id');
+
+    //             if ($usr->type == 'client') {
+    //                 $id_deals = $usr->clientDeals->pluck('id');
+    //             } else {
+    //                 $id_deals = $usr->deals->pluck('id');
+    //             }
+
+    //             //check filters
+    //             $filters = [];
+    //             if (isset($_GET['name']) && !empty($_GET['name'])) {
+    //                 $filters['name'] = $_GET['name'];
+    //             }
+
+
+    //             if (isset($_GET['price']) && !empty($_GET['price'])) {
+    //                 $price = $_GET['price'];
+
+    //                 if (preg_match('/^(<=|>=|<|>)/', $price, $matches)) {
+    //                     $comparePrice = $matches[1]; // Get the comparison operator
+    //                     $filters['price'] = (float) substr($price, strlen($comparePrice)); // Get the price value
+    //                 } else {
+    //                     $comparePrice = '=';
+    //                     $filters['price'] = '=' . $price; // Default to '=' if no comparison operator is provided
+    //                 }
+    //             }
+
+
+    //             if (isset($_GET['stages']) && !empty($_GET['stages'])) {
+    //                 $filters['deals.stage_id'] = $_GET['stages'];
+    //             }
+
+    //             $deal1_query = Deal::whereIn('id', $id_deals);
+    //             $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id')->where('deals.pipeline_id', '=', $pipeline->id);
+    //             $curr_month_query = Deal::whereIn('id', $id_deals)->where($filters)->where('pipeline_id', '=', $pipeline->id)->whereMonth('created_at', '=', date('m'));
+    //             $curr_week_query   = Deal::whereIn('id', $id_deals)->where($filters)->where('pipeline_id', '=', $pipeline->id)->whereBetween(
+    //                 'created_at',
+    //                 [
+    //                     \Carbon\Carbon::now()->startOfWeek(),
+    //                     \Carbon\Carbon::now()->endOfWeek(),
+    //                 ]
+    //             );
+    //             $last_30days_query = Deal::whereIn('id', $id_deals)->where('pipeline_id', '=', $pipeline->id)->whereDate('created_at', '>', \Carbon\Carbon::now()->subDays(30));
+
+    //             // Add the dynamic filters
+    //             foreach ($filters as $column => $value) {
+    //                 if ($column === 'name') {
+    //                     $deal1_query->whereIn('name', $value);
+    //                     $deals_query->whereIn('name', $value);
+    //                     $curr_month_query->whereIn('name', $value);
+    //                     $curr_week_query->whereIn('name', $value);
+    //                     $last_30days_query->whereIn('name', $value);
+    //                 } elseif ($column === 'deals.stage_id') {
+    //                     $deal1_query->whereIn('stage_id', $value);
+    //                     $deals_query->whereIn('stage_id', $value);
+    //                     $curr_month_query->whereIn('stage_id', $value);
+    //                     $curr_week_query->whereIn('stage_id', $value);
+    //                     $last_30days_query->whereIn('stage_id', $value);
+    //                 } elseif ($column === 'price') {
+    //                     $value = str_replace($comparePrice, '', $value);
+    //                     $deal1_query->where('price', $comparePrice, $value);
+    //                     $deals_query->where('price', $comparePrice, $value);
+    //                     $curr_month_query->where('price', $comparePrice, $value);
+    //                     $curr_week_query->where('price', $comparePrice, $value);
+    //                     $last_30days_query->where('price', $comparePrice, $value);
+    //                 } elseif ($column === 'users') {
+    //                     $value = str_replace($comparePrice, '', $value);
+    //                     $deal1_query->where('created_by',  $value);
+    //                     $deals_query->where('created_by',  $value);
+    //                     $curr_month_query->where('created_by',  $value);
+    //                     $curr_week_query->where('created_by',  $value);
+    //                     $last_30days_query->where('created_by',  $value);
+    //                 } elseif ($column == 'created_at') {
+    //                     $deals_query->whereDate('deals.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+    //                 }
+    //             }
+    //             $deals = $deal1_query->get();
+    //             $curr_month = $curr_month_query->get();
+    //             $curr_week = $curr_week_query->get();
+    //             $last_30days = $last_30days_query->get();
+
+    //             // Deal Summary
+    //             $cnt_deal['total']       = Deal::getDealSummary($deals);
+    //             $cnt_deal['this_month']  = Deal::getDealSummary($curr_month);
+    //             $cnt_deal['this_week']   = Deal::getDealSummary($curr_week);
+    //             $cnt_deal['last_30days'] = Deal::getDealSummary($last_30days);
+
+    //             // Deals
+    //             // if ($usr->type == 'client') {
+    //             //     $deals_query->where('client_deals.client_id', '=', $usr->id);
+    //             //     $deals_query->orderBy('deals.created_at', 'desc');
+    //             // } else {
+
+    //             //     $deals_query->where('user_deals.user_ids', '=', $usr->id);
+    //             //     $deals_query->orderBy('deals.order');
+    //             // }
+
+
+
+
+
+    //             if ($usr->can('view all deals')  || \Auth::user()->type == 'Admin Team') {
+    //                 $companies = User::get()->pluck('name', 'id');
+    //             } else if (\auth::user()->type == "company") {
+    //                 $users = User::select(['users.id', 'users.name'])->join('roles', 'roles.name', '=', 'users.type')
+    //                     ->join('role_has_permissions', 'role_has_permissions.role_id', '=', 'roles.id')
+    //                     ->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
+    //                     ->where(['users.created_by' => \auth::id(), 'permissions.name' => 'create deal'])
+    //                     ->groupBy('users.id')
+    //                     ->pluck('name', 'id')
+    //                     ->toArray();
+
+    //                 $users[$usr->id] = $usr->name;
+    //                 $companies = $users;
+    //                 $deal_created_by = array_keys($users);
+    //                 $deals_query->whereIn('user_deals.user_id', $deal_created_by);
+    //             } else {
+    //                 $deal_created_by[] = \auth::user()->created_by;
+    //                 $deal_created_by[] = $usr->id;
+    //                 $deals_query->whereIn('user_deals.user_id', $deal_created_by);
+    //                 $companies = User::where('id', $usr->id)->get()->pluck('name', 'id');
+    //             }
+    //             $total_records = count($deals_query->groupBy('deals.id')->get());
+
+    //             $deals = $deals_query->groupBy('deals.id')->orderBy('deals.order')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
+    //         } //end check role
+
+    //         $users = User::get()->pluck('name', 'id');
+    //         $stages = Stage::get();
+    //         return view('deals.list', compact('pipelines', 'pipeline', 'deals', 'cnt_deal', 'users', 'stages', 'total_records', 'companies'));
+    //     } else {
+    //         return redirect()->back()->with('error', __('Permission Denied.'));
+    //     }
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function deal_list()
     {
-        // die('come');
-
         $usr = \Auth::user();
-        $cnt_deal = [];
-        $comparePrice = '';
-
         $start = 0;
         $num_results_on_page = env("RESULTS_ON_PAGE");
         if (isset($_GET['page'])) {
@@ -288,16 +602,27 @@ class DealController extends Controller
 
         if ($usr->can('view deal') || $usr->can('manage deal') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Admin Team') {
             //whole query
-            $deals_query = Deal::select('deals.id','deals.name','deals.stage_id','deals.assigned_to','deals.intake_month','deals.intake_year')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
-            $companies = FiltersBrands();
-            $brand_ids = array_keys($companies);
-
+            $deals_query = Deal::select(
+                'deals.id',
+                'deals.name',
+                'deals.stage_id',
+                'deals.assigned_to',
+                'deals.intake_month',
+                'deals.intake_year',
+                'sources.name as sources',
+                'assignedUser.name as assigName',
+                'clientUser.passport_number as passport'
+            )
+            ->leftJoin('user_deals', 'user_deals.deal_id', '=', 'deals.id')
+            ->leftJoin('sources', 'sources.id', '=', 'deals.sources')
+            ->leftJoin('users as assignedUser', 'assignedUser.id', '=', 'deals.assigned_to')
+            ->leftJoin('client_deals', 'client_deals.deal_id', '=', 'deals.id')
+            ->leftJoin('users as clientUser', 'clientUser.id', '=', 'client_deals.client_id');
             if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || $usr->can('level 1')){
-
             }else if(\Auth::user()->type == 'company'){
                 $deals_query->where('brand_id', \Auth::user()->id);
             }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || $usr->can('level 2')){
-                $deals_query->whereIn('brand_id', $brand_ids);
+                $deals_query->whereIn('brand_id', array_keys(FiltersBrands()));
             }else if(\Auth::user()->type == 'Region Manager' || $usr->can('level 3') && !empty(\Auth::user()->region_id)){
                 $deals_query->where('deals.region_id', \Auth::user()->region_id);
             }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || $usr->can('level 4') && !empty(\Auth::user()->branch_id)){
@@ -331,31 +656,21 @@ class DealController extends Controller
                 }
             }
 
-
-            // $companies = FiltersBrands();
-            // $brand_ids = array_keys($companies);
-            // $deals_query->whereIn('brand_id', $brand_ids);
-            // $deals_query->orWhere('assigned_to', \Auth::user()->id);
-
             //if list global search
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
-                $deals_query->join('client_deals', 'client_deals.deal_id', '=', 'deals.id')->join('users', 'users.id', '=', 'deals.assigned_to');
                 $deals_query->Where('deals.name', 'like', '%' . $g_search . '%');
-                $deals_query->orWhere('users.passport_number', 'like', '%' . $g_search . '%');
-                $deals_query->orWhere('users.name', 'like', '%' . $g_search . '%');
+                $deals_query->orWhere('clientUser.passport_number', 'like', '%' . $g_search . '%');
+                $deals_query->orWhere('assignedUser.name', 'like', '%' . $g_search . '%');
                 $deals_query->orWhere('deals.phone', 'like', '%' . $g_search . '%');
             }
 
             $total_records = $deals_query->count();
 
-            $deals_query->groupBy('deals.id')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page);
+            $deals_query->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page);
             $deals = $deals_query->get();
-
             $stages = Stage::get()->pluck('name', 'id')->toArray();
-            $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
-            $brands = $companies;
-            $users = allUsers();
+
             $sources = Source::get()->pluck('name', 'id')->toArray();
             $months = months();
             $currentYear = date('Y');
@@ -365,207 +680,43 @@ class DealController extends Controller
                 $years[$nextYear] = $nextYear;
             }
             $universities = University::get()->pluck('name', 'id')->toArray();
-
-            $clients = array();
-            $branches = array();
-            $branches = Branch::get()->pluck('name', 'id')->toArray();
-            if (\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team') {
-                $clients      = User::where('type', 'client')->get()->pluck('name', 'id');
-            } else {
-                $clients      = User::where('created_by', '=', \Auth::user()->ownerId())->where('type', 'client')->get()->pluck('name', 'id');
-            }
-
             $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
             $pipelines = Pipeline::get()->pluck('name', 'id')->toArray();
-            $stages = Stage::get()->pluck('name', 'id')->toArray();
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-                $html = view('deals.deals_list_ajax', compact('deals','pipelines','users','stages','branches','universities', 'organizations', 'stages', 'users', 'total_records', 'sources'))->render();
+                $html = view('deals.deals_list_ajax', compact('deals','pipelines','stages','universities', 'organizations', 'total_records', 'sources'))->render();
 
                 return json_encode([
                     'status' => 'success',
                     'html' => $html
                 ]);
             }
-
-            // dd($universities);
             $filters = BrandsRegionsBranches();
 
-            return view('deals.list', compact('Alldeals','deals','universities','pipelines','users','branches','months','years','clients', 'organizations', 'stages', 'users', 'total_records', 'sources', 'brands', 'filters'));
-        }
-
-
-        if ($usr->can('manage deal') || \Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team') {
-            if (\Auth::user()->type == 'super admin') {
-                $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
-
-                foreach ($filters as $column => $value) {
-                    if ($column === 'name') {
-                        $deals_query->whereIn('name', $value);
-                    } elseif ($column === 'deals.stage_id') {
-                        $deals_query->whereIn('stage_id', $value);
-                    } elseif ($column === 'price') {
-                        $value = str_replace($comparePrice, '', $value);
-                        $deals_query->where('price', $comparePrice, $value);
-                    } elseif ($column == 'users') {
-                        $deals_query->whereIn('created_by', $value);
-                    } elseif ($column == 'created_at') {
-                        $deals_query->whereDate('created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
-                    }
-                }
-                $pipeline = Pipeline::get();
-                $pipelines = Pipeline::get()->pluck('name', 'id');
-                $id_deals = $usr->deals->pluck('id');
-                $deals = $deals_query->where('deals.pipeline_id', '=', $pipeline[0]->id)->orderBy('deals.order')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
-
-                // $deals = Deal::select('deals.*')->orderBy('deals.created_ats', 'desc')->skip($start)->take($num_results_on_page)->get();
-            } else {
-
-                if ($usr->default_pipeline) {
-                    //$pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
-                    $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
-                    if (!$pipeline) {
-                        $pipeline = Pipeline::first();
-                    }
-                } else {
-                    $pipeline = Pipeline::first();
-                }
-
-                // $pipelines = Pipeline::get()->pluck('name', 'id');
-                $pipelines = Pipeline::get()->pluck('name', 'id');
-
-                if ($usr->type == 'client') {
-                    $id_deals = $usr->clientDeals->pluck('id');
-                } else {
-                    $id_deals = $usr->deals->pluck('id');
-                }
-
-                //check filters
-                $filters = [];
-                if (isset($_GET['name']) && !empty($_GET['name'])) {
-                    $filters['name'] = $_GET['name'];
-                }
-
-
-                if (isset($_GET['price']) && !empty($_GET['price'])) {
-                    $price = $_GET['price'];
-
-                    if (preg_match('/^(<=|>=|<|>)/', $price, $matches)) {
-                        $comparePrice = $matches[1]; // Get the comparison operator
-                        $filters['price'] = (float) substr($price, strlen($comparePrice)); // Get the price value
-                    } else {
-                        $comparePrice = '=';
-                        $filters['price'] = '=' . $price; // Default to '=' if no comparison operator is provided
-                    }
-                }
-
-
-                if (isset($_GET['stages']) && !empty($_GET['stages'])) {
-                    $filters['deals.stage_id'] = $_GET['stages'];
-                }
-
-                $deal1_query = Deal::whereIn('id', $id_deals);
-                $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id')->where('deals.pipeline_id', '=', $pipeline->id);
-                $curr_month_query = Deal::whereIn('id', $id_deals)->where($filters)->where('pipeline_id', '=', $pipeline->id)->whereMonth('created_at', '=', date('m'));
-                $curr_week_query   = Deal::whereIn('id', $id_deals)->where($filters)->where('pipeline_id', '=', $pipeline->id)->whereBetween(
-                    'created_at',
-                    [
-                        \Carbon\Carbon::now()->startOfWeek(),
-                        \Carbon\Carbon::now()->endOfWeek(),
-                    ]
-                );
-                $last_30days_query = Deal::whereIn('id', $id_deals)->where('pipeline_id', '=', $pipeline->id)->whereDate('created_at', '>', \Carbon\Carbon::now()->subDays(30));
-
-                // Add the dynamic filters
-                foreach ($filters as $column => $value) {
-                    if ($column === 'name') {
-                        $deal1_query->whereIn('name', $value);
-                        $deals_query->whereIn('name', $value);
-                        $curr_month_query->whereIn('name', $value);
-                        $curr_week_query->whereIn('name', $value);
-                        $last_30days_query->whereIn('name', $value);
-                    } elseif ($column === 'deals.stage_id') {
-                        $deal1_query->whereIn('stage_id', $value);
-                        $deals_query->whereIn('stage_id', $value);
-                        $curr_month_query->whereIn('stage_id', $value);
-                        $curr_week_query->whereIn('stage_id', $value);
-                        $last_30days_query->whereIn('stage_id', $value);
-                    } elseif ($column === 'price') {
-                        $value = str_replace($comparePrice, '', $value);
-                        $deal1_query->where('price', $comparePrice, $value);
-                        $deals_query->where('price', $comparePrice, $value);
-                        $curr_month_query->where('price', $comparePrice, $value);
-                        $curr_week_query->where('price', $comparePrice, $value);
-                        $last_30days_query->where('price', $comparePrice, $value);
-                    } elseif ($column === 'users') {
-                        $value = str_replace($comparePrice, '', $value);
-                        $deal1_query->where('created_by',  $value);
-                        $deals_query->where('created_by',  $value);
-                        $curr_month_query->where('created_by',  $value);
-                        $curr_week_query->where('created_by',  $value);
-                        $last_30days_query->where('created_by',  $value);
-                    } elseif ($column == 'created_at') {
-                        $deals_query->whereDate('deals.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
-                    }
-                }
-                $deals = $deal1_query->get();
-                $curr_month = $curr_month_query->get();
-                $curr_week = $curr_week_query->get();
-                $last_30days = $last_30days_query->get();
-
-                // Deal Summary
-                $cnt_deal['total']       = Deal::getDealSummary($deals);
-                $cnt_deal['this_month']  = Deal::getDealSummary($curr_month);
-                $cnt_deal['this_week']   = Deal::getDealSummary($curr_week);
-                $cnt_deal['last_30days'] = Deal::getDealSummary($last_30days);
-
-                // Deals
-                // if ($usr->type == 'client') {
-                //     $deals_query->where('client_deals.client_id', '=', $usr->id);
-                //     $deals_query->orderBy('deals.created_at', 'desc');
-                // } else {
-
-                //     $deals_query->where('user_deals.user_ids', '=', $usr->id);
-                //     $deals_query->orderBy('deals.order');
-                // }
-
-
-
-
-
-                if ($usr->can('view all deals')  || \Auth::user()->type == 'Admin Team') {
-                    $companies = User::get()->pluck('name', 'id');
-                } else if (\auth::user()->type == "company") {
-                    $users = User::select(['users.id', 'users.name'])->join('roles', 'roles.name', '=', 'users.type')
-                        ->join('role_has_permissions', 'role_has_permissions.role_id', '=', 'roles.id')
-                        ->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
-                        ->where(['users.created_by' => \auth::id(), 'permissions.name' => 'create deal'])
-                        ->groupBy('users.id')
-                        ->pluck('name', 'id')
-                        ->toArray();
-
-                    $users[$usr->id] = $usr->name;
-                    $companies = $users;
-                    $deal_created_by = array_keys($users);
-                    $deals_query->whereIn('user_deals.user_id', $deal_created_by);
-                } else {
-                    $deal_created_by[] = \auth::user()->created_by;
-                    $deal_created_by[] = $usr->id;
-                    $deals_query->whereIn('user_deals.user_id', $deal_created_by);
-                    $companies = User::where('id', $usr->id)->get()->pluck('name', 'id');
-                }
-                $total_records = count($deals_query->groupBy('deals.id')->get());
-
-                $deals = $deals_query->groupBy('deals.id')->orderBy('deals.order')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
-            } //end check role
-
-            $users = User::get()->pluck('name', 'id');
-            $stages = Stage::get();
-            return view('deals.list', compact('pipelines', 'pipeline', 'deals', 'cnt_deal', 'users', 'stages', 'total_records', 'companies'));
+            return view('deals.list', compact('Alldeals','deals','universities','pipelines','months','years', 'organizations', 'stages', 'total_records', 'sources', 'filters'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Show the form for creating a new redeal.
      *
