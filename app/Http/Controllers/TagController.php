@@ -25,7 +25,7 @@ class TagController extends Controller
     }
     public function index()
     {
-        if (\Auth::user()->can('level 2')) {
+        if (\Auth::user()->can('level 2') || \Auth::user()->type == 'Project Director' || \Auth::user()->type ==  'Project Manager') {
 
             $start = 0;
             $num_results_on_page = env("RESULTS_ON_PAGE");
@@ -123,7 +123,7 @@ class TagController extends Controller
 
     public function create()
     {
-        if (\Auth::user()->can('level 2')) {
+        if (\Auth::user()->can('level 2') || \Auth::user()->type == 'Project Director' || \Auth::user()->type ==  'Project Manager') {
             $usr = \Auth::user();
 
             $executed_data = $this->executeLeadQuery();
@@ -171,7 +171,7 @@ class TagController extends Controller
     public function store(Request $request)
     {
 
-        if (\Auth::user()->can('level 2')) {
+        if (\Auth::user()->can('level 2') || \Auth::user()->type == 'Project Director' || \Auth::user()->type ==  'Project Manager') {
 
             $validator = \Validator::make(
                 $request->all(),
@@ -220,7 +220,7 @@ class TagController extends Controller
     public function edit($id)
     {
         $LeadTag = LeadTag::find($id);
-        if (\Auth::user()->can('level 2')) {
+        if (\Auth::user()->can('level 2') || \Auth::user()->type == 'Project Director' || \Auth::user()->type ==  'Project Manager') {
             $usr = \Auth::user();
             $executed_data = $this->executeLeadQuery();
             $brands = $executed_data['companies'];
@@ -254,7 +254,7 @@ class TagController extends Controller
     }
     public function update(Request $request)
     {
-        if (\Auth::user()->can('level 2')) {
+        if (\Auth::user()->can('level 2') || \Auth::user()->type == 'Project Director' || \Auth::user()->type ==  'Project Manager') {
             $validator = \Validator::make(
                 $request->all(),
                 [
@@ -305,7 +305,7 @@ class TagController extends Controller
         if (empty($lead_tag)) {
             return redirect()->route('tages.index')->with('success', __('Sorry Your Tag Not Found!'));
         }
-        if (\Auth::user()->can('level 2')) {
+        if (\Auth::user()->can('level 2') || \Auth::user()->type == 'Project Director' || \Auth::user()->type ==  'Project Manager') {
             $lead_tag->delete();
 
             return redirect()->route('tages.index')->with('success', __('Tag successfully deleted!'));
