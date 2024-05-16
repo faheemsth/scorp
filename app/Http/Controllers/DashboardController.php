@@ -563,6 +563,54 @@ class DashboardController extends Controller
         return view('chartdashboard.chart', $data);
     }
 
+    public function crm_dashboard_index_admin_reports()
+    {
+        if (!Auth::check()) {
+            return redirect('login');
+        }
+        $filter_data = BrandsRegionsBranches();
+
+        $chart_data = $this->getChartData();
+        $stage_share_data = $this->getStageShareLeads();
+        $top_brands = $this->AdmissionTopper();
+        $top_countries = $this->GetTop3Countries();
+        $deals_stage_share_data = $this->getStageShareDeals();
+
+        //getting subcharts
+        $sub_chart_visas = $this->getSubChartVisasData();
+        $sub_chart_deposit = $this->getSubChartDepositData();
+        $sub_chart_applications = $this->getSubChartApplicationsData();
+        $sub_chart_admissions = $this->getSubChartAdmissionsData();
+        $sub_chart_assignedleads = $this->getSubChartAssignedLeadsData();
+        $sub_chart_unassignedleads = $this->getSubChartUnassignedLeadsData();
+        $sub_chart_Qualifiedleads = $this->getSubChartQualifiedLeadsData();
+        $sub_chart_Unqualifiedleads = $this->getSubChartUnqualifiedLeadsData();
+
+
+
+
+
+        $data = [
+            'filter_data' => $filter_data,
+            'chart_data1_json' => json_encode($chart_data),
+            'stage_share_data' => json_encode($stage_share_data),
+            'top_brands' => json_encode($top_brands),
+            'top_countries' => $top_countries,
+            'deals_stage_share_data' => json_encode($deals_stage_share_data),
+
+            'sub_chart_deposit' => json_encode($sub_chart_deposit),
+            'sub_chart_visas' => json_encode($sub_chart_visas),
+            'sub_chart_applications' =>  json_encode($sub_chart_applications),
+            'sub_chart_admissions' => json_encode($sub_chart_admissions),
+            'sub_chart_assignedleads' => json_encode($sub_chart_assignedleads),
+            'sub_chart_unassignedleads' => json_encode($sub_chart_unassignedleads),
+            'sub_chart_qualifiedleads' => json_encode($sub_chart_Qualifiedleads),
+            'sub_chart_unqualifiedleads' => json_encode($sub_chart_Unqualifiedleads)
+        ];
+
+        return view('chartdashboard.chart', $data);
+    }
+
     private function getChartData()
     {
         $datatype = isset($_GET['datatype']) ? $_GET['datatype'] : 'Admission-Applications';

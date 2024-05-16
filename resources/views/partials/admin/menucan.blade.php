@@ -377,11 +377,11 @@ Gate::check('manage employee'))
 {{-- --}}
 @can('manage report')
 <li class="nav-item ">
-    <a class="nav-link {{ Request::segment(1) == 'report' || Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapsesreport" aria-expanded="true" aria-controls="collapsesreport">
+    <a class="nav-link {{ Request::segment(1) == 'report' || Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' || Request::segment(1) == 'crm-dashboard-admin' ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapsesreport" aria-expanded="true" aria-controls="collapsesreport">
         <i class="fa-solid fa-chart-bar me-1" style="color: #ffffff;font-size: 15px;"></i>
         <span>{{ __('Reports') }}</span>
     </a>
-    <div id="collapsesreport" class="collapse {{ Request::segment(1) == 'report' || Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' ? 'show' : '' }}" aria-labelledby="headingrepost" data-parent="#accordionSidebar">
+    <div id="collapsesreport" class="collapse {{ Request::segment(1) == 'report' || Request::segment(1) == 'ChartGranted' || Request::segment(1) == 'ChartDeposited' || Request::segment(1) == 'ChartApplication' || Request::segment(1) == 'crm-dashboard-admin' ? 'show' : '' }}" aria-labelledby="headingrepost" data-parent="#accordionSidebar">
         <div class="  collapse-inner rounded">
             <ul>
                 <li class="emp nav-item {{ Request::segment(1) == 'analysis' ? ' active' : '' }}">
@@ -392,6 +392,16 @@ Gate::check('manage employee'))
 
                         {{ __('Analysis Report') }}</a>
                 </li>
+                @if (Auth::user()->type == 'super admin')
+                    <li class="emp nav-item {{ Request::segment(1) == 'crm-dashboard-admin' ? ' active' : '' }}">
+                        <a class="collapse-item" href="{{ url('/crm-dashboard-admin') }}" style="color:white; font-size: 13px;">
+
+                            <i class="fa-solid fa-chart-line me-1" id="icon1" style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa-solid fa-chart-line me-1" id="icon2" style="color: #2e82d0;font-size: 15px;"></i>
+
+                            {{ __('Crm Dashboard') }}</a>
+                    </li>
+                @endif
             </ul>
             <ul class="d-none">
                 @can('expense report')

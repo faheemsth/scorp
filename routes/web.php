@@ -220,6 +220,7 @@ Route::get('auth/google/callback', [AuthenticatedSessionController::class, 'hand
 Route::get('/', [DashboardController::class, 'crm_dashboard_index'])->name('c')->middleware(['XSS', 'revalidate',]);
 
 Route::get('/crm-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('crm.dashboard')->middleware(['XSS', 'revalidate',]);
+Route::get('/crm-dashboard-admin', [DashboardController::class, 'crm_dashboard_index_admin_reports'])->name('crm.dashboard.reports')->middleware(['XSS', 'revalidate',]);
 
 Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
 Route::get('/account-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
