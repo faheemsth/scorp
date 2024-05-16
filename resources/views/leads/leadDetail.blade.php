@@ -560,7 +560,18 @@
                                                                 </td>
                                                             </tr>
 
-
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 200px; font-size: 14px;">
+                                                                    {{ __('Tages') }}
+                                                                </td>
+                                                                <td class=""
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $lead->tag_ids))->get() as $tag)
+                                                                    <span class="badge text-white tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $lead->id }}" style="background-color:#cd9835;cursor:pointer;">{{ $tag->tag }}</span>
+                                                                    @endforeach
+                                                                </td>
+                                                            </tr>
 
                                                             <tr>
                                                                 <td class=""
@@ -1582,4 +1593,35 @@
         });
 
     });
+    $('.tag-badge').click(function() {
+            $('#TagModalBody').html('');
+            var tagId = $(this).data('tag-id');
+            var leadId = $(this).data('lead-id');
+            $('#UpdateTageModal').css('z-index', 99999);
+            var selectOptions = <?php echo json_encode($tags); ?>;
+            // Check if selectOptions is an object
+            if (typeof selectOptions === 'object' && selectOptions !== null) {
+                // Generate options HTML by iterating over object keys
+                var optionsHTML = '';
+                for (var key in selectOptions) {
+                    if (selectOptions.hasOwnProperty(key) && key.trim() !== '') {
+                        optionsHTML += `<option value="${selectOptions[key]}" ${tagId === selectOptions[key] ? 'selected' : ''}>${key}</option>`;
+                    }
+                }
+                // Append the options to the select element
+                $('#TagModalBody').append(`
+                    <input type="hidden" value="${tagId}" name="old_tag_id" id="old_tag_id">
+                    <div class="form-group">
+                        <label for="">Tag</label>
+                        <select class="form form-control select2 selectTage" name="new_tag_id" id="tagSelectupdate" style="width: 95%;">
+                            <option value="">Select Tag</option>
+                            ${optionsHTML}
+                        </select>
+                    </div>
+                    <input type="hidden" value="${leadId}" name="lead_id" id="lead_id">
+                `);
+                select2();
+                $('#UpdateTageModal').modal('show');
+            }
+        });
 </script>

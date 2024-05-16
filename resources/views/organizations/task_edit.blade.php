@@ -69,11 +69,14 @@
                             <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                 class="text-danger">*</span></label>
                             <div class="form-group col-md-6" id="brand_div">
-                                <input type="hidden" name="brand_id" value="{{\Auth::user()->id}}">
-                                <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                {{-- <input type="hidden" name="brand_id" value="{{\Auth::user()->id}}"> --}}
+                                <select class='form-control select2 brand_id' id="brands" name="brand_id">
                                     @foreach($companies as $key => $comp)
-                                     <option value="{{$key}}" {{ $key == \Auth::user()->id ? 'selected' : ''}}>{{$comp}}</option>
+                                     <option value="{{$key}}" {{ $key == $task->brand_id ? 'selected' : ''}}>{{$comp}}</option>
                                     @endforeach
+                                    @if($task->brand_id != 3751)
+                                        <option value="3751">{{ __('SCORP')}}</option>
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -81,14 +84,17 @@
                         <div class="form-group row ">
                             <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                 class="text-danger">*</span></label>
-                            <div class="form-group col-md-6" id="brand_div">
-                                <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}">
-                                <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
-                                    @foreach($companies as $key => $comp)
-                                     <option value="{{$key}}" {{ $key == \Auth::user()->brand_id ? 'selected' : ''}}>{{$comp}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                                <div class="form-group col-md-6" id="brand_div">
+                                    {{-- <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}"> --}}
+                                    <select class='form-control select2 brand_id' id="brands" name="brand_id">
+                                        @foreach($companies as $key => $comp)
+                                         <option value="{{$key}}" {{ $key == $task->brand_id ? 'selected' : ''}}>{{$comp}}</option>
+                                        @endforeach
+                                        @if($task->brand_id != 3751)
+                                        <option value="3751">{{ __('SCORP')}}</option>
+                                        @endif
+                                    </select>
+                                </div>
                         </div>
                         @endif
                         {{-- End Brand Filter --}}

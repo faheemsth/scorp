@@ -167,7 +167,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                 $type = \Auth::user()->type;
                                 @endphp
 
-                       
+
 
                                 @if($type == 'super admin'|| $type == 'Admin Team' || $type == 'Project Director' || $type == 'Project Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
                                 <div class="col-md-3 mt-2">
@@ -223,7 +223,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
 
 
 
-                              
+
 
                                 <div class="col-md-3 mt-2">
                                     <label for="">Designation</label>
@@ -286,6 +286,7 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     <th style="width: 50px !important;">
                                         <input type="checkbox" class="main-check">
                                     </th>
+                                    <th>Profile</th>
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Phone</th>
@@ -311,12 +312,15 @@ $profile = \App\Models\Utility::get_file('uploads/avatar');
                                     <td>
                                         <input type="checkbox" name="employee_ids[]" value="{{ $employee->id }}" class="sub-check">
                                     </td>
+                                    <td >
+                                        <img class="img-fluid rounded-3 shadow-sm" src="{{ $employee->avatar ? asset('storage/uploads/avatar/' . $employee->avatar) : asset('assets/images/user/default.jpg') }}" width="50" height="50" alt="{{ $employee->avatar ? 'User Avatar' : 'Default Avatar' }}">
 
-                                    <td>
+                                    </td>
+                                    <td class="text-start">
+                                                <span style="cursor:pointer" class="hyper-link" @can('view employee') onclick="openSidebar('/user/employee/{{ $employee->id }}/show')" @endcan>
+                                                    {{ $employee->name }}
+                                                </span>
 
-                                        <span style="cursor:pointer" class="hyper-link" @can('view employee') onclick="openSidebar('/user/employee/{{ $employee->id }}/show')" @endcan>
-                                            {{ $employee->name }}
-                                        </span>
                                     </td>
                                     <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="mailto:{{ $employee->email }}">{{ $employee->email }}</a></td>
                                     <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $employee->phone }}</td>

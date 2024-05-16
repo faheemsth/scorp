@@ -258,6 +258,19 @@
                                             </td>
                                         </tr>
 
+                                        <tr>
+                                            <td class="" style="width: 100px; font-size: 13px;">
+                                                {{ __('Tages') }}
+                                            </td>
+                                            <td class="" style="padding-left: 10px; font-size: 13px;">
+                                                <select class="form-control select2" multiple id="choice-4232" name="tag_ids[]">
+                                                    <option value="">Select tage</option>
+                                                    @foreach ($tags as $key => $tag)
+                                                      <option value="{{ $tag }}">{{ $key }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

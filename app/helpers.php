@@ -408,7 +408,7 @@ if (!function_exists('BrandsRegionsBranches')) {
 
         if ($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || \Auth::user()->can('level 1')) {
             $brands = User::where('type', 'company')->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-           // $project_dm = User::whereIn('type', ['Project Director', 'Project Manager'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+           $employees = User::whereNotIn('type', ['super admin', 'company', 'client', 'team'])->where('branch_id', $user->branch_id)->pluck('name', 'id')->toArray();
         } else if ($type == 'company') {
             $brands = User::where('type', 'company')->where('id', $user->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
             $regions = Region::where('brands', $user->id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();

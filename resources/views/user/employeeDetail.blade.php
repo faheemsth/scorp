@@ -153,6 +153,24 @@
 
                                                     <table>
                                                         <tbody>
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Image') }}
+                                                                </td>
+                                                                <td style="padding-left: 10px; font-size: 14px;">
+                                                                    <a class="nav-link"  id="userDropdown" >
+                                                                        @if ($employee->avatar == null || $employee->avatar == '')
+                                                                            <img class="img-profile rounded-3" src="{{ asset('assets/images/user/default.jpg') }}"  width="80" height="80"
+                                                                                alt="Default Avatar">
+                                                                        @else
+                                                                            <img class="img-profile rounded-3" src="{{ asset('storage/uploads/avatar') . '/' . $employee->avatar }}" width="80" height="80" alt="User Avatar">
+                                                                        @endif
+                                                                   </a>
+                                                                </td>
+
+                                                            </tr>
+
                                                             <tr>
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Record ID') }}
@@ -176,7 +194,7 @@
                                                                     {{ __('Email') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                   <a href="{{ $employee->email }}" target="_blank" >{{ $employee->email }}</a>  
+                                                                   <a href="{{ $employee->email }}" target="_blank" >{{ $employee->email }}</a>
                                                                 </td>
                                                             </tr>
 

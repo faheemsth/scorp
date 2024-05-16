@@ -618,8 +618,8 @@
                                                                 $section = 1;
                                                                 $section2 = 1;
                                                             @endphp
-                                                            @foreach ($tasks as $task)
-                                                                @if ($task->status == 1)
+                                                            @foreach ($tasks as $task1)
+                                                                @if ($task1->status == 1)
                                                                     <div class="accordion"
                                                                         id="accordionPanelsStayOpenExample">
                                                                         <div class="accordion-item">
@@ -636,8 +636,8 @@
                                                                                         {{ $section == 1 ? 'Closed Activity' : '' }}
                                                                                     </button>
                                                                                 </h2>
-                                                                                @foreach ($tasks as $task3)
-                                                                                    @if ($task3->status == 1)
+                                                                                @foreach ($tasks as $task)
+                                                                                    @if ($task->status == 1)
                                                                                         <div id="panelsStayOpen-collapseOnedds"
                                                                                             class="accordion-collapse collapse"
                                                                                             aria-labelledby="panelsStayOpen-headingOnedds">
@@ -724,7 +724,7 @@
                                                 @php
                                                     $section++;
                                                 @endphp
-                                            @elseif ($task->status == 0)
+                                            @elseif ($task1->status == 0)
                                                 <div class="accordion" id="accordionPanelsStayOpenExample">
                                                     <div class="accordion-item">
                                                         @if ($section2 == 1)
@@ -739,8 +739,8 @@
                                                                 </button>
                                                             </h2>
 
-                                                            @foreach ($tasks as $task2)
-                                                                @if ($task2->status == 0)
+                                                            @foreach ($tasks as $task)
+                                                                @if ($task->status == 0)
                                                                     <div id="panelsStayOpen-collapseOneddsd"
                                                                         class="accordion-collapse collapse show"
                                                                         aria-labelledby="panelsStayOpen-headingOneddsd">

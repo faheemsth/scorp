@@ -426,16 +426,21 @@ class LeadController extends Controller
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
 
-            // $query = Branch::query();
-            // $region_query = Region::query();
+            $tags = [];
 
-            // foreach ($brand_ids as $brandId) {
-            //     $query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
-            //     $region_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
-            // }
+            if (\Auth::check()) {
+                $user = \Auth::user();
 
-            // $branches = $query->pluck('name', 'id')->toArray();
-            // $regions = $region_query->pluck('name', 'id')->toArray();
+                if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                    $tags = LeadTag::pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                    $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Region Manager'])) {
+                    $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                } else {
+                    $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                }
+            }
 
             $regions = [];
             $branches = [];
@@ -458,7 +463,7 @@ class LeadController extends Controller
             $branches = $filter['branches'];
             $employees = $filter['employees'];
 
-            return view('leads.create', compact('users', 'companies', 'stages', 'branches', 'organizations', 'sources', 'countries', 'regions', 'employees'));
+            return view('leads.create', compact('tags','users', 'companies', 'stages', 'branches', 'organizations', 'sources', 'countries', 'regions', 'employees'));
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
         }
@@ -653,6 +658,7 @@ class LeadController extends Controller
                 $lead->stage_id    = $request->lead_stage;
                 $lead->subject     = $request->lead_first_name . ' ' . $request->lead_last_name;
                 $lead->user_id     = $request->lead_assigned_user;
+                $lead->tag_ids     = !empty($request->tag_ids) ? implode(',', $request->tag_ids): '';
                 $lead->pipeline_id = $pipeline->id;
 
                 $session_id = Session::get('auth_type_id');
@@ -825,6 +831,23 @@ class LeadController extends Controller
             $branches = $filter['branches'];
             $employees = $filter['employees'];
 
+
+            $tags = [];
+
+            if (\Auth::check()) {
+                $user = \Auth::user();
+
+                if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                    $tags = LeadTag::pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                    $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Region Manager'])) {
+                    $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                } else {
+                    $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                }
+            }
+
             $data = [
                 'lead' => $lead,
                 'users' => $users,
@@ -835,6 +858,7 @@ class LeadController extends Controller
                 'countries' => $countries,
                 'companies' => $companies,
                 'regions' => $regions,
+                'tags' => $tags,
                 'employees' => $employees
             ];
             return view('leads.edit', $data);
@@ -979,6 +1003,7 @@ class LeadController extends Controller
                 $lead->subject     =  $request->lead_first_name . ' ' . $request->lead_last_name;
                 $lead->date        = date('Y-m-d');
                 $lead->drive_link = isset($request->drive_link) ? $request->drive_link : '';
+                $lead->tag_ids     = !empty($request->tag_ids) ? implode(',', $request->tag_ids): '';
                 $lead->save();
 
                 $to = LeadStage::find($request->lead_stage)->name;
@@ -3256,8 +3281,22 @@ class LeadController extends Controller
 
             //Getting lead stages history
             $stage_histories = StageHistory::where('type', 'lead')->where('type_id', $lead->id)->pluck('stage_id')->toArray();
+            $tags = [];
 
-            $html = view('leads.leadDetail', compact('lead', 'deal', 'stageCnt', 'lead_stages', 'precentage', 'tasks', 'branches', 'users', 'log_activities', 'stage_histories'))->render();
+            if (\Auth::check()) {
+                $user = \Auth::user();
+
+                if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                    $tags = LeadTag::pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                    $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Region Manager'])) {
+                    $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                } else {
+                    $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                }
+            }
+            $html = view('leads.leadDetail', compact('tags','lead', 'deal', 'stageCnt', 'lead_stages', 'precentage', 'tasks', 'branches', 'users', 'log_activities', 'stage_histories'))->render();
 
             return json_encode([
                 'status' => 'success',

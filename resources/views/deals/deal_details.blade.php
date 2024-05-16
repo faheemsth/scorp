@@ -396,7 +396,7 @@
                                                                 </td>
                                                                 <td class="name-td"
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $regions[$deal->region_id] }}
+                                                                    {{ $regions[$deal->region_id] ?? '' }}
                                                                 </td>
                                                             </tr>
                                                             <tr>

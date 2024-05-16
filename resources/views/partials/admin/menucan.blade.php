@@ -159,7 +159,7 @@ styl
                     <ul class="
                               {{ Request::segment(1) == 'stages' ||
                               Request::segment(1) == 'labels' ||
-                              Request::segment(1) == 'sources' ||
+                              Request::segment(1) == 'tages' ||
                               Request::segment(1) == 'university' ||
                               Request::segment(1) == 'lead_stages' ||
                               Request::segment(1) == 'leads' ||
@@ -685,12 +685,12 @@ Gate::check('super admin') ||
 \Auth::user()->type == 'HR'
 )
 <li class="nav-item">
-    <a class="nav-link {{ Request::segment(1) == 'settings' || Request::segment(1) == 'roles' || Request::segment(1) == 'coupons' || Request::segment(1) == 'email_template_lang' || Request::segment(1) == 'plans' || Request::segment(1) == 'company-permission' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'systems' || Request::segment(1) == 'plan_request' || Request::segment(1) == 'sources' || Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapsesetting" aria-expanded="true" aria-controls="collapsesetting">
+    <a class="nav-link {{ Request::segment(1) == 'settings' || Request::segment(1) == 'roles' || Request::segment(1) == 'coupons' || Request::segment(1) == 'email_template_lang' || Request::segment(1) == 'plans' || Request::segment(1) == 'company-permission' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'systems' || Request::segment(1) == 'plan_request' || Request::segment(1) == 'tages' || Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'tages' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? '' : 'collapsed' }}" href="#" data-toggle="collapse" data-target="#collapsesetting" aria-expanded="true" aria-controls="collapsesetting">
         <img src="{{ asset('assets/cs-theme/icons/settings-3110 1.png') }}" width="15px" height="15px" style="margin-top:-5px" alt="" srcset="">
 
         <span>{{ __('Settings') }}</span>
     </a>
-    <div id="collapsesetting" class="collapse {{ Request::segment(1) == 'settings' || Request::segment(1) == 'roles' || Request::segment(1) == 'coupons' || Request::segment(1) == 'email_template_lang' || Request::segment(1) == 'plans' || Request::segment(1) == 'company-permission' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'systems' || Request::segment(1) == 'plan_request' || Request::segment(1) == 'sources' || Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'show' : '' }}" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+    <div id="collapsesetting" class="collapse {{ Request::segment(1) == 'settings' || Request::segment(1) == 'roles' || Request::segment(1) == 'coupons' || Request::segment(1) == 'email_template_lang' || Request::segment(1) == 'plans' || Request::segment(1) == 'company-permission' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'systems' || Request::segment(1) == 'plan_request' || Request::segment(1) == 'tages' || Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'tages' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'show' : '' }}" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
         <div class="  collapse-inner rounded">
             <ul>
                 @if(\Gate::check('manage permission') || \Auth::user()->type == 'HR')
@@ -705,9 +705,9 @@ Gate::check('super admin') ||
 
 
                 {{-- @can('manage crm settings')
-                <li style="" class="emp nav-item {{ Request::segment(1) == 'sources' || Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
+                <li style="" class="emp nav-item {{ Request::segment(1) == 'tages' || Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'tages' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
 
-                    <a class="collapse-item" style="color:white; font-size: 13px;" href="{{ route('sources.index') }}   ">
+                    <a class="collapse-item" style="color:white; font-size: 13px;" href="{{ route('tages.index') }}   ">
                         <img src="{{ asset('assets/cs-theme/icons/administrator-developer-icon 1.png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
                         <img src="{{ asset('assets/cs-theme/icons/crmsysblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
 
@@ -724,9 +724,9 @@ Gate::check('super admin') ||
                         <i class="fa-solid fa-gears" id="icon2" style="color: #2e82d0;font-size: 15px;"></i>
                         {{ __('System Settings') }}</a>
                 </li>
-                <li style="" class="emp nav-item {{ Request::segment(1) == 'sources' || Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'sources' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
+                <li style="" class="emp nav-item {{ Request::segment(1) == 'tages' || Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'tages' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
 
-                    <a class="collapse-item" style="color:white; font-size: 13px;" href="{{ route('sources.index') }}   ">
+                    <a class="collapse-item" style="color:white; font-size: 13px;" href="{{ route('tages.index') }}   ">
                         <img src="{{ asset('assets/cs-theme/icons/administrator-developer-icon 1.png') }}" id="icon1" width="15px" height="15px" style="margin-top:-10px" alt="" srcset="">
                         <img src="{{ asset('assets/cs-theme/icons/crmsysblue.png') }}" id="icon2" width="15px" height="15px" style="margin-top:-8px" alt="" srcset="">
 
