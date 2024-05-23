@@ -189,6 +189,12 @@
                                                         class="pull-right text-dark">{lead_pipeline}</span></p>
                                                 <p class="col-4">{{ __('Lead Stage') }} : <span
                                                         class="pull-right text-dark">{lead_stage}</span></p>
+                                                <p class="col-4">{{ __('Lead Brand') }} : <span
+                                                        class="pull-right text-dark">{lead_brand}</span></p>
+                                                <p class="col-4">{{ __('Lead Region') }} : <span
+                                                        class="pull-right text-dark">{lead_region}</span></p>
+                                                <p class="col-4">{{ __('Lead Branch') }} : <span
+                                                        class="pull-right text-dark">{lead_branch}</span></p>
                                             </div>
                                         @elseif($emailTemplate->slug == 'deal_assigned')
                                             <div class="row">
