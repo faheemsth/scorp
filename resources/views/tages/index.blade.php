@@ -33,21 +33,21 @@
                             </tr>
                             </thead>
                             <tbody>
-                            @foreach ($sources as $source)
+                            @foreach ($tags as $key => $source)
                                 <tr>
-                                    <td>{{ $source->tag }}</td>
+                                    <td>{{ $source }}</td>
                                     <td class="Active">
 
                                         @can('level 2')
                                             <div class="action-btn ms-2">
-                                                <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center" data-url="{{ url('tages/edit/').'/'.$source->id }}" data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip" title="{{__('Edit Tag')}}" data-title="{{__('Edit Tag')}}">
+                                                <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center" data-url="{{ url('tages/edit/').'/'.$key }}" data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip" title="{{__('Edit Tag')}}" data-title="{{__('Edit Tag')}}">
                                                     <i class="ti ti-pencil text-white"></i>
                                                 </a>
                                             </div>
                                         @endcan
                                         @can('level 2')
                                             <div class="action-btn ms-2">
-                                                {!! Form::open(['method' => 'DELETE', 'route' => ['tages.destroy', $source->id]]) !!}
+                                                {!! Form::open(['method' => 'DELETE', 'route' => ['tages.destroy', $key]]) !!}
                                                 <a href="#" class="btn btn-sm btn-danger mx-1 align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}">
                                                     <i class="ti ti-trash text-white"></i>
                                                 </a>

@@ -52,6 +52,7 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\SavedFilter;
+use App\Models\EmailSendLog;
 class LeadController extends Controller
 {
     /**
@@ -4093,7 +4094,7 @@ class LeadController extends Controller
 
 
 
-        $lead_emails = Lead::query()->select('email', 'name')->whereIn('id', explode(',', $request->ids))->get();
+        $lead_emails = Lead::query()->select('email', 'name','id')->whereIn('id', explode(',', $request->ids))->get();
 
         foreach ($lead_emails as $lead) {
             try {
@@ -4105,6 +4106,22 @@ class LeadController extends Controller
                     'sender' => \Auth::user()->name
                 ];
                 $emailstatus =    Utility::sendEmailTemplate_New($request->content, [$lead->email], $arr,$request->from,$request->subject);
+                try {
+
+                    if ($emailstatus) {
+                        $sent_log = $emailstatus['is_success'] == false ? $emailstatus['error'] : $emailstatus['is_success'];
+                        $EmailSendLog = new EmailSendLog;
+                        $EmailSendLog->refrance_id = $lead->id;
+                        $EmailSendLog->subject = $request->subject;
+                        $EmailSendLog->content = $request->content;
+                        $EmailSendLog->email = $lead->email;
+                        $EmailSendLog->status = $emailstatus['is_success'];
+                        $EmailSendLog->sent_log = $sent_log;
+                        $EmailSendLog->save();
+                    }
+                } catch (\Exception $e) {
+                    dd($e->getMessage());
+                }
 
 
 

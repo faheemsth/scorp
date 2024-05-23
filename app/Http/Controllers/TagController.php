@@ -37,27 +37,34 @@ class TagController extends Controller
                 $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
             }
 
-            $Source_query = LeadTag::where('tag', '!=', '');
+
+
+
+
+
+            $targer_query = [];
+
             if (\Auth::check()) {
                 $user = \Auth::user();
 
                 if (in_array($user->type, ['super admin', 'Admin Team'])) {
-                    $tags = $Source_query->pluck('id', 'tag')->toArray();
+                    $targer_query = LeadTag::pluck('id', 'tag')->toArray();
                 } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
-                    $tags = $Source_query->whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                    $targer_query = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
                 } elseif (in_array($user->type, ['Region Manager'])) {
-                    $tags = $Source_query->where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                    $targer_query = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
                 } else {
-                    $tags = $Source_query->where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                    $targer_query = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
                 }
-
             }
+
+            $Source_query = LeadTag::where('tag', '!=', '')->whereIn('id',array_values($targer_query));
             $total_records = $Source_query->count();
 
             $Source_query->orderBy('created_at', 'desc')->skip($start)->take($num_results_on_page);
-            $sources = $Source_query->get();
+            $tags = $Source_query->pluck('tag', 'id');
 
-            return view('tages.index', compact('sources', 'total_records'));
+            return view('tages.index', compact('tags', 'total_records'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
