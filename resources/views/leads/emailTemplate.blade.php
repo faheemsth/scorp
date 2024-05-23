@@ -140,10 +140,11 @@
 
                             <div class="form-group col-6">
                                 {{ Form::label('emailFrom', __('Email From'), ['class' => 'form-label text-dark']) }}
-                                {!! Form::select('emailFrom', $Allemails, null, [
+                                {!! Form::select('emailFrom', array_combine($Allemails, $Allemails), null, [
                                     'class' => 'form-control select2 font-style',
                                     'required' => 'required',
                                 ]) !!}
+
                             </div>
                             <span class="clearfix"></span>
 
@@ -187,10 +188,11 @@
 
                             <div class="form-group col-6">
                                 {{ Form::label('emailFrom', __('Email From'), ['class' => 'form-label text-dark']) }}
-                                {!! Form::select('emailFrom', $Allemails, null, [
+                                {!! Form::select('emailFrom', array_combine($Allemails, $Allemails), null, [
                                     'class' => 'form-control select2 font-style',
                                     'required' => 'required',
                                 ]) !!}
+
                             </div>
                             <span class="clearfix"></span>
 
