@@ -24,6 +24,38 @@
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
     </script>
+
+<script>
+    $(document).ready(function(){
+    $('form').submit(function(e){
+        e.preventDefault(); // Prevent the default form submission
+
+        var formData = new FormData($(this)[0]); // Create FormData object from the form
+        $(".BulkSendButton").val('Processing...');
+        $('.BulkSendButton').attr('disabled', 'disabled');
+        $.ajax({
+            url: $(this).attr('action'), // Get the form action URL
+            type: $(this).attr('method'), // Get the form method (POST in this case)
+            data: formData, // Set the form data
+            contentType: false, // Don't set contentType, let jQuery handle it
+            processData: false, // Don't process the data, let jQuery handle it
+            success: function(response){
+                response = JSON.parse(response);
+                if (response.status == 'success') {
+                    show_toastr('Success', response.message, 'success');
+                    window.location.reload();
+                    return false;
+                } else {
+                    show_toastr('Error', response.message, 'error');
+                    $(".BulkSendButton").val('Send Mail');
+                    $('.BulkSendButton').removeAttr('disabled');
+                }
+            },
+        });
+    });
+});
+
+</script>
 @endpush
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
@@ -102,7 +134,7 @@
                     {{-- <div class="card"> --}}
                     {{ Form::model($currEmailTempLang, ['route' => ['send.bulk.email',  ['ids' => $_GET['ids'], 'templateID' => $EmailTemplate->id]], 'method' => 'POST']) }}
                     <div class="row">
-                      
+
 
                         <div class="form-group col-6">
                             {{ Form::label('emailFrom', __('Email From'), ['class' => 'col-form-label text-dark']) }}
@@ -128,7 +160,7 @@
 
                         <div class="modal-footer">
                             {{ Form::hidden('lang', null) }}
-                            {{ Form::submit(__('Send Mail'), ['class' => 'btn btn-xs btn-dark']) }}
+                            {{ Form::submit(__('Send Mail'), ['class' => 'btn btn-xs btn-dark BulkSendButton']) }}
                         </div>
 
                         {{ Form::close() }}
