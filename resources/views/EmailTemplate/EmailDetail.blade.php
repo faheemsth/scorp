@@ -159,7 +159,18 @@
                                                                 {{ $emailMarketing->name }}
                                                                 </td>
                                                             </tr>
-
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Status') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                @if ($emailMarketing->status == '1')
+                                                                Active
+                                                                @else
+                                                                Inactive
+                                                                @endif
+                                                                </td>
+                                                            </tr>
 
                                                             <tr >
                                                                 <td class="" style="width: 100px; font-size: 14px;">

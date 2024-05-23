@@ -950,6 +950,7 @@ Route::get('email_template_type_show', [EmailTemplateController::class, 'email_t
 Route::get('email_template_type_update', [EmailTemplateController::class, 'email_template_type_update'])->name('email_template_type_update')->middleware(['auth', 'XSS']);
 Route::post('email_template_type_updateSave', [EmailTemplateController::class, 'email_template_type_updateSave'])->name('email_template_type_updateSave')->middleware(['auth', 'XSS']);
 Route::get('email_template_type_delete', [EmailTemplateController::class, 'email_template_type_delete'])->name('email_template_type_delete')->middleware(['auth', 'XSS']);
+Route::get('toggleEmailTemplateStatus', [EmailTemplateController::class, 'toggleEmailTemplateStatus'])->name('toggleEmailTemplateStatus')->middleware(['auth', 'XSS']);
 
 
 // End Email Templates

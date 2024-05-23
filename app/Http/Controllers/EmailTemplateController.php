@@ -200,6 +200,12 @@ class EmailTemplateController extends Controller
 
         $usr = \Auth::user();
         $leads_query = EmailTemplate::query();
+        if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
+        {
+            $leads_query->where('status', '1')->orWhere('status','0');
+        }else{
+            $leads_query->where('status', '1');
+        }
         if (
             $usr->can('view lead') ||
             $usr->can('manage lead') ||
@@ -225,7 +231,7 @@ class EmailTemplateController extends Controller
                 $leads_query->where('user_id', \Auth::user()->id);
             }
 
-            $leads_query->where('id',$id)->groupBy('id')->orderBy('created_at', 'desc');
+            $leads_query->where('id',$id)->orderBy('name', 'asc');
         }
         $EmailTemplates = $leads_query->get();
 
@@ -255,6 +261,12 @@ class EmailTemplateController extends Controller
 
             $usr = \Auth::user();
             $leads_query = EmailTemplate::query();
+            if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
+            {
+                $leads_query->where('status', '1')->orWhere('status','0');
+            }else{
+                $leads_query->where('status', '1');
+            }
             if (
                 $usr->can('view lead') ||
                 $usr->can('manage lead') ||
@@ -280,7 +292,7 @@ class EmailTemplateController extends Controller
                     $leads_query->where('user_id', \Auth::user()->id);
                 }
 
-                $leads_query->groupBy('id')->orderBy('created_at', 'desc');
+                $leads_query->groupBy('id')->orderBy('name', 'asc');
             }
             $EmailTemplates = $leads_query->get();
             return view('email_templates.show', compact('emailTemplate', 'languages', 'currEmailTempLang','EmailTemplates'));
@@ -441,15 +453,47 @@ class EmailTemplateController extends Controller
         }
 
         $pipeline = Pipeline::first();
-        $leads_query = EmailTemplate::query();
-        $total_records = $leads_query->count();
+        $email_query = EmailTemplate::query();
+        if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
+        {
+            $email_query->where('status', '1')->orWhere('status','0');
+        }else{
+            $email_query->where('status', '1');
+        }
+        if (
+            \Auth::user()->can('view lead') ||
+            \Auth::user()->can('manage lead') ||
+            \Auth::user()->type == 'super admin' ||
+            \Auth::user()->type == 'Admin Team'
+        ) {
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+
+            $userType = \Auth::user()->type;
+
+            if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
+                // No additional conditions, leave $email_query as it is
+            } elseif ($userType === 'company') {
+                $email_query->where('brand_id', \Auth::user()->id);
+            } elseif (in_array($userType, ['Project Director', 'Project Manager']) || \Auth::user()->can('level 2')) {
+                $email_query->whereIn('brand_id', $brand_ids);
+            } elseif (($userType === 'Region Manager' || \Auth::user()->can('level 3')) && !empty(\Auth::user()->region_id)) {
+                $email_query->where('region_id', \Auth::user()->region_id);
+            } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || (\Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id))) {
+                $email_query->where('branch_id', \Auth::user()->branch_id);
+            } else {
+                $email_query->where('user_id', \Auth::user()->id);
+            }
+        }
+
+        $total_records = $email_query->count();
 
         $users = allUsers();
         $branches = Branch::get()->pluck('name', 'id')->ToArray();
         $regiones = Region::get()->pluck('name', 'id')->ToArray();
 
         $users_with_roles = \DB::table('roles')->pluck('name', 'id')->toArray();
-        $EmailMarketings = $leads_query->skip($start)->take($num_results_on_page)->get();
+        $EmailMarketings = $email_query->orderBy('name', 'asc')->skip($start)->take($num_results_on_page)->get();
 
         return view('EmailTemplate.list', compact('branches','regiones','pipeline', 'EmailMarketings', 'total_records', 'users', 'users_with_roles'));
     }
@@ -487,6 +531,7 @@ class EmailTemplateController extends Controller
         $emailMarketing->brand_id = $request->brand_id;
         $emailMarketing->region_id = $request->region_id;
         $emailMarketing->branch_id = $request->lead_branch;
+        $emailMarketing->status = !empty($request->status)? $request->status: '0';
         $emailMarketing->created_by = \Auth::id();
 
         if ($emailMarketing->save()) {
@@ -581,6 +626,7 @@ class EmailTemplateController extends Controller
         $emailMarketing->brand_id = $request->brand_id;
         $emailMarketing->region_id = $request->region_id;
         $emailMarketing->branch_id = $request->lead_branch;
+        $emailMarketing->status = !empty($request->status)? $request->status: '0';
         $emailMarketing->created_by = \Auth::id();
 
         if ($emailMarketing->save()) {
@@ -600,8 +646,25 @@ class EmailTemplateController extends Controller
             return redirect()->back()->with('error', __('Something is wrong.'));
         }
     }
+    public function toggleEmailTemplateStatus(Request $request)
+    {
+        $emailMarketing = EmailTemplate::find($request->id);
+        if (empty($emailMarketing)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Email Marketing not found!',
+            ]);
+        }
 
+        $statusMessage = $request->status == 1 ? 'Active' : 'Inactive';
+        $emailMarketing->status = $request->status;
 
-
+        if ($emailMarketing->save()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => "$statusMessage Template Status Successfully",
+            ]);
+        }
+    }
 
 }

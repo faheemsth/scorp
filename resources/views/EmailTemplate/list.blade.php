@@ -37,13 +37,6 @@
         color: #1F2735 !important;
     }
 
-
-    .lead-info-cell {
-        max-width: 110px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
 </style>
 
 <style>
@@ -181,6 +174,9 @@
                                             <input type="checkbox" class="main-check">
                                         </th>
                                         <th>{{ __('Name') }}</th>
+                                            @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
+                                               <th>{{ __('Status') }}</th>
+                                            @endif
                                         <th>{{ __('Brand') }}</th>
                                         <th>{{ __('Region') }}</th>
                                         <th>{{ __('Branch') }}</th>
@@ -201,6 +197,17 @@
                                                         @can('view lead') onclick="openSidebar('/email_template_type_show?id=<?= $EmailM->id ?>')" @endcan
                                                         data-lead-id="{{ $EmailM->id }}">{{ $EmailM->name }}</span>
                                                 </td>
+                                                @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
+                                                <td class="">
+                                                    <div class="form-check form-switch">
+                                                        @if ($EmailM->status == '0')
+                                                        <input class="form-check-input" type="checkbox" onclick="toggleEmailTemplateStatus('{{ $EmailM->id }}', this)" value="{{ $EmailM->status }}">
+                                                        @else
+                                                        <input class="form-check-input" type="checkbox" onclick="toggleEmailTemplateStatus('{{ $EmailM->id }}', this)" value="{{ $EmailM->status }}" checked>
+                                                        @endif
+                                                    </div>
+                                                </td>
+                                                @endif
 
                                                 <td class="lead-info-cell">
                                                     {{ $users[$EmailM->brand_id] ?? '' }}
@@ -241,5 +248,26 @@
 @push('script-page')
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-    <script></script>
+    <script>
+        function toggleEmailTemplateStatus(Id, status) {
+            var statusValue = status.checked ? 1 : 0;
+            var toggleEmailTemplateStatusUrl = "{{ url('toggleEmailTemplateStatus') }}";
+            $.ajax({
+                url: toggleEmailTemplateStatusUrl, // Use the URL variable
+                type: "GET",
+                data: { status: statusValue, id: Id },
+                success: function(response) {
+                    // response = JSON.parse(response);
+                    if (response.status == 'success') {
+                        show_toastr('Success', response.message, 'success');
+                    } else {
+                        show_toastr('Error', response.message, 'error');
+                        $(".BulkSendButton").val('Send Mail');
+                        $('.BulkSendButton').removeAttr('disabled');
+                    }
+                },
+            });
+        }
+    </script>
+
 @endpush

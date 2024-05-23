@@ -4134,17 +4134,33 @@ class LeadController extends Controller
             $id = 0;
         }
 
-
-
-
-        $cr_brand_id = \Auth::user()->brand_id;
-
-        if($cr_brand_id){
-
-            $brandEmail =   User::where('brand_id', $cr_brand_id)->first()->email;
-        }else{
-            $brandEmail =   '';
-        }
+        $branch_query = Branch::select(['branches.*']);
+            if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR'){
+             }else if(\Auth::user()->type == 'company'){
+              $branch_query->where('brands', \Auth::user()->id);
+            }else{
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+                $branch_query->whereIn('brands', $brand_ids);
+            }
+            if(\Auth::user()->type == 'Region Manager'){
+                $branch_query->where('region_id', \Auth::user()->region_id);
+            }
+            ///Filter Data
+            if(isset($_GET['brand_id']) && !empty($_GET['brand_id'])){
+                $branch_query->where('brands', $_GET['brand_id']);
+            }
+            if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
+                $branch_query->where('region_id', $_GET['region_id']);
+            }
+            if(isset($_GET['id']) && !empty($_GET['branch_id'])){
+            }
+        $initial_emails = [
+                            01 => \Auth::user()->email,
+                            04 => 'noreplyscorp@gmail.com',
+                          ];
+        $emails=$branch_query->whereNotNull('email')->pluck('email', 'id')->toArray();
+        $Allemails = array_merge($initial_emails, $emails);
 
         $lang = 'en';
         $usr = \Auth::user();
@@ -4232,7 +4248,7 @@ class LeadController extends Controller
                 $leads_query->groupBy('id')->orderBy('created_at', 'desc');
             }
             $EmailTemplates = $leads_query->get();
-            return view('leads.emailTemplate', compact('emailTemplate', 'languages', 'currEmailTempLang','EmailTemplates','brandEmail'));
+            return view('leads.emailTemplate', compact('Allemails','emailTemplate', 'languages', 'currEmailTempLang','EmailTemplates'));
 
 
 

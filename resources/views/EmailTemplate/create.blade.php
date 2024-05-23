@@ -157,6 +157,14 @@
                             @endif
                         </div>
                     </div>
+                   @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
+                    <div>
+                        <label for="name" class="form-label">{{ __('Status') }}</label>
+                        <div class="form-check form-switch" style="padding-left: 10px; font-size: 19px;">
+                            <input class="form-check-input m-auto" type="checkbox" name="status" value="1">
+                        </div>
+                    </div>
+                   @endif
                 </div>
 
             </div>

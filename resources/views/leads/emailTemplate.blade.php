@@ -2,8 +2,8 @@
 @section('page-title')
     Send Bulk Email
     @php
-        $emailTemplateName=$emailTemplate->name ?? '';
-        $emailTemplateId=$emailTemplate->id ?? '0';
+        $emailTemplateName = $emailTemplate->name ?? '';
+        $emailTemplateId = $emailTemplate->id ?? '0';
     @endphp
 @endsection
 @push('css-page')
@@ -24,38 +24,36 @@
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
     </script>
+    <script>
+        $(document).ready(function() {
+            $('form').submit(function(e) {
+                e.preventDefault(); // Prevent the default form submission
 
-<script>
-    $(document).ready(function(){
-    $('form').submit(function(e){
-        e.preventDefault(); // Prevent the default form submission
-
-        var formData = new FormData($(this)[0]); // Create FormData object from the form
-        $(".BulkSendButton").val('Processing...');
-        $('.BulkSendButton').attr('disabled', 'disabled');
-        $.ajax({
-            url: $(this).attr('action'), // Get the form action URL
-            type: $(this).attr('method'), // Get the form method (POST in this case)
-            data: formData, // Set the form data
-            contentType: false, // Don't set contentType, let jQuery handle it
-            processData: false, // Don't process the data, let jQuery handle it
-            success: function(response){
-                response = JSON.parse(response);
-                if (response.status == 'success') {
-                    show_toastr('Success', response.message, 'success');
-                    window.location.reload();
-                    return false;
-                } else {
-                    show_toastr('Error', response.message, 'error');
-                    $(".BulkSendButton").val('Send Mail');
-                    $('.BulkSendButton').removeAttr('disabled');
-                }
-            },
+                var formData = new FormData($(this)[0]); // Create FormData object from the form
+                $(".BulkSendButton").val('Processing...');
+                $('.BulkSendButton').attr('disabled', 'disabled');
+                $.ajax({
+                    url: $(this).attr('action'), // Get the form action URL
+                    type: $(this).attr('method'), // Get the form method (POST in this case)
+                    data: formData, // Set the form data
+                    contentType: false, // Don't set contentType, let jQuery handle it
+                    processData: false, // Don't process the data, let jQuery handle it
+                    success: function(response) {
+                        response = JSON.parse(response);
+                        if (response.status == 'success') {
+                            show_toastr('Success', response.message, 'success');
+                            window.location.reload();
+                            return false;
+                        } else {
+                            show_toastr('Error', response.message, 'error');
+                            $(".BulkSendButton").val('Send Mail');
+                            $('.BulkSendButton').removeAttr('disabled');
+                        }
+                    },
+                });
+            });
         });
-    });
-});
-
-</script>
+    </script>
 @endpush
 @section('breadcrumb')
     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">{{ __('Dashboard') }}</a></li>
@@ -106,10 +104,14 @@
                                 </style>
                                 @foreach ($EmailTemplates as $EmailTemplate)
                                     @php
-                                        $templateName = strlen($EmailTemplate->name) > 20 ? substr($EmailTemplate->name, 0, 17) . '...' : $EmailTemplate->name;
+                                        $templateName =
+                                            strlen($EmailTemplate->name) > 20
+                                                ? substr($EmailTemplate->name, 0, 17) . '...'
+                                                : $EmailTemplate->name;
                                     @endphp
                                     <a href="{{ route('send.bulk.email.get', ['ids' => $_GET['ids'], 'templateID' => $EmailTemplate->id]) }}"
-                                        class="dropdown-item {{ $EmailTemplate->name == $emailTemplateName ? 'text-dark' : '' }}" title="{{ $EmailTemplate->name }}">
+                                        class="dropdown-item {{ $EmailTemplate->name == $emailTemplateName ? 'text-dark' : '' }}"
+                                        title="{{ $EmailTemplate->name }}">
                                         {{ $templateName }}
                                     </a>
                                 @endforeach
@@ -126,49 +128,99 @@
 
 
 @section('content')
-@if (!empty($emailTemplateName))
-    <div class="row">
-        <div class="col-xl-12">
-            <div class="card">
-                <div class="card-body ">
-                    {{-- <div class="card"> --}}
-                    {{ Form::model($currEmailTempLang, ['route' => ['send.bulk.email',  ['ids' => $_GET['ids'], 'templateID' => $EmailTemplate->id]], 'method' => 'POST']) }}
-                    <div class="row">
+    @if (!empty($emailTemplateName))
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body ">
+                        {{-- <div class="card"> --}}
+                        {{ Form::model($currEmailTempLang, ['route' => ['send.bulk.email', ['ids' => $_GET['ids'], 'templateID' => $EmailTemplate->id]], 'method' => 'POST']) }}
+                        <div class="row">
 
 
-                        <div class="form-group col-6">
-                            {{ Form::label('emailFrom', __('Email From'), ['class' => 'col-form-label text-dark']) }}
-                            {{ Form::email('emailFrom', $brandEmail, ['class' => 'form-control font-style', 'required' => 'required']) }}
+                            <div class="form-group col-6">
+                                {{ Form::label('emailFrom', __('Email From'), ['class' => 'form-label text-dark']) }}
+                                {!! Form::select('emailFrom', $Allemails, null, [
+                                    'class' => 'form-control select2 font-style',
+                                    'required' => 'required',
+                                ]) !!}
+                            </div>
+                            <span class="clearfix"></span>
+
+                            <div class="form-group col-6">
+                                {{ Form::label('subject', __('Subject'), ['class' => 'col-form-label text-dark']) }}
+                                {{ Form::text('subject', null, ['class' => 'form-control font-style', 'required' => 'required']) }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                {{ Form::label('from', __('From'), ['class' => 'col-form-label text-dark']) }}
+                                {{ Form::text('from', $emailTemplate->from, ['class' => 'form-control font-style', 'required' => 'required']) }}
+                            </div>
+
+
+                            <div class="form-group col-12">
+                                {{ Form::label('content', __('Email Message'), ['class' => 'col-form-label text-dark']) }}
+                                <textarea name="content" id="summernote" style="height: 120px;" class="form-control font-style summernote">{{ $currEmailTempLang->content }}</textarea>
+                            </div>
+
+
+                            <div class="modal-footer">
+                                {{ Form::hidden('lang', null) }}
+                                {{ Form::submit(__('Send Mail'), ['class' => 'btn btn-xs btn-dark BulkSendButton']) }}
+                            </div>
+
+                            {{ Form::close() }}
                         </div>
-                        <span class="clearfix"></span>
 
-                        <div class="form-group col-6">
-                            {{ Form::label('subject', __('Subject'), ['class' => 'col-form-label text-dark']) }}
-                            {{ Form::text('subject', null, ['class' => 'form-control font-style', 'required' => 'required']) }}
-                        </div>
-                        <div class="form-group col-md-6">
-                            {{ Form::label('from', __('From'), ['class' => 'col-form-label text-dark']) }}
-                            {{ Form::text('from', $emailTemplate->from, ['class' => 'form-control font-style', 'required' => 'required']) }}
-                        </div>
-
-
-                        <div class="form-group col-12">
-                            {{ Form::label('content', __('Email Message'), ['class' => 'col-form-label text-dark']) }}
-                            <textarea name="content" id="summernote" style="height: 120px;" class="form-control font-style summernote">{{ $currEmailTempLang->content }}</textarea>
-                        </div>
-
-
-                        <div class="modal-footer">
-                            {{ Form::hidden('lang', null) }}
-                            {{ Form::submit(__('Send Mail'), ['class' => 'btn btn-xs btn-dark BulkSendButton']) }}
-                        </div>
-
-                        {{ Form::close() }}
                     </div>
-
                 </div>
             </div>
         </div>
-    </div>
-@endif
+    @else
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body ">
+                        {{-- <div class="card"> --}}
+                        {{ Form::model(null, ['route' => ['send.bulk.email', ['ids' => $_GET['ids'], 'templateID' => 0]], 'method' => 'POST']) }}
+                        <div class="row">
+
+
+                            <div class="form-group col-6">
+                                {{ Form::label('emailFrom', __('Email From'), ['class' => 'form-label text-dark']) }}
+                                {!! Form::select('emailFrom', $Allemails, null, [
+                                    'class' => 'form-control select2 font-style',
+                                    'required' => 'required',
+                                ]) !!}
+                            </div>
+                            <span class="clearfix"></span>
+
+                            <div class="form-group col-6">
+                                {{ Form::label('subject', __('Subject'), ['class' => 'col-form-label text-dark']) }}
+                                {{ Form::text('subject', null, ['class' => 'form-control font-style', 'required' => 'required']) }}
+                            </div>
+                            <div class="form-group col-md-6">
+                                {{ Form::label('from', __('From'), ['class' => 'col-form-label text-dark']) }}
+                                {{ Form::text('from', null, ['class' => 'form-control font-style', 'required' => 'required']) }}
+                            </div>
+
+
+                            <div class="form-group col-12">
+                                {{ Form::label('content', __('Email Message'), ['class' => 'col-form-label text-dark']) }}
+                                <textarea name="content" id="summernote" style="height: 120px;" class="form-control font-style summernote"></textarea>
+                            </div>
+
+
+                            <div class="modal-footer">
+                                {{ Form::hidden('lang', null) }}
+                                {{ Form::submit(__('Send Mail'), ['class' => 'btn btn-xs btn-dark BulkSendButton']) }}
+                            </div>
+
+                            {{ Form::close() }}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 @endsection
