@@ -31,27 +31,40 @@
                     </div>
 
                 </div>
-
-                @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit application') || \Auth::user()->can('delete application'))
                 <div class="d-flex justify-content-end gap-1 me-3">
-                    @can('edit application')
-                    <a href="#" data-size="lg" data-url="{{ route('deals.application.edit', $application->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Application') }}" class="btn text-white px-2 btn-dark" style="width: 36px; height: 36px;">
-                        <i class="ti ti-pencil"></i>
-                    </a>
-                    @endcan
+                    @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'admin team')
+                    @php
+                    $client = \App\Models\User::join('client_deals', 'client_deals.client_id', 'users.id')->where('client_deals.deal_id', $application->deal_id)->first();
+                    $passport_number = isset($client->passport_number) ? $client->passport_number : '';
+                    @endphp
+                    @if (!empty($passport_number))
+                        <a href="#" data-size="lg" data-url="{{ url('deals/move-application').'/'.$passport_number.'/'.$application->id }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Move Application') }}"
+                            title="Move Application" data-original-title="{{ __('Move Application') }}" class="btn text-white px-2 btn-dark" style="width: 36px; height: 36px;">
+                            <i class="ti ti-exchange"></i>
+                        </a>
+                    @endif
 
-                    @can('delete application')
-                    {!! Form::open([
-                    'method' => 'DELETE',
-                    'route' => ['deals.application.destroy', $application->id],
-                    'id' => 'delete-form-' . $application->id,
-                    ]) !!}
-                    <a href="#" class="btn px-2 bg-danger  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}" style="width: 36px; height: 36px;"><i class="ti ti-trash text-white"></i></a>
+                   @endif
 
-                    {!! Form::close() !!}
-                    @endcan
+                    @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit application') || \Auth::user()->can('delete application'))
+                        @can('edit application')
+                        <a href="#" data-size="lg" data-url="{{ route('deals.application.edit', $application->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Application') }}" class="btn text-white px-2 btn-dark" style="width: 36px; height: 36px;">
+                            <i class="ti ti-pencil"></i>
+                        </a>
+                        @endcan
+
+                        @can('delete application')
+                        {!! Form::open([
+                        'method' => 'DELETE',
+                        'route' => ['deals.application.destroy', $application->id],
+                        'id' => 'delete-form-' . $application->id,
+                        ]) !!}
+                        <a href="#" class="btn px-2 bg-danger  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}" style="width: 36px; height: 36px;"><i class="ti ti-trash text-white"></i></a>
+
+                        {!! Form::close() !!}
+                        @endcan
+                    @endif
                 </div>
-                @endif
             </div>
 
 

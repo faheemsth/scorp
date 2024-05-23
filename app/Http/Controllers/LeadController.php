@@ -2765,6 +2765,7 @@ class LeadController extends Controller
         $deal->brand_id = $lead->brand_id;
         $deal->organization_id = gettype($lead->organization_id) == 'string' ? 0 : $lead->organization_id;
         $deal->organization_link = $lead->organization_link;
+        $deal->tag_ids = $lead->tag_ids;
         $deal->save();
         // end create deal oishfsoidifsoifsd siofhsio sdifbsodf sdfohsdf
 
@@ -3976,6 +3977,35 @@ class LeadController extends Controller
 
     public function addTags(Request $request)
     {
+        if(!empty($request->deal_id)){
+            if (!empty($request->old_tag_id) && !empty($request->new_tag_id) && !empty($request->deal_id)) {
+                if($request->old_tag_id == $request->new_tag_id)
+                {
+                  return json_encode([
+                        'status' => 'success',
+                        'msg' => 'Tag Update successfully'
+                  ]);
+
+                }else{
+
+                  $Leads = Deal::find($request->deal_id)->tag_ids;
+                  $leadArray = explode(',', $Leads);
+                  $index = array_search($request->old_tag_id, $leadArray);
+                  if ($index !== false) {
+                      unset($leadArray[$index]);
+                  }
+                  $newLeads = implode(',', $leadArray);
+                  $Lead = Deal::where('id', $request->deal_id)->first();
+                  $Lead->tag_ids = $newLeads ? $newLeads . ',' . $request->new_tag_id : $request->new_tag_id;
+                  $Lead->save();
+                    return json_encode([
+                        'status' => 'success',
+                        'msg' => 'Tag Update successfully'
+                    ]);
+                }
+            }
+
+        }
         $ids = explode(',', $request->selectedIds);
         $Leads = Lead::whereIn('id', $ids)->get();
         if(!empty($ids) && !empty($Leads) && $Leads->count() > 0){
@@ -4030,6 +4060,21 @@ class LeadController extends Controller
             }
             $newLeads = implode(',', $leadArray);
             $Lead = Lead::where('id', $request->lead_id)->first();
+            $Lead->tag_ids = $newLeads;
+            $Lead->save();
+              return json_encode([
+                  'status' => 'success',
+                  'msg' => 'Tag Delete successfully'
+              ]);
+        }else{
+            $Leads = Deal::find($request->deal_id)->tag_ids;
+            $leadArray = explode(',', $Leads);
+            $index = array_search($request->old_tag_id, $leadArray);
+            if ($index !== false) {
+                unset($leadArray[$index]);
+            }
+            $newLeads = implode(',', $leadArray);
+            $Lead = Deal::where('id', $request->deal_id)->first();
             $Lead->tag_ids = $newLeads;
             $Lead->save();
               return json_encode([

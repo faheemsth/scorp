@@ -1785,6 +1785,9 @@ Route::post('deals/{id}/store-application', [DealController::class, 'storeApplic
 Route::get('deals/{id}/edit-application', [DealController::class, 'editApplication'])->name('deals.application.edit');
 Route::post('deals/{id}/update-application', [DealController::class, 'updateApplication'])->name('deals.application.update');
 Route::delete('deals/{id}/delete-application', [DealController::class, 'destroyApplication'])->name('deals.application.destroy');
+//move application to other admission
+Route::get('deals/move-application/{passport_number}/{id}', [DealController::class, 'moveApplication'])->name('deals.application.move');
+Route::post('deals/move-application/{id}', [DealController::class, 'moveApplicationsave'])->name('deals.application.move.save');
 
 //////////Lead Detail
 Route::get('/get-lead-detail', [LeadController::class, 'getLeadDetails'])->name('get-lead-detail');

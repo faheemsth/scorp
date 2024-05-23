@@ -32,7 +32,12 @@
     .wizard {
         font-size: 8px;
     }
-
+    .lead-info-cell {
+        max-width: 110px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
     .wizard a {
         padding: 8px 8px 8px 25px !important;
         background: #efefef;
@@ -661,6 +666,7 @@
 
 
                                     <th class="">{{ __('Assigned to') }}</th>
+                                    <th class="">{{ __('Tag') }}</th>
                                     <th width="300px" class="d-none">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
@@ -706,7 +712,12 @@
                                                 {{ $deal->assigName }}
                                             </span>
                                         </td>
+                                        <td class="lead-info-cell">
 
+                                            @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $deal->tag_ids))->get() as $tag)
+                                                <span class="badge text-white tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $deal->lead_id }}" data-deal-id="{{ $deal->id }}" style="background-color:#cd9835;cursor:pointer;">{{ $tag->tag }}</span>
+                                            @endforeach
+                                        </td>
 
                                         @if (\Auth::user()->type != 'Client')
                                             <td class="Action d-none">
@@ -833,13 +844,52 @@
         </div>
     </div>
 </div>
+<div class="modal" id="UpdateTageModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tags Update</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+                <form action="{{ route('lead_tags') }}" method="POST" id="UpdateTagForm">
+                <div class="modal-body" id="TagModalBody">
 
+                </div>
+                <br>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-dark px-2 Update" value="Update">
+                    <a class="btn btn-danger text-white" onclick="deleteTage()">Delete</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
     {{-- @endif --}}
     @endsection
 
 
     @push('script-page')
     <script>
+
+function deleteTage() {
+        $.ajax({
+            type: "GET",
+            url: '{{ url('delete_tage') }}',
+            data: {deal_id : $('#dealer_id').val(),old_tag_id : $('#old_tag_id').val()},
+            success: function(response) {
+                data = JSON.parse(response);
+
+                if (data.status == 'success') {
+                    $("#UpdateTageModal").hide();
+                    show_toastr('success', data.msg);
+                    window.location.href = '/deals/list';
+                }
+            },
+        });
+    }
+
         $(document).ready(function() {
             let curr_url = window.location.href;
 
@@ -1663,5 +1713,59 @@
                     }
                 });
         });
+        $('.tag-badge').click(function() {
+            $('#TagModalBody').html('');
+            var tagId = $(this).data('tag-id');
+            var leadId = $(this).data('lead-id');
+            var dealId = $(this).data('deal-id');
+
+            var selectOptions = <?php echo json_encode($tags); ?>;
+            // Check if selectOptions is an object
+            if (typeof selectOptions === 'object' && selectOptions !== null) {
+                // Generate options HTML by iterating over object keys
+                var optionsHTML = '';
+                for (var key in selectOptions) {
+                    if (selectOptions.hasOwnProperty(key) && key.trim() !== '') {
+                        optionsHTML += `<option value="${selectOptions[key]}" ${tagId === selectOptions[key] ? 'selected' : ''}>${key}</option>`;
+                    }
+                }
+                // Append the options to the select element
+                $('#TagModalBody').append(`
+                    <input type="hidden" value="${tagId}" name="old_tag_id" id="old_tag_id">
+                    <div class="form-group">
+                        <label for="">Tag</label>
+                        <select class="form form-control select2 selectTage" name="new_tag_id" id="tagSelectupdate" style="width: 95%;">
+                            <option value="">Select Tag</option>
+                            ${optionsHTML}
+                        </select>
+                    </div>
+                    <input type="hidden" value="${leadId}" name="lead_id" id="lead_id">
+                    <input type="hidden" value="${dealId}" name="deal_id" id="dealer_id">
+                `);
+                select2();
+                $('#UpdateTageModal').modal('show');
+            }
+        });
+        // update tage post request
+    $(document).ready(function () {
+        $('#UpdateTagForm').submit(function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+            $.ajax({
+                url: '{{ url("leads/tag") }}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    data = JSON.parse(response);
+                    show_toastr('success', data.msg);
+                    $("#UpdateTageModal").hide();
+                    window.location.href = '/deals/list';
+                },
+            });
+        });
+    });
     </script>
     @endpush

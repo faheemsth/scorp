@@ -40,7 +40,8 @@ use App\Models\ClientPermission;
 use App\Models\CompanyPermission;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-
+use App\Models\ApplicationNote;
+use App\Models\LeadTag;
 class DealController extends Controller
 {
     /**
@@ -606,18 +607,21 @@ class DealController extends Controller
                 'deals.id',
                 'deals.name',
                 'deals.stage_id',
+                'deals.tag_ids',
                 'deals.assigned_to',
                 'deals.intake_month',
                 'deals.intake_year',
                 'sources.name as sources',
                 'assignedUser.name as assigName',
-                'clientUser.passport_number as passport'
+                'clientUser.passport_number as passport',
+                'leads.id as lead_id'
             )
             ->leftJoin('user_deals', 'user_deals.deal_id', '=', 'deals.id')
             ->leftJoin('sources', 'sources.id', '=', 'deals.sources')
             ->leftJoin('users as assignedUser', 'assignedUser.id', '=', 'deals.assigned_to')
             ->leftJoin('client_deals', 'client_deals.deal_id', '=', 'deals.id')
-            ->leftJoin('users as clientUser', 'clientUser.id', '=', 'client_deals.client_id');
+            ->leftJoin('users as clientUser', 'clientUser.id', '=', 'client_deals.client_id')
+            ->leftJoin('leads', 'leads.is_converted', '=', 'deals.id');
             if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || $usr->can('level 1')){
             }else if(\Auth::user()->type == 'company'){
                 $deals_query->where('deals.brand_id', \Auth::user()->id);
@@ -679,12 +683,29 @@ class DealController extends Controller
                 $nextYear = $currentYear + $i;
                 $years[$nextYear] = $nextYear;
             }
+
+            $tags = [];
+
+            if (\Auth::check()) {
+                $user = \Auth::user();
+
+                if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                    $tags = LeadTag::pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                    $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Region Manager'])) {
+                    $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                } else {
+                    $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                }
+            }
+
             $universities = University::get()->pluck('name', 'id')->toArray();
             $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
             $pipelines = Pipeline::get()->pluck('name', 'id')->toArray();
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-                $html = view('deals.deals_list_ajax', compact('deals','pipelines','stages','universities', 'organizations', 'total_records', 'sources'))->render();
+                $html = view('deals.deals_list_ajax', compact('tags','deals','pipelines','stages','universities', 'organizations', 'total_records', 'sources'))->render();
 
                 return json_encode([
                     'status' => 'success',
@@ -693,7 +714,7 @@ class DealController extends Controller
             }
             $filters = BrandsRegionsBranches();
 
-            return view('deals.list', compact('Alldeals','deals','universities','pipelines','months','years', 'organizations', 'stages', 'total_records', 'sources', 'filters'));
+            return view('deals.list', compact('tags','Alldeals','deals','universities','pipelines','months','years', 'organizations', 'stages', 'total_records', 'sources', 'filters'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -2831,6 +2852,143 @@ class DealController extends Controller
         }
     }
 
+    public function moveApplication($passport_number,$id)
+    {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'admin team') {
+
+        $admissions = \DB::table('deals')
+        ->leftJoin('client_deals', 'client_deals.deal_id', '=', 'deals.id')
+        ->leftJoin('users as clientUser', 'clientUser.id', '=', 'client_deals.client_id')
+        ->leftJoin('users as brandUser', 'brandUser.id', '=', 'deals.brand_id')
+        ->leftJoin('regions', 'regions.id', '=', 'deals.region_id')
+        ->leftJoin('branches', 'branches.id', '=', 'deals.branch_id')
+        ->leftJoin('users as assignedUser', 'assignedUser.id', '=', 'deals.assigned_to')
+        ->where('clientUser.passport_number', $passport_number)
+        ->select('deals.id', 'deals.name', 'clientUser.passport_number as passport','brandUser.name as brandName','regions.name as RegionName','branches.name as branchName','assignedUser.name as assignedName')
+        ->get();
+
+            $application_id = optional(DealApplication::where('id', $id)->first())->deal_id;
+
+            return view('deals.move-application', compact('admissions','application_id','id'));
+        } else {
+            return redirect()->back()->with('error', __('Permission Denied.'));
+        }
+    }
+
+
+    public function moveApplicationsave(Request $request, $id)
+    {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'admin team') {
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                'deal_id' => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+
+            $messages = $validator->getMessageBag();
+            return json_encode([
+                'status' => 'error',
+                'message' => $messages->first()
+            ]);
+
+        }
+        // ready for new deal_id
+        $old_application_id = DealApplication::where('id', $id)->first();
+        $old_deal_aoolications = DealApplication::where('deal_id', $request->old_deal_id)->first();
+        if($request->old_deal_id == $request->deal_id){
+            return json_encode([
+                'status' => 'error',
+                'message' => 'that have also this lead'
+            ]);
+        }
+
+
+        if(empty($old_application_id)){
+            return json_encode([
+                'status' => 'error',
+                'message' => 'sorry you did not have DealApplication'
+            ]);
+        }
+        $DealApplication= new DealApplication;
+        $DealApplication->application_key =$old_application_id->application_key;
+        $DealApplication->university_id  =$old_application_id->university_id;
+        $DealApplication->deal_id  =$request->deal_id;// deal_id $request->deal_id
+        $DealApplication->course  =$old_application_id->course;
+        $DealApplication->stage_id  =$old_application_id->stage_id;
+        $DealApplication->name  =$old_application_id->name;
+        $DealApplication->intake  =$old_application_id->intake;
+        $DealApplication->external_app_id  =$old_application_id->external_app_id;
+        $DealApplication->status  =$old_application_id->status;
+        $DealApplication->created_by  = $old_application_id->created_by;// created_by New_applications
+        $DealApplication->brand_id =$old_application_id->brand_id;
+        $DealApplication->save();
+
+// by new applicatioin assign id
+        $notes = ApplicationNote::where('application_id', $id)->get();
+        if(!empty($notes)){
+            foreach($notes as $note){
+                $ApplicationNote = new ApplicationNote;
+                $ApplicationNote->title = $note->title;
+                $ApplicationNote->description = $note->description;
+                $ApplicationNote->application_id = $DealApplication->id;
+                $ApplicationNote->created_by = $old_application_id->created_by;
+                $ApplicationNote->save();
+            }
+        }
+
+
+
+// by new task assign id
+        $tasks = DealTask::where(['related_to' => $id, 'related_type' => 'application'])->orderBy('status')->get();
+        if(!empty($tasks)){
+            foreach($tasks as $task){
+                $DealTask= new DealTask;
+                $DealTask->deal_id = $DealApplication->id;
+                $DealTask->name = $task->name;
+                $DealTask->date = $task->date;
+                $DealTask->time = $task->time;
+                $DealTask->priority = $task->priority;
+                $DealTask->status = 1;
+                $DealTask->organization_id = $task->organization_id;
+                $DealTask->assigned_to = $task->assigned_to;
+                $DealTask->assigned_type = $task->assigned_type;
+                $DealTask->related_type = $task->related_type;
+                $DealTask->related_to = $DealApplication->id;
+                $DealTask->branch_id = $task->branch_id;
+                $DealTask->due_date = $task->due_date;
+                $DealTask->start_date = $task->start_date;
+                $DealTask->remainder_date = $task->remainder_date;
+                $DealTask->description = $task->description;
+                $DealTask->visibility = $task->visibility;
+                $DealTask->deal_stage_id = $task->deal_stage_id;
+                $DealTask->created_by = $old_application_id->created_by;
+                $DealTask->brand_id = $task->brand_id;
+                $DealTask->region_id = $task->region_id;
+                $DealTask->save();
+                }
+        }
+
+        if(!empty($old_deal_aoolications)){
+            $old_deal_aoolications->delete();
+        }
+        return json_encode([
+            'status' => 'success',
+            'app_id' => $DealApplication->id,
+            'message' => __('Move Application successfully!')
+        ]);
+
+
+
+       }else {
+        return json_encode([
+            'status' => 'error',
+            'message' => 'Permission Denied.'
+        ]);
+       }
+    }
     public function updateApplication(Request $request, $id)
     {
 
