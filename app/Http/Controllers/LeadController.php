@@ -143,6 +143,9 @@ class LeadController extends Controller
         if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
             $filters['branch_id'] = $_GET['branch_id'];
         }
+        if (isset($_GET['tag']) && !empty($_GET['tag'])) {
+            $filters['tag'] = $_GET['tag'];
+        }
         //}
         if (isset($_GET['lead_assigned_user']) && $_GET['lead_assigned_user'] == 'null') {
             unset($filters['brand_id']);
@@ -261,7 +264,7 @@ class LeadController extends Controller
                         $leads_query->whereDate('leads.created_at', '<=', $value);
                         break;
                     case 'tag':
-                        $leads_query->where('tag.tag', $value);
+                        $leads_query->whereRaw('FIND_IN_SET(?, leads.tag_ids)', [$value]);
                         break;
                 }
             }

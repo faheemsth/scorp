@@ -617,6 +617,17 @@
                                         style="width: 95%; border-color:#aaa">
                                 </div>
 
+                                <div class="col-md-3"> <label for="">Tag</label>
+                                    <select class="form form-control select2" id="tags" name="tag" style="width: 95%;">
+                                        <option value="">Select Tag</option>
+                                        @foreach ($tags as $key => $tag)
+                                          @if ($key != '')
+                                             <option value="{{ $tag }}" <?= (isset($_GET['tag']) && $tag == $_GET['tag']) ? 'selected' : '' ?>>{{ $key }}</option>
+                                          @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+
                                 <div class="col-md-4 mt-3">
                                     <br>
                                     <input type="submit" class="btn me-2 bg-dark" style=" color:white;">

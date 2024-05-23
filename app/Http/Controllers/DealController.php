@@ -234,6 +234,9 @@ class DealController extends Controller
         if (isset($_GET['created_at_to']) && !empty($_GET['created_at_to'])) {
             $filters['created_at_to'] = $_GET['created_at_to'];
         }
+        if (isset($_GET['tag']) && !empty($_GET['tag'])) {
+            $filters['tag'] = $_GET['tag'];
+        }
 
         if (isset($_GET['price']) && !empty($_GET['price'])) {
             $price = $_GET['price'];
@@ -657,7 +660,10 @@ class DealController extends Controller
                     $deals_query->whereDate('deals.created_at', '>=', $value);
                 }else if($column == 'created_at_to'){
                     $deals_query->whereDate('deals.created_at', '<=', $value);
+                }else if($column == 'tag'){
+                    $deals_query->whereRaw('FIND_IN_SET(?, deals.tag_ids)', [$value]);
                 }
+
             }
 
             //if list global search
