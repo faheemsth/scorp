@@ -47,12 +47,13 @@ use App\Models\LeadActivityLog;
 use App\Models\CompanyPermission;
 use App\Models\EmailTemplate;
 use App\Models\EmailTemplateLang;
+use App\Models\EmailSendLog;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\SavedFilter;
-use App\Models\EmailSendLog;
+
 class LeadController extends Controller
 {
     /**
@@ -834,8 +835,6 @@ class LeadController extends Controller
             $Region = $filter['regions'];
             $branches = $filter['branches'];
             $employees = $filter['employees'];
-
-
             $tags = [];
 
             if (\Auth::check()) {
@@ -851,7 +850,6 @@ class LeadController extends Controller
                     $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
                 }
             }
-
             $data = [
                 'lead' => $lead,
                 'users' => $users,
@@ -4105,8 +4103,8 @@ class LeadController extends Controller
                     'student_name' => $lead->name,
                     'sender' => \Auth::user()->name
                 ];
-                $emailstatus =    Utility::sendEmailTemplate_New($request->content, [$lead->email], $arr,$request->from,$request->subject);
-                try {
+                $emailstatus =    Utility::sendEmailTemplate_New($request->content, [$lead->email], $arr,$request->from,$request->subject,$request->emailFrom);
+                                try {
 
                     if ($emailstatus) {
                         $sent_log = $emailstatus['is_success'] == false ? $emailstatus['error'] : $emailstatus['is_success'];
@@ -4174,7 +4172,6 @@ class LeadController extends Controller
             }
         $initial_emails = [
                             01 => \Auth::user()->email,
-                            04 => 'noreplyscorp@gmail.com',
                           ];
         $emails=$branch_query->whereNotNull('email')->pluck('email', 'id')->toArray();
         $Allemails = array_merge($initial_emails, $emails);
@@ -4265,7 +4262,7 @@ class LeadController extends Controller
                 $leads_query->groupBy('id')->orderBy('created_at', 'desc');
             }
             $EmailTemplates = $leads_query->get();
-            return view('leads.emailTemplate', compact('Allemails','emailTemplate', 'languages', 'currEmailTempLang','EmailTemplates'));
+             return view('leads.emailTemplate', compact('Allemails','emailTemplate', 'languages', 'currEmailTempLang','EmailTemplates'));
 
 
 

@@ -1312,7 +1312,7 @@ class Utility extends Model
         //}
     }
 
-    public static function sendEmailTemplate_New($content, $mailTo, $obj,$from,$subject)
+    public static function sendEmailTemplate_New($content, $mailTo, $obj,$from,$subject,$emailFrom)
     {
 
         $usr = Auth::user();
@@ -1329,7 +1329,7 @@ class Utility extends Model
                     $settings = self::settings();
                     $new_content = new \stdClass();
 
-                    $new_content->from = $from;
+                    $new_content->from = $emailFrom;
                     $new_content->subject = $subject;
 
                     if (!empty($content)) {
@@ -1346,12 +1346,12 @@ class Utility extends Model
                                 'mail.encryption' => env('MAIL_ENCRYPTION'),
                                 'mail.username' => env('MAIL_USERNAME'),
                                 'mail.password' => env('MAIL_PASSWORD'),
-                                'mail.from.address' => env('MAIL_FROM_ADDRESS'),
+                                'mail.from.address' => $emailFrom,
                                 'mail.from.name' => env('MAIL_FROM_NAME'),
                             ]);
 
 
-                            $mailTo = 'azmat.sth@gmail.com';
+                           // $mailTo = 'azmat.sth@gmail.com';
                            $stat =  Mail::to($mailTo)->send(new CommonEmailTemplate($new_content, $settings));
                             //die();
                         } catch (\Exception $e) {
