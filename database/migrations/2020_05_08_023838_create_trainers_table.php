@@ -16,7 +16,9 @@ class CreateTrainersTable extends Migration
         Schema::create(
             'trainers', function (Blueprint $table){
             $table->bigIncrements('id');
-            $table->string('branch');
+            $table->string('brand_id');
+            $table->integer('region_id');
+            $table->integer('branch_id');
             $table->string('firstname');
             $table->string('lastname');
             $table->string('contact');

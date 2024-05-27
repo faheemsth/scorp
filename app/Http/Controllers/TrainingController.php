@@ -15,15 +15,12 @@ class TrainingController extends Controller
 
     public function index()
     {
-        if(\Auth::user()->can('manage training'))
-        {
+        if (\Auth::user()->can('manage training')) {
             $trainings = Training::where('created_by', '=', \Auth::user()->creatorId())->get();
             $status    = Training::$Status;
 
             return view('training.index', compact('trainings', 'status'));
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
@@ -31,18 +28,19 @@ class TrainingController extends Controller
 
     public function create()
     {
-        if(\Auth::user()->can('create training'))
-        {
-            $branches      = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        if (\Auth::user()->can('create training')) {
             $trainingTypes = TrainingType::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $trainers      = Trainer::where('created_by', \Auth::user()->creatorId())->get()->pluck('firstname', 'id');
             $employees     = Employee::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $options       = Training::$options;
-
-            return view('training.create', compact('branches', 'trainingTypes', 'trainers', 'employees', 'options'));
-        }
-        else
-        {
+            // for all Brands Regions Branches
+            $filter = BrandsRegionsBranches();
+            $companies = $filter['brands'];
+            $regions = $filter['regions'];
+            $branches = $filter['branches'];
+            $employees = $filter['employees'];
+            return view('training.create', compact('employees', 'regions', 'companies', 'branches', 'trainingTypes', 'trainers', 'employees', 'options'));
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
@@ -50,28 +48,31 @@ class TrainingController extends Controller
 
     public function store(Request $request)
     {
-        if(\Auth::user()->can('create training'))
-        {
+        if (\Auth::user()->can('create training')) {
 
             $validator = \Validator::make(
-                $request->all(), [
-                                   'branch' => 'required',
-                                   'training_type' => 'required',
-                                   'training_cost' => 'required',
-                                   'employee' => 'required',
-                                   'start_date' => 'required',
-                                   'end_date' => 'required',
-                               ]
+                $request->all(),
+                [
+                    'brand_id' => 'required',
+                    'region_id' => 'required',
+                    'lead_branch' => 'required',
+                    'training_type' => 'required',
+                    'training_cost' => 'required',
+                    'employee' => 'required',
+                    'start_date' => 'required',
+                    'end_date' => 'required',
+                ]
             );
-            if($validator->fails())
-            {
+            if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
-
-                return redirect()->back()->with('error', $messages->first());
+                return json_encode([
+                    'status' => 'error',
+                    'message' => $messages->first()
+                ]);
             }
 
             $training                 = new Training();
-            $training->branch         = $request->branch;
+            $training->branch         = $request->brand_id;
             $training->trainer_option = $request->trainer_option;
             $training->training_type  = $request->training_type;
             $training->trainer        = $request->trainer;
@@ -84,9 +85,7 @@ class TrainingController extends Controller
             $training->save();
 
             return redirect()->route('training.index')->with('success', __('Training successfully created.'));
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
@@ -105,8 +104,7 @@ class TrainingController extends Controller
 
     public function edit(Training $training)
     {
-        if(\Auth::user()->can('create training'))
-        {
+        if (\Auth::user()->can('create training')) {
             $branches      = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $trainingTypes = TrainingType::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $trainers      = Trainer::where('created_by', \Auth::user()->creatorId())->get()->pluck('firstname', 'id');
@@ -114,9 +112,7 @@ class TrainingController extends Controller
             $options       = Training::$options;
 
             return view('training.edit', compact('branches', 'trainingTypes', 'trainers', 'employees', 'options', 'training'));
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
@@ -124,21 +120,20 @@ class TrainingController extends Controller
 
     public function update(Request $request, Training $training)
     {
-        if(\Auth::user()->can('edit training'))
-        {
+        if (\Auth::user()->can('edit training')) {
 
             $validator = \Validator::make(
-                $request->all(), [
-                                   'branch' => 'required',
-                                   'training_type' => 'required',
-                                   'training_cost' => 'required',
-                                   'employee' => 'required',
-                                   'start_date' => 'required',
-                                   'end_date' => 'required',
-                               ]
+                $request->all(),
+                [
+                    'branch' => 'required',
+                    'training_type' => 'required',
+                    'training_cost' => 'required',
+                    'employee' => 'required',
+                    'start_date' => 'required',
+                    'end_date' => 'required',
+                ]
             );
-            if($validator->fails())
-            {
+            if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
                 return redirect()->back()->with('error', $messages->first());
@@ -156,9 +151,7 @@ class TrainingController extends Controller
             $training->save();
 
             return redirect()->route('training.index')->with('success', __('Training successfully updated.'));
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
@@ -166,21 +159,15 @@ class TrainingController extends Controller
 
     public function destroy(Training $training)
     {
-        if(\Auth::user()->can('delete training'))
-        {
-            if($training->created_by == \Auth::user()->creatorId())
-            {
+        if (\Auth::user()->can('delete training')) {
+            if ($training->created_by == \Auth::user()->creatorId()) {
                 $training->delete();
 
                 return redirect()->route('training.index')->with('success', __('Training successfully deleted.'));
-            }
-            else
-            {
+            } else {
                 return redirect()->back()->with('error', __('Permission denied.'));
             }
-        }
-        else
-        {
+        } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
