@@ -724,6 +724,9 @@ Gate::check('super admin') ||
                         <i class="fa-solid fa-gears" id="icon2" style="color: #2e82d0;font-size: 15px;"></i>
                         {{ __('System Settings') }}</a>
                 </li>
+                @endcan
+
+                @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type ==  'Project Manager')
                 <li style="" class="emp nav-item {{ Request::segment(1) == 'tages' || Request::segment(1) == 'stages' || Request::segment(1) == 'labels' || Request::segment(1) == 'tages' || Request::segment(1) == 'lead_stages' || Request::segment(1) == 'pipelines' || Request::segment(1) == 'product-category' || Request::segment(1) == 'product-unit' || Request::segment(1) == 'payment-method' || Request::segment(1) == 'custom-field' || Request::segment(1) == 'chart-of-account-type' ? 'active dash-trigger' : '' }}">
 
                     <a class="collapse-item" style="color:white; font-size: 13px;" href="{{ route('tages.index') }}   ">
@@ -733,7 +736,8 @@ Gate::check('super admin') ||
                         {{ __('CRM System Setup') }}
                     </a>
                 </li>
-                @endcan
+                @endif
+
                 @can('manage company plan')
                 <li class="d-none {{ Request::route()->getName() == 'plans.index' || Request::route()->getName() == 'stripe' ? ' active' : '' }}">
                     <a href="{{ route('plans.index') }}" class="collapse-item" style="color: white; font-size: 13px;">{{ __('Setup Subscription Plan') }}</a>
