@@ -1312,7 +1312,7 @@ class Utility extends Model
         //}
     }
 
-    public static function sendEmailTemplate_New($content, $mailTo, $obj,$from,$subject,$emailFrom)
+    public static function sendEmailTemplate_New($content, $mailTo, $obj,$from,$subject,$emailFrom,$BrandName)
     {
 
         $usr = Auth::user();
@@ -1347,7 +1347,7 @@ class Utility extends Model
                                 'mail.username' => env('MAIL_USERNAME'),
                                 'mail.password' => env('MAIL_PASSWORD'),
                                 'mail.from.address' => $emailFrom,
-                                'mail.from.name' => env('MAIL_FROM_NAME'),
+                                'mail.from.name' => $BrandName,
                             ]);
 
 

@@ -4092,7 +4092,7 @@ class LeadController extends Controller
 
 
 
-        $lead_emails = Lead::query()->select('email', 'name','id')->whereIn('id', explode(',', $request->ids))->get();
+        $lead_emails = Lead::query()->select('email', 'name','id','brand_id')->whereIn('id', explode(',', $request->ids))->get();
 
         foreach ($lead_emails as $lead) {
             try {
@@ -4103,7 +4103,9 @@ class LeadController extends Controller
                     'student_name' => $lead->name,
                     'sender' => \Auth::user()->name
                 ];
-                $emailstatus =    Utility::sendEmailTemplate_New($request->content, [$lead->email], $arr,$request->from,$request->subject,$request->emailFrom);
+
+                $BrandName = optional(User::where('type', 'company')->where('id',$lead->brand_id)->first())->name;
+                $emailstatus =    Utility::sendEmailTemplate_New($request->content, [$lead->email], $arr,$request->from,$request->subject,$request->emailFrom,$BrandName);
                                 try {
 
                     if ($emailstatus) {
