@@ -760,8 +760,8 @@ Route::resource('tages', TagController::class);
 Route::get('/tages/edit/{id}', [TagController::class, 'edit'])->name('tages.edit');
 Route::post('/tages/update', [TagController::class, 'update'])->name('tages.updated');
 
-
-
+// tages delete
+Route::get('tages/bulk/delete', [TagController::class, 'TagesBulkDelete'])->name('tages.bulk.delete.d');
 
 // Leads Module
 

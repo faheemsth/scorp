@@ -36,12 +36,6 @@ class TagController extends Controller
             } else {
                 $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
             }
-
-
-
-
-
-
             $targer_query = [];
 
             if (\Auth::check()) {
@@ -57,19 +51,110 @@ class TagController extends Controller
                     $targer_query = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
                 }
             }
+            // Define the base query
+            $query = LeadTag::select(
+                'lead_tags.id',
+                'lead_tags.tag',
+                'users.name as brand',
+                'branches.name as branch',
+                'regions.name as region'
+                )
+                ->leftJoin('users', 'users.id', '=', 'lead_tags.brand_id')
+                ->leftJoin('branches', 'branches.id', '=', 'lead_tags.branch_id')
+                ->leftJoin('regions', 'regions.id', '=', 'branches.region_id') // Ensure correct join condition
+                ->where('lead_tags.tag', '!=', '')
+                ->whereIn('lead_tags.id', array_values($targer_query));
 
-            $Source_query = LeadTag::where('tag', '!=', '')->whereIn('id',array_values($targer_query));
-            $total_records = $Source_query->count();
 
-            $Source_query->orderBy('created_at', 'desc')->skip($start)->take($num_results_on_page);
-            $tags = $Source_query->pluck('tag', 'id');
+                $filters = $this->tagFilters();
+                foreach ($filters as $column => $value) {
+                    if ($column === 'name') {
+                        $query->whereIn('lead_tags.tag', $value);
+                    } elseif ($column == 'created_at') {
+                        $query->whereDate('lead_tags.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                    }elseif ($column == 'brand') {
+                        $query->where('lead_tags.brand_id', $value);
+                    }elseif ($column == 'region_id') {
+                        $query->where('lead_tags.region_id', $value);
+                    }elseif ($column == 'branch_id') {
+                        $query->where('lead_tags.branch_id', $value);
+                    }
 
-            return view('tages.index', compact('tags', 'total_records'));
+                }
+
+            // Get the total record count
+            $total_records = $query->count();
+
+            // Apply sorting and pagination
+            $tags = $query->orderBy('lead_tags.tag', 'desc')
+                ->skip($start)
+                ->take($num_results_on_page)
+                ->get()
+                ->toArray();
+                $filters = BrandsRegionsBranches();
+            return view('tages.index', compact('filters','tags', 'total_records'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
 
+    private function tagFilters()
+    {
+        $filters = [];
+        if (isset($_GET['name']) && !empty($_GET['name'])) {
+            $filters['name'] = $_GET['name'];
+        }
+
+        if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+            $filters['brand'] = $_GET['brand'];
+        }
+
+        if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
+            $filters['region_id'] = $_GET['region_id'];
+        }
+
+        if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
+            $filters['branch_id'] = $_GET['branch_id'];
+        }
+
+        if (isset($_GET['lead_assigned_user']) && !empty($_GET['lead_assigned_user'])) {
+            $filters['deal_assigned_user'] = $_GET['lead_assigned_user'];
+        }
+
+
+        if (isset($_GET['stages']) && !empty($_GET['stages'])) {
+            $filters['stage_id'] = $_GET['stages'];
+        }
+
+        if (isset($_GET['users']) && !empty($_GET['users'])) {
+            $filters['users'] = $_GET['users'];
+        }
+
+        if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
+            $filters['created_at_from'] = $_GET['created_at_from'];
+        }
+
+        if (isset($_GET['created_at_to']) && !empty($_GET['created_at_to'])) {
+            $filters['created_at_to'] = $_GET['created_at_to'];
+        }
+        if (isset($_GET['tag']) && !empty($_GET['tag'])) {
+            $filters['tag'] = $_GET['tag'];
+        }
+
+        if (isset($_GET['price']) && !empty($_GET['price'])) {
+            $price = $_GET['price'];
+
+            if (preg_match('/^(<=|>=|<|>)/', $price, $matches)) {
+                $comparePrice = $matches[1]; // Get the comparison operator
+                $filters['price'] = (float) substr($price, strlen($comparePrice)); // Get the price value
+            } else {
+                $comparePrice = '=';
+                $filters['price'] = '=' . $price; // Default to '=' if no comparison operator is provided
+            }
+        }
+
+        return $filters;
+    }
     private function executeLeadQuery()
     {
         $usr = \Auth::user();
@@ -320,7 +405,7 @@ class TagController extends Controller
         }
     }
 
-    public function destroy(LeadTag $source,$id)
+    public function destroy(LeadTag $source, $id)
     {
         $lead_tag = LeadTag::findOrFail($id);
         if (empty($lead_tag)) {
@@ -334,4 +419,21 @@ class TagController extends Controller
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
+
+
+
+    public function TagesBulkDelete(Request $request)
+    {
+        $ids = explode(',', $request->input('id'));
+        $users = LeadTag::whereIn('id', $ids)->get();
+        if (count($users) > 0) {
+            foreach($users as $user){
+                $user->delete();
+            }
+            return redirect()->route('tages.index')->with('success', __('Tag successfully deleted!'));
+        } else {
+            return redirect()->route('tages.index')->with('success', __('Some Ids Not Found!'));
+        }
+    }
+
 }
