@@ -161,6 +161,36 @@
 
 {{ Form::close() }}
 <script>
+    $(document).ready(function() {
+        $('form').submit(function(e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var formData = new FormData($(this)[0]); // Create FormData object from the form
+            $(".BulkSendButton").val('Processing...');
+            $('.BulkSendButton').attr('disabled', 'disabled');
+            $.ajax({
+                url: $(this).attr('action'), // Get the form action URL
+                type: $(this).attr('method'), // Get the form method (POST in this case)
+                data: formData, // Set the form data
+                contentType: false, // Don't set contentType, let jQuery handle it
+                processData: false, // Don't process the data, let jQuery handle it
+                success: function(response) {
+                    if (response.status == 'success') {
+                        show_toastr('Success', response.message, 'success');
+                        $('#commonModal').modal('hide');
+                        openSidebar('/training/view?id='+response.id)
+                        return false;
+                    } else {
+                        show_toastr('Error', response.message, 'error');
+                        $(".BulkSendButton").val('Create');
+                        $('.BulkSendButton').removeAttr('disabled');
+                    }
+                },
+            });
+        });
+    });
+</script>
+<script>
     $(".brand_id").on("change", function() {
 
         var id = $(this).val();

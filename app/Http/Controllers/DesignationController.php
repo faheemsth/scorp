@@ -30,13 +30,10 @@ class DesignationController extends Controller
         {
             $branches_data = Branch::where('created_by', '=', \Auth::user()->creatorId())->get();
 
-           
-            $departments = Department::where('created_by', '=', \Auth::user()->creatorId())->get();
+
+            $departments = Department::where('created_by', '=', \Auth::user()->creatorId())->pluck('name', 'id');
             $branches  = $branches_data->pluck('name', 'id');
-            
-            //$departments = $departments->pluck('name', 'id');
-            $departments[0] = 'Select Department';
-           
+
             return view('designation.create', compact('departments', 'branches'));
         }
         else
@@ -47,15 +44,15 @@ class DesignationController extends Controller
 
     public function get_departments(Request $request){
         $departments = Department::where(['branch_id' => $request->branch_id])->get()->pluck('name', 'id');
-    
-        
+
+
         $list = '';
         foreach($departments as $key => $department){
             print_r($department);
             $list .= '<option value='.$key.'>'.$department.'</option>';
         }
 
-        
+
         return $list;
     }
 
@@ -63,14 +60,14 @@ class DesignationController extends Controller
 
     public function get_designations(Request $request){
         $designations = Designation::where(['department_id' => $request->designation_id])->get()->pluck('name', 'id');
-    
+
         $list = '';
         foreach($designations as $key => $designation){
             print_r($designation);
             $list .= '<option value='.$key.'>'.$designation.'</option>';
         }
 
-        
+
         return $list;
     }
 

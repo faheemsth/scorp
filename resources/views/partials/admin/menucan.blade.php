@@ -334,7 +334,7 @@ styl
                 Gate::check('manage branch') ||
                 Gate::check('manage employee'))
             <li class="nav-item">
-                <a class="nav-link {{ Request::segment(1) == 'training' || Request::segment(1) == 'trainer' || Request::segment(1) == 'branch' || Request::segment(1) == 'users' || (Request::segment(1) == 'user' && Request::segment(2) == 'employees') || Request::segment(1) == 'region' || Request::segment(1) == 'trainingtype' ? '' : 'collapsed' }}"
+                <a class="nav-link {{ Request::segment(1) == 'deductionoption' || Request::segment(1) == 'trainingtype' || Request::segment(1) == 'department' || Request::segment(1) == 'designation' || Request::segment(1) == 'leavetype' || Request::segment(1) == 'document' || Request::segment(1) == 'paysliptype' || Request::segment(1) == 'allowanceoption' || Request::segment(1) == 'loanoption' || Request::segment(1) == 'goaltype' || Request::segment(1) == 'awardtype' || Request::segment(1) == 'terminationtype' || Request::segment(1) == 'job-category' || Request::segment(1) == 'job-stage' || Request::segment(1) == 'deductionoption' || Request::segment(1) == 'competencies' || Request::segment(1) == 'training' || Request::segment(1) == 'trainer' || Request::segment(1) == 'branch' || Request::segment(1) == 'users' || (Request::segment(1) == 'user' && Request::segment(2) == 'employees') || Request::segment(1) == 'region' || Request::segment(1) == 'trainingtype' ? '' : 'collapsed' }}"
                     href="#" data-toggle="collapse" data-target="#collapsehrm" aria-expanded="true"
                     aria-controls="collapsehrm">
                     <img src="{{ asset('assets/cs-theme/icons/hrm.png') }}" width="23px" style="margin-top:-5px"
@@ -342,7 +342,7 @@ styl
                     <span>{{ __('HRM System') }}</span>
                 </a>
                 <div id="collapsehrm"
-                    class="collapse {{ Request::segment(1) == 'training' || Request::segment(1) == 'trainer' || Request::segment(1) == 'branch' || Request::segment(1) == 'users' || (Request::segment(1) == 'user' && Request::segment(2) == 'employees') || Request::segment(1) == 'region' || Request::segment(1) == 'trainingtype' ? 'show' : '' }}"
+                    class="collapse {{ Request::segment(1) == 'deductionoption' || Request::segment(1) == 'trainingtype' || Request::segment(1) == 'department' || Request::segment(1) == 'designation' || Request::segment(1) == 'leavetype' || Request::segment(1) == 'document' || Request::segment(1) == 'paysliptype' || Request::segment(1) == 'allowanceoption' || Request::segment(1) == 'loanoption' || Request::segment(1) == 'goaltype' || Request::segment(1) == 'awardtype' || Request::segment(1) == 'terminationtype' || Request::segment(1) == 'job-category' || Request::segment(1) == 'job-stage' || Request::segment(1) == 'deductionoption' || Request::segment(1) == 'competencies' || Request::segment(1) == 'training' || Request::segment(1) == 'trainer' || Request::segment(1) == 'branch' || Request::segment(1) == 'users' || (Request::segment(1) == 'user' && Request::segment(2) == 'employees') || Request::segment(1) == 'region' || Request::segment(1) == 'trainingtype' ? 'show' : '' }}"
                     aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="  collapse-inner rounded">
                         <ul>
@@ -448,7 +448,7 @@ styl
 
 
 
-                            <li class="emp nav-item {{ Request::segment(1) == 'trainingtype' ? ' active' : '' }}">
+                            <li class="emp nav-item {{ Request::segment(1) == 'deductionoption' || Request::segment(1) == 'trainingtype' || Request::segment(1) == 'department' || Request::segment(1) == 'designation' || Request::segment(1) == 'leavetype' || Request::segment(1) == 'document' || Request::segment(1) == 'paysliptype' || Request::segment(1) == 'allowanceoption' || Request::segment(1) == 'loanoption' || Request::segment(1) == 'goaltype' || Request::segment(1) == 'awardtype' || Request::segment(1) == 'terminationtype' || Request::segment(1) == 'job-category' || Request::segment(1) == 'job-stage' || Request::segment(1) == 'deductionoption' || Request::segment(1) == 'competencies' || Request::segment(1) == 'trainingtype' ? ' active' : '' }}">
                                 <a class="collapse-item " style="color:white; font-size: 13px;"
                                     href="{{ route('trainingtype.index') }}">
                                     <img src="{{ asset('assets/cs-theme/icons/Vector (1).png') }}" id="icon1"

@@ -1063,6 +1063,7 @@ Route::resource('trainer', TrainerController::class)->middleware(['auth', 'XSS']
 Route::get('show-trainer', [TrainerController::class, 'ShowTrainer'])->name('ShowTrainer')->middleware(['auth', 'XSS']);
 
 Route::post('training/status', [TrainingController::class, 'updateStatus'])->name('training.status')->middleware(['auth', 'XSS']);
+Route::get('/training/view', [TrainingController::class, 'TrainingShow'])->name('training.view')->middleware(['auth', 'XSS']);
 
 Route::resource('training', TrainingController::class)->middleware(['auth', 'XSS']);
 

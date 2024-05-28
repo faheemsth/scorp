@@ -458,7 +458,7 @@
                 if (data.status == 'success') {
                     $("#UpdateTageModal").hide();
                     show_toastr('success', data.msg);
-                    window.location.href = '/leads/list';
+                    openSidebar('/get-lead-detail?lead_id='+$('#lead_id').val());
                 }
             },
         });
@@ -1227,8 +1227,8 @@ function openInNewTab(url, params) {
                 success: function (response) {
                     data = JSON.parse(response);
                     show_toastr('success', data.msg);
-                    $("#UpdateTageModal").hide();
-                    window.location.href = '/leads/list';
+                    $("#UpdateTageModal").modal('hide');
+                    openSidebar('/get-lead-detail?lead_id='+$('#lead_id').val());
                 },
             });
         });
@@ -1259,7 +1259,8 @@ function openInNewTab(url, params) {
                     $(".sub-check").prop('checked', false);
                     $button.prop('disabled', false);
                     show_toastr('success', data.msg);
-                    window.location.href = '/leads/list';
+                    $("#UpdateTageModal").modal('hide');
+                    openSidebar('/get-lead-detail?lead_id='+$('#lead_id').val());
                 }
             },
         });

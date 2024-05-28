@@ -66,7 +66,7 @@
 
                                                 @can('edit designation')
                                                     <div class="action-btn ms-2">
-                                                        <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para"
+                                                        <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center "
                                                             data-url="{{ route('designation.edit', $designation->id) }}"
                                                             data-ajax-popup="true" data-title="{{ __('Edit Designation') }}"
                                                             data-toggle="tooltip" data-original-title="{{ __('Edit') }}">

@@ -57,7 +57,7 @@
                                             @can('edit loan option')
                                                 <div class="action-btn  ms-2">
                                                     <a href="#"
-                                                        class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para"
+                                                        class="btn btn-sm btn-dark mx-1 align-items-center"
                                                         data-url="{{ URL::to('loanoption/' . $loanoption->id . '/edit') }}"
                                                         data-ajax-popup="true" data-title="{{ __('Edit Loan Option') }}"
                                                         data-bs-toggle="tooltip" title="{{ __('Edit') }}"

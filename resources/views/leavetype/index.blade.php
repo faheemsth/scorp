@@ -60,7 +60,7 @@
                                             @can('edit leave type')
                                                 <div class="action-btn  ms-2">
                                                     <a href="#"
-                                                        class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para"
+                                                        class="btn btn-sm btn-dark mx-1 align-items-center "
                                                         data-url="{{ URL::to('leavetype/' . $leavetype->id . '/edit') }}"
                                                         data-ajax-popup="true" data-title="{{ __('Edit Leave Type') }}"
                                                         data-bs-toggle="tooltip" title="{{ __('Edit') }}"

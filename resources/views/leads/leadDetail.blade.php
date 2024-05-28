@@ -107,7 +107,7 @@
         <div class="col-sm-12">
 
             {{-- topbar --}}
-            <div class="lead-topbar d-flex flex-wrape justify-content-between align-items-center py-1 px-2">
+            <div class="lead-topbar d-flex flex-wrap justify-content-between align-items-center py-1 px-2">
                 <div class="d-flex align-items-center">
                     <div class="lead-avator">
                         <img src="{{ asset('assets/images/placeholder-lead.png') }}" alt="" class="">
@@ -119,59 +119,56 @@
                             <h5 class="fw-bold">{{ $lead->name }}</h5>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="d-flex justify-content-end gap-1 me-3">
                     {{-- @can('view lead') --}}
                     <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}"
-                        target="_blank" data-size="lg" data-bs-toggle="tooltip"
-                        title="{{ __('Already Converted To Admission') }}" class="btn px-2 py-2 btn-dark text-white"
-                        style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
+                       target="_blank" data-size="lg" data-bs-toggle="tooltip"
+                       title="{{ __('Already Converted To Admission') }}" class="btn px-2 py-2 btn-dark text-white"
+                       style="background-color: #313949; color: white; width: 36px; height: 36px; margin-top: 10px;">
                         <i class="fa-brands fa-whatsapp"></i>
                     </a>
                     {{-- @endcan --}}
 
-
                     @can('edit lead')
-
                         @if (!empty($deal))
                             <a href="javascript:void(0)"
-                                @can('View Deal') @if ($deal->is_active)   onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }}) @else '' @endif @else '' @endcan"
-                                data-size="lg" data-bs-toggle="tooltip"
-                                data-bs-title=" {{ __('Already Converted to Admission') }}"
-                                class="btn px-2 py-2 btn-dark text-white"
-                                style="background-color: #313949 color:white; width:36px; height: 36px; margin-top:10px;">
+                               @can('View Deal')
+                                   @if ($deal->is_active)
+                                       onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})"
+                                   @endif
+                               @endcan
+                               data-size="lg" data-bs-toggle="tooltip"
+                               data-bs-title="{{ __('Already Converted to Admission') }}"
+                               class="btn px-2 py-2 btn-dark text-white"
+                               style="background-color: #313949; color: white; width: 36px; height: 36px; margin-top: 10px;">
                                 <i class="ti ti-exchange"></i>
                             </a>
                         @else
                             @can('convert lead')
                                 <a href="#" data-size="lg"
-                                    data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
-                                    data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] to Admission') }}"
-                                    class="btn px-2 py-2 btn-dark text-white"style="width:36px; height: 36px; margin-top:10px;">
+                                   data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
+                                   data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] to Admission') }}"
+                                   class="btn px-2 py-2 btn-dark text-white" style="width: 36px; height: 36px; margin-top: 10px;">
                                     <i class="ti ti-exchange"></i>
                                 </a>
                             @endcan
                         @endif
-
                     @endcan
 
                     <a href="#" data-url="{{ URL::to('leads/' . $lead->id . '/labels') }}" data-ajax-popup="true"
-                        data-size="lg" data-bs-toggle="tooltip" title="{{ __('Label') }}"
-                        class="btn px-2 py-2 text-white"
-                        style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
+                       data-size="lg" data-bs-toggle="tooltip" title="{{ __('Label') }}"
+                       class="btn px-2 py-2 text-white"
+                       style="background-color: #313949; color: white; width: 36px; height: 36px; margin-top: 10px;">
                         <i class="ti ti-bookmark"></i>
                     </a>
 
-
-
                     @can('edit lead')
                         <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}"
-                            data-ajax-popup="true" data-bs-toggle="tooltip" bs-original-title="{{ __('Update Lead') }}"
-                            title="Update Lead" data-original-title="{{ __('Update Lead') }}"
-                            class="btn px-2 py-2 text-white"
-                            style="background-color: #313949;color:white; width:36px; height: 36px; margin-top:10px;">
+                           data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update Lead') }}"
+                           class="btn px-2 py-2 text-white"
+                           style="background-color: #313949; color: white; width: 36px; height: 36px; margin-top: 10px;">
                             <i class="ti ti-pencil"></i>
                         </a>
                     @endcan
@@ -184,17 +181,37 @@
                         ]) !!}
 
                         <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}"
-                            class="btn px-2 py-2 text-white bs-pass-para bg-danger"style="width:36px; height: 36px; margin-top:10px;">
+                           class="btn px-2 py-2 text-white bs-pass-para bg-danger" style="width: 36px; height: 36px; margin-top: 10px;">
                             <i class="ti ti-trash"></i>
                         </a>
 
-
                         {!! Form::close() !!}
                     @endcan
+                </div>
 
-
+                <!-- New row added here -->
+                <div class="row w-100 mt-3">
+                    @php $counter = 0; @endphp
+                    <div class="col-12 px-5 py-2 d-flex">
+                        @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $lead->tag_ids))->get() as $tag)
+                            @if ($counter % 5 == 0 && $counter != 0)
+                                </div><div class="col-12 px-5 py-2 d-flex">
+                            @endif
+                            <div class="d-flex ml-1">
+                                <span class="" style="font-size:13px;background-color: #419de4;color:white;padding: 5px 21px;border: none;border-radius: 0px 30px 30px 0px;font-size: 11.7px;">{{ limit_words($tag->tag, 1.5) }}</span>
+                                <span class="d-flex mt-1">
+                                    <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-dark mx-1 tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $lead->id }}"><i class="ti ti-pencil"></i></a>
+                                    <input type="hidden" value="{{ $lead->id }}" name="lead_id" id="lead_id">
+                                    <input type="hidden" value="{{ $tag->id }}" name="old_tag_id" id="old_tag_id">
+                                    <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-danger" onclick="deleteTage()"><i class="ti ti-trash"></i></a>
+                                </span>
+                            </div>
+                            @php $counter++; @endphp
+                        @endforeach
+                    </div>
                 </div>
             </div>
+
 
 
             <div class="lead-info d-flex justify-content-between p-3 text-center">

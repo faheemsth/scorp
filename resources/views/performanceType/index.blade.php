@@ -16,15 +16,6 @@
 
 
 
-
-@section('action-btn')
-    <div class="float-end">
-        <a href="#" data-url="{{ route('performanceType.create') }}" data-ajax-popup="true" data-title="{{__('Create New Performance Type')}}" data-bs-toggle="tooltip" title="{{__('Create')}}"  class="btn btn-sm btn-primary">
-            <i class="ti ti-plus"></i>
-        </a>
-    </div>
-@endsection
-
 @section('content')
 
     <div class="row">
@@ -33,13 +24,24 @@
         </div>
         <div class="col-9">
             <div class="card">
+                <div class="card-header" style="display: flex; justify-content: space-between;">
+                    <h3>Performance Type</h3>
+
+                    <div class="float-end">
+                        <a href="#" data-url="{{ route('performanceType.create') }}" data-ajax-popup="true" data-title="{{__('Create New Performance Type')}}" data-bs-toggle="tooltip" title="{{__('Create')}}"  class="btn btn-sm btn-dark">
+                            <i class="ti ti-plus"></i>
+                        </a>
+                    </div>
+
+
+                </div>
                 <div class="card-body table-border-style">
                     <div class="table-responsive">
                         <table class="table datatable">
                             <thead>
                             <tr>
                                 <th scope="col">{{__('Name')}}</th>
-                                <th scope="col" class="">{{__('Action')}}</th>
+                                <th width="200px">{{__('Action')}}</th>
 
                             </tr>
                             </thead>
@@ -50,15 +52,15 @@
 
                                     <td class="">
 
-                                        <div class="action-btn bg-primary ms-2">
-                                            <a href="#" data-url="{{ route('performanceType.edit',$type->id) }}" data-ajax-popup="true" title="{{__('Edit')}}" data-title="{{__('Edit Performance Type')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" data-original-title="{{__('Edit')}}">
+                                        <div class="action-btn  ms-2">
+                                            <a href="#" data-url="{{ route('performanceType.edit',$type->id) }}" data-ajax-popup="true" title="{{__('Edit')}}" data-title="{{__('Edit Performance Type')}}" class="btn btn-sm btn-dark mx-1 align-items-center" data-bs-toggle="tooltip" data-original-title="{{__('Edit')}}">
                                                 <i class="ti ti-pencil text-white"></i>
                                             </a>
                                         </div>
 
-                                        <div class="action-btn bg-danger ms-2">
+                                        <div class="action-btn  ms-2">
                                             {!! Form::open(['method' => 'DELETE', 'route' => ['performanceType.destroy', $type->id],'id'=>'delete-form-'.$type->id]) !!}
-                                            <a href="#!" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="document.getElementById('delete-form-{{$type->id}}').submit();">
+                                            <a href="#!" class="btn btn-sm btn-danger mx-1 align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="Are You Sure?|This action can not be undone. Do you want to continue?" data-confirm-yes="document.getElementById('delete-form-{{$type->id}}').submit();">
                                                 <i class="ti ti-trash text-white"></i>
                                             </a>
                                             {!! Form::close() !!}

@@ -359,6 +359,87 @@ if (!function_exists('stagesRange')) {
     }
 }
 
+if (!function_exists('GetTrainers')) {
+    function GetTrainers()
+    {
+        $Trainer_query = App\Models\Trainer::query();
+
+        // Apply user type-based filtering
+        $userType = \Auth::user()->type;
+        if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
+            // No additional filtering needed
+        } elseif ($userType === 'company') {
+            $Trainer_query->where('trainings.brand_id', \Auth::user()->id);
+        } elseif (in_array($userType, ['Project Director', 'Project Manager']) || \Auth::user()->can('level 2')) {
+            $Trainer_query->whereIn('trainings.brand_id', array_keys(FiltersBrands()));
+        } elseif (($userType === 'Region Manager' || \Auth::user()->can('level 3')) && !empty(\Auth::user()->region_id)) {
+            $Trainer_query->where('trainings.region_id', \Auth::user()->region_id);
+        } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)) {
+            $Trainer_query->where('trainings.branch_id', \Auth::user()->branch_id);
+        } else {
+            $Trainer_query->where('trainings.created_by', \Auth::user()->id);
+        }
+
+        return $Trainer_query->get()->pluck('firstname', 'id');
+    }
+}
+
+if (!function_exists('GetDepartments')) {
+    function GetDepartments()
+    {
+        $Trainer_query = App\Models\Department::query();
+
+        // Apply user type-based filtering
+        $userType = \Auth::user()->type;
+        if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
+            // No additional filtering needed
+        } elseif ($userType === 'company') {
+            $Trainer_query->where('trainings.brand_id', \Auth::user()->id);
+        } elseif (in_array($userType, ['Project Director', 'Project Manager']) || \Auth::user()->can('level 2')) {
+            $Trainer_query->whereIn('trainings.brand_id', array_keys(FiltersBrands()));
+        } elseif (($userType === 'Region Manager' || \Auth::user()->can('level 3')) && !empty(\Auth::user()->region_id)) {
+            $Trainer_query->where('trainings.region_id', \Auth::user()->region_id);
+        } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)) {
+            $Trainer_query->where('trainings.branch_id', \Auth::user()->branch_id);
+        } else {
+            $Trainer_query->where('trainings.created_by', \Auth::user()->id);
+        }
+
+        return $Trainer_query->get()->pluck('name', 'id');
+    }
+}
+
+
+
+if (!function_exists('GetAllbrachesByPermission')) {
+    function GetAllbrachesByPermission()
+    {
+        $branch_query = Branch::select(['branches.*']);
+            if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR'){
+            }else if(\Auth::user()->type == 'company'){
+            $branch_query->where('brands', \Auth::user()->id);
+            }else{
+                $companies = FiltersBrands();
+                $brand_ids = array_keys($companies);
+                $branch_query->whereIn('brands', $brand_ids);
+            }
+            if(\Auth::user()->type == 'Region Manager'){
+                $branch_query->where('region_id', \Auth::user()->region_id);
+            }
+
+
+            return $branch_query->get();
+
+
+    }
+}
+
+if (! function_exists('limit_words')) {
+    function limit_words($string, $word_limit) {
+        $words = explode(' ', $string);
+        return implode(' ', array_slice($words, 0, $word_limit));
+    }
+}
 
 
 

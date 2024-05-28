@@ -49,7 +49,7 @@ class TrainerController extends Controller
             } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)) {
                 $Trainer_query->where('trainers.branch_id', \Auth::user()->branch_id);
             } else {
-                $Trainer_query->where('user_id', \Auth::user()->id);
+                $Trainer_query->where('trainers.created_by', \Auth::user()->id);
             }
 
             $filters = $this->dealFilters();

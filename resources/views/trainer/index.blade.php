@@ -321,6 +321,7 @@ function deleteTage() {
 }
 
     $(document).ready(function() {
+        select2();
         let curr_url = window.location.href;
 
         if(curr_url.includes('?')){
@@ -653,6 +654,7 @@ function deleteTage() {
                 type: type
             },
             success: function(data) {
+                select2();
                 data = JSON.parse(data);
 
                 if (data.status === 'success') {
