@@ -43,6 +43,6 @@ class Appraisal extends Model
 
     public function employees()
     {
-        return $this->hasOne('App\Models\Employee', 'id', 'employee');
+        return $this->hasOne('App\Models\User', 'id', 'employee');
     }
 }

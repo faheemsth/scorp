@@ -1745,6 +1745,7 @@ Route::post('deal-settings', [SystemController::class, 'DealSettingStore'])->nam
 Route::post('/appraisals', [AppraisalController::class, 'empByStar'])->name('empByStar')->middleware(['auth', 'XSS']);
 Route::post('/appraisals1', [AppraisalController::class, 'empByStar1'])->name('empByStar1')->middleware(['auth', 'XSS']);
 Route::post('/getemployee', [AppraisalController::class, 'getemployee'])->name('getemployee');
+Route::get('/appraisalShow', [AppraisalController::class, 'appraisalShow'])->name('appraisalShow');
 
 
 //offer Letter
