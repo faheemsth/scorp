@@ -53,6 +53,8 @@ use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\SavedFilter;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class LeadController extends Controller
 {
@@ -289,6 +291,7 @@ class LeadController extends Controller
                     $leads_query->whereNotIn('lead_stages.id', [6, 7])->where('leads.is_converted', 0);
                 }
             }
+
 
             // Count total records and retrieve paginated leads
             $total_records = $leads_query->count();
@@ -3320,6 +3323,15 @@ class LeadController extends Controller
         Lead::where('id', $lead_id)->update(['stage_id' => $stage_id]);
 
 
+        //old Stage History
+        $data_for_stage_history_old = [
+            'stage_id' => $from_stage,
+            'type_id' => $lead_id,
+            'type' => 'lead'
+        ];
+        addLeadHistory($data_for_stage_history_old);
+
+
         //Add Stage History
         $data_for_stage_history = [
             'stage_id' => $stage_id,
@@ -4092,6 +4104,8 @@ class LeadController extends Controller
 
 
 
+
+
         $lead_emails = Lead::query()->select('email', 'name','id','brand_id')->whereIn('id', explode(',', $request->ids))->get();
 
         foreach ($lead_emails as $lead) {
@@ -4104,8 +4118,11 @@ class LeadController extends Controller
                     'sender' => \Auth::user()->name
                 ];
 
-                $BrandName = optional(User::where('type', 'company')->where('id',$lead->brand_id)->first())->name;
-                $emailstatus =    Utility::sendEmailTemplate_New($request->content, [$lead->email], $arr,$request->from,$request->subject,$request->emailFrom,$BrandName);
+                $brand = User::where('type', 'company')->where('id', $lead->brand_id)->first();
+                $BrandName = $brand ? $brand->name : 'Default';
+
+                $emailstatus = Utility::sendEmailTemplate_New($request->content1, [$lead->email], $arr, $request->from, $request->subject, $request->emailFrom, $BrandName);
+
                                 try {
 
                     if ($emailstatus) {
@@ -4113,7 +4130,7 @@ class LeadController extends Controller
                         $EmailSendLog = new EmailSendLog;
                         $EmailSendLog->refrance_id = $lead->id;
                         $EmailSendLog->subject = $request->subject;
-                        $EmailSendLog->content = $request->content;
+                        $EmailSendLog->content = $request->content1;
                         $EmailSendLog->email = $lead->email;
                         $EmailSendLog->status = $emailstatus['is_success'];
                         $EmailSendLog->sent_log = $sent_log;
@@ -4268,5 +4285,47 @@ class LeadController extends Controller
 
 
 
+    }
+
+
+    public function uploadImage(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $filenameWithExt = $request->file('upload')->getClientOriginalName();
+            $filename        = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension       = $request->file('upload')->getClientOriginalExtension();
+            $fileNameToStore = $filename . '_' . time() . '.' . $extension;
+
+             $settings = Utility::getStorageSetting();
+            if ($settings['storage_setting'] == 'local') {
+                $dir        = '/uploads/avatar/';
+                // $dir        = 'storage/';
+            } else {
+                $dir        = 'uploads/avatar/';
+            }
+
+            $image_path = $dir . $filename;
+
+            if (File::exists($image_path)) {
+                File::delete($image_path);
+            }
+
+
+            $url = '';
+            $path = Utility::upload_file($request, 'upload', $fileNameToStore, $dir, []);
+
+            if ($path['flag'] == 1) {
+                $url = env("APP_URL").$path['url'];
+            }
+
+
+        // Return response in CKEditor format
+        return response()->json([
+            'fileName' => $filename,
+            'uploaded' => 1,
+            'url' => $url
+        ]);
+            return response()->json($url);
+        }
     }
 }
