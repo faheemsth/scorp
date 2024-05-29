@@ -203,9 +203,9 @@ class LeadController extends Controller
 
             // Build the leads query
             $leads_query = Lead::select('leads.id','leads.name','leads.brand_id','leads.email','leads.branch_id','leads.phone','leads.user_id','leads.stage_id','leads.tag_ids')
-                ->join('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')
-                ->join('users', 'users.id', '=', 'leads.brand_id')
-                ->join('branches', 'branches.id', '=', 'leads.branch_id')
+                ->leftJoin('lead_stages', 'leads.stage_id', '=', 'lead_stages.id')
+                ->leftJoin('users', 'users.id', '=', 'leads.brand_id')
+                ->leftJoin('branches', 'branches.id', '=', 'leads.branch_id')
                 ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'leads.user_id')
                 ->leftJoin('lead_tags as tag', 'tag.lead_id', '=', 'leads.id');
 
@@ -283,11 +283,11 @@ class LeadController extends Controller
                         ->orWhere('assigned_to.name', 'like', "%$g_search%")
                         ->orWhere('leads.phone', 'like', "%$g_search%");
                 });
-            }
-
-            // Apply default filters when $_GET is empty
-            if (!(!empty($_GET['stages']) && (in_array("6", $_GET['stages']) || in_array("7", $_GET['stages'])))) {
-                $leads_query->whereNotIn('lead_stages.name', ['Unqualified', 'Junk Lead'])->where('leads.is_converted', 0);
+            }else{
+                // Apply default filters when $_GET is empty
+                if (empty($_GET['stages']) || (!in_array("6", $_GET['stages']) && !in_array("7", $_GET['stages']))) {
+                    $leads_query->whereNotIn('lead_stages.id', [6, 7])->where('leads.is_converted', 0);
+                }
             }
 
             // Count total records and retrieve paginated leads
