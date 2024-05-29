@@ -220,7 +220,7 @@
 
                 <div class="">
                     <small>{{ __('Admission Owner') }}</small>
-                    <span>{{ $users[$deal->created_by] }}</span>
+                    <span>{{ $users[$lead->created_by] }}</span>
                 </div>
             </div>
 

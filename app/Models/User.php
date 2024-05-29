@@ -791,7 +791,7 @@ class User extends Authenticatable
 
     public function clientApplications($id)
     {
-        return DealApplication::join('client_deals', 'client_deals.deal_id', '=', 'deal_applications.deal_id')->where('client_id', $id)->count();
+        // return DealApplication::join('client_deals', 'client_deals.deal_id', '=', 'deal_applications.deal_id')->where('client_id', $id)->count();
 
         return \App\Models\Deal::select(['deal_applications.*'])->join('deal_applications', 'deal_applications.deal_id', 'deals.id')->join('client_deals','client_deals.deal_id', 'deals.id')->where('client_deals.client_id', $id)->count();
     }
