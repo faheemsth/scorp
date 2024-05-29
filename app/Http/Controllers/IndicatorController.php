@@ -7,6 +7,7 @@ use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Indicator;
 use App\Models\PerformanceType;
+use App\Models\SavedFilter;
 use Illuminate\Http\Request;
 
 class IndicatorController extends Controller
@@ -25,8 +26,9 @@ class IndicatorController extends Controller
             {
                 $indicators = Indicator::where('created_by', '=', $user->creatorId())->get();
             }
-
-            return view('indicator.index', compact('indicators'));
+            $saved_filters = SavedFilter::where('created_by', \Auth::id())->where('module', 'indicator')->get();
+            $filters = BrandsRegionsBranches();
+            return view('indicator.index', compact('filters','saved_filters','indicators'));
         }
         else
         {
