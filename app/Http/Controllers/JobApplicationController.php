@@ -729,6 +729,9 @@ class JobApplicationController extends Controller
         // $Offerletter=GenerateOfferLetter::where('lang', $currantLang)->first();
         $Offerletter=GenerateOfferLetter::where(['lang' =>   $currantLang,'created_by' =>  \Auth::user()->creatorId()])->first();
 
+        if(empty($Offerletter)){
+            return redirect()->back()->with('error', __('Offer Letter not found.'));
+        }
         $job = JobApplication::find($id);
         $Onboard=JobOnBoard::find($id);
         $name=JobApplication::find($Onboard->application);
@@ -761,7 +764,9 @@ class JobApplicationController extends Controller
         $users = \Auth::user();
         $currantLang = $users->currentLanguage();
         $Offerletter=GenerateOfferLetter::where(['lang' =>   $currantLang,'created_by' =>  \Auth::user()->creatorId()])->first();
-        // ['lang' =>   $currantLang,'created_by' =>  \Auth::user()->id]
+        if(empty($Offerletter)){
+            return redirect()->back()->with('error', __('Offer Letter not found.'));
+        }
         $job = JobApplication::find($id);
         $Onboard=JobOnBoard::find($id);
         $name=JobApplication::find($Onboard->application);
