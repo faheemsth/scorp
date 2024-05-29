@@ -1746,6 +1746,10 @@ Route::post('/getemployee', [AppraisalController::class, 'getemployee'])->name('
 
 Route::post('setting/offerlatter/{lang?}', [SystemController::class, 'offerletterupdate'])->name('offerlatter.update');
 Route::get('setting/offerlatter', [SystemController::class, 'companyIndex'])->name('get.offerlatter.language');
+Route::get('setting-offerlatter', [SystemController::class, 'SettingOfferlatter'])->name('setting.offerlatter');
+
+
+
 Route::get('job-onboard/pdf/{id}', [JobApplicationController::class, 'offerletterPdf'])->name('offerlatter.download.pdf');
 Route::get('job-onboard/doc/{id}', [JobApplicationController::class, 'offerletterDoc'])->name('offerlatter.download.doc');
 

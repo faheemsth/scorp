@@ -515,14 +515,14 @@ styl
 
         {{-- hrm Recruitment Setup career/2/en--}}
         <li class="nav-item ">
-            <a class="nav-link {{ Request::segment(1) == 'career' || Request::route()->getName() == 'job.index' || Request::route()->getName() == 'job.create' || Request::segment(1) == 'job-application' || Request::segment(1) == 'candidates-job-applications' || Request::segment(1) == 'interview-schedule' || Request::segment(1) == 'custom-question' || Request::segment(1) == 'job-onboard' ? '' : 'collapsed' }}"
+            <a class="nav-link {{ Request::segment(1) == 'setting-offerlatter' || Request::segment(1) == 'career' || Request::route()->getName() == 'job.index' || Request::route()->getName() == 'job.create' || Request::segment(1) == 'job-application' || Request::segment(1) == 'candidates-job-applications' || Request::segment(1) == 'interview-schedule' || Request::segment(1) == 'custom-question' || Request::segment(1) == 'job-onboard' ? '' : 'collapsed' }}"
                 href="#" data-toggle="collapse" data-target="#collapsesRecruitment" aria-expanded="true"
                 aria-controls="collapsesRecruitment">
                 <i class="fa-solid fa-chart-bar me-1" style="color: #ffffff;font-size: 15px;"></i>
                 <span>{{ __('Recruitment Setup') }}</span>
             </a>
             <div id="collapsesRecruitment"
-                class="collapse {{ Request::segment(1) == 'career' || Request::route()->getName() == 'job.index' || Request::route()->getName() == 'job.create' || Request::segment(1) == 'job-application' || Request::segment(1) == 'candidates-job-applications' || Request::segment(1) == 'interview-schedule' || Request::segment(1) == 'custom-question' || Request::segment(1) == 'job-onboard' ? 'show' : '' }}"
+                class="collapse {{ Request::segment(1) == 'setting-offerlatter' || Request::segment(1) == 'career' || Request::route()->getName() == 'job.index' || Request::route()->getName() == 'job.create' || Request::segment(1) == 'job-application' || Request::segment(1) == 'candidates-job-applications' || Request::segment(1) == 'interview-schedule' || Request::segment(1) == 'custom-question' || Request::segment(1) == 'job-onboard' ? 'show' : '' }}"
                 aria-labelledby="headingrepost" data-parent="#accordionSidebar">
                 <div class="  collapse-inner rounded">
                     <ul>
@@ -615,6 +615,21 @@ styl
                                 {{ __('Career') }}</a>
 
                         </li>
+
+                        <li class="emp nav-item {{ Request::segment(1) == 'setting-offerlatter' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/setting-offerlatter') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fas fa-briefcase me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fas fa-briefcase me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Setting Offerlatter') }}</a>
+
+                        </li>
+
+
                     </ul>
                 </div>
             </div>
