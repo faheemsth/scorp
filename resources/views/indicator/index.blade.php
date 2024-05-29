@@ -52,15 +52,6 @@
     <li class="breadcrumb-item"><a href="{{route('dashboard')}}">{{__('Dashboard')}}</a></li>
     <li class="breadcrumb-item">{{__('Indicator')}}</li>
 @endsection
-@section('action-btn')
-    <div class="float-end">
-    @can('create indicator')
-       <a href="#" data-size="lg" data-url="{{ route('indicator.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create New Indicator')}}" class="btn btn-sm btn-primary">
-            <i class="ti ti-plus"></i>
-        </a>
-        @endcan
-    </div>
-@endsection
 
 @section('content')
     <div class="row">

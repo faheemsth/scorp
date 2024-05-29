@@ -37,11 +37,17 @@ class IndicatorController extends Controller
 
     public function create()
     {
-        $brances     = Branch::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
         $performance     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
         $departments = Department::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
         $departments->prepend('Select Department', '');
-        return view('indicator.create', compact( 'brances', 'departments','performance'));
+
+        $filter = BrandsRegionsBranches();
+        $companies = $filter['brands'];
+        $regions = $filter['regions'];
+        $branches = $filter['branches'];
+        $employees = $filter['employees'];
+
+        return view('indicator.create', compact('companies','regions','branches','departments','performance'));
     }
 
 
@@ -51,21 +57,31 @@ class IndicatorController extends Controller
         {
             $validator = \Validator::make(
                 $request->all(), [
-                                   'branch' => 'required',
-                                   'department' => 'required',
-                                   'designation' => 'required',
+                    'brand_id' => 'required|integer|min:1',
+                    'region_id' => 'required|integer|min:1',
+                    'lead_branch' => 'required|integer|min:1',
+                    'department' => 'required',
+                    'designation' => 'required',
                                ]
             );
-            if($validator->fails())
-            {
+
+
+            if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
-                return redirect()->back()->with('error', $messages->first());
+                return json_encode([
+                    'status' => 'error',
+                    'message' => $messages->first()
+                ]);
             }
 
 
             $indicator              = new Indicator();
-            $indicator->branch      = $request->branch;
+            $indicator->branch      = $request->lead_branch;
+
+            $indicator->brand_id      = $request->brand_id;
+            $indicator->region_id      = $request->region_id;
+
             $indicator->department  = $request->department;
             $indicator->designation = $request->designation;
 
@@ -83,11 +99,17 @@ class IndicatorController extends Controller
             $indicator->created_by = \Auth::user()->creatorId();
             $indicator->save();
 
-            return redirect()->route('indicator.index')->with('success', __('Indicator successfully created.'));
+            return json_encode([
+                'status' => 'success',
+                'message' => 'Indicator successfully created.'
+            ]);
         }
         else
         {
-            return redirect()->back()->with('error', __('Permission denied.'));
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Permission denied.'
+            ]);
         }
     }
 
