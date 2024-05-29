@@ -188,13 +188,13 @@
             <div class="card">
             <div class="card-body table-border-style">
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                    <div class="col-4 d-flex">
+                    <div class="col-4 d-flex mb-3">
                         <span>
                             <p class="mb-0 pb-0 ps-1">Leads</p>
                             <div class="dropdown">
                                 <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1"
                                     data-bs-toggle="dropdown" aria-expanded="false">
-                                    ALL Trainer
+                                    ALL Indicator
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                     @if (sizeof($saved_filters) > 0)
@@ -237,7 +237,7 @@
 
                         <span class="ml-3">
                             <p class="mb-0 pb-0 ps-1">Limit</p>
-                            <form action="{{ url('leads/list') }}" method="GET" id="paginationForm">
+                            <form action="{{ url('indicator') }}" method="GET" id="paginationForm">
                                 <input type="hidden" name="num_results_on_page" id="num_results_on_page"
                                     value="{{ $_GET['num_results_on_page'] ?? '' }}">
                                 {{-- <input type="hidden" name="page" id="page" value="{{ $_GET['page'] ?? 1 }}"> --}}
@@ -271,7 +271,7 @@
                         </span>
                     </div>
 
-                    <div class="col-8 d-flex justify-content-end gap-2 pe-0">
+                    <div class="col-8 d-flex justify-content-end gap-2 pe-0 mb-3">
                         <div class="input-group w-25 rounded" style= "width:36px; height: 36px; margin-top:10px;">
                             <button class="btn  list-global-search-btn  p-0 pb-2 ">
                                 <span class="input-group-text bg-transparent border-0 px-1" id="basic-addon1">
@@ -302,21 +302,22 @@
                          @endcan
                     </div>
                 </div>
-                @include('training.list_filter')
+                @include('indicator.list_filter')
 
                     <div class="table-responsive">
                     <table class="table datatable">
                             <thead>
                             <tr>
-                                <th>{{__('Branch')}}</th>
                                 <th>{{__('Department')}}</th>
+                                <th>{{__('Brand')}}</th>
+                                <th>{{__('Region')}}</th>
+                                <th>{{__('Branch')}}</th>
+
                                 <th>{{__('Designation')}}</th>
                                 <th>{{__('Overall Rating')}}</th>
                                 <th>{{__('Added By')}}</th>
                                 <th>{{__('Created At')}}</th>
-                                @if( Gate::check('edit indicator') ||Gate::check('delete indicator') ||Gate::check('show indicator'))
-                                    <th width="200px">{{__('Action')}}</th>
-                                @endif
+
                             </tr>
                             </thead>
                             <tbody class="font-style">
@@ -340,8 +341,20 @@
                                     }
                                 @endphp
                                 <tr>
-                                    <td>{{ !empty($indicator->branches)?$indicator->branches->name:'' }}</td>
-                                    <td>{{ !empty($indicator->departments)?$indicator->departments->name:'' }}</td>
+                                    <td>
+
+                                        <span style="cursor:pointer" class="lead-name hyper-link"
+                                                onclick="openSidebar('/IndicatorShowing?id=<?= $indicator->id ?>')"
+                                                data-lead-id="{{ $indicator->id }}">
+                                            {{ !empty($indicator->departments)?$indicator->departments->name:'' }}
+                                        </span>
+
+                                    </td>
+                                    <td>{{ $indicator->brand }}</td>
+                                    <td>{{ $indicator->region }}</td>
+                                    <td>{{ $indicator->branch }}</td>
+
+
                                     <td>{{ !empty($indicator->designations)?$indicator->designations->name:'' }}</td>
                                     <td>
 
@@ -362,31 +375,7 @@
 
                                     <td>{{ !empty($indicator->user)?$indicator->user->name:'' }}</td>
                                     <td>{{ \Auth::user()->dateFormat($indicator->created_at) }}</td>
-                                    @if( Gate::check('edit indicator') ||Gate::check('delete indicator') || Gate::check('show indicator'))
-                                        <td>
-                                            @can('show indicator')
-                                            <div class="action-btn bg-info ms-2">
-                                                <a href="#" data-url="{{ route('indicator.show',$indicator->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Indicator Detail')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('View')}}" data-original-title="{{__('View Detail')}}">
-                                                    <i class="ti ti-eye text-white"></i></a>
-                                            </div>
-                                            @endcan
-                                            @can('edit indicator')
-                                            <div class="action-btn bg-primary ms-2">
-                                                <a href="#" data-url="{{ route('indicator.edit',$indicator->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Indicator')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
-                                                <i class="ti ti-pencil text-white"></i></a>
-                                            </div>
-                                                @endcan
-                                            @can('delete indicator')
-                                            <div class="action-btn bg-danger ms-2">
-                                            {!! Form::open(['method' => 'DELETE', 'route' => ['indicator.destroy', $indicator->id],'id'=>'delete-form-'.$indicator->id]) !!}
 
-                                                <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$indicator->id}}').submit();">
-                                                <i class="ti ti-trash text-white"></i></a>
-                                                {!! Form::close() !!}
-                                                </div>
-                                            @endcan
-                                        </td>
-                                    @endif
                                 </tr>
                             @endforeach
                             </tbody>
@@ -397,3 +386,401 @@
         </div>
     </div>
 @endsection
+@push('script-page')
+<script>
+
+function deleteTage() {
+    $.ajax({
+        type: "GET",
+        url: '{{ url('delete_tage') }}',
+        data: {deal_id : $('#dealer_id').val(),old_tag_id : $('#old_tag_id').val()},
+        success: function(response) {
+            data = JSON.parse(response);
+
+            if (data.status == 'success') {
+                $("#UpdateTageModal").hide();
+                show_toastr('success', data.msg);
+                window.location.href = '/deals/list';
+            }
+        },
+    });
+}
+
+    $(document).ready(function() {
+        select2();
+        let curr_url = window.location.href;
+
+        if(curr_url.includes('?')){
+            $('#save-filter-btn').css('display','inline-block');
+        }
+    });
+
+
+    $(document).on('change', '.main-check', function() {
+    $(".sub-check").prop('checked', $(this).prop('checked'));
+
+    var selectedIds = $('.sub-check:checked').map(function() {
+        return this.value;
+    }).get();
+
+    // console.log(selectedIds.length)
+
+    if (selectedIds.length > 0) {
+        selectedArr = selectedIds;
+        $("#actions_div").removeClass('d-none');
+    } else {
+        selectedArr = selectedIds;
+
+        $("#actions_div").addClass('d-none');
+    }
+});
+
+
+    // new lead form submitting...
+    $(document).on("submit", "#deal-updating-form", function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var id = $(".deal-id").val();
+
+        $(".update-lead-btn").val('Processing...');
+        $('.update-lead-btn').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: "/deals/update/" + id,
+            data: formData,
+            success: function(data) {
+                data = JSON.parse(data);
+                //alert(data.status);
+                if (data.status == 'success') {
+                    show_toastr('Success', data.message, 'success');
+                    $('#commonModal').modal('hide');
+                   // openNav(data.deal.id);
+                    openSidebar('/get-deal-detail?deal_id='+data.deal.id);
+                    return false;
+                } else {
+                    show_toastr('Error', data.message, 'error');
+                    $(".new-lead-btn").val('Create');
+                    $('.new-lead-btn').removeAttr('disabled');
+                }
+            }
+        });
+    });
+
+
+    $(document).on("click", ".edit-lead-remove", function() {
+        var id = $(".deal-id").val();
+        openSidebar('/get-deal-detail?deal_id='+id);
+        //openNav(id);
+    });
+
+
+    $(document).on('click', '.deal_stage', function() {
+
+        var deal_id = $('.deal-id').val();
+        var stage_id = $(this).attr('data-stage-id');
+        var currentBtn = $(this);
+
+
+        if(stage_id == 6){
+            $.ajax({
+                method: 'GET',
+                url: '{{ route('get_deal_applications') }}',
+                data: {
+                    id: deal_id
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+
+                    if(data.status == 'success'){
+                        $("#deal_id").val(deal_id);
+                        $("#stage_id").val(stage_id);
+                        $("#admission-application").html(data.html);
+                        $("#deal_applications").modal('show');
+                    }
+                }
+            });
+            return false;
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: "{{ route('update-deal-stage') }}",
+            data: {
+                deal_id: deal_id,
+                stage_id: stage_id
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status == 'success') {
+                    show_toastr('Success', data.message, 'success');
+                   // openNav(deal_id);
+                    openSidebar('/get-deal-detail?deal_id='+deal_id);
+                    //window.location.href = '/deals/list';
+
+                } else {
+                    show_toastr('Error', data.message, 'error');
+                }
+            }
+        });
+    });
+
+
+    $(document).on('click', '#save-changes-application-status', function(){
+        var deal_id = $('#deal_id').val();
+        var stage_id = $('#stage_id').val();
+        var application_id = $("#admission-application").val();
+
+
+        $.ajax({
+            type: 'GET',
+            url: "{{ route('update-deal-stage') }}",
+            data: {
+                deal_id: deal_id,
+                stage_id: stage_id,
+                application_id: application_id
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status == 'success') {
+                    $("#deal_applications").modal('hide');
+                    show_toastr('Success', data.message, 'success');
+                   // openNav(deal_id);
+                    openSidebar('/get-deal-detail?deal_id='+deal_id);
+                } else {
+                    show_toastr('Error', data.message, 'error');
+                }
+            }
+        });
+
+    });
+
+
+    $(document).on("click", ".edit-input", function() {
+        var value = $(this).val();
+        var name = $(this).attr('name');
+        var id = $(".deal-id").val();
+
+        $.ajax({
+            type: 'GET',
+            url: "/deals/get-field/" + id,
+            data: {
+                name,
+                id
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status == 'success') {
+                    $('.' + name + '-td').html(data.html);
+                }
+            }
+        });
+
+    });
+
+    $(document).on("click", ".edit-btn-data", function() {
+        var name = $(this).attr('data-name');
+        var value = $(this).parent().siblings('.input-group').children('.' + name).val();
+        var id = $(".deal-id").val();
+
+
+        $.ajax({
+            type: 'GET',
+            url: "/deals/" + id + "/update-data",
+            data: {
+                value: value,
+                name: name,
+                id: id
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status == 'success') {
+                    show_toastr('Success', data.message, 'msg');
+                    // $('.' + name + '-td').html(data.html);
+                   // openNav(id);
+                    openSidebar('/get-deal-detail?deal_id='+id);
+                }
+            }
+        });
+
+    });
+
+
+
+    //saving discussion
+    $(document).on("submit", "#create-discussion", function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var id = $('.deal-id').val();
+
+        $(".create-discussion-btn").val('Processing...');
+        $('.create-discussion-btn').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: "/deals/" + id + "/discussions",
+            data: formData,
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status == 'success') {
+                    show_toastr('Success', data.message, 'success');
+                    $('#commonModal').modal('hide');
+                    $('.list-group-flush').html(data.html);
+                    $(".discussion_count").text(data.total_discussions);
+                    // openNav(data.lead.id);
+                    return false;
+                } else {
+                    show_toastr('Error', data.message, 'error');
+                    $(".create-discussion-btn").val('Create');
+                    $('.create-discussion-btn').removeAttr('disabled');
+                }
+            }
+        });
+    })
+
+
+
+
+
+
+
+
+
+
+    $(document).on("click", ".list-global-search-btn", function() {
+        var search = $(".list-global-search").val();
+        var ajaxCall = 'true';
+        $("#deals_tbody").html('Loading...');
+
+        $.ajax({
+            type: 'GET',
+            url: "{{ route('deals.list') }}",
+            data: {
+                search: search,
+                ajaxCall: ajaxCall
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status == 'success') {
+                    $("#deals_tbody").html(data.html);
+                }
+            }
+        })
+    })
+
+    $(".refresh-list").on("click", function() {
+        var ajaxCall = 'true';
+        $("#deals_tbody").html('Loading...');
+
+        $.ajax({
+            type: 'GET',
+            url: "{{ route('deals.list') }}",
+            data: {
+                ajaxCall: ajaxCall
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status == 'success') {
+                    console.log(data.html);
+                    $("#deals_tbody").html(data.html);
+                }
+            }
+        });
+    })
+
+
+     ////////////////////Filters Javascript
+     $("#filter_brand_id").on("change", function() {
+        var id = $(this).val();
+        var type = 'brand';
+        var filter = true;
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands') }}',
+            data: {
+                id: id, // Add a key for the id parameter
+                filter,
+                type: type
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $('#region_filter_div').html('');
+                    $("#region_filter_div").html(data.regions);
+                    select2();
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+
+    $(document).on("change", "#filter_region_id, #region_id", function() {
+        var id = $(this).val();
+        var filter = true;
+        var type = 'region';
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands') }}',
+            data: {
+                id: id, // Add a key for the id parameter
+                filter,
+                type: type
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                select2();
+                if (data.status === 'success') {
+                    $('#branch_filter_div').html('');
+                    $("#branch_filter_div").html(data.branches);
+                    getLeads();
+                    select2();
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+    $(document).on("change", "#filter_branch_id, #branch_id", function() {
+
+        var id = $(this).val();
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('filter-branch-users') }}',
+                data: {
+                    id: id
+                },
+                success: function(data){
+                    data = JSON.parse(data);
+                    select2();
+                    if (data.status === 'success') {
+                        $('#assign_to_div').html('');
+                        $("#assign_to_div").html(data.html);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+    });
+
+
+</script>
+@endpush

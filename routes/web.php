@@ -1038,6 +1038,11 @@ Route::resource('payslip', PaySlipController::class)->middleware(['auth', 'XSS']
 
 Route::resource('company-policy', CompanyPolicyController::class)->middleware(['auth', 'XSS']);
 Route::resource('indicator', IndicatorController::class)->middleware(['auth', 'XSS']);
+Route::get('IndicatorShowing', [IndicatorController::class, 'IndicatorShowing'])->name('indicator.showing');
+
+
+
+
 Route::resource('appraisal', AppraisalController::class)->middleware(['auth', 'XSS']);
 
 Route::post('branch/employee/json', [EmployeeController::class, 'employeeJson'])->name('branch.employee.json')->middleware(['auth', 'XSS']);
