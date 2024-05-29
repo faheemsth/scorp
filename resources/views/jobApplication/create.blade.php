@@ -1,6 +1,6 @@
 {{Form::open(array('url'=>'job-application','method'=>'post', 'enctype' => "multipart/form-data"))}}
-<div class="modal-body">
-    <div class="row">
+<div class="modal-body pt-0" style="height: 80vh;" >
+    <div class="row" style="max-height: 100%; overflow-y: scroll;">
         <div class="form-group col-md-12">
             {{Form::label('job',__('Job'),['class'=>'form-label'])}}
             {{Form::select('job',$jobs,null,array('class'=>'form-control select2','id'=>'jobs'))}}
