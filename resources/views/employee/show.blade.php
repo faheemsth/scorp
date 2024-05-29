@@ -14,14 +14,14 @@
                         <h5 class="fw-bold">{{ $employee->name }}</h5>
                     </div>
                 </div>
-                
+
                 <div class="d-flex gap-1 me-3 align-items-center">
                     @can('edit employee')
                     <a href="{{ route('employee.edit', $employee->id) }}" class="btn btn-dark text-white d-flex justify-content-center align-items-center" style="width: 36px; height: 36px; margin-top: 10px;" data-bs-original-title="{{__('Edit Employee')}}" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
                         <i class="ti ti-pencil" style="font-size: 18px;"></i>
                     </a>
                     @endcan
-                
+
                     @can('delete employee')
                     {!! Form::open(['method' => 'DELETE', 'class' => 'mb-0', 'route' => ['employee.destroy', $employee->id], 'id' => 'delete-form-'.$employee->id]) !!}
                     <button type="submit" class="btn btn-danger text-white bs-pass-para d-flex justify-content-center align-items-center" style="width: 36px; height: 36px; margin-top: 10px;" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
@@ -29,9 +29,9 @@
                     </button>
                     {!! Form::close() !!}
                     @endcan
-            
+
                 </div>
-                
+
             </div>
             <!-- Topbar End -->
 
@@ -175,7 +175,7 @@
 
                                                         @if(!$documents->isEmpty())
                                                         @foreach($documents as $key=>$document)
-                                                            
+
                                                         <tr>
                                                             <td style="font-size: 14px;">{{$document->name }}</td>
                                                             <td style="padding-left: 10px; font-size: 14px;">

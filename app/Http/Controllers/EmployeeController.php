@@ -86,7 +86,7 @@ class EmployeeController extends Controller
                     ->orWhere('phone', 'like', '%' . $g_search . '%')
                     ->orWhere(DB::raw('(SELECT name FROM regions r WHERE r.id = users.region_id)'), 'like', '%' . $g_search . '%')
                     ->orWhere(DB::raw('(SELECT name FROM users b WHERE b.id = users.brand_id)'), 'like', '%' . $g_search . '%')
-                    ->orWhere(DB::raw('(SELECT name FROM branches br WHERE br.id = users.branch_id)'), 'like', '%' . $g_search . '%'); 
+                    ->orWhere(DB::raw('(SELECT name FROM branches br WHERE br.id = users.branch_id)'), 'like', '%' . $g_search . '%');
             });
         }
 
@@ -394,7 +394,7 @@ class EmployeeController extends Controller
 
 
 
-            
+
 
             if ($request->document) {
                 foreach ($request->document as $key => $document) {
@@ -451,21 +451,21 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
         if (Auth::user()->can('delete employee') || Auth::user()->type == 'super admin') {
-          
+
             $user          = User::where('id', '=', $id)->first();
             $employee      = Employee::where('user_id', $user->id)->first();
             $emp_documents = EmployeeDocument::where('employee_id', $employee->employee_id)->get();
             $employee->delete();
             $user->delete();
             $dir = storage_path('uploads/document/');
-            
+
             foreach ($emp_documents as $emp_document) {
                 $emp_document->delete();
                 if (!empty($emp_document->document_value) && file_exists($dir . $emp_document->document_value)) {
                     unlink($dir . $emp_document->document_value);
                 }
             }
-            
+
             return redirect()->route('employee.index')->with('success', 'Employee successfully deleted.');
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
@@ -519,7 +519,7 @@ class EmployeeController extends Controller
         $errorArray    = [];
         for ($i = 1; $i <= count($employees) - 1; $i++) {
             $employee = $employees[$i];
-            //user create and update 
+            //user create and update
             $userByEmail = User::where('email', $employee[1])->first();
             if (!empty($userByEmail)) {
                 $userData = $userByEmail;
@@ -612,7 +612,7 @@ class EmployeeController extends Controller
     {
 
         if (\Auth::user()->can('view employee')) {
-            $employee = Employee::join('users as u', 'u.id', '=', 'employees.user_id')->where('u.id', $id)->first();
+            $employee = Employee::join('users as u', 'u.id', '=', 'employees.user_id')->where('employees.id', $id)->first();
             $documents = Document::get();
             $userRegionBranch = UserRegionBranch();
 

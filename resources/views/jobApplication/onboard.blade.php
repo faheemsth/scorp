@@ -86,7 +86,7 @@
                                                 </div>
                                             @elseif($job->status == 'confirm' && $job->convert_to_employee != 0)
                                                 <div class="action-btn bg-info ms-2">
-                                                    <a href="{{ route('employee.show', \Crypt::encrypt($job->convert_to_employee)) }}"
+                                                    <a onclick="openSidebar('/employee/{{ $job->convert_to_employee }}')"
                                                         class="btn btn-sm btn-dark mx-1 align-items-center" data-bs-toggle="tooltip"
                                                         title="{{ __('View') }}"
                                                         data-original-title="{{ __('Employee Detail') }}"><i
