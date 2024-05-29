@@ -441,7 +441,7 @@
                                                                        @elseif ($task->related_type == 'lead')
                                                                             {{ $leads[$task->related_to] }}
                                                                        @elseif ($task->related_type ==  'application')
-                                                                            {{ $applications[$task->related_to] }}
+                                                                            {{ $applications[$task->related_to] ?? '' }}
                                                                        @elseif ($task->related_type == 'deal')
                                                                             {{ $deals[$task->related_to] }}
                                                                        @elseif ($task->related_type == 'toolkit')
