@@ -73,7 +73,7 @@
                                                         'id' => 'job-form-' . $job->id,
                                                     ]) !!}
                                                     <a href="#"
-                                                        class="mx-3 btn btn-sm  align-items-center bs-pass-para"
+                                                        class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para"
                                                         data-bs-toggle="tooltip"
                                                         data-original-title="{{ __('Convert to Employee') }}"
                                                         title="{{ __('Convert to Employee') }}"
@@ -87,7 +87,7 @@
                                             @elseif($job->status == 'confirm' && $job->convert_to_employee != 0)
                                                 <div class="action-btn bg-info ms-2">
                                                     <a href="{{ route('employee.show', \Crypt::encrypt($job->convert_to_employee)) }}"
-                                                        class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip"
+                                                        class="btn btn-sm btn-dark mx-1 align-items-center" data-bs-toggle="tooltip"
                                                         title="{{ __('View') }}"
                                                         data-original-title="{{ __('Employee Detail') }}"><i
                                                             class="ti ti-eye text-white"></i></a>
@@ -96,7 +96,7 @@
 
                                             <div class="action-btn bg-primary ms-2">
                                                 <a href="#" data-url="{{ route('job.on.board.edit', $job->id) }}"
-                                                    data-ajax-popup="true" class="mx-3 btn btn-sm align-items-center"
+                                                    data-ajax-popup="true" class="btn btn-sm btn-dark mx-1 align-items-center"
                                                     data-bs-toggle="tooltip" title="{{ __('Edit') }}"
                                                     data-original-title="{{ __('Edit') }}"><i
                                                         class="ti ti-pencil text-white"></i></a>
@@ -108,7 +108,7 @@
                                                     'route' => ['job.on.board.delete', $job->id],
                                                     'id' => 'delete-form-' . $job->id,
                                                 ]) !!}
-                                                <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para"
+                                                <a href="#" class="btn btn-sm btn-danger mx-1 align-items-center bs-pass-para"
                                                     data-bs-toggle="tooltip" title="{{ __('Delete') }}"
                                                     data-original-title="{{ __('Delete') }}"
                                                     data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
@@ -120,14 +120,14 @@
                                             @if ($job->status == 'confirm')
                                                 <div class="action-btn bg-secondary ms-2">
                                                     <a href="{{ route('offerlatter.download.pdf', $job->id) }}"
-                                                        class="mx-3 btn btn-sm  align-items-center "
+                                                        class="btn btn-sm btn-dark mx-1 align-items-center"
                                                         data-bs-toggle="tooltip" data-bs-placement="top"
                                                         title="{{ __('OfferLetter PDF') }}" target="_blanks"><i
                                                             class="ti ti-download text-white"></i></a>
                                                 </div>
                                                 <div class="action-btn bg-secondary ms-2">
                                                     <a href="{{ route('offerlatter.download.doc', $job->id) }}"
-                                                        class="mx-3 btn btn-sm  align-items-center "
+                                                        class="btn btn-sm btn-dark mx-1 align-items-center"
                                                         data-bs-toggle="tooltip" data-bs-placement="top"
                                                         title="{{ __('OfferLetter DOC') }}" target="_blanks"><i
                                                             class="ti ti-download text-white"></i></a>

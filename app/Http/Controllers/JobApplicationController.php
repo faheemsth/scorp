@@ -25,6 +25,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Spatie\Permission\Models\Role;
 
 class JobApplicationController extends Controller
 {
@@ -524,7 +525,17 @@ class JobApplicationController extends Controller
 
     public function jobBoardConvert($id)
     {
-        $jobOnBoard       = JobOnBoard::find($id);
+        $jobOnBoard = JobOnBoard::select('job_on_boards.*','jobs.brand_id','jobs.region_id','jobs.branch as branch_id')
+        ->join('job_applications', 'job_applications.id', '=', 'job_on_boards.application')
+        ->join('jobs', 'jobs.id', '=', 'job_applications.job')
+        ->where('job_on_boards.id', $id)
+        ->first();
+
+        $filter = BrandsRegionsBranchesForEdit($jobOnBoard->brand_id, $jobOnBoard->region_id, $jobOnBoard->branch_id);
+        $companies = $filter['brands'];
+        $regions = $filter['regions'];
+        $branches = $filter['branches'];
+
         $company_settings = Utility::settings();
         $documents        = Document::where('created_by', \Auth::user()->creatorId())->get();
         $branches         = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -532,13 +543,14 @@ class JobApplicationController extends Controller
         $designations     = Designation::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
         $employees        = User::where('created_by', \Auth::user()->creatorId())->get();
         $employeesId      = \Auth::user()->employeeIdFormat($this->employeeNumber());
-
-        return view('jobApplication.convert', compact('jobOnBoard', 'employees', 'employeesId', 'departments', 'designations', 'documents', 'branches', 'company_settings'));
+        $roles = Role::where('name', '!=', 'super admin')->pluck('name', 'id')->toArray();
+        return view('jobApplication.convert', compact('roles','companies','regions','branches','jobOnBoard', 'employees', 'employeesId', 'departments', 'designations', 'documents', 'branches', 'company_settings'));
 
     }
 
     public function jobBoardConvertData(Request $request, $id)
     {
+
         $validator = \Validator::make(
             $request->all(), [
                                'name' => 'required',
@@ -550,9 +562,9 @@ class JobApplicationController extends Controller
                                'password' => 'required',
                                'department_id' => 'required',
                                'designation_id' => 'required',
-//                               'document.*' => 'mimes:jpeg,png,jpg,gif,svg,pdf,doc,zip|max:20480',
                            ]
         );
+
         if($validator->fails())
         {
             $messages = $validator->getMessageBag();
@@ -564,26 +576,18 @@ class JobApplicationController extends Controller
 
         $total_employee = $employees->count();
         $plan           = Plan::find($objUser->plan);
-        // dd($plan);
-        if($total_employee < $plan->max_users || $plan->max_users == -1)
-        {
-            $user = User::create(
-                [
-                    'name' => $request['name'],
-                    'email' => $request['email'],
-                    'password' => Hash::make($request['password']),
-                    'type' => 'employee',
-                    'lang' => 'en',
-                    'created_by' => \Auth::user()->creatorId(),
-                ]
-            );
-            $user->save();
-            $user->assignRole('Employee');
-        }
-        else
-        {
-            return redirect()->back()->with('error', __('Your employee limit is over, Please upgrade plan.'));
-        }
+        $user = new User;
+        $user->name = $request['name'];
+        $user->email = $request['email'];
+        $user->brand_id = $request->brand_id;
+        $user->region_id = $request->region_id;
+        $user->branch_id = $request->branch_id;
+        $user->password = Hash::make($request['password']);
+        $user->type = 'employee';
+        $user->lang = 'en';
+        $user->created_by = \Auth::user()->creatorId();
+        $user->save();
+        $user->assignRole($request->role);
 
 
         if(!empty($request->document) && !is_null($request->document))
@@ -790,7 +794,7 @@ class JobApplicationController extends Controller
     public function getDealApplication(){
         $id = $_GET['id'];
         $applications = \App\Models\DealApplication::where('deal_id', $id)->pluck('application_key', 'id');
-        
+
         $html = '<option value=""> Select Application</option>';
 
         foreach($applications as $key => $app){
