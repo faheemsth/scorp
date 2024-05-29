@@ -513,6 +513,112 @@ styl
         @endif
 
 
+        {{-- hrm Recruitment Setup career/2/en--}}
+        <li class="nav-item ">
+            <a class="nav-link {{ Request::segment(1) == 'career' || Request::route()->getName() == 'job.index' || Request::route()->getName() == 'job.create' || Request::segment(1) == 'job-application' || Request::segment(1) == 'candidates-job-applications' || Request::segment(1) == 'interview-schedule' || Request::segment(1) == 'custom-question' || Request::segment(1) == 'job-onboard' ? '' : 'collapsed' }}"
+                href="#" data-toggle="collapse" data-target="#collapsesRecruitment" aria-expanded="true"
+                aria-controls="collapsesRecruitment">
+                <i class="fa-solid fa-chart-bar me-1" style="color: #ffffff;font-size: 15px;"></i>
+                <span>{{ __('Recruitment Setup') }}</span>
+            </a>
+            <div id="collapsesRecruitment"
+                class="collapse {{ Request::segment(1) == 'career' || Request::route()->getName() == 'job.index' || Request::route()->getName() == 'job.create' || Request::segment(1) == 'job-application' || Request::segment(1) == 'candidates-job-applications' || Request::segment(1) == 'interview-schedule' || Request::segment(1) == 'custom-question' || Request::segment(1) == 'job-onboard' ? 'show' : '' }}"
+                aria-labelledby="headingrepost" data-parent="#accordionSidebar">
+                <div class="  collapse-inner rounded">
+                    <ul>
+                        <li class="emp nav-item {{ Request::route()->getName() == 'job.index' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/job') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fa fa-tasks me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa fa-tasks me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Job') }}</a>
+                        </li>
+                        <li class="emp nav-item {{ Request::route()->getName() == 'job.create' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/job/create') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fa fa-tasks me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa fa-tasks me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Job Create') }}</a>
+                        </li>
+                        <li class="emp nav-item {{ Request::segment(1) == 'job-application' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/job-application') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fas fa-address-card me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fas fa-address-card me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Job Application') }}</a>
+                        </li>
+                        <li class="emp nav-item {{ Request::segment(1) == 'candidates-job-applications' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/candidates-job-applications') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fa fa-users me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa fa-users me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Job Candidate') }}</a>
+                        </li>
+                        <li class="emp nav-item {{ Request::segment(1) == 'job-onboard' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/job-onboard') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fa fa-graduation-cap me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa fa-graduation-cap me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Job On-boarding') }}</a>
+                        </li>
+                        <li class="emp nav-item {{ Request::segment(1) == 'custom-question' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/custom-question') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fa-solid fa-question me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa-solid fa-question me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Custom Question') }}</a>
+                        </li>
+                        <li class="emp nav-item {{ Request::segment(1) == 'interview-schedule' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/interview-schedule') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fa fa-question-circle me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa fa-question-circle me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Interview Schedule') }}</a>
+                        </li>
+                        <li class="emp nav-item {{ Request::segment(1) == 'career/2/en' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/career/2/en') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fas fa-briefcase me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fas fa-briefcase me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Career') }}</a>
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
 
 
 
@@ -636,6 +742,7 @@ styl
             </li>
         @endcan
         {{-- --}}
+
 
         <!--------------------- Start Project ----------------------------------->
 

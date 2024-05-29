@@ -106,7 +106,7 @@
                             {!! Form::date('end_date', old('end_date'), ['class' => 'form-control ']) !!}
                         </div>
                         <div class="form-group col-md-12">
-                            <input type="text" class="form-control" value="" data-toggle="tags" name="skill" placeholder="Skill"/>
+                            <input type="text" class="form-control" value="" data-toggle="tags" name="skill" placeholder="Skill" required>
                         </div>
                     </div>
                 </div>

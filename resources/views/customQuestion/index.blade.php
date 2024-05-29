@@ -8,21 +8,22 @@
     <li class="breadcrumb-item">{{__('Custom-Question')}}</li>
 @endsection
 
-
-@section('action-btn')
-    <div class="float-end">
-    @can('create custom question')
-        <a href="#" data-size="lg" data-url="{{ route('custom-question.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create New Custom Question')}}" class="btn btn-sm btn-primary">
-            <i class="ti ti-plus"></i>
-        </a>
-        @endcan
-    </div>
-@endsection
-
 @section('content')
     <div class="row">
         <div class="col-md-12">
             <div class="card">
+                <div class="card-header" style="display: flex; justify-content: space-between;">
+                    <h3>Custom Question</h3>
+
+                    <div class="float-end">
+                        @can('create custom question')
+                            <a href="#" data-size="lg" data-url="{{ route('custom-question.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create New Custom Question')}}" class="btn btn-sm btn-dark">
+                                <i class="ti ti-plus"></i>
+                            </a>
+                        @endcan
+                    </div>
+
+                </div>
             <div class="card-body table-border-style">
                     <div class="table-responsive">
                     <table class="table datatable">
@@ -46,15 +47,15 @@
                                     </td>
                                     <td>
                                         @can('edit custom question')
-                                        <div class="action-btn bg-primary ms-2">
-                                            <a href="#" data-url="{{ route('custom-question.edit',$question->id) }}" data-size="lg" title="{{__('Edit')}}"  data-ajax-popup="true" data-title="{{__('Edit Custom Question')}}" class="mx-3 btn btn-sm  align-items-center" data-bs-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                        <div class="action-btn  ms-2">
+                                            <a href="#" data-url="{{ route('custom-question.edit',$question->id) }}" data-size="lg" title="{{__('Edit')}}"  data-ajax-popup="true" data-title="{{__('Edit Custom Question')}}" class="btn btn-sm btn-dark mx-1 align-items-center" data-bs-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
                                         </div>
                                             @endcan
                                         @can('delete custom question')
-                                        <div class="action-btn bg-danger ms-2">
+                                        <div class="action-btn  ms-2">
                                         {!! Form::open(['method' => 'DELETE', 'route' => ['custom-question.destroy', $question->id],'id'=>'delete-form-'.$question->id]) !!}
 
-                                            <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$question->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
+                                            <a href="#" class="btn btn-sm btn-danger mx-1 align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$question->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
                                             {!! Form::close() !!}
                                         </div>
                                         @endif

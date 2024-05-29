@@ -50,18 +50,6 @@
     <li class="breadcrumb-item">{{__('Interview Schedule')}}</li>
 @endsection
 
-
-@section('action-btn')
-    <div class="float-end">
-        @can('create interview schedule')
-            <a href="#" data-url="{{ route('interview-schedule.create') }}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-ajax-popup="true" data-title="{{__('Create New Interview Schedule')}}" class="btn btn-sm btn-primary">
-                <i class="ti ti-plus"></i>
-            </a>
-        @endcan
-    </div>
-@endsection
-
-
 @section('content')
 
     <div class="row">
@@ -78,6 +66,17 @@
         </div>
         <div class="col-lg-4">
             <div class="card">
+                <div class="card-header" style="display: flex; justify-content: space-between;">
+                    <h3>Schedule List</h3>
+                    <div class="float-end">
+                        @can('create interview schedule')
+                            <a href="#" data-url="{{ route('interview-schedule.create') }}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-ajax-popup="true" data-title="{{__('Create New Interview Schedule')}}" class="btn btn-sm btn-dark">
+                                <i class="ti ti-plus"></i>
+                            </a>
+                        @endcan
+                    </div>
+                </div>
+
                 <div class="card-body">
                     <h4 class="mb-4">{{__('Schedule List')}}</h4>
                     <ul class="event-cards list-group list-group-flush mt-3 w-100">

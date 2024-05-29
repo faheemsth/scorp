@@ -36,14 +36,14 @@
                             {!! Form::label('title', __('Job Title'),['class'=>'form-label']) !!}
                             {!! Form::text('title', null, ['class' => 'form-control','required' => 'required']) !!}
                         </div>
-                        
+
                         @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
                         <div class="form-group col-md-6">
                             <label for="">Brand</label>
                             <select name="brand" class="form form-control select2" id="filter_brand_id">
                                 @if (!empty($filters['brands']))
                                 @foreach ($filters['brands'] as $key => $Brand)
-                                <option value="{{ $key }}" {{ !empty($_GET['brand']) && $_GET['brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
+                                <option value="{{ $key }}" {{ $job->brand_id == $key ? 'selected' : '' }}>{{ $Brand }}</option>
                                 @endforeach
                                 @else
                                 <option value="" disabled>No brands available</option>
@@ -60,7 +60,7 @@
                             <select name="region_id" class="form form-control select2" id="filter_region_id">
                                 @if (!empty($filters['regions']))
                                 @foreach ($filters['regions'] as $key => $region)
-                                <option value="{{ $key }}" {{ !empty($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : '' }}>{{ $region }}</option>
+                                <option value="{{ $key }}" {{ $job->region_id == $key ? 'selected' : '' }}>{{ $region }}</option>
                                 @endforeach
                                 @else
                                 <option value="" disabled>No regions available</option>
@@ -76,7 +76,7 @@
                             <select name="branch_id" class="form form-control select2" id="filter_branch_id">
                                 @if (!empty($filters['branches']))
                                 @foreach ($filters['branches'] as $key => $branch)
-                                <option value="{{ $key }}" {{ !empty($_GET['branch_id']) && $_GET['branch_id'] == $key ? 'selected' : '' }}>{{ $branch }}</option>
+                                <option value="{{ $key }}" {{ $job->branch == $key ? 'selected' : '' }}>{{ $branch }}</option>
                                 @endforeach
                                 @else
                                 <option value="" disabled>No regions available</option>

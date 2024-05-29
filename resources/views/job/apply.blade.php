@@ -91,11 +91,11 @@
                                     {{Form::label('phone',__('Phone'),['class'=>'form-label'])}}
                                     {{Form::text('phone',null,array('class'=>'form-control','required'=>'required'))}}
                                 </div>
-                                @if(!empty($job->applicant) && in_array('dob',explode(',',$job->applicant)))
-                                    <div class="form-group col-md-6 ">
-                                        {!! Form::label('dob', __('Date of Birth'),['class'=>'form-label']) !!}
-                                        {!! Form::text('dob', old('dob'), ['class' => 'form-control datepicker','required'=>'required']) !!}
-                                    </div>
+                                @if(!empty($job->applicant) && in_array('dob', explode(',', $job->applicant)))
+                                <div class="form-group col-md-6">
+                                    {!! Form::label('dob', __('Date of Birth'), ['class' => 'form-label']) !!}
+                                    {!! Form::date('dob', old('dob'), ['class' => 'form-control', 'required' => 'required']) !!}
+                                </div>
                                 @endif
                                 @if(!empty($job->applicant) && in_array('gender',explode(',',$job->applicant)))
                                     <div class="form-group col-md-6 ">

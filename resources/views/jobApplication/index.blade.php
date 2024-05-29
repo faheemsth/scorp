@@ -172,16 +172,16 @@
                             </div>
                             <div class="col-auto float-end ms-2 mt-4">
 
-                                <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('applicarion_filter').submit(); return false;" data-bs-toggle="tooltip" data-original-title="{{__('apply')}}">
+                                <a href="#" class="btn btn-sm btn-dark" onclick="document.getElementById('applicarion_filter').submit(); return false;" data-bs-toggle="tooltip" data-original-title="{{__('apply')}}">
                                     <span class="btn-inner--icon"><i class="ti ti-search"></i></span>
                                 </a>
-                                <a href="{{ route('job-application.index') }}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip"
+                                <a href="{{ route('job-application.index') }}" class="btn btn-sm btn-dark" data-bs-toggle="tooltip"
                                    title="{{ __('Reset') }}">
                                     <span class="btn-inner--icon"><i class="ti ti-trash-off text-white-off "></i></span>
                                 </a>
 
                                 @can('create job application')
-                                    <a href="#" data-size="lg" data-url="{{ route('job-application.create')}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create New Job Application')}}" class="btn btn-sm btn-primary">
+                                    <a href="#" data-size="lg" data-url="{{ route('job-application.create')}}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create New Job Application')}}" class="btn btn-sm btn-dark">
                                         <i class="ti ti-plus"></i>
                                     </a>
                                 @endcan
@@ -204,16 +204,16 @@
                     $json[] = 'task-list-'.$stage->id;
                 }
             @endphp
-            <div class="row kanban-wrapper horizontal-scroll-cards" style="overflow-x: scroll; flex-wrap: unset;" data-plugin="dragula" data-containers='{!! json_encode($json) !!}'>
+            <div class="row ml-1 kanban-wrapper horizontal-scroll-cards" style="overflow-x: scroll; flex-wrap: unset;" data-plugin="dragula" data-containers='{!! json_encode($json) !!}'>
                 @foreach($stages as $stage)
                     @php $applications = $stage->applications($filter) @endphp
 
-                    <div class="col">
+                    <div class="col-3">
                         <div class="card">
 
                             <div class="card-header">
                                 <div class="float-end">
-                                    <span class="btn btn-sm btn-primary btn-icon count">
+                                    <span class="btn btn-sm btn-dark btn-icon count">
                                         {{count($applications)}}
                                     </span>
                                 </div>

@@ -11,6 +11,7 @@
 
         <div class="col-md-12">
             <div class="card">
+            <div class="card-header" style="display: flex; justify-content: space-between;"><div class="float-end"></div></div>
             <div class="card-body table-border-style">
                     <div class="table-responsive">
                     <table class="table datatable">
