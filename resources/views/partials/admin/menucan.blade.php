@@ -639,6 +639,89 @@ styl
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <li class="nav-item ">
+            <a class="nav-link {{ Request::segment(1) == 'indicator' || Request::segment(1) == 'appraisal' || Request::segment(1) == 'goaltracking' ? '' : 'collapsed' }}"
+                href="#" data-toggle="collapse" data-target="#collapsesRecruitment" aria-expanded="true"
+                aria-controls="collapsesRecruitment">
+                <i class="fa-solid fa-chart-bar me-1" style="color: #ffffff;font-size: 15px;"></i>
+                <span>{{ __('Performance') }}</span>
+            </a>
+            <div id="collapsesRecruitment"
+                class="collapse {{ Request::segment(1) == 'indicator' || Request::segment(1) == 'appraisal' || Request::segment(1) == 'goaltracking' ? 'show' : '' }}"
+                aria-labelledby="headingrepost" data-parent="#accordionSidebar">
+                <div class="  collapse-inner rounded">
+                    <ul>
+                        <li class="emp nav-item {{ Request::segment(1) == 'indicator' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/indicator') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fa fa-tasks me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa fa-tasks me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Indicator') }}</a>
+                        </li>
+                        <li class="emp nav-item {{ Request::segment(1) == 'appraisal' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/appraisal') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fa-solid fa-question me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa-solid fa-question me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Appraisal') }}</a>
+                        </li>
+
+                        <li class="emp nav-item {{ Request::segment(1) == 'goaltracking' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/goaltracking') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fas fa-briefcase me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fas fa-briefcase me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Career') }}</a>
+
+                        </li>
+
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </li>
+
+
+
+
+
+
+
+
+
+
+
         <!--------------------- End CRM ----------------------------------->
         {{-- --}}
         @can('manage report')
