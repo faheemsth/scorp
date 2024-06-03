@@ -1049,6 +1049,9 @@ Route::post('branch/employee/json', [EmployeeController::class, 'employeeJson'])
 
 Route::resource('goaltype', GoalTypeController::class)->middleware(['auth', 'XSS']);
 Route::resource('goaltracking', GoalTrackingController::class)->middleware(['auth', 'XSS']);
+
+Route::get('GoalTrackingShow', [GoalTrackingController::class, 'GoalTrackingShow'])->middleware(['auth', 'XSS'])->name('GoalTrackingShow');
+
 Route::resource('account-assets', AssetController::class)->middleware(['auth', 'XSS']);
 
 

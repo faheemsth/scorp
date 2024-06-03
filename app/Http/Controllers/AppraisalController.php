@@ -32,6 +32,8 @@ class AppraisalController extends Controller
             ->leftJoin('regions', 'regions.id', '=', 'appraisals.region_id')
             ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'appraisals.created_by');
 
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
             $userType = \Auth::user()->type;
             if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
                 // No additional filtering needed
