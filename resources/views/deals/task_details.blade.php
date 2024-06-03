@@ -436,17 +436,17 @@
                                                                         style="cursor: pointer" onclick="openSidebar('/university/{{ $task->related_to }}/university_detail');"
                                                                         @endif
                                                                     >
-                                                                       @if ($task->related_type == 'organization')
-                                                                            {{ $organizations[$task->related_to] }}
-                                                                       @elseif ($task->related_type == 'lead')
-                                                                            {{ $leads[$task->related_to] }}
-                                                                       @elseif ($task->related_type ==  'application')
+                                                                    @if ($task->related_type == 'organization')
+                                                                    {{ $organizations[$task->related_to] ?? ''  }}
+                                                                    @elseif ($task->related_type == 'lead')
+                                                                            {{ $leads[$task->related_to] ?? '' }}
+                                                                    @elseif ($task->related_type ==  'application')
                                                                             {{ $applications[$task->related_to] ?? '' }}
-                                                                       @elseif ($task->related_type == 'deal')
-                                                                            {{ $deals[$task->related_to] }}
-                                                                       @elseif ($task->related_type == 'toolkit')
-                                                                            {{ $universites[$task->related_to] }}
-                                                                       @endif
+                                                                    @elseif ($task->related_type == 'deal')
+                                                                            {{ $deals[$task->related_to] ?? ''  }}
+                                                                    @elseif ($task->related_type == 'toolkit')
+                                                                            {{ $universites[$task->related_to] ?? ''  }}
+                                                                    @endif
 
                                                                     </span>
                                                                 </td>
