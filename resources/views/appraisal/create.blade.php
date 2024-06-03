@@ -90,7 +90,7 @@
 
 <div class="modal-footer">
     <input type="button" value="Cancel" class="btn btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{ __('Create') }}" class="btn btn-primary BulkSendButton">
+    <input type="submit" value="{{ __('Create') }}" class="btn btn-dark BulkSendButton">
 </div>
 {{ Form::close() }}
 <script>
@@ -107,10 +107,12 @@
                 data: formData, // Set the form data
                 contentType: false, // Don't set contentType, let jQuery handle it
                 processData: false, // Don't process the data, let jQuery handle it
+                dataType: 'json', // Expect JSON response
                 success: function(response) {
                     if (response.status == 'success') {
                         show_toastr('Success', response.message, 'success');
                         $('#commonModal').modal('hide');
+                        openSidebar('/appraisalShow?id='+response.id)
                         return false;
                     } else {
                         show_toastr('Error', response.message, 'error');

@@ -331,20 +331,27 @@
                             <tbody class="font-style">
                             @foreach ($appraisals as $appraisal)
 
-                                @php
-                                    $indicator = App\Models\Indicator::where('created_user', $appraisal->employee)->first();
-                                    $designation=!empty($indicator) ?  $indicator->designation : 0;
-                                    $targetRating =  Utility::getTargetrating($designation,$competencyCount);
-                                    if(!empty($appraisal->rating)&&($competencyCount!=0))
-                                    {
-                                        $rating = json_decode($appraisal->rating,true);
-                                        $starsum = array_sum($rating);
-                                        $overallrating = $starsum/$competencyCount;
-                                    }
-                                    else{
-                                        $overallrating = 0;
-                                    }
-                                @endphp
+                            @php
+                            $indicator = App\Models\Indicator::where('created_user', $appraisal->employee)->first();
+                            $designation = !empty($indicator) ? $indicator->designation : 0;
+                            $targetRating = Utility::getTargetrating($designation, $competencyCount);
+
+                            if (!empty($appraisal->rating)) {
+                                $rating = json_decode($appraisal->rating, true);
+
+                                // Ensure that $rating is an array before proceeding
+                                if (is_array($rating)) {
+                                    $starsum = array_sum($rating);
+                                    $overallrating = $starsum / $competencyCount;
+                                } else {
+                                    // Handle the case where $rating is not a valid array
+                                    $overallrating = 0;
+                                }
+                            } else {
+                                $overallrating = 0;
+                            }
+                           @endphp
+
 
                                 @php
                                     if(!empty($appraisal->rating)){

@@ -188,7 +188,8 @@ class AppraisalController extends Controller
 
             return json_encode([
                 'status' => 'success',
-                'message' => 'Appraisal successfully created.'
+                'message' => 'Appraisal successfully created.',
+                'id'=> $appraisal->id,
             ]);
         } else {
             return json_encode([
@@ -200,7 +201,18 @@ class AppraisalController extends Controller
 
     public function appraisalShow(Request $request)
     {
-        $appraisal = Appraisal::find($request->id);
+        $appraisal = Appraisal::select(
+            'appraisals.*', // Corrected this line
+            'regions.name as region',
+            'branches.name as branch',
+            'users.name as brand',
+            'assigned_to.name as created_user'
+        )
+        ->leftJoin('users', 'users.id', '=', 'appraisals.brand_id')
+        ->leftJoin('branches', 'branches.id', '=', 'appraisals.branch')
+        ->leftJoin('regions', 'regions.id', '=', 'appraisals.region_id')
+        ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'appraisals.employee')->where('appraisals.id',$request->id)->first();
+
         if(empty($appraisal)){
             return json_encode([
                 'status' => 'error',
@@ -211,7 +223,7 @@ class AppraisalController extends Controller
         $performance_types     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
         $employee = Employee::find($appraisal->employee);
         $indicator = Indicator::where('created_user', $appraisal->employee)->first();
-        $ratings = json_decode($indicator->rating, true);
+        $ratings = !empty($indicator) ? json_decode($indicator->rating, true) : [];
 
         $html = view('appraisal.show', compact('appraisal', 'performance_types', 'ratings', 'rating'))->render();
         return json_encode([
@@ -225,11 +237,15 @@ class AppraisalController extends Controller
         if (\Auth::user()->can('edit appraisal')) {
 
             $performance_types     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
-            $brances = Branch::where('created_by', '=', \Auth::user()->creatorId())->get();
             $ratings = json_decode($appraisal->rating, true);
 
+            $filter = BrandsRegionsBranchesForEdit($appraisal->brand_id, $appraisal->region_id, $appraisal->branch);
+            $companies = $filter['brands'];
+            $regions = $filter['regions'];
+            $branches = $filter['branches'];
+            $employees = $filter['employees'];
 
-            return view('appraisal.edit', compact('brances', 'appraisal', 'performance_types', 'ratings'));
+            return view('appraisal.edit', compact('companies','regions','branches','employees', 'appraisal', 'performance_types', 'ratings'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
@@ -241,24 +257,40 @@ class AppraisalController extends Controller
             $validator = \Validator::make(
                 $request->all(),
                 [
-                    'branch' => 'required',
-                    'employee' => 'required',
+                    'brand_id' => 'required|integer|min:1',
+                    'region_id' => 'required|integer|min:1',
+                    'lead_branch' => 'required|integer|min:1',
+                    'lead_assigned_user' => 'required',
                 ]
             );
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
-                return redirect()->back()->with('error', $messages->first());
+                return json_encode([
+                    'status' => 'error',
+                    'message' => $messages->first()
+                ]);
             }
 
-            $appraisal->branch         = $request->branch;
-            $appraisal->employee       = $request->employee;
+            $appraisal->brand_id         = $request->brand_id;
+            $appraisal->region_id         = $request->region_id;
+            $appraisal->branch         = $request->lead_branch;
+            $appraisal->employee       = $request->lead_assigned_user;
             $appraisal->appraisal_date = $request->appraisal_date;
             $appraisal->rating         = json_encode($request->rating, true);
             $appraisal->remark         = $request->remark;
             $appraisal->save();
 
-            return redirect()->route('appraisal.index')->with('success', __('Appraisal successfully updated.'));
+            return json_encode([
+                'status' => 'success',
+                'message' => 'Appraisal successfully updated.',
+                'id'=> $appraisal->id,
+            ]);
+        } else {
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Permission denied.'
+            ]);
         }
     }
 
@@ -301,7 +333,7 @@ class AppraisalController extends Controller
 
         $appraisal = Appraisal::find($request->appraisal);
 
-        $indicator = Indicator::where('branch', $employee->branch_id)->where('department', $employee->department_id)->where('designation', $employee->designation_id)->first();
+        $indicator = Indicator::where('created_user', $request->employee)->first();
 
         $ratings = json_decode($indicator->rating, true);
         $rating = json_decode($appraisal->rating, true);

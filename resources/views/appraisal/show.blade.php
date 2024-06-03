@@ -143,33 +143,79 @@
                                             aria-labelledby="panelsStayOpen-headinginfo">
                                             <div class="accordion-body">
 
+                                                <div class="accordion-body">
+
+                                                    <div class="table-responsive mt-1" style="margin-left: 10px;">
+
+                                                        <table>
+                                                            <tbody>
+
+                                                                <tr>
+                                                                    <td class=""
+                                                                        style="width: 150px; font-size: 14px;">
+                                                                        {{ __('Brand') }}
+                                                                    </td>
+                                                                    <td class=""
+                                                                        style="padding-left: 10px; font-size: 14px;">
+                                                                        {{ $appraisal->brand }}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class=""
+                                                                        style="width: 150px; font-size: 14px;">
+                                                                        {{ __('Region') }}
+                                                                    </td>
+                                                                    <td class=""
+                                                                        style="padding-left: 10px; font-size: 14px;">
+                                                                        {{ $appraisal->region }}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class=""
+                                                                        style="width: 150px; font-size: 14px;">
+                                                                        {{ __('Branch') }}
+                                                                    </td>
+                                                                    <td class=""
+                                                                        style="padding-left: 10px; font-size: 14px;">
+                                                                        {{ $appraisal->branch }}
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td class=""
+                                                                        style="width: 150px; font-size: 14px;">
+                                                                        {{ __('Assign To') }}
+                                                                    </td>
+                                                                    <td class=""
+                                                                        style="padding-left: 10px; font-size: 14px;">
+                                                                        {{ $appraisal->created_user }}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td class=""
+                                                                        style="width: 150px; font-size: 14px;">
+                                                                        {{ __('Appraisal Date') }}
+                                                                    </td>
+                                                                    <td class=""
+                                                                        style="padding-left: 10px; font-size: 14px;">
+                                                                        {{ $appraisal->appraisal_date }}
+                                                                    </td>
+                                                                </tr>
+
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                                 <div class="table-responsive mt-1" style="margin-left: 10px;">
 
                                                     <table>
                                                         <tbody>
 
                                                             <div class="modal-body">
-                                                                <div class="row py-4">
-                                                                    <div class="col-md-12">
-                                                                        <div class="info text-sm">
-                                                                            <strong>{{ __('Branch') }} : </strong>
-                                                                            <span>{{ !empty($appraisal->branches) ? $appraisal->branches->name : '' }}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6 mt-3">
-                                                                        <div class="info text-sm font-style">
-                                                                            <strong>{{ __('Employee') }} : </strong>
-                                                                            <span>{{ !empty($appraisal->employees) ? $appraisal->employees->name : '' }}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6 mt-3">
-                                                                        <div class="info text-sm font-style">
-                                                                            <strong>{{ __('Appraisal Date') }} :
-                                                                            </strong>
-                                                                            <span>{{ $appraisal->appraisal_date }}</span>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
+
+
+
                                                                 <div class="row">
 
 
