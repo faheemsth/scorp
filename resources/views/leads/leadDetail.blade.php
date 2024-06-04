@@ -531,7 +531,7 @@
                                                                 <td class=""
                                                                     style="padding-left: 10px; font-size: 14px;">
                                                                     <a href="" style="font-size: 14px;">
-                                                                        {{ \App\Models\User::where('id', $lead->created_by)->first()->name }}</a>
+                                                                        {{ optional(\App\Models\User::where('id', $lead->created_by)->first())->name }}</a>
                                                                 </td>
                                                             </tr>
 
