@@ -32,26 +32,6 @@ class AppraisalController extends Controller
             ->leftJoin('regions', 'regions.id', '=', 'appraisals.region_id')
             ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'appraisals.created_by');
             $Appraisal_query = RoleBaseTableGet($query,'appraisals.brand_id','appraisals.region_id','appraisals.branch','appraisals.created_by');
-
-            $companies = FiltersBrands();
-            $brand_ids = array_keys($companies);
-            $userType = \Auth::user()->type;
-            if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
-                // No additional filtering needed
-            } elseif ($userType === 'company') {
-                $Appraisal_query->where('appraisals.brand_id', \Auth::user()->id);
-            } elseif (in_array($userType, ['Project Director', 'Project Manager']) || \Auth::user()->can('level 2')) {
-                $Appraisal_query->whereIn('appraisals.brand_id', $brand_ids);
-            } elseif (($userType === 'Region Manager' || \Auth::user()->can('level 3')) && !empty(\Auth::user()->region_id)) {
-                $Appraisal_query->where('appraisals.region_id', \Auth::user()->region_id);
-            } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || \Auth::user()->can('level 4') && !empty(\Auth::user())) {
-                $Appraisal_query->where('appraisals.branch', \Auth::user()->branch_id);
-            } else {
-                $Appraisal_query->where('appraisals.created_by', \Auth::user()->id);
-            }
-
-
-
             $filters = $this->AppraisalFilters();
 
             foreach ($filters as $column => $value) {
