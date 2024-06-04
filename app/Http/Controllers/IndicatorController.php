@@ -17,28 +17,12 @@ class IndicatorController extends Controller
         if(\Auth::user()->can('manage indicator'))
         {
             $user = \Auth::user();
-            $indicator_query = Indicator::select('indicators.id','regions.name as region','branches.name as branch','users.name as brand','indicators.id','indicators.created_by','indicators.department','indicators.designation','indicators.created_user')
+            $query = Indicator::select('indicators.id','regions.name as region','branches.name as branch','users.name as brand','indicators.id','indicators.created_by','indicators.department','indicators.designation','indicators.created_user')
             ->leftJoin('users', 'users.id', '=', 'indicators.brand_id')
             ->leftJoin('branches', 'branches.id', '=', 'indicators.branch')
             ->leftJoin('regions', 'regions.id', '=', 'indicators.region_id')
             ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'indicators.created_by');
-
-                // Apply user type-based filtering
-            $userType = \Auth::user()->type;
-            if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
-                // No additional filtering needed
-            } elseif ($userType === 'company') {
-                $indicator_query->where('indicators.brand_id', \Auth::user()->id);
-            } elseif (in_array($userType, ['Project Director', 'Project Manager']) || \Auth::user()->can('level 2')) {
-                $indicator_query->whereIn('indicators.brand_id', $brand_ids);
-            } elseif (($userType === 'Region Manager' || \Auth::user()->can('level 3')) && !empty(\Auth::user()->region_id)) {
-                $indicator_query->where('indicators.region_id', \Auth::user()->region_id);
-            } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || \Auth::user()->can('level 4') && !empty(\Auth::user())) {
-                $indicator_query->where('indicators.branch', \Auth::user()->branch_id);
-            } else {
-                $indicator_query->where('indicators.created_by', \Auth::user()->id);
-            }
-
+            $indicator_query = RoleBaseTableGet($query,'indicators.brand_id','indicators.region_id','indicators.branch','indicators.created_by');
             $filters = $this->IndicatorFilters();
 
             foreach ($filters as $column => $value) {

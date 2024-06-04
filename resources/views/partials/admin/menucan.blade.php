@@ -658,12 +658,12 @@ styl
 
         <li class="nav-item ">
             <a class="nav-link {{ Request::segment(1) == 'indicator' || Request::segment(1) == 'appraisal' || Request::segment(1) == 'goaltracking' ? '' : 'collapsed' }}"
-                href="#" data-toggle="collapse" data-target="#collapsesRecruitment" aria-expanded="true"
-                aria-controls="collapsesRecruitment">
+                href="#" data-toggle="collapse" data-target="#collapsesPerformance" aria-expanded="true"
+                aria-controls="collapsesPerformance">
                 <i class="fa-solid fa-chart-bar me-1" style="color: #ffffff;font-size: 15px;"></i>
                 <span>{{ __('Performance') }}</span>
             </a>
-            <div id="collapsesRecruitment"
+            <div id="collapsesPerformance"
                 class="collapse {{ Request::segment(1) == 'indicator' || Request::segment(1) == 'appraisal' || Request::segment(1) == 'goaltracking' ? 'show' : '' }}"
                 aria-labelledby="headingrepost" data-parent="#accordionSidebar">
                 <div class="  collapse-inner rounded">

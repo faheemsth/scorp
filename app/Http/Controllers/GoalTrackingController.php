@@ -18,7 +18,7 @@ class GoalTrackingController extends Controller
         {
             $user = \Auth::user();
 
-                $goalTracking_query = GoalTracking::select(
+                $query = GoalTracking::select(
                     'goal_trackings.*', // Corrected this line
                     'regions.name as region',
                     'branches.name as branch',
@@ -27,24 +27,7 @@ class GoalTrackingController extends Controller
                 ->leftJoin('users', 'users.id', '=', 'goal_trackings.brand_id')
                 ->leftJoin('branches', 'branches.id', '=', 'goal_trackings.branch')
                 ->leftJoin('regions', 'regions.id', '=', 'goal_trackings.region_id');
-
-                $companies = FiltersBrands();
-                $brand_ids = array_keys($companies);
-                $userType = \Auth::user()->type;
-                if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
-                    // No additional filtering needed
-                } elseif ($userType === 'company') {
-                    $goalTracking_query->where('goal_trackings.brand_id', \Auth::user()->id);
-                } elseif (in_array($userType, ['Project Director', 'Project Manager']) || \Auth::user()->can('level 2')) {
-                    $goalTracking_query->whereIn('goal_trackings.brand_id', $brand_ids);
-                } elseif (($userType === 'Region Manager' || \Auth::user()->can('level 3')) && !empty(\Auth::user()->region_id)) {
-                    $goalTracking_query->where('goal_trackings.region_id', \Auth::user()->region_id);
-                } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || \Auth::user()->can('level 4') && !empty(\Auth::user())) {
-                    $goalTracking_query->where('goal_trackings.branch', \Auth::user()->branch_id);
-                } else {
-                    $goalTracking_query->where('goal_trackings.created_by', \Auth::user()->id);
-                }
-
+                $goalTracking_query = RoleBaseTableGet($query,'goal_trackings.brand_id','goal_trackings.region_id','goal_trackings.branch','goal_trackings.created_by');
                 $filters = $this->GoalTrackingFilters();
 
                 foreach ($filters as $column => $value) {

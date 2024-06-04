@@ -20,7 +20,7 @@ class AppraisalController extends Controller
         if (\Auth::user()->can('manage appraisal')) {
 
             $user = \Auth::user();
-            $Appraisal_query = Appraisal::select(
+            $query = Appraisal::select(
                 'appraisals.*', // Corrected this line
                 'regions.name as region',
                 'branches.name as branch',
@@ -31,6 +31,7 @@ class AppraisalController extends Controller
             ->leftJoin('branches', 'branches.id', '=', 'appraisals.branch')
             ->leftJoin('regions', 'regions.id', '=', 'appraisals.region_id')
             ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'appraisals.created_by');
+            $Appraisal_query = RoleBaseTableGet($query,'appraisals.brand_id','appraisals.region_id','appraisals.branch','appraisals.created_by');
 
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
