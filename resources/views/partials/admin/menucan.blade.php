@@ -717,6 +717,44 @@ styl
 
 
 
+        <li class="nav-item ">
+            <a class="nav-link {{ Request::segment(1) == 'payslip' || Request::segment(1) == 'setsalary' ? '' : 'collapsed' }}"
+                href="#" data-toggle="collapse" data-target="#collapsesPayroll" aria-expanded="true"
+                aria-controls="collapsesPayroll">
+                <i class="fa-solid fa-chart-bar me-1" style="color: #ffffff;font-size: 15px;"></i>
+                <span>{{ __('Payroll') }}</span>
+            </a>
+            <div id="collapsesPayroll"
+                class="collapse {{ Request::segment(1) == 'payslip' || Request::segment(1) == 'setsalary' ? 'show' : '' }}"
+                aria-labelledby="headingrepost" data-parent="#accordionSidebar">
+                <div class="  collapse-inner rounded">
+                    <ul>
+                        <li class="emp nav-item {{ Request::segment(1) == 'setsalary' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/setsalary') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fa fa-tasks me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa fa-tasks me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Set Salary') }}</a>
+                        </li>
+                        <li class="emp nav-item {{ Request::segment(1) == 'payslip' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/payslip') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fa-solid fa-question me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa-solid fa-question me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Payslip') }}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
 
 
 
