@@ -12,12 +12,10 @@
 
 @section('content')
     <div class="col-sm-12 col-lg-12 col-xl-12 col-md-12 mt-4">
-
         <div class="card">
             <div class="card-body">
                 {{ Form::open(['route' => ['payslip.store'], 'method' => 'POST', 'id' => 'payslip_form']) }}
                 <div class="d-flex align-items-center justify-content-end">
-
                     <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12 col-12 mx-2">
                         <div class="btn-box">
                             {{ Form::label('month', __('Select Month'), ['class' => 'form-label']) }}
@@ -33,20 +31,17 @@
                         </div>
                     </div>
                     <div class="col-auto float-end ms-2 mt-4">
-                        <a href="javascript:void(0)" class="btn  btn-primary"
+                        <a href="javascript:void(0)" class="btn  btn-dark"
                            onclick="document.getElementById('payslip_form').submit(); return false;"
                            data-bs-toggle="tooltip" title="{{ __('payslip') }}"
                            data-original-title="{{ __('payslip') }}">
                             {{ __('Generate Payslip') }}
                         </a>
-
-
                     </div>
                 </div>
             </div>
             {{ Form::close() }}
         </div>
-
     </div>
 
 
@@ -54,24 +49,12 @@
         <div class="card">
             <div class="card-header">
                 <form>
-                    {{-- <div class="d-flex justify-content-between w-100"> --}}
                     <div class="d-flex align-items-center justify-content-start">
                         <h5>{{ __('Find Employee Payslip') }}</h5>
                     </div>
-
-
                     <div class="d-flex align-items-center justify-content-end">
-
                         <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12 col-12 mx-2">
                             <div class="btn-box">
-
-                                {{--                                <select class="form-control month_date " name="year" tabindex="-1" aria-hidden="true">--}}
-                                {{--                                    <option value="--">--</option>--}}
-                                {{--                                    @foreach ($month as $k => $mon)--}}
-                                {{--                                        <option value="{{ $k }}">{{ $mon }}</option>--}}
-                                {{--                                    @endforeach--}}
-                                {{--                                </select>--}}
-
                                 <select class="form-control month_date " name="year" tabindex="-1" aria-hidden="true">
                                     <option value="--">--</option>
                                     @foreach($month as $k=>$mon)
@@ -81,11 +64,7 @@
                                         @endphp
                                         <option value="{{$k}}" {{ $selected }} >{{$mon}}</option>
                                     @endforeach
-
-
                                 </select>
-
-
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-3 col-md-6 col-sm-12 col-12 mx-2">
@@ -97,29 +76,11 @@
                         </div>
                         <div class="col-auto float-end ">
                             @can('Create Pay Slip')
-                                <input type="button" value="{{ __('Bulk Payment') }}" class="btn btn-primary"
+                                <input type="button" value="{{ __('Bulk Payment') }}" class="btn btn-dark"
                                        id="bulk_payment">
                             @endcan
-
-
                         </div>
                     </div>
-
-                    {{-- <div class="float-right col-2">
-                            <select class="form-control month_date " name="year" tabindex="-1" aria-hidden="true">
-                                <option value="--">--</option>
-                                @foreach ($month as $k => $mon)
-                                    <option value="{{ $k }}">{{ $mon }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="float-right col-2">
-                            {{ Form::select('year', $year, null, ['class' => 'form-control year_date ']) }}
-                        </div>
-                        @can('Create Pay Slip')
-                            <input type="button" value="{{ __('Bulk Payment') }}" class="btn btn-primary" id="bulk_payment">
-                        @endcan --}}
-                    {{-- </div> --}}
                 </form>
             </div>
             <div class="card-body">
@@ -211,7 +172,7 @@
                                 var payslip =
                                     '<a href="#" data-url="{{ url('payslip/pdf/') }}/' + id +
                                     '/' + datePicker +
-                                    '" data-size="md-pdf"  data-ajax-popup="true" class="btn btn-primary" data-title="{{ __('Employee Payslip') }}">' +
+                                    '" data-size="md-pdf"  data-ajax-popup="true" class="btn btn-dark" data-title="{{ __('Employee Payslip') }}">' +
                                     '{{ __('Payslip') }}' + '</a> ';
                             }
 
@@ -281,7 +242,7 @@
                                 if (valueOfElement[6] == "UnPaid" && valueOfElement[7] != 0) {
                                     var clickToPaid =
                                         '<a href="{{ url('payslip/paysalary/') }}/' + id +
-                                        '/' + datePicker + '"  class="btn-sm btn btn-primary">' +
+                                        '/' + datePicker + '"  class="btn-sm btn btn-dark">' +
                                         '{{ __('Click To Paid') }}' + '</a>  ';
                                 } else {
                                     var clickToPaid = '';

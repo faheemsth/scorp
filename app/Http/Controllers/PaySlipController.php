@@ -40,19 +40,13 @@ class PaySlipController extends Controller
                 '12' => 'DEC',
             ];
 
-            $year = [
-//                '2020' => '2020',
-//                '2021' => '2021',
-                '2022' => '2022',
-                '2023' => '2023',
-                '2024' => '2024',
-                '2025' => '2025',
-                '2026' => '2026',
-                '2027' => '2027',
-                '2028' => '2028',
-                '2029' => '2029',
-                '2030' => '2030',
-            ];
+            $year = [];
+            $currentYear = date('Y');
+
+            for ($i = 0; $i < 10; $i++) {
+                $yearValue = $currentYear - $i;
+                $year[$yearValue] = (string)$yearValue;
+            }
 
             return view('payslip.index', compact('employees', 'month', 'year'));
         }
@@ -89,13 +83,21 @@ class PaySlipController extends Controller
 
         $formate_month_year = $year . '-' . $month;
         $validatePaysilp    = PaySlip::where('salary_month', '=', $formate_month_year)->where('created_by', \Auth::user()->creatorId())->pluck('employee_id');
-        $payslip_employee   = Employee::where('created_by', \Auth::user()->creatorId())->where('company_doj', '<=', date($year . '-' . $month . '-t'))->count();
-        
+        $query = Employee::select('employees.*')
+        ->leftJoin('users', 'users.id', '=', 'users.brand_id')
+        ->leftJoin('branches', 'branches.id', '=', 'users.branch_id')
+        ->leftJoin('regions', 'regions.id', '=', 'users.region_id');
+
+        $Employee = RoleBaseTableGet($query,'users.brand_id','users.region_id','users.branch_id','users.created_by');
+        $Employee2 = RoleBaseTableGet($query,'users.brand_id','users.region_id','users.branch_id','users.created_by');
+        $Employee3 = RoleBaseTableGet($query,'users.brand_id','users.region_id','users.branch_id','users.created_by');
+        $payslip_employee   = $Employee->where('company_doj', '<=', date($year . '-' . $month . '-t'))->count();
+
         if($payslip_employee >= count($validatePaysilp))
         {
-            $employees = Employee::where('created_by', \Auth::user()->creatorId())->where('company_doj', '<=', date($year . '-' . $month . '-t'))->whereNotIn('employee_id', $validatePaysilp)->get();
-            $employees = Employee::whereNotNull('salary')->whereNotNull('salary_type')->get();
-            $employeesSalary = Employee::where('created_by', \Auth::user()->creatorId())->where('salary', '<=', 0)->first();
+            $employees = $Employee2->where('company_doj', '<=', date($year . '-' . $month . '-t'))->whereNotIn('employee_id', $validatePaysilp)->get();
+            $employees = $Employee3->whereNotNull('salary')->whereNotNull('salary_type')->get();
+            $employeesSalary = $Employee2->where('salary', '<=', 0)->first();
             if(!empty($employeesSalary))
             {
                 return redirect()->route('payslip.index')->with('error', __('Please set employee salary.'));

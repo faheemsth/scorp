@@ -133,22 +133,22 @@ class SetSalaryController extends Controller
             $allowance_options = AllowanceOption::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $loan_options      = LoanOption::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
             $deduction_options = DeductionOption::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            // if(\Auth::user()->type == 'employee')
-            // {
-            //     $currentEmployee      = Employee::where('user_id', '=', \Auth::user()->id)->first();
-            //     $allowances           = Allowance::where('employee_id', $currentEmployee->id)->get();
-            //     $commissions          = Commission::where('employee_id', $currentEmployee->id)->get();
-            //     $loans                = Loan::where('employee_id', $currentEmployee->id)->get();
-            //     $saturationdeductions = SaturationDeduction::where('employee_id', $currentEmployee->id)->get();
-            //     $otherpayments        = OtherPayment::where('employee_id', $currentEmployee->id)->get();
-            //     $overtimes            = Overtime::where('employee_id', $currentEmployee->id)->get();
-            //     $employee             = Employee::where('user_id', '=', \Auth::user()->id)->first();
+            if(\Auth::user()->type == 'employee')
+            {
+                $currentEmployee      = Employee::where('user_id', '=', \Auth::user()->id)->first();
+                $allowances           = Allowance::where('employee_id', $currentEmployee->id)->get();
+                $commissions          = Commission::where('employee_id', $currentEmployee->id)->get();
+                $loans                = Loan::where('employee_id', $currentEmployee->id)->get();
+                $saturationdeductions = SaturationDeduction::where('employee_id', $currentEmployee->id)->get();
+                $otherpayments        = OtherPayment::where('employee_id', $currentEmployee->id)->get();
+                $overtimes            = Overtime::where('employee_id', $currentEmployee->id)->get();
+                $employee             = Employee::where('user_id', '=', \Auth::user()->id)->first();
 
-            //     return view('setsalary.employee_salary', compact('employee', 'payslip_type', 'allowance_options', 'commissions', 'loan_options', 'overtimes', 'otherpayments', 'saturationdeductions', 'loans', 'deduction_options', 'allowances'));
+                return view('setsalary.employee_salary', compact('employee', 'payslip_type', 'allowance_options', 'commissions', 'loan_options', 'overtimes', 'otherpayments', 'saturationdeductions', 'loans', 'deduction_options', 'allowances'));
 
-            // }
-            // else
-            // {
+            }
+            else
+            {
                 $allowances           = Allowance::where('employee_id', $id)->get();
                 $commissions          = Commission::where('employee_id', $id)->get();
                 $loans                = Loan::where('employee_id', $id)->get();
@@ -158,7 +158,7 @@ class SetSalaryController extends Controller
                 $employee             = Employee::find($id);
 
                 return view('setsalary.edit', compact('employee', 'payslip_type', 'allowance_options', 'commissions', 'loan_options', 'overtimes', 'otherpayments', 'saturationdeductions', 'loans', 'deduction_options', 'allowances'));
-            // }
+            }
         }
         else
         {
