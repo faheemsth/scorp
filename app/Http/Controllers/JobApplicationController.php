@@ -19,6 +19,7 @@ use App\Models\JobApplicationNote;
 use App\Models\JobOnBoard;
 use App\Models\JobStage;
 use App\Models\Plan;
+use App\Models\SavedFilter;
 use App\Models\User;
 use App\Models\Utility;
 use Illuminate\Http\Request;
@@ -413,14 +414,103 @@ class JobApplicationController extends Controller
     {
         if(\Auth::user()->can('manage job onBoard'))
         {
-            $jobOnBoards = JobOnBoard::where('created_by', \Auth::user()->creatorId())->get();
+            $query = JobOnBoard::select(
+                'job_on_boards.*',
+                'regions.name as region',
+                'branches.name as branch',
+                'users.name as brand',
+                'assigned_to.name as created_user'
+            )
+            ->leftJoin('job_applications as ja1', 'ja1.id', '=', 'job_on_boards.application')
+            ->leftJoin('jobs', 'jobs.id', '=', 'ja1.job')
+            ->leftJoin('users', 'users.id', '=', 'jobs.brand_id')
+            ->leftJoin('job_applications as ja2', 'ja2.id', '=', 'jobs.brand_id')
+            ->leftJoin('branches', 'branches.id', '=', 'jobs.branch')
+            ->leftJoin('regions', 'regions.id', '=', 'jobs.region_id')
+            ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'jobs.created_by');
 
-            return view('jobApplication.onboard', compact('jobOnBoards'));
+            $jobOnBoard_query=RoleBaseTableGet($query,'jobs.brand_id','jobs.region_id','jobs.branch','jobs.created_by');
+            $filters = $this->jobsFilters();
+
+            foreach ($filters as $column => $value) {
+                if ($column == 'created_at') {
+                    $jobOnBoard_query->whereDate('jobs.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                }elseif ($column == 'brand') {
+                    $jobOnBoard_query->where('jobs.brand_id', $value);
+                }elseif ($column == 'region_id') {
+                    $jobOnBoard_query->where('jobs.region_id', $value);
+                }elseif ($column == 'branch_id') {
+                    $jobOnBoard_query->where('jobs.branch', $value);
+                }
+
+            }
+            $jobOnBoards=$jobOnBoard_query->get();
+            $saved_filters = SavedFilter::where('created_by', \Auth::id())->where('module', 'jobOnBoards')->get();
+            $filters = BrandsRegionsBranches();
+            return view('jobApplication.onboard', compact('filters','saved_filters','jobOnBoards'));
         }
         else
         {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
+    }
+
+    private function jobsFilters()
+    {
+        $filters = [];
+        if (isset($_GET['name']) && !empty($_GET['name'])) {
+            $filters['name'] = $_GET['name'];
+        }
+
+        if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+            $filters['brand'] = $_GET['brand'];
+        }
+
+        if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
+            $filters['region_id'] = $_GET['region_id'];
+        }
+
+        if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
+            $filters['branch_id'] = $_GET['branch_id'];
+        }
+
+        if (isset($_GET['lead_assigned_user']) && !empty($_GET['lead_assigned_user'])) {
+            $filters['deal_assigned_user'] = $_GET['lead_assigned_user'];
+        }
+
+
+        if (isset($_GET['stages']) && !empty($_GET['stages'])) {
+            $filters['stage_id'] = $_GET['stages'];
+        }
+
+        if (isset($_GET['users']) && !empty($_GET['users'])) {
+            $filters['users'] = $_GET['users'];
+        }
+
+        if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
+            $filters['created_at_from'] = $_GET['created_at_from'];
+        }
+
+        if (isset($_GET['created_at_to']) && !empty($_GET['created_at_to'])) {
+            $filters['created_at_to'] = $_GET['created_at_to'];
+        }
+        if (isset($_GET['tag']) && !empty($_GET['tag'])) {
+            $filters['tag'] = $_GET['tag'];
+        }
+
+        if (isset($_GET['price']) && !empty($_GET['price'])) {
+            $price = $_GET['price'];
+
+            if (preg_match('/^(<=|>=|<|>)/', $price, $matches)) {
+                $comparePrice = $matches[1]; // Get the comparison operator
+                $filters['price'] = (float) substr($price, strlen($comparePrice)); // Get the price value
+            } else {
+                $comparePrice = '=';
+                $filters['price'] = '=' . $price; // Default to '=' if no comparison operator is provided
+            }
+        }
+
+        return $filters;
     }
 
     public function jobBoardStore(Request $request, $id)

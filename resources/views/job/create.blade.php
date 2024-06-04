@@ -205,10 +205,34 @@
         {{Form::close()}}
     </div>
 @endsection
-
-
 @push('script-page')
 <script>
+     $('form').submit(function(e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var formData = new FormData($(this)[0]); // Create FormData object from the form
+            $(".BulkSendButton").val('Processing...');
+            $('.BulkSendButton').attr('disabled', 'disabled');
+            $.ajax({
+                url: $(this).attr('action'), // Get the form action URL
+                type: $(this).attr('method'), // Get the form method (POST in this case)
+                data: formData, // Set the form data
+                contentType: false, // Don't set contentType, let jQuery handle it
+                processData: false, // Don't process the data, let jQuery handle it
+                dataType: 'json', // Expect JSON response
+                success: function(response) {
+                    if (response.status == 'success') {
+                        show_toastr('Success', response.message, 'success');
+                        window.location.href = response.url;
+                        return false;
+                    } else {
+                        show_toastr('Error', response.message, 'error');
+                        $(".BulkSendButton").val('Create');
+                        $('.BulkSendButton').removeAttr('disabled');
+                    }
+                },
+            });
+        });
     $("#filter_brand_id").on("change", function() {
         var id = $(this).val();
         var type = 'brand';

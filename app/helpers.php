@@ -409,6 +409,57 @@ if (!function_exists('GetDepartments')) {
     }
 }
 
+if (!function_exists('CountJob')) {
+    function CountJob($status)
+    {
+        $count_query = App\Models\Job::select('jobs.*');
+
+        $companies = FiltersBrands();
+        $brand_ids = array_keys($companies);
+        $userType = \Auth::user()->type;
+        if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
+            // No additional filtering needed
+        } elseif ($userType === 'company') {
+            $count_query->where('jobs.brand_id', \Auth::user()->id);
+        } elseif (in_array($userType, ['Project Director', 'Project Manager']) || \Auth::user()->can('level 2')) {
+            $count_query->whereIn('jobs.brand_id', $brand_ids);
+        } elseif (($userType === 'Region Manager' || \Auth::user()->can('level 3')) && !empty(\Auth::user()->region_id)) {
+            $count_query->where('jobs.region_id', \Auth::user()->region_id);
+        } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || \Auth::user()->can('level 4') && !empty(\Auth::user())) {
+            $count_query->where('jobs.branch', \Auth::user()->branch_id);
+        } else {
+            $count_query->where('jobs.created_by', \Auth::user()->id);
+        }
+
+
+        return $count_query->whereIn('status',$status)->count();
+    }
+}
+
+
+if (!function_exists('RoleBaseTableGet')) {
+    function RoleBaseTableGet($count_query,$brand,$region,$branch,$byMe)
+    {
+        $companies = FiltersBrands();
+        $brand_ids = array_keys($companies);
+        $userType = \Auth::user()->type;
+        if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
+            // No additional filtering needed
+        } elseif ($userType === 'company') {
+            $count_query->where($brand, \Auth::user()->id);
+        } elseif (in_array($userType, ['Project Director', 'Project Manager']) || \Auth::user()->can('level 2')) {
+            $count_query->whereIn($brand, $brand_ids);
+        } elseif (($userType === 'Region Manager' || \Auth::user()->can('level 3')) && !empty(\Auth::user()->region_id)) {
+            $count_query->where($region, \Auth::user()->region_id);
+        } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || \Auth::user()->can('level 4') && !empty(\Auth::user())) {
+            $count_query->where($branch, \Auth::user()->branch_id);
+        } else {
+            $count_query->where($byMe, \Auth::user()->id);
+        }
+        return $count_query;
+    }
+}
+
 
 
 if (!function_exists('GetAllbrachesByPermission')) {
