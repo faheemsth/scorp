@@ -833,7 +833,7 @@ class LeadController extends Controller
             $lead->sources  = explode(',', $lead->sources);
             $regions =  Region::where('id', $lead->region_id)->pluck('name', 'id')->toArray();
             $branches =  Branch::where('id', $lead->branch_id)->get()->pluck('name', 'id')->toArray();
-            $companies = FiltersBrands();
+            // $companies = FiltersBrands();
             $filter = BrandsRegionsBranchesForEdit($lead->brand_id, $lead->region_id, $lead->branch_id);
             $filter['brands'][3751] = 'SCORP';
             $companies = $filter['brands'];
