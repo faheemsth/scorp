@@ -134,7 +134,7 @@
                     @can('edit lead')
                         @if (!empty($deal))
                             <a href="javascript:void(0)"
-                               @can('View Deal')
+                               @can('view deal')
                                    @if ($deal->is_active)
                                        onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})"
                                    @endif
