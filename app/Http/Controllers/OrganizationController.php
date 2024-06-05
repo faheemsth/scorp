@@ -1023,6 +1023,7 @@ class OrganizationController extends Controller
 
             //function will return all the relevent brands, regions,leads
             $filter = BrandsRegionsBranches();
+            $filter['brands'][3751] = 'SCORP';
             $companies = $filter['brands'];
             $Region = $filter['regions'];
             $branches = $filter['branches'];
@@ -1206,6 +1207,7 @@ class OrganizationController extends Controller
             // dd($branches);
 
             $filter = BrandsRegionsBranchesForEdit($task->brand_id, $task->region_id, $task->branch_id);
+            $filter['brands'][3751] = 'SCORP';
             $companies = $filter['brands'];
             $Region = $filter['regions'];
             $branches = $filter['branches'];
