@@ -96,12 +96,13 @@ class PaySlipController extends Controller
         if($payslip_employee >= count($validatePaysilp))
         {
             $employees = $Employee2->where('company_doj', '<=', date($year . '-' . $month . '-t'))->whereNotIn('employee_id', $validatePaysilp)->get();
-            $employees = $Employee3->whereNotNull('salary')->whereNotNull('salary_type')->get();
+            // $employees = $Employee3->whereNotNull('salary')->whereNotNull('salary_type')->get();
             $employeesSalary = $Employee2->where('salary', '<=', 0)->first();
             if(!empty($employeesSalary))
             {
                 return redirect()->route('payslip.index')->with('error', __('Please set employee salary.'));
             }
+            // dd($employees);
             foreach($employees as $employee)
             {
 

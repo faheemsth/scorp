@@ -20,22 +20,22 @@
 
                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" href="#allowance" role="tab" aria-controls="pills-home" aria-selected="true">{{__('Allowance')}}</a>
+                        <a class="nav-link active" id="pills-home-tab" style="color:black" data-bs-toggle="pill" href="#allowance" role="tab" aria-controls="pills-home" aria-selected="true">{{__('Allowance')}}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" href="#commission" role="tab" aria-controls="pills-profile" aria-selected="false">{{__('Commission')}}</a>
+                        <a class="nav-link" id="pills-profile-tab" style="color:black" data-bs-toggle="pill" href="#commission" role="tab" aria-controls="pills-profile" aria-selected="false">{{__('Commission')}}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" href="#loan" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('Loan')}}</a>
+                        <a class="nav-link" id="pills-contact-tab" style="color:black" data-bs-toggle="pill" href="#loan" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('Loan')}}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" href="#deduction" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('Saturation Deduction')}}</a>
+                        <a class="nav-link" id="pills-contact-tab" style="color:black" data-bs-toggle="pill" href="#deduction" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('Saturation Deduction')}}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" href="#payment" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('Other Payment')}}</a>
+                        <a class="nav-link" id="pills-contact-tab" style="color:black" data-bs-toggle="pill" href="#payment" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('Other Payment')}}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" href="#overtime" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('Overtime')}}</a>
+                        <a class="nav-link" id="pills-contact-tab" style="color:black" data-bs-toggle="pill" href="#overtime" role="tab" aria-controls="pills-contact" aria-selected="false">{{__('Overtime')}}</a>
                     </li>
                 </ul>
                 {{-- @dd($payslip->allowance) --}}
@@ -168,7 +168,7 @@
             </div>
             <div class="modal-footer">
                 <input type="button" value="Cancel" class="btn btn-light" data-bs-dismiss="modal">
-                <input type="submit" value="{{__('Update')}}" class="btn btn-primary">
+                <input type="submit" value="{{__('Update')}}" class="btn btn-dark">
             </div>
             {{Form::close()}}
         </div>
