@@ -747,4 +747,8 @@ function UserRegionBranch(){
         'branches' => $branches
     ];
 }
+function allBranches(){
+    // Retrieve branches and format them as 'name' => 'id'
+    return Branch::pluck('name', 'id')->toArray();
+}
 

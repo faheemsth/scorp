@@ -1898,7 +1898,7 @@ Route::get('/region/regionBrands/task', [RegionController::class, 'getRegionBran
 Route::post("/save-filter", [SavedFilterController::class, 'save'])->name('save-filter');
 Route::post("/edit-filter", [SavedFilterController::class, 'edit'])->name('edit-filter');
 Route::post("/delete-filter", [SavedFilterController::class, 'deleteFilter'])->name('delete-filter');
-
+Route::get('/region/filter-branch-users-permission', [RegionController::class, 'getFilterBranchUsersPermission'])->name('filter-branch-users-permission');
 /////////////////////////////////////////////////////////////////////////////////
 Route::get('/region/filter-regions', [RegionController::class, 'getFilterRegions'])->name('filter-regions');
 Route::get('/region/filter-branches', [RegionController::class, 'getFilterBranches'])->name('filter-branches');
