@@ -447,11 +447,19 @@
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script>
-    function deleteTage() {
+    function deleteTage(element,lead_id,old_tag_id) {
+        $(element).attr('disabled', 'disabled'); // Disable the anchor tag
+        $(element).css('pointer-events', 'none'); // Prevent further clicks
+        $(element).find('i').remove(); // Remove the <i> tag
+        $(element).append(`
+        <div class="spinner-border spinner-border-sm text-white" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        `);
         $.ajax({
             type: "GET",
             url: '{{ url('delete_tage') }}',
-            data: {lead_id : $('#lead_id').val(),old_tag_id : $('#old_tag_id').val()},
+            data: {lead_id : lead_id,old_tag_id : old_tag_id},
             success: function(response) {
                 data = JSON.parse(response);
 

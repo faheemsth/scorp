@@ -204,7 +204,7 @@
                                         <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-dark mx-1 tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $lead->id }}"><i class="ti ti-pencil"></i></a>
                                         <input type="hidden" value="{{ $lead->id }}" name="lead_id" id="lead_id">
                                         <input type="hidden" value="{{ $tag->id }}" name="old_tag_id" id="old_tag_id">
-                                        <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-danger" onclick="deleteTage()"><i class="ti ti-trash"></i></a>
+                                        <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-danger" onclick="deleteTage(this,{{ $lead->id }},{{ $tag->id }})"><i class="ti ti-trash"></i></a>
                                     </span>
                                 </div>
                                 @php $counter++; @endphp
