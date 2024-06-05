@@ -172,7 +172,7 @@
                                 var payslip =
                                     '<a href="#" data-url="{{ url('payslip/pdf/') }}/' + id +
                                     '/' + datePicker +
-                                    '" data-size="md-pdf"  data-ajax-popup="true" class="btn btn-dark" data-title="{{ __('Employee Payslip') }}">' +
+                                    '" data-size="md-pdf"  data-ajax-popup="true" class="btn btn-dark" data-size="lg" data-title="{{ __('Employee Payslip') }}">' +
                                     '{{ __('Payslip') }}' + '</a> ';
                             }
 
@@ -186,7 +186,7 @@
                                 view =
                                     '<a href="#" data-url="{{ url('payslip/showemployee/') }}/' +
                                     payslip_id +
-                                    '"  data-ajax-popup="true" class="view-btn gray-bg" data-title="{{ __('View Employee Detail') }}">' +
+                                    '"  data-ajax-popup="true" class="view-btn gray-bg" data-size="lg" data-title="{{ __('View Employee Detail') }}">' +
                                     '{{ __('View') }}' + '</a>';
                             }
 
@@ -194,7 +194,7 @@
                                 edit =
                                     '<a href="#" data-url="{{ url('payslip/editemployee/') }}/' +
                                     payslip_id +
-                                    '"  data-ajax-popup="true" class="view-btn blue-bg" data-title="{{ __('Edit Employee salary') }}">' +
+                                    '"  data-ajax-popup="true" class="view-btn blue-bg" data-size="lg" data-title="{{ __('Edit Employee salary') }}" bs-original-title="{{ __('Edit Employee salary') }}" title="{{ __('Edit Employee salary') }}">' +
                                     '{{ __('Edit') }}' + '</a>';
                             }
 
@@ -236,7 +236,7 @@
                                         '<a href="#" data-url="{{ url('payslip/pdf/') }}/' +
                                         id +
                                         '/' + datePicker +
-                                        '" data-size="lg"  data-ajax-popup="true" class=" btn-sm btn btn-warning" data-title="{{ __('Employee Payslip') }}">' +
+                                        '" data-size="lg"  data-ajax-popup="true" class=" btn-sm btn btn-warning" data-size="lg" data-title="{{ __('Employee Payslip') }}">' +
                                         '{{ __('Payslip') }}' + '</a> ';
                                 }
                                 if (valueOfElement[6] == "UnPaid" && valueOfElement[7] != 0) {
@@ -252,7 +252,7 @@
                                     var edit =
                                         '<a href="#" data-url="{{ url('payslip/editemployee/') }}/' +
                                         payslip_id +
-                                        '"  data-ajax-popup="true" class="btn-sm btn btn-info" data-title="{{ __('Edit Employee salary') }}">' +
+                                        '"  data-ajax-popup="true" class="btn-sm btn btn-info" data-size="lg" data-title="{{ __('Edit Employee salary') }}" bs-original-title="{{ __('Edit Employee salary') }}" title="{{ __('Edit Employee salary') }}">' +
                                         '{{ __('Edit') }}' + '</a>';
                                 } else {
                                     var edit = '';
