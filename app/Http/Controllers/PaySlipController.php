@@ -96,15 +96,16 @@ class PaySlipController extends Controller
         if($payslip_employee >= count($validatePaysilp))
         {
             $employees = $Employee2->where('company_doj', '<=', date($year . '-' . $month . '-t'))->whereNotIn('employee_id', $validatePaysilp)->get();
-            // $employees = $Employee3->whereNotNull('salary')->whereNotNull('salary_type')->get();
+            $employees = $Employee3->whereNotNull('salary')->whereNotNull('salary_type')->get();
             $employeesSalary = $Employee2->where('salary', '<=', 0)->first();
             if(!empty($employeesSalary))
             {
                 return redirect()->route('payslip.index')->with('error', __('Please set employee salary.'));
             }
-            // dd($employees);
             foreach($employees as $employee)
             {
+                $CheckPaysilp    = PaySlip::where('employee_id',$employee->id)->where('salary_month', '=', $formate_month_year)->where('created_by', \Auth::user()->creatorId())->first();
+               if(empty($CheckPaysilp)){
 
                 $payslipEmployee                       = new PaySlip();
                 $payslipEmployee->employee_id          = $employee->id;
@@ -120,7 +121,7 @@ class PaySlipController extends Controller
                 $payslipEmployee->overtime             = Employee::overtime($employee->id);
                 $payslipEmployee->created_by           = \Auth::user()->creatorId();
                 $payslipEmployee->save();
-
+               }
                 //Slack Notification
                 $setting  = Utility::settings(\Auth::user()->creatorId());
                 if(isset($setting['payslip_notification']) && $setting['payslip_notification'] ==1){
