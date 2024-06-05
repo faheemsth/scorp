@@ -3738,8 +3738,23 @@ class DealController extends Controller
              $stage_histories = StageHistory::where('type', 'deal')->where('type_id', $deal->id)->pluck('stage_id')->toArray();
 
              $lead = Lead::where('is_converted', $deal->id)->first();
+             $tags = [];
 
-            $html = view('deals.deal_details', compact('regions','Brands','deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories', 'lead'))->render();
+             if (\Auth::check()) {
+                 $user = \Auth::user();
+
+                 if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                     $tags = LeadTag::pluck('id', 'tag')->toArray();
+                 } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                     $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                 } elseif (in_array($user->type, ['Region Manager'])) {
+                     $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                 } else {
+                     $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                 }
+             }
+
+            $html = view('deals.deal_details', compact('tags','regions','Brands','deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories', 'lead'))->render();
 
             return json_encode([
                 'status' => 'success',

@@ -120,7 +120,7 @@
         <div class="col-sm-12 pe-0">
 
             {{-- topbar --}}
-            <div class="lead-topbar d-flex flex-wrape justify-content-between align-items-center p-2">
+            <div class="lead-topbar d-flex flex-wrap justify-content-between align-items-center py-1 px-2">
                 <div class="d-flex align-items-center">
                     <div class="lead-avator">
                         <img src="{{ asset('assets/images/placeholder-lead.png') }}" alt="" class="">
@@ -182,6 +182,34 @@
                 </div>
 
 
+                <!-- New row added here -->
+                <div class="row w-100 mt-3 border-top">
+                    @php $counter = 0; @endphp
+                    <div class="col-12 px-5 py-2 d-flex">
+                        @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $deal->tag_ids))->get() as $tag)
+                            @if ($tag->tag != '')
+                                @if ($counter % 5 == 0 && $counter != 0)
+                                    </div><div class="col-12 px-5 py-2 d-flex">
+                                @endif
+                                <div class="d-flex ml-1">
+                                    <span class="" style="font-size:13px;background-color: #419de4;color:white;padding: 5px 21px;border: none;border-radius: 0px 30px 30px 0px;font-size: 11.7px;">{{ limit_words($tag->tag, 1.5) }}</span>
+                                    <span class="d-flex mt-1">
+                                        <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-dark mx-1 tag-badge"
+                                        data-tag-id="{{ $tag->id }}"
+                                        data-lead-id="{{ $lead->id }}"
+                                        data-deal-id="{{ $deal->id }}"
+                                        ><i class="ti ti-pencil"></i></a>
+                                        <input type="hidden" value="{{ $deal->id }}" name="lead_id" id="lead_id">
+                                        <input type="hidden" value="{{ $tag->id }}" name="old_tag_id" id="old_tag_id">
+                                        <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-danger" onclick="deleteTage(this,{{ $deal->id }},{{ $tag->id }})"><i class="ti ti-trash"></i></a>
+                                    </span>
+                                </div>
+                                @php $counter++; @endphp
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+                {{--  New row added end --}}
             </div>
 
 
@@ -1586,4 +1614,84 @@
             $('#note_id').val(dataId);
         });
     });
+    $('.tag-badge').click(function() {
+            $('#TagModalBody').html('');
+            var tagId = $(this).data('tag-id');
+            var leadId = $(this).data('lead-id');
+            var dealId = $(this).data('deal-id');
+            $('#UpdateTageModal').css('z-index', 99999);
+            var selectOptions = <?php echo json_encode($tags); ?>;
+            // Check if selectOptions is an object
+            if (typeof selectOptions === 'object' && selectOptions !== null) {
+                // Generate options HTML by iterating over object keys
+                var optionsHTML = '';
+                for (var key in selectOptions) {
+                    if (selectOptions.hasOwnProperty(key) && key.trim() !== '') {
+                        optionsHTML += `<option value="${selectOptions[key]}" ${tagId === selectOptions[key] ? 'selected' : ''}>${key}</option>`;
+                    }
+                }
+                // Append the options to the select element
+                $('#TagModalBody').append(`
+                    <input type="hidden" value="${tagId}" name="old_tag_id" id="old_tag_id">
+                    <div class="form-group">
+                        <label for="">Tag</label>
+                        <select class="form form-control select2 selectTage" name="new_tag_id" id="tagSelectupdate" style="width: 95%;">
+                            <option value="">Select Tag</option>
+                            ${optionsHTML}
+                        </select>
+                    </div>
+                    <input type="hidden" value="${leadId}" name="lead_id" id="lead_id">
+                    <input type="hidden" value="${dealId}" name="deal_id" id="dealer_id">
+                `);
+                select2();
+                $('#UpdateTageModal').modal('show');
+            }
+        });
+        // update tage post request
+    $(document).ready(function () {
+        $('#UpdateTagForm').submit(function (event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+            $.ajax({
+                url: '{{ url("leads/tag") }}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    data = JSON.parse(response);
+                    show_toastr('success', data.msg);
+                    $("#UpdateTageModal").modal('hide');
+                    openSidebar('/get-deal-detail?deal_id='+$('#dealer_id').val())
+                },
+            });
+        });
+    });
+    function deleteTage(element,deal_id,old_tag_id) {
+    $(element).attr('disabled', 'disabled'); // Disable the anchor tag
+    $(element).css('pointer-events', 'none'); // Prevent further clicks
+    $(element).find('i').remove(); // Remove the <i> tag
+    $(element).append(`
+      <div class="spinner-border spinner-border-sm text-white" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    `);
+    // Add the <div> tag with spinner and loading text
+        $.ajax({
+            type: "GET",
+            url: '{{ url('delete_tage') }}',
+            data: {deal_id : deal_id,old_tag_id : old_tag_id},
+            success: function(response) {
+                data = JSON.parse(response);
+
+                if (data.status == 'success') {
+                    $("#UpdateTageModal").modal('hide');
+                    show_toastr('success', data.msg);
+                    openSidebar('/get-deal-detail?deal_id='+deal_id)
+                }
+            },
+        });
+    }
 </script>

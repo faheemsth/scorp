@@ -190,35 +190,34 @@
                 </div>
 
                 <!-- New row added here -->
-                <div class="row w-100 mt-3">
+                <div class="row w-100 mt-3 border-top">
                     @php $counter = 0; @endphp
                     <div class="col-12 px-5 py-2 d-flex">
                         @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $lead->tag_ids))->get() as $tag)
-                            @if ($counter % 5 == 0 && $counter != 0)
-                                </div><div class="col-12 px-5 py-2 d-flex">
+                            @if ($tag->tag != '')
+                                @if ($counter % 5 == 0 && $counter != 0)
+                                    </div><div class="col-12 px-5 py-2 d-flex">
+                                @endif
+                                <div class="d-flex ml-1">
+                                    <span class="" style="font-size:13px;background-color: #419de4;color:white;padding: 5px 21px;border: none;border-radius: 0px 30px 30px 0px;font-size: 11.7px;">{{ limit_words($tag->tag, 1.5) }}</span>
+                                    <span class="d-flex mt-1">
+                                        <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-dark mx-1 tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $lead->id }}"><i class="ti ti-pencil"></i></a>
+                                        <input type="hidden" value="{{ $lead->id }}" name="lead_id" id="lead_id">
+                                        <input type="hidden" value="{{ $tag->id }}" name="old_tag_id" id="old_tag_id">
+                                        <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-danger" onclick="deleteTage()"><i class="ti ti-trash"></i></a>
+                                    </span>
+                                </div>
+                                @php $counter++; @endphp
                             @endif
-                            <div class="d-flex ml-1">
-                                <span class="" style="font-size:13px;background-color: #419de4;color:white;padding: 5px 21px;border: none;border-radius: 0px 30px 30px 0px;font-size: 11.7px;">{{ limit_words($tag->tag, 1.5) }}</span>
-                                <span class="d-flex mt-1">
-                                    <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-dark mx-1 tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $lead->id }}"><i class="ti ti-pencil"></i></a>
-                                    <input type="hidden" value="{{ $lead->id }}" name="lead_id" id="lead_id">
-                                    <input type="hidden" value="{{ $tag->id }}" name="old_tag_id" id="old_tag_id">
-                                    <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-danger" onclick="deleteTage()"><i class="ti ti-trash"></i></a>
-                                </span>
-                            </div>
-                            @php $counter++; @endphp
                         @endforeach
                     </div>
                 </div>
+                {{--  New row added end --}}
             </div>
 
 
 
             <div class="lead-info d-flex justify-content-between p-3 text-center">
-                {{-- <div class="">
-                    <small>{{ __('Stage') }}</small>
-                    <span class="font-weight-bolder">{{ $lead->stage->name }}</span>
-                </div> --}}
                 <div>
                     <small>{{ __('Phone') }}</small>
                     <span style="color: #313949;">{{ !empty($lead->phone) ? $lead->phone : '' }}</span>
@@ -227,11 +226,6 @@
                     <small>{{ __('Email') }}</small>
                     <span style="color: #313949;">{{ !empty($lead->email) ? $lead->email : '' }}</span>
                 </div>
-
-                {{-- <div>
-                    <small> {{ __('Pipeline') }} </small>
-                    <span>{{ $lead->pipeline->name }}</span>
-                </div> --}}
                 <div class="">
                     <small>{{ __('Created') }}</small>
                     <span style="color: #313949;">{{ \Auth::user()->dateFormat($lead->created_at) }}</span>
