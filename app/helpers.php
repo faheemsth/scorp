@@ -559,7 +559,7 @@ if (!function_exists('BrandsRegionsBranches')) {
             $employees = User::where('branch_id', $user->branch_id)->whereNotIn('type', ['client', 'company', 'super admin'])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
         }
 
-
+            $brands=[3751 => 'SCORP'];
 
         return [
             'brands' => [0 => 'Select Brand'] + $brands,
