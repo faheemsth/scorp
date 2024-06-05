@@ -70,7 +70,6 @@
                                         @foreach($companies as $key => $comp)
                                          <option value="{{$key}}" {{ $key == \Auth::user()->id ? 'selected' : ''}}>{{$comp}}</option>
                                         @endforeach
-                                        <option value="3751">{{ __('SCORP')}}</option>
                                     </select>
                                 </div>
                             </div>
@@ -84,7 +83,6 @@
                                         @foreach($companies as $key => $comp)
                                          <option value="{{$key}}" {{ $key == \Auth::user()->brand_id ? 'selected' : ''}}>{{$comp}}</option>
                                         @endforeach
-                                        <option value="3751">{{ __('SCORP')}}</option>
                                     </select>
                                 </div>
                             </div>

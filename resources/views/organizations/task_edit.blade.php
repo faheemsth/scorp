@@ -74,9 +74,6 @@
                                     @foreach($companies as $key => $comp)
                                      <option value="{{$key}}" {{ $key == $task->brand_id ? 'selected' : ''}}>{{$comp}}</option>
                                     @endforeach
-                                    @if($task->brand_id != 3751)
-                                        <option value="3751">{{ __('SCORP')}}</option>
-                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -90,9 +87,6 @@
                                         @foreach($companies as $key => $comp)
                                          <option value="{{$key}}" {{ $key == $task->brand_id ? 'selected' : ''}}>{{$comp}}</option>
                                         @endforeach
-                                        @if($task->brand_id != 3751)
-                                        <option value="3751">{{ __('SCORP')}}</option>
-                                        @endif
                                     </select>
                                 </div>
                         </div>
