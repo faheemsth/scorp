@@ -131,7 +131,7 @@
                             <div class="row">
                                 <div class="col-auto" style="margin-top: 6rem;">
 
-                                    <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('attendanceemployee_filter').submit(); return false;" data-bs-toggle="tooltip" title="{{__('Apply')}}" data-original-title="{{__('apply')}}">
+                                    <a href="#" class="btn btn-sm btn-dark" onclick="document.getElementById('attendanceemployee_filter').submit(); return false;" data-size="lg" data-bs-toggle="tooltip" title="{{__('Apply')}}" data-original-title="{{__('apply')}}">
                                         <span class="btn-inner--icon"><i class="ti ti-search"></i></span>
                                     </a>
 

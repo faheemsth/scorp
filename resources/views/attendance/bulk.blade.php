@@ -94,7 +94,7 @@
                                 </div>
                             </div>
                             <div class="col-auto float-end ms-2 mt-4">
-                                <a href="#" class="btn btn-sm btn-primary" onclick="document.getElementById('bulkattendance_filter').submit(); return false;" data-bs-toggle="tooltip" title="{{__('Apply')}}" data-original-title="{{__('apply')}}">
+                                <a href="#" class="btn btn-sm btn-dark" onclick="document.getElementById('bulkattendance_filter').submit(); return false;" data-bs-toggle="tooltip" title="{{__('Apply')}}" data-original-title="{{__('apply')}}">
                                     <span class="btn-inner--icon"><i class="ti ti-search"></i></span>
                                 </a>
                             </div>
@@ -194,7 +194,7 @@
                         <input type="hidden" value="{{ isset($_GET['branch']) ? $_GET['branch'] : '' }}" name="branch">
                         <input type="hidden" value="{{ isset($_GET['department']) ? $_GET['department'] : '' }}"
                                name="department">
-                        {{ Form::submit(__('Update'), ['class' => 'btn btn-primary']) }}
+                        {{ Form::submit(__('Update'), ['class' => 'btn btn-dark']) }}
                     </div>
                     {{ Form::close() }}
                 </div>

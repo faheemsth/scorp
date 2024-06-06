@@ -255,7 +255,13 @@
 
 
                              @can('create leave')
-                        <a href="#" data-size="lg" data-url="{{ route('leave.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create')}}" data-title="{{__('Create Leave')}}" class="btn filter-btn-show p-2 btn-dark" style="color:white; width:36px; height: 36px; margin-top:10px;">
+                        <a href="#" data-size="lg" data-url="{{ route('leave.create') }}" 
+                        data-ajax-popup="true" 
+                        data-bs-toggle="tooltip" 
+                        title="{{__('Create')}}" 
+                        data-title="{{__('Create Leave')}}" 
+                        class="btn p-2 btn-dark"
+                         style="color:white; width:36px; height: 36px; margin-top:10px;">
                             <i class="ti ti-plus"></i>
                         </a>
                         @endcan
