@@ -14,9 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::table('trainers', function (Blueprint $table) {
-            $table->renameColumn('brand', 'brand_id');
+            $table->renameColumn('branch', 'branch_id');
             $table->integer('region_id');
-            $table->integer('branch_id');
+            $table->integer('brand_id');
         });
     }
 
@@ -28,9 +28,9 @@ return new class extends Migration
     public function down()
     {
         Schema::table('trainers', function (Blueprint $table) {
-            $table->renameColumn('brand_id', 'brand');
+            $table->renameColumn('branch_id', 'branch');
             $table->dropColumn('region_id');
-            $table->dropColumn('branch_id');
+            $table->dropColumn('brand_id');
         });
     }
 };
