@@ -758,6 +758,55 @@ styl
 
 
 
+        <li class="nav-item ">
+            <a class="nav-link {{ Request::segment(1) == 'leave' || Request::segment(1) == 'attendanceemployee' || Request::segment(2) == 'bulkattendance' ? '' : 'collapsed' }}"
+                href="#" data-toggle="collapse" data-target="#collapsesPayroll" aria-expanded="true"
+                aria-controls="collapsesPayroll">
+                <i class="fa-solid fa-chart-bar me-1" style="color: #ffffff;font-size: 15px;"></i>
+                <span>{{ __('Timesheet') }}</span>
+            </a>
+            <div id="collapsesPayroll"
+                class="collapse {{ Request::segment(1) == 'leave' || Request::segment(1) == 'attendanceemployee' || Request::segment(2) == 'bulkattendance' ? 'show' : '' }}"
+                aria-labelledby="headingrepost" data-parent="#accordionSidebar">
+                <div class="  collapse-inner rounded">
+                    <ul>
+                        <li class="emp nav-item {{ Request::segment(1) == 'leave' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/leave') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fa fa-tasks me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa fa-tasks me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Leave') }}</a>
+                        </li>
+                        <li class="emp nav-item {{ Request::segment(1) == 'attendanceemployee' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/attendanceemployee') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fa-solid fa-clock me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa-solid fa-clock me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Marked Attendance') }}</a>
+                        </li>
+                        <li class="emp nav-item {{ Request::segment(1) == 'bulkattendance' ? ' active' : '' }}">
+                            <a class="collapse-item" href="{{ url('/attendanceemployee/bulkattendance') }}"
+                                style="color:white; font-size: 13px;">
+
+                                <i class="fa-solid fa-question me-1" id="icon1"
+                                    style="color: #ffffff;font-size: 15px;"></i>
+                                <i class="fa-solid fa-question me-1" id="icon2"
+                                    style="color: #2e82d0;font-size: 15px;"></i>
+
+                                {{ __('Bulk Attendance') }}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
 
 
         <!--------------------- End CRM ----------------------------------->

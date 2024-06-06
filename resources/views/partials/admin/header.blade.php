@@ -147,12 +147,9 @@
                         onChange="loginWithCompany();">
                         <option value="">Select Companies</option>
                         @foreach ($all_companies as $key => $comp)
-                            <!--@if ($key == $currentUserCompany->id)
--->
-                            <!--    <option value="{{ $key }}" selected><a-->
-                            <!--            href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a></option>-->
-                            <!--
-@endif-->
+                            @if ($key == $currentUserCompany->id)
+                            <option value="{{ $key }}" selected><a href="{{ url('logged_in_as_customer') . '/' . $key }}">{{ $comp }}</a></option>
+                            @endif
                             @foreach ($com_permissions as $com_per)
                                 @if ($com_per->permitted_company_id == $key)
                                     <option value="{{ $key }}"><a
