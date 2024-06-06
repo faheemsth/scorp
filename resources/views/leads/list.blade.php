@@ -414,7 +414,7 @@
                                                 </td>
                                                 <td class="lead-info-cell">
                                                     @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $lead->tag_ids))->get() as $tag)
-                                                        <span class="badge text-white tag-badge" style="background-color:#cd9835;cursor:pointer;">{{ $tag->tag }}</span>
+                                                        <span class="badge text-white" style="background-color:#cd9835;cursor:pointer;">{{ $tag->tag }}</span>
                                                     @endforeach
                                                 </td>
                                             </tr>
