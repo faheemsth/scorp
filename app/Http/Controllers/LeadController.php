@@ -2683,7 +2683,10 @@ class LeadController extends Controller
         if ($validator->fails()) {
             $messages = $validator->getMessageBag();
 
-            return redirect()->back()->with('error', $messages->first());
+            return json_encode([
+                'status' => 'error',
+                'message' => $messages->first()
+            ]);
         }
 
         $lead = Lead::findOrFail($id);
@@ -2700,15 +2703,17 @@ class LeadController extends Controller
                 [
                     'client_name' => 'required',
                     'client_email' => 'required|email|unique:users,email',
-                    // 'client_password' => 'required',
                     'client_passport' => 'required|unique:users,passport_number'
                 ]
             );
 
             if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
-
-                return redirect()->back()->with('error', $messages->first());
+    
+                return json_encode([
+                    'status' => 'error',
+                    'message' => $messages->first()
+                ]);
             }
 
             $role   = Role::findByName('client');
@@ -2743,13 +2748,20 @@ class LeadController extends Controller
             ->orderBy('order', 'asc')
             ->first();
         if (empty($stage)) {
-            return redirect()->back()->with('error', __('Please Create Stage for This Pipeline.'));
+
+            return json_encode([
+                'status' => 'success',
+                'message' => 'Please Create Stage for This Pipeline.',
+            ]);
         }
 
         //check if deal already exist
         $lead_converted = Lead::where('id', $lead->id)->first();
         if($lead_converted->converted != 0){
-            return redirect()->back()->with('success', __('Lead successfully converted'));
+            return json_encode([
+                'status' => 'success',
+                'message' => 'Lead successfully converted',
+            ]);
         }
 
         $deal              = new Deal();
@@ -2973,9 +2985,10 @@ class LeadController extends Controller
         //     $msg = __("Deal converted through lead") . '' . $leadUsers->name . '.';
         //     Utility::send_telegram_msg($msg);
         // }
-
-
-        return redirect()->back()->with('success', __('Lead successfully converted'));
+        return json_encode([
+            'status' => 'success',
+            'message' => 'Lead successfully converted',
+        ]);
     }
 
     // Lead Calls

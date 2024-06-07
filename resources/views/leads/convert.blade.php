@@ -107,44 +107,40 @@
 
 <div class="modal-footer">
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Create')}}" class="btn  btn-dark px-2">
+    <input type="submit" value="{{__('Create')}}" class="btn  btn-dark px-2 BulkSendButton">
 </div>
 
 {{Form::close()}}
 
 <script>
-    // $(document).ready(function () {
-    //     var is_client = $("input[name='client_check']:checked").val();
-    //     $("input[name='client_check']").click(function () {
-    //         is_client = $(this).val();
+    $(document).ready(function() {
+        $('form').submit(function(e) {
+            e.preventDefault(); // Prevent the default form submission
 
-    //         if (is_client == "exist") {
-    //             $('.exist_client').removeClass('d-none');
-    //             $('#client_name').removeAttr('required');
-    //             $('#client_email').removeAttr('required');
-    //             $('#client_password').removeAttr('required');
-    //             $('.new_client').addClass('d-none');
-    //         } else {
-    //             $('.new_client').removeClass('d-none');
-    //             $('#client_name').attr('required', 'required');
-    //             $('#client_email').attr('required', 'required');
-    //             $('#client_password').attr('required', 'required');
-    //             $('.exist_client').addClass('d-none');
-    //         }
-    //     });
-    //     if (is_client == "exist") {
-    //         $('.exist_client').removeClass('d-none');
-    //         $('#client_name').removeAttr('required');
-    //         $('#client_email').removeAttr('required');
-    //         $('#client_password').removeAttr('required');
-    //         $('.new_client').addClass('d-none');
-    //     } else {
-    //         $('.new_client').removeClass('d-none');
-    //         $('#client_name').attr('required', 'required');
-    //         $('#client_email').attr('required', 'required');
-    //         $('#client_password').attr('required', 'required');
-    //         $('.exist_client').addClass('d-none');
-    //     }
-    // })
+            var formData = new FormData($(this)[0]); // Create FormData object from the form
+            $(".BulkSendButton").val('Processing...');
+            $('.BulkSendButton').attr('disabled', 'disabled');
+            $.ajax({
+                url: $(this).attr('action'), // Get the form action URL
+                type: $(this).attr('method'), // Get the form method (POST in this case)
+                data: formData, // Set the form data
+                contentType: false, // Don't set contentType, let jQuery handle it
+                processData: false, // Don't process the data, let jQuery handle it
+                dataType: 'json', // Expect JSON response
+                success: function(response) {
+                    if (response.status == 'success') {
+                        show_toastr('Success', response.message, 'success');
+                        $('#commonModal').modal('hide');
+                        location.reload();
 
+                        return false;
+                    } else {
+                        show_toastr('Error', response.message, 'error');
+                        $(".BulkSendButton").val('Create');
+                        $('.BulkSendButton').removeAttr('disabled');
+                    }
+                },
+            });
+        });
+    });
 </script>
