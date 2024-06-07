@@ -66,7 +66,7 @@
                 <br>
                 <input type="submit" class="btn form-btn bg-dark" style=" color:white;">
                 <a href="/indicator" style="margin: 0px 3px;" class="btn form-btn bg-dark" style="color:white;">Reset</a>
-                <a type="button" id="save-filter-btn" onClick="saveFilter('leads',<?= isset($leads) && is_countable($leads) ? sizeof($leads) : 0 ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
+                <a type="button" id="save-filter-btn" onClick="saveFilter('indicator',<?= isset($indicators) && is_countable($indicators) ? sizeof($indicators) : 0 ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
             </div>
         </div>
     </form>

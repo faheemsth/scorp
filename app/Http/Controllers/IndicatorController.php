@@ -173,7 +173,8 @@ class IndicatorController extends Controller
 
             return json_encode([
                 'status' => 'success',
-                'message' => 'Indicator successfully created.'
+                'message' => 'Indicator successfully created.',
+                'id' => $indicator->id
             ]);
         }
         else

@@ -95,6 +95,7 @@
                     if (response.status == 'success') {
                         show_toastr('Success', response.message, 'success');
                         $('#commonModal').modal('hide');
+                        openSidebar('/IndicatorShowing?id='+response.id)
                         return false;
                     } else {
                         show_toastr('Error', response.message, 'error');
