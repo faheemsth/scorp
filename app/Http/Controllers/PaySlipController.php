@@ -87,11 +87,24 @@ class PaySlipController extends Controller
         ->leftJoin('users', 'users.id', '=', 'users.brand_id')
         ->leftJoin('branches', 'branches.id', '=', 'users.branch_id')
         ->leftJoin('regions', 'regions.id', '=', 'users.region_id');
+        
+        $query2 = Employee::select('employees.*')
+        ->leftJoin('users', 'users.id', '=', 'users.brand_id')
+        ->leftJoin('branches', 'branches.id', '=', 'users.branch_id')
+        ->leftJoin('regions', 'regions.id', '=', 'users.region_id');
+        
+        $query3 = Employee::select('employees.*')
+        ->leftJoin('users', 'users.id', '=', 'users.brand_id')
+        ->leftJoin('branches', 'branches.id', '=', 'users.branch_id')
+        ->leftJoin('regions', 'regions.id', '=', 'users.region_id');
+        
+
 
         $Employee = RoleBaseTableGet($query,'users.brand_id','users.region_id','users.branch_id','users.created_by');
-        $Employee2 = RoleBaseTableGet($query,'users.brand_id','users.region_id','users.branch_id','users.created_by');
-        $Employee3 = RoleBaseTableGet($query,'users.brand_id','users.region_id','users.branch_id','users.created_by');
+        $Employee2 = RoleBaseTableGet($query2,'users.brand_id','users.region_id','users.branch_id','users.created_by');
+        $Employee3 = RoleBaseTableGet($query3,'users.brand_id','users.region_id','users.branch_id','users.created_by');
         $payslip_employee   = $Employee->where('company_doj', '<=', date($year . '-' . $month . '-t'))->count();
+        
 
         if($payslip_employee >= count($validatePaysilp))
         {
