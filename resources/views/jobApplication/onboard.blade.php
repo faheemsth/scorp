@@ -324,11 +324,11 @@
                                                     <a href="#"
                                                         class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para"
                                                         data-bs-toggle="tooltip"
-                                                        data-original-title="{{ __('Convert to Employee') }}"
+                                                        data-original-title="{{ __('Convert to Employee') }}" style="line-height: 16px;height: 30px;"
                                                         title="{{ __('Convert to Employee') }}"
                                                         data-confirm="You want to confirm convert to invoice. Press Yes to continue or Cancel to go back"
                                                         data-confirm-yes="document.getElementById('job-form-{{ $job->id }}').submit();">
-                                                        <i class="ti ti-exchange text-white"></i>
+                                                        <i class="ti ti-exchange text-white"  style="line-height: 17px;"></i>
                                                     </a>
                                                     {!! Form::close() !!}
 
@@ -337,18 +337,18 @@
                                                 <div class="action-btn  ms-2">
                                                     <a onclick="openSidebar('/employee/{{ $job->convert_to_employee }}')"
                                                         class="btn btn-sm btn-dark mx-1 align-items-center" data-bs-toggle="tooltip"
-                                                        title="{{ __('View') }}"
+                                                        title="{{ __('View') }}" style="line-height: 16px;height: 30px;"
                                                         data-original-title="{{ __('Employee Detail') }}"><i
-                                                            class="ti ti-eye text-white"></i></a>
+                                                            class="ti ti-eye text-white"  style="line-height: 17px;"></i></a>
                                                 </div>
                                             @endif
 
                                             <div class="action-btn  ms-2">
                                                 <a href="#" data-url="{{ route('job.on.board.edit', $job->id) }}"
                                                     data-ajax-popup="true" class="btn btn-sm btn-dark mx-1 align-items-center"
-                                                    data-bs-toggle="tooltip" title="{{ __('Edit') }}"
+                                                    data-bs-toggle="tooltip" title="{{ __('Edit') }}" style="line-height: 16px;height: 30px;"
                                                     data-original-title="{{ __('Edit') }}"><i
-                                                        class="ti ti-pencil text-white"></i></a>
+                                                        class="ti ti-pencil text-white"  style="line-height: 17px;"></i></a>
                                             </div>
 
                                             <div class="action-btn ms-2">
@@ -358,28 +358,28 @@
                                                     'id' => 'delete-form-' . $job->id,
                                                 ]) !!}
                                                 <a href="#" class="btn btn-sm btn-danger mx-1 align-items-center bs-pass-para"
-                                                    data-bs-toggle="tooltip" title="{{ __('Delete') }}"
+                                                    data-bs-toggle="tooltip" title="{{ __('Delete') }}" style="line-height: 16px;height: 30px;"
                                                     data-original-title="{{ __('Delete') }}"
                                                     data-confirm="{{ __('Are You Sure?') . '|' . __('This action can not be undone. Do you want to continue?') }}"
                                                     data-confirm-yes="document.getElementById('delete-form-{{ $job->id }}').submit();"><i
-                                                        class="ti ti-trash text-white"></i></a>
+                                                        class="ti ti-trash text-white"  style="line-height: 17px;"></i></a>
                                                 {!! Form::close() !!}
                                             </div>
 
                                             @if ($job->status == 'confirm')
                                                 <div class="action-btn  ms-2">
                                                     <a href="{{ route('offerlatter.download.pdf', $job->id) }}"
-                                                        class="btn btn-sm btn-dark mx-1 align-items-center"
+                                                        class="btn btn-sm btn-dark mx-1 align-items-center" style="line-height: 16px;height: 30px;"
                                                         data-bs-toggle="tooltip" data-bs-placement="top"
                                                         title="{{ __('OfferLetter PDF') }}" target="_blanks"><i
-                                                            class="ti ti-download text-white"></i></a>
+                                                            class="ti ti-download text-white"  style="line-height: 17px;"></i></a>
                                                 </div>
                                                 <div class="action-btn  ms-2">
                                                     <a href="{{ route('offerlatter.download.doc', $job->id) }}"
-                                                        class="btn btn-sm btn-dark mx-1 align-items-center"
+                                                        class="btn btn-sm btn-dark mx-1 align-items-center" style="line-height: 16px;height: 30px;"
                                                         data-bs-toggle="tooltip" data-bs-placement="top"
                                                         title="{{ __('OfferLetter DOC') }}" target="_blanks"><i
-                                                            class="ti ti-download text-white"></i></a>
+                                                            class="ti ti-download text-white" style="line-height: 17px;"></i></a>
                                                 </div>
                                             @endif
 
