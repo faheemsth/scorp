@@ -4590,4 +4590,20 @@ class DealController extends Controller
 
     }
 
+    public function addTags(Request $request)
+    {
+        $ids = explode(',', $request->selectedIds);
+        $Leads = Deal::whereIn('id', $ids)->get();
+        if(!empty($ids) && !empty($Leads) && $Leads->count() > 0){
+                foreach ($Leads as $Lead) {
+                    $Lead->tag_ids = $Lead->tag_ids ? $Lead->tag_ids . ',' . $request->tagid : $request->tagid;
+                    $Lead->save();
+                }
+            return json_encode([
+                    'status' => 'success',
+                    'msg' => 'Tag added successfully'
+            ]);
+      }
+    }
+
 }

@@ -15,6 +15,43 @@
 
     $(".add-filter").on("click", function() {
         $(".filter-data").toggle();
+    });
+    $(".add-tags").on("click", function(e){
+        e.preventDefault();
+        $button = $(this);
+        var formData = $("#addTagForm").serialize(); // Serialize form data
+        var url = $("#addTagForm").attr('action'); // Get form action URL
+        var csrfToken = $('meta[name="csrf-token"]').attr('content'); // Get CSRF token
+        $button.prop('disabled', true);
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: formData,
+            headers: {
+                'X-CSRF-Token': csrfToken // Include CSRF token in headers
+            },
+            success: function(response){
+                data = JSON.parse(response);
+                if(data.status == 'success'){
+                    $("#tagModal").hide();
+                    $(".modal-backdrop").removeClass('modal-backdrop');
+                    $(".sub-check").prop('checked', false);
+                    $button.prop('disabled', false);
+                    show_toastr('success', data.msg);
+                    window.location.href = '/deals/list';
+                }
+            },
+        });
+    });
+    $("#tagModalBtn").on("click", function(){
+        $(".sub-check").prop('checked', $(this).prop('checked'));
+
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        $("#selectedIds").val(selectedIds);
     })
 </script>
 @endpush
@@ -494,7 +531,20 @@
                                 <i class="ti ti-trash"></i>
                             </a>
                         @endif
-
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-dark dropdown-toggle-split rounded-1" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="far fa-clone" style="font-size: 15px;"></i><span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <!-- Dropdown menu items -->
+                                <li>
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-link dropdown-item d-none" id="tagModalBtn" data-toggle="modal" data-target="#tagModal">
+                                        Tags
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                         {{-- <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}" class="btn p-2 btn-dark">
                             <i class="ti ti-plus"></i>
                         </a> --}}
@@ -876,6 +926,41 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="tagModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Tag</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('deal_tags') }}" method="POST" id="addTagForm">
+                <div class="modal-body">
+                    <input type="hidden" value="" name="selectedIds" id="selectedIds">
+
+                    <div class="form-group">
+                        <label for="">Tag</label>
+                        <select class="form form-control select2 selectTage" name="tagid" id="tagSelect" style="width: 95%;">
+                            <option value="">Select Tag</option>
+                            @foreach ($tags as $key => $tag)
+                            @if (!empty($tag))
+                            <option value="{{ $tag }}" <?= isset($_GET['tag']) && $key == $_GET['tag'] ? 'selected' : '' ?> class="">{{ $key }}</option>
+                            @endif
+                            @endforeach
+                            {{-- @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') --}}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark add-tags">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
     {{-- @endif --}}
     @endsection
 
@@ -929,10 +1014,11 @@
 
         if (selectedIds.length > 0) {
             selectedArr = selectedIds;
+            $("#tagModalBtn").removeClass('d-none');
             $("#actions_div").removeClass('d-none');
         } else {
             selectedArr = selectedIds;
-
+            $("#tagModalBtn").addClass('d-none');
             $("#actions_div").addClass('d-none');
         }
     });
@@ -946,10 +1032,11 @@
 
         if (selectedIds.length > 0) {
             selectedArr = selectedIds;
+            $("#tagModalBtn").removeClass('d-none');
             $("#actions_div").removeClass('d-none');
         } else {
             selectedArr = selectedIds;
-
+            $("#tagModalBtn").addClass('d-none');
             $("#actions_div").addClass('d-none');
         }
         let commaSeperated = selectedArr.join(",");
