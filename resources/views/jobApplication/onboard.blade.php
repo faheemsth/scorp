@@ -315,7 +315,7 @@
 
                                         <td>
                                             @if ($job->status == 'confirm' && $job->convert_to_employee == 0)
-                                                <div class="action-btn bg-warning ms-2">
+                                                <div class="action-btn  ms-2">
                                                     {!! Form::open([
                                                         'method' => 'get',
                                                         'route' => ['job.on.board.convert', $job->id],
@@ -334,7 +334,7 @@
 
                                                 </div>
                                             @elseif($job->status == 'confirm' && $job->convert_to_employee != 0)
-                                                <div class="action-btn bg-info ms-2">
+                                                <div class="action-btn  ms-2">
                                                     <a onclick="openSidebar('/employee/{{ $job->convert_to_employee }}')"
                                                         class="btn btn-sm btn-dark mx-1 align-items-center" data-bs-toggle="tooltip"
                                                         title="{{ __('View') }}"
@@ -343,7 +343,7 @@
                                                 </div>
                                             @endif
 
-                                            <div class="action-btn bg-primary ms-2">
+                                            <div class="action-btn  ms-2">
                                                 <a href="#" data-url="{{ route('job.on.board.edit', $job->id) }}"
                                                     data-ajax-popup="true" class="btn btn-sm btn-dark mx-1 align-items-center"
                                                     data-bs-toggle="tooltip" title="{{ __('Edit') }}"
@@ -351,7 +351,7 @@
                                                         class="ti ti-pencil text-white"></i></a>
                                             </div>
 
-                                            <div class="action-btn bg-danger ms-2">
+                                            <div class="action-btn ms-2">
                                                 {!! Form::open([
                                                     'method' => 'DELETE',
                                                     'route' => ['job.on.board.delete', $job->id],
@@ -367,14 +367,14 @@
                                             </div>
 
                                             @if ($job->status == 'confirm')
-                                                <div class="action-btn bg-secondary ms-2">
+                                                <div class="action-btn  ms-2">
                                                     <a href="{{ route('offerlatter.download.pdf', $job->id) }}"
                                                         class="btn btn-sm btn-dark mx-1 align-items-center"
                                                         data-bs-toggle="tooltip" data-bs-placement="top"
                                                         title="{{ __('OfferLetter PDF') }}" target="_blanks"><i
                                                             class="ti ti-download text-white"></i></a>
                                                 </div>
-                                                <div class="action-btn bg-secondary ms-2">
+                                                <div class="action-btn  ms-2">
                                                     <a href="{{ route('offerlatter.download.doc', $job->id) }}"
                                                         class="btn btn-sm btn-dark mx-1 align-items-center"
                                                         data-bs-toggle="tooltip" data-bs-placement="top"
