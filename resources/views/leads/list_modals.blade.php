@@ -106,7 +106,7 @@
                 <br>
                 <div class="modal-footer">
                     <input type="submit" class="btn btn-dark px-2 Update" value="Update">
-                    <a class="btn btn-danger text-white" onclick="deleteTage()">Delete</a>
+                    {{-- <a class="btn btn-danger text-white" onclick="deleteTage()">Delete</a> --}}
                 </div>
             </form>
         </div>

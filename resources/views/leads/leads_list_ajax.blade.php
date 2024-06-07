@@ -34,17 +34,9 @@
             <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                 {{ $branches[$lead->branch_id] ?? '' }}</td>
             <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
-                @php
-                    $lead_tags = \App\Models\LeadTag::where('lead_id', $lead->id)->get();
-                @endphp
-
-                @forelse($lead_tags as $tag)
-                    <span
-                        class="badge text-white {{ \Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Manager' || \Auth::user()->type == 'Project Director' ? 'tag-badge' : '' }}"
-                        data-tag-id="{{ $tag->id }}" data-tag-name="{{ $tag->tag }}"
-                        style="background-color:#cd9835;cursor:pointer;">{{ $tag->tag }}</span>
-                @empty
-                @endforelse
+                @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $lead->tag_ids))->get() as $tag)
+                   <span class="badge text-white" style="background-color:#cd9835;cursor:pointer;">{{ $tag->tag }}</span>
+                @endforeach
             </td>
         </tr>
     @endforeach

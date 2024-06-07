@@ -681,9 +681,10 @@ class LeadController extends Controller
                 $lead->drive_link = isset($request->drive_link) ? $request->drive_link : '';
                 $lead->save();
 
-
+   
+                $branches = Branch::pluck('name', 'id')->toArray();
                 $users = User::get()->pluck('name', 'id')->toArray();
-                $new_record_html = view('leads.lead_new_record', compact('lead', 'users'))->render();
+                $new_record_html = view('leads.lead_new_record', compact('branches','lead', 'users'))->render();
 
 
                 UserLead::create(

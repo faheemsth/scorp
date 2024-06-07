@@ -39,7 +39,14 @@
                     {{ $deal->assigName }}
                 </span>
             </td>
+            <td class="lead-info-cell">
 
+                @foreach (\App\Models\LeadTag::whereIn('id', explode(',', $deal->tag_ids))->get() as $tag)
+                    <span class="badge text-white tag-badge" data-tag-id="{{ $tag->id }}"
+                        data-lead-id="{{ $deal->lead_id }}" data-deal-id="{{ $deal->id }}"
+                        style="background-color:#cd9835;cursor:pointer;">{{ $tag->tag }}</span>
+                @endforeach
+            </td>
 
             @if (\Auth::user()->type != 'Client')
                 <td class="Action d-none">
