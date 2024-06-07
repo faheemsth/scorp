@@ -55,7 +55,7 @@
                         <h3>ALL Institute Categories</h3>
                         @can('create institute category')
                         <div class="float-end">
-                            <a href="#" data-size="md" data-url="{{ route('institute-category.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn btn-sm btn-dark">
+                            <a href="#" data-size="md" data-url="{{ route('institute-category.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Institute Categories')}}" class="btn btn-sm btn-dark">
                                 <i class="ti ti-plus"></i>
                             </a>
                         </div>
@@ -84,7 +84,7 @@
                                                 <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center "
                                                     data-url="{{ route('institute-category.edit', $category->id) }}"
                                                     data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
-                                                    title="{{ __('Edit') }}"
+                                                    title="{{ __('Edit Institute Categories') }}"
                                                     data-title="{{ __('Edit Institute Category') }}">
                                                     <i class="ti ti-pencil text-white"></i>
                                                 </a>

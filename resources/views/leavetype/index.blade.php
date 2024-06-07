@@ -31,7 +31,7 @@
                     @can('create leave type')
                         <div class="float-end">
                             <a href="#" data-size="md" data-url="{{ route('leavetype.create') }}" data-ajax-popup="true"
-                                data-bs-toggle="tooltip" title="{{ __('Create New Sources') }}" class="btn btn-sm btn-dark">
+                                data-bs-toggle="tooltip" title="{{ __('Create New Leave Type') }}" class="btn btn-sm btn-dark">
                                 <i class="ti ti-plus"></i>
                             </a>
                         </div>
@@ -63,7 +63,7 @@
                                                         class="btn btn-sm btn-dark mx-1 align-items-center "
                                                         data-url="{{ URL::to('leavetype/' . $leavetype->id . '/edit') }}"
                                                         data-ajax-popup="true" data-title="{{ __('Edit Leave Type') }}"
-                                                        data-bs-toggle="tooltip" title="{{ __('Edit') }}"
+                                                        data-bs-toggle="tooltip" title="{{ __('Edit Leave Type') }}"
                                                         data-original-title="{{ __('Edit') }}">
                                                         <i class="ti ti-pencil text-white"></i>
                                                     </a>

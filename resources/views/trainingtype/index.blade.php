@@ -21,7 +21,7 @@
                         <h3>Training Type</h3>
 
                         @can('create training type')
-                        <a href="#" data-url="{{ route('trainingtype.create') }}" data-ajax-popup="true" data-title="{{__('Create New Training Type')}}" data-bs-toggle="tooltip" title="{{__('Create')}}"  class="btn btn-sm btn-dark mx-1 align-items-center" style="margin: auto">
+                        <a href="#" data-url="{{ route('trainingtype.create') }}" data-ajax-popup="true" data-title="{{__('Create New Training Type')}}" data-bs-toggle="tooltip" title="{{__('Create New Training Type')}}"  class="btn btn-sm btn-dark mx-1 align-items-center" style="margin: auto">
                             <i class="ti ti-plus"></i>
                         </a>
 
@@ -49,7 +49,7 @@
 
                                     @can('edit training type')
                                         <div class="action-btn ms-2">
-                                            <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center" data-url="{{ route('trainingtype.edit',$trainingtype->id) }}" data-ajax-popup="true" data-title="{{__('Edit Training Type')}}" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
+                                            <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center" data-url="{{ route('trainingtype.edit',$trainingtype->id) }}" data-ajax-popup="true" data-title="{{__('Edit Training Type')}}" data-bs-toggle="tooltip" title="{{__('Edit Training Type')}}" data-original-title="{{__('Edit')}}">
                                                 <i class="ti ti-pencil text-white"></i>
                                             </a>
                                         </div>

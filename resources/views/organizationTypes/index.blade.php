@@ -33,7 +33,7 @@
 
                     @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('create organization_type'))
                     <div class="float-end">
-                        <a href="#" data-size="md" data-url="{{ route('organization-type.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn btn-sm btn-dark">
+                        <a href="#" data-size="md" data-url="{{ route('organization-type.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Organization Type')}}" class="btn btn-sm btn-dark">
                             <i class="ti ti-plus"></i>
                         </a>
                     </div>
@@ -74,7 +74,7 @@
                                                         class="btn btn-sm btn-dark mx-1 align-items-center "
                                                             data-url="{{ route('organization-type.edit', $type->id) }}"
                                                             data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
-                                                            title="{{ __('Edit') }}"
+                                                            title="{{ __('Edit Organization Type') }}"
                                                             data-title="{{ __('Edit Type') }}">
                                                             <i class="ti ti-pencil text-white"></i>
                                                         </a>

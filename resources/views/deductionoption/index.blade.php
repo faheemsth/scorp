@@ -32,7 +32,7 @@
                     <h3>Manage Deduction Option</h3>
                     @can('create document type')
                     <div class="float-end">
-                        <a href="#" data-size="md" data-url="{{ route('deductionoption.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn btn-sm btn-dark">
+                        <a href="#" data-size="md" data-url="{{ route('deductionoption.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Deduction Option')}}" class="btn btn-sm btn-dark">
                             <i class="ti ti-plus"></i>
                         </a>
                     </div>
