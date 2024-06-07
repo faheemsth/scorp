@@ -74,7 +74,7 @@ class TrainerController extends Controller
             }
 
             $trainers=$Trainer_query->get();
-            $saved_filters = SavedFilter::where('created_by', \Auth::id())->where('module', 'leads')->get();
+            $saved_filters = SavedFilter::where('created_by', \Auth::id())->where('module', 'trainer')->get();
             $filters = BrandsRegionsBranches();
             return view('trainer.index', compact('filters','trainers', 'saved_filters'));
         } else {
