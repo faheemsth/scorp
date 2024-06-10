@@ -124,9 +124,9 @@
                 <div class="d-flex justify-content-end gap-1 me-3">
                     {{-- @can('view lead') --}}
                     <a href="https://wa.me/{{ !empty($lead->phone) ? formatPhoneNumber($lead->phone) : '' }}?text=Hello ! Dear {{ $lead->name }}"
-                       target="_blank" data-size="lg" data-bs-toggle="tooltip"
-                       title="{{ __('Already Converted To Admission') }}" class="btn px-2 py-2 btn-dark text-white"
-                       style="background-color: #313949; color: white; width: 36px; height: 36px; margin-top: 10px;">
+                        target="_blank" data-size="lg" data-bs-toggle="tooltip"
+                        title="{{ __('Already Converted To Admission') }}" class="btn px-2 py-2 btn-dark text-white"
+                        style="background-color: #313949; color: white; width: 36px; height: 36px; margin-top: 10px;">
                         <i class="fa-brands fa-whatsapp"></i>
                     </a>
                     {{-- @endcan --}}
@@ -134,23 +134,24 @@
                     @can('edit lead')
                         @if (!empty($deal))
                             <a href="javascript:void(0)"
-                               @can('view deal')
+                                @can('view deal')
                                    @if ($deal->is_active)
                                        onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})"
                                    @endif
                                @endcan
-                               data-size="lg" data-bs-toggle="tooltip"
-                               data-bs-title="{{ __('Already Converted to Admission') }}"
-                               class="btn px-2 py-2 btn-dark text-white"
-                               style="background-color: #313949; color: white; width: 36px; height: 36px; margin-top: 10px;">
+                                data-size="lg" data-bs-toggle="tooltip"
+                                data-bs-title="{{ __('Already Converted to Admission') }}"
+                                class="btn px-2 py-2 btn-dark text-white"
+                                style="background-color: #313949; color: white; width: 36px; height: 36px; margin-top: 10px;">
                                 <i class="ti ti-exchange"></i>
                             </a>
                         @else
                             @can('convert lead')
                                 <a href="#" data-size="lg"
-                                   data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
-                                   data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] to Admission') }}"
-                                   class="btn px-2 py-2 btn-dark text-white" style="width: 36px; height: 36px; margin-top: 10px;">
+                                    data-url="{{ URL::to('leads/' . $lead->id . '/show_convert') }}" data-ajax-popup="true"
+                                    data-bs-toggle="tooltip" title="{{ __('Convert [' . $lead->subject . '] to Admission') }}"
+                                    class="btn px-2 py-2 btn-dark text-white"
+                                    style="width: 36px; height: 36px; margin-top: 10px;">
                                     <i class="ti ti-exchange"></i>
                                 </a>
                             @endcan
@@ -158,17 +159,17 @@
                     @endcan
 
                     <a href="#" data-url="{{ URL::to('leads/' . $lead->id . '/labels') }}" data-ajax-popup="true"
-                       data-size="lg" data-bs-toggle="tooltip" title="{{ __('Label') }}"
-                       class="btn px-2 py-2 text-white"
-                       style="background-color: #313949; color: white; width: 36px; height: 36px; margin-top: 10px;">
+                        data-size="lg" data-bs-toggle="tooltip" title="{{ __('Label') }}"
+                        class="btn px-2 py-2 text-white"
+                        style="background-color: #313949; color: white; width: 36px; height: 36px; margin-top: 10px;">
                         <i class="ti ti-bookmark"></i>
                     </a>
 
                     @can('edit lead')
                         <a href="#" data-size="lg" data-url="{{ route('leads.edit', $lead->id) }}"
-                           data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update Lead') }}"
-                           class="btn px-2 py-2 text-white"
-                           style="background-color: #313949; color: white; width: 36px; height: 36px; margin-top: 10px;">
+                            data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Update Lead') }}"
+                            class="btn px-2 py-2 text-white"
+                            style="background-color: #313949; color: white; width: 36px; height: 36px; margin-top: 10px;">
                             <i class="ti ti-pencil"></i>
                         </a>
                     @endcan
@@ -181,7 +182,8 @@
                         ]) !!}
 
                         <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}"
-                           class="btn px-2 py-2 text-white bs-pass-para bg-danger" style="width: 36px; height: 36px; margin-top: 10px;">
+                            class="btn px-2 py-2 text-white bs-pass-para bg-danger"
+                            style="width: 36px; height: 36px; margin-top: 10px;">
                             <i class="ti ti-trash"></i>
                         </a>
 
@@ -193,22 +195,30 @@
                 <div class="row w-100 mt-3 border-top">
                     @php $counter = 0; @endphp
                     <div class="col-12 px-5 py-2 d-flex">
-                        @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $lead->tag_ids))->get() as $tag)
+                        @foreach (\App\Models\LeadTag::whereIn('id', explode(',', $lead->tag_ids))->get() as $tag)
                             @if ($tag->tag != '')
                                 @if ($counter % 5 == 0 && $counter != 0)
-                                    </div><div class="col-12 px-5 py-2 d-flex">
-                                @endif
-                                <div class="d-flex ml-1">
-                                    <span class="" style="font-size:13px;background-color: #419de4;color:white;padding: 5px 21px;border: none;border-radius: 0px 30px 30px 0px;font-size: 11.7px;">{{ limit_words($tag->tag, 1.5) }}</span>
-                                    <span class="d-flex mt-1">
-                                        <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-dark mx-1 tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $lead->id }}"><i class="ti ti-pencil"></i></a>
-                                        <input type="hidden" value="{{ $lead->id }}" name="lead_id" id="lead_id">
-                                        <input type="hidden" value="{{ $tag->id }}" name="old_tag_id" id="old_tag_id">
-                                        <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-danger" onclick="deleteTage(this,{{ $lead->id }},{{ $tag->id }})"><i class="ti ti-trash"></i></a>
-                                    </span>
-                                </div>
-                                @php $counter++; @endphp
-                            @endif
+                    </div>
+                    <div class="col-12 px-5 py-2 d-flex">
+                        @endif
+                        <div class="d-flex ml-1">
+                            <span class=""
+                                style="font-size:13px;background-color: #419de4;color:white;padding: 5px 21px;border: none;border-radius: 0px 30px 30px 0px;font-size: 11.7px;">{{ limit_words($tag->tag, 1.5) }}</span>
+                            <span class="d-flex mt-1">
+                                <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;"
+                                    class="btn px-2 py-1 p-auto btn-sm text-white bg-dark mx-1 tag-badge"
+                                    data-tag-id="{{ $tag->id }}" data-lead-id="{{ $lead->id }}"><i
+                                        class="ti ti-pencil"></i></a>
+                                <input type="hidden" value="{{ $lead->id }}" name="lead_id" id="lead_id">
+                                <input type="hidden" value="{{ $tag->id }}" name="old_tag_id" id="old_tag_id">
+                                <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;"
+                                    class="btn px-2 py-1 p-auto btn-sm text-white bg-danger"
+                                    onclick="deleteTage(this,{{ $lead->id }},{{ $tag->id }})"><i
+                                        class="ti ti-trash"></i></a>
+                            </span>
+                        </div>
+                        @php $counter++; @endphp
+                        @endif
                         @endforeach
                     </div>
                 </div>
@@ -265,13 +275,13 @@
                             if ($lead->stage->name == $stage->name) {
                                 $done = false;
                             }
-
+                            
                             $is_missed = false;
-
+                            
                             if (!empty($stage_histories) && !in_array($stage->id, $stage_histories) && $stage->id <= max($stage_histories)) {
                                 $is_missed = true;
                             }
-
+                            
                             ?>
 
                             <style>
@@ -285,7 +295,8 @@
                                 }
                             </style>
 
-                            <a type="button" data-lead-id="{{ $lead->id }}" data-stage-id="{{ $stage->id }}"
+                            <a type="button" data-lead-id="{{ $lead->id }}"
+                                data-stage-id="{{ $stage->id }}"
                                 class="@can('edit stage lead') lead_stage @endcan {{ $is_missed == true ? 'missedup' : ($lead->stage->name == $stage->name ? 'current' : ($done == true ? 'done' : '')) }}"
                                 style="font-size:13px;"> {{ $stage->name }} @if ($is_missed == true)
                                     <i class="fa fa-close text-danger"></i>
@@ -301,8 +312,9 @@
                         <ul class="nav nav-pills mb-1" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link pills-link active fw-bold" id="pills-details-tab"
-                                    data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab"
-                                    aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
+                                    data-bs-toggle="pill" data-bs-target="#pills-details" type="button"
+                                    role="tab" aria-controls="pills-details"
+                                    aria-selected="true">{{ __('Details') }}</button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link pills-link text-dark fw-bold" id="pills-related-tab"
@@ -578,8 +590,11 @@
                                                                 </td>
                                                                 <td class=""
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $lead->tag_ids))->get() as $tag)
-                                                                    <span class="badge text-white tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $lead->id }}" style="background-color:#cd9835;cursor:pointer;">{{ $tag->tag }}</span>
+                                                                    @foreach (\App\Models\LeadTag::whereIn('id', explode(',', $lead->tag_ids))->get() as $tag)
+                                                                        <span class="badge text-white tag-badge"
+                                                                            data-tag-id="{{ $tag->id }}"
+                                                                            data-lead-id="{{ $lead->id }}"
+                                                                            style="background-color:#cd9835;cursor:pointer;">{{ $tag->tag }}</span>
                                                                     @endforeach
                                                                 </td>
                                                             </tr>
@@ -941,528 +956,458 @@
                             {{-- Details Pill End --}}
                             <div class="tab-pane fade" id="pills-related" role="tabpanel"
                                 aria-labelledby="pills-related-tab">
-
-                                <div >
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                @can('manage notes')
+                                    <div class="accordion" id="accordionPanelsStayOpenExample">
+                                        <!-- Open Accordion Item -->
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="panelsStayOpen-headingnote">
+                                                <button class="accordion-button p-2" type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#panelsStayOpen-collapsenote">
+                                                    {{ __('Notes') }}
+                                                </button>
+                                            </h2>
+                                            <div id="panelsStayOpen-collapsenote" class="accordion-collapse collapse show"
+                                                aria-labelledby="panelsStayOpen-headingnote">
+                                                <div class="accordion-body">
 
 
+                                                    <div class="">
+
+                                                        <div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <div id="discussion_note">
-                                        <div>
-
-                                            @can('manage notes')
-                                                <div class="accordion" id="accordionPanelsStayOpenExample">
-                                                    <!-- Open Accordion Item -->
-                                                    <div class="accordion-item">
-                                                        <h2 class="accordion-header" id="panelsStayOpen-headingnote">
-                                                            <button class="accordion-button p-2" type="button"
-                                                                data-bs-toggle="collapse"
-                                                                data-bs-target="#panelsStayOpen-collapsenote">
-                                                                {{ __('Notes') }}
-                                                            </button>
-                                                        </h2>
-                                                        <div id="panelsStayOpen-collapsenote"
-                                                            class="accordion-collapse collapse show"
-                                                            aria-labelledby="panelsStayOpen-headingnote">
-                                                            <div class="accordion-body">
-
-
-                                                                <div class="">
-
-                                                                    <div>
-
-
-                                                                        <div class="card position-relative"
-                                                                            id="leadsNoteForm">
-                                                                            {{ Form::model($lead, ['route' => ['leads.notes.store', $lead->id], 'method' => 'POST', 'id' => 'create-notes', 'style' => 'z-index: 9999999 !important;']) }}
-                                                                            <textarea class="form-control" style="height: 120px;" name="description" id="description"
-                                                                                placeholder="Click here add your Notes Comments..."></textarea>
-                                                                            <input type="hidden" id="note_id"
-                                                                                value="" name="note_id">
-                                                                            <div class="row justify-content-end indivbtn">
-                                                                                <div class="col-auto ">
-                                                                                    <button class="btn btn-dark text-white"
-                                                                                        id="SaveDiscussion">Save</button>
-                                                                                </div>
-                                                                            </div>
-                                                                            {{ Form::close() }}
-                                                                        </div>
-                                                                        <div class="card-body px-0 py-0">
-                                                                            @php
-                                                                                $notesQuery = \App\Models\LeadNote::where(
-                                                                                    'lead_id',
-                                                                                    $lead->id,
-                                                                                );
-
-                                                                                if (
-                                                                                    \Auth::user()->type !=
-                                                                                        'super admin' &&
-                                                                                    \Auth::user()->type !=
-                                                                                        'Project Director' &&
-                                                                                    \Auth::user()->type !=
-                                                                                        'Project Manager'
-                                                                                ) {
-                                                                                    $notesQuery->where(
-                                                                                        'created_by',
-                                                                                        \Auth::user()->id,
-                                                                                    );
-                                                                                }
-
-                                                                                $notes = $notesQuery
-                                                                                    ->orderBy('created_at', 'DESC')
-                                                                                    ->get();
-                                                                            @endphp
-
-                                                                            <span
-                                                                                class="list-group list-group-flush mt-2 note-tbody">
-
-                                                                                @foreach ($notes as $note)
-                                                                                    <div
-                                                                                        style="border-top:1px solid black;border-bottom:1px solid black ">
-                                                                                        <div
-                                                                                            class="row my-2 justify-content-between ps-4">
-                                                                                            <div class="col-12 my-2">
-                                                                                                <p class="text-dark"
-                                                                                                    style="font-size: 18px;">
-                                                                                                    {!! $note->description !!}
-                                                                                                </p>
-                                                                                            </div>
-                                                                                            <div class="col-8">
-                                                                                                <div
-                                                                                                    class="row align-items-center">
-                                                                                                    {{-- <div class="col-2 text-center">
-
-                                                                                            </div> --}}
-                                                                                                    <div class="col-8">
-                                                                                                        <p
-                                                                                                            class="mb-0 text-secondary">
-                                                                                                            {{ \App\Models\User::where('id', $note->created_by)->first()->name }}
-                                                                                                        </p>
-                                                                                                        <p class="mb-0">
-                                                                                                            {{ optional(App\models\User::find($note->created_by))->type }}
-                                                                                                        </p>
-
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div
-                                                                                                class="col-4 text-end px-1">
-                                                                                                @php
-                                                                                                    $dateTime = new DateTime(
-                                                                                                        $note->created_at,
-                                                                                                    );
-                                                                                                @endphp
-                                                                                                <p>{{ $dateTime->format('Y-m-d H:i:s') }}
-                                                                                                </p>
-                                                                                            </div>
-
-                                                                                        </div>
-                                                                                        <div class="d-flex gap-1 justify-content-end pb-2 px-3"
-                                                                                            id="dellhover">
-                                                                                            <div class="btn btn-outline-dark text-dark textareaClassedit"
-                                                                                                data-note-id="{{ $note->id }}"
-                                                                                                id="editable"
-                                                                                                style="font-size: ;">Edit
-                                                                                            </div>
-
-                                                                                            <div class="delete-notes btn btn-dark  text-white"
-                                                                                                id="editable"
-                                                                                                style="font-size: ;"
-                                                                                                data-note-id="{{ $note->id }}">
-                                                                                                Delete</div>
-                                                                                        </div>
-
-                                                                                    </div>
-                                                                                @endforeach
-
-                                                                            </span>
-
-                                                                        </div>
+                                                            <div class="card position-relative" id="leadsNoteForm">
+                                                                {{ Form::model($lead, ['route' => ['leads.notes.store', $lead->id], 'method' => 'POST', 'id' => 'create-notes', 'style' => 'z-index: 9999999 !important;']) }}
+                                                                <textarea class="form-control" style="height: 120px;" name="description" id="description"
+                                                                    placeholder="Click here add your Notes Comments..."></textarea>
+                                                                <input type="hidden" id="note_id" value=""
+                                                                    name="note_id">
+                                                                <div class="row justify-content-end indivbtn">
+                                                                    <div class="col-auto ">
+                                                                        <button class="btn btn-dark text-white"
+                                                                            id="SaveDiscussion">Save</button>
                                                                     </div>
                                                                 </div>
+                                                                {{ Form::close() }}
+                                                            </div>
+                                                            <div class="card-body px-0 py-0">
+                                                                @php
+                                                                    $notesQuery = \App\Models\LeadNote::where(
+                                                                        'lead_id',
+                                                                        $lead->id,
+                                                                    );
+
+                                                                    if (
+                                                                        \Auth::user()->type != 'super admin' &&
+                                                                        \Auth::user()->type != 'Project Director' &&
+                                                                        \Auth::user()->type != 'Project Manager'
+                                                                    ) {
+                                                                        $notesQuery->where(
+                                                                            'created_by',
+                                                                            \Auth::user()->id,
+                                                                        );
+                                                                    }
+
+                                                                    $notes = $notesQuery
+                                                                        ->orderBy('created_at', 'DESC')
+                                                                        ->get();
+                                                                @endphp
+
+                                                                <span class="list-group list-group-flush mt-2 note-tbody">
+
+                                                                    @foreach ($notes as $note)
+                                                                        <div
+                                                                            style="border-top:1px solid black;border-bottom:1px solid black ">
+                                                                            <div
+                                                                                class="row my-2 justify-content-between ps-4">
+                                                                                <div class="col-12 my-2">
+                                                                                    <p class="text-dark"
+                                                                                        style="font-size: 18px;">
+                                                                                        {!! $note->description !!}
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-8">
+                                                                                    <div class="row align-items-center">
+                                                                                        {{-- <div class="col-2 text-center">
+
+                                                                                            </div> --}}
+                                                                                        <div class="col-8">
+                                                                                            <p class="mb-0 text-secondary">
+                                                                                                {{ \App\Models\User::where('id', $note->created_by)->first()->name }}
+                                                                                            </p>
+                                                                                            <p class="mb-0">
+                                                                                                {{ optional(App\models\User::find($note->created_by))->type }}
+                                                                                            </p>
+
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-4 text-end px-1">
+                                                                                    @php
+                                                                                        $dateTime = new DateTime(
+                                                                                            $note->created_at,
+                                                                                        );
+                                                                                    @endphp
+                                                                                    <p>{{ $dateTime->format('Y-m-d H:i:s') }}
+                                                                                    </p>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div class="d-flex gap-1 justify-content-end pb-2 px-3"
+                                                                                id="dellhover">
+                                                                                <div class="btn btn-outline-dark text-dark textareaClassedit"
+                                                                                    data-note-id="{{ $note->id }}"
+                                                                                    id="editable" style="font-size: ;">
+                                                                                    Edit
+                                                                                </div>
+
+                                                                                <div class="delete-notes btn btn-dark  text-white"
+                                                                                    id="editable" style="font-size: ;"
+                                                                                    data-note-id="{{ $note->id }}">
+                                                                                    Delete</div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    @endforeach
+
+                                                                </span>
 
                                                             </div>
                                                         </div>
                                                     </div>
+
                                                 </div>
-                                            @endcan
-                                            @can('manage task')
-                                                <div class="accordion" id="accordionPanelsStayOpenExample">
-                                                    <!-- Open Accordion Item -->
-                                                    <div class="accordion-item">
-                                                        <h2 class="d-flex justify-between align-items-center accordion-header"
-                                                            id="panelsStayOpen-headingnote">
-                                                            <button class="accordion-button px-2 py-3 " type="button"
-                                                                data-bs-toggle="collapse"
-                                                                data-bs-target="#panelsStayOpen-collapsetasks">
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endcan
+                                @can('manage task')
+                                    <div class="accordion" id="accordionPanelsStayOpenExample">
+                                        <div class="accordion-item">
+                                            <h2 class="d-flex justify-between align-items-center accordion-header"
+                                                id="panelsStayOpen-headingnote">
+                                                <button class="accordion-button px-2 py-3 " type="button"
+                                                    data-bs-toggle="collapse"
+                                                    data-bs-target="#panelsStayOpen-collapsetasks">
 
-                                                                <div style="position: absolute;right: 27px;z-index: 9999;">
-                                                                    @can('create task')
-                                                                        <a data-size="lg"
-                                                                            data-url="/organiation/1/task?type=lead&typeid={{ $lead->id }}"
-                                                                            data-ajax-popup="true" data-bs-toggle="tooltip"
-                                                                            title="{{ __('Add Task') }}"
-                                                                            class="btn p-2 text-white"
-                                                                            style="background-color: #313949; color: #fff !important;">
-                                                                            <i class="ti ti-plus"></i>
-                                                                        </a>
-                                                                    @endcan
-                                                                </div>
-                                                                <span>
-                                                                    {{ __('Tasks') }}
-                                                                </span>
-                                                            </button>
+                                                    <div style="position: absolute;right: 27px;z-index: 9999;">
+                                                        @can('create task')
+                                                            <a data-size="lg"
+                                                                data-url="/organiation/1/task?type=lead&typeid={{ $lead->id }}"
+                                                                data-ajax-popup="true" data-bs-toggle="tooltip"
+                                                                title="{{ __('Add Task') }}" class="btn p-2 text-white"
+                                                                style="background-color: #313949; color: #fff !important;">
+                                                                <i class="ti ti-plus"></i>
+                                                            </a>
+                                                        @endcan
+                                                    </div>
+                                                    <span>
+                                                        {{ __('Tasks') }}
+                                                    </span>
+                                                </button>
 
-                                                        </h2>
+                                            </h2>
 
-                                                        <div id="panelsStayOpen-collapsetasks"
-                                                            class="accordion-collapse collapse show"
-                                                            aria-labelledby="panelsStayOpen-headingnote">
-                                                            <div class="accordion-body">
-                                                                @if (!empty($tasks) && $tasks->count() > 0)
-                                                                    @php
-                                                                        $section = 1;
-                                                                        $section2 = 1;
-                                                                    @endphp
-                                                                    @foreach ($tasks as $task1)
-                                                                        @if ($task1->status == 1)
-                                                                            <div class="accordion"
-                                                                                id="accordionPanelsStayOpenExample">
-                                                                                <div class="accordion-item">
-                                                                                    @if ($section == 1)
-                                                                                        <h2 class="accordion-header"
-                                                                                            id="panelsStayOpen-headingOnedds">
-                                                                                            <button
-                                                                                                class="accordion-button"
-                                                                                                type="button"
-                                                                                                data-bs-toggle="collapse"
-                                                                                                data-bs-target="#panelsStayOpen-collapseOnedds"
-                                                                                                aria-expanded="true"
-                                                                                                aria-controls="panelsStayOpen-collapseOnedds">
-                                                                                                {{ $section == 1 ? 'Closed Activity' : '' }}
-                                                                                            </button>
-                                                                                        </h2>
-                                                                                        @foreach ($tasks as $task)
-                                                                                            @if ($task->status == 1)
-                                                                                                <div id="panelsStayOpen-collapseOnedds"
-                                                                                                    class="accordion-collapse collapse"
-                                                                                                    aria-labelledby="panelsStayOpen-headingOnedds">
+                                            <div id="panelsStayOpen-collapsetasks"
+                                                class="accordion-collapse collapse show"
+                                                aria-labelledby="panelsStayOpen-headingnote">
+                                                <div class="accordion-body">
+                                                    @if (!empty($tasks) && $tasks->count() > 0)
+                                                        @php
+                                                            $section = 1;
+                                                            $section2 = 1;
+                                                        @endphp
+                                                        @foreach ($tasks as $task1)
+                                                            @if ($task1->status == 1)
+                                                                <div class="accordion"
+                                                                    id="accordionPanelsStayOpenExample">
+                                                                    <div class="accordion-item">
+                                                                        @if ($section == 1)
+                                                                            <h2 class="accordion-header"
+                                                                                id="panelsStayOpen-headingOnedds">
+                                                                                <button class="accordion-button"
+                                                                                    type="button"
+                                                                                    data-bs-toggle="collapse"
+                                                                                    data-bs-target="#panelsStayOpen-collapseOnedds"
+                                                                                    aria-expanded="true"
+                                                                                    aria-controls="panelsStayOpen-collapseOnedds">
+                                                                                    {{ $section == 1 ? 'Closed Activity' : '' }}
+                                                                                </button>
+                                                                            </h2>
+                                                                            @foreach ($tasks as $task)
+                                                                                @if ($task->status == 1)
+                                                                                    <div id="panelsStayOpen-collapseOnedds"
+                                                                                        class="accordion-collapse collapse"
+                                                                                        aria-labelledby="panelsStayOpen-headingOnedds">
+                                                                                        <div class="accordion-body">
+                                                                                            {{--  --}}
+                                                                                            <div
+                                                                                                style="border-top:1px solid black;border-bottom:1px solid black ">
+                                                                                                <div
+                                                                                                    class="row my-2 justify-content-between  ps-4">
                                                                                                     <div
-                                                                                                        class="accordion-body">
-                                                                                                        {{--  --}}
+                                                                                                        class="col-12 my-2">
+                                                                                                        <p class="text-dark"
+                                                                                                            style="font-size: 18px;">
+                                                                                                            <span
+                                                                                                                style="cursor:pointer"
+                                                                                                                class="task-name hyper-link"
+                                                                                                                @can('view task') onclick="openSidebar('/get-task-detail?task_id=<?= $task->id ?>')" @endcan
+                                                                                                                data-task-id="{{ $task->id }}">{{ $task->name }}</span>
+                                                                                                        </p>
+                                                                                                    </div>
+                                                                                                    <div class="col-8">
                                                                                                         <div
-                                                                                                            style="border-top:1px solid black;border-bottom:1px solid black ">
+                                                                                                            class="row align-items-center">
+
                                                                                                             <div
-                                                                                                                class="row my-2 justify-content-between  ps-4">
-                                                                                                                <div
-                                                                                                                    class="col-12 my-2">
-                                                                                                                    <p class="text-dark"
-                                                                                                                        style="font-size: 18px;">
-                                                                                                                        <span
-                                                                                                                            style="cursor:pointer"
-                                                                                                                            class="task-name hyper-link"
-                                                                                                                            @can('view task') onclick="openSidebar('/get-task-detail?task_id=<?= $task->id ?>')" @endcan
-                                                                                                                            data-task-id="{{ $task->id }}">{{ $task->name }}</span>
-                                                                                                                    </p>
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    class="col-8">
-                                                                                                                    <div
-                                                                                                                        class="row align-items-center">
-
-                                                                                                                        <div
-                                                                                                                            class="col-8">
-                                                                                                                            <p
-                                                                                                                                class="mb-0 text-secondary">
-                                                                                                                            <p class="text-muted text-sm"
-                                                                                                                                style="font-size: 18px;">
-                                                                                                                                <i class="step__icon fa fa-user"
-                                                                                                                                    aria-hidden="true"></i>
-                                                                                                                                {{ optional(\App\Models\User::where('id', $task->assigned_to)->first())->name }}
-                                                                                                                            </p>
-                                                                                                                        </div>
-                                                                                                                        <div
-                                                                                                                            class="col-8">
-                                                                                                                            <span
-                                                                                                                                class="d-flex mt-0">
-                                                                                                                                <p>Status
-                                                                                                                                </p>
-                                                                                                                                <p class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }} ml-2"
-                                                                                                                                    style="font-size: 10px;">
-                                                                                                                                    {{ $task->status == 1 ? 'Completed' : 'On Going' }}
-                                                                                                                                </p>
-                                                                                                                            </span>
-                                                                                                                        </div>
-                                                                                                                    </div>
-                                                                                                                </div>
-                                                                                                                <div
-                                                                                                                    class="col-4 text-end px-1">
-                                                                                                                    <p>{{ $task->created_at }}
-                                                                                                                    </p>
-                                                                                                                </div>
+                                                                                                                class="col-8">
+                                                                                                                <p
+                                                                                                                    class="mb-0 text-secondary">
+                                                                                                                <p class="text-muted text-sm"
+                                                                                                                    style="font-size: 18px;">
+                                                                                                                    <i class="step__icon fa fa-user"
+                                                                                                                        aria-hidden="true"></i>
+                                                                                                                    {{ optional(\App\Models\User::where('id', $task->assigned_to)->first())->name }}
+                                                                                                                </p>
                                                                                                             </div>
-                                                                                                            <div class="d-flex gap-1 justify-content-end pb-2 px-3"
-                                                                                                                id="dellhover">
-                                                                                                                <button
-                                                                                                                    class="btn btn-outline-dark text-dark textareaClassedit"
-                                                                                                                    data-size="lg"
-                                                                                                                    data-url="{{ route('organiation.tasks.edit', $task->id) }}"
-                                                                                                                    data-ajax-popup="true"
-                                                                                                                    data-bs-toggle="tooltip"
-                                                                                                                    title="{{ __('Update Task') }}"
-                                                                                                                    id="editable"
-                                                                                                                    style="font-size: ;">Edit</button>
-
-                                                                                                                <div class="btn btn-dark  text-white"
-                                                                                                                    id="editable"
-                                                                                                                    style="font-size: ;"
-                                                                                                                    onclick="deleteTask({{ $task->id }}, {{ $lead->id }}, 'lead');">
-                                                                                                                    Delete
-                                                                                                                </div>
+                                                                                                            <div
+                                                                                                                class="col-8">
+                                                                                                                <span
+                                                                                                                    class="d-flex mt-0">
+                                                                                                                    <p>Status
+                                                                                                                    </p>
+                                                                                                                    <p class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }} ml-2"
+                                                                                                                        style="font-size: 10px;">
+                                                                                                                        {{ $task->status == 1 ? 'Completed' : 'On Going' }}
+                                                                                                                    </p>
+                                                                                                                </span>
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     </div>
-                                                                                                </div>
-                                                                                                {{--  --}}
-                                                                                </div>
-                                                                        @endif
-                                                                    @endforeach
-                                                                @endif
-                                                            </div>
-                                                        </div>
-
-                                                        @php
-                                                            $section++;
-                                                        @endphp
-                                                    @elseif ($task1->status == 0)
-                                                        <div class="accordion" id="accordionPanelsStayOpenExample">
-                                                            <div class="accordion-item">
-                                                                @if ($section2 == 1)
-                                                                    <h2 class="accordion-header"
-                                                                        id="panelsStayOpen-headingOneddsd">
-                                                                        <button class="accordion-button" type="button"
-                                                                            data-bs-toggle="collapse"
-                                                                            data-bs-target="#panelsStayOpen-collapseOneddsd"
-                                                                            aria-expanded="true"
-                                                                            aria-controls="panelsStayOpen-collapseOneddsd">
-                                                                            {{ $section2 == 1 ? 'Open Activity' : '' }}
-                                                                        </button>
-                                                                    </h2>
-
-                                                                    @foreach ($tasks as $task)
-                                                                        @if ($task->status == 0)
-                                                                            <div id="panelsStayOpen-collapseOneddsd"
-                                                                                class="accordion-collapse collapse show"
-                                                                                aria-labelledby="panelsStayOpen-headingOneddsd">
-                                                                                <div class="accordion-body">
-                                                                                    {{--  --}}
-                                                                                    <div
-                                                                                        style="border-top:1px solid black;border-bottom:1px solid black ">
-                                                                                        <div
-                                                                                            class="row my-2 justify-content-between  ps-4">
-                                                                                            <div class="col-12 my-2">
-                                                                                                <p class="text-dark"
-                                                                                                    style="font-size: 18px;">
-                                                                                                    <span
-                                                                                                        style="cursor:pointer"
-                                                                                                        class="task-name hyper-link"
-                                                                                                        @can('view task') onclick="openSidebar('/get-task-detail?task_id=<?= $task->id ?>')" @endcan
-                                                                                                        data-task-id="{{ $task->id }}">{{ $task->name }}</span>
-                                                                                                </p>
-                                                                                            </div>
-                                                                                            <div class="col-8">
-                                                                                                <div
-                                                                                                    class="row align-items-center">
-
-                                                                                                    <div class="col-8">
-                                                                                                        <p
-                                                                                                            class="mb-0 text-secondary">
-                                                                                                        <p class="text-muted text-sm"
-                                                                                                            style="font-size: 18px;">
-                                                                                                            <i class="step__icon fa fa-user"
-                                                                                                                aria-hidden="true"></i>
-                                                                                                            {{ optional(\App\Models\User::where('id', $task->assigned_to)->first())->name }}
+                                                                                                    <div
+                                                                                                        class="col-4 text-end px-1">
+                                                                                                        <p>{{ $task->created_at }}
                                                                                                         </p>
                                                                                                     </div>
-                                                                                                    <div class="col-8">
-                                                                                                        <span
-                                                                                                            class="d-flex mb-0">
-                                                                                                            <p>Status
-                                                                                                            </p>
-                                                                                                            <p class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }} ml-2"
-                                                                                                                style="font-size: 10px;">
-                                                                                                                {{ $task->status == 1 ? 'Completed' : 'On Going' }}
-                                                                                                            </p>
-                                                                                                        </span>
+                                                                                                </div>
+                                                                                                <div class="d-flex gap-1 justify-content-end pb-2 px-3"
+                                                                                                    id="dellhover">
+                                                                                                    <button
+                                                                                                        class="btn btn-outline-dark text-dark textareaClassedit"
+                                                                                                        data-size="lg"
+                                                                                                        data-url="{{ route('organiation.tasks.edit', $task->id) }}"
+                                                                                                        data-ajax-popup="true"
+                                                                                                        data-bs-toggle="tooltip"
+                                                                                                        title="{{ __('Update Task') }}"
+                                                                                                        id="editable"
+                                                                                                        style="font-size: ;">Edit</button>
+
+                                                                                                    <div class="btn btn-dark  text-white"
+                                                                                                        id="editable"
+                                                                                                        style="font-size: ;"
+                                                                                                        onclick="deleteTask({{ $task->id }}, {{ $lead->id }}, 'lead');">
+                                                                                                        Delete
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div
-                                                                                                class="col-4 text-end px-1">
-                                                                                                <p>{{ $task->created_at }}
-                                                                                                </p>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="d-flex gap-1 justify-content-end pb-2 px-3"
-                                                                                            id="dellhover">
-                                                                                            <button
-                                                                                                class="btn btn-outline-dark text-dark textareaClassedit "
-                                                                                                data-size="lg"
-                                                                                                data-url="{{ route('organiation.tasks.edit', $task->id) }}"
-                                                                                                data-ajax-popup="true"
-                                                                                                data-bs-toggle="tooltip"
-                                                                                                title="{{ __('Update Task') }}"
-                                                                                                id="editable"
-                                                                                                style="font-size: ;">Edit</button>
-
-                                                                                            <div class="btn btn-dark  text-white"
-                                                                                                id="editable"
-                                                                                                style="font-size: ;"
-                                                                                                onclick="deleteTask({{ $task->id }}, {{ $lead->id }}, 'lead');">
-                                                                                                Delete</div>
                                                                                         </div>
                                                                                     </div>
                                                                                     {{--  --}}
+                                                                    </div>
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+                                                </div>
+                                            </div>
+
+                                            @php
+                                                $section++;
+                                            @endphp
+                                        @elseif ($task1->status == 0)
+                                            <div class="accordion" id="accordionPanelsStayOpenExample">
+                                                <div class="accordion-item">
+                                                    @if ($section2 == 1)
+                                                        <h2 class="accordion-header" id="panelsStayOpen-headingOneddsd">
+                                                            <button class="accordion-button" type="button"
+                                                                data-bs-toggle="collapse"
+                                                                data-bs-target="#panelsStayOpen-collapseOneddsd"
+                                                                aria-expanded="true"
+                                                                aria-controls="panelsStayOpen-collapseOneddsd">
+                                                                {{ $section2 == 1 ? 'Open Activity' : '' }}
+                                                            </button>
+                                                        </h2>
+
+                                                        @foreach ($tasks as $task)
+                                                            @if ($task->status == 0)
+                                                                <div id="panelsStayOpen-collapseOneddsd"
+                                                                    class="accordion-collapse collapse show"
+                                                                    aria-labelledby="panelsStayOpen-headingOneddsd">
+                                                                    <div class="accordion-body">
+                                                                        {{--  --}}
+                                                                        <div
+                                                                            style="border-top:1px solid black;border-bottom:1px solid black ">
+                                                                            <div
+                                                                                class="row my-2 justify-content-between  ps-4">
+                                                                                <div class="col-12 my-2">
+                                                                                    <p class="text-dark"
+                                                                                        style="font-size: 18px;">
+                                                                                        <span style="cursor:pointer"
+                                                                                            class="task-name hyper-link"
+                                                                                            @can('view task') onclick="openSidebar('/get-task-detail?task_id=<?= $task->id ?>')" @endcan
+                                                                                            data-task-id="{{ $task->id }}">{{ $task->name }}</span>
+                                                                                    </p>
+                                                                                </div>
+                                                                                <div class="col-8">
+                                                                                    <div class="row align-items-center">
+
+                                                                                        <div class="col-8">
+                                                                                            <p class="mb-0 text-secondary">
+                                                                                            <p class="text-muted text-sm"
+                                                                                                style="font-size: 18px;">
+                                                                                                <i class="step__icon fa fa-user"
+                                                                                                    aria-hidden="true"></i>
+                                                                                                {{ optional(\App\Models\User::where('id', $task->assigned_to)->first())->name }}
+                                                                                            </p>
+                                                                                        </div>
+                                                                                        <div class="col-8">
+                                                                                            <span class="d-flex mb-0">
+                                                                                                <p>Status
+                                                                                                </p>
+                                                                                                <p class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }} ml-2"
+                                                                                                    style="font-size: 10px;">
+                                                                                                    {{ $task->status == 1 ? 'Completed' : 'On Going' }}
+                                                                                                </p>
+                                                                                            </span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-4 text-end px-1">
+                                                                                    <p>{{ $task->created_at }}
+                                                                                    </p>
                                                                                 </div>
                                                                             </div>
-                                                                        @endif
-                                                                    @endforeach
-                                                                @endif
-
-                                                            </div>
-                                                        </div>
-
-                                                        @php
-                                                            $section2++;
-                                                        @endphp
-                                                        @endif
-                                                        @endforeach
-                                                        @endif
-                                                    </div>
-                                            </div>
-                                        @endcan
-                                        <div class="accordion d-none" id="accordionPanelsStayOpenExample">
-                                            <!-- Open Accordion Item -->
-                                            <div class="accordion-item">
-                                                <h2 class="accordion-header" id="panelsStayOpen-headingdisc">
-                                                    <button class="accordion-button p-2" type="button"
-                                                        data-bs-toggle="collapse"
-                                                        data-bs-target="#panelsStayOpen-collapsedisc">
-                                                        {{ __('Discussion') }}
-                                                    </button>
-                                                </h2>
-
-                                                <div id="panelsStayOpen-collapsedisc"
-                                                    class="accordion-collapse collapse show"
-                                                    aria-labelledby="panelsStayOpen-headingdisc">
-                                                    <div class="accordion-body">
-
-
-                                                        <div class="">
-
-                                                            <div class="col-12">
-                                                                <div class="card">
-                                                                    <div class="card-header ">
-                                                                        <div class="d-flex justify-content-end">
-                                                                            <div class="float-end">
-                                                                                <a data-size="lg"
-                                                                                    data-url="{{ route('leads.discussions.create', $lead->id) }}"
+                                                                            <div class="d-flex gap-1 justify-content-end pb-2 px-3"
+                                                                                id="dellhover">
+                                                                                <button
+                                                                                    class="btn btn-outline-dark text-dark textareaClassedit "
+                                                                                    data-size="lg"
+                                                                                    data-url="{{ route('organiation.tasks.edit', $task->id) }}"
                                                                                     data-ajax-popup="true"
                                                                                     data-bs-toggle="tooltip"
-                                                                                    title="{{ __('Add Message') }}"
-                                                                                    class="btn p-2 text-white"
-                                                                                    style="background-color: #313949;">
-                                                                                    <i class="ti ti-plus"></i>
-                                                                                </a>
+                                                                                    title="{{ __('Update Task') }}"
+                                                                                    id="editable"
+                                                                                    style="font-size: ;">Edit</button>
+
+                                                                                <div class="btn btn-dark  text-white"
+                                                                                    id="editable" style="font-size: ;"
+                                                                                    onclick="deleteTask({{ $task->id }}, {{ $lead->id }}, 'lead');">
+                                                                                    Delete</div>
                                                                             </div>
                                                                         </div>
+                                                                        {{--  --}}
                                                                     </div>
-                                                                    <div class="card-body px-0">
-                                                                        <ul class="list-group list-group-flush mt-2">
-                                                                            @if (!$lead->discussions->isEmpty())
-                                                                                @foreach ($lead->discussions as $discussion)
-                                                                                    <li class="list-group-item px-0"
-                                                                                        style="list-style: none;">
-                                                                                        <div
-                                                                                            class="d-block d-sm-flex align-items-start">
-                                                                                            <img src="@if ($discussion->user->avatar) {{ asset('/storage/uploads/avatar/' . $discussion->user->avatar) }} @else {{ asset('/storage/uploads/avatar/avatar.png') }} @endif"
-                                                                                                class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
-                                                                                                alt="image">
-                                                                                            <div class="w-100">
-                                                                                                <div
-                                                                                                    class="d-flex align-items-center justify-content-between">
-                                                                                                    <div
-                                                                                                        class="mb-3 mb-sm-0">
-                                                                                                        <h6
-                                                                                                            class="mb-0">
-                                                                                                            {{ $discussion->comment }}
-                                                                                                        </h6>
-                                                                                                        <span
-                                                                                                            class="text-muted text-sm">{{ $discussion->user->name }}</span>
-                                                                                                    </div>
-                                                                                                    <div
-                                                                                                        class="form-check form-switch form-switch-right mb-2">
-                                                                                                        {{ $discussion->created_at->diffForHumans() }}
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </li>
-                                                                                @endforeach
-                                                                            @else
-                                                                                <li class="text-center">
-                                                                                    {{ __(' No Data Available.!') }}
-                                                                                </li>
-                                                                            @endif
-                                                                        </ul>
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                    @endif
+
+                                                </div>
+                                            </div>
+
+                                            @php
+                                                $section2++;
+                                            @endphp
+                                            @endif
+                                            @endforeach
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endcan
+                                <div class="accordion d-none" id="accordionPanelsStayOpenExample">
+                                    <!-- Open Accordion Item -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="panelsStayOpen-headingdisc">
+                                            <button class="accordion-button p-2" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#panelsStayOpen-collapsedisc">
+                                                {{ __('Discussion') }}
+                                            </button>
+                                        </h2>
+
+                                        <div id="panelsStayOpen-collapsedisc" class="accordion-collapse collapse show"
+                                            aria-labelledby="panelsStayOpen-headingdisc">
+                                            <div class="accordion-body">
+
+
+                                                <div class="">
+
+                                                    <div class="col-12">
+                                                        <div class="card">
+                                                            <div class="card-header ">
+                                                                <div class="d-flex justify-content-end">
+                                                                    <div class="float-end">
+                                                                        <a data-size="lg"
+                                                                            data-url="{{ route('leads.discussions.create', $lead->id) }}"
+                                                                            data-ajax-popup="true"
+                                                                            data-bs-toggle="tooltip"
+                                                                            title="{{ __('Add Message') }}"
+                                                                            class="btn p-2 text-white"
+                                                                            style="background-color: #313949;">
+                                                                            <i class="ti ti-plus"></i>
+                                                                        </a>
                                                                     </div>
                                                                 </div>
                                                             </div>
-
+                                                            <div class="card-body px-0">
+                                                                <ul class="list-group list-group-flush mt-2">
+                                                                    @if (!$lead->discussions->isEmpty())
+                                                                        @foreach ($lead->discussions as $discussion)
+                                                                            <li class="list-group-item px-0"
+                                                                                style="list-style: none;">
+                                                                                <div
+                                                                                    class="d-block d-sm-flex align-items-start">
+                                                                                    <img src="@if ($discussion->user->avatar) {{ asset('/storage/uploads/avatar/' . $discussion->user->avatar) }} @else {{ asset('/storage/uploads/avatar/avatar.png') }} @endif"
+                                                                                        class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
+                                                                                        alt="image">
+                                                                                    <div class="w-100">
+                                                                                        <div
+                                                                                            class="d-flex align-items-center justify-content-between">
+                                                                                            <div class="mb-3 mb-sm-0">
+                                                                                                <h6 class="mb-0">
+                                                                                                    {{ $discussion->comment }}
+                                                                                                </h6>
+                                                                                                <span
+                                                                                                    class="text-muted text-sm">{{ $discussion->user->name }}</span>
+                                                                                            </div>
+                                                                                            <div
+                                                                                                class="form-check form-switch form-switch-right mb-2">
+                                                                                                {{ $discussion->created_at->diffForHumans() }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                        @endforeach
+                                                                    @else
+                                                                        <li class="text-center">
+                                                                            {{ __(' No Data Available.!') }}
+                                                                        </li>
+                                                                    @endif
+                                                                </ul>
+                                                            </div>
                                                         </div>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+
                         </div>
                     </div>
                     <!-- End of Open Accordion Item -->
@@ -1495,7 +1440,8 @@
                                                         @endphp
 
                                                         <li class="StepProgress-item is-done">
-                                                            <div class="bold time">{{ $activity->created_at }}</div>
+                                                            <div class="bold time">{{ $activity->created_at }}
+                                                            </div>
                                                             <div class="bold"
                                                                 style="text-align: left; margin-left: 80px;">
                                                                 <p class="bold"
@@ -1605,22 +1551,23 @@
 
     });
     $('.tag-badge').click(function() {
-            $('#TagModalBody').html('');
-            var tagId = $(this).data('tag-id');
-            var leadId = $(this).data('lead-id');
-            $('#UpdateTageModal').css('z-index', 99999);
-            var selectOptions = <?php echo json_encode($tags); ?>;
-            // Check if selectOptions is an object
-            if (typeof selectOptions === 'object' && selectOptions !== null) {
-                // Generate options HTML by iterating over object keys
-                var optionsHTML = '';
-                for (var key in selectOptions) {
-                    if (selectOptions.hasOwnProperty(key) && key.trim() !== '') {
-                        optionsHTML += `<option value="${selectOptions[key]}" ${tagId === selectOptions[key] ? 'selected' : ''}>${key}</option>`;
-                    }
+        $('#TagModalBody').html('');
+        var tagId = $(this).data('tag-id');
+        var leadId = $(this).data('lead-id');
+        $('#UpdateTageModal').css('z-index', 99999);
+        var selectOptions = <?php echo json_encode($tags); ?>;
+        // Check if selectOptions is an object
+        if (typeof selectOptions === 'object' && selectOptions !== null) {
+            // Generate options HTML by iterating over object keys
+            var optionsHTML = '';
+            for (var key in selectOptions) {
+                if (selectOptions.hasOwnProperty(key) && key.trim() !== '') {
+                    optionsHTML +=
+                        `<option value="${selectOptions[key]}" ${tagId === selectOptions[key] ? 'selected' : ''}>${key}</option>`;
                 }
-                // Append the options to the select element
-                $('#TagModalBody').append(`
+            }
+            // Append the options to the select element
+            $('#TagModalBody').append(`
                     <input type="hidden" value="${tagId}" name="old_tag_id" id="old_tag_id">
                     <div class="form-group">
                         <label for="">Tag</label>
@@ -1631,8 +1578,8 @@
                     </div>
                     <input type="hidden" value="${leadId}" name="lead_id" id="lead_id">
                 `);
-                select2();
-                $('#UpdateTageModal').modal('show');
-            }
-        });
+            select2();
+            $('#UpdateTageModal').modal('show');
+        }
+    });
 </script>
