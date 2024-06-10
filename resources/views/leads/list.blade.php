@@ -377,15 +377,15 @@
                                                 <td class="lead-info-cell">
                                                     <span style="cursor:pointer" class="lead-name hyper-link"
                                                         @can('view lead') onclick="openSidebar('/get-lead-detail?lead_id=<?= $lead->id ?>')" @endcan
-                                                        data-lead-id="{{ $lead->id }}">{{ $lead->name }}</span>
+                                                        data-lead-id="{{ $lead->id }}">{{ !empty($lead->name)? $lead->name : '--' }}</span>
                                                 </td>
 
                                                 <td class="lead-info-cell">
-                                                    <a href="{{ $lead->email }}">{{ $lead->email }}</a>
+                                                    <a href="{{ $lead->email }}">{{ !empty($lead->email)? $lead->email : '--' }}</a>
                                                 </td>
 
                                                 <td class="lead-info-cell">
-                                                    {{ $lead->phone }}
+                                                    {{ !empty($lead->phone)? $lead->phone : '--' }}
                                                 </td>
 
                                                 <td class="lead-info-cell">

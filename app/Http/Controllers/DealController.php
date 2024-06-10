@@ -2729,10 +2729,25 @@ class DealController extends Controller
                 'Rejected' => 'Rejected'
             ];
 
+            $tags = [];
+
+            if (\Auth::check()) {
+                $user = \Auth::user();
+    
+                if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                    $tags = LeadTag::pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                    $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Region Manager'])) {
+                    $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                } else {
+                    $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                }
+            }
             $countries = Country::pluck('name', 'name');
             $countries = [0 => 'Select Country'] + $countries->toArray();
 
-            return view('deals.create-application', compact('universities', 'statuses', 'id', 'deal_passport', 'stages', 'countries'));
+            return view('deals.create-application', compact('tags','universities', 'statuses', 'id', 'deal_passport', 'stages', 'countries'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -2798,7 +2813,7 @@ class DealController extends Controller
                 'name' => $deal->name . '-' . $request->course . '-' . $university_name . '-' . $request->application_key,
                 'created_by' => Session::get('auth_type_id') != null ? Session::get('auth_type_id') : \Auth::user()->id,
             ]);
-
+            $new_app->tag_ids     = !empty($request->tag_ids) ? implode(',', $request->tag_ids): '';
             $new_app->brand_id = $deal->brand_id;
             $new_app->save();
 
@@ -2852,7 +2867,23 @@ class DealController extends Controller
             $deal_passport = Deal::select(['users.*'])->join('client_deals', 'client_deals.deal_id', 'deals.id')->join('users', 'users.id', 'client_deals.client_id')->where(['deals.id' => $application->deal_id])->first();
             $stages = ApplicationStage::get()->pluck('name', 'id')->toArray();
 
-            return view('deals.edit-application', compact('application', 'universities', 'statuses', 'deal_passport', 'stages'));
+            $tags = [];
+
+            if (\Auth::check()) {
+                $user = \Auth::user();
+    
+                if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                    $tags = LeadTag::pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                    $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Region Manager'])) {
+                    $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                } else {
+                    $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                }
+            }
+
+            return view('deals.edit-application', compact('tags','application', 'universities', 'statuses', 'deal_passport', 'stages'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -3057,6 +3088,7 @@ class DealController extends Controller
             $application->external_app_id = $request->application_key;
             $application->intake = date('Y-m-d', strtotime($request->intake));
             $application->name = $deal->name . '-' . $request->course . '-' . $university_name . '-' . $request->application_key;
+            $application->tag_ids     = !empty($request->tag_ids) ? implode(',', $request->tag_ids): '';
             $application->update();
 
             return json_encode([

@@ -324,6 +324,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         <th scope="col">{{ __('University') }}</th>
                         <th scope="col">{{ __('Stage') }}</th>
                         <th scope="col">{{ __('Assigned To') }}</th>
+                        <th scope="col">{{ __('Tag') }}</th>
 
                         <th scope="col" class="d-none">{{ __('Intake') }}</th>
                         <th scope="col" class="d-none">{{ __('Brand') }}</th>
@@ -353,7 +354,7 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         <td>{{ $universities[$app->university_id]  ?? '' }}</td>
                         <td>{{ isset($app->stage_id) && isset($stages[$app->stage_id]) ? $stages[$app->stage_id] : '' }}</td>
                         <td> {{ !empty($deal->assigned_to) ? (isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : '') : '' }} </td>
-
+                        <td>{{ $app->tag_ids }}</td>
 
                         <td class="d-none"> {{ $app->intake }} </td>
                         <td class="d-none"> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }} </td>

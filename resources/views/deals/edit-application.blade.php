@@ -16,7 +16,15 @@
             {{ Form::label('application_key', __('Application ID'), ['class' => 'form-label']) }}
             {{ Form::text('application_key', $application->external_app_id, ['class' => 'form-control', 'style' => 'height: 45px;']) }}
         </div>
-
+        <div class="col-6 form-group py-0">
+            {{ Form::label('tag', __('Tages'), ['class' => 'form-label']) }}
+            <select class="form-control select2" multiple id="choice-4232" name="tag_ids[]">
+                <option value="">Select tage</option>
+                @foreach ($tags as $key => $tag)
+                  <option value="{{ $tag }}" {{ in_array($tag, explode(',', $application->tag_ids)) ? 'selected' : '' }}>{{ $key }}</option>
+                @endforeach
+            </select>
+        </div>
         <div class="col-6 form-group py-0">
             {{ Form::label('intake', __('Intake'), ['class' => 'form-label']) }}
             <div class="intake_month_div" id="intake_month_div">
