@@ -1934,6 +1934,10 @@ Route::get('/filter-branches', [RegionController::class, 'filterBranches'])->nam
 //////////////////////////////////////////////////Add Tags to Leads
 Route::post('/leads/tag', [LeadController::class, 'addTags'])->name('lead_tags');
 Route::post('/deals/tag', [DealController::class, 'addTags'])->name('deal_tags');
+Route::post('/applications/tag', [ApplicationsController::class, 'addTags'])->name('applications_tags');
+Route::post('/application_single_tags', [ApplicationsController::class, 'application_single_tags'])->name('application_single_tags');
 Route::get('/delete_tage', [LeadController::class, 'delete_tage'])->name('delete_tage');
+Route::get('/delete_app_tage', [ApplicationsController::class, 'delete_app_tage'])->name('delete_app_tage');
+
 
 

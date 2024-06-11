@@ -158,6 +158,19 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                 </a>
                 @endif
 
+                <div class="btn-group">
+                    <button type="button" class="btn btn-dark dropdown-toggle-split rounded-1" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="far fa-clone" style="font-size: 15px;"></i><span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-link dropdown-item d-none" id="tagModalBtn" data-toggle="modal" data-target="#tagModal">
+                                Tags
+                            </button>
+                        </li>
+                    </ul>
+                </div>
                 <!-- <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> -->
 
             </div>
@@ -274,11 +287,11 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                             style="width: 95%; border-color:#aaa">
                     </div>
 
-                    <div class="col-md-3 mt-2 p-0">
+                    <div class="col-md-3 mt-3 p-0">
                         <br>
-                        <input type="submit" class="btn form-btn btn-sm btn-dark">
-                        <a href="/applications/" class="btn form-btn btn-sm btn-dark">Reset</a>
-                        <a type="button" id="save-filter-btn" onClick="saveFilter('applications',<?= sizeof($applications) ?>)" class="btn form-btn btn-sm bg-dark" style=" color:white;display:none;">Save Filter</a>
+                        <input type="submit" class="btn form-btn btn-dark">
+                        <a href="/applications/" class="btn form-btn  btn-dark">Reset</a>
+                        <a type="button" id="save-filter-btn" onClick="saveFilter('applications',<?= sizeof($applications) ?>)" class="btn form-btn  bg-dark" style=" color:white;display:none;">Save Filter</a>
                     </div>
                 </div>
                 <div class="row my-4 d-none">
@@ -354,7 +367,11 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                         <td>{{ $universities[$app->university_id]  ?? '' }}</td>
                         <td>{{ isset($app->stage_id) && isset($stages[$app->stage_id]) ? $stages[$app->stage_id] : '' }}</td>
                         <td> {{ !empty($deal->assigned_to) ? (isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : '') : '' }} </td>
-                        <td>{{ $app->tag_ids }}</td>
+                        <td>
+                            @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $app->tag_ids))->get() as $tag)
+                                <span class="badge text-white" style="background-color:#cd9835;cursor:pointer;">{{ $tag->tag }}</span>
+                            @endforeach
+                        </td>
 
                         <td class="d-none"> {{ $app->intake }} </td>
                         <td class="d-none"> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }} </td>
@@ -419,6 +436,44 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
         </div>
     </div>
 </div>
+
+
+
+<div class="modal fade" id="tagModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Tag</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('applications_tags') }}" method="POST" id="addTagForm">
+                <div class="modal-body">
+                    <input type="hidden" value="" name="selectedIds" id="selectedIds">
+
+                    <div class="form-group">
+                        <label for="">Tag</label>
+                        <select class="form form-control select2 selectTage" name="tagid" id="tagSelect" style="width: 95%;">
+                            <option value="">Select Tag</option>
+                            @foreach ($tags as $key => $tag)
+                            @if (!empty($tag))
+                            <option value="{{ $tag }}" <?= isset($_GET['tag']) && $key == $_GET['tag'] ? 'selected' : '' ?> class="">{{ $key }}</option>
+                            @endif
+                            @endforeach
+                            {{-- @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') --}}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark add-tags">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 
@@ -441,15 +496,16 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
         var selectedIds = $('.sub-check:checked').map(function() {
             return this.value;
         }).get();
-
+        $("#selectedIds").val(selectedIds);
         // console.log(selectedIds.length)
 
         if (selectedIds.length > 0) {
             selectedArr = selectedIds;
+            $("#tagModalBtn").removeClass('d-none');
             $("#actions_div").removeClass('d-none');
         } else {
             selectedArr = selectedIds;
-
+            $("#tagModalBtn").addClass('d-none');
             $("#actions_div").addClass('d-none');
         }
     });
@@ -458,15 +514,16 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
         var selectedIds = $('.sub-check:checked').map(function() {
             return this.value;
         }).get();
-
+        $("#selectedIds").val(selectedIds);
         // console.log(selectedIds.length)
 
         if (selectedIds.length > 0) {
             selectedArr = selectedIds;
+            $("#tagModalBtn").removeClass('d-none');
             $("#actions_div").removeClass('d-none');
         } else {
             selectedArr = selectedIds;
-
+            $("#tagModalBtn").addClass('d-none');
             $("#actions_div").addClass('d-none');
         }
         let commaSeperated = selectedArr.join(",");
@@ -711,5 +768,33 @@ $profile=\App\Models\Utility::get_file('uploads/avatar/');
                     }
                 });
         });
+        $(".add-tags").on("click", function(e){
+        e.preventDefault();
+        $button = $(this);
+        var formData = $("#addTagForm").serialize(); // Serialize form data
+        var url = $("#addTagForm").attr('action'); // Get form action URL
+        var csrfToken = $('meta[name="csrf-token"]').attr('content'); // Get CSRF token
+        $button.prop('disabled', true);
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: formData,
+            headers: {
+                'X-CSRF-Token': csrfToken // Include CSRF token in headers
+            },
+            success: function(response){
+                data = JSON.parse(response);
+                if(data.status == 'success'){
+                    $("#tagModal").hide();
+                    $(".modal-backdrop").removeClass('modal-backdrop');
+                    $(".sub-check").prop('checked', false);
+                    $button.prop('disabled', false);
+                    show_toastr('success', data.msg);
+                    window.location.href = '/applications';
+                }
+            },
+        });
+    });
 </script>
 @endpush

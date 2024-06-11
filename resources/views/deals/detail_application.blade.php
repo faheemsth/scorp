@@ -1,7 +1,117 @@
 <style>
+    .editable:hover {
+        border: 1px solid rgb(136, 136, 136);
+    }
+
+    /* table tr td {
+        padding-top: 3px !important;
+        padding-bottom: 3px !important;
+        font-size: 12px;
+    } */
+
+    table tr {
+        font-size: 14px;
+    }
+
+    .card-body {
+        padding: 25px 15px !important;
+    }
+
+    .edit-input-field-div {
+        background-color: #ffffff;
+        border: 0px solid rgb(224, 224, 224);
+        max-width: max-content;
+        max-height: 30px;
+    }
+
+
+    .edit-input-field-div .input-group {
+        min-width: 70px;
+        min-height: 30px;
+        border: none !important;
+    }
+
+    .edit-input-field-div .input-group input {
+
+        border: none !important;
+    }
+
+    .edit-input-field {
+        border: 0px;
+        box-shadow: none;
+        padding: 4px !important;
+
+    }
+
+    .edit-input-field-div .edit-btn-div {
+        display: none;
+    }
+
+    .edit-input-field-div:hover {
+        /* border: 1px solid rgb(224, 224, 224); */
+    }
+
+    .edit-input-field-div:hover .edit-btn-div {
+        display: block;
+    }
+
+    .edit-input {
+        padding: 7px;
+    }
+
+    .block-items {
+        overflow: auto;
+        padding-right: 7px;
+        padding-bottom: 5px;
+        padding-top: 1px;
+        padding-left: 1px;
+        width: 100%;
+        display: flex;
+    }
+
+
+    .block-item {
+        display: inline-block;
+        vertical-align: top;
+        padding: 10px;
+        text-align: left;
+        white-space: nowrap;
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .16), 0 0 0 1px rgba(0, 0, 0, .08);
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .16), 0 0 0 1px rgba(0, 0, 0, .08);
+        border-radius: 2px;
+        margin-right: 10px;
+        line-height: initial;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .top-label {
+        text-transform: uppercase;
+        white-space: nowrap;
+        width: 100%;
+        color: #757575;
+        font-size: 11px;
+        line-height: 12px;
+        font-weight: normal;
+        padding-bottom: 4px;
+        display: block;
+    }
+
+
+    .block-item-count-total {
+        font-weight: bold;
+        font-size: 14px;
+        text-align: left;
+    }
+
     .btn-sm {
-        width: 35px;
-        height: 35px;
+        width: 30px;
+        height: 30px;
     }
 </style>
 <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
@@ -10,7 +120,7 @@
         <div class="col-sm-12 pe-0">
 
             {{-- topbar --}}
-            <div class="lead-topbar d-flex flex-wrape justify-content-between align-items-center p-2">
+            <div class="lead-topbar d-flex flex-wrap justify-content-between align-items-center p-2">
                 <div class="d-flex align-items-center">
                     <div class="lead-avator">
                         <img src="{{ asset('assets/images/placeholder-lead.png') }}" alt="" class="">
@@ -79,6 +189,35 @@
                         @endcan
                     @endif
                 </div>
+
+                <!-- New row added here -->
+                <div class="row w-100 mt-3 border-top">
+                    @php $counter = 0; @endphp
+                    <div class="col-12 px-5 py-2 d-flex">
+                        @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $application->tag_ids))->get() as $tag)
+                            @if ($tag->tag != '')
+                                @if ($counter % 5 == 0 && $counter != 0)
+                                    </div><div class="col-12 px-5 py-2 d-flex">
+                                @endif
+                                <div class="d-flex ml-1">
+                                    <span class="" style="font-size:13px;background-color: #419de4;color:white;padding: 5px 21px;border: none;border-radius: 0px 30px 30px 0px;font-size: 11.7px;">{{ limit_words($tag->tag, 1.5) }}</span>
+                                    <span class="d-flex mt-1">
+                                        <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-dark mx-1 tag-badge"
+                                        data-tag-id="{{ $tag->id }}"
+                                        {{-- data-lead-id="{{ $lead->id }}" --}}
+                                        data-deal-id="{{ $application->id }}"
+                                        ><i class="ti ti-pencil"></i></a>
+                                        <input type="hidden" value="{{ $application->id }}" name="lead_id" id="lead_id">
+                                        <input type="hidden" value="{{ $tag->id }}" name="old_tag_id" id="old_tag_id">
+                                        <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-danger" onclick="deleteTage(this,{{ $application->id }},{{ $tag->id }})"><i class="ti ti-trash"></i></a>
+                                    </span>
+                                </div>
+                                @php $counter++; @endphp
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+                {{--  New row added end --}}
             </div>
 
 
@@ -431,7 +570,7 @@
                                                                         <span style="cursor:pointer"
                                                                             class="hyper-link"
                                                                             @can('view employee') onclick="openSidebar('/user/employee/{{ App\Models\Deal::find($application->deal_id)->assigned_to }}/show')" @endcan>
-                                                                            {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->assigned_to)->name }}
+                                                                            {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->assigned_to)->name ?? '' }}
                                                                         </span>
                                                                     @else
                                                                         {{ __(' ') }}
@@ -1006,7 +1145,55 @@
     </div>
 </div>
 </div>
+<div class="modal" id="UpdateTageModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tags Update</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+                <form action="{{ route('application_single_tags') }}" method="POST" id="UpdateTagForm">
+                <div class="modal-body" id="TagModalBody">
 
+                </div>
+                <br>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-dark px-2 Update" value="Update">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function deleteTage(element,deal_id,old_tag_id) {
+    $(element).attr('disabled', 'disabled'); // Disable the anchor tag
+    $(element).css('pointer-events', 'none'); // Prevent further clicks
+    $(element).find('i').remove(); // Remove the <i> tag
+    $(element).append(`
+      <div class="spinner-border spinner-border-sm text-white" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    `);
+    // Add the <div> tag with spinner and loading text
+        $.ajax({
+            type: "GET",
+            url: '{{ url('delete_app_tage') }}',
+            data: {deal_id : deal_id,old_tag_id : old_tag_id},
+            success: function(response) {
+                data = JSON.parse(response);
+
+                if (data.status == 'success') {
+                    $("#UpdateTageModal").modal('hide');
+                    show_toastr('success', data.msg);
+                    openSidebar('/deals/'+deal_id+'/detail-application')
+                }
+            },
+        });
+    }
+    </script>
 <script>
     $(document).ready(function() {
 
@@ -1101,5 +1288,63 @@
 
 
 
+
+
+        $('.tag-badge').click(function() {
+            $('#TagModalBody').html('');
+            var tagId = $(this).data('tag-id');
+            var leadId = $(this).data('lead-id');
+            var dealId = $(this).data('deal-id');
+            $('#UpdateTageModal').css('z-index', 99999);
+            var selectOptions = <?php echo json_encode($tags); ?>;
+            // Check if selectOptions is an object
+            if (typeof selectOptions === 'object' && selectOptions !== null) {
+                // Generate options HTML by iterating over object keys
+                var optionsHTML = '';
+                for (var key in selectOptions) {
+                    if (selectOptions.hasOwnProperty(key) && key.trim() !== '') {
+                        optionsHTML += `<option value="${selectOptions[key]}" ${tagId === selectOptions[key] ? 'selected' : ''}>${key}</option>`;
+                    }
+                }
+                // Append the options to the select element
+                $('#TagModalBody').append(`
+                    <input type="hidden" value="${tagId}" name="old_tag_id" id="old_tag_id">
+                    <div class="form-group">
+                        <label for="">Tag</label>
+                        <select class="form form-control select2 selectTage" name="new_tag_id" id="tagSelectupdate" style="width: 95%;">
+                            <option value="">Select Tag</option>
+                            ${optionsHTML}
+                        </select>
+                    </div>
+                    <input type="hidden" value="${leadId}" name="lead_id" id="lead_id">
+                    <input type="hidden" value="${dealId}" name="deal_id" id="dealer_id">
+                `);
+                select2();
+                $('#UpdateTageModal').modal('show');
+            }
+        });
+        // update tage post request
+    $(document).ready(function () {
+        $('#UpdateTagForm').submit(function (event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+            $.ajax({
+                url: '{{ route('application_single_tags') }}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    data = JSON.parse(response);
+                    show_toastr('success', data.msg);
+                    $("#UpdateTageModal").modal('hide');
+                    openSidebar('/deals/'+$('#dealer_id').val()+'/detail-application')
+                },
+            });
+        });
+    });
     });
 </script>
+

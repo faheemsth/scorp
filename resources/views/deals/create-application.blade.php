@@ -32,7 +32,7 @@
             <select class="form-control select2" multiple id="choice-4232" name="tag_ids[]">
                 <option value="">Select tage</option>
                 @foreach ($tags as $key => $tag)
-                  <option value="{{ $tag }}">{{ $key }}</option>
+                  <option value="{{ $tag }}" {{ in_array($tag, explode(',', $deal->tag_ids)) ? 'selected' : '' }}>{{ $key }}</option>
                 @endforeach
             </select>
         </div>

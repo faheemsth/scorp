@@ -16,6 +16,7 @@ use App\Models\SavedFilter;
 use App\Models\StageHistory;
 use Illuminate\Http\Request;
 use App\Models\DealApplication;
+use App\Models\LeadTag;
 use Session;
 
 class ApplicationsController extends Controller
@@ -181,7 +182,22 @@ class ApplicationsController extends Controller
             }
 
             $filters = BrandsRegionsBranches();
-            return view('applications.index', compact('applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands', 'saved_filters',  'filters'));
+            $tags = [];
+
+            if (\Auth::check()) {
+                $user = \Auth::user();
+    
+                if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                    $tags = LeadTag::pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                    $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Region Manager'])) {
+                    $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                } else {
+                    $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                }
+            }
+            return view('applications.index', compact('tags','applications', 'total_records', 'universities', 'stages', 'app_for_filer', 'brands', 'saved_filters',  'filters'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -538,5 +554,78 @@ class ApplicationsController extends Controller
                 'status' => 'success',
                 'html' => $html,
             ]);
+    }
+    public function addTags(Request $request)
+    {
+        $ids = explode(',', $request->selectedIds);
+        $Leads = DealApplication::whereIn('id', $ids)->get();
+        if(!empty($ids) && !empty($Leads) && $Leads->count() > 0){
+                foreach ($Leads as $Lead) {
+                    $Lead->tag_ids = $Lead->tag_ids ? $Lead->tag_ids . ',' . $request->tagid : $request->tagid;
+                    $Lead->save();
+                }
+            return json_encode([
+                    'status' => 'success',
+                    'msg' => 'Tag added successfully'
+            ]);
+      }
+    }
+    public function application_single_tags(Request $request)
+    {
+        if(!empty($request->deal_id)){
+            if (!empty($request->old_tag_id) && !empty($request->new_tag_id) && !empty($request->deal_id)) {
+                if($request->old_tag_id == $request->new_tag_id)
+                {
+                  return json_encode([
+                        'status' => 'success',
+                        'msg' => 'Tag Update successfully',
+                        'id' =>  $request->deal_id,
+                  ]);
+
+                }else{
+
+                  $Leads = DealApplication::find($request->deal_id)->tag_ids;
+                  $leadArray = explode(',', $Leads);
+                  $index = array_search($request->old_tag_id, $leadArray);
+                  if ($index !== false) {
+                      unset($leadArray[$index]);
+                  }
+                  $newLeads = implode(',', $leadArray);
+                  $Lead = DealApplication::where('id', $request->deal_id)->first();
+                  $Lead->tag_ids = $newLeads ? $newLeads . ',' . $request->new_tag_id : $request->new_tag_id;
+                  $Lead->save();
+                    return json_encode([
+                        'status' => 'success',
+                        'msg' => 'Tag Update successfully',
+                        'id' =>  $Lead->id,
+                    ]);
+                }
+            }
+
+        }
+        
+
+    }
+
+    public function delete_app_tage(Request $request)
+    {
+        if (!empty($request->old_tag_id) && !empty($request->deal_id)) {
+
+            $Leads = DealApplication::find($request->deal_id)->tag_ids;
+            $leadArray = explode(',', $Leads);
+            $index = array_search($request->old_tag_id, $leadArray);
+            if ($index !== false) {
+                unset($leadArray[$index]);
+            }
+            $newLeads = implode(',', $leadArray);
+            $Lead = DealApplication::where('id', $request->deal_id)->first();
+            $Lead->tag_ids = $newLeads;
+            $Lead->save();
+              return json_encode([
+                  'status' => 'success',
+                  'msg' => 'Tag Delete successfully',
+                  'id' => $Lead->id
+              ]);
+        }
     }
 }

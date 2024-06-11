@@ -2747,7 +2747,8 @@ class DealController extends Controller
             $countries = Country::pluck('name', 'name');
             $countries = [0 => 'Select Country'] + $countries->toArray();
 
-            return view('deals.create-application', compact('tags','universities', 'statuses', 'id', 'deal_passport', 'stages', 'countries'));
+            $deal = Deal::where(['id' => $id])->first();
+            return view('deals.create-application', compact('deal','tags','universities', 'statuses', 'id', 'deal_passport', 'stages', 'countries'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -4219,12 +4220,26 @@ class DealController extends Controller
         $application = DealApplication::where('id', $id)->first();
         $stages = ApplicationStage::get()->pluck('name', 'id')->toArray();
         $universities = University::get()->pluck('name', 'id')->toArray();
+        $tags = [];
 
+        if (\Auth::check()) {
+            $user = \Auth::user();
+
+            if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                $tags = LeadTag::pluck('id', 'tag')->toArray();
+            } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+            } elseif (in_array($user->type, ['Region Manager'])) {
+                $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+            } else {
+                $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+            }
+        }
         //Getting lead stages history
         $stage_histories = StageHistory::where('type', 'application')->where('type_id', $id)->pluck('stage_id')->toArray();
 
 
-        $html = view('deals.detail_application', compact('application', 'stages', 'universities', 'stage_histories'))->render();
+        $html = view('deals.detail_application', compact('tags','application', 'stages', 'universities', 'stage_histories'))->render();
         return json_encode([
             'status' => 'success',
             'app_id' => $application->id,
