@@ -66,6 +66,9 @@ class ApplicationsController extends Controller
         if (isset($_GET['lead_assigned_user']) && !empty($_GET['lead_assigned_user'])) {
             $filters['assigned_to'] = $_GET['lead_assigned_user'];
         }
+        if (isset($_GET['tag']) && !empty($_GET['tag'])) {
+            $filters['tag'] = $_GET['tag'];
+        }
 
         return $filters;
     }
@@ -143,6 +146,8 @@ class ApplicationsController extends Controller
                     $app_query->whereDate('deal_applications.created_at', '>=', $value);
                 }elseif ($column == 'created_at_to') {
                     $app_query->whereDate('deal_applications.created_at', '<=', $value);
+                }elseif ($column == 'tag') {
+                    $app_query->whereRaw('FIND_IN_SET(?, deal_applications.tag_ids)', [$value]);
                 }
             }
 
