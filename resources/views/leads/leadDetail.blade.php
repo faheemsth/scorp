@@ -99,6 +99,44 @@
         right: 10px;
         z-index: 1000;
     }
+    .note-toolbar > .btn-group {
+    position: absolute;
+    top: 101px;
+    z-index: 1000;
+}
+
+.note-toolbar > .btn-group > .note-btn > .note-icon-link {
+        font-size: 22px;
+        position: relative;
+        padding-right: 10px;
+        padding-bottom: 6px;
+
+    }
+
+    .note-toolbar > .btn-group > .note-btn{
+        width: fit-content;
+    }
+
+
+
+    .note-toolbar > .btn-group > .note-btn > .note-icon-link::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 2px;
+        height: 50%;
+        background-color: darkgray;
+        transform: translateY(-50%);
+    }
+
+.note-btn::after {
+    content: " Add a title";
+    font-size: 15px;
+    color: darkgray;
+    margin-left: 5px;
+}
+
 </style>
 
 <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
@@ -1583,3 +1621,103 @@
         }
     });
 </script>
+<script>
+    //saving notes
+    $(document).on("submit", "#create-notes", function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var id = $('.lead-id').val();
+
+        $(".create-notes-btn").val('Processing...');
+        $('.create-notes-btn').attr('disabled', 'disabled');
+
+        $.ajax({
+            type: "POST",
+            url: "/leads/" + id + "/notes",
+            data: formData,
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status == 'success') {
+                    show_toastr('Success', data.message, 'success');
+                    $('#commonModal').modal('hide');
+                    $('.note-tbody').html(data.html);
+                    $('#note_id').val('');
+                    var content = $('#description').summernote('code');
+                    $('#description').val(encodeURIComponent(content));
+                    $('#description').summernote('code', ''); // Set empty content
+                    return true;
+                } else {
+                    show_toastr('error', data.message, 'error');
+                    $(".create-notes-btn").val('Create');
+                    $('.create-notes-btn').removeAttr('disabled');
+                }
+            }
+        });
+    })
+    $(document).on("submit", "#update-notes", function(e) {
+        e.preventDefault();
+        var formData = $(this).serialize();
+        var id = $('.lead-id').val();
+        $(".update-notes-btn").val('Processing...');
+        $('.update-notes-btn').attr('disabled', 'disabled');
+        $.ajax({
+            type: "POST",
+            url: "/leads/" + id + "/notes-update",
+            data: formData,
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status == 'success') {
+                    show_toastr('Success', data.message, 'success');
+                    $('#commonModal').modal('hide');
+                    $('.note-tbody').html(data.html);
+                    $('#note_id').val('');
+                    $('#description').val('');
+                } else {
+                    show_toastr('error', data.message, 'error');
+                    $(".update-notes-btn").val('Update');
+                    $('.update-notes-btn').removeAttr('disabled');
+                }
+            }
+        });
+    })
+        //delete-notes
+    $(document).on("click", '.delete-notes', function(e) {
+        e.preventDefault();
+        var id = $(this).attr('data-note-id');
+        var lead_id = $('.lead-id').val();
+        var currentBtn = '';
+            Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+            $.ajax({
+                type: "GET",
+                url: "/leads/" + id + "/notes-delete",
+                data: {
+                    id,
+                    lead_id
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('Success', data.message, 'success');
+                        $('.note-tbody').html(data.html);
+                        $('#note_id').val('');
+                        $('#description').val('');
+                    } else {
+                        show_toastr('error', data.message, 'error');
+                    }
+                }
+            });
+        }
+        });
+
+        })
+        </script>
