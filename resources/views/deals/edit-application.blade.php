@@ -31,10 +31,10 @@
                 <select name="intake_month" class="form form-control" id="intake_month">
                     <option value="">Select months</option>
                     @if(isset($application) && isset($application->intake))
-                        @php
-                            $selectedValue = date('Y-m', strtotime($application->intake));
-                        @endphp
-                        <option value="{{ $selectedValue }}" selected>{{ date('F', strtotime($application->intake)) }}</option>
+                        @foreach($IntakeMonths as $key => $IntakeMonth)
+                            @php $selectedValue = $application->intake == $key ? 'selected' : ''; @endphp
+                            <option value="{{ $key }}" {{ $selectedValue }}>{{ $IntakeMonth }}</option>
+                        @endforeach
                     @endif
                 </select>
 

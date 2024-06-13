@@ -2871,6 +2871,19 @@ class DealController extends Controller
                 'Rejected' => 'Rejected'
             ];
             $application = DealApplication::where('id', $id)->first();
+            $university = University::where('id', $application->university_id)->first();
+            $IntakeMonths = [];
+            
+            if ($university) {
+                $intake_months = $university->intake_months;
+                $uni_months = explode(',', $intake_months);
+                $months = months();
+                foreach ($months as $key => $month) {
+                    if (in_array($key, $uni_months)) {
+                        $IntakeMonths[$key] = $month;
+                    }
+                }
+            }            
             $deal_passport = Deal::select(['users.*'])->join('client_deals', 'client_deals.deal_id', 'deals.id')->join('users', 'users.id', 'client_deals.client_id')->where(['deals.id' => $application->deal_id])->first();
             $stages = ApplicationStage::get()->pluck('name', 'id')->toArray();
 
@@ -2890,7 +2903,7 @@ class DealController extends Controller
                 }
             }
 
-            return view('deals.edit-application', compact('tags','application', 'universities', 'statuses', 'deal_passport', 'stages'));
+            return view('deals.edit-application', compact('IntakeMonths','tags','application', 'universities', 'statuses', 'deal_passport', 'stages'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -3093,7 +3106,7 @@ class DealController extends Controller
             $application->course = $request->course;
             //$application->pipeline_id = $pipeline->id;
             $application->external_app_id = $request->application_key;
-            $application->intake = date('Y-m-d', strtotime($request->intake));
+            $application->intake = $request->intake_month;
             $application->name = $deal->name . '-' . $request->course . '-' . $university_name . '-' . $request->application_key;
             $application->tag_ids     = !empty($request->tag_ids) ? implode(',', $request->tag_ids): '';
             $application->update();
