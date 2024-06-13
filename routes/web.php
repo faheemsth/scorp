@@ -246,6 +246,9 @@ Route::get('profile', [UserController::class, 'profile'])->name('profile')->midd
 Route::any('edit-profile', [UserController::class, 'editprofile'])->name('update.account')->middleware(['auth', 'XSS', 'revalidate']);
 
 Route::resource('users', UserController::class)->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/user/show/edit/{id}', [UserController::class, 'showConvert'])->name('user.show.edit')->middleware(['auth', 'XSS', 'revalidate']);
+Route::post('/user/{id}/convert', [UserController::class, 'convertToUser'])->name('user.convert')->middleware(['auth', 'XSS']);
+
 Route::get('/user/employees', [UserController::class, 'employees'])->name('user.employees')->middleware(['auth', 'XSS', 'revalidate']);
 Route::get('/user/employee/create', [UserController::class, 'employeeCreate'])->name('user.employee.create')->middleware(['auth', 'XSS', 'revalidate']);
 Route::post('/user/employee/store', [UserController::class, 'employeeStore'])->name('user.employee.store')->middleware(['auth', 'XSS', 'revalidate']);
@@ -1834,6 +1837,7 @@ Route::get('/get_branch_by_type', [OrganizationController::class, 'GetBranchByTy
 
 
 
+Route::get('get_applicatrion_of_admission/', [ApplicationsController::class, 'get_applicatrion_of_admission'])->name('get_applicatrion_of_admission.index')->middleware(['auth', 'XSS']);
 Route::get('applications/', [ApplicationsController::class, 'index'])->name('applications.index')->middleware(['auth', 'XSS']);
 Route::get('application/', [ApplicationsController::class, 'application'])->name('application')->middleware(['auth', 'XSS']);
 Route::post('/application/order', [ApplicationsController::class, 'order'])->name('application.order')->middleware(['auth', 'XSS']);

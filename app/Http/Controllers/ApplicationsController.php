@@ -633,4 +633,34 @@ class ApplicationsController extends Controller
               ]);
         }
     }
+
+    public function get_applicatrion_of_admission(Request $request)
+    {
+        // Fetch the applications for the given deal_id
+        $applications = DealApplication::select(
+            'deal_applications.name',
+            'deal_applications.intake',
+            'universities.name as uni',
+            'application_stages.name as stage'
+        )->where('deal_id', $request->id)
+        ->leftJoin('deals', 'deals.id', 'deal_applications.deal_id')
+        ->leftJoin('application_stages', 'deal_applications.stage_id', '=', 'application_stages.id')
+        ->leftJoin('universities', 'deal_applications.university_id', '=', 'universities.id')
+        ->get();
+        $html = '';
+        // Iterate over each application and build the HTML list items
+        foreach ($applications as $application) {
+            $html .= '<tr>';
+            $html .= '<td>' . $application->name . '</td>';
+            $html .= '<td>' . $application->uni . '</td>';
+            $html .= '<td>' . $application->intake . '</td>';
+            $html .= '<td>' . $application->stage . '</td>';
+            $html .= '</tr>';
+
+        }
+        // Return the generated HTML
+        return $html;
+    }
+    
+
 }

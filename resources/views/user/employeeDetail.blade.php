@@ -92,6 +92,14 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-1 me-3">
+                    @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                    <a href="#" data-size="lg"
+                        data-url="{{ route('user.show.edit', $employee->id) }}" data-ajax-popup="true"
+                        data-bs-toggle="tooltip" title="{{ __('Convert') }}"
+                        class="btn px-2 py-2 btn-dark text-white">
+                        <i class="ti ti-exchange"></i>
+                    </a>
+                    @endif
                     @can('edit employee')
                     <a href="#!" data-size="lg" data-url="{{ route('user.employee.edit', $employee->id) }}" data-ajax-popup="true" class="btn px-2 py-2 btn-dark text-white" data-bs-original-title="{{__('Edit Employee')}}" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
                     <i class="ti ti-pencil"></i>

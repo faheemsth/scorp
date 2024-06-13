@@ -1205,6 +1205,12 @@ class DealController extends Controller
              // reopen the old lead
              $lead = Lead::where('is_converted', $deal->id)->first();
 
+             $applications = DealApplication::where('deal_id', $deal->id)->get();
+             if(!empty($applications)){
+                foreach ($applications as $application) {
+                $application->delete();
+               }
+             }
              if (!empty($lead)) {
                  // Add Stage History
                  $data_for_stage_history = [

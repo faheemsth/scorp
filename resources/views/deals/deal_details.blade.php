@@ -163,20 +163,10 @@
                     @endif
 
                     @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('delete deal'))
-                        {!! Form::open([
-                            'method' => 'DELETE',
-                            'route' => ['deals.destroy', $deal->id],
-                            'id' => 'delete-form-' . $deal->id,
-                            'class' => 'mb-0',
-                        ]) !!}
-
-                        <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}"
-                            class="btn py-2 px-2 btn-danger text-white bs-pass-para">
+                        <a onclick="DeleteDetail('{{ route('deals.destroy', $deal->id)}}', {{ $deal->id }})"
+                            class="btn py-2 px-2 btn-danger text-white">
                             <i class="ti ti-trash"></i>
                         </a>
-
-
-                        {!! Form::close() !!}
                     @endif
 
                 </div>
@@ -1592,6 +1582,117 @@
     </div>
 </div>
 </div>
+
+<style>
+    #AdmissionCheck .modal-content {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+#AdmissionCheck .modal-header {
+    border-bottom: none;
+}
+
+#AdmissionCheck .modal-title {
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #007bff;
+}
+
+#AdmissionCheck .close {
+    font-size: 1.25rem;
+}
+
+#AdmissionCheck .modal-body {
+    padding: 2rem;
+}
+
+#AdmissionCheck .modal-footer {
+    border-top: none;
+}
+
+#AdmissionCheck .btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+}
+
+#AdmissionCheck .btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+#AdmissionCheck .btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+#AdmissionCheck .btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+#AdmissionCheck #AppendApplication {
+    margin-top: 1rem;
+}
+
+#AdmissionCheck #AppendApplication li {
+    margin: 0 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#AdmissionCheck #AppendApplication li:hover {
+    background-color: #e2e6ea;
+}
+.name-cell {
+    max-width: 200px; /* Adjust the max-width as per your design */
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+</style>
+<div class="modal" id="AdmissionCheck" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content rounded-3 shadow-lg">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-primary">Admissions</h5>
+                <button type="button" class="close text-secondary" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <p class="mb-0">Would you like to delete those applications?</p>
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>University</th>
+                        <th>Intake</th>
+                        <th>Stage</th>
+                      </tr>
+                    </thead>
+                    <tbody id="AppendApplication">
+                      
+                    </tbody>
+                  </table>
+            </div>
+            <div class="modal-footer border-0 justify-content-center d-flex">
+                <a class="btn btn-outline-primary px-4 me-2" data-bs-dismiss="modal">Close</a>
+                <span id="AppendApplicationDelete">
+                    
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <script>
     $(document).ready(function() {
         $('.textareaClass').click(function() {
@@ -1694,4 +1795,28 @@
             },
         });
     }
+
+ function DeleteDetail(url, id) {
+    $('#AppendApplication').html('');
+    // Add Ajax to remove admission
+    $.ajax({
+            type: "GET",
+            url: '{{ url('get_applicatrion_of_admission') }}',
+            data: {id : id},
+            success: function(response) {
+            $('#AppendApplication').html(response);
+            },
+    });
+    $("#AppendApplicationDelete").html('');
+    $("#AppendApplicationDelete").append(`
+        <form method="POST" action="${url}" accept-charset="UTF-8" id="delete-form-${id}" class="mb-0">
+            <input name="_method" type="hidden" value="DELETE">
+            @csrf
+            <a href="#" data-bs-toggle="tooltip" title="Delete" class="btn btn-outline-danger px-4 me-2 bs-pass-para">
+                Delete
+            </a>
+        </form>
+    `);
+    $("#AdmissionCheck").modal('show');
+  } 
 </script>

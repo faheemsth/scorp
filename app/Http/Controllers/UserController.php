@@ -29,6 +29,10 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Models\ExperienceCertificate;
 use App\Models\Notification;
+use App\Models\DealTask;
+use App\Models\Deal;
+use App\Models\Lead;
+use App\Models\DealApplication;
 
 
 class UserController extends Controller
@@ -1707,6 +1711,102 @@ class UserController extends Controller
             'status' => 'success',
             'html' => $html
         ]);
+    }
+
+    public function showConvert($id)
+    {
+
+        $employee= User::find($id);
+        $filter = BrandsRegionsBranchesForEdit($employee->brand_id, $employee->region_id, 0);
+        $branches = $filter['branches'];
+        $employees = $filter['employees'];
+        return view('user.convert', compact('employee','branches','employees'));
+    }
+
+
+
+
+//  convertToUser branch and new user
+    public function convertToUser(Request $request,$id)
+    {
+        // Change Branch
+        $user = User::find($id);
+       if($request->UserTransfer == 0){
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                'branch_id' => 'required|integer|min:1',
+            ]
+        );
+        if ($validator->fails()) {
+            $messages = $validator->getMessageBag();
+            return json_encode([
+                'status' => 'error',
+                'message' => $messages->first()
+            ]);
+        }
+        
+        DB::table('deal_tasks')
+            ->where('branch_id', $user->branch_id)
+            ->update(['branch_id' => $request->branch_id]);
+
+        DB::table('leads')
+            ->where('branch_id', $user->branch_id)
+            ->update(['branch_id' => $request->branch_id]);
+
+        DB::table('deals')
+            ->where('branch_id', $user->branch_id)
+            ->update(['branch_id' => $request->branch_id]);
+
+        DB::table('deal_applications')
+            ->join('deals', 'deals.id', '=', 'deal_applications.deal_id')
+            ->where('deals.branch_id', $user->branch_id)
+            ->update(['deals.branch_id' => $request->branch_id]);
+
+        
+       return json_encode([
+        'status' => 'success',
+        'message' => __('Change Branch successfully!')
+       ]);
+       }else{
+        // User Responsible
+        
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                'assigned_to' => 'required|integer|min:1',
+            ]
+        );
+        if ($validator->fails()) {
+            $messages = $validator->getMessageBag();
+            return json_encode([
+                'status' => 'error',
+                'message' => $messages->first()
+            ]);
+        }
+
+        DB::table('deal_tasks')
+        ->where('assigned_to', $user->id)
+        ->update(['assigned_to' => $request->assigned_to]);
+
+        DB::table('leads')
+        ->where('user_id', $user->id)
+        ->update(['user_id' => $request->assigned_to]);
+
+        DB::table('deals')
+        ->where('assigned_to', $user->id)
+        ->update(['assigned_to' => $request->assigned_to]);
+
+        DB::table('deal_applications')
+        ->join('deals', 'deals.id', '=', 'deal_applications.deal_id')
+        ->where('deals.assigned_to', $user->id)
+        ->update(['deals.assigned_to' => $request->assigned_to]);
+
+        return json_encode([
+            'status' => 'success',
+            'message' => __('Change Assigned To successfully!')
+           ]);
+       }
     }
 
 
