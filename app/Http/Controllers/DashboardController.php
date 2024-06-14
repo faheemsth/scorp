@@ -1668,4 +1668,27 @@ class DashboardController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+    public function HrmHome()
+    {
+        $AuthUser = User::select(
+            'users.id',
+            'users.name',
+            'regions.name as region',
+            'branches.name as branch',
+            'brandget.name as brand',
+            'users.email',
+            'users.phone',
+            'users.date_of_birth',
+            'users.type',
+            'users.created_at',
+            'users.updated_at',
+        )
+        ->leftJoin('users as brandget', 'users.brand_id', '=', 'brandget.id')
+        ->leftJoin('branches', 'branches.id', '=', 'users.branch_id')
+        ->leftJoin('regions', 'regions.id', '=', 'users.region_id')
+        ->where('users.id', \Auth::id())
+        ->first();
+        return view('hrmhome.index',compact('AuthUser'));
+    }
+
 }

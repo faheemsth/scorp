@@ -221,6 +221,12 @@ class JobController extends Controller
        // return view('job.show', compact('status', 'job'));
     }
 
+    public function Hrmshow(Job $jo)
+    {
+        $jobs  = Job::where('created_by',\Auth::id())->get();
+        $filters = UserRegionBranch();
+        return view('hrmhome.jobs', compact('jobs','filters'));
+    }
     public function edit(Job $job)
     {
 

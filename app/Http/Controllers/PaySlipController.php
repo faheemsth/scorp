@@ -471,4 +471,14 @@ class PaySlipController extends Controller
 
         return redirect()->route('payslip.index')->with('success', __('Employee payroll successfully updated.'));
     }
+
+
+    public function HrmPayslip()
+    {
+
+        $id=optional(Employee::where('user_id',\Auth::id())->first())->id;
+        $payslips  = PaySlip::where('employee_id', $id)->get();
+        $payslipDetail = Utility::employeePayslipDetail($id);
+        return view('hrmhome.payslip', compact('payslips','payslipDetail'));
+    }
 }

@@ -241,6 +241,13 @@ Route::get('/project-dashboard', [DashboardController::class, 'project_dashboard
 
 Route::get('/hrm-dashboard', [DashboardController::class, 'hrm_dashboard_index'])->name('hrm.dashboard')->middleware(['auth', 'XSS', 'revalidate']);
 
+Route::get('/hrm-home', [DashboardController::class, 'HrmHome'])->name('hrm.home')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/hrm-jobs', [JobController::class, 'Hrmshow'])->name('hrm.home')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/hrm-leaves', [LeaveController::class, 'Hrmleave'])->name('hrm.leave')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/hrm-payslip', [PaySlipController::class, 'HrmPayslip'])->name('hrm.payslip')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/hrm-appraisal', [AppraisalController::class, 'HrmAppraisal'])->name('hrm.appraisal')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/hrm-indicator', [IndicatorController::class, 'HrmIndicator'])->name('hrm.indicator')->middleware(['auth', 'XSS', 'revalidate']);
+
 Route::get('profile', [UserController::class, 'profile'])->name('profile')->middleware(['auth', 'XSS', 'revalidate']);
 
 Route::any('edit-profile', [UserController::class, 'editprofile'])->name('update.account')->middleware(['auth', 'XSS', 'revalidate']);

@@ -484,4 +484,33 @@ class LeaveController extends Controller
         return $leave_counts;
 
     }
+
+    public function Hrmleave()
+    {
+        // Build the leads query
+        $Leave_query = Leave::select(
+                'regions.name as region',
+                'branches.name as branch',
+                'users.name as brand',
+                'leaves.id',
+                'leaves.brand_id',
+                'leaves.branch_id',
+                'leaves.created_by',
+                'leaves.start_date',
+                'leaves.created_at',
+                'leaves.end_date',
+                'leaves.leave_type_id',
+                'leaves.status',
+                )
+                ->join('users', 'users.id', '=', 'leaves.brand_id')
+                ->join('branches', 'branches.id', '=', 'leaves.branch_id')
+                ->join('regions', 'regions.id', '=', 'leaves.region_id')
+                ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'leaves.created_by')
+                ->leftJoin('lead_tags as tag', 'tag.lead_id', '=', 'leaves.id');
+
+        $leaves=$Leave_query->get();
+           
+        return view('hrmhome.leave', compact('leaves'));
+       
+    }
 }

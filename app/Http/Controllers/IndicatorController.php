@@ -303,4 +303,21 @@ class IndicatorController extends Controller
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
+
+    public function HrmIndicator()
+    {
+        $indicator = Indicator::select('indicators.id','regions.name as region','branches.name as branch','users.name as brand','indicators.created_by','indicators.department','indicators.designation','indicators.created_user','indicators.rating','indicators.created_at','indicators.updated_at')
+        ->leftJoin('users', 'users.id', '=', 'indicators.brand_id')
+        ->leftJoin('branches', 'branches.id', '=', 'indicators.branch')
+        ->leftJoin('regions', 'regions.id', '=', 'indicators.region_id')
+        ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'indicators.created_by')
+        ->where('indicators.created_user', \Auth::id())
+        ->first();
+        $ratings = json_decode($indicator->rating,true);
+        $performance     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
+
+        return view('hrmhome.indicator', compact('indicator','ratings','performance'));
+
+       
+    }
 }

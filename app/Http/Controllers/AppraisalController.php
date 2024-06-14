@@ -331,4 +331,30 @@ class AppraisalController extends Controller
         $data['employee'] = Employee::where('branch_id', $request->branch_id)->get();
         return response()->json($data);
     }
+
+    public function HrmAppraisal()
+    {
+        $appraisal = Appraisal::select(
+            'appraisals.*', // Corrected this line
+            'regions.name as region',
+            'branches.name as branch',
+            'users.name as brand',
+            'assigned_to.name as created_user'
+        )
+        ->leftJoin('users', 'users.id', '=', 'appraisals.brand_id')
+        ->leftJoin('branches', 'branches.id', '=', 'appraisals.branch')
+        ->leftJoin('regions', 'regions.id', '=', 'appraisals.region_id')
+        ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'appraisals.employee')->where('appraisals.employee', \Auth::id())->first();
+
+        if(empty($appraisal)){
+            return back()->with('success','Data Not Found');
+        }
+        $rating = json_decode($appraisal->rating, true);
+        $performance_types     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
+        $employee = Employee::find($appraisal->employee);
+        $indicator = Indicator::where('created_user', $appraisal->employee)->first();
+        $ratings = !empty($indicator) ? json_decode($indicator->rating, true) : [];
+
+        return view('hrmhome.appraisal', compact('appraisal', 'performance_types', 'ratings', 'rating'));
+    }
 }
