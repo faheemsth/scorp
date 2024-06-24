@@ -49,6 +49,8 @@
                                             @endif
                                         </select>
                                     </div>
+                                    @else
+                                        <input type="hidden" name="brand" value="{{\Auth::user()->brand_id}}">
                                     @endif
 
 
@@ -66,6 +68,8 @@
                                             @endif
                                         </select>
                                     </div>
+                                    @else
+                                        <input type="hidden" name="region_id" value="{{ \Auth::user()->region_id }}">
                                     @endif
 
 
@@ -82,6 +86,8 @@
                                             @endif
                                         </select>
                                     </div>
+                                    @else
+                                        <input type="hidden" name="branch_id" value="{{ \Auth::user()->branch_id }}">
                                     @endif
 
                         <div class="form-group col-md-6">

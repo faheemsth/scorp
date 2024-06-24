@@ -190,7 +190,7 @@ class JobController extends Controller
             $job->applicant       = !empty($request->applicant) ? implode(',', $request->applicant) : '';
             $job->visibility      = !empty($request->visibility) ? implode(',', $request->visibility) : '';
             $job->custom_question = !empty($request->custom_question) ? implode(',', $request->custom_question) : '';
-            $job->created_by      = \Auth::user()->creatorId();
+            $job->created_by      = \Auth::id();
             $job->save();
 
             return json_encode([
