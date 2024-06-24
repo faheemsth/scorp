@@ -241,7 +241,7 @@
                                 <select name="country[]" id="choices-multiple333" class="form form-control select2" multiple style="width: 95%;">
                                     <option value="">Select user</option>
                                     @foreach ($countries as $key => $country)
-                                        <option value="{{ $country }}" <?= isset($_GET['country']) && is_array($_GET['country']) && in_array($country, $_GET['country']) ? 'selected' : '' ?> class="">{{ $country }}</option>
+                                        <option value="{{ $country['name'] }}" <?= isset($_GET['country']) && is_array($_GET['country']) && in_array($country['name'], $_GET['country']) ? 'selected' : '' ?> class="">{{ $country['name'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -297,7 +297,13 @@
 
                                 <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org_data->phone) ? $org_data->phone : '' }}</td>
                                 <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org_data->contactname) ? $org_data->contactname : '' }}</td>
-                                <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org_data->billing_country) ? $org_data->billing_country : '' }}</td>
+                                <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                    @php
+                                       $country_parts = explode("-", isset($org_data->billing_country) ? $org_data->billing_country : '');
+                                       $country_code = $country_parts[0];
+                                    @endphp
+                                    {{ $country_code }}
+                                </td>
                                 <td class="d-none">
                                     <div class="dropdown">
                                         <button class="btn bg-transparents" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -542,8 +548,8 @@
                                                             <select name="organization_billing_country" id="" class="form form-select">
                                                                 <option value="">Select country</option>
                                                                 @foreach ($countries as $country)
-                                                                <option value="{{ $country }}">
-                                                                    {{ $country }}
+                                                                <option value="{{ $country['name'] }}">
+                                                                    {{ $country['name'] }}
                                                                 </option>
                                                                 @endforeach
                                                             </select>
@@ -608,6 +614,23 @@
         $('#textareaID, .textareaClass').toggle("slide");
     });
 
+    $(document).on("change", "#countries", function(e) {
+        var selectedOption = $(this).children('option:selected');
+        var id = selectedOption.val().split('-').pop().trim(); // Removed extra parenthesis
+        $.ajax({
+            type: 'GET',
+            url: '{{ url('getCitiesOnCode') }}',
+            data: {
+                code: id
+            },
+            success: function(data) {
+                if (data.status === 'success') {
+                    $('#Cities_divs').html(data.html);
+                    select2();
+                }
+            }
+        });
+    });
     $(document).on("submit", "#create-notes", function(e) {
         e.preventDefault();
         var formData = $(this).serialize();

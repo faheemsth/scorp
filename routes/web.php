@@ -892,6 +892,7 @@ Route::get('/get-notifications-detail', [UserController::class, 'getnotification
 Route::resource('organization', OrganizationController::class);
 Route::resource('agency', AgencyController::class);
 Route::get('/get-agency-detail', [AgencyController::class, 'GetAgencyDetail'])->name('get-agency-detail');
+Route::get('/getCitiesOnCode', [AgencyController::class, 'getCitiesOnCode'])->name('getCitiesOnCode');
 Route::get('/organization/{id}/delete', [organizationController::class, 'destroy'])->name('organization.delete')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/notes', [organizationController::class, 'notesCreate'])->name('organization.notes.create')->middleware(['auth', 'XSS']);
 

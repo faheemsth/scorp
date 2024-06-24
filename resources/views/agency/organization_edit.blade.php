@@ -121,22 +121,54 @@
                                             <div class="col-12">
                                                 <textarea name="organization_billing_street" class="form form-control" id="" cols="30" rows="3">{{ $org_query->billing_street }}</textarea>
                                             </div>
-
-                                            <div class="row mt-1 mx-0">
-                                                <div class="col-12 mt-1 space">
-                                                    <select name="organization_billing_country" id="" class="form form-select">
-                                                        <option value="">Select country</option>
-                                                        @foreach($countries as $country)
-                                                        <option value="{{$country}}" <?= isset($org_query->billing_country) && $org_query->billing_country  == $country ? 'selected' : '' ?>>{{$country}}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-
                                         </div>
                                     </div>
 
 
+                                    <div class="form-group row">
+                                        <label for="billing-addres" class="col-sm-3 col-form-label">Country</label>
+                                        <div class="col-sm-6">
+                                            <div class="col-12">
+                                                <select name="organization_billing_country" id="countries" class="form form-select select2">
+                                                    <option value="">Select country</option>
+                                                    @foreach ($countries as $key => $country)
+                                                        <option value="{{ $country['name'] }}-{{ $country['code'] }}" <?= isset($org_query->billing_country) && $org_query->billing_country  == $country['name'].'-'.$country['code'] ? 'selected' : '' ?>>
+                                                            {{ $country['name'] }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group row">
+                                        <label for="billing-addres" class="col-sm-3 col-form-label">City
+                                        </label>
+                                        <div class="col-6">
+                                            <div class="col-12 px-0" id="Cities_divs">
+                                                <select name="city" id="city" class="form form-select select2">
+                                                    <option value="">Select cities</option>
+                                                    @foreach ($cities as $key => $name)
+                                                            <option value="{{$name}}" <?= isset($org_query->city) && $org_query->city  == $name ? 'selected' : '' ?>>
+                                                                {{ $name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group row">
+                                        <label for="billing-addres" class="col-sm-3 col-form-label">Complete Address</label>
+                                        <div class="col-6">
+                                            <div class="col-12 px-0">
+                                                <textarea name="c_address" class="form form-control" id="" cols="30"
+                                                    rows="3">{{ $org_query->c_address }}</textarea>
+                                            </div>
+        
+                                        </div>
+                                    </div>
 
 
                                 </div>

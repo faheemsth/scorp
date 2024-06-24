@@ -199,9 +199,25 @@
                                                                     {{ __('Billing Country') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $org_query->billing_country }}
+
+                                                                    @php
+                                                                    $country_parts = explode("-", $org_query->billing_country);
+                                                                    $country_code = $country_parts[0];
+
+                                                                    @endphp
+                                                                    {{ $country_code }}
                                                                 </td>
                                                             </tr>
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Complete Address') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                {{ $org_query->c_address }}
+                                                                </td>
+                                                            </tr>
+
                                                             <tr>
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Created at') }}

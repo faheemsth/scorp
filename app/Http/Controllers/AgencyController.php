@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Models\OrganizationDiscussion;
 use Illuminate\Support\Facades\Validator;
-
+use App\Models\City;
 class AgencyController extends Controller
 {
     
@@ -40,7 +40,10 @@ class AgencyController extends Controller
 
             if ($countries !== null) {
                 $countries_arr = array_map(function ($country) {
-                    return $country['name']['common'];
+                    return [
+                        'name' => $country['name']['common'],
+                        'code' => isset($country['cca2']) ? $country['cca2'] : null,
+                    ];
                 }, $countries);
             } else {
                 return "Error decoding JSON.";
@@ -48,7 +51,6 @@ class AgencyController extends Controller
         } else {
             return "Error fetching data from API.";
         }
-
         return $countries_arr;
     }
 
@@ -176,10 +178,29 @@ class AgencyController extends Controller
         }
     }
 
-
+    public function getCitiesOnCode(Request $request)
+    {
+        $countryCode = $request->input('code');
+        
+        $cities = City::where('country_code', $countryCode)->pluck('name', 'id')->toArray();
+        
+        $html = '<select class="form-control city select2" id="city" name="city">';
+        $html .= '<option value="">Select Cities</option>';
+        
+        foreach ($cities as $id => $name) {
+            $html .= '<option value="' . $name . '">' . $name . '</option>';
+        }
+        
+        $html .= '</select>';
+        
+        return response()->json([
+            'html' => $html,
+            'status' => 'success'
+        ]);
+    }
+        
     public function store(Request $request)
     {
-
         if (\Auth::user()->type == 'super admin' || \Auth::user()->can('create organization')) {
 
             //
@@ -231,6 +252,8 @@ class AgencyController extends Controller
             $org->billing_country = $request->organization_billing_country;
             $org->description = $request->organization_description;
             $org->user_id = $user->id;
+            $org->city = $request->city;
+            $org->c_address = $request->c_address;
             $org->save();
 
 
@@ -295,7 +318,10 @@ class AgencyController extends Controller
             ->leftJoin('users', 'users.id', '=', 'agencies.user_id')
             ->where('agencies.id', $id)->first();
             $countries = $this->countries_list();
-            return view('agency.organization_edit', ['org_query' => $org_query , 'countries' => $countries]);
+            $country_parts = explode("-", $org_query->billing_country);
+            $country_code = end($country_parts);
+            $cities = City::where('country_code', $country_code)->pluck('name', 'id')->toArray();
+            return view('agency.organization_edit', ['cities' => $cities,'org_query' => $org_query , 'countries' => $countries]);
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
         }
@@ -343,6 +369,8 @@ class AgencyController extends Controller
         $org->billing_country = $request->organization_billing_country;
         $org->description = $request->organization_description;
         $org->user_id = $user->id;
+        $org->city = $request->city;
+        $org->c_address = $request->c_address;
         $org->save();
         //Log
         $data = [
