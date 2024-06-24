@@ -45,7 +45,7 @@
 
             <div class="card me-3">
                 <div class="card-header d-flex justify-content-between align-items-baseline">
-                    <h4>Emergency Contact</h4>
+                    <h4>Payslip Information</h4>
                 </div>
                 <div class="card-body px-2">
                     <div class="tab-content" id="pills-tabContent">

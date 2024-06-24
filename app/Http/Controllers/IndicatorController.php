@@ -306,17 +306,28 @@ class IndicatorController extends Controller
 
     public function HrmIndicator()
     {
-        $indicator = Indicator::select('indicators.id','regions.name as region','branches.name as branch','users.name as brand','indicators.created_by','indicators.department','indicators.designation','indicators.created_user','indicators.rating','indicators.created_at','indicators.updated_at')
+        if(isset($_GET['emp_id'])){
+            $userId = $_GET['emp_id'];
+         }else{
+             $userId = \Auth::id();
+         }
+         
+        $indicators = Indicator::select('indicators.id','regions.name as region','branches.name as branch','users.name as brand','indicators.created_by','indicators.department','indicators.designation','indicators.created_user','indicators.rating','indicators.created_at','indicators.updated_at')
         ->leftJoin('users', 'users.id', '=', 'indicators.brand_id')
         ->leftJoin('branches', 'branches.id', '=', 'indicators.branch')
         ->leftJoin('regions', 'regions.id', '=', 'indicators.region_id')
         ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'indicators.created_by')
-        ->where('indicators.created_user', \Auth::id())
-        ->first();
-        $ratings = json_decode($indicator->rating,true);
+        ->where('indicators.created_user', $userId)
+        ->get();
+        if(!empty($indicator)){
+            $ratings = json_decode($indicator->rating,true);
+        }else{
+            $ratings = json_decode(0,true);
+        }
+        
         $performance     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
 
-        return view('hrmhome.indicator', compact('indicator','ratings','performance'));
+        return view('hrmhome.indicator', compact('indicators','ratings','performance'));
 
        
     }

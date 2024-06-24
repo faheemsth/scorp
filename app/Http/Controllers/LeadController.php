@@ -55,6 +55,8 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Models\SavedFilter;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use App\Models\Agency;
+
 
 class LeadController extends Controller
 {
@@ -462,6 +464,12 @@ class LeadController extends Controller
             //if not company
             $organizations = User::where('type', 'organization')->get()->pluck('name', 'id');
             $sources = Source::get()->pluck('name', 'id');
+
+            $org_query = Agency::select(
+                'users.*',
+            )
+            ->leftJoin('users', 'users.id', '=', 'agencies.user_id');
+            $Agences = $org_query->pluck('name', 'id');
             $countries = countries();
 
 
@@ -472,7 +480,7 @@ class LeadController extends Controller
             $branches = $filter['branches'];
             $employees = $filter['employees'];
 
-            return view('leads.create', compact('tags','users', 'companies', 'stages', 'branches', 'organizations', 'sources', 'countries', 'regions', 'employees'));
+            return view('leads.create', compact('Agences','tags','users', 'companies', 'stages', 'branches', 'organizations', 'sources', 'countries', 'regions', 'employees'));
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
         }
@@ -835,6 +843,12 @@ class LeadController extends Controller
             $regions =  Region::where('id', $lead->region_id)->pluck('name', 'id')->toArray();
             $branches =  Branch::where('id', $lead->branch_id)->get()->pluck('name', 'id')->toArray();
             // $companies = FiltersBrands();
+            
+            $org_query = Agency::select(
+                'users.*',
+            )
+            ->leftJoin('users', 'users.id', '=', 'agencies.user_id');
+            $Agences = $org_query->pluck('name', 'id');
             $filter = BrandsRegionsBranchesForEdit($lead->brand_id, $lead->region_id, $lead->branch_id);
             $filter['brands'][3751] = 'SCORP';
             $companies = $filter['brands'];
@@ -867,7 +881,8 @@ class LeadController extends Controller
                 'companies' => $companies,
                 'regions' => $regions,
                 'tags' => $tags,
-                'employees' => $employees
+                'employees' => $employees,
+                'Agences' => $Agences,
             ];
             return view('leads.edit', $data);
         } else {
@@ -3318,7 +3333,13 @@ class LeadController extends Controller
                     $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
                 }
             }
-            $html = view('leads.leadDetail', compact('tags','lead', 'deal', 'stageCnt', 'lead_stages', 'precentage', 'tasks', 'branches', 'users', 'log_activities', 'stage_histories'))->render();
+            $org_query = Agency::select(
+                'users.*',
+            )
+            ->leftJoin('users', 'users.id', '=', 'agencies.user_id');
+            $Agences = $org_query->pluck('name', 'id');
+
+            $html = view('leads.leadDetail', compact('Agences','tags','lead', 'deal', 'stageCnt', 'lead_stages', 'precentage', 'tasks', 'branches', 'users', 'log_activities', 'stage_histories'))->render();
 
             return json_encode([
                 'status' => 'success',

@@ -476,7 +476,12 @@ class PaySlipController extends Controller
     public function HrmPayslip()
     {
 
-        $id=optional(Employee::where('user_id',\Auth::id())->first())->id;
+        if(isset($_GET['emp_id'])){
+           $userId = $_GET['emp_id'];
+        }else{
+            $userId = \Auth::id();
+        }
+        $id=optional(Employee::where('user_id',$userId)->first())->id;
         $payslips  = PaySlip::where('employee_id', $id)->get();
         $payslipDetail = Utility::employeePayslipDetail($id);
         return view('hrmhome.payslip', compact('payslips','payslipDetail'));

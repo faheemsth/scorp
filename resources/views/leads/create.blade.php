@@ -208,11 +208,11 @@
 
                                         <tr class="d-none">
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Agency') }}
+                                                {{ __('Organizations') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choice-7" name="lead_organization">
-                                                    <option value="">Select Agency</option>
+                                                    <option value="">Select Organizations</option>
                                                     @foreach($organizations as $key => $org)
                                                     <option value="{{$key}}">{{$org}}</option>
                                                     @endforeach
@@ -221,20 +221,20 @@
                                         </tr>
 
 
-                                        {{-- <tr>
-                                                    <td class=""
-                                                        style="width: 100px; font-size: 13px;">
-                                                        {{ __('Agency Link') }}
+                                        <tr>
+                                            <td class=""
+                                                style="width: 100px; font-size: 13px;">
+                                            {{ __('Agency') }}
                                         </td>
                                         <td class="" style="padding-left: 10px; font-size: 13px;">
-                                            <select class="form-select w-50" name="lead_organization_link">
-                                                <option>Select Agency Link</option>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
+                                            <select class="form-select w-50 select2" id="choice-6" name="lead_organization_link">
+                                                <option>Select Agency</option>
+                                                @foreach($Agences as $key => $Agence)
+                                                    <option value="{{$key}}">{{$Agence}}</option>
+                                                @endforeach
                                             </select>
                                         </td>
-                                        </tr> --}}
+                                        </tr>
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Lead Source') }}

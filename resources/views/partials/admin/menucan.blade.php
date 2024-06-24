@@ -161,7 +161,7 @@ styl
                 Gate::check('manage form builder') ||
                 Gate::check('manage contract'))
             <li class="nav-item">
-                <a class="nav-link {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' || Request::segment(2) == 'marketing' ? '' : 'collapsed' }} "
+                <a class="nav-link {{ Request::segment(1) == 'agency' || Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' || Request::segment(2) == 'marketing' ? '' : 'collapsed' }} "
                     href="#" data-toggle="collapse" data-target="#collapsefour" aria-expanded="true"
                     aria-controls="collapsefour">
                     <img src="{{ asset('assets/cs-theme/icons/quantity-2 1.png') }}" width="15px" height="15px"
@@ -169,7 +169,7 @@ styl
                     <span>{{ __('CRM System') }}</span>
                 </a>
                 <div id="collapsefour"
-                    class="collapse {{ Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' || Request::segment(2) == 'marketing' ? 'show' : '' }}"
+                    class="collapse {{ Request::segment(1) == 'agency' || Request::segment(1) == 'deals' || Request::segment(1) == 'leads' || Request::segment(1) == 'applications' || Request::segment(1) == 'clients' || Request::segment(1) == 'university' || Request::segment(1) == 'organization' || Request::segment(2) == 'marketing' ? 'show' : '' }}"
                     aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                     <div class="  collapse-inner rounded">
                         <ul
@@ -314,6 +314,19 @@ styl
                                         {{ __('Organizations') }}</a>
                                 </li>
                             @endcan
+                            <li
+                                    class="emp nav-item {{ Request::segment(1) == 'agency' ? ' active' : '' }}">
+                                    <a class="collapse-item" style="color: white; font-size: 13px;"
+                                        href="{{ url('agency') }}">
+                                        <img src="{{ asset('assets/cs-theme/icons/organization-01-1 1.png') }}"
+                                            id="icon1" width="15px" height="15px" style="margin-top:-10px"
+                                            alt="" srcset="">
+                                        <img src="{{ asset('assets/cs-theme/icons/orgblue.png') }}" id="icon2"
+                                            width="15px" height="15px" style="margin-top:-8px" alt=""
+                                            srcset="">
+
+                                        {{ __('Agency') }}</a>
+                                </li>
                             @can('company')
                                 <li class=" d-none" style="display: none;"
                                     {{ Request::route()->getName() == 'contract.index' || Request::route()->getName() == 'contract.show' ? 'active' : '' }}">
@@ -349,7 +362,7 @@ styl
 
                             <li class="emp nav-item {{ Request::segment(1) == 'hrm-home' || Request::segment(1) == 'hrm-leaves' || Request::segment(1) == 'hrm-jobs' || Request::segment(1) == 'hrm-payslip' || Request::segment(1) == 'hrm-indicator' || Request::segment(1) == 'hrm-appraisal' ? 'active' : '' }}">
                                 <a class="collapse-item" style="color:white; font-size: 13px;"
-                                    href="{{ route('hrm.home') }}">
+                                    href="{{ url('hrm-leaves') }}">
                                     <img src="{{ asset('assets/cs-theme/icons/Layer_1 (5).png') }}" id="icon1"
                                         width="15px" height="15px" style="margin-top:-8px" alt=""
                                         srcset="">

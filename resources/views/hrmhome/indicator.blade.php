@@ -54,6 +54,7 @@
                             <div class="accordion" id="accordionPanelsStayOpenExample">
                                 <!-- Open Accordion Item -->
                                 <div class="card me-3">
+                                    @foreach ($indicators as $indicator)
                                     <div class="card-body px-2">
                                         <div class="tab-content" id="pills-tabContent">
                                             {{-- Details Pill Start --}}
@@ -161,6 +162,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    @endforeach
                                 </div>
 
                             </div>

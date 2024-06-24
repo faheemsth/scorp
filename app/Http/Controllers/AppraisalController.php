@@ -334,6 +334,11 @@ class AppraisalController extends Controller
 
     public function HrmAppraisal()
     {
+        if(isset($_GET['emp_id'])){
+            $userId = $_GET['emp_id'];
+         }else{
+             $userId = \Auth::id();
+         }
         $appraisal = Appraisal::select(
             'appraisals.*', // Corrected this line
             'regions.name as region',
@@ -344,7 +349,8 @@ class AppraisalController extends Controller
         ->leftJoin('users', 'users.id', '=', 'appraisals.brand_id')
         ->leftJoin('branches', 'branches.id', '=', 'appraisals.branch')
         ->leftJoin('regions', 'regions.id', '=', 'appraisals.region_id')
-        ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'appraisals.employee')->where('appraisals.employee', \Auth::id())->first();
+        ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'appraisals.employee')
+        ->where('appraisals.employee', $userId)->first();
 
         if(empty($appraisal)){
             return back()->with('success','Data Not Found');

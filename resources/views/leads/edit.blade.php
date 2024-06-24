@@ -231,12 +231,12 @@
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Agency') }}
+                                                {{ __('Organizations') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choice-4"
                                                     name="lead_organization">
-                                                    <option value="">Select Agency</option>
+                                                    <option value="">Select Organizations</option>
                                                     @foreach ($organizations as $key => $org)
                                                         <option value="{{ $key }}"
                                                             <?= $lead->organization_id == $key ? 'selected' : '' ?>>
@@ -245,6 +245,22 @@
                                                 </select>
                                             </td>
                                         </tr>
+
+                                        <tr>
+                                            <td class=""
+                                                style="width: 100px; font-size: 13px;">
+                                            {{ __('Agency') }}
+                                        </td>
+                                        <td class="" style="padding-left: 10px; font-size: 13px;">
+                                            <select class="form-select w-50 select2" id="choice-6" name="lead_organization_link">
+                                                <option>Select Agency</option>
+                                                @foreach($Agences as $key => $Agence)
+                                                    <option value="{{$key}}" <?= $lead->organization_link == $key ? 'selected' : '' ?>>{{$Agence}}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        </tr>
+
 
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">

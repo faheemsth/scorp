@@ -488,6 +488,11 @@ class LeaveController extends Controller
     public function Hrmleave()
     {
         // Build the leads query
+        if(isset($_GET['emp_id'])){
+            $userId = $_GET['emp_id'];
+         }else{
+             $userId = \Auth::id();
+         }
         $Leave_query = Leave::select(
                 'regions.name as region',
                 'branches.name as branch',
@@ -503,11 +508,13 @@ class LeaveController extends Controller
                 'leaves.status',
                 )
                 ->join('users', 'users.id', '=', 'leaves.brand_id')
+                ->leftJoin('users as leavedPerson', 'users.id', '=', 'leaves.employee_id')
                 ->join('branches', 'branches.id', '=', 'leaves.branch_id')
                 ->join('regions', 'regions.id', '=', 'leaves.region_id')
                 ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'leaves.created_by')
                 ->leftJoin('lead_tags as tag', 'tag.lead_id', '=', 'leaves.id');
 
+        $Leave_query->where('leaves.employee_id',$userId);
         $leaves=$Leave_query->get();
            
         return view('hrmhome.leave', compact('leaves'));

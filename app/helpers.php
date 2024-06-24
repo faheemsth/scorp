@@ -79,6 +79,32 @@ if (!function_exists('companiesEmployees')) {
 }
 
 
+if (!function_exists('getAllEmployees')) {
+    function getAllEmployees()
+    {
+        $excludedTypes = ['super admin', 'company', 'team', 'client'];
+        $usersQuery = User::select('users.*');
+
+        $companies = FiltersBrands();
+        $brand_ids = array_keys($companies);
+        if (\Auth::user()->can('level 1')) {
+            // Permissions for level 1
+        } elseif (\Auth::user()->type == 'company') {
+            $usersQuery->where('brand_id', \Auth::user()->id);
+        } elseif (\Auth::user()->can('level 2')) {
+            $usersQuery->whereIn('brand_id', $brand_ids);
+        } elseif (\Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)) {
+            $usersQuery->where('region_id', \Auth::user()->region_id);
+        } elseif (\Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)) {
+            $usersQuery->where('branch_id', \Auth::user()->branch_id);
+        } else {
+            $usersQuery->where('id', \Auth::user()->id);
+        }
+        // Apply exclusion of user types
+        return $usersQuery->whereNotIn('type', $excludedTypes)->pluck('name','id');
+    }
+}
+
 if (!function_exists('allUniversities')) {
     function allUniversities()
     {

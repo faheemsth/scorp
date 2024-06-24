@@ -140,6 +140,7 @@ use App\Http\Controllers\ProductServiceCategoryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\EmailMarketingController;
+use App\Http\Controllers\AgencyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -889,6 +890,8 @@ Route::get('/get-notifications-detail', [UserController::class, 'getnotification
 // Organization
 
 Route::resource('organization', OrganizationController::class);
+Route::resource('agency', AgencyController::class);
+Route::get('/get-agency-detail', [AgencyController::class, 'GetAgencyDetail'])->name('get-agency-detail');
 Route::get('/organization/{id}/delete', [organizationController::class, 'destroy'])->name('organization.delete')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/notes', [organizationController::class, 'notesCreate'])->name('organization.notes.create')->middleware(['auth', 'XSS']);
 

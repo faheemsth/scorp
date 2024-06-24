@@ -464,6 +464,16 @@
                                                                     {{ isset($users[$lead->user_id]) ? $users[$lead->user_id] : '' }}
                                                                 </td>
                                                             </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 200px; font-size: 14px;">
+                                                                    {{ __('Agency') }}
+                                                                </td>
+                                                                <td class=""
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ isset($Agences[$lead->organization_link]) ? $Agences[$lead->organization_link] : '' }}
+                                                                </td>
+                                                            </tr>
 
                                                             @php
                                                                 $org_name = '';
@@ -485,7 +495,7 @@
                                                             <tr>
                                                                 <td class=""
                                                                     style="width: 200px; font-size: 14px;">
-                                                                    {{ __('Agency') }}
+                                                                    {{ __('Organization') }}
                                                                 </td>
                                                                 <td class="organization_id-td"
                                                                     style="padding-left: 10px; font-size: 14px;"
@@ -1031,25 +1041,24 @@
                                                             </div>
                                                             <div class="card-body px-0 py-0">
                                                                 @php
-                                                                    $notesQuery = \App\Models\LeadNote::where(
-                                                                        'lead_id',
-                                                                        $lead->id,
-                                                                    );
+                                                                   $notesQuery = \App\Models\LeadNote::where('lead_id', $lead->id);
 
-                                                                    if (
-                                                                        \Auth::user()->type != 'super admin' &&
-                                                                        \Auth::user()->type != 'Project Director' &&
-                                                                        \Auth::user()->type != 'Project Manager'
-                                                                    ) {
-                                                                        $notesQuery->where(
-                                                                            'created_by',
-                                                                            \Auth::user()->id,
-                                                                        );
+                                                                   $userType = \Auth::user()->type;
+                                                                    if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
+                                                                        // No additional filtering needed
+                                                                    } elseif ($userType === 'company') {
+                                                                        $notesQuery->whereIn('created_by', getAllEmployees()->keys()->toArray());
+                                                                    } elseif (in_array($userType, ['Project Director', 'Project Manager']) || \Auth::user()->can('level 2')) {
+                                                                        $notesQuery->whereIn('created_by', getAllEmployees()->keys()->toArray());
+                                                                    } elseif (($userType === 'Region Manager' || \Auth::user()->can('level 3')) && !empty(\Auth::user()->region_id)) {
+                                                                        $notesQuery->whereIn('created_by', getAllEmployees()->keys()->toArray());
+                                                                    } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)) {
+                                                                        $notesQuery->whereIn('created_by', getAllEmployees()->keys()->toArray());
+                                                                    } else {
+                                                                        $notesQuery->where('user_id', \Auth::user()->id);
                                                                     }
 
-                                                                    $notes = $notesQuery
-                                                                        ->orderBy('created_at', 'DESC')
-                                                                        ->get();
+                                                                    $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
                                                                 @endphp
 
                                                                 <span class="list-group list-group-flush mt-2 note-tbody">
@@ -1523,11 +1532,6 @@
             $('#textareaID, .textareaClass').toggle("slide");
         });
 
-        $('#create-notes').submit(function(event) {
-            event.preventDefault(); // Prevents the default form submission
-            $('#textareaID, .textareaClass').toggle("slide");
-        });
-
         $('#cancelNote').click(function() {
             $('textarea[name="description"]').val('');
             $('#note_id').val('');
@@ -1622,38 +1626,6 @@
     });
 </script>
 <script>
-    //saving notes
-    $(document).on("submit", "#create-notes", function(e) {
-        e.preventDefault();
-        var formData = $(this).serialize();
-        var id = $('.lead-id').val();
-
-        $(".create-notes-btn").val('Processing...');
-        $('.create-notes-btn').attr('disabled', 'disabled');
-
-        $.ajax({
-            type: "POST",
-            url: "/leads/" + id + "/notes",
-            data: formData,
-            success: function(data) {
-                data = JSON.parse(data);
-                if (data.status == 'success') {
-                    show_toastr('Success', data.message, 'success');
-                    $('#commonModal').modal('hide');
-                    $('.note-tbody').html(data.html);
-                    $('#note_id').val('');
-                    var content = $('#description').summernote('code');
-                    $('#description').val(encodeURIComponent(content));
-                    $('#description').summernote('code', ''); // Set empty content
-                    return true;
-                } else {
-                    show_toastr('error', data.message, 'error');
-                    $(".create-notes-btn").val('Create');
-                    $('.create-notes-btn').removeAttr('disabled');
-                }
-            }
-        });
-    })
     $(document).on("submit", "#update-notes", function(e) {
         e.preventDefault();
         var formData = $(this).serialize();

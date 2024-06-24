@@ -79,52 +79,32 @@
             <div class="lead-topbar d-flex flex-wrape justify-content-between align-items-center p-2">
                 <div class="d-flex align-items-center">
                     <div class="lead-avator">
-                        <img src="{{ asset('assets/images/placeholder-lead.png') }}" alt="" style="width:50px; height:50px;" class="">
+                        <img src="{{ asset('assets/images/placeholder-lead.png') }}" alt="" class="">
                     </div>
 
                     <div class="lead-basic-info">
-                        <p class="pb-0 mb-0 fw-normal">{{ __('Employee') }}</p>
+                        <p class="pb-0 mb-0 fw-normal">{{ __('Agency') }}</p>
                         <div class="d-flex align-items-baseline">
-                            <h5 class="fw-bold">{{ $employee->name }}</h5>
+                            <h5 class="fw-bold">{{ $org_query->username }}</h5>
                         </div>
                     </div>
 
                 </div>
 
                 <div class="d-flex justify-content-end gap-1 me-3">
-                    <a href="{{ url('hrm-leaves').'?emp_id='.$employee->id }}" class="btn px-2 py-2 btn-dark text-white" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
-                        <i class="ti ti-user"></i>
-                    </a>
-
-                    @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                    <a href="#" data-size="lg"
-                        data-url="{{ route('user.show.edit', $employee->id) }}" data-ajax-popup="true"
-                        data-bs-toggle="tooltip" title="{{ __('Convert') }}"
-                        class="btn px-2 py-2 btn-dark text-white">
-                        <i class="ti ti-exchange"></i>
-                    </a>
-                    @endif
-                    @can('edit employee')
-                    <a href="#!" data-size="lg" data-url="{{ route('user.employee.edit', $employee->id) }}" data-ajax-popup="true" class="btn px-2 py-2 btn-dark text-white" data-bs-original-title="{{__('Edit Employee')}}" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
+                   
+                    <a href="#!" data-size="lg" data-url="{{ route('agency.edit', $org_query->id) }}" data-ajax-popup="true" class="btn px-2 py-2 btn-dark text-white" data-bs-original-title="{{__('Edit Agency')}}" data-bs-toggle="tooltip" title="{{ __('Edit Agency') }}">
                     <i class="ti ti-pencil"></i>
                       </a>
-                    @endcan
+                    
 
-                    @can('delete employee')
-                    {!! Form::open(['method' => 'DELETE','class'=>'mb-0' , 'route' => ['users.destroy', $employee['id']],'id'=>'delete-form-'.$employee['id']]) !!}
+                    @can('delete user')
+                    {!! Form::open(['method' => 'DELETE','class'=>'mb-0' , 'route' => ['agency.destroy', $org_query['id']],'id'=>'delete-form-'.$org_query['id']]) !!}
                     <a href="#!" class="btn px-2 py-2 btn-danger text-white bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
                         <i class="ti ti-archive"></i>
-                        <!-- <span> @if($employee->delete_status!=0){{__('Delete')}} @else {{__('Restore')}}@endif</span> -->
                     </a>
                     {!! Form::close() !!}
                     @endcan
-
-                    @can('password reset employee')
-                    <a href="#!" data-url="{{route('users.reset',\Crypt::encrypt($employee->id))}}" data-ajax-popup="true" data-size="md" class="btn px-2 btn-dark py-2 text-white" data-bs-original-title="{{__('Reset Password')}}" data-bs-toggle="tooltip" title="{{ __('Password Reset') }}">
-                        <i class="ti ti-adjustments"></i>
-                    </a>
-                    @endcan
-
                 </div>
             </div>
 
@@ -154,7 +134,7 @@
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headinginfo">
                                             <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseinfo">
-                                                {{ __('EMPLOYEE INFORMATION') }}
+                                                {{ __('AGENCY INFORMATION') }}
                                             </button>
                                         </h2>
 
@@ -165,115 +145,69 @@
 
                                                     <table>
                                                         <tbody>
-
-                                                            <tr>
-                                                                <td class="" style="width: 100px; font-size: 14px;">
-                                                                    {{ __('Image') }}
-                                                                </td>
-                                                                <td style="padding-left: 10px; font-size: 14px;">
-                                                                    <a class="nav-link"  id="userDropdown" >
-                                                                        @if ($employee->avatar == null || $employee->avatar == '')
-                                                                            <img class="img-profile rounded-3" src="{{ asset('assets/images/user/default.jpg') }}"  width="80" height="80"
-                                                                                alt="Default Avatar">
-                                                                        @else
-                                                                            <img class="img-profile rounded-3" src="{{ asset('storage/uploads/avatar') . '/' . $employee->avatar }}" width="80" height="80" alt="User Avatar">
-                                                                        @endif
-                                                                   </a>
-                                                                </td>
-
-                                                            </tr>
-
                                                             <tr>
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Record ID') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $employee->id }}
+                                                                    {{ $org_query->id }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class="" style="width: 100px; font-size: 14px;">
-                                                                    {{ __('Name') }}
+                                                                    {{ __('Agency Name') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $employee->name }}
+                                                                {{ $org_query->username }}
+                                                                </td>
+                                                            </tr>
+
+
+                                                           
+
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Agency email') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $org_query->useremail }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class="" style="width: 100px; font-size: 14px;">
-                                                                    {{ __('Email') }}
+                                                                    {{ __('Agency Phone') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                   <a href="{{ $employee->email }}" target="_blank" >{{ $employee->email }}</a>
+                                                                    {{ $org_query->phone }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
                                                                 <td class="" style="width: 100px; font-size: 14px;">
-                                                                    {{ __('Phone') }}
+                                                                    {{ __('Contact Person Name') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                     {{ $employee->phone }}
-                                                                </td>
-                                                            </tr>
-
-
-                                                            <tr>
-                                                                <td class="" style="width: 100px; font-size: 14px;">
-                                                                    {{ __('Date of Birth') }}
-                                                                </td>
-                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                     {{ $employee->dob }}
+                                                                    {{ $org_query->contactname }}
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td class="" style="width: 100px; font-size: 14px;">
-                                                                    {{ __('Designation') }}
-                                                                </td>
-                                                                <td style="padding-left: 10px; font-size: 14px;">
-                                                                    <div class="bg-danger text-white ps-1">
-                                                                    {{ $employee->type }}
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class="" style="width: 100px; font-size: 14px;">
-                                                                    {{ __('Brand') }}
+    `                                                          <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Billing Country') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                   {{ $allUsers[$employee->brand_id] ?? '' }}
+                                                                    {{ $org_query->billing_country }}
                                                                 </td>
                                                             </tr>
-
-                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' || \Auth::user()->can('level 2') ? 'd-none' : ''}}">
-                                                                <td class="" style="width: 100px; font-size: 14px;">
-                                                                    {{ __('Region') }}
-                                                                </td>
-                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $regions[$employee->region_id] ?? '' }}
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' || $employee->type == 'Region Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3')? 'd-none' : ''}}">
-                                                                <td class="" style="width: 100px; font-size: 14px;">
-                                                                    {{ __('Branch') }}
-                                                                </td>
-                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $branches[$employee->branch_id]  ?? ''}}
-                                                                </td>
-                                                            </tr>
-
-
                                                             <tr>
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Created at') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $employee->created_at }}
+                                                                {{ $org_query->created_at }}
                                                                 </td>
                                                             </tr>
 
@@ -282,9 +216,10 @@
                                                                     {{ __('Update at') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                {{ $employee->updated_at }}
+                                                                {{ $org_query->updated_at }}
                                                                 </td>
                                                             </tr>
+
 
                                                         </tbody>
                                                     </table>

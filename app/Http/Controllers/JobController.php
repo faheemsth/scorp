@@ -223,7 +223,12 @@ class JobController extends Controller
 
     public function Hrmshow(Job $jo)
     {
-        $jobs  = Job::where('created_by',\Auth::id())->get();
+        if(isset($_GET['emp_id'])){
+            $userId = $_GET['emp_id'];
+         }else{
+             $userId = \Auth::id();
+         }
+        $jobs  = Job::where('created_by',$userId)->get();
         $filters = UserRegionBranch();
         return view('hrmhome.jobs', compact('jobs','filters'));
     }
