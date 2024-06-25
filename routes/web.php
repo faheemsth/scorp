@@ -249,6 +249,7 @@ Route::get('/hrm-payslip', [PaySlipController::class, 'HrmPayslip'])->name('hrm.
 Route::get('/hrm-appraisal', [AppraisalController::class, 'HrmAppraisal'])->name('hrm.appraisal')->middleware(['auth', 'XSS', 'revalidate']);
 Route::get('/hrm-indicator', [IndicatorController::class, 'HrmIndicator'])->name('hrm.indicator')->middleware(['auth', 'XSS', 'revalidate']);
 Route::get('/hrm-attendance', [AttendanceEmployeeController::class, 'HrmAttendance'])->name('hrm.indicator')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/hrm-training', [TrainingController::class, 'HrmTraining'])->name('hrm.training')->middleware(['auth', 'XSS', 'revalidate']);
 
 Route::get('profile', [UserController::class, 'profile'])->name('profile')->middleware(['auth', 'XSS', 'revalidate']);
 

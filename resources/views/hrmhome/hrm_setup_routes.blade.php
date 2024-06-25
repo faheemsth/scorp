@@ -37,6 +37,13 @@
             </div>
         </a>
 
+        <a href="{{ url('hrm-training') . (isset($_GET['emp_id']) ? '?emp_id=' . $_GET['emp_id'] : '')  }}" class="{{ Request::segment(1) == 'hrm-training' ? 'active' : '' }} list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center {{ (Request::route()->getName() == 'indicator.index' ? 'active' : '')}}">
+            <div>
+                <i class="fa-solid fa-question mr-2"></i>
+                <span>{{__('Training')}}</span>
+            </div>
+        </a>
+
         <a href="{{ url('hrm-appraisal') . (isset($_GET['emp_id']) ? '?emp_id=' . $_GET['emp_id'] : '')  }}" class="{{ Request::segment(1) == 'hrm-appraisal' ? 'active' : '' }} list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center {{ (Request::route()->getName() == 'appraisal.index' ? 'active' : '')}}">
             <div>
                 <i class="ti ti-star mr-2"></i>

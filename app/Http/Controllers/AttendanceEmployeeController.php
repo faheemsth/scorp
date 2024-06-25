@@ -559,9 +559,12 @@ class AttendanceEmployeeController extends Controller
             
             if (!\Auth::user()->can('level1')) {
                
-                $emp = !empty(\Auth::user()->employee) ? \Auth::user()->employee->id : 0;
-                //dd($emp);
-                $attendanceEmployee = AttendanceEmployee::where('employee_id', $emp);
+                if(isset($_GET['emp_id'])){
+                    $userId = optional(Employee::where('user_id',$_GET['emp_id'])->first())->id;
+                 }else{
+                     $userId = !empty(\Auth::user()->employee) ? \Auth::user()->employee->id : '';
+                 }
+                $attendanceEmployee = AttendanceEmployee::where('employee_id', $userId);
 
 
                 if ($request->type == 'monthly' && !empty($request->month)) {
@@ -650,7 +653,7 @@ class AttendanceEmployeeController extends Controller
                 $attendanceEmployee = $attendanceEmployee->get();
             }
 
-            return view('attendance.index', compact('attendanceEmployee', 'branch', 'department', 'filters'));
+            return view('hrmhome.attendance', compact('attendanceEmployee', 'branch', 'department', 'filters'));
         } else {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
