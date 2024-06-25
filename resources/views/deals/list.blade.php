@@ -1519,7 +1519,7 @@
                         $('#commonModal').modal('hide');
                         $('.note-body').html(data.html);
                         $('textarea[name="description"]').val('');
-                        $('#note_id').val(id);
+                        $('#note_id').val('');
 
                         // openNav(data.lead.id);
                         // return false;
