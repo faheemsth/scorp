@@ -22,17 +22,18 @@
             </div>
         </a>
 
-        <a href="{{ route('document.index') . (isset($_GET['emp_id']) ? '?emp_id=' . $_GET['emp_id'] : '')  }}" class="{{ Request::segment(1) == 'hrm-home' ? 'active' : '' }} list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center {{ (Request::route()->getName() == 'attendance.index' ? 'active' : '')}}">
-            <div>
-                <i class="fa-solid fa-clock mr-2"></i>
-                <span>{{__('Attendance')}}</span>
-            </div>
-        </a>
+        
 
-        <a href="{{ url('hrm-indicator') . (isset($_GET['emp_id']) ? '?emp_id=' . $_GET['emp_id'] : '')  }}" class="{{ Request::segment(1) == 'hrm-indicator' ? 'active' : '' }} list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center {{ (Request::route()->getName() == 'indicator.index' ? 'active' : '')}}">
+        {{-- <a href="{{ url('hrm-attendance') . (isset($_GET['emp_id']) ? '?emp_id=' . $_GET['emp_id'] : '')  }}" class="{{ Request::segment(1) == 'hrm-attendance' ? 'active' : '' }} list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center {{ (Request::route()->getName() == 'indicator.index' ? 'active' : '')}}">
             <div>
                 <i class="fa-solid fa-question mr-2"></i>
                 <span>{{__('Indicator')}}</span>
+            </div>
+        </a> --}}
+        <a href="{{ url('hrm-attendance') . (isset($_GET['emp_id']) ? '?emp_id=' . $_GET['emp_id'] : '')  }}" class="{{ Request::segment(1) == 'hrm-attendance' ? 'active' : '' }} list-group-item list-group-item-action border-0 d-flex justify-content-between align-items-center {{ (Request::route()->getName() == 'indicator.index' ? 'active' : '')}}">
+            <div>
+                <i class="fa-solid fa-question mr-2"></i>
+                <span>{{__('Attendance')}}</span>
             </div>
         </a>
 

@@ -350,7 +350,7 @@ class AppraisalController extends Controller
         ->leftJoin('branches', 'branches.id', '=', 'appraisals.branch')
         ->leftJoin('regions', 'regions.id', '=', 'appraisals.region_id')
         ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'appraisals.employee')
-        ->where('appraisals.employee', $userId)->first();
+        ->where('appraisals.created_by', $userId)->first();
 
         if(empty($appraisal)){
             return back()->with('success','Data Not Found');
