@@ -487,6 +487,16 @@ class LeaveController extends Controller
 
     public function Hrmleave()
     {
+
+        
+        $user = \Auth::user();
+
+        if ($user->type!='HR' && $user->type!='super admin' && $user->type!='Project Manager') {
+            echo 'access Denied';
+                exit();
+                die();
+    }
+    
         // Build the leads query
         if(isset($_GET['emp_id'])){
             $userId = $_GET['emp_id'];

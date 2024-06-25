@@ -334,6 +334,14 @@ class AppraisalController extends Controller
 
     public function HrmAppraisal()
     {
+        $user = \Auth::user();
+
+        if ($user->type!='HR' && $user->type!='super admin' && $user->type!='Project Manager') {
+            echo 'access Denied';
+                exit();
+                die();
+    }
+    
         if(isset($_GET['emp_id'])){
             $userId = $_GET['emp_id'];
          }else{

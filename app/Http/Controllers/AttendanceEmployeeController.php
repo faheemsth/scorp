@@ -539,6 +539,14 @@ class AttendanceEmployeeController extends Controller
     {
 
 
+        $user = \Auth::user();
+
+            if ($user->type!='HR' && $user->type!='super admin' && $user->type!='Project Manager') {
+                echo 'access Denied';
+                    exit();
+                    die();
+        }
+
         if (\Auth::user()->can('manage attendance')) {
 
             $filters = BrandsRegionsBranches();
