@@ -109,8 +109,8 @@ class IndicatorController extends Controller
 
     public function create()
     {
-        $performance     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
-        $departments = Department::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+        $performance     = PerformanceType::where('created_by', '=', \Auth::id())->get();
+        $departments = Department::where('created_by', '=', \Auth::id())->get()->pluck('name', 'id');
         $departments->prepend('Select Department', '');
 
         $filter = BrandsRegionsBranches();
@@ -161,14 +161,14 @@ class IndicatorController extends Controller
 
             if(\Auth::user()->type == 'company')
             {
-                $indicator->created_user = \Auth::user()->creatorId();
+                $indicator->created_user = \Auth::id();
             }
             else
             {
                 $indicator->created_user = \Auth::user()->id;
             }
 
-            $indicator->created_by = \Auth::user()->creatorId();
+            $indicator->created_by = \Auth::id();
             $indicator->save();
 
             return json_encode([
@@ -196,7 +196,7 @@ class IndicatorController extends Controller
         ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'indicators.created_by')->first();
 
         $ratings = json_decode($indicator->rating,true);
-        $performance     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
+        $performance     = PerformanceType::where('created_by', '=', \Auth::id())->get();
 
         $html = view('indicator.show', compact('indicator','ratings','performance'))->render();
 
@@ -212,9 +212,9 @@ class IndicatorController extends Controller
         if(\Auth::user()->can('edit indicator'))
         {
 
-            $performance     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
-            $brances        = Branch::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
-            $departments    = Department::where('created_by', '=', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $performance     = PerformanceType::where('created_by', '=', \Auth::id())->get();
+            $brances        = Branch::where('created_by', '=', \Auth::id())->get()->pluck('name', 'id');
+            $departments    = Department::where('created_by', '=', \Auth::id())->get()->pluck('name', 'id');
             $departments->prepend('Select Department', '');
 
             $ratings = json_decode($indicator->rating,true);
@@ -287,7 +287,7 @@ class IndicatorController extends Controller
     {
         if(\Auth::user()->can('delete indicator'))
         {
-            if($indicator->created_by == \Auth::user()->creatorId())
+            if($indicator->created_by == \Auth::id())
             {
                 $indicator->delete();
 
@@ -325,7 +325,7 @@ class IndicatorController extends Controller
             $ratings = json_decode(0,true);
         }
         
-        $performance     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
+        $performance     = PerformanceType::where('created_by', '=', \Auth::id())->get();
 
         return view('hrmhome.indicator', compact('indicators','ratings','performance'));
 

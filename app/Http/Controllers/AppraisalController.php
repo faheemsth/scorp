@@ -122,7 +122,7 @@ class AppraisalController extends Controller
     {
         if (\Auth::user()->can('create appraisal')) {
 
-            $performance     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
+            $performance     = PerformanceType::where('created_by', '=', \Auth::id())->get();
             $filter = BrandsRegionsBranches();
             $companies = $filter['brands'];
             $regions = $filter['regions'];
@@ -166,7 +166,7 @@ class AppraisalController extends Controller
             $appraisal->appraisal_date = $request->appraisal_date;
             $appraisal->rating         = json_encode($request->rating, true);
             $appraisal->remark         = $request->remark;
-            $appraisal->created_by     = \Auth::user()->creatorId();
+            $appraisal->created_by     = \Auth::id();
             $appraisal->save();
 
             return json_encode([
@@ -203,7 +203,7 @@ class AppraisalController extends Controller
             ]);
         }
         $rating = json_decode($appraisal->rating, true);
-        $performance_types     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
+        $performance_types     = PerformanceType::where('created_by', '=', \Auth::id())->get();
         $employee = Employee::find($appraisal->employee);
         $indicator = Indicator::where('created_user', $appraisal->employee)->first();
         $ratings = !empty($indicator) ? json_decode($indicator->rating, true) : [];
@@ -219,7 +219,7 @@ class AppraisalController extends Controller
     {
         if (\Auth::user()->can('edit appraisal')) {
 
-            $performance_types     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
+            $performance_types     = PerformanceType::where('created_by', '=', \Auth::id())->get();
             $ratings = json_decode($appraisal->rating, true);
 
             $filter = BrandsRegionsBranchesForEdit($appraisal->brand_id, $appraisal->region_id, $appraisal->branch);
@@ -280,7 +280,7 @@ class AppraisalController extends Controller
     public function destroy(Appraisal $appraisal)
     {
         if (\Auth::user()->can('delete appraisal')) {
-            if ($appraisal->created_by == \Auth::user()->creatorId()) {
+            if ($appraisal->created_by == \Auth::id()) {
                 $appraisal->delete();
 
                 return redirect()->route('appraisal.index')->with('success', __('Appraisal successfully deleted.'));
@@ -303,7 +303,7 @@ class AppraisalController extends Controller
 
         $ratings = !empty($indicator) ? json_decode($indicator->rating, true) : [];
 
-        $performance_types = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
+        $performance_types = PerformanceType::where('created_by', '=', \Auth::id())->get();
 
         $viewRender = view('appraisal.star', compact('ratings', 'performance_types'))->render();
         // dd($viewRender);
@@ -320,7 +320,7 @@ class AppraisalController extends Controller
 
         $ratings = json_decode($indicator->rating, true);
         $rating = json_decode($appraisal->rating, true);
-        $performance_types = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
+        $performance_types = PerformanceType::where('created_by', '=', \Auth::id())->get();
         $viewRender = view('appraisal.staredit', compact('ratings', 'rating', 'performance_types'))->render();
         // dd($viewRender);
         return response()->json(array('success' => true, 'html' => $viewRender));
@@ -356,7 +356,7 @@ class AppraisalController extends Controller
             return back()->with('success','Data Not Found');
         }
         $rating = json_decode($appraisal->rating, true);
-        $performance_types     = PerformanceType::where('created_by', '=', \Auth::user()->creatorId())->get();
+        $performance_types     = PerformanceType::where('created_by', '=', \Auth::id())->get();
         $employee = Employee::find($appraisal->employee);
         $indicator = Indicator::where('created_user', $appraisal->employee)->first();
         $ratings = !empty($indicator) ? json_decode($indicator->rating, true) : [];
