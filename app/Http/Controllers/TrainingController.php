@@ -319,6 +319,12 @@ class TrainingController extends Controller
 
     public function HrmTraining()
     {
+        if(isset($_GET['emp_id'])){
+            $userId = $_GET['emp_id'];
+         }else{
+             $userId = \Auth::id();
+         }
+
         if (\Auth::user()->can('manage training')) {
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
@@ -329,38 +335,9 @@ class TrainingController extends Controller
                 ->leftJoin('branches', 'branches.id', '=', 'trainings.branch_id')
                 ->leftJoin('regions', 'regions.id', '=', 'trainings.region_id')
                 ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'trainings.employee');
-
-            // Apply user type-based filtering
-            $userType = \Auth::user()->type;
-            if (in_array($userType, ['super admin', 'Admin Team']) || \Auth::user()->can('level 1')) {
-                // No additional filtering needed
-            } elseif ($userType === 'company') {
-                $Trainer_query->where('trainings.brand_id', \Auth::user()->id);
-            } elseif (in_array($userType, ['Project Director', 'Project Manager']) || \Auth::user()->can('level 2')) {
-                $Trainer_query->whereIn('trainings.brand_id', $brand_ids);
-            } elseif (($userType === 'Region Manager' || \Auth::user()->can('level 3')) && !empty(\Auth::user()->region_id)) {
-                $Trainer_query->where('trainings.region_id', \Auth::user()->region_id);
-            } elseif (($userType === 'Branch Manager' || in_array($userType, ['Admissions Officer', 'Admissions Manager', 'Marketing Officer'])) || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)) {
-                $Trainer_query->where('trainings.branch_id', \Auth::user()->branch_id);
-            } else {
-                $Trainer_query->where('trainings.created_by', \Auth::user()->id);
-            }
-
-            $filters = $this->TraningFilters();
-
-            foreach ($filters as $column => $value) {
-                if ($column == 'created_at') {
-                    $Trainer_query->whereDate('trainings.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
-                }elseif ($column == 'brand') {
-                    $Trainer_query->where('trainings.brand_id', $value);
-                }elseif ($column == 'region_id') {
-                    $Trainer_query->where('trainings.region_id', $value);
-                }elseif ($column == 'branch_id') {
-                    $Trainer_query->where('trainings.branch_id', $value);
-                }
-
-            }
-
+              
+            $Trainer_query->where('trainings.created_by', $userId);
+           
             $trainings=$Trainer_query->get();
             $status    = Training::$Status;
             $saved_filters = SavedFilter::where('created_by', \Auth::id())->where('module', 'leads')->get();

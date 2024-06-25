@@ -600,23 +600,16 @@ class AttendanceEmployeeController extends Controller
                 $attendanceEmployee = $attendanceEmployee->get();
             } else {
 
-                $employee = Employee::select('employees.id')->join('users', 'users.id', '=', 'employees.user_id');
-                if (!empty($request->brand)) {
-                    $employee->where('users.brand_id', $request->brand);
-                }
+                if(isset($_GET['emp_id'])){
+                    $userId = optional(Employee::where('user_id',$_GET['emp_id'])->first())->id;
+                 }else{
+                     $userId = !empty(\Auth::user()->employee) ? \Auth::user()->employee->id : '';
+                 }
+                 
 
-                if (!empty($request->region_id)) {
-                    $employee->where('users.region_id', $request->region_id);
-                }
+                             
 
-                if (!empty($request->branch_id)) {
-                    $employee->where('users.branch_id', $request->branch_id);
-                }
-
-
-                $employee = $employee->get()->pluck('id', 'id');              
-
-                $attendanceEmployee = AttendanceEmployee::whereIn('employee_id', $employee);
+                $attendanceEmployee = AttendanceEmployee::where('employee_id', $userId);
 
                 if ($request->type == 'monthly' && !empty($request->month)) {
                     $month = date('m', strtotime($request->month));
@@ -648,8 +641,6 @@ class AttendanceEmployeeController extends Controller
                         ]
                     );
                 }
-
-                //                dd($attendanceEmployee->toSql(), $attendanceEmployee->getBindings());
                 $attendanceEmployee = $attendanceEmployee->get();
             }
 
