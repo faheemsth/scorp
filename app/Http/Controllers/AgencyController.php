@@ -73,6 +73,10 @@ class AgencyController extends Controller
             $filters['country'] = $_GET['country'];
         }
 
+        if (isset($_GET['city']) && !empty($_GET['city'])) {
+            $filters['city'] = $_GET['city'];
+        }
+
         return $filters;
     }
 
@@ -109,35 +113,43 @@ class AgencyController extends Controller
             $filters = $this->organizationsFilter();
             foreach ($filters as $column => $value) {
                 if ($column === 'name') {
-                    $org_query->where('agencies.name', 'LIKE', '%' . $value . '%');
+                    $org_query->where('users.name', 'LIKE', '%' . $value . '%');
                 } elseif ($column === 'phone') {
                     $org_query->where('agencies.phone', 'LIKE', '%' . $value . '%');
                 } elseif ($column === 'email') {
-                    $org_query->where('agencies.email', 'LIKE', '%' . $value . '%');
+                    $org_query->where('users.email', 'LIKE', '%' . $value . '%');
                 } elseif ($column === 'country') {
-                    $org_query->whereIn('agencies.billing_country', $value);
+                    $org_query->where('agencies.billing_country', 'like', '%' . $value . '%');
+                } elseif ($column === 'city') {
+                    $org_query->where('agencies.city', 'like', '%' . $value . '%');
                 }
             }
-
+            
             //if list global search
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
-                $org_query->Where('users.name', 'like', '%' . $g_search . '%');
+                $org_query->where('users.name', 'like', '%' . $g_search . '%');
                 $org_query->orWhere('agencies.phone', 'like', '%' . $g_search . '%');
-                $org_query->orWhere('agencies.email', 'like', '%' . $g_search . '%');
+                $org_query->orWhere('users.email', 'like', '%' . $g_search . '%');
                 $org_query->orWhere('agencies.billing_country', 'like', '%' . $g_search . '%');
+                $org_query->where('agencies.city', 'like', '%' . $g_search . '%');
             }
 
             $total_records  = $org_query->count();
             $organizations = $org_query->orderBy('agencies.created_at', 'desc')->skip($start)->take($num_results_on_page)->get();
 
-
+            if(!empty($_GET) && !empty($_GET['country'])){
+                $country_parts = explode("-", isset($_GET['country']) ? $_GET['country'] : '');
+                $citiese = City::where('country_code', $country_parts[1])->get();
+            }else{
+                $citiese=[];
+            }
             $org_types = OrganizationType::get()->pluck('name', 'id');
             $countries = $this->countries_list();
             // $countries = [];
             $user_type = User::get()->pluck('type', 'id')->toArray();
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-                $html = view('agency.organization_list', compact('organizations', 'org_types', 'countries', 'user_type'))->render();
+                $html = view('agency.agency_ajax_list', compact('organizations', 'org_types', 'countries', 'user_type'))->render();
                 $pagination_html = view('layouts.pagination', [
                     'total_pages' => $total_records,
                     'num_results_on_page' =>  $num_results_on_page // You need to define $num_results_on_page
@@ -149,7 +161,7 @@ class AgencyController extends Controller
                     'pagination_html' => $pagination_html
                 ]);
             } else {
-                return view('agency.index', compact('organizations', 'org_types', 'countries', 'user_type', 'total_records'));
+                return view('agency.index', compact('citiese','organizations', 'org_types', 'countries', 'user_type', 'total_records'));
             }
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));

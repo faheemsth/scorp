@@ -238,13 +238,29 @@
 
 
                             <div class="col-md-3"> <label for="">Country</label>
-                                <select name="country[]" id="choices-multiple333" class="form form-control select2" multiple style="width: 95%;">
+                                <select name="country" id="countries" class="form form-control select2 " style="width: 95%;">
                                     <option value="">Select user</option>
                                     @foreach ($countries as $key => $country)
-                                        <option value="{{ $country['name'] }}" <?= isset($_GET['country']) && is_array($_GET['country']) && in_array($country['name'], $_GET['country']) ? 'selected' : '' ?> class="">{{ $country['name'] }}</option>
+                                        <option value="{{ $country['name'] }}-{{ $country['code'] }}" <?= isset($_GET['country']) && $_GET['country'] == $country['name'].'-'.$country['code'] ? 'selected' : '' ?>>
+                                                {{ $country['name'] }}</option>
                                     @endforeach
                                 </select>
                             </div>
+
+
+                            <div class="col-md-3"> <label for="">City</label>
+                                <span id="Cities_divs">
+                                    <select name="city" id="city" class="form form-select select2">
+                                        <option value="">Select cities</option>
+                                        @if(!empty($citiese))
+                                           @foreach($citiese as $city)
+                                              <option value="{{$city->name}}" {{ $city->name == $_GET['city']? 'selected':'' }}>{{$city->name}}</option>
+                                           @endforeach
+                                        @endif
+                                    </select>
+                                </span>
+                            </div>
+
 
                             <div class="col-md-4 mt-2">
                                 <br>
@@ -270,6 +286,7 @@
                                 <td style="border-left: 1px solid #fff;">Contact Person Name</td>
 
                                 <td style="border-left: 1px solid #fff;">Billing Country</td>
+                                <td style="border-left: 1px solid #fff;">Billing City</td>
 
                                 <td style="border-left: 1px solid #fff; display: none;">Action</td>
                             </tr>
@@ -304,6 +321,11 @@
                                     @endphp
                                     {{ $country_code }}
                                 </td>
+                                @php
+                                    $country_parts = explode("-", isset($org_data->billing_country) ? $org_data->billing_country : '');
+                                    $cities = App\Models\City::where('country_code', $country_parts[1])->where('name',$org_data->city)->first();
+                                @endphp
+                                <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $cities['name'] }}</td>
                                 <td class="d-none">
                                     <div class="dropdown">
                                         <button class="btn bg-transparents" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
@@ -342,7 +364,7 @@
                             @empty
                             <tr>
                                 <td colspan="9" class="py-1 text-center">
-                                    No Organizations found
+                                    No Agency found
                                 </td>
                             </tr>
                             @endforelse
@@ -975,7 +997,7 @@ if(curr_url.includes('?')){
 
                 $.ajax({
                     type: 'GET',
-                    url: "{{route('organization.index')}}",
+                    url: "{{route('agency.index')}}",
                     data: {
                         search: search,
                         ajaxCall: ajaxCall
