@@ -211,7 +211,7 @@
                                     <label for="billing-addres" class="col-sm-3 col-form-label">City
                                     </label>
                                     <div class="col-6">
-                                        <div class="col-12 px-0" id="Cities_divs">
+                                        <div class="col-12 px-0" id="Cities_divs_create">
                                             <select name="city" id="city" class="form form-select select2">
                                                 <option value="">Select cities</option>
                                             </select>

@@ -620,6 +620,8 @@
             success: function(data) {
                 if (data.status === 'success') {
                     $('#Cities_divs').html(data.html);
+                    $('#Cities_divs_create').html(data.html);
+                    $('#Cities_divs_update').html(data.html);
                     select2();
                 }
             }
