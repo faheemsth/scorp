@@ -2817,8 +2817,8 @@ class LeadController extends Controller
 
 
         $LeadNotes = LeadNote::where('lead_id', $lead->id)->get();
-        if(!empty($tasks) && $tasks->count() > 0)
-        {
+        if(!empty($LeadNotes) && $LeadNotes->count() > 0)
+        { 
             foreach($LeadNotes as $LeadNote)
             {   $DealNotes = new DealNote();
                 $DealNotes->description = $LeadNote->description;
@@ -2827,7 +2827,7 @@ class LeadController extends Controller
                 $DealNotes->save();
             }
         }
-
+       
         // Make entry in ClientDeal Table
         ClientDeal::create(
             [
