@@ -814,6 +814,7 @@ Route::get('/leads/{id}/notes-edit', [LeadController::class, 'notesEdit'])->name
 Route::post('/leads/{id}/notes-update', [LeadController::class, 'notesUpdate'])->name('leads.notes.update')->middleware(['auth', 'XSS']);
 Route::get('/leads/{id}/notes-delete', [LeadController::class, 'notesDelete'])->name('leads.notes.delete')->middleware(['auth', 'XSS']);
 Route::post('/update/from/leadsNoteForm', [LeadController::class, 'UpdateFromLeadsNoteForm']);
+Route::post('/update/from/DealsNoteForm', [DealController::class, 'UpdateFromDealsNoteForm']);
 
 
 Route::get('/deals/{id}/notes', [DealController::class, 'notesCreate'])->name('deals.notes.create')->middleware(['auth', 'XSS']);

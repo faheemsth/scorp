@@ -6,7 +6,7 @@
     <div style="border-top:1px solid black;border-bottom:1px solid black ">
         <div class="row my-2 justify-content-between ps-4">
             <div class="col-12 my-2">
-                <p class="text-dark" style="font-size: 18px;">{{ $note->description }}</p>
+                <p class="text-dark" style="font-size: 18px;">{!! $note->description !!}</p>
             </div>
             <div class="col-8">
                 <div class="row align-items-center">

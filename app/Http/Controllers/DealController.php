@@ -4672,4 +4672,15 @@ class DealController extends Controller
       }
     }
 
+    public function UpdateFromDealsNoteForm(Request $request)
+    {
+        $note = DealNote::where('id', $request->id)->first();
+        $html = view('deals.getNotesForm', compact('note'))->render();
+        return json_encode([
+            'status' => 'success',
+            'html' => $html,
+            'message' =>  __('Notes added successfully')
+        ]);
+    }
+
 }

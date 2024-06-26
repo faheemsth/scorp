@@ -1258,6 +1258,39 @@
             }
 
             });
+            
+
+    $(document).on("click", ".textareaClassedit", function() {
+        var dataId = $(this).data('note-id');
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        $.ajax({
+            url: "{{ url('update/from/DealsNoteForm') }}",
+            method: 'POST',
+            data: {
+                id: dataId
+            },
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status === 'success') {
+                    $("#leadsNoteForm").html('');
+                    $("#leadsNoteForm").html(data.html);
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+
+
+            },
+
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+
+    });
 
         // new lead form submitting...
         $(document).on("submit", "#deal-creating-form", function(e) {
@@ -1518,7 +1551,8 @@
                         $('.create-notes-btn').removeAttr('disabled');
                         $('#commonModal').modal('hide');
                         $('.note-body').html(data.html);
-                        $('textarea[name="description"]').val('');
+                        $('#description').val('');
+                        $('#description').summernote('code', '<p><br></p>');
                         $('#note_id').val('');
 
                         // openNav(data.lead.id);

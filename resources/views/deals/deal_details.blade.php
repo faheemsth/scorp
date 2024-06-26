@@ -979,7 +979,7 @@
                                                             class="accordion-collapse collapse show"
                                                             aria-labelledby="panelsStayOpen-headingnote">
                                                             <div class="accordion-body">
-                                                                <div class="position-relative">
+                                                                <div class="position-relative" id="leadsNoteForm">
                                                                     {{ Form::model($deal, ['route' => ['deals.notes.store', $deal->id], 'method' => 'POST', 'id' => 'create-notes', 'style' => 'z-index: 9999999 !important;']) }}
                                                                     <textarea name="description" id="description" style="height: 120px;" class="form-control"
                                                                         placeholder="Click here add your Notes Comments..."></textarea>
@@ -1005,7 +1005,7 @@
                                                                                     <div class="col-12 my-2">
                                                                                         <p class="text-dark"
                                                                                             style="font-size: 18px;">
-                                                                                            {{ $note->description }}</p>
+                                                                                            {!! $note->description !!}</p>
                                                                                     </div>
                                                                                     <div class="col-8">
                                                                                         <div
@@ -1690,9 +1690,66 @@
         </div>
     </div>
 </div>
+<style>
+    .indivbtn {
+        position: absolute;
+        bottom: 12px;
+        right: 10px;
+        z-index: 1000;
+    }
+    .note-toolbar > .btn-group {
+    position: absolute;
+    top: 101px;
+    z-index: 1000;
+}
+
+.note-toolbar > .btn-group > .note-btn > .note-icon-link {
+        font-size: 22px;
+        position: relative;
+        padding-right: 10px;
+        padding-bottom: 6px;
+
+    }
+
+    .note-toolbar > .btn-group > .note-btn{
+        width: fit-content;
+    }
 
 
 
+    .note-toolbar > .btn-group > .note-btn > .note-icon-link::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 2px;
+        height: 50%;
+        background-color: darkgray;
+        transform: translateY(-50%);
+    }
+
+.note-btn::after {
+    content: " Add a title";
+    font-size: 15px;
+    color: darkgray;
+    margin-left: 5px;
+}
+
+</style>
+
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#description').summernote({
+            height: 150, // Set the height to 600 pixels
+            focus: true,
+            toolbar: [
+                ['link', ['link']],
+            ]
+        });
+    });
+</script>
 <script>
     $(document).ready(function() {
         $('.textareaClass').click(function() {
