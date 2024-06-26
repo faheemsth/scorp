@@ -238,7 +238,7 @@
 
                 <div class="">
                     <small>{{ __('Admission Owner') }}</small>
-                    <span>{{ $users[$lead->created_by ?? ''] ?? '' }}</span>
+                    <span>{{ isset($users[$deal->created_by]) ? $users[$deal->created_by] : '' }}</span>
                 </div>
             </div>
 
