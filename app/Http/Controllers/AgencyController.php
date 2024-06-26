@@ -354,7 +354,7 @@ class AgencyController extends Controller
         ->where('agencies.id', $id)->first();
         $user = User::where('id', $org_query->user_id)->first();
         $user->name = $request->organization_name;
-        $user->type = 'organization';
+        $user->type = 'agency';
         $user->email =  $request->organization_email;
         $user->password = Hash::make('123456789');
         $user->is_active = 1;
@@ -429,6 +429,20 @@ class AgencyController extends Controller
     
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
+        }
+    }
+
+    public function deleteBulkAgency(Request $request)
+    {
+        if ($request->ids != null) {
+            $Agencies = Agency::whereIn('id', explode(',', $request->ids))->get();
+            foreach($Agencies as $Agency){
+               User::where('id', $Agency->user_id)->where('type', '=', 'agency')->delete();
+               $Agency->delete();
+            }
+            return redirect()->route('agency.index')->with('success', 'Agency deleted successfully');
+        } else {
+            return redirect()->route('agency.index')->with('error', 'Atleast select 1 organization.');
         }
     }
 }

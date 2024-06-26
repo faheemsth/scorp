@@ -10,28 +10,6 @@
 {{-- <link rel="stylesheet" href="{{ asset('css/customsidebar.css') }}"> --}}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @push('script-page')
-<script>
-    $(document).on('change', '.sub-check', function() {
-        var selectedIds = $('.sub-check:checked').map(function() {
-            return this.value;
-        }).get();
-
-        console.log(selectedIds.length)
-
-        if (selectedIds.length > 0) {
-            selectedArr = selectedIds;
-            $("#actions_div").css('display', 'block');
-        } else {
-            selectedArr = selectedIds;
-
-            $("#actions_div").css('display', 'none');
-        }
-        let commaSeperated = selectedArr.join(",");
-        console.log(commaSeperated)
-        $("#lead_ids").val(commaSeperated);
-
-    });
-</script>
 @endpush
 <style>
     #objType {
@@ -207,11 +185,9 @@
                             <i class="ti ti-plus"></i>
                         </a>
 
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><a class="dropdown-item delete-bulk-organizations" href="javascript:void(0)">Delete</a></li>
-                            <li id="actions_div" style="display:none;font-size:14px;color:#3a3b45;"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li>
-
-                        </ul>
+                        <button class="btn px-2 btn-dark d-none" id="actions_div" type="button" style="color:white; width:36px; height: 36px; margin-top:10px;">
+                            <i class="ti ti-trash" style="font-size:18px"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -301,7 +277,7 @@
 
                             <tr>
                                 <td >
-                                    <input type="checkbox" name="organizations[]" value="{{ $org->UserId }}" class="sub-check">
+                                    <input type="checkbox" name="agency[]" value="{{ $org->id }}" class="sub-check">
                                 </td>
 
                                 <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
@@ -621,10 +597,6 @@
 <script>
     $('.filter-btn-show').click(function() {
         $("#filter-show").toggle();
-    });
-
-    $(document).on('change', '.main-check', function() {
-        $(".sub-check").prop('checked', $(this).prop('checked'));
     });
 
     $(document).on("click", ".textareaClass", function() {
@@ -1049,13 +1021,46 @@ if(curr_url.includes('?')){
             $(".assigned_to_type").addClass('d-none');
         }
     })
+    // main check
+    $(document).on('change', '.main-check', function() {
+    $(".sub-check").prop('checked', $(this).prop('checked'));
 
-    $(document).on("click", '.delete-bulk-organizations', function() {
-        var task_ids = $(".sub-check:checked");
+    var selectedIds = $('.sub-check:checked').map(function() {
+        return this.value;
+    }).get();
+
+    if (selectedIds.length > 0) {
+        selectedArr = selectedIds;
+        $("#actions_div").removeClass('d-none');
+    } else {
+        selectedArr = selectedIds;
+        $("#actions_div").addClass('d-none');
+    }
+   });
+    //    single check 
+    $(document).on('change', '.sub-check', function() {
         var selectedIds = $('.sub-check:checked').map(function() {
             return this.value;
         }).get();
 
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+            $("#actions_div").addClass('d-none');
+        }
+        let commaSeperated = selectedArr.join(",");
+        $("#lead_ids").val(commaSeperated);
+
+    });
+    // by check delete bulk code
+
+    $("#actions_div").on("click", function() {
+        var task_ids = $(".sub-check:checked");
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -1066,9 +1071,9 @@ if(curr_url.includes('?')){
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = '/delete-bulk-organizations?ids=' + selectedIds.join(',');
+                window.location.href = '/delete-bulk-agency?ids=' + selectedIds.join(',');
             }
         });
-    })
+    });
 </script>
 @endpush
