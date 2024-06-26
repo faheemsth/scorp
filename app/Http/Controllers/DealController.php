@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use Session;
 use App\Models\Deal;
+use App\Models\Lead;
 use App\Models\User;
 use App\Models\Label;
 use App\Models\Stage;
 use App\Models\Branch;
 use App\Models\Course;
+use App\Models\Region;
 use App\Models\Source;
+use App\Models\Country;
 use App\Models\Utility;
 use App\Models\DealCall;
 use App\Models\DealFile;
 use App\Models\DealNote;
 use App\Models\DealTask;
-use App\Models\Notification;
 use App\Models\Pipeline;
 use App\Models\UserDeal;
 use App\Models\DealEmail;
@@ -23,20 +26,22 @@ use App\Models\University;
 use App\Mail\SendDealEmail;
 use App\Models\ActivityLog;
 use App\Models\CustomField;
+use App\Models\SavedFilter;
+use App\Models\Notification;
 use App\Models\StageHistory;
 use Illuminate\Http\Request;
 use App\Models\DealDiscussion;
 use App\Models\ProductService;
 use App\Models\TaskDiscussion;
+use App\Events\NewNotification;
 use App\Models\DealApplication;
+use App\Models\ApplicationStage;
 use App\Models\ClientPermission;
+use App\Models\CompanyPermission;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use App\Models\CompanyPermission;
-use App\Models\Region;
-use App\Models\ApplicationStage;
-use Session;
-
+use App\Models\ApplicationNote;
+use App\Models\LeadTag;
 class DealController extends Controller
 {
     /**
@@ -197,6 +202,22 @@ class DealController extends Controller
             $filters['name'] = $_GET['name'];
         }
 
+        if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+            $filters['brand'] = $_GET['brand'];
+        }
+
+        if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
+            $filters['region_id'] = $_GET['region_id'];
+        }
+
+        if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
+            $filters['branch_id'] = $_GET['branch_id'];
+        }
+
+        if (isset($_GET['lead_assigned_user']) && !empty($_GET['lead_assigned_user'])) {
+            $filters['deal_assigned_user'] = $_GET['lead_assigned_user'];
+        }
+
 
         if (isset($_GET['stages']) && !empty($_GET['stages'])) {
             $filters['stage_id'] = $_GET['stages'];
@@ -206,8 +227,15 @@ class DealController extends Controller
             $filters['users'] = $_GET['users'];
         }
 
-        if (isset($_GET['created_at']) && !empty($_GET['created_at'])) {
-            $filters['created_at'] = $_GET['created_at'];
+        if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
+            $filters['created_at_from'] = $_GET['created_at_from'];
+        }
+
+        if (isset($_GET['created_at_to']) && !empty($_GET['created_at_to'])) {
+            $filters['created_at_to'] = $_GET['created_at_to'];
+        }
+        if (isset($_GET['tag']) && !empty($_GET['tag'])) {
+            $filters['tag'] = $_GET['tag'];
         }
 
         if (isset($_GET['price']) && !empty($_GET['price'])) {
@@ -241,14 +269,331 @@ class DealController extends Controller
 
         return $users;
     }
+
+    // public function deal_list()
+    // {
+    //     // die('come');
+
+    //     $usr = \Auth::user();
+    //     $cnt_deal = [];
+    //     $comparePrice = '';
+
+    //     $start = 0;
+    //     $num_results_on_page = env("RESULTS_ON_PAGE");
+    //     if (isset($_GET['page'])) {
+    //         $page = $_GET['page'];
+    //         $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+    //         $start = ($page - 1) * $num_results_on_page;
+    //     } else {
+    //         $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+    //     }
+
+    //     $filters = $this->dealFilters();
+
+    //     if ($usr->can('view deal') || $usr->can('manage deal') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Admin Team') {
+    //         //whole query
+    //         $deals_query = Deal::select('deals.id','deals.name','deals.stage_id','deals.assigned_to','deals.intake_month','deals.intake_year')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
+    //         $companies = FiltersBrands();
+    //         $brand_ids = array_keys($companies);
+
+    //         if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || $usr->can('level 1')){
+
+    //         }else if(\Auth::user()->type == 'company'){
+    //             $deals_query->where('brand_id', \Auth::user()->id);
+    //         }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || $usr->can('level 2')){
+    //             $deals_query->whereIn('brand_id', $brand_ids);
+    //         }else if(\Auth::user()->type == 'Region Manager' || $usr->can('level 3') && !empty(\Auth::user()->region_id)){
+    //             $deals_query->where('deals.region_id', \Auth::user()->region_id);
+    //         }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || $usr->can('level 4') && !empty(\Auth::user()->branch_id)){
+    //             $deals_query->where('deals.branch_id', \Auth::user()->branch_id);
+    //         }else{
+    //             $deals_query->where('assigned_to', \Auth::user()->id);
+    //         }
+
+    //         $Alldeals = $deals_query->get();
+    //         foreach ($filters as $column => $value) {
+    //             if ($column === 'name') {
+    //                 $deals_query->whereIn('name', $value);
+    //             } elseif ($column === 'stage_id') {
+    //                 $deals_query->whereIn('stage_id', $value);
+    //             } elseif ($column == 'users') {
+    //                 $deals_query->whereIn('created_by', $value);
+    //             } elseif ($column == 'created_at') {
+    //                 $deals_query->whereDate('deals.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+    //             }elseif ($column == 'brand') {
+    //                 $deals_query->where('deals.brand_id', $value);
+    //             }elseif ($column == 'region_id') {
+    //                 $deals_query->where('deals.region_id', $value);
+    //             }elseif ($column == 'branch_id') {
+    //                 $deals_query->where('deals.branch_id', $value);
+    //             }elseif ($column == 'deal_assigned_user') {
+    //                 $deals_query->where('deals.assigned_to', $value);
+    //             }else if($column == 'created_at_from'){
+    //                 $deals_query->whereDate('deals.created_at', '>=', $value);
+    //             }else if($column == 'created_at_to'){
+    //                 $deals_query->whereDate('deals.created_at', '<=', $value);
+    //             }
+    //         }
+
+
+    //         // $companies = FiltersBrands();
+    //         // $brand_ids = array_keys($companies);
+    //         // $deals_query->whereIn('brand_id', $brand_ids);
+    //         // $deals_query->orWhere('assigned_to', \Auth::user()->id);
+
+    //         //if list global search
+    //         if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
+    //             $g_search = $_GET['search'];
+    //             $deals_query->join('client_deals', 'client_deals.deal_id', '=', 'deals.id')->join('users', 'users.id', '=', 'deals.assigned_to');
+    //             $deals_query->Where('deals.name', 'like', '%' . $g_search . '%');
+    //             $deals_query->orWhere('users.passport_number', 'like', '%' . $g_search . '%');
+    //             $deals_query->orWhere('users.name', 'like', '%' . $g_search . '%');
+    //             $deals_query->orWhere('deals.phone', 'like', '%' . $g_search . '%');
+    //         }
+
+    //         $total_records = $deals_query->count();
+
+    //         $deals_query->groupBy('deals.id')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page);
+    //         $deals = $deals_query->get();
+
+    //         $stages = Stage::get()->pluck('name', 'id')->toArray();
+    //         $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
+    //         $brands = $companies;
+    //         $users = allUsers();
+    //         $sources = Source::get()->pluck('name', 'id')->toArray();
+    //         $months = months();
+    //         $currentYear = date('Y');
+    //         $years = [];
+    //         for ($i = 0; $i < 5; $i++) {
+    //             $nextYear = $currentYear + $i;
+    //             $years[$nextYear] = $nextYear;
+    //         }
+    //         $universities = University::get()->pluck('name', 'id')->toArray();
+
+    //         $clients = array();
+    //         $branches = array();
+    //         $branches = Branch::get()->pluck('name', 'id')->toArray();
+    //         if (\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team') {
+    //             $clients      = User::where('type', 'client')->get()->pluck('name', 'id');
+    //         } else {
+    //             $clients      = User::where('created_by', '=', \Auth::user()->ownerId())->where('type', 'client')->get()->pluck('name', 'id');
+    //         }
+
+    //         $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
+    //         $pipelines = Pipeline::get()->pluck('name', 'id')->toArray();
+    //         $stages = Stage::get()->pluck('name', 'id')->toArray();
+
+    //         if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+    //             $html = view('deals.deals_list_ajax', compact('deals','pipelines','users','stages','branches','universities', 'organizations', 'stages', 'users', 'total_records', 'sources'))->render();
+
+    //             return json_encode([
+    //                 'status' => 'success',
+    //                 'html' => $html
+    //             ]);
+    //         }
+
+    //         // dd($universities);
+    //         $filters = BrandsRegionsBranches();
+
+    //         return view('deals.list', compact('Alldeals','deals','universities','pipelines','users','branches','months','years','clients', 'organizations', 'stages', 'users', 'total_records', 'sources', 'brands', 'filters'));
+    //     }
+
+
+    //     if ($usr->can('manage deal') || \Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team') {
+    //         if (\Auth::user()->type == 'super admin') {
+    //             $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
+
+    //             foreach ($filters as $column => $value) {
+    //                 if ($column === 'name') {
+    //                     $deals_query->whereIn('name', $value);
+    //                 } elseif ($column === 'deals.stage_id') {
+    //                     $deals_query->whereIn('stage_id', $value);
+    //                 } elseif ($column === 'price') {
+    //                     $value = str_replace($comparePrice, '', $value);
+    //                     $deals_query->where('price', $comparePrice, $value);
+    //                 } elseif ($column == 'users') {
+    //                     $deals_query->whereIn('created_by', $value);
+    //                 } elseif ($column == 'created_at') {
+    //                     $deals_query->whereDate('created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+    //                 }
+    //             }
+    //             $pipeline = Pipeline::get();
+    //             $pipelines = Pipeline::get()->pluck('name', 'id');
+    //             $id_deals = $usr->deals->pluck('id');
+    //             $deals = $deals_query->where('deals.pipeline_id', '=', $pipeline[0]->id)->orderBy('deals.order')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
+
+    //             // $deals = Deal::select('deals.*')->orderBy('deals.created_ats', 'desc')->skip($start)->take($num_results_on_page)->get();
+    //         } else {
+
+    //             if ($usr->default_pipeline) {
+    //                 //$pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
+    //                 $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
+    //                 if (!$pipeline) {
+    //                     $pipeline = Pipeline::first();
+    //                 }
+    //             } else {
+    //                 $pipeline = Pipeline::first();
+    //             }
+
+    //             // $pipelines = Pipeline::get()->pluck('name', 'id');
+    //             $pipelines = Pipeline::get()->pluck('name', 'id');
+
+    //             if ($usr->type == 'client') {
+    //                 $id_deals = $usr->clientDeals->pluck('id');
+    //             } else {
+    //                 $id_deals = $usr->deals->pluck('id');
+    //             }
+
+    //             //check filters
+    //             $filters = [];
+    //             if (isset($_GET['name']) && !empty($_GET['name'])) {
+    //                 $filters['name'] = $_GET['name'];
+    //             }
+
+
+    //             if (isset($_GET['price']) && !empty($_GET['price'])) {
+    //                 $price = $_GET['price'];
+
+    //                 if (preg_match('/^(<=|>=|<|>)/', $price, $matches)) {
+    //                     $comparePrice = $matches[1]; // Get the comparison operator
+    //                     $filters['price'] = (float) substr($price, strlen($comparePrice)); // Get the price value
+    //                 } else {
+    //                     $comparePrice = '=';
+    //                     $filters['price'] = '=' . $price; // Default to '=' if no comparison operator is provided
+    //                 }
+    //             }
+
+
+    //             if (isset($_GET['stages']) && !empty($_GET['stages'])) {
+    //                 $filters['deals.stage_id'] = $_GET['stages'];
+    //             }
+
+    //             $deal1_query = Deal::whereIn('id', $id_deals);
+    //             $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id')->where('deals.pipeline_id', '=', $pipeline->id);
+    //             $curr_month_query = Deal::whereIn('id', $id_deals)->where($filters)->where('pipeline_id', '=', $pipeline->id)->whereMonth('created_at', '=', date('m'));
+    //             $curr_week_query   = Deal::whereIn('id', $id_deals)->where($filters)->where('pipeline_id', '=', $pipeline->id)->whereBetween(
+    //                 'created_at',
+    //                 [
+    //                     \Carbon\Carbon::now()->startOfWeek(),
+    //                     \Carbon\Carbon::now()->endOfWeek(),
+    //                 ]
+    //             );
+    //             $last_30days_query = Deal::whereIn('id', $id_deals)->where('pipeline_id', '=', $pipeline->id)->whereDate('created_at', '>', \Carbon\Carbon::now()->subDays(30));
+
+    //             // Add the dynamic filters
+    //             foreach ($filters as $column => $value) {
+    //                 if ($column === 'name') {
+    //                     $deal1_query->whereIn('name', $value);
+    //                     $deals_query->whereIn('name', $value);
+    //                     $curr_month_query->whereIn('name', $value);
+    //                     $curr_week_query->whereIn('name', $value);
+    //                     $last_30days_query->whereIn('name', $value);
+    //                 } elseif ($column === 'deals.stage_id') {
+    //                     $deal1_query->whereIn('stage_id', $value);
+    //                     $deals_query->whereIn('stage_id', $value);
+    //                     $curr_month_query->whereIn('stage_id', $value);
+    //                     $curr_week_query->whereIn('stage_id', $value);
+    //                     $last_30days_query->whereIn('stage_id', $value);
+    //                 } elseif ($column === 'price') {
+    //                     $value = str_replace($comparePrice, '', $value);
+    //                     $deal1_query->where('price', $comparePrice, $value);
+    //                     $deals_query->where('price', $comparePrice, $value);
+    //                     $curr_month_query->where('price', $comparePrice, $value);
+    //                     $curr_week_query->where('price', $comparePrice, $value);
+    //                     $last_30days_query->where('price', $comparePrice, $value);
+    //                 } elseif ($column === 'users') {
+    //                     $value = str_replace($comparePrice, '', $value);
+    //                     $deal1_query->where('created_by',  $value);
+    //                     $deals_query->where('created_by',  $value);
+    //                     $curr_month_query->where('created_by',  $value);
+    //                     $curr_week_query->where('created_by',  $value);
+    //                     $last_30days_query->where('created_by',  $value);
+    //                 } elseif ($column == 'created_at') {
+    //                     $deals_query->whereDate('deals.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+    //                 }
+    //             }
+    //             $deals = $deal1_query->get();
+    //             $curr_month = $curr_month_query->get();
+    //             $curr_week = $curr_week_query->get();
+    //             $last_30days = $last_30days_query->get();
+
+    //             // Deal Summary
+    //             $cnt_deal['total']       = Deal::getDealSummary($deals);
+    //             $cnt_deal['this_month']  = Deal::getDealSummary($curr_month);
+    //             $cnt_deal['this_week']   = Deal::getDealSummary($curr_week);
+    //             $cnt_deal['last_30days'] = Deal::getDealSummary($last_30days);
+
+    //             // Deals
+    //             // if ($usr->type == 'client') {
+    //             //     $deals_query->where('client_deals.client_id', '=', $usr->id);
+    //             //     $deals_query->orderBy('deals.created_at', 'desc');
+    //             // } else {
+
+    //             //     $deals_query->where('user_deals.user_ids', '=', $usr->id);
+    //             //     $deals_query->orderBy('deals.order');
+    //             // }
+
+
+
+
+
+    //             if ($usr->can('view all deals')  || \Auth::user()->type == 'Admin Team') {
+    //                 $companies = User::get()->pluck('name', 'id');
+    //             } else if (\auth::user()->type == "company") {
+    //                 $users = User::select(['users.id', 'users.name'])->join('roles', 'roles.name', '=', 'users.type')
+    //                     ->join('role_has_permissions', 'role_has_permissions.role_id', '=', 'roles.id')
+    //                     ->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
+    //                     ->where(['users.created_by' => \auth::id(), 'permissions.name' => 'create deal'])
+    //                     ->groupBy('users.id')
+    //                     ->pluck('name', 'id')
+    //                     ->toArray();
+
+    //                 $users[$usr->id] = $usr->name;
+    //                 $companies = $users;
+    //                 $deal_created_by = array_keys($users);
+    //                 $deals_query->whereIn('user_deals.user_id', $deal_created_by);
+    //             } else {
+    //                 $deal_created_by[] = \auth::user()->created_by;
+    //                 $deal_created_by[] = $usr->id;
+    //                 $deals_query->whereIn('user_deals.user_id', $deal_created_by);
+    //                 $companies = User::where('id', $usr->id)->get()->pluck('name', 'id');
+    //             }
+    //             $total_records = count($deals_query->groupBy('deals.id')->get());
+
+    //             $deals = $deals_query->groupBy('deals.id')->orderBy('deals.order')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
+    //         } //end check role
+
+    //         $users = User::get()->pluck('name', 'id');
+    //         $stages = Stage::get();
+    //         return view('deals.list', compact('pipelines', 'pipeline', 'deals', 'cnt_deal', 'users', 'stages', 'total_records', 'companies'));
+    //     } else {
+    //         return redirect()->back()->with('error', __('Permission Denied.'));
+    //     }
+    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function deal_list()
     {
         $usr = \Auth::user();
-        $cnt_deal = [];
-        $comparePrice = '';
-
         $start = 0;
-        $num_results_on_page = 25;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
             $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -259,50 +604,74 @@ class DealController extends Controller
 
         $filters = $this->dealFilters();
 
-        if ($usr->can('manage deal') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company') {
-
+        if ($usr->can('view deal') || $usr->can('manage deal') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company' || \Auth::user()->type == 'Admin Team') {
             //whole query
-            $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
-            $companies = FiltersBrands();
-            $brand_ids = array_keys($companies);
-
-            if(\Auth::user()->type == 'super admin'){
-                
+            $deals_query = Deal::select(
+                'deals.id',
+                'deals.name',
+                'deals.stage_id',
+                'deals.tag_ids',
+                'deals.assigned_to',
+                'deals.intake_month',
+                'deals.intake_year',
+                'sources.name as sources',
+                'assignedUser.name as assigName',
+                'clientUser.passport_number as passport',
+                'leads.id as lead_id'
+            )
+            ->leftJoin('user_deals', 'user_deals.deal_id', '=', 'deals.id')
+            ->leftJoin('sources', 'sources.id', '=', 'deals.sources')
+            ->leftJoin('users as assignedUser', 'assignedUser.id', '=', 'deals.assigned_to')
+            ->leftJoin('client_deals', 'client_deals.deal_id', '=', 'deals.id')
+            ->leftJoin('users as clientUser', 'clientUser.id', '=', 'client_deals.client_id')
+            ->leftJoin('leads', 'leads.is_converted', '=', 'deals.id');
+            if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || $usr->can('level 1')){
             }else if(\Auth::user()->type == 'company'){
-                $deals_query->where('brand_id', \Auth::user()->id);
-            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
-                $deals_query->whereIn('brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
-                $deals_query->where('region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
-                $deals_query->where('branch_id', \Auth::user()->branch_id);
+                $deals_query->where('deals.brand_id', \Auth::user()->id);
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || $usr->can('level 2')){
+                $deals_query->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+            }else if(\Auth::user()->type == 'Region Manager' || $usr->can('level 3') && !empty(\Auth::user()->region_id)){
+                $deals_query->where('deals.region_id', \Auth::user()->region_id);
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || $usr->can('level 4') && !empty(\Auth::user()->branch_id)){
+                $deals_query->where('deals.branch_id', \Auth::user()->branch_id);
             }else{
-                $deals_query->where('assigned_to', \Auth::user()->id);
+                $deals_query->where('deals.assigned_to', \Auth::user()->id);
             }
-           
-            
+
+            $Alldeals = $deals_query->get();
             foreach ($filters as $column => $value) {
                 if ($column === 'name') {
-                    $deals_query->whereIn('name', $value);
+                    $deals_query->whereIn('deals.name', $value);
                 } elseif ($column === 'stage_id') {
-                    $deals_query->whereIn('stage_id', $value);
+                    $deals_query->whereIn('deals.stage_id', $value);
                 } elseif ($column == 'users') {
-                    $deals_query->whereIn('created_by', $value);
+                    $deals_query->whereIn('deals.created_by', $value);
                 } elseif ($column == 'created_at') {
                     $deals_query->whereDate('deals.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                }elseif ($column == 'brand') {
+                    $deals_query->where('deals.brand_id', $value);
+                }elseif ($column == 'region_id') {
+                    $deals_query->where('deals.region_id', $value);
+                }elseif ($column == 'branch_id') {
+                    $deals_query->where('deals.branch_id', $value);
+                }elseif ($column == 'deal_assigned_user') {
+                    $deals_query->where('deals.assigned_to', $value);
+                }else if($column == 'created_at_from'){
+                    $deals_query->whereDate('deals.created_at', '>=', $value);
+                }else if($column == 'created_at_to'){
+                    $deals_query->whereDate('deals.created_at', '<=', $value);
+                }else if($column == 'tag'){
+                    $deals_query->whereRaw('FIND_IN_SET(?, deals.tag_ids)', [$value]);
                 }
-            }
 
-            // $companies = FiltersBrands();
-            // $brand_ids = array_keys($companies);
-            // $deals_query->whereIn('brand_id', $brand_ids);
-            // $deals_query->orWhere('assigned_to', \Auth::user()->id);
+            }
 
             //if list global search
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
                 $deals_query->Where('deals.name', 'like', '%' . $g_search . '%');
-                //$deals_query->orWhere('deals.email', 'like', '%' . $g_search . '%');
+                $deals_query->orWhere('clientUser.passport_number', 'like', '%' . $g_search . '%');
+                $deals_query->orWhere('assignedUser.name', 'like', '%' . $g_search . '%');
                 $deals_query->orWhere('deals.phone', 'like', '%' . $g_search . '%');
             }
 
@@ -310,11 +679,8 @@ class DealController extends Controller
 
             $deals_query->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page);
             $deals = $deals_query->get();
-
             $stages = Stage::get()->pluck('name', 'id')->toArray();
-            $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
-            $brands = $companies;
-            $users = allUsers();
+
             $sources = Source::get()->pluck('name', 'id')->toArray();
             $months = months();
             $currentYear = date('Y');
@@ -323,207 +689,60 @@ class DealController extends Controller
                 $nextYear = $currentYear + $i;
                 $years[$nextYear] = $nextYear;
             }
-            $universities = University::get()->pluck('name', 'id')->toArray();
 
-            $clients = array();
-            $branches = array();
-            $branches = Branch::get()->pluck('name', 'id')->toArray();
-            if (\Auth::user()->type == 'super admin') {
-                $clients      = User::where('type', 'client')->get()->pluck('name', 'id');
-            } else {
-                $clients      = User::where('created_by', '=', \Auth::user()->ownerId())->where('type', 'client')->get()->pluck('name', 'id');
+            $tags = [];
+
+            if (\Auth::check()) {
+                $user = \Auth::user();
+
+                if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                    $tags = LeadTag::pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                    $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Region Manager'])) {
+                    $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                } else {
+                    $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                }
             }
 
+            $universities = University::get()->pluck('name', 'id')->toArray();
             $organizations = User::where('type', 'organization')->get()->pluck('name', 'id')->toArray();
             $pipelines = Pipeline::get()->pluck('name', 'id')->toArray();
-            $stages = Stage::get()->pluck('name', 'id')->toArray();
 
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-                $html = view('deals.deals_list_ajax', compact('deals','pipelines','users','stages','branches','universities', 'organizations', 'stages', 'users', 'total_records', 'sources'))->render();
+                $html = view('deals.deals_list_ajax', compact('tags','deals','pipelines','stages','universities', 'organizations', 'total_records', 'sources'))->render();
 
                 return json_encode([
                     'status' => 'success',
                     'html' => $html
                 ]);
             }
+            $filters = BrandsRegionsBranches();
 
-            // dd($universities);
-
-            return view('deals.list', compact('deals','universities','pipelines','users','branches','months','years','clients', 'organizations', 'stages', 'users', 'total_records', 'sources', 'brands'));
-        }
-
-
-        if ($usr->can('manage deal') || \Auth::user()->type == 'super admin') {
-            if (\Auth::user()->type == 'super admin') {
-                $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
-
-                foreach ($filters as $column => $value) {
-                    if ($column === 'name') {
-                        $deals_query->whereIn('name', $value);
-                    } elseif ($column === 'deals.stage_id') {
-                        $deals_query->whereIn('stage_id', $value);
-                    } elseif ($column === 'price') {
-                        $value = str_replace($comparePrice, '', $value);
-                        $deals_query->where('price', $comparePrice, $value);
-                    } elseif ($column == 'users') {
-                        $deals_query->whereIn('created_by', $value);
-                    } elseif ($column == 'created_at') {
-                        $deals_query->whereDate('created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
-                    }
-                }
-                $pipeline = Pipeline::get();
-                $pipelines = Pipeline::get()->pluck('name', 'id');
-                $id_deals = $usr->deals->pluck('id');
-                $deals = $deals_query->where('deals.pipeline_id', '=', $pipeline[0]->id)->orderBy('deals.order')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
-
-                // $deals = Deal::select('deals.*')->orderBy('deals.created_ats', 'desc')->skip($start)->take($num_results_on_page)->get();
-            } else {
-
-                if ($usr->default_pipeline) {
-                    //$pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
-                    $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
-                    if (!$pipeline) {
-                        $pipeline = Pipeline::first();
-                    }
-                } else {
-                    $pipeline = Pipeline::first();
-                }
-
-                // $pipelines = Pipeline::get()->pluck('name', 'id');
-                $pipelines = Pipeline::get()->pluck('name', 'id');
-
-                if ($usr->type == 'client') {
-                    $id_deals = $usr->clientDeals->pluck('id');
-                } else {
-                    $id_deals = $usr->deals->pluck('id');
-                }
-
-                //check filters
-                $filters = [];
-                if (isset($_GET['name']) && !empty($_GET['name'])) {
-                    $filters['name'] = $_GET['name'];
-                }
-
-
-                if (isset($_GET['price']) && !empty($_GET['price'])) {
-                    $price = $_GET['price'];
-
-                    if (preg_match('/^(<=|>=|<|>)/', $price, $matches)) {
-                        $comparePrice = $matches[1]; // Get the comparison operator
-                        $filters['price'] = (float) substr($price, strlen($comparePrice)); // Get the price value
-                    } else {
-                        $comparePrice = '=';
-                        $filters['price'] = '=' . $price; // Default to '=' if no comparison operator is provided
-                    }
-                }
-
-
-                if (isset($_GET['stages']) && !empty($_GET['stages'])) {
-                    $filters['deals.stage_id'] = $_GET['stages'];
-                }
-
-                $deal1_query = Deal::whereIn('id', $id_deals);
-                $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id')->where('deals.pipeline_id', '=', $pipeline->id);
-                $curr_month_query = Deal::whereIn('id', $id_deals)->where($filters)->where('pipeline_id', '=', $pipeline->id)->whereMonth('created_at', '=', date('m'));
-                $curr_week_query   = Deal::whereIn('id', $id_deals)->where($filters)->where('pipeline_id', '=', $pipeline->id)->whereBetween(
-                    'created_at',
-                    [
-                        \Carbon\Carbon::now()->startOfWeek(),
-                        \Carbon\Carbon::now()->endOfWeek(),
-                    ]
-                );
-                $last_30days_query = Deal::whereIn('id', $id_deals)->where('pipeline_id', '=', $pipeline->id)->whereDate('created_at', '>', \Carbon\Carbon::now()->subDays(30));
-
-                // Add the dynamic filters
-                foreach ($filters as $column => $value) {
-                    if ($column === 'name') {
-                        $deal1_query->whereIn('name', $value);
-                        $deals_query->whereIn('name', $value);
-                        $curr_month_query->whereIn('name', $value);
-                        $curr_week_query->whereIn('name', $value);
-                        $last_30days_query->whereIn('name', $value);
-                    } elseif ($column === 'deals.stage_id') {
-                        $deal1_query->whereIn('stage_id', $value);
-                        $deals_query->whereIn('stage_id', $value);
-                        $curr_month_query->whereIn('stage_id', $value);
-                        $curr_week_query->whereIn('stage_id', $value);
-                        $last_30days_query->whereIn('stage_id', $value);
-                    } elseif ($column === 'price') {
-                        $value = str_replace($comparePrice, '', $value);
-                        $deal1_query->where('price', $comparePrice, $value);
-                        $deals_query->where('price', $comparePrice, $value);
-                        $curr_month_query->where('price', $comparePrice, $value);
-                        $curr_week_query->where('price', $comparePrice, $value);
-                        $last_30days_query->where('price', $comparePrice, $value);
-                    } elseif ($column === 'users') {
-                        $value = str_replace($comparePrice, '', $value);
-                        $deal1_query->where('created_by',  $value);
-                        $deals_query->where('created_by',  $value);
-                        $curr_month_query->where('created_by',  $value);
-                        $curr_week_query->where('created_by',  $value);
-                        $last_30days_query->where('created_by',  $value);
-                    } elseif ($column == 'created_at') {
-                        $deals_query->whereDate('deals.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
-                    }
-                }
-                $deals = $deal1_query->get();
-                $curr_month = $curr_month_query->get();
-                $curr_week = $curr_week_query->get();
-                $last_30days = $last_30days_query->get();
-
-                // Deal Summary
-                $cnt_deal['total']       = Deal::getDealSummary($deals);
-                $cnt_deal['this_month']  = Deal::getDealSummary($curr_month);
-                $cnt_deal['this_week']   = Deal::getDealSummary($curr_week);
-                $cnt_deal['last_30days'] = Deal::getDealSummary($last_30days);
-
-                // Deals
-                // if ($usr->type == 'client') {
-                //     $deals_query->where('client_deals.client_id', '=', $usr->id);
-                //     $deals_query->orderBy('deals.created_at', 'desc');
-                // } else {
-
-                //     $deals_query->where('user_deals.user_ids', '=', $usr->id);
-                //     $deals_query->orderBy('deals.order');
-                // }
-
-
-
-
-
-                if ($usr->can('view all deals')) {
-                    $companies = User::get()->pluck('name', 'id');
-                } else if (\auth::user()->type == "company") {
-                    $users = User::select(['users.id', 'users.name'])->join('roles', 'roles.name', '=', 'users.type')
-                        ->join('role_has_permissions', 'role_has_permissions.role_id', '=', 'roles.id')
-                        ->join('permissions', 'role_has_permissions.permission_id', '=', 'permissions.id')
-                        ->where(['users.created_by' => \auth::id(), 'permissions.name' => 'create deal'])
-                        ->groupBy('users.id')
-                        ->pluck('name', 'id')
-                        ->toArray();
-
-                    $users[$usr->id] = $usr->name;
-                    $companies = $users;
-                    $deal_created_by = array_keys($users);
-                    $deals_query->whereIn('user_deals.user_id', $deal_created_by);
-                } else {
-                    $deal_created_by[] = \auth::user()->created_by;
-                    $deal_created_by[] = $usr->id;
-                    $deals_query->whereIn('user_deals.user_id', $deal_created_by);
-                    $companies = User::where('id', $usr->id)->get()->pluck('name', 'id');
-                }
-                $total_records = count($deals_query->groupBy('deals.id')->get());
-
-                $deals = $deals_query->groupBy('deals.id')->orderBy('deals.order')->orderBy('deals.id', 'DESC')->skip($start)->take($num_results_on_page)->get();
-            } //end check role
-
-            $users = User::get()->pluck('name', 'id');
-            $stages = Stage::get();
-            return view('deals.list', compact('pipelines', 'pipeline', 'deals', 'cnt_deal', 'users', 'stages', 'total_records', 'companies'));
+            return view('deals.list', compact('tags','Alldeals','deals','universities','pipelines','months','years', 'organizations', 'stages', 'total_records', 'sources', 'filters'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Show the form for creating a new redeal.
@@ -643,6 +862,7 @@ class DealController extends Controller
                         ]),
             'module_id' => $deal->id,
             'module_type' => 'deal',
+            'notification_type' => 'Deal Created'
         ];
         addLogActivity($data);
 
@@ -714,6 +934,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $deal->id,
                     'module_type' => 'lead',
+                    'notification_type' => 'Deal Created'
                 ];
                 addLogActivity($data);
 
@@ -826,23 +1047,24 @@ class DealController extends Controller
 
 
                 $months = months();
-                $currentYear = date('Y');
+                $currentYear = 2000;
                 $years = [];
-                for ($i = 0; $i < 5; $i++) {
+                for ($i = 0; $i < 100; $i++) {
                     $nextYear = $currentYear + $i;
                     $years[$nextYear] = $nextYear;
                 }
 
 
                 $contacts = ClientDeal::where('deal_id', $deal->id)->get()->pluck('client_id', 'id')->toArray();
-                
+
                 $filter = BrandsRegionsBranchesForEdit($deal->brand_id, $deal->region_id, $deal->branch_id);
                 $companies = $filter['brands'];
                 $Region = $filter['regions'];
                 $branches = $filter['branches'];
                 $users = $filter['employees'];
-                
-                return view('deals.edit', compact('deal', 'clients', 'contacts', 'months', 'years', 'companies', 'universities', 'branches', 'pipelines', 'stages', 'users', 'organizations'));
+
+                $lead = Lead::where('is_converted', $deal->id)->first();
+                return view('deals.edit', compact('deal', 'clients', 'contacts', 'months', 'years', 'companies', 'universities', 'branches', 'pipelines', 'stages', 'users', 'organizations', 'lead'));
             } else {
                 return response()->json(['error' => __('Permission Denied.')], 401);
             }
@@ -886,10 +1108,12 @@ class DealController extends Controller
                     $messages = $validator->getMessageBag();
 
                     return json_encode([
-                        'status' => 'success',
+                        'status' => 'error',
                         'message' => $messages->first()
                     ]);
                 }
+
+
 
                 $usr = \Auth::user();
                 $deal->name  = $request->name;
@@ -913,6 +1137,18 @@ class DealController extends Controller
                 $deal->save();
 
 
+                $lead = Lead::where('is_converted', $id)->first();
+
+                if(!empty($request->lead_email)){
+                    $lead->email = $request->lead_email;
+                }
+
+                if(!empty($request->lead_phone)){
+                    $lead->phone = $request->full_number;
+                }
+
+                $lead->save();
+
                 //send email
                 // $clients = User::whereIN('id', array_filter($request->input('contact')))->get()->pluck('email', 'id')->toArray();
 
@@ -933,6 +1169,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $deal->id,
                     'module_type' => 'deal',
+                    'notification_type' => 'Deal Updated'
                 ];
                 addLogActivity($data);
 
@@ -965,7 +1202,42 @@ class DealController extends Controller
     public function destroy(Deal $deal)
     {
         if (\Auth::user()->can('delete deal') ||  \Auth::user()->type == 'super admin') {
-            if ($deal->created_by == \Auth::user()->ownerId() ||  \Auth::user()->type == 'super admin') {
+             // reopen the old lead
+             $lead = Lead::where('is_converted', $deal->id)->first();
+
+             $applications = DealApplication::where('deal_id', $deal->id)->get();
+             if(!empty($applications)){
+                foreach ($applications as $application) {
+                $application->delete();
+               }
+             }
+             if (!empty($lead)) {
+                 // Add Stage History
+                 $data_for_stage_history = [
+                     'stage_id' => $lead->stage_id,
+                     'type_id' => $lead->id,
+                     'type' => 'lead'
+                 ];
+                 addLeadHistory($data_for_stage_history);
+
+                 // Add Log Activity
+                 $data = [
+                     'type' => 'info',
+                     'note' => json_encode([
+                         'title' => 'Lead Reopen',
+                         'message' => 'Lead Reopen successfully'
+                     ]),
+                     'module_id' => $lead->id,
+                     'module_type' => 'lead',
+                     'notification_type' => 'Lead Reopen'
+                 ];
+                 addLogActivity($data);
+
+                 // Update lead
+                 $lead->is_converted = 0;
+                 $lead->save();
+             }
+           // if ($deal->created_by == \Auth::user()->ownerId() ||  \Auth::user()->type == 'super admin') {
                 DealDiscussion::where('deal_id', '=', $deal->id)->delete();
                 DealFile::where('deal_id', '=', $deal->id)->delete();
                 ClientDeal::where('deal_id', '=', $deal->id)->delete();
@@ -981,9 +1253,9 @@ class DealController extends Controller
                     return redirect()->route('deals.list')->with('success', __('Deal successfully deleted!'));
                 }
                 return redirect()->route('deals.list')->with('success', __('Deal successfully deleted!'));
-            } else {
-                return redirect()->back()->with('error', __('Permission Denied.'));
-            }
+            // } else {
+            //     return redirect()->back()->with('error', __('Permission Denied.'));
+            // }
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -1012,6 +1284,7 @@ class DealController extends Controller
                     ]),
                     'module_id' => $deal->id,
                     'module_type' => 'Deal',
+                    'notification_type' => 'Lead Updated'
                 ];
                 addLogActivity($data);
                 ActivityLog::create(
@@ -1600,6 +1873,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $deal->id,
                     'module_type' => 'deal',
+                    'notification_type' => 'Deal Notes Created'
                 ];
                 addLogActivity($data);
 
@@ -1736,6 +2010,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $deal->id,
                     'module_type' => 'deal',
+                    'notification_type' => 'Task Created'
                 ];
                 addLogActivity($data);
 
@@ -1893,6 +2168,7 @@ class DealController extends Controller
                                 ]),
                     'module_id' => $id,
                     'module_type' => 'deal',
+                    'notification_type' => 'Task Updated'
                 ];
                 addLogActivity($data);
 
@@ -2448,18 +2724,37 @@ class DealController extends Controller
                 );
             }
 
-            $universities = University::pluck('name', 'id');
-             $universities = [0 => 'Select University'] + $universities->toArray();
+            //$universities = University::pluck('name', 'id');
+            // $universities = [0 => 'Select University'] + $universities->toArray();
            // $universities->prepend('Select Institute');
             $stages = ApplicationStage::get()->pluck('name', 'id')->toArray();
-
+            $universities = [];
             $statuses = [
                 'Pending' => 'Pending',
                 'Approved' => 'Approved',
                 'Rejected' => 'Rejected'
             ];
 
-            return view('deals.create-application', compact('universities', 'statuses', 'id', 'deal_passport', 'stages'));
+            $tags = [];
+
+            if (\Auth::check()) {
+                $user = \Auth::user();
+    
+                if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                    $tags = LeadTag::pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                    $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Region Manager'])) {
+                    $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                } else {
+                    $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                }
+            }
+            $countries = Country::pluck('name', 'name');
+            $countries = [0 => 'Select Country'] + $countries->toArray();
+
+            $deal = Deal::where(['id' => $id])->first();
+            return view('deals.create-application', compact('deal','tags','universities', 'statuses', 'id', 'deal_passport', 'stages', 'countries'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -2504,7 +2799,7 @@ class DealController extends Controller
             )->name;
             $brandName=optional(User::find($deal->brand_id))->name;
             $branchname=optional(Branch::find($deal->branch_id))->name;
-            $is_exist = DealApplication::where(['application_key' => $userName .'-'. $passport_number . '-' . $university_name .'-'. $request->intake_month .'-'. $request->id])->first();
+            $is_exist = DealApplication::where('application_key', 'LIKE', '%' . $userName . '-' . $passport_number . '-' . $university_name . '%')->first();
 
 
             if ($passport_number && $is_exist) {
@@ -2515,7 +2810,7 @@ class DealController extends Controller
             }
 
             $new_app = DealApplication::create([
-                'application_key' =>  $userName .'-'. $passport_number . '-' . $university_name .'-'. $request->intake_month .'-'. $request->id,
+                'application_key' => $userName . '-' . $passport_number . '-' . $university_name,
                 'deal_id' => $request->id,
                 'university_id' => (int)$request->university,
                 'course' => $request->course,
@@ -2525,7 +2820,7 @@ class DealController extends Controller
                 'name' => $deal->name . '-' . $request->course . '-' . $university_name . '-' . $request->application_key,
                 'created_by' => Session::get('auth_type_id') != null ? Session::get('auth_type_id') : \Auth::user()->id,
             ]);
-
+            $new_app->tag_ids     = !empty($request->tag_ids) ? implode(',', $request->tag_ids): '';
             $new_app->brand_id = $deal->brand_id;
             $new_app->save();
 
@@ -2548,6 +2843,7 @@ class DealController extends Controller
                             ]),
                 'module_id' => $new_app->id,
                 'module_type' => 'application',
+                'notification_type' => 'Stage Updated'
             ];
             addLogActivity($data);
 
@@ -2575,15 +2871,181 @@ class DealController extends Controller
                 'Rejected' => 'Rejected'
             ];
             $application = DealApplication::where('id', $id)->first();
+            $university = University::where('id', $application->university_id)->first();
+            $IntakeMonths = [];
+            
+            if ($university) {
+                $intake_months = $university->intake_months;
+                $uni_months = explode(',', $intake_months);
+                $months = months();
+                foreach ($months as $key => $month) {
+                    if (in_array($key, $uni_months)) {
+                        $IntakeMonths[$key] = $month;
+                    }
+                }
+            }            
             $deal_passport = Deal::select(['users.*'])->join('client_deals', 'client_deals.deal_id', 'deals.id')->join('users', 'users.id', 'client_deals.client_id')->where(['deals.id' => $application->deal_id])->first();
             $stages = ApplicationStage::get()->pluck('name', 'id')->toArray();
 
-            return view('deals.edit-application', compact('application', 'universities', 'statuses', 'deal_passport', 'stages'));
+            $tags = [];
+
+            if (\Auth::check()) {
+                $user = \Auth::user();
+    
+                if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                    $tags = LeadTag::pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                    $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                } elseif (in_array($user->type, ['Region Manager'])) {
+                    $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                } else {
+                    $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                }
+            }
+
+            return view('deals.edit-application', compact('IntakeMonths','tags','application', 'universities', 'statuses', 'deal_passport', 'stages'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
     }
 
+    public function moveApplication($passport_number,$id)
+    {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'admin team') {
+
+        $admissions = \DB::table('deals')
+        ->leftJoin('client_deals', 'client_deals.deal_id', '=', 'deals.id')
+        ->leftJoin('users as clientUser', 'clientUser.id', '=', 'client_deals.client_id')
+        ->leftJoin('users as brandUser', 'brandUser.id', '=', 'deals.brand_id')
+        ->leftJoin('regions', 'regions.id', '=', 'deals.region_id')
+        ->leftJoin('branches', 'branches.id', '=', 'deals.branch_id')
+        ->leftJoin('users as assignedUser', 'assignedUser.id', '=', 'deals.assigned_to')
+        ->where('clientUser.passport_number', $passport_number)
+        ->select('deals.id', 'deals.name', 'clientUser.passport_number as passport','brandUser.name as brandName','regions.name as RegionName','branches.name as branchName','assignedUser.name as assignedName')
+        ->get();
+
+            $application_id = optional(DealApplication::where('id', $id)->first())->deal_id;
+
+            return view('deals.move-application', compact('admissions','application_id','id'));
+        } else {
+            return redirect()->back()->with('error', __('Permission Denied.'));
+        }
+    }
+
+
+    public function moveApplicationsave(Request $request, $id)
+    {
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'admin team') {
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                'deal_id' => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+
+            $messages = $validator->getMessageBag();
+            return json_encode([
+                'status' => 'error',
+                'message' => $messages->first()
+            ]);
+
+        }
+        // ready for new deal_id
+        $old_application_id = DealApplication::where('id', $id)->first();
+        $old_deal_aoolications = DealApplication::where('deal_id', $request->old_deal_id)->first();
+        if($request->old_deal_id == $request->deal_id){
+            return json_encode([
+                'status' => 'error',
+                'message' => 'that have also this lead'
+            ]);
+        }
+
+
+        if(empty($old_application_id)){
+            return json_encode([
+                'status' => 'error',
+                'message' => 'sorry you did not have DealApplication'
+            ]);
+        }
+        $DealApplication= new DealApplication;
+        $DealApplication->application_key =$old_application_id->application_key;
+        $DealApplication->university_id  =$old_application_id->university_id;
+        $DealApplication->deal_id  =$request->deal_id;// deal_id $request->deal_id
+        $DealApplication->course  =$old_application_id->course;
+        $DealApplication->stage_id  =$old_application_id->stage_id;
+        $DealApplication->name  =$old_application_id->name;
+        $DealApplication->intake  =$old_application_id->intake;
+        $DealApplication->external_app_id  =$old_application_id->external_app_id;
+        $DealApplication->status  =$old_application_id->status;
+        $DealApplication->created_by  = $old_application_id->created_by;// created_by New_applications
+        $DealApplication->brand_id =$old_application_id->brand_id;
+        $DealApplication->save();
+
+// by new applicatioin assign id
+        $notes = ApplicationNote::where('application_id', $id)->get();
+        if(!empty($notes)){
+            foreach($notes as $note){
+                $ApplicationNote = new ApplicationNote;
+                $ApplicationNote->title = $note->title;
+                $ApplicationNote->description = $note->description;
+                $ApplicationNote->application_id = $DealApplication->id;
+                $ApplicationNote->created_by = $old_application_id->created_by;
+                $ApplicationNote->save();
+            }
+        }
+
+
+
+// by new task assign id
+        $tasks = DealTask::where(['related_to' => $id, 'related_type' => 'application'])->orderBy('status')->get();
+        if(!empty($tasks)){
+            foreach($tasks as $task){
+                $DealTask= new DealTask;
+                $DealTask->deal_id = $DealApplication->id;
+                $DealTask->name = $task->name;
+                $DealTask->date = $task->date;
+                $DealTask->time = $task->time;
+                $DealTask->priority = $task->priority;
+                $DealTask->status = 1;
+                $DealTask->organization_id = $task->organization_id;
+                $DealTask->assigned_to = $task->assigned_to;
+                $DealTask->assigned_type = $task->assigned_type;
+                $DealTask->related_type = $task->related_type;
+                $DealTask->related_to = $DealApplication->id;
+                $DealTask->branch_id = $task->branch_id;
+                $DealTask->due_date = $task->due_date;
+                $DealTask->start_date = $task->start_date;
+                $DealTask->remainder_date = $task->remainder_date;
+                $DealTask->description = $task->description;
+                $DealTask->visibility = $task->visibility;
+                $DealTask->deal_stage_id = $task->deal_stage_id;
+                $DealTask->created_by = $old_application_id->created_by;
+                $DealTask->brand_id = $task->brand_id;
+                $DealTask->region_id = $task->region_id;
+                $DealTask->save();
+                }
+        }
+
+        if(!empty($old_deal_aoolications)){
+            $old_deal_aoolications->delete();
+        }
+        return json_encode([
+            'status' => 'success',
+            'app_id' => $DealApplication->id,
+            'message' => __('Move Application successfully!')
+        ]);
+
+
+
+       }else {
+        return json_encode([
+            'status' => 'error',
+            'message' => 'Permission Denied.'
+        ]);
+       }
+    }
     public function updateApplication(Request $request, $id)
     {
 
@@ -2598,17 +3060,19 @@ class DealController extends Controller
                     'intake_month' => 'required'
                 ]
             );
-                // Default Field Value
-                if ($usr->default_pipeline) {
-                    $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
-                    if (!$pipeline) {
-                        $pipeline = Pipeline::first();
-                    }
-                } elseif (\Auth::user()->type == 'super admin') {
-                    $pipeline = Pipeline::first();
-                } else {
-                    $pipeline = Pipeline::first();
-                }
+           // $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
+
+                // // Default Field Value
+                // if ($usr->default_pipeline) {
+                //     $pipeline = Pipeline::where('id', '=', $usr->default_pipeline)->first();
+                //     if (!$pipeline) {
+                //         $pipeline = Pipeline::first();
+                //     }
+                // } elseif (\Auth::user()->type == 'super admin') {
+                //     $pipeline = Pipeline::first();
+                // } else {
+                //     $pipeline = Pipeline::first();
+                // }
             if ($validator->fails()) {
 
                 $messages = $validator->getMessageBag();
@@ -2640,10 +3104,11 @@ class DealController extends Controller
             $application->university_id = $request->university;
             $application->stage_id = $request->status;
             $application->course = $request->course;
-            $application->pipeline_id = $pipeline->id;
+            //$application->pipeline_id = $pipeline->id;
             $application->external_app_id = $request->application_key;
-            $application->intake = date('Y-m-d', strtotime($request->intake));
+            $application->intake = $request->intake_month;
             $application->name = $deal->name . '-' . $request->course . '-' . $university_name . '-' . $request->application_key;
+            $application->tag_ids     = !empty($request->tag_ids) ? implode(',', $request->tag_ids): '';
             $application->update();
 
             return json_encode([
@@ -2682,28 +3147,189 @@ class DealController extends Controller
             $filters['subjects'] = $_GET['subjects'];
         }
 
-        if (isset($_GET['assigned_to']) && !empty($_GET['assigned_to'])) {
-            $filters['assigned_to'] = $_GET['assigned_to'];
+        if (isset($_GET['lead_assigned_user']) && !empty($_GET['lead_assigned_user'])) {
+            $filters['assigned_to'] = $_GET['lead_assigned_user'];
         }
 
-        if (isset($_GET['brands']) && !empty($_GET['brands'])) {
-            $filters['created_by'] = $_GET['brands'];
+        if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+            $filters['brand_id'] = $_GET['brand'];
+        }
+
+        if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
+            $filters['region_id'] = $_GET['region_id'];
+        }
+
+        if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
+            $filters['branch_id'] = $_GET['branch_id'];
         }
 
         if (isset($_GET['due_date']) && !empty($_GET['due_date'])) {
             $filters['due_date'] = $_GET['due_date'];
         }
-        if (isset($_GET['status']) && !empty($_GET['status'])) {
-            $filters['status'] = $_GET['status'];
+        if (isset($_GET['status']) && $_GET['status'] !== '') {
+            if ($_GET['status'] != '0') {
+                $filters['status'] = $_GET['status'];
+            } else {
+                $filters['status'] = 0;
+            }
+        }
+
+        if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
+            $filters['created_at_from'] = $_GET['created_at_from'];
+        }
+
+        if (isset($_GET['created_at_to']) && !empty($_GET['created_at_to'])) {
+            $filters['created_at_to'] = $_GET['created_at_to'];
         }
 
         return $filters;
     }
+    // public function userTasks()
+    // {
+    //     //dd($_GET);
+    //     $start = 0;
+    //     if(!empty($_GET['perPage']))
+    //     {
+    //     $num_results_on_page = $_GET['perPage'];
+    //     }else{
+    //         $num_results_on_page = env("RESULTS_ON_PAGE");
+    //     }
+    //     if (isset($_GET['page'])) {
+    //         $page = $_GET['page'];
+    //         $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+    //         $start = ($page - 1) * $num_results_on_page;
+    //     } else {
+    //         $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+    //     }
+
+    //     if (\Auth::user()->can('view task') || \Auth::user()->can('manage task') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company') {
+    //         $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to')->join('users as brand', 'brand.id', '=', 'deal_tasks.brand_id');;
+
+    //         $companies = FiltersBrands();
+    //         $brand_ids = array_keys($companies);
+    //         if(\Auth::user()->type == 'super admin' || \Auth::user()->can('level 1')){
+
+    //         }else if(\Auth::user()->type == 'company'){
+    //             $tasks->where('deal_tasks.brand_id', \Auth::user()->id);
+    //         }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')){
+    //             $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
+    //         }else if(\Auth::user()->type == 'Region Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)){
+    //             $tasks->where('deal_tasks.region_id', \Auth::user()->region_id);
+    //         }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)){
+    //             $tasks->where('deal_tasks.branch_id', \Auth::user()->branch_id);
+    //         }else{
+    //             $tasks->where('deal_tasks.assigned_to', \Auth::user()->id);
+    //         }
+
+    //         $filters = $this->TasksFilter();
+    //        // dd($filters);
+    //         foreach ($filters as $column => $value) {
+    //             if ($column === 'subjects') {
+    //                 $tasks->whereIn('deal_tasks.id', $value);
+    //             } elseif ($column === 'assigned_to') {
+    //                 $tasks->where('assigned_to', $value);
+    //             } elseif ($column === 'brand_id') {
+    //                 $tasks->where('deal_tasks.brand_id', $value);
+    //             }elseif ($column === 'region_id') {
+    //                 $tasks->where('deal_tasks.region_id', $value);
+    //             }elseif ($column === 'branch_id') {
+    //                 $tasks->where('deal_tasks.branch_id', $value);
+    //             } elseif ($column == 'due_date') {
+    //                 $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
+    //             }elseif ($column == 'status') {
+    //                 if(gettype($value) == 'array'){
+    //                     if(in_array(2, $value)){
+    //                         $tasks->where('status', 0)->whereDate('deal_tasks.due_date', '<', now());
+    //                     }else{
+    //                         $tasks->whereIn('status', $value);
+    //                     }
+    //                 }else{
+    //                     if($value == 2){
+    //                         $tasks->where('status', 0)->whereDate('deal_tasks.due_date', '<', now());
+    //                     }else{
+    //                         $tasks->where('status', $value);
+    //                     }
+    //                 }
+
+    //             }elseif ($column == 'created_at_from') {
+    //                 $tasks->whereDate('deal_tasks.created_at', '>=', $value);
+    //             }elseif ($column == 'created_at_to') {
+    //                 $tasks->whereDate('deal_tasks.created_at', '<=', $value);
+    //             }
+    //         }
+
+    //         if(!isset($_GET['status'])){
+    //             $tasks->where('status', 0);
+    //         }
+    //         if (!empty($_GET['assigned_by_me']) && $_GET['assigned_by_me'] == true) {
+    //             $tasks->where('deal_tasks.created_by', \Auth::id());
+    //         }
+
+    //         if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
+    //             $g_search = $_GET['search'];
+    //             $tasks->Where('deal_tasks.name', 'like', '%' . $g_search . '%');
+    //             $tasks->orWhere('brand.name', 'like', '%' . $g_search . '%');
+    //             $tasks->orWhere('users.name', 'like', '%' . $g_search . '%');
+    //             $tasks->orWhere('deal_tasks.due_date', 'like', '%' . $g_search . '%');
+    //         }
+
+
+    //         $total_records = $tasks->count();
+
+    //         $tasks = $tasks->orderBy('created_at', 'DESC')->skip($start)->take($num_results_on_page)->get();
+    //         $priorities = DealTask::$priorities;
+    //         $user_type = User::get()->pluck('type', 'id')->toArray();
+    //         $users = User::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+    //         $brands = User::where('type', 'company')->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+    //         $branches = array();
+    //         $branches = Branch::orderBy('name', 'ASC')->get();
+
+    //         $assign_to = array();
+    //         if(\Auth::user()->type == 'super admin'){
+    //             $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
+    //             ->orderBy('name', 'ASC')
+    //             ->pluck('name', 'id')->toArray();
+    //         }else{
+    //             $companies = FiltersBrands();
+    //             $brand_ids = array_keys($companies);
+
+    //             $assign_to = User::whereIn('brand_id', $brand_ids)->pluck('name', 'id')->toArray();
+    //         }
+
+
+
+    //         if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
+    //             $html = view('deals.tasks_list_ajax',compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands'))->render();
+
+    //             return json_encode([
+    //                 'status' => 'success',
+    //                 'html' => $html
+    //             ]);
+    //         }
+
+
+    //         $filter = BrandsRegionsBranches();
+    //         // $companies = $filter['brands'];
+    //         // $regions = $filter['regions'];
+    //         // $branches = $filter['branches'];
+    //         // $employees = $filter['employees'];
+    //         $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'tasks')->get();
+
+    //         return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'filter', 'saved_filters'));
+    //     } else {
+    //         return redirect()->back()->with('error', __('Permission Denied.'));
+    //     }
+    // }
+
     public function userTasks()
     {
-
         $start = 0;
-        $num_results_on_page = 50;
+        if(!empty($_GET['perPage']))
+        {
+        $num_results_on_page = $_GET['perPage'];
+        }else{
+            $num_results_on_page = env("RESULTS_ON_PAGE");
+        }
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
             $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
@@ -2711,95 +3337,82 @@ class DealController extends Controller
         } else {
             $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
         }
-
-        if (\Auth::user()->can('manage task') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company') {
-            $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to');
-            
-            $companies = FiltersBrands();
-            $brand_ids = array_keys($companies);
-            if(\Auth::user()->type == 'super admin'){
-                
+        if (\Auth::user()->can('view task') || \Auth::user()->can('manage task') || \Auth::user()->type == 'super admin' || \Auth::user()->type == 'company') {
+            $tasks = DealTask::select('deal_tasks.name','deal_tasks.brand_id','deal_tasks.id','deal_tasks.due_date', 'deal_tasks.status', 'deal_tasks.assigned_to')->join('users', 'users.id', '=', 'deal_tasks.assigned_to')->join('users as brand', 'brand.id', '=', 'deal_tasks.brand_id');
+            if(\Auth::user()->type == 'super admin' || \Auth::user()->can('level 1')){
             }else if(\Auth::user()->type == 'company'){
                 $tasks->where('deal_tasks.brand_id', \Auth::user()->id);
-            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager'){
-                $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
-            }else if(\Auth::user()->type == 'Regional Manager' && !empty(\Auth::user()->region_id)){
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')){
+                $tasks->whereIn('deal_tasks.brand_id', array_keys(FiltersBrands()));
+            }else if(\Auth::user()->type == 'Region Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)){
                 $tasks->where('deal_tasks.region_id', \Auth::user()->region_id);
-            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' && !empty(\Auth::user()->branch_id)){
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)){
                 $tasks->where('deal_tasks.branch_id', \Auth::user()->branch_id);
             }else{
                 $tasks->where('deal_tasks.assigned_to', \Auth::user()->id);
             }
-           
             $filters = $this->TasksFilter();
-
             foreach ($filters as $column => $value) {
                 if ($column === 'subjects') {
-                    $tasks->whereIn('deal_tasks.name', $value);
+                    $tasks->whereIn('deal_tasks.id', $value);
                 } elseif ($column === 'assigned_to') {
-                    $tasks->whereIn('assigned_to', $value);
-                } elseif ($column === 'created_by') {
-                    $tasks->whereIn('deal_tasks.brand_id', $value);
+                    $tasks->where('assigned_to', $value);
+                } elseif ($column === 'brand_id') {
+                    $tasks->where('deal_tasks.brand_id', $value);
+                }elseif ($column === 'region_id') {
+                    $tasks->where('deal_tasks.region_id', $value);
+                }elseif ($column === 'branch_id') {
+                    $tasks->where('deal_tasks.branch_id', $value);
                 } elseif ($column == 'due_date') {
                     $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
                 }elseif ($column == 'status') {
-                    $tasks->where('status',$value);
+                    if(gettype($value) == 'array'){
+                        if(in_array(2, $value)){
+                            $tasks->where('status', 0)->whereDate('deal_tasks.due_date', '<', now());
+                        }else{
+                            $tasks->whereIn('status', $value);
+                        }
+                    }else{
+                        if($value == 2){
+                            $tasks->where('status', 0)->whereDate('deal_tasks.due_date', '<', now());
+                        }else{
+                            $tasks->where('status', $value);
+                        }
+                    }
+                }elseif ($column == 'created_at_from') {
+                    $tasks->whereDate('deal_tasks.created_at', '>=', $value);
+                }elseif ($column == 'created_at_to') {
+                    $tasks->whereDate('deal_tasks.created_at', '<=', $value);
                 }
             }
-
             if(!isset($_GET['status'])){
                 $tasks->where('status', 0);
             }
-
+            if (!empty($_GET['assigned_by_me']) && $_GET['assigned_by_me'] == true) {
+                $tasks->where('deal_tasks.created_by', \Auth::id());
+            }
             if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true' && isset($_GET['search']) && !empty($_GET['search'])) {
                 $g_search = $_GET['search'];
                 $tasks->Where('deal_tasks.name', 'like', '%' . $g_search . '%');
-              //  $tasks->orWhere('tasks.email', 'like', '%' . $g_search . '%');
+                $tasks->orWhere('brand.name', 'like', '%' . $g_search . '%');
+                $tasks->orWhere('users.name', 'like', '%' . $g_search . '%');
                 $tasks->orWhere('deal_tasks.due_date', 'like', '%' . $g_search . '%');
             }
-
-
             $total_records = $tasks->count();
-
-            $tasks = $tasks->orderBy('created_at', 'DESC')->skip($start)->take($num_results_on_page)->get();
-            $priorities = DealTask::$priorities;
+            $tasks = $tasks->orderBy('deal_tasks.created_at', 'DESC')->skip($start)->take($num_results_on_page)->get();
             $user_type = User::get()->pluck('type', 'id')->toArray();
             $users = User::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
-            $brands = User::where('type', 'company')->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
-            $branches = array();
-            $branches = Branch::orderBy('name', 'ASC')->get();
-
-            $assign_to = array();
-            if(\Auth::user()->type == 'super admin'){
-                $assign_to = User::whereNotIn('type', ['client', 'company', 'super admin', 'organization', 'team'])
-                ->orderBy('name', 'ASC')
-                ->pluck('name', 'id')->toArray();
-            }else{
-                $companies = FiltersBrands();
-                $brand_ids = array_keys($companies);
-
-                $assign_to = User::whereIn('brand_id', $brand_ids)->pluck('name', 'id')->toArray();
-            }
-
-
-
-            if (isset($_GET['ajaxCall']) && $_GET['ajaxCall'] == 'true') {
-                $html = view('deals.tasks_list_ajax',compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands'))->render();
-
+            $access_levels = accessLevel();
+            $filters = BrandsRegionsBranches();
+            $type = \Auth::user()->type;
+            if ($_GET['ajaxCall'] ?? false) {
                 return json_encode([
                     'status' => 'success',
-                    'html' => $html
+                    'html' => view('deals.tasks_list_ajax', compact('type', 'filters', 'access_levels', 'tasks', 'user_type', 'users', 'total_records'))->render()
                 ]);
             }
-
-
-            $filter = BrandsRegionsBranches();
-            // $companies = $filter['brands'];
-            // $regions = $filter['regions'];
-            // $branches = $filter['branches'];
-            // $employees = $filter['employees'];
-
-            return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'filter'));
+            $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'tasks')->get();
+            return view('deals.deal_tasks', compact('type','filters','access_levels','tasks', 'user_type', 'users', 'total_records', 'saved_filters'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -2929,6 +3542,17 @@ class DealController extends Controller
         return true;
     }
 
+    public function UpdateFromTaskDiscussion(Request $request)
+    {
+        $usr= \Auth::user();
+        $discussions = !empty($request->id) ? TaskDiscussion::find($request->id):'';
+        $html = view('deals.getDiscussionsFom', compact('discussions'))->render();
+        return json_encode([
+            'status' => 'success',
+            'html' => $html,
+            'message' => __('Message successfully added!')
+        ]);
+    }
     public function getTaskDetails()
     {
 
@@ -2938,7 +3562,7 @@ class DealController extends Controller
         $task = DealTask::FindOrFail($taskId);
 
         // if (\Auth::user()->type == 'super admin') {
-            
+
         // } else {
         //     $branches = Branch::where('created_by', \Auth::user()->id)->get()->pluck('name', 'id')->toArray();
         // }
@@ -2949,6 +3573,12 @@ class DealController extends Controller
         $users = User::get()->pluck('name', 'id')->toArray();
         $deals = Deal::get()->pluck('name', 'id')->toArray();
         $stages = Stage::get()->pluck('name', 'id')->toArray();
+        $universites = University::get()->pluck('name', 'id')->toArray();
+        $organizations = User::where('type', 'organization')->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+        $leads = Lead::where('branch_id', $task->branch_id)->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+        $deals = Deal::where('branch_id', $task->branch_id)->orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+        $toolkits = University::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
+        $applications = DealApplication::join('deals', 'deals.id', '=', 'deal_applications.deal_id')->where('deals.branch_id', $task->branch_id)->orderBy('deal_applications.name', 'ASC')->pluck('deal_applications.application_key', 'deal_applications.id')->toArray();
 
         $discussions = TaskDiscussion::select('task_discussions.id', 'task_discussions.comment', 'task_discussions.created_at', 'users.name', 'users.avatar')
             ->join('users', 'task_discussions.created_by', 'users.id')
@@ -2958,7 +3588,7 @@ class DealController extends Controller
             ->toArray();
             $log_activities = getLogActivity($taskId, 'task');
 
-        $html = view('deals.task_details', compact('task', 'branches', 'users', 'deals', 'stages','log_activities', 'discussions'))->render();
+        $html = view('deals.task_details', compact('applications','organizations','leads','deals','toolkits','universites','task', 'branches', 'users', 'deals', 'stages','log_activities', 'discussions'))->render();
 
         return json_encode([
             'status' => 'success',
@@ -3121,6 +3751,8 @@ class DealController extends Controller
 
         $deal_id = $_GET['deal_id'];
         $deal = Deal::where('id', $deal_id)->first();
+        $Brands = User::where('type', 'company')->pluck('name', 'id')->toArray();
+        $regions = Region::pluck('name', 'id')->toArray();
 
         if ($deal->is_active) {
 
@@ -3132,7 +3764,23 @@ class DealController extends Controller
             $users = User::get()->pluck('name', 'id')->toArray();
             $clientDeal = ClientDeal::where('deal_id', $deal->id)->first();
             $discussions = DealDiscussion::select('deal_discussions.id', 'deal_discussions.comment', 'deal_discussions.created_at', 'users.name', 'users.avatar')->join('users', 'deal_discussions.created_by', 'users.id')->where(['deal_id' => $deal->id])->orderBy('deal_discussions.created_by', 'DESC')->get()->toArray();
-            $notes = DealNote::where('deal_id', $deal->id)->orderBy('created_at', 'DESC')->get();
+
+            $notesQuery = DealNote::select('deal_notes.*')
+            ->join('deals', 'deals.id', '=', 'deal_notes.deal_id')
+            ->where('deal_notes.deal_id', $deal->id);
+
+            if (\Auth::user()->can('level 1')) {
+
+            } elseif (\Auth::user()->can('level 2')) {
+                $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+            } elseif (\Auth::user()->can('level 3')) {
+                $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+            } elseif (\Auth::user()->can('level 4')) {
+                $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+            } else {
+                $notesQuery->where('deal_notes.created_by', \Auth::user()->id);
+            }
+            $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
 
             $applications = DealApplication::where('deal_id', $deal->id)->get();
             $tasks = DealTask::where(['related_to' => $deal->id, 'related_type' => 'deal'])->orderBy('status')->get();
@@ -3141,7 +3789,24 @@ class DealController extends Controller
              //Getting lead stages history
              $stage_histories = StageHistory::where('type', 'deal')->where('type_id', $deal->id)->pluck('stage_id')->toArray();
 
-            $html = view('deals.deal_details', compact('deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories'))->render();
+             $lead = Lead::where('is_converted', $deal->id)->first();
+             $tags = [];
+
+             if (\Auth::check()) {
+                 $user = \Auth::user();
+
+                 if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                     $tags = LeadTag::pluck('id', 'tag')->toArray();
+                 } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                     $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+                 } elseif (in_array($user->type, ['Region Manager'])) {
+                     $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+                 } else {
+                     $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+                 }
+             }
+
+            $html = view('deals.deal_details', compact('tags','regions','Brands','deal', 'branches', 'organizations', 'universities', 'stages', 'applications', 'users', 'clientDeal', 'discussions', 'notes', 'tasks', 'log_activities', 'stage_histories', 'lead'))->render();
 
             return json_encode([
                 'status' => 'success',
@@ -3291,7 +3956,7 @@ class DealController extends Controller
         return json_encode([
             'status' => 'success',
             'html' => $html,
-            'message' => 'Lead ' . $name . ' updated successfully'
+            'message' => 'Admission ' . $name . ' updated successfully'
         ]);
     }
 
@@ -3352,7 +4017,7 @@ class DealController extends Controller
         return json_encode([
             'status' => 'success',
             'html' => $html,
-            'message' => 'Lead ' . $name . ' updated successfully'
+            'message' => 'Admission ' . $name . ' updated successfully'
         ]);
     }
 
@@ -3386,13 +4051,30 @@ class DealController extends Controller
 
 
         $id = $request->id;
-        if($request->note_id != null && $request->note_id != ''){
+        $note = DealNote::where('id', $request->note_id)->first();
+        if($request->note_id != null && $request->note_id != '' && !empty($note)){
             $note = DealNote::where('id', $request->note_id)->first();
             $note->title = $request->input('title');
             $note->description = $request->input('description');
             $note->update();
 
-            $notes = DealNote::where('deal_id', $id)->orderBy('created_at', 'DESC')->get();
+            $notesQuery = DealNote::select('deal_notes.*')
+            ->join('deals', 'deals.id', '=', 'deal_notes.deal_id')
+            ->where('deal_notes.deal_id', $id);
+
+            if (\Auth::user()->can('level 1')) {
+
+            } elseif (\Auth::user()->can('level 2')) {
+                $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+            } elseif (\Auth::user()->can('level 3')) {
+                $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+            } elseif (\Auth::user()->can('level 4')) {
+                $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+            } else {
+                $notesQuery->where('deal_notes.created_by', \Auth::user()->id);
+            }
+            $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
+
             $html = view('deals.getNotes', compact('notes'))->render();
 
             return json_encode([
@@ -3408,7 +4090,23 @@ class DealController extends Controller
         $note->deal_id = $id;
         $note->save();
 
-        $notes = DealNote::where('deal_id', $id)->orderBy('created_at', 'DESC')->get();
+        $notesQuery = DealNote::select('deal_notes.*')
+        ->join('deals', 'deals.id', '=', 'deal_notes.deal_id')
+        ->where('deal_notes.deal_id', $id);
+
+        if (\Auth::user()->can('level 1')) {
+
+        } elseif (\Auth::user()->can('level 2')) {
+            $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+        } elseif (\Auth::user()->can('level 3')) {
+            $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+        } elseif (\Auth::user()->can('level 4')) {
+            $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+        } else {
+            $notesQuery->where('deal_notes.created_by', \Auth::user()->id);
+        }
+        $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
+
         $html = view('deals.getNotes', compact('notes'))->render();
 
         return json_encode([
@@ -3468,7 +4166,22 @@ class DealController extends Controller
         $note = DealNote::where('id', $id)->first();
         $note->delete();
 
-        $notes = DealNote::where('deal_id', $request->deal_id)->orderBy('created_at', 'DESC')->get();
+        $notesQuery = DealNote::select('deal_notes.*')
+        ->join('deals', 'deals.id', '=', 'deal_notes.deal_id')
+        ->where('deal_notes.deal_id', $request->deal_id);
+
+        if (\Auth::user()->can('level 1')) {
+
+        } elseif (\Auth::user()->can('level 2')) {
+            $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+        } elseif (\Auth::user()->can('level 3')) {
+            $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+        } elseif (\Auth::user()->can('level 4')) {
+            $notesQuery->whereIn('deals.brand_id', array_keys(FiltersBrands()));
+        } else {
+            $notesQuery->where('deal_notes.created_by', \Auth::user()->id);
+        }
+        $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
         $html = view('leads.getNotes', compact('notes'))->render();
 
         return json_encode([
@@ -3497,6 +4210,7 @@ class DealController extends Controller
                         ]),
             'module_id' => $deal_id,
             'module_type' => 'deal',
+            'notification_type' => 'Deal Stage Updated'
         ];
         addLogActivity($data);
 
@@ -3525,12 +4239,26 @@ class DealController extends Controller
         $application = DealApplication::where('id', $id)->first();
         $stages = ApplicationStage::get()->pluck('name', 'id')->toArray();
         $universities = University::get()->pluck('name', 'id')->toArray();
+        $tags = [];
 
+        if (\Auth::check()) {
+            $user = \Auth::user();
+
+            if (in_array($user->type, ['super admin', 'Admin Team'])) {
+                $tags = LeadTag::pluck('id', 'tag')->toArray();
+            } elseif (in_array($user->type, ['Project Director', 'Project Manager', 'Admissions Officer'])) {
+                $tags = LeadTag::whereIn('brand_id', array_keys(FiltersBrands()))->pluck('id', 'tag')->toArray();
+            } elseif (in_array($user->type, ['Region Manager'])) {
+                $tags = LeadTag::where('region_id', $user->region_id)->pluck('id', 'tag')->toArray();
+            } else {
+                $tags = LeadTag::where('branch_id', $user->branch_id)->pluck('id', 'tag')->toArray();
+            }
+        }
         //Getting lead stages history
         $stage_histories = StageHistory::where('type', 'application')->where('type_id', $id)->pluck('stage_id')->toArray();
 
 
-        $html = view('deals.detail_application', compact('application', 'stages', 'universities', 'stage_histories'))->render();
+        $html = view('deals.detail_application', compact('tags','application', 'stages', 'universities', 'stage_histories'))->render();
         return json_encode([
             'status' => 'success',
             'app_id' => $application->id,
@@ -3560,6 +4288,7 @@ class DealController extends Controller
                             ]),
                 'module_id' => $task->deal_id,
                 'module_type' => 'deal',
+                'notification_type' => 'Task Updated'
             ];
             addLogActivity($data);
         }
@@ -3761,5 +4490,197 @@ class DealController extends Controller
         }
     }
 
+
+    public function downloadTasks(){
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->can('level 1')) {
+            $tasks = DealTask::select(['deal_tasks.*'])->join('users', 'users.id', '=', 'deal_tasks.assigned_to');
+
+            $companies = FiltersBrands();
+            $brand_ids = array_keys($companies);
+            if(\Auth::user()->type == 'super admin'){
+
+            }else if(\Auth::user()->type == 'company'){
+                $tasks->where('deal_tasks.brand_id', \Auth::user()->id);
+            }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')){
+                $tasks->whereIn('deal_tasks.brand_id', $brand_ids);
+            }else if(\Auth::user()->type == 'Regional Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)){
+                $tasks->where('deal_tasks.region_id', \Auth::user()->region_id);
+            }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)){
+                $tasks->where('deal_tasks.branch_id', \Auth::user()->branch_id);
+            }else{
+                $tasks->where('deal_tasks.assigned_to', \Auth::user()->id);
+            }
+
+            $filters = $this->TasksFilter();
+
+            foreach ($filters as $column => $value) {
+                if ($column === 'subjects') {
+                    $tasks->whereIn('deal_tasks.name', $value);
+                } elseif ($column === 'assigned_to') {
+                    $tasks->whereIn('assigned_to', $value);
+                } elseif ($column === 'created_by') {
+                    $tasks->whereIn('deal_tasks.brand_id', $value);
+                } elseif ($column == 'due_date') {
+                    $tasks->whereDate('due_date', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                }elseif ($column == 'status') {
+                    $tasks->where('status',$value);
+                }
+            }
+
+            if(!isset($_GET['status'])){
+                $tasks->where('status', 0);
+            }
+
+
+            if(isset($_GET['search']) && !empty($_GET['search'])){
+                $g_search = $_GET['search'];
+                $tasks->Where('deal_tasks.name', 'like', '%' . $g_search . '%');
+              //  $tasks->orWhere('tasks.email', 'like', '%' . $g_search . '%');
+                $tasks->orWhere('deal_tasks.due_date', 'like', '%' . $g_search . '%');
+            }
+
+            $tasks = $tasks->orderBy('created_at', 'DESC')->get();
+            $all_users = allUsers();
+
+            //header
+            $header = [
+                'Sr.No.',
+                'Subject',
+                'Assigned to',
+                'Brand',
+                'Status'
+            ];
+
+            $data = [];
+            foreach($tasks as $key => $task){
+                $data[] = [
+                    'sr' => $key + 1,
+                    'Subject' => $task->name,
+                    'Assigned To' => $all_users[$task->assigned_to] ?? '',
+                    'Brand' => $all_users[$task->brand_id] ?? '',
+                    'Status' => ($task->status == 1) ? 'Completed' : 'On Going'
+                ];
+            }
+
+
+
+            downloadCSV($header, $data, 'tasks.csv');
+            return true;
+            //return view('deals.deal_tasks', compact('tasks','assign_to','branches', 'priorities', 'user_type', 'users', 'total_records', 'brands', 'filter', 'saved_filters'));
+        } else {
+            return redirect()->back()->with('error', __('Permission Denied.'));
+        }
+    }
+
+    public function download(){
+        //whole query
+        $filters = $this->dealFilters();
+        $deals_query = Deal::select('deals.*')->join('user_deals', 'user_deals.deal_id', '=', 'deals.id');
+        $companies = FiltersBrands();
+        $brand_ids = array_keys($companies);
+
+        if(\Auth::user()->type == 'super admin'  || \Auth::user()->type == 'Admin Team' || \Auth::user()->can('level 1')){
+
+        }else if(\Auth::user()->type == 'company'){
+            $deals_query->where('brand_id', \Auth::user()->id);
+        }else if(\Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager' || \Auth::user()->can('level 2')){
+            $deals_query->whereIn('brand_id', $brand_ids);
+        }else if(\Auth::user()->type == 'Region Manager' || \Auth::user()->can('level 3') && !empty(\Auth::user()->region_id)){
+            $deals_query->where('region_id', \Auth::user()->region_id);
+        }else if(\Auth::user()->type == 'Branch Manager' || \Auth::user()->type == 'Admissions Officer' || \Auth::user()->type == 'Admissions Manager' || \Auth::user()->type == 'Marketing Officer' || \Auth::user()->can('level 4') && !empty(\Auth::user()->branch_id)){
+            $deals_query->where('branch_id', \Auth::user()->branch_id);
+        }else{
+            $deals_query->where('assigned_to', \Auth::user()->id);
+        }
+
+
+        foreach ($filters as $column => $value) {
+            if ($column === 'name') {
+                $deals_query->whereIn('name', $value);
+            } elseif ($column === 'stage_id') {
+                $deals_query->whereIn('stage_id', $value);
+            } elseif ($column == 'users') {
+                $deals_query->whereIn('created_by', $value);
+            } elseif ($column == 'created_at') {
+                $deals_query->whereDate('deals.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+            }
+        }
+
+        //if list global search
+        if (isset($_GET['search']) && !empty($_GET['search'])) {
+            $g_search = $_GET['search'];
+            $deals_query->Where('deals.name', 'like', '%' . $g_search . '%');
+            //$deals_query->orWhere('deals.email', 'like', '%' . $g_search . '%');
+            $deals_query->orWhere('deals.phone', 'like', '%' . $g_search . '%');
+        }
+
+
+        $deals_query->orderBy('deals.id', 'DESC');
+        $deals = $deals_query->get();
+
+        $stages = Stage::get()->pluck('name', 'id')->toArray();
+        $brands = $companies;
+        $users = allUsers();
+        $sources = Source::get()->pluck('name', 'id')->toArray();
+
+
+        $header = [
+            'Sr.No.',
+            'Name',
+            'Passport',
+            'Stage',
+            'Intake',
+            'Assigned to'
+        ];
+
+        $data = [];
+        foreach($deals as $key => $deal){
+            $client = \App\Models\User::join('client_deals', 'client_deals.client_id', 'users.id')->where('client_deals.deal_id', $deal->id)->first();
+            $passport_number = isset($client->passport_number) ? $client->passport_number : '';
+            $month = !empty($deal->intake_month) ? $deal->intake_month : 'January';
+            $year = !empty($deal->intake_year) ? $deal->intake_year : '2023';
+
+            $data[] = [
+                'sr_no' => $key+1,
+                'name' => $deal->name,
+                'passport_number' => $passport_number,
+                'stage' => $stages[$deal->stage_id] ?? '',
+                'intake' => $month.' 1 ,'.$year,
+                'assigned_to' => $users[$deal->assigned_to] ?? ''
+            ];
+        }
+
+
+        downloadCSV($header, $data, 'deals.csv');
+        return true;
+
+    }
+
+    public function addTags(Request $request)
+    {
+        $ids = explode(',', $request->selectedIds);
+        $Leads = Deal::whereIn('id', $ids)->get();
+        if(!empty($ids) && !empty($Leads) && $Leads->count() > 0){
+                foreach ($Leads as $Lead) {
+                    $Lead->tag_ids = $Lead->tag_ids ? $Lead->tag_ids . ',' . $request->tagid : $request->tagid;
+                    $Lead->save();
+                }
+            return json_encode([
+                    'status' => 'success',
+                    'msg' => 'Tag added successfully'
+            ]);
+      }
+    }
+
+    public function UpdateFromDealsNoteForm(Request $request)
+    {
+        $note = DealNote::where('id', $request->id)->first();
+        $html = view('deals.getNotesForm', compact('note'))->render();
+        return json_encode([
+            'status' => 'success',
+            'html' => $html,
+            'message' =>  __('Notes added successfully')
+        ]);
+    }
 
 }

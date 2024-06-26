@@ -1,5 +1,5 @@
-{{ Form::open(['route' => ['deals.application.update',$application->id], 'id' => 'updating-application']) }}
-<div class="modal-body" style="min-height: 65vh;">
+{{ Form::open(['route' => ['deals.application.update',$application->id], 'method' => 'POST', 'id' => 'updating-application']) }}
+<div class="modal-body">
     <div class="row">
 
         <div class="col-6 form-group py-0">
@@ -16,17 +16,25 @@
             {{ Form::label('application_key', __('Application ID'), ['class' => 'form-label']) }}
             {{ Form::text('application_key', $application->external_app_id, ['class' => 'form-control', 'style' => 'height: 45px;']) }}
         </div>
-
+        <div class="col-6 form-group py-0">
+            {{ Form::label('tag', __('Tages'), ['class' => 'form-label']) }}
+            <select class="form-control select2" multiple id="choice-4232" name="tag_ids[]">
+                <option value="">Select tage</option>
+                @foreach ($tags as $key => $tag)
+                  <option value="{{ $tag }}" {{ in_array($tag, explode(',', $application->tag_ids)) ? 'selected' : '' }}>{{ $key }}</option>
+                @endforeach
+            </select>
+        </div>
         <div class="col-6 form-group py-0">
             {{ Form::label('intake', __('Intake'), ['class' => 'form-label']) }}
             <div class="intake_month_div" id="intake_month_div">
                 <select name="intake_month" class="form form-control" id="intake_month">
                     <option value="">Select months</option>
                     @if(isset($application) && isset($application->intake))
-                        @php
-                            $selectedValue = date('Y-m', strtotime($application->intake));
-                        @endphp
-                        <option value="{{ $selectedValue }}" selected>{{ date('F', strtotime($application->intake)) }}</option>
+                        @foreach($IntakeMonths as $key => $IntakeMonth)
+                            @php $selectedValue = $application->intake == $key ? 'selected' : ''; @endphp
+                            <option value="{{ $key }}" {{ $selectedValue }}>{{ $IntakeMonth }}</option>
+                        @endforeach
                     @endif
                 </select>
 
@@ -53,6 +61,7 @@
 
 <script>
     $("#updating-application").on("submit", function(e) {
+       
                 e.preventDefault();
                 var formData = $(this).serialize();
                 var url = $(this).attr('action');

@@ -32,7 +32,7 @@
                     <h3>Manage Deduction Option</h3>
                     @can('create document type')
                     <div class="float-end">
-                        <a href="#" data-size="md" data-url="{{ route('deductionoption.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn btn-sm btn-dark">
+                        <a href="#" data-size="md" data-url="{{ route('deductionoption.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Deduction Option')}}" class="btn btn-sm btn-dark">
                             <i class="ti ti-plus"></i>
                         </a>
                     </div>
@@ -55,7 +55,7 @@
                                     <td>
                                         @can('edit deduction option')
                                             <div class="action-btn  ms-2">
-                                                <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para" data-url="{{ URL::to('deductionoption/'.$deductionoption->id.'/edit') }}" data-ajax-popup="true" data-title="{{__('Edit Deduction Option')}}" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
+                                                <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center" data-url="{{ URL::to('deductionoption/'.$deductionoption->id.'/edit') }}" data-ajax-popup="true" data-title="{{__('Edit Deduction Option')}}" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
                                                     <i class="ti ti-pencil text-white"></i>
                                                 </a>
                                             </div>

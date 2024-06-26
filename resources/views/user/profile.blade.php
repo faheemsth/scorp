@@ -55,6 +55,18 @@
                     {{Form::model($userDetail,array('route' => array('update.account'), 'method' => 'post', 'enctype' => "multipart/form-data"))}}
                         @csrf
                         <div class="row">
+                            <div class="col-md-6">
+                                <a class="nav-link"  id="userDropdown" >
+                                    @if (\Auth::user()->avatar == null || \Auth::user()->avatar == '')
+                                        <img class="img-profile rounded-3" src="{{ asset('assets/images/user/default.jpg') }}"  width="150" height="150"
+                                            alt="Default Avatar">
+                                    @else
+                                        <img class="img-profile rounded-3" src="{{ asset('storage/uploads/avatar') . '/' . Auth::user()->avatar }}" width="150" height="150" alt="User Avatar">
+                                    @endif
+                               </a>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-lg-6 col-sm-6">
                                 <div class="form-group">
                                     <label class="col-form-label text-dark">{{__('Name')}}</label>

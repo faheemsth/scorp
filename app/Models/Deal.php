@@ -20,6 +20,8 @@ class Deal extends Model
         'permissions',
         'status',
         'is_active',
+        'branch_id',
+        'assigned_to'
     ];
 
     public static $permissions = [

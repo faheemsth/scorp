@@ -63,7 +63,7 @@
                                             @can('edit department')
                                             <div class="action-btn ms-2">
 
-                                                <a href="#" data-url="{{ URL::to('department/'.$department->id.'/edit') }}"  data-ajax-popup="true" data-title="{{__('Edit Department')}}" class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
+                                                <a href="#" data-url="{{ URL::to('department/'.$department->id.'/edit') }}"  data-ajax-popup="true" data-title="{{__('Edit Department')}}" class="btn btn-sm btn-dark mx-1 align-items-center " data-bs-toggle="tooltip" title="{{__('Edit Department')}}" data-original-title="{{__('Edit')}}">
                                                     <i class="ti ti-pencil text-white"></i></a>
                                             </div>
                                                 @endcan

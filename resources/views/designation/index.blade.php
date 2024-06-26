@@ -34,7 +34,7 @@
                     @can('create designation')
                         <div class="float-end">
                             <a href="#" data-size="md" data-url="{{ route('designation.create') }}" data-ajax-popup="true"
-                                data-bs-toggle="tooltip" title="{{ __('Create New Sources') }}" class="btn btn-sm btn-dark">
+                                data-bs-toggle="tooltip" title="{{ __('Create New Designation') }}" class="btn btn-sm btn-dark">
                                 <i class="ti ti-plus"></i>
                             </a>
                         </div>
@@ -66,10 +66,10 @@
 
                                                 @can('edit designation')
                                                     <div class="action-btn ms-2">
-                                                        <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para"
+                                                        <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center "
                                                             data-url="{{ route('designation.edit', $designation->id) }}"
                                                             data-ajax-popup="true" data-title="{{ __('Edit Designation') }}"
-                                                            data-toggle="tooltip" data-original-title="{{ __('Edit') }}">
+                                                            data-toggle="tooltip" data-original-title="{{ __('Edit Designation') }}">
                                                             <i class="ti ti-pencil text-white"></i>
                                                         </a>
                                                     </div>

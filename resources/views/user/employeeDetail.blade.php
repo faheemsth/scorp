@@ -79,7 +79,7 @@
             <div class="lead-topbar d-flex flex-wrape justify-content-between align-items-center p-2">
                 <div class="d-flex align-items-center">
                     <div class="lead-avator">
-                        <img src="{{ asset('assets/images/placeholder-lead.png') }}" alt="" class="">
+                        <img src="{{ asset('assets/images/placeholder-lead.png') }}" alt="" style="width:50px; height:50px;" class="">
                     </div>
 
                     <div class="lead-basic-info">
@@ -92,6 +92,18 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-1 me-3">
+                    <a href="{{ url('hrm-leaves').'?emp_id='.$employee->id }}" class="btn px-2 py-2 btn-dark text-white" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
+                        <i class="ti ti-user"></i>
+                    </a>
+
+                    @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
+                    <a href="#" data-size="lg"
+                        data-url="{{ route('user.show.edit', $employee->id) }}" data-ajax-popup="true"
+                        data-bs-toggle="tooltip" title="{{ __('Convert') }}"
+                        class="btn px-2 py-2 btn-dark text-white">
+                        <i class="ti ti-exchange"></i>
+                    </a>
+                    @endif
                     @can('edit employee')
                     <a href="#!" data-size="lg" data-url="{{ route('user.employee.edit', $employee->id) }}" data-ajax-popup="true" class="btn px-2 py-2 btn-dark text-white" data-bs-original-title="{{__('Edit Employee')}}" data-bs-toggle="tooltip" title="{{ __('Edit Employee') }}">
                     <i class="ti ti-pencil"></i>
@@ -153,6 +165,24 @@
 
                                                     <table>
                                                         <tbody>
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Image') }}
+                                                                </td>
+                                                                <td style="padding-left: 10px; font-size: 14px;">
+                                                                    <a class="nav-link"  id="userDropdown" >
+                                                                        @if ($employee->avatar == null || $employee->avatar == '')
+                                                                            <img class="img-profile rounded-3" src="{{ asset('assets/images/user/default.jpg') }}"  width="80" height="80"
+                                                                                alt="Default Avatar">
+                                                                        @else
+                                                                            <img class="img-profile rounded-3" src="{{ asset('storage/uploads/avatar') . '/' . $employee->avatar }}" width="80" height="80" alt="User Avatar">
+                                                                        @endif
+                                                                   </a>
+                                                                </td>
+
+                                                            </tr>
+
                                                             <tr>
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Record ID') }}
@@ -176,7 +206,7 @@
                                                                     {{ __('Email') }}
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
-                                                                     {{ $employee->email }}
+                                                                   <a href="{{ $employee->email }}" target="_blank" >{{ $employee->email }}</a>
                                                                 </td>
                                                             </tr>
 
@@ -186,6 +216,16 @@
                                                                 </td>
                                                                 <td class="" style="padding-left: 10px; font-size: 14px;">
                                                                      {{ $employee->phone }}
+                                                                </td>
+                                                            </tr>
+
+
+                                                            <tr>
+                                                                <td class="" style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Date of Birth') }}
+                                                                </td>
+                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                     {{ $employee->dob }}
                                                                 </td>
                                                             </tr>
 
@@ -209,7 +249,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' ? 'd-none' : ''}}">
+                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' || \Auth::user()->can('level 2') ? 'd-none' : ''}}">
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Region') }}
                                                                 </td>
@@ -218,7 +258,7 @@
                                                                 </td>
                                                             </tr>
 
-                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' || $employee->type == 'Region Manager'? 'd-none' : ''}}">
+                                                            <tr class="{{ $employee->type == 'Project Director' || $employee->type == 'Project Manager' || $employee->type == 'Region Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3')? 'd-none' : ''}}">
                                                                 <td class="" style="width: 100px; font-size: 14px;">
                                                                     {{ __('Branch') }}
                                                                 </td>

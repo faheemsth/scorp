@@ -26,7 +26,7 @@ class DepartmentController extends Controller
     {
         if(\Auth::user()->can('create department'))
         {
-            $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+            $branch = GetAllbrachesByPermission()->pluck('name', 'id');
 
             return view('department.create', compact('branch'));
         }
@@ -79,7 +79,7 @@ class DepartmentController extends Controller
         {
             if($department->created_by == \Auth::user()->creatorId())
             {
-                $branch = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
+                $branch = GetAllbrachesByPermission()->pluck('name', 'id');
 
                 return view('department.edit', compact('department', 'branch'));
             }

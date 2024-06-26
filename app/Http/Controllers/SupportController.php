@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewNotification;
+use App\Events\SupportTicketCreated;
 use App\Models\Employee;
+use App\Models\Notification;
 use App\Models\Support;
 use App\Models\SupportReply;
 use App\Models\Ticket;
@@ -15,10 +18,20 @@ class SupportController extends Controller
 {
     public function index()
     {
-        
         if(\Auth::user()->type == 'super admin')
-        {
-            $supports = Support::get();
+        {       
+            
+            $support_query = Support::query();
+            if(isset($_GET['type'])){
+                if($_GET['type'] == 'open'){
+                    $support_query->where('status', 'open');
+                }else if($_GET['type'] == 'hold'){
+                    $support_query->where('status', 'on hold');
+                }else if($_GET['type'] == 'close'){
+                    $support_query->where('status', 'close');
+                }
+            }
+            $supports = $support_query->get();
             $countTicket      = Support::count();
             $countOpenTicket  = Support::where('status', '=', 'open')->count();
             $countonholdTicket  = Support::where('status', '=', 'on hold')->count();
@@ -26,7 +39,21 @@ class SupportController extends Controller
             return view('support.index', compact('supports','countTicket','countOpenTicket','countonholdTicket','countCloseTicket'));
         }else if(\Auth::user()->type == 'company')
         {
-            $supports = Support::where('created_by', \Auth::user()->creatorId())->get();
+            //$supports = Support::where('created_by', \Auth::user()->creatorId())->get();
+            
+            $support_query = Support::where('created_by', '=', \Auth::user()->creatorId());
+
+            if(isset($_GET['type'])){
+                if($_GET['type'] == 'open'){
+                    $support_query->where('status', 'open');
+                }else if($_GET['type'] == 'hold'){
+                    $support_query->where('status', 'on hold');
+                }else if($_GET['type'] == 'close'){
+                    $support_query->where('status', 'close');
+                }
+            }
+            $supports = $support_query->get();
+
             $countTicket      = Support::where('created_by', '=', \Auth::user()->creatorId())->count();
             $countOpenTicket  = Support::where('status', '=', 'open')->where('created_by', '=', \Auth::user()->creatorId())->count();
             $countonholdTicket  = Support::where('status', '=', 'on hold')->where('created_by', '=', \Auth::user()->creatorId())->count();
@@ -35,7 +62,21 @@ class SupportController extends Controller
         }
         elseif(\Auth::user()->type == 'client')
         {
-            $supports = Support::where('user', \Auth::user()->id)->orWhere('ticket_created', \Auth::user()->id)->get();
+           // $supports = Support::where('user', \Auth::user()->id)->orWhere('ticket_created', \Auth::user()->id)->get();
+            
+            $support_query = Support::where('ticket_created', \Auth::user()->id);
+
+            if(isset($_GET['type'])){
+                if($_GET['type'] == 'open'){
+                    $support_query->where('status', 'open');
+                }else if($_GET['type'] == 'hold'){
+                    $support_query->where('status', 'on hold');
+                }else if($_GET['type'] == 'close'){
+                    $support_query->where('status', 'close');
+                }
+            }
+            $supports = $support_query->get();
+            
             $countTicket      = Support::where('created_by', '=', \Auth::user()->creatorId())->count();
             $countOpenTicket  = Support::where('status', '=', 'open')->where('created_by', '=', \Auth::user()->creatorId())->count();
             $countonholdTicket  = Support::where('status', '=', 'on hold')->where('created_by', '=', \Auth::user()->creatorId())->count();
@@ -43,7 +84,20 @@ class SupportController extends Controller
             return view('support.index', compact('supports','countTicket','countOpenTicket','countonholdTicket','countCloseTicket'));
         } elseif(\Auth::user()->type == 'sth_team')
         {
-            $supports = Support::where('user', \Auth::user()->id)->get();
+            $support_query = Support::where('ticket_created', \Auth::user()->id);
+
+            if(isset($_GET['type'])){
+                if($_GET['type'] == 'open'){
+                    $support_query->where('status', 'open');
+                }else if($_GET['type'] == 'hold'){
+                    $support_query->where('status', 'on hold');
+                }else if($_GET['type'] == 'close'){
+                    $support_query->where('status', 'close');
+                }
+            }
+            $supports = $support_query->get();
+
+            //$supports = Support::where('user', \Auth::user()->id)->get();
             $countTicket      = Support::where('created_by', '=', \Auth::user()->creatorId())->count();
             $countOpenTicket  = Support::where('status', '=', 'open')->where('created_by', '=', \Auth::user()->creatorId())->count();
             $countonholdTicket  = Support::where('status', '=', 'on hold')->where('created_by', '=', \Auth::user()->creatorId())->count();
@@ -53,11 +107,25 @@ class SupportController extends Controller
         else
         {
 
-            $supports = Support::where('user', \Auth::user()->id)->orWhere('ticket_created', \Auth::user()->id)->get();
-            $countTicket      = Support::where('created_by', '=', \Auth::user()->creatorId())->count();
-            $countOpenTicket  = Support::where('status', '=', 'open')->where('created_by', '=', \Auth::user()->creatorId())->count();
-            $countonholdTicket  = Support::where('status', '=', 'on hold')->where('created_by', '=', \Auth::user()->creatorId())->count();
-            $countCloseTicket = Support::where('status', '=', 'close')->where('created_by', '=', \Auth::user()->creatorId())->count();
+           // $supports = Support::where('user', \Auth::user()->id)->orWhere('ticket_created', \Auth::user()->id)->get();
+          
+           $support_query = Support::where('ticket_created', \Auth::user()->id);
+
+            if(isset($_GET['type'])){
+                if($_GET['type'] == 'open'){
+                    $support_query->where('status', 'open');
+                }else if($_GET['type'] == 'hold'){
+                    $support_query->where('status', 'on hold');
+                }else if($_GET['type'] == 'close'){
+                    $support_query->where('status', 'close');
+                }
+            }
+            $supports = $support_query->get();
+
+            $countTicket      = Support::where('ticket_created', '=', \Auth::user()->id)->count();
+            $countOpenTicket  = Support::where('status', '=', 'open')->where('ticket_created', '=', \Auth::user()->id)->count();
+            $countonholdTicket  = Support::where('status', '=', 'on hold')->where('ticket_created', '=', \Auth::user()->id)->count();
+            $countCloseTicket = Support::where('status', '=', 'close')->where('ticket_created', '=', \Auth::user()->id)->count();
             return view('support.index', compact('supports','countTicket','countOpenTicket','countonholdTicket','countCloseTicket'));
         }
 
@@ -137,6 +205,9 @@ class SupportController extends Controller
         }
 
         $support->save();
+
+
+        event(new SupportTicketCreated($support));
 
 
 

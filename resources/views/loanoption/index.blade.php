@@ -33,7 +33,7 @@
                     @can('create loan option')
                         <div class="float-end">
                             <a href="#" data-size="md" data-url="{{ route('loanoption.create') }}" data-ajax-popup="true"
-                                data-bs-toggle="tooltip" title="{{ __('Create New Sources') }}" class="btn btn-sm btn-dark">
+                                data-bs-toggle="tooltip" title="{{ __('Create New Loan Option') }}" class="btn btn-sm btn-dark">
                                 <i class="ti ti-plus"></i>
                             </a>
                         </div>
@@ -57,10 +57,10 @@
                                             @can('edit loan option')
                                                 <div class="action-btn  ms-2">
                                                     <a href="#"
-                                                        class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para"
+                                                        class="btn btn-sm btn-dark mx-1 align-items-center"
                                                         data-url="{{ URL::to('loanoption/' . $loanoption->id . '/edit') }}"
                                                         data-ajax-popup="true" data-title="{{ __('Edit Loan Option') }}"
-                                                        data-bs-toggle="tooltip" title="{{ __('Edit') }}"
+                                                        data-bs-toggle="tooltip" title="{{ __('Edit Loan Option') }}"
                                                         data-original-title="{{ __('Edit') }}">
                                                         <i class="ti ti-pencil text-white"></i>
                                                     </a>

@@ -16,6 +16,7 @@ use App\Models\IpRestrict;
 use Illuminate\Http\Request;
 use App\Models\EmailTemplate;
 use App\Models\JoiningLetter;
+use App\Models\EmailTemplateLang;
 use Illuminate\Support\Facades\DB;
 use App\Models\GenerateOfferLetter;
 use Illuminate\Support\Facades\Auth;
@@ -35,7 +36,7 @@ class SystemController extends Controller
 
             $stages = LeadStage::select('lead_stages.*')->join('pipelines', 'pipelines.id', '=', 'lead_stages.pipeline_id')->orderBy('lead_stages.order')->get()->pluck('name', 'id');
             $deal_stage = DB::table('settings')->where('name', '=', 'deal_stage' )->first();
-           
+
             return view('settings.index', compact('settings','admin_payment_setting', 'stages', 'deal_stage'));
         }
         else
@@ -576,26 +577,91 @@ class SystemController extends Controller
             $company_payment_setting = Utility::getCompanyPaymentSetting(\Auth::user()->creatorId());
 
             $EmailTemplates = EmailTemplate::all();
-            $ips = IpRestrict::where('created_by', \Auth::user()->creatorId())->get();
+            $ips = IpRestrict::get();
             // $languages = Utility::languages();
+            $EmailMarketing = EmailTemplateLang::where('subject', 'Email Marketing')->where('lang', 'en')->first();
+
+
 
             //offer letter
-            $Offerletter=GenerateOfferLetter::all();
-            $currOfferletterLang = GenerateOfferLetter::where('created_by',  \Auth::user()->id)->where('lang', $offerlang)->first();
+            $Offerletter=GenerateOfferLetter::where('lang', 'en')->get();
+            $currOfferletterLang = GenerateOfferLetter::where('lang', $offerlang)->first();
 
             //joining letter
-            $Joiningletter=JoiningLetter::all();
-            $currjoiningletterLang = JoiningLetter::where('created_by',  \Auth::user()->id)->where('lang', $joininglang)->first();
+            $Joiningletter=JoiningLetter::where('lang', 'en')->get();
+            $currjoiningletterLang = JoiningLetter::where('lang', $joininglang)->first();
 
             //Experience Certificate
-            $experience_certificate=ExperienceCertificate::all();
-            $curr_exp_cetificate_Lang = ExperienceCertificate::where('created_by',  \Auth::user()->id)->where('lang', $explang)->first();
+            $experience_certificate=ExperienceCertificate::where('lang', 'en')->get();
+            $curr_exp_cetificate_Lang = ExperienceCertificate::where('lang', $explang)->first();
 
             //NOC
-            $noc_certificate=NOC::all();
-            $currnocLang = NOC::where('created_by',  \Auth::user()->id)->where('lang', $noclang)->first();
+            $noc_certificate=NOC::where('lang', 'en')->get();
+            $currnocLang = NOC::where('lang', $noclang)->first();
 
-            return view('settings.company', compact('settings','company_payment_setting','timezones', 'ips','EmailTemplates','currOfferletterLang','Offerletter','offerlang','Joiningletter','currjoiningletterLang','joininglang','experience_certificate','curr_exp_cetificate_Lang','explang','noc_certificate','currnocLang','noclang'));
+            return view('settings.company', compact('settings','company_payment_setting','timezones', 'ips','EmailTemplates','currOfferletterLang','Offerletter','offerlang','Joiningletter','currjoiningletterLang','joininglang','experience_certificate','curr_exp_cetificate_Lang','explang','noc_certificate','currnocLang','noclang', 'EmailMarketing'));
+        }
+        else
+        {
+            return redirect()->back()->with('error', 'Permission denied.');
+        }
+    }
+
+    public function SettingOfferlatter(Request $request )
+    {
+        if(\Auth::user()->can('manage company settings'))
+        {
+
+            if($request->offerlangs){
+                $offerlang = $request->offerlangs;
+            }else{
+                $offerlang = "en";
+            }
+            if($request->joininglangs){
+                $joininglang = $request->joininglangs;
+            }else{
+                $joininglang = "en";
+            }
+            if($request->explangs){
+                $explang = $request->explangs;
+            }else{
+                $explang = "en";
+            }
+            if($request->noclangs){
+                $noclang = $request->noclangs;
+            }else{
+                $noclang = "en";
+            }
+
+
+            $settings                = Utility::settings();
+            $timezones               = config('timezones');
+            $company_payment_setting = Utility::getCompanyPaymentSetting(\Auth::user()->creatorId());
+
+            $EmailTemplates = EmailTemplate::all();
+            $ips = IpRestrict::get();
+            // $languages = Utility::languages();
+            $EmailMarketing = EmailTemplateLang::where('subject', 'Email Marketing')->where('lang', 'en')->first();
+
+
+
+            //offer letter
+            $Offerletter=GenerateOfferLetter::where('lang', 'en')->get();
+            $currOfferletterLang = GenerateOfferLetter::where('lang', $offerlang)->first();
+
+            //joining letter
+            $Joiningletter=JoiningLetter::where('lang', 'en')->get();
+            $currjoiningletterLang = JoiningLetter::where('lang', $joininglang)->first();
+
+            //Experience Certificate
+            $experience_certificate=ExperienceCertificate::where('lang', 'en')->get();
+            $curr_exp_cetificate_Lang = ExperienceCertificate::where('lang', $explang)->first();
+
+            //NOC
+            $noc_certificate=NOC::where('lang', 'en')->get();
+            $currnocLang = NOC::where('lang', $noclang)->first();
+
+            return view('settings.SettingOfferlatter', compact('settings','company_payment_setting','timezones', 'ips','EmailTemplates','currOfferletterLang','Offerletter','offerlang','Joiningletter','currjoiningletterLang','joininglang','experience_certificate','curr_exp_cetificate_Lang','explang','noc_certificate','currnocLang','noclang', 'EmailMarketing'));
         }
         else
         {
@@ -1485,13 +1551,13 @@ class SystemController extends Controller
     public function offerletterupdate($lang, Request $request)
     {
         $user = GenerateOfferLetter::updateOrCreate(['lang' =>$lang,'created_by' =>  \Auth::user()->id],['content' => $request->content]);
-
-        return response()->json(
-            [
-                'is_success' => true,
-                'success' => __('Offer Letter successfully saved!'),
-            ], 200
-        );
+        return redirect()->back()->with('success', 'Offer Letter successfully updated.');
+        // return response()->json(
+        //     [
+        //         'is_success' => true,
+        //         'success' => __('Offer Letter successfully saved!'),
+        //     ], 200
+        // );
 
     }
     public function joiningletterupdate($lang, Request $request)
@@ -1546,7 +1612,7 @@ class SystemController extends Controller
             $messages = $validator->getMessageBag();
             return redirect()->back()->with('error', $messages->first());
         }
-            
+
         $deal_stage = DB::table('settings')->where('name', '=', 'deal_stage' )->first();
         if(!$deal_stage){
             DB::table('settings')->insert([

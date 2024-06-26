@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Branch;
 use App\Models\Region;
 use App\Models\University;
-use App\Models\User;
+use App\Models\SavedFilter;
 use Illuminate\Http\Request;
 
 class RegionController extends Controller
@@ -13,7 +14,7 @@ class RegionController extends Controller
     public function index()
     {
 
-        $num_results_on_page = 25;
+        $num_results_on_page = env("RESULTS_ON_PAGE");
 
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
@@ -47,43 +48,33 @@ class RegionController extends Controller
                         ->orwhere('manager.name', 'like', '%'.$g_search.'%')
                         ->orwhere('brand.name', 'like', '%'.$g_search.'%');
         }
-        
-        if (\Auth::user()->type == 'super admin') {
 
-            $regions = Region::skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
-            $total_records = Region::count();
+        if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR') {
+
         } else if (\Auth::user()->type == 'company') {
-            $total_records = Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->count();
-           // $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id])->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);;
-            $region_query->whereRaw('FIND_IN_SET(?, brands)', [\Auth::user()->id]);
+            $region_query->where('brands', \Auth::user()->id);
         } else {
-
-
             $companies = FiltersBrands();
             $brand_ids = array_keys($companies);
-
-           // $region_query = Region::query();
-
-            foreach ($brand_ids as $brandId) {
-                $region_query->orWhereRaw('FIND_IN_SET(?, brands)', [$brandId]);
-            }
-           // $total_records = $region_query->count();
-            //$regions = $region_query->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
+            $region_query->whereIn('brands', $brand_ids);
         }
 
 
         $total_records = $region_query->count();
         $regions = $region_query->skip($start)->take($num_results_on_page)->orderBy('name', 'ASC')->paginate($num_results_on_page);
         $users = allUsers();
+        $saved_filters = SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'region')->get();
 
         //filter brand, region, employees
         $filter = BrandsRegionsBranches();
+
 
         $data = [
             'regions' => $regions,
             'users' => $users,
             'total_records' => $total_records,
-            'filter' => $filter
+            'filter' => $filter,
+            'saved_filters' => $saved_filters
         ];
 
 
@@ -92,7 +83,7 @@ class RegionController extends Controller
             $html = view('region.regionAjax', $data)->render();
             $pagination_html = view('layouts.pagination', [
                 'total_pages' => $total_records,
-                'num_results_on_page' => 25,
+                'num_results_on_page' => $num_results_on_page,
             ])->render();
             return json_encode([
                 'status' => 'success',
@@ -146,12 +137,41 @@ class RegionController extends Controller
             ]);
         } else if ($type == 'branch') {
 
-            $employees = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client'])->where('branch_id', $id)
+
+            //get region of the branch
+            $regions = Region::select(['regions.id'])->join('branches', 'branches.region_id', '=', 'regions.id')->where('branches.id', $id)->pluck('id')->toArray();
+
+            $brand_ids = Region::select(['regions.brands'])->join('branches', 'branches.region_id', '=', 'regions.id')->where('branches.id', $id)->pluck('brands')->toArray();
+
+            //super admins
+            $admins = User::whereIn('type', ['super admin'])->pluck('name', 'id')->toArray();
+
+            //project directors
+            $project_directors = User::whereIn('type', ['Project Director', 'Project Manager'])->where('brand_id', $brand_ids)->pluck('name', 'id')->toArray();
+
+            $regional_managers = User::where('type', 'Region Manager')->whereIn('region_id', $regions)->pluck('name', 'id')->toArray();
+
+
+            //$employees = User::whereNotIn('type', ['super admin', 'company', 'accountant', 'client'])->where('branch_id', $id)
+            $employees = User::whereNotIn('type', ['super admin', 'company','client'])->where('branch_id', $id)
                 ->where('type', '!=', 'company')
                 ->pluck('name', 'id')
                 ->toArray();
 
-            $html = ' <select class="form form-control lead_assgigned_user select2" id="choices-multiple4" name="assigned_to" > <option value="">Select User</option> ';
+            $html = ' <select class="form form-control lead_assigned_user select2" id="choices-multiple4" name="assigned_to" > <option value="">Select User</option> ';
+
+            foreach ($admins as $key => $user) {
+                $html .= '<option value="' . $key . '">' . $user . '</option> ';
+            }
+
+            foreach ($project_directors as $key => $user) {
+                $html .= '<option value="' . $key . '">' . $user . '</option> ';
+            }
+
+            foreach ($regional_managers as $key => $user) {
+                $html .= '<option value="' . $key . '">' . $user . '</option> ';
+            }
+
             foreach ($employees as $key => $user) {
                 $html .= '<option value="' . $key . '">' . $user . '</option> ';
             }
@@ -198,8 +218,16 @@ class RegionController extends Controller
             //  $regions = Region::whereRaw('FIND_IN_SET(?, brands)', [$id])->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
 
             $regions = Region::where('brands', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
+            $filter = $_GET['filter'] ?? '';
+            $html = '<label for="region_id">Region';
 
-            $html = ' <label for="region_id">Regions</label><select class="form form-control select2" id="region_id" name="region_id" > <option value="">Select Region</option> ';
+            // Checking if $filter is not empty and is true
+            if (empty($filter)) {
+                $html .= '<span class="text-danger">*</span>';
+            }
+
+            $html .= '</label><select class="form form-control select2" id="region_id" name="region_id"><option value="">Select Region</option>';
+
             foreach ($regions as $key => $region) {
                 $html .= '<option value="' . $key . '">' . $region . '</option> ';
             }
@@ -211,13 +239,27 @@ class RegionController extends Controller
                 'regions' => $html,
             ]);
         } else if ($type == 'region') {
+            $filter = $_GET['filter'] ?? '';
 
             $branches = Branch::where('region_id', $id)->orderBy('name', 'ASC')->pluck('name', 'id')->toArray();
-            $html = ' <label for="branch_id">Branch</label><select class="form form-control select2" id="branch_id" name="branch_id" > <option value="">Select Branch</option> ';
+
+            $html = '<label for="branch_id">Branch';
+
+            // Checking if $filter is not empty and is true
+            if (empty($filter)) {
+                $html .= '<span class="text-danger">*</span>';
+            }
+
+            $html .= '</label><select class="form form-control select2" id="branch_id" name="branch_id" > <option value="">Select Branch</option> ';
+
+
             foreach ($branches as $key => $branch) {
                 $html .= '<option value="' . $key . '">' . $branch . '</option> ';
             }
             $html .= '</select>';
+
+
+
             return json_encode([
                 'status' => 'success',
                 'branches' => $html,
@@ -268,6 +310,26 @@ class RegionController extends Controller
     public function save(Request $request)
     {
 
+        // echo '<pre>';
+        // print_r($request->full_number);
+        // die();
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                'name' => 'required',
+                'brands' => 'required',
+            ]
+        );
+
+        if ($validator->fails()) {
+            $messages = $validator->getMessageBag();
+            return json_encode([
+                'status' => 'error',
+                'msg' => $messages->first()
+            ]);
+            //return redirect()->back()->with('error', $messages->first());
+        }
+
         if (!empty($request->id)) {
 
             // Region::find($request->id)->update($request->all());
@@ -275,25 +337,41 @@ class RegionController extends Controller
             $region->name = $request->name;
             $region->region_manager_id = $request->region_manager_id;
             $region->location = $request->location;
-            $region->phone = $request->phone;
+            $region->phone = $request->full_number;
             $region->email = $request->email;
-            $region->brands = implode(',', $request->brands);
+            $region->brands = $request->brands[0];
             $region->update();
+
+            return json_encode([
+                'status' => 'success',
+                'id' => $region->id,
+                'msg' => 'Region updated successfully.'
+            ]);
         } else {
 
 
             $brands = null;
             if ($request->brands != null && sizeof($request->brands) > 0) {
-                $brands = implode(',', $request->brands);
+                $brands = $request->brands;
             }
 
             $data = $request->all();
-            $data['brands'] = $brands;
+            $data['brands'] = $brands[0];
 
-            Region::create($data);
+            $region = Region::create($data);
+            $region->phone = $request->full_number;
+            $region->save();
+
+            return json_encode([
+                'status' => 'success',
+                'id' => $region->id,
+                'msg' => 'Region created successfully'
+            ]);
         }
 
-        return back();
+
+
+        //return back();
     }
 
 
@@ -382,7 +460,7 @@ class RegionController extends Controller
         if(isset($_GET['region_id']) && !empty($_GET['region_id'])){
             $region_query->where('id', $_GET['region_id']);
         }
-        
+
         if (\Auth::user()->type == 'super admin') {
             $regions = Region::orderBy('name', 'ASC')->get();
         } else if (\Auth::user()->type == 'company') {
@@ -430,9 +508,45 @@ class RegionController extends Controller
                 'manager' => $users[$region->region_manager_id] ?? '',
                 'brand' => $users[$region->brands] ?? ''
             ];
-        }   
+        }
 
         downloadCSV($header, $data, 'regions.csv');
         return true;
+    }
+
+
+    /////////////////////////////////////Filter Regions
+    public function filterRegions(){
+        $brand_id = $_GET['brand_id'];
+        $regions = Region::where('brands', $brand_id)->pluck('name', 'id')->toArray();
+
+        $html = '<option value="">Select Region</option>';
+        foreach($regions as $key => $region){
+            $html .= "<option value='$key'>$region</option>";
+        }
+
+        $html .= '';
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
+    }
+
+    public function filterBranches(){
+        $region_id = $_GET['region_id'];
+        $regions = Branch::where('region_id', $region_id)->pluck('name', 'id')->toArray();
+
+        $html = '<option value="">Select Branch</option>';
+        foreach($regions as $key => $region){
+            $html .= "<option value='$key'>$region</option>";
+        }
+
+        $html .= '';
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
     }
 }

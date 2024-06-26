@@ -33,7 +33,7 @@
 
                     @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('create organization_type'))
                     <div class="float-end">
-                        <a href="#" data-size="md" data-url="{{ route('organization-type.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn btn-sm btn-dark">
+                        <a href="#" data-size="md" data-url="{{ route('organization-type.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Organization Type')}}" class="btn btn-sm btn-dark">
                             <i class="ti ti-plus"></i>
                         </a>
                     </div>
@@ -71,10 +71,10 @@
                                                 @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit organization_type'))
                                                     <div class="action-btn  ms-2">
                                                         <a href="#"
-                                                        class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para"
+                                                        class="btn btn-sm btn-dark mx-1 align-items-center "
                                                             data-url="{{ route('organization-type.edit', $type->id) }}"
                                                             data-ajax-popup="true" data-size="md" data-bs-toggle="tooltip"
-                                                            title="{{ __('Edit') }}"
+                                                            title="{{ __('Edit Organization Type') }}"
                                                             data-title="{{ __('Edit Type') }}">
                                                             <i class="ti ti-pencil text-white"></i>
                                                         </a>
@@ -98,6 +98,12 @@
 
                             </tbody>
                         </table>
+                        @if ($total_records > 0)
+                        @include('layouts.pagination', [
+                        'total_pages' => $total_records,
+                        'num_results_on_page' => 50,
+                        ])
+                        @endif
                     </div>
                 </div>
             </div>

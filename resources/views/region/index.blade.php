@@ -235,6 +235,48 @@
     }
 </style>
 
+<style>
+    /* .red-cross {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                color: red;
+            } */
+    .boximg {
+        margin: auto;
+    }
+
+    .dropdown-togglefilter:hover .dropdown-menufil {
+        display: block;
+    }
+
+    .choices__inner {
+        border: 1px solid #ccc !important;
+        min-height: auto;
+        padding: 4px !important;
+    }
+
+    .fil:hover .submenu {
+        display: block;
+    }
+
+    .fil .submenu {
+        display: none;
+        position: absolute;
+        top: 3%;
+        left: 154px;
+        width: 100%;
+        background-color: #fafafa;
+        font-weight: 600;
+        list-style-type: none;
+
+    }
+
+    .dropdown-item:hover {
+        background-color: white !important;
+    }
+</style>
+
 <div class="row">
     <div class="col-xl-12">
         <div class="card my-card">
@@ -247,14 +289,36 @@
                     <div class="col-2">
                         <p class="mb-0 pb-0 ps-1">Regions</p>
                         <div class="dropdown">
-                            <button class="all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                All REGIONS
+                            <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span> ALL REGIONS </span>
                             </button>
-                            <!-- <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
-                            </ul> -->
+                            @if(sizeof($saved_filters) > 0)
+                            <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton1">
 
+                                @foreach($saved_filters as $filter)
+                                <li class="d-flex align-items-center justify-content-between ps-2">
+                                    <div class="col-10">
+                                        <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                        <span class="text-dark"> ({{$filter->count}})</span>
+                                    </div>
+                                    <ul class="w-25" style="list-style: none;">
+                                        <li class="fil fw-bolder">
+                                            <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                            <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                            box-shadow: 0px 0px 1px #e9e9e9;">
+                                                <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name?>', <?= $filter->id ?>)">Rename</a></li>
+                                                <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                @endforeach
+
+                            </ul>
+                            @endif
                         </div>
+
                     </div>
 
                     {{-- <div class="col-2">
@@ -289,14 +353,16 @@
                         </a>
                         @endcan
 
+                        @if(auth()->user()->type == 'super admin' || auth()->user()->type == 'Admin Team')
                         <a href="{{ route('regions.download') }}" class="btn  btn-dark px-0" style="color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
                             <i class="ti ti-download" style="font-size:18px"></i>
                         </a>
+                        @endif
 
                         @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete region'))
-                            <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Regions') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; margin-top:10px;">
-                                <i class="ti ti-trash"></i>
-                            </a>
+                        <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Regions') }}" class="btn delete-bulk text-white btn-dark d-none px-0" style="width:36px; height: 36px; margin-top:10px;">
+                            <i class="ti ti-trash"></i>
+                        </a>
                         @endif
 
                     </div>
@@ -308,7 +374,7 @@
 
 
 
-            <div class="table-responsive mt-2">
+            <div class="table-responsive">
                 {{-- Filters --}}
 
                 <script>
@@ -327,7 +393,7 @@
                             $type = \Auth::user()->type;
                             @endphp
 
-                            @if($type == 'super admin' || $type == 'Project Director' || $type == 'Project Manager')
+                            @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
                             <div class="col-md-4 mt-2">
                                 <label for="">Brand</label>
                                 <select name="brand_id" class="form form-control select2" id="filter_brand_id">
@@ -343,7 +409,7 @@
                             </div>
                             @endif
 
-                            @if($type == 'super admin' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'company' || $type == 'Region Manager')
+                            @if($type == 'super admin' || $type == 'Admin Team' || $type == 'HR' || $type == 'Project Director' || $type == 'Project Manager' || $type == 'company' || $type == 'Region Manager' || \Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3'))
                             <div class="col-md-4 mt-2" id="region_div">
                                 <label for="">Region</label>
 
@@ -363,6 +429,7 @@
                             <div class="col-md-3   ">
                                 <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
                                 <a href="/region/index" class="btn bg-dark" style="color:white;">Reset</a>
+                                <a type="button" id="save-filter-btn" onClick="saveFilter('region',<?= sizeof($regions) ?>)" class="btn btn-dark me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                             </div>
                         </div>
                     </form>
@@ -515,6 +582,14 @@
 
 @push('script-page')
 <script>
+    $(document).ready(function() {
+        let curr_url = window.location.href;
+
+        if (curr_url.includes('?')) {
+            $('#save-filter-btn').css('display', 'inline-block');
+        }
+    });
+
     // Attach an event listener to the input field
     $('.list-global-search').keypress(function(e) {
 
@@ -603,7 +678,7 @@
             return this.value;
         }).get();
 
-       // console.log(selectedIds.length)
+        // console.log(selectedIds.length)
 
         if (selectedIds.length > 0) {
             selectedArr = selectedIds;
@@ -620,7 +695,7 @@
             return this.value;
         }).get();
 
-       // console.log(selectedIds.length)
+        // console.log(selectedIds.length)
 
         if (selectedIds.length > 0) {
             selectedArr = selectedIds;
@@ -657,5 +732,140 @@
             }
         });
     })
+
+
+
+
+    $("#brands").on("change", function() {
+        var id = $(this).val();
+        var type = 'brand';
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands') }}',
+            data: {
+                id: id, // Add a key for the id parameter
+                type: type
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    $('#region_div').html('');
+                    $("#region_div").html(data.regions);
+                    select2();
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+
+    $(document).on("change", "#region_div #region_id", function() {
+        var id = $(this).val();
+        var type = 'region';
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('region_brands') }}',
+            data: {
+                id: id, // Add a key for the id parameter
+                type: type
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+
+                if (data.status === 'success') {
+                    if (type == 'region') {
+                        $('#branch_div').html('');
+                        $("#branch_div").html(data.branches);
+                        select2();
+                    }
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+    });
+
+    $(document).on("submit", "#UpdateRegion", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Serialize form data
+        var formData = $(this).serialize();
+
+        $(".update-region").text('Updating...').prop("disabled", true);
+
+        // AJAX request
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"), // Form action URL
+            data: formData, // Serialized form data
+            success: function(response) {
+              data = JSON.parse(response);
+
+              if(data.status == 'success'){
+                show_toastr('Success', data.msg, 'success');
+                  $('#commonModal').modal('hide');
+                  $(".modal-backdrop").removeClass("modal-backdrop");
+                  $(".block-screen").css('display', 'none');
+                  $(".update-region").text('Update').prop("disabled", false);
+                  openSidebar('/regions/'+data.id+'/show');
+              }else{
+                $(".update-region").text('Updating...').prop("disabled", true);
+                show_toastr('Error', data.msg, 'error');
+              }
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
+
+    $(document).on("submit", "#CreateRegion", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        // Serialize form data
+        var formData = $(this).serialize();
+
+         // Change button text and disable it
+        $(".create-region").text('Creating...').prop("disabled", true);
+
+        // AJAX request
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"), // Form action URL
+            data: formData, // Serialized form data
+            success: function(response) {
+              data = JSON.parse(response);
+
+              if(data.status == 'success'){
+                show_toastr('Success', data.msg, 'success');
+                  $('#commonModal').modal('hide');
+                  $(".modal-backdrop").removeClass("modal-backdrop");
+                  $(".block-screen").css('display', 'none');
+                   // Change button text and disable it
+                  $(".create-region").text('Create').prop("disabled", false);
+                  openSidebar('/regions/'+data.id+'/show');;
+              }else{
+                $(".create-region").text('Create').prop("disabled", false);
+                show_toastr('Error', data.msg, 'error');
+              }
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.error(xhr.responseText);
+            }
+        });
+    });
 </script>
 @endpush

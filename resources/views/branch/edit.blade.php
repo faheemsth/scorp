@@ -1,8 +1,8 @@
-{{ Form::model($branch, ['route' => ['branch.update', $branch->id], 'method' => 'PUT', 'novalidate' => 'novalidate']) }}
+{{ Form::model($branch, ['route' => ['branch.update', $branch->id], 'method' => 'PUT', 'id' => 'updateBranch', 'novalidate' => 'novalidate']) }}
 
 <div class="modal-body" style="min-height: 35vh;">
 
-    <div class="row">
+    <div class="row align-items-baseline">
         <div class="col-md-6">
             <div class="form-group">
                 {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}
@@ -20,8 +20,13 @@
             <div class="form-group" id="brands_div">
                 @if (
                     \Auth::user()->type == 'super admin' ||
+                     \Auth::user()->type == 'HR' ||
+                    \Auth::user()->type == 'Admin Team' ||
                         \Auth::user()->type == 'Project Director' ||
-                        \Auth::user()->type == 'Project Manager')
+                        \Auth::user()->type == 'Project Manager' ||
+                        \Auth::user()->can('level 1') ||
+                        \Auth::user()->can('level 2')
+                        )
                     <label for="branches" class="col-sm-3 col-form-label">Brands<span
                             class="text-danger">*</span></label>
                     {!! Form::select('brands', $brands, $branch->brands, [
@@ -30,7 +35,7 @@
                     ]) !!}
 
                 @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
-                    <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                    <label for="branches" class=" col-form-label">Brands<span
                             class="text-danger">*</span></label>
                     <input type="hidden" name="brands" value="{{ $branch->brands }}">
                     <select class='form-control select2 brand_id' disabled ="brands" id="brands">
@@ -57,13 +62,17 @@
 
 
         <div class="col-md-6">
-            <div class="form-group" id="region_div">
+            <div class="form-group" id="region_divs">
                 @if (
                         \Auth::user()->type == 'super admin' ||
+                         \Auth::user()->type == 'HR' ||
+                        \Auth::user()->type == 'Admin Team' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||
-                            \Auth::user()->type == 'Regional Manager')
+                            \Auth::user()->type == 'Region Manager' ||
+                            \Auth::user()->can('level 1') ||
+                            \Auth::user()->can('level 2'))
                         <label for="branches" class="col-sm-3 col-form-label">Region<span
                                 class="text-danger">*</span></label>
                         {!! Form::select('region_id', $regions, $branch->region_id, [
@@ -71,7 +80,7 @@
                             'id' => 'region_id',
                         ]) !!}
                     @else
-                        <label for="branches" class="col-sm-3 col-form-label">Region<span
+                        <label for="branches" class=" col-form-label">Region<span
                                 class="text-danger">*</span></label>
                         <input type="hidden" name="region_id" value="{{ $branch->region_id }}">
                         {!! Form::select('region_id', $regions, $branch->region_id, [
@@ -139,7 +148,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="phone">{{ __('Phone') }}</label>
-                <input type="text" name="phone" class="form-control" value="{{ $branch->phone }}"
+                <input type="tel" name="phone" class="form-control" id="phone" value="{{ $branch->phone }}"
                     placeholder="{{ __('Enter Branch Phone') }}">
                 @error('phone')
                     <span class="invalid-name" role="alert">
@@ -173,6 +182,43 @@
 <script>
     $(document).ready(function() {
         select2();
+
+        $(document).on("submit", "#updateBranch", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Serialize form data
+        var formData = $(this).serialize();
+            
+        $(".update-branch").text('Updating...').prop("disabled", true);
+    
+            // AJAX request
+            $.ajax({
+                type: "POST",
+                url: $(this).attr("action"), // Form action URL
+                data: formData, // Serialized form data
+                success: function(response) {
+                data = JSON.parse(response);
+
+                if(data.status == 'success'){
+                    show_toastr('success', data.msg, 'success');
+                    $('#commonModal').modal('hide');
+                    $(".modal-backdrop").removeClass("modal-backdrop");
+                    $(".block-screen").css('display', 'none');
+                    $(".update-branch").text('Update').prop("disabled", false);
+                    openSidebar('/branch/'+data.id+'/show');
+                }else{
+                    $(".update-branch").text('Update').prop("disabled", false);
+                    show_toastr('Error', data.msg, 'error');
+                }
+
+                },
+                error: function(xhr, status, error) {
+                    // Handle error response
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+
         // $("#region_id").on("change", function(){
         //     var id = $(this).val();
 
@@ -218,8 +264,8 @@
 
                 if (data.status === 'success') {
                     if(type == 'brand'){
-                        $('#region_div').html('');
-                        $("#region_div").html(data.regions);
+                        $('#region_divs').html('');
+                        $("#region_divs").html(data.regions);
                         select2();
                     }else{
                         $('#brands').remove();
@@ -270,4 +316,17 @@
     });
 
 })
+</script>
+
+<script>
+    // Use the input variable in the rest of your code
+    window.intlTelInput(document.getElementById('phone'), {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+        initialCountry: "pk",
+        separateDialCode: true,
+        formatOnDisplay: true,
+        hiddenInput: "full_number",
+        //placeholderNumberType: "FIXED_LINE",
+       // preferredCountries: ["us", "gb"]
+    });
 </script>

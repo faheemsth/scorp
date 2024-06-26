@@ -4,16 +4,9 @@
     <div class="row">
         <div class="col-12">
             <div class="form-group">
-                {{ Form::label('branch_id', __('Branch'),['class'=>'form-label']) }}
-                {{ Form::select('branch_id', $branches,null, array('class' => 'form-control select branch_id','required'=>'required')) }}
-            </div>
-
-            <div class="form-group">
                 {{ Form::label('department_id', __('Department'),['class'=>'form-label']) }}
-                <select name="department_id" id="department_id" class="form-control select department_id" required>
-                    <option value="">Select Department</option>
-                </select>
-          
+                {{ Form::select('department_id', $departments,null, array('class' => 'form-control select department_id','required'=>'required')) }}
+
             </div>
             <div class="form-group">
                 {{Form::label('name',__('Name'),['class'=>'form-label'])}}

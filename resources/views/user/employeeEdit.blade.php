@@ -1,13 +1,13 @@
-{{ Form::open(['url' => route('user.employee.update', $user->id), 'method' => 'post', 'novalidate' => 'novalidate']) }}
+{{ Form::open(['url' => route('user.employee.update', $user->id), 'method' => 'post', 'id' => 'employeeEdit' ,'novalidate' => 'novalidate']) }}
 
 <div class="modal-body" style="height:75vh;">
     <div class="lead-content my-2" style="max-height: 100%; overflow-y: scroll;">
         <div class="card-body px-2 py-0">
-            <div class="row">
-
+            <div class="row align-items-baseline">
                 <div class="col-md-6">
                     <div class="form-group">
                         {{ Form::label('name', __('Name'), ['class' => 'form-label']) }}
+                        <span class="text-danger">*</span>
                         {{ Form::text('name', $user->name, ['class' => 'form-control', 'placeholder' => __('Enter User Name'), 'required' => 'required']) }}
                         @error('name')
                             <small class="invalid-name" role="alert">
@@ -19,12 +19,13 @@
 
                 <div class="form-group col-md-6">
                     {{ Form::label('role', __('User Role'), ['class' => 'form-label']) }}
+                    <span class="text-danger">*</span>
                     <select name="role" id="roles" class="form form-control select2">
                         @foreach($roles as $role)
                         <option value="{{$role}}" {{ $role == $user->type ? "selected":"" }}>{{ $role }}</option>
-                        @endforeach 
+                        @endforeach
                     </select>
-                
+
                     @error('role')
                         <small class="invalid-role" role="alert">
                             <strong class="text-danger">{{ $message }}</strong>
@@ -36,7 +37,9 @@
                     @if (
                         \Auth::user()->type == 'super admin' ||
                             \Auth::user()->type == 'Project Director' ||
-                            \Auth::user()->type == 'Project Manager')
+                            \Auth::user()->type == 'Project Manager' ||
+                            \Auth::user()->can('level 1') ||
+                            \Auth::user()->can('level 2'))
                         <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                 class="text-danger">*</span></label>
                         {!! Form::select('companies', $companies, $user->brand_id, [
@@ -44,7 +47,7 @@
                             'id' => 'brands',
                         ]) !!}
                     @elseif (Session::get('is_company_login') == true || \Auth::user()->type == 'company')
-                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                        <label for="branches" class=" col-form-label">Brands<span
                                 class="text-danger">*</span></label>
                         <input type="hidden" name="companies" value="{{ $user->brand_id }}">
                         <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
@@ -54,7 +57,7 @@
                             @endforeach
                         </select>
                     @else
-                        <label for="branches" class="col-sm-3 col-form-label">Brands<span
+                        <label for="branches" class=" col-form-label">Brands<span
                                 class="text-danger">*</span></label>
                         <input type="hidden" name="companies" value="{{ $user->brand_id }}">
                         <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
@@ -70,10 +73,14 @@
                 <div class="form-group col-md-6 {{ $user->type == 'Project Director' || $user->type == 'Project Manager' ? 'd-none' : ''}}" id="region_div">
                                      @if (
                         \Auth::user()->type == 'super admin' ||
+                         \Auth::user()->type == 'HR' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||
-                            \Auth::user()->type == 'Regional Manager')
+                            \Auth::user()->type == 'Region Manager' ||
+                            \Auth::user()->can('level 1') ||
+                            \Auth::user()->can('level 2') ||
+                            \Auth::user()->can('level 3'))
                         <label for="branches" class="col-sm-3 col-form-label">Region<span
                                 class="text-danger">*</span></label>
                         {!! Form::select('region_id', $Region, $user->region_id, [
@@ -81,7 +88,7 @@
                             'id' => 'region_id',
                         ]) !!}
                     @else
-                        <label for="branches" class="col-sm-3 col-form-label">Region<span
+                        <label for="branches" class=" col-form-label">Region<span
                                 class="text-danger">*</span></label>
                         <input type="hidden" name="region_id" value="{{ $user->region_id }}">
                         {!! Form::select('region_id', $Region, $user->region_id, [
@@ -94,14 +101,18 @@
 
 
                 <div class="form-group col-md-6 {{ $user->type == 'Project Director' || $user->type == 'Project Manager' ? 'd-none' : ''}}" id="branch_div">
-                    
+
                     @if (
                         \Auth::user()->type == 'super admin' ||
                             \Auth::user()->type == 'Project Director' ||
                             \Auth::user()->type == 'Project Manager' ||
                             \Auth::user()->type == 'company' ||
-                            \Auth::user()->type == 'Regional Manager' ||
-                            \Auth::user()->type == 'Branch Manager')
+                            \Auth::user()->type == 'Region Manager' ||
+                            \Auth::user()->type == 'Branch Manager' ||
+                            \Auth::user()->can('level 1') ||
+                            \Auth::user()->can('level 2') ||
+                            \Auth::user()->can('level 3') ||
+                            \Auth::user()->can('level 4'))
                         <label for="branches" class="col-sm-3 col-form-label">Branch<span
                                 class="text-danger">*</span></label>
                         <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
@@ -111,7 +122,7 @@
                             @endforeach
                         </select>
                     @else
-                        <label for="branches" class="col-sm-3 col-form-label">Branch<span
+                        <label for="branches" class=" col-form-label">Branch<span
                                 class="text-danger">*</span></label>
                         <input type="hidden" name="branch_id" value="{{ $user->branch_id }}">
                         <select name="branch_id" id="branch_id" class="form-control select2 branch_id"
@@ -141,7 +152,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         {{ Form::label('phone', __('Phone'), ['class' => 'form-label']) }}
-                        {{ Form::text('phone', $user->phone, ['class' => 'form-control', 'required' => 'required']) }}
+                        {{ Form::text('phone', $user->phone, ['class' => 'form-control' , 'id' => 'phone', 'required' => 'required']) }}
                         @error('phone')
                             <small class="invalid-phone" role="alert">
                                 <strong class="text-danger">{{ $phone }}</strong>
@@ -223,7 +234,7 @@
 
 <div class="modal-footer">
     <input type="button" value="{{ __('Cancel') }}" class="btn  btn-light" data-bs-dismiss="modal">
-    <input type="submit" value="{{ __('Update') }}" class="btn  btn-dark px-2">
+    <input type="submit" value="{{ __('Update') }}" class="btn  btn-dark px-2 update-employee">
 </div>
 
 {{ Form::close() }}
@@ -244,7 +255,7 @@
         var role = $(this).text();
         if (role == 'Project Director' || role == 'Project Manager') {
             $("#region_div, #branch_div").addClass('d-none');
-            
+
         } else {
             $("#region_div, #branch_div").removeClass('d-none');
         }
@@ -270,7 +281,7 @@
                 if (data.status === 'success') {
                     $('#region_div').html('');
                     $("#region_div").html(data.regions);
-                    select2();                       
+                    select2();
                 } else {
                     console.error('Server returned an error:', data.message);
                 }
@@ -311,5 +322,53 @@
         });
     });
 
+    $(document).on("submit", "#employeeEdit", function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Serialize form data
+        var formData = $(this).serialize();
+
+        $(".update-employee").text('Updating...').prop("disabled", true);
+
+        // AJAX request
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"), // Form action URL
+            data: formData, // Serialized form data
+            success: function(response) {
+              data = JSON.parse(response);
+
+              if(data.status == 'success'){
+                show_toastr('success', data.msg, 'success');
+                  $('#commonModal').modal('hide');
+                  $(".modal-backdrop").removeClass("modal-backdrop");
+                  $(".block-screen").css('display', 'none');
+                  $(".update-employee").text('Update').prop("disabled", false);
+                  openSidebar('/user/employee/'+data.id+'/show');
+              }else{
+                $(".update-employee").text('Updating...').prop("disabled", true);
+                show_toastr('error', data.msg, 'error');
+              }
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error response
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
 </script>
 
+<script>
+    // Use the input variable in the rest of your code
+    window.intlTelInput(document.getElementById('phone'), {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+        initialCountry: "pk",
+        separateDialCode: true,
+        formatOnDisplay: true,
+        hiddenInput: "full_number",
+        //placeholderNumberType: "FIXED_LINE",
+       // preferredCountries: ["us", "gb"]
+    });
+</script>

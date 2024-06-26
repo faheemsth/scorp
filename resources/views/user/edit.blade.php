@@ -1,4 +1,4 @@
-{{Form::model($user,array('route' => array('users.update', $user->id), 'method' => 'PUT')) }}
+{{Form::model($user,array('route' => array('users.update', $user->id), 'method' => 'PUT', 'id' => 'update-brand')) }}
 <div class="modal-body">
     <div class="row">
         <div class="col-md-6">
@@ -63,13 +63,26 @@
             </div>
         </div>
 
+        <div class="col-md-6">
+            <div class="form-group">
+                {{Form::label('name',__('Email'),['class'=>'form-label']) }}
+                <span class="text-danger">*</span>
+                {{Form::email('email',$user->email,array('class'=>'form-control','placeholder'=>__('Enter Email...'),'required'=>'required'))}}
+                @error('email')
+                <small class="invalid-name" role="alert">
+                    <strong class="text-danger">{{ $message }}</strong>
+                </small>
+                @enderror
+            </div>
+        </div>
+
     </div>
 
 </div>
 
 <div class="modal-footer">
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-light"data-bs-dismiss="modal">
-    <input type="submit" value="{{__('Update')}}" class="btn  btn-dark px-2">
+    <input type="submit" value="{{__('Update')}}" class="btn  btn-dark px-2 update-brand">
 </div>
 
 {{Form::close()}}

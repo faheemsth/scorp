@@ -7,25 +7,34 @@ if (isset($_GET['page']) && !empty($_GET['page'])) {
 ?>
 
 @forelse($users as $key => $employee)
-    <tr>
-        <td>{{ $count++ }}</td>
-        <td>
+<tr>
+    <td>
+        <input type="checkbox" name="employee_ids[]" value="{{ $employee->id }}" class="sub-check">
+    </td>
 
-            <span style="cursor:pointer" class="hyper-link"
-                @can('view employee') onclick="openSidebar('/user/employee/{{ $employee->id }}/show')" @endcan>
-                {{ $employee->name }}
-            </span>
-        </td>
-        <td><a href="mailto:{{ $employee->email }}">{{ $employee->email }}</a></td>
-        <td>{{ $employee->type }}</td>
-        <td>{{ $employee->phone }}</td>
-        <td>{{ $Regions[$employee->region_id] ?? '' }}</td>
-        <td>{{ !empty($employee->last_login_at) ? $employee->last_login_at : '' }}
-        </td>
+    <td >
+        <style> .fixed-size-image { width: 50px;height: 50px;object-fit: cover;} </style>
+        <img class="img-fluid rounded-3 shadow-sm fixed-size-image" src="{{ $employee->avatar ? asset('storage/uploads/avatar/' . $employee->avatar) : asset('assets/images/user/default.jpg') }}" width="50" height="50" alt="{{ $employee->avatar ? 'User Avatar' : 'Default Avatar' }}">
 
-    </tr>
+    </td>
+    <td class="text-start">
+                <span style="cursor:pointer" class="hyper-link" @can('view employee') onclick="openSidebar('/user/employee/{{ $employee->id }}/show')" @endcan>
+                    {{ $employee->name }}
+                </span>
+
+    </td>
+    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;"><a href="mailto:{{ $employee->email }}">{{ $employee->email }}</a></td>
+    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $employee->phone }}</td>
+    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $employee->type }}</td>
+    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $Branchs[$employee->branch_id] ?? '' }}</td>
+    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $Regions[$employee->region_id] ?? '' }}</td>
+    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $brandss[$employee->brand_id] ?? '' }}</td>
+    <td style="max-width: 140px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($employee->last_login_at) ? $employee->last_login_at : '' }}
+    </td>
+
+</tr>
 @empty
-    <tr>
-        <td colspan="6">No employees found</td>
-    </tr>
+<tr>
+    <td colspan="6">No employees found</td>
+</tr>
 @endforelse

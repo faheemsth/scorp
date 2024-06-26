@@ -169,4 +169,9 @@ class Notification extends Model
 
         return $html;
     }
+
+    public function Notifier()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

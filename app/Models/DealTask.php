@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 class DealTask extends Model
 {
     protected $fillable = [
-        'deal_id','name','date','time','priority','status'
+        'deal_id','name','date','time','priority','status','assigned_to','branch_id'
     ];
 
     public static $priorities = [

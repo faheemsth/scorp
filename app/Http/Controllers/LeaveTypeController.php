@@ -11,7 +11,7 @@ class LeaveTypeController extends Controller
     {
         if(\Auth::user()->can('manage leave type'))
         {
-            $leavetypes = LeaveType::where('created_by', '=', \Auth::user()->creatorId())->get();
+            $leavetypes = LeaveType::where('created_by', '=', \Auth::id())->get();
 
             return view('leavetype.index', compact('leavetypes'));
         }
@@ -57,7 +57,7 @@ class LeaveTypeController extends Controller
             $leavetype             = new LeaveType();
             $leavetype->title      = $request->title;
             $leavetype->days       = $request->days;
-            $leavetype->created_by = \Auth::user()->creatorId();
+            $leavetype->created_by = \Auth::id();
             $leavetype->save();
 
             return redirect()->route('leavetype.index')->with('success', __('LeaveType  successfully created.'));
@@ -77,7 +77,7 @@ class LeaveTypeController extends Controller
     {
         if(\Auth::user()->can('edit leave type'))
         {
-            if($leavetype->created_by == \Auth::user()->creatorId())
+            if($leavetype->created_by == \Auth::id())
             {
 
                 return view('leavetype.edit', compact('leavetype'));
@@ -97,7 +97,7 @@ class LeaveTypeController extends Controller
     {
         if(\Auth::user()->can('edit leave type'))
         {
-            if($leavetype->created_by == \Auth::user()->creatorId())
+            if($leavetype->created_by == \Auth::id())
             {
                 $validator = \Validator::make(
                     $request->all(), [
@@ -134,7 +134,7 @@ class LeaveTypeController extends Controller
     {
         if(\Auth::user()->can('delete leave type'))
         {
-            if($leavetype->created_by == \Auth::user()->creatorId())
+            if($leavetype->created_by == \Auth::id())
             {
                 $leavetype->delete();
 

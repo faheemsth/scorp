@@ -26,12 +26,16 @@
 @endsection
 
 @push('css-page')
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="{{asset('css/summernote/summernote-bs4.css')}}">
 @endpush
-
 @push('script-page')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="{{asset('css/summernote/summernote-bs4.js')}}"></script>
     <script>
+        summernote();
         $('.summernote-simple0').on('summernote.blur', function () {
             $.ajax({
                 url: "{{route('offerlatter.update',$offerlang)}}",
@@ -107,6 +111,31 @@
         $('.summernote-simple3').on('summernote.blur', function () {
             $.ajax({
                 url: "{{route('noc.update',$noclang)}}",
+                data: {_token: $('meta[name="csrf-token"]').attr('content'), content: $(this).val()},
+                type: 'POST',
+                success: function (response) {
+                    console.log(response)
+                    if (response.is_success) {
+                        show_toastr('success', response.success,'success');
+                    } else {
+                        show_toastr('error', response.error, 'error');
+                    }
+                },
+                error: function (response) {
+
+                    response = response.responseJSON;
+                    if (response.is_success) {
+                        show_toastr('error', response.error, 'error');
+                    } else {
+                        show_toastr('error', response.error, 'error');
+                    }
+                }
+            })
+        });
+
+        $('.summernote-simple5').on('summernote.blur', function () {
+            $.ajax({
+                url: "{{route('update.email',$EmailMarketing->id)}}",
                 data: {_token: $('meta[name="csrf-token"]').attr('content'), content: $(this).val()},
                 type: 'POST',
                 success: function (response) {
@@ -216,10 +245,8 @@
         });
 
     </script>
-
-
-
 @endpush
+
 @section('content')
 
     <div class="row">
@@ -2186,11 +2213,10 @@
                                 <div class="form-group col-12">
                                     {{Form::label('content',__(' Format'),['class'=>'form-label text-dark'])}}
                                     <textarea name="content"  class="summernote-simple0 summernote-simple">{!! isset($currOfferletterLang->content) ? $currOfferletterLang->content : "" !!}</textarea>
-
                                 </div>
-{{--                                <div class="card-footer text-end">--}}
-{{--                                    {{ Form::submit(__('Save Changes'), ['class' => 'btn  btn-primary']) }}--}}
-{{--                                </div>--}}
+                                <div class="card-footer text-end">
+                                    {{ Form::submit(__('Save Changes'), ['class' => 'btn  btn-primary']) }}
+                                </div>
 
                                 {{ Form::close() }}
                             </div>
@@ -2391,6 +2417,42 @@
 
                     </div>
 
+
+
+                    <div id="email-marketing-settings" class="card">
+                        <div class="col-md-12">
+                            <div class="card-header d-flex justify-content-between">
+                                <h5>{{ __('Email Marketing') }}</h5>
+                            </div>
+                            <div class="card-body ">
+                                <h5 class= "font-weight-bold pb-3">{{ __('Placeholders') }}</h5>
+                                <div class="col-lg-12 col-md-12 col-sm-12">
+                                    <div class="card">
+                                        <div class="card-header card-body">
+                                            <div class="row ">
+                                                <div class="row">
+                                                     <p class="col-4">{{__('Student Name')}} : <span class="pull-right text-primary">{student_name}</span></p>
+                                                     <p class="col-4">{{__('Sender')}} : <span class="pull-right text-primary">{sender}</span></p>
+                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body table-border-style ">
+                                {{ Form::open(['route' => ['update.email', ['id' => $EmailMarketing->id]], 'method' => 'post']) }}
+                                <div class="form-group col-12">
+                                    {{Form::label('content',__(' Format'),['class'=>'form-label text-dark'])}}
+                                    <textarea name="content"  class="summernote-simple5 summernote-simple">{!! isset($EmailMarketing->content) ? $EmailMarketing->content : "" !!}</textarea>
+
+                                </div>
+
+                                {{ Form::close() }}
+                            </div>
+                        </div>
+
+                    </div>
+
                 </div>
                 <!-- [ sample-page ] end -->
             </div>
@@ -2398,3 +2460,5 @@
         </div>
     </div>
 @endsection
+
+

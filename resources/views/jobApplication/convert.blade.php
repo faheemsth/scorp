@@ -71,13 +71,38 @@
                         </div>
 
                         <div class="form-group col-md-6">
-                            {{ Form::label('branch_id', __('Branch'),['class'=>'form-label']) }}
-                            {{ Form::select('branch_id', $branches,!empty($jobOnBoard->applications)?!empty($jobOnBoard->applications->jobs)?$jobOnBoard->applications->jobs->branch:'':'', array('class' => 'form-control ','required'=>'required')) }}
+                            {{ Form::label('brand_id', __('Brand'),['class'=>'form-label']) }}
+                        <input type="hidden" name="brand_id" value="{{ $jobOnBoard->brand_id }}">
+                        <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                            @foreach($companies as $key => $comp)
+                                <option value="{{$key}}" {{ $key == $jobOnBoard->brand_id ? 'selected' : ''}}>{{$comp}}</option>
+                            @endforeach
+                        </select>
                         </div>
 
                         <div class="form-group col-md-6">
+                            {{ Form::label('region_id', __('Region'),['class'=>'form-label']) }}
+                        <input type="hidden" name="region_id" value="{{ $jobOnBoard->region_id }}">
+                        {!! Form::select('region_id', $regions, $jobOnBoard->region_id, [
+                            'class' => 'form-control select2',
+                            'disabled' => 'disabled',
+                            'id' => 'region_id',
+                        ]) !!}
+                        </div>
+
+                       <div class="form-group col-md-6">
+                        {{ Form::label('branch_id', __('branch'),['class'=>'form-label']) }}
+                        <input type="hidden" name="branch_id" value="{{ $jobOnBoard->branch_id }}">
+                            <select name="branch_id" id="branch_id" class="form-control select2 branch_id" disabled >
+                                    @foreach($branches as $key => $branch)
+                                        <option value="{{$key}}" {{ $jobOnBoard->branch_id == $key ? 'selected' : '' }}>{{$branch}}</option>
+                                    @endforeach
+                            </select>
+                       </div>
+
+                        <div class="form-group col-md-6">
                             {{ Form::label('department_id', __('Department'),['class'=>'form-label']) }}
-                            {{ Form::select('department_id', $departments,null, array('class' => 'form-control ','id'=>'department_id','required'=>'required')) }}
+                            {{ Form::select('department_id', $departments,null, array('class' => 'form-control select','id'=>'department_id','required'=>'required')) }}
                         </div>
 
                         <div class="form-group col-md-12">
@@ -86,6 +111,16 @@
                                 <option value="">{{__('Select any Designation')}}</option>
                             </select>
                         </div>
+                        <div class="form-group col-md-12">
+                            {{ Form::label('role', __('Roles'),['class'=>'form-label']) }}
+                            <select class=" form-control " id="role" name="role" data-toggle="select2" data-placeholder="{{ __('Select Designation ...') }}">
+                                <option value="">{{__('Select any Role')}}</option>
+                                @foreach ($roles as $role)
+                                 <option value="{{ $role }}">{{ $role }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="form-group col-md-12 ">
                             {!! Form::label('company_doj', __('Company Date Of Joining'),['class'=>'form-label']) !!}
                             {!! Form::date('company_doj', $jobOnBoard->joining_date, ['class' => 'form-control datepicker','required' => 'required']) !!}

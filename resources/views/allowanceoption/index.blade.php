@@ -33,7 +33,7 @@
                     <h3>Manage Allowance Option</h3>
                     @can('create allowance option')
                     <div class="float-end">
-                        <a href="#" data-size="md" data-url="{{ route('allowanceoption.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Sources')}}" class="btn btn-sm btn-dark">
+                        <a href="#" data-size="md" data-url="{{ route('allowanceoption.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{__('Create New Allowance Option')}}" class="btn btn-sm btn-dark">
                             <i class="ti ti-plus"></i>
                         </a>
                     </div>
@@ -57,7 +57,7 @@
 
                                         @can('edit allowance option')
                                             <div class="action-btn  ms-2">
-                                                <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center bs-pass-para" data-url="{{ URL::to('allowanceoption/'.$allowanceoption->id.'/edit') }}" data-ajax-popup="true" data-title="{{__('Edit Document Type')}}" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
+                                                <a href="#" class="btn btn-sm btn-dark mx-1 align-items-center" data-url="{{ URL::to('allowanceoption/'.$allowanceoption->id.'/edit') }}" data-ajax-popup="true" data-title="{{__('Edit Allowance Option')}}" data-bs-toggle="tooltip" title="{{__('Edit Allowance Option')}}" data-original-title="{{__('Edit')}}">
                                                     <i class="ti ti-pencil text-white"></i>
                                                 </a>
                                             </div>

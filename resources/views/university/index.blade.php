@@ -47,6 +47,14 @@
 .dropdown-item:hover{
     background-color: white !important;
 }
+.form-control:focus{
+                    border: none !important;
+                    outline:none !important;
+                }
+   
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
 </style>
 
 
@@ -65,6 +73,7 @@
                     @if ($university->country == $key && !$countryFound)
                     @if ($i <= 4) <?php $i++; ?>
                     <div class="">
+                        <a href="/university?name=&country={{ $university->country }}&city=&phone=&note=" class="" style="text-decoration: none;">
                         <div class="card shadow py-2" style="width: 100%; height: 70%;border-radius: 22px;">
                             <div class="card-body" style="display: flex;
                             flex-direction: column;
@@ -81,15 +90,12 @@
                                 </div>
                             </div>
                         </div>
+                        </a>
                     </div>
                 @php
                 if ($i < 5) { echo '<div style="border-left: 3px solid black; height: 80px; width: 5px;margin-top: 1.9rem; " class = "mx-4"></div>' ; } $countryFound=true; @endphp @endif @endif @endforeach @empty @endforelse </div>
 
-                    <!-- <style>
-                        .form-control:focus {
-                            border: 1px solid rgb(209, 209, 209) !important;
-                        }
-                    </style> -->
+                   
 
                     <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                         <div class="col-3">
@@ -111,14 +117,12 @@
                                         <ul class="w-25" style="list-style: none;">
                                         <li class="fil fw-bolder">
                                             <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
-                                            <ul class="submenu" style="border: 1px solid #e9e9e9;
-                                            box-shadow: 0px 0px 1px #e9e9e9;">
+                                            <ul class="submenu" style="border: 1px solid #e9e9e9;box-shadow: 0px 0px 1px #e9e9e9;">
                                               <li><a class="dropdown-item" href="#">Rename</a></li>
                                               <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
                                             </ul>
                                         </li>
                                         </ul>
-
                                     </li>
                                     @endforeach
 
@@ -163,38 +167,42 @@
                         </div>
 
                         <div class="col-9 d-flex justify-content-end gap-2" >
-                            <div class="input-group w-25 rounded " >
-                                <button class="btn btn-sm list-global-search-btn px-0 ">
-                                    <span class="input-group-text bg-transparent border-0  px-1 py-1" id="basic-addon1">
+                            <div class="input-group w-25 rounded "  style= "width:36px; height: 36px; margin-top:10px;" >
+                                <button class="btn btn-sm list-global-search-btn p-0 pb-2 ">
+                                    <span class="input-group-text bg-transparent border-0  px-1" id="basic-addon1">
                                         <i class="ti ti-search" style="font-size: 18px"></i>
                                     </span>
                                 </button>
-                                <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list ..." aria-label="Username" aria-describedby="basic-addon1">
+                                <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2 list-global-search" placeholder="Search this list ..." aria-label="Username" aria-describedby="basic-addon1">
                             </div>
 
-                            <button class="btn p-2 refresh-list btn-dark d-none" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()"><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                            <button class="btn p-2 refresh-list btn-dark d-none" data-bs-toggle="tooltip" title="{{__('Refresh')}}" onclick="RefreshList()" style="display: flex; justify-content: center; align-items: center;">
+                                <i class="ti ti-refresh" style="font-size: 18px;"></i>
+                            </button>
 
-
-                            <button class="btn filter-btn-show p-2 btn-dark" style="color:white;" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
-                                <i class="ti ti-filter" style="font-size:18px"></i>
+                            <button class="btn filter-btn-show p-2 btn-dark" style="color:white; width:36px; height: 36px; margin-top:10px; display: flex; justify-content: center; align-items: center;" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
+                                <i class="ti ti-filter" style="font-size:18px;"></i>
                             </button>
 
                             @can('create university')
-                            <button data-size="lg" data-url="{{ route('university.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-size="lg" title="{{ __('Create University') }}" class="btn  btn-dark p-2">
+                            <button data-size="lg" data-url="{{ route('university.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-size="lg" title="{{ __('Create University') }}" class="btn  btn-dark p-2" style="color:white; width:36px; height: 36px; margin-top:10px; display: flex; justify-content: center; align-items: center;">
                                 <i class="ti ti-plus"></i>
                             </button>
                             @endcan
 
-                            <a href="{{ route('university.download') }}" class="btn p-2 btn-dark" style="color:white;" data-bs-toggle="tooltip" title="{{__('Download in Csv')}}">
-                                <i class="ti ti-download" style="font-size:18px"></i>
+                            @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
+                            <a href="{{ route('university.download') }}" class="btn p-2 btn-dark" style="color:white; width:36px; height: 36px; margin-top:10px; display: flex; justify-content: center; align-items: center;" data-bs-toggle="tooltip" title="{{__('Download in Csv')}}">
+                                <i class="ti ti-download" style="font-size:18px;"></i>
                             </a>
+                            @endif
+
                         </div>
                     </div>
 
                     {{-- Filters --}}
                     <div class="filter-data px-3" id="filter-show" <?= isset($_GET['name']) ? '' : 'style="display: none;"' ?>>
                         <form action="/university" method="GET" class="">
-                            <div class="row my-3">
+                            <div class="row my-3 filbar">
                                 <div class="col-md-3 mt-2">
                                     <label for="">Name</label>
                                     <input type="text" class="form form-control" placeholder="Search Name" name="name" value="<?= isset($_GET['name']) ? $_GET['name'] : '' ?>" style="width: 95%; border-color:#aaa">
@@ -228,8 +236,8 @@
                                 <div class="col-md-4 mt-3">
                                     <br>
                                     <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
+                                    <a href="/university" class="btn bg-dark me-2" style="color:white;">Reset</a>
                                     <a type="button" id="save-filter-btn" onClick="saveFilter('university',<?= sizeof($universities) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
-                                    <a href="/university" class="btn bg-dark" style="color:white;">Reset</a>
                                 </div>
                             </div>
                             <div class="row d-none">
@@ -265,7 +273,7 @@
                                     <th scope="col">{{ __('Campuses') }}</th>
                                     <th scope="col">{{ __('Intake') }}</th>
                                     <th scope="col">{{ __('Territory') }}</th>
-                                    <th scope="col">{{ __('Company') }}</th>
+                                    <!-- <th scope="col">{{ __('Company') }}</th> -->
                                     <th scope="col">{{ __('Resources') }}</th>
                                     <th scope="col">{{ __('Application Method') }}</th>
                                     @if (\Auth::user()->type == 'super admin')
@@ -306,15 +314,15 @@
 
                                     <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($university->campuses) ? $university->campuses : '' }}</td>
 
-                                    <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($university->intake_months) ? $university->intake_months : '' }}</td>
-                                    <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($university->territory) ? $university->territory : '' }}</td>
-                                    <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $users[$university->company_id]  ?? ''  }}</td>
-                                    <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($university->intake_months) ? $university->intake_months : '' }}</td>
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ !empty($university->territory) ? $university->territory : '' }}</td>
+                                    <!-- <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ $users[$university->company_id]  ?? ''  }}</td> -->
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         <a href="{{ !empty($university->resource_drive_link) ? $university->resource_drive_link : '' }}" >
                                             Click to view
                                         </a>
                                     </td>
-                                    <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         <a href="{{ !empty($university->application_method_drive_link) ? $university->application_method_drive_link : '' }}">
                                             {{ !empty($university->name) ? $university->name : '' }}
                                         </a>
@@ -376,12 +384,12 @@ $(document).ready(function() {
     $('.dropdown-togglefilter').dropdown();
 });
 $(document).ready(function() {
-            let curr_url = window.location.href;
+        let curr_url = window.location.href;
 
-            if(curr_url.includes('?')){
-                $('#save-filter-btn').css('display','inline-block');
-            }
-        });
+        if(curr_url.includes('?')){
+            $('#save-filter-btn').css('display','inline-block');
+        }
+    });
 
     $('.filter-btn-show').click(function() {
         $("#filter-show").toggle();

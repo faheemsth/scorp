@@ -15,6 +15,43 @@
 
     $(".add-filter").on("click", function() {
         $(".filter-data").toggle();
+    });
+    $(".add-tags").on("click", function(e){
+        e.preventDefault();
+        $button = $(this);
+        var formData = $("#addTagForm").serialize(); // Serialize form data
+        var url = $("#addTagForm").attr('action'); // Get form action URL
+        var csrfToken = $('meta[name="csrf-token"]').attr('content'); // Get CSRF token
+        $button.prop('disabled', true);
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: formData,
+            headers: {
+                'X-CSRF-Token': csrfToken // Include CSRF token in headers
+            },
+            success: function(response){
+                data = JSON.parse(response);
+                if(data.status == 'success'){
+                    $("#tagModal").hide();
+                    $(".modal-backdrop").removeClass('modal-backdrop');
+                    $(".sub-check").prop('checked', false);
+                    $button.prop('disabled', false);
+                    show_toastr('success', data.msg);
+                    window.location.href = '/deals/list';
+                }
+            },
+        });
+    });
+    $("#tagModalBtn").on("click", function(){
+        $(".sub-check").prop('checked', $(this).prop('checked'));
+
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        $("#selectedIds").val(selectedIds);
     })
 </script>
 @endpush
@@ -32,7 +69,12 @@
     .wizard {
         font-size: 8px;
     }
-
+    .lead-info-cell {
+        max-width: 110px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
     .wizard a {
         padding: 8px 8px 8px 25px !important;
         background: #efefef;
@@ -217,8 +259,73 @@
             left: 0 !important;
         }
     }
+    .form-control:focus{
+                    border: none !important;
+                    outline:none !important;
+                }
+
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
+</style>
+<style>
+    .form-controls,
+    .form-btn {
+        padding: 4px 1rem !important;
+    }
+
+    /* Set custom width for specific table cells */
+    .action-btn {
+        display: inline-grid !important;
+    }
+
+    .dataTable-bottom,
+    .dataTable-top {
+        display: none;
+    }
 </style>
 
+<style>
+    /* .red-cross {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                color: red;
+            } */
+    .boximg {
+        margin: auto;
+    }
+
+    .dropdown-togglefilter:hover .dropdown-menufil {
+        display: block;
+    }
+
+    /* .choices__inner {
+        border: 1px solid #ccc !important;
+        min-height: auto;
+        padding: 4px !important;
+    } */
+
+    .fil:hover .submenu {
+        display: block;
+    }
+
+    .fil .submenu {
+        display: none;
+        position: absolute;
+        top: 3%;
+        left: 154px;
+        width: 100%;
+        background-color: #fafafa;
+        font-weight: 600;
+        list-style-type: none;
+
+    }
+
+    .dropdown-item:hover {
+        background-color: white !important;
+    }
+</style>
 @section('breadcrumb')
 <li class="breadcrumb-item"><a href="{{ route('crm.dashboard') }}">{{ __('Dashboard') }}</a></li>
 <li class="breadcrumb-item">{{ __('Admissions') }}</li>
@@ -324,47 +431,124 @@
                 {{-- topbar --}}
                 <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
                     <div class="col-4">
-                        <p class="mb-0 pb-0 ps-1">ADMISSIONS</p>
+                        <p class="mb-0 pb-0 ps-1">Admissions</p>
                         <div class="dropdown">
                             <button class="dropdown-toggle all-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                 ALL ADMISSIONS
                             </button>
+
+
+
+                            @php
+                            $saved_filters = App\Models\SavedFilter::where('created_by', \Auth::user()->id)->where('module', 'deals')->get();
+                            @endphp
+
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><a class="dropdown-item delete-bulk-deals" href="javascript:void(0)">Delete</a></li>
-                          </ul>
-                        </div>
+                                    @if(sizeof($saved_filters) > 0)
+                                        @foreach($saved_filters as $filter)
+                                        <li class="d-flex align-items-center justify-content-between ps-2">
+                                            <div class="col-10">
+                                                <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                                <span class="text-dark"> ({{$filter->count}})</span>
+                                            </div>
+                                            <ul class="w-25" style="list-style: none;">
+                                                <li class="fil fw-bolder">
+                                                    <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                                    <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                                                                box-shadow: 0px 0px 1px #e9e9e9;">
+                                                        <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name ?>', <?= $filter->id ?>)">Rename</a></li>
+                                                        <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+
+                                        </li>
+                                        @endforeach
+                                        @else
+                                        <li class="d-flex align-items-center justify-content-center ps-2">
+                                            No Saved Filter Found.
+                                        </li>
+                                        @endif
+
+                            </ul>
+
+
+
                     </div>
+                </div>
 
 
                     <div class="col-8 d-flex justify-content-end gap-2 pe-0">
-                        <div class="input-group w-25">
+                        <!-- <div class="input-group w-25">
                             <button class="btn btn-sm list-global-search-btn px-0">
                                 <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
                             </button>
                             <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search this list...">
+                        </div> -->
+
+                        <div class="input-group w-25 rounded" style="width:36px; height: 36px; margin-top:10px;">
+                            <button class="btn btn-sm list-global-search-btn p-0 pb-2">
+                                <span class="input-group-text bg-transparent border-0  px-1 " id="basic-addon1">
+                                    <i class="ti ti-search" style="font-size: 18px"></i>
+                                </span>
+                            </button>
+                            <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2  list-global-search" placeholder="Search this list...">
                         </div>
 
 
 
 
 
-                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 d-none refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
 
-                        <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
-                            <i class="ti ti-filter" style="font-size:18px"></i>
-                        </button>
+                        <!-- <button class="btn filter-btn-show p-2 btn-dark" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
+                            <i class="ti ti-filter"></i>
+                        </button> -->
 
+                        <a href="javascript:void(0)" class="btn p-2 filter-btn-show btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Filter" class="btn  btn-dark px-0">
+                        <i class="ti ti-filter"></i>
+                        </a>
+<!--
                         <a  href="{{ url('/deals') }}" data-bs-toggle="tooltip" title="{{ __('Deals View') }}" class="btn px-2 btn-dark d-flex align-items-center">
                             {{-- <i class="ti ti-plus" style="font-size:18px"></i> --}}
                             <i class="fa-solid fa-border-all" style="font-size:18px"></i>
+                        </a> -->
+
+                        <a href="{{ url('/deals') }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Deal View" class="btn  btn-dark px-0">
+                            <i class="fa-solid fa-border-all"></i>
                         </a>
 
+                        @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team')
+                            <a href="{{ route('deals.download') }}" class="btn p-2 btn-dark  text-white" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="tooltip" title="" data-original-title="Download in Csv" class="btn  btn-dark px-0">
+                                <i class="ti ti-download"></i>
+                            </a>
+                        @endif
+
+                        @if(auth()->user()->can('delete deal'))
+                            <a class="btn p-2 btn-dark  text-white assigned_to delete-bulk d-none" data-bs-toggle="tooltip" title="{{__('Mass Delete')}}" id="actions_div" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;">
+                                <i class="ti ti-trash"></i>
+                            </a>
+                        @endif
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-dark dropdown-toggle-split rounded-1" style="font-weight: 500; color:white; width:36px; height: 36px; margin-top:10px;" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-list-check"></i><span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <!-- Dropdown menu items -->
+                                <li>
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-link dropdown-item d-none" id="tagModalBtn" data-toggle="modal" data-target="#tagModal">
+                                        Tags
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
                         {{-- <a href="#" data-size="lg" data-url="{{ route('deals.create') }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create New Deal') }}" class="btn p-2 btn-dark">
                             <i class="ti ti-plus"></i>
                         </a> --}}
-                        <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+                        <!-- <a class="btn p-2 btn-dark  text-white assigned_to" data-bs-toggle="tooltip" title="{{__('Mass Update')}}" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a> -->
 
 
                     </div>
@@ -380,19 +564,85 @@
                     <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
                         <form action="/deals/list" method="GET" class="">
 
-                            <div class="row my-3">
-                                <div class="col-md-4">
+                            <div class="row my-3 filbar">
+                                @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2'))
+                                    <div class="col-md-3 mt-2">
+                                        <label for="">Brand</label>
+                                        <select name="brand" class="form form-control select2" id="filter_brand_id">
+                                            @if (!empty($filters['brands']))
+                                                @foreach ($filters['brands'] as $key => $Brand)
+                                                <option value="{{ $key }}" {{ !empty($_GET['brand']) && $_GET['brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No brands available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+
+
+                                @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3'))
+                                    <div class="col-md-3 mt-2" id="region_filter_div">
+                                        <label for="">Region</label>
+                                        <select name="region_id" class="form form-control select2" id="filter_region_id">
+                                            @if (!empty($filters['regions']))
+                                                @foreach   ($filters['regions'] as $key => $region)
+                                                <option value="{{ $key }}" {{ !empty($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : '' }}>{{ $region }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+
+                                @if(\Auth::user()->can('level 1') || \Auth::user()->can('level 2') || \Auth::user()->can('level 3') || \Auth::user()->can('level 4'))
+                                    <div class="col-md-3 mt-2" id="branch_filter_div">
+                                        <label for="">Branch</label>
+                                        <select name="branch_id" class="form form-control select2" id="filter_branch_id">
+                                            @if (!empty($filters['branches']))
+                                                @foreach ($filters['branches'] as $key => $branch)
+                                                <option value="{{ $key }}" {{ !empty($_GET['branch_id']) && $_GET['branch_id'] == $key ? 'selected' : '' }}>{{ $branch }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+                                <div class="col-md-3 mt-2"> <label for="">Assigned To</label>
+                                    <div class="" id="assign_to_div">
+                                        <select name="lead_assigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
+                                            @foreach ($filters['employees'] as $key => $user)
+                                            <option value="{{ $key }}" <?= isset($_GET['lead_assigned_user']) && $key == $_GET['lead_assigned_user'] ? 'selected' : '' ?> class="">{{ $user }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+
+                                <div class="col-md-3 mt-2">
                                     <label for="">Name</label>
                                     <select name="name[]" id="deals" class="form form-control select2" multiple style="width: 95%;">
                                         <option value="">Select name</option>
-                                        @foreach ($deals as $deal)
+                                        @foreach ($Alldeals as $deal)
                                         <option value="{{ $deal->name }}" <?= isset($_GET['name']) && in_array($deal->name, $_GET['name']) ? 'selected' : '' ?> class="">{{ $deal->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
 
 
-                                <div class="col-md-4">
+
+                                <div class="col-md-3 mt-2">
                                     <label for="">Stages</label>
                                     <select name="stages[]" id="stages" class="form form-control select2" multiple style="width: 95%;">
                                         <option value="">Select Pipeline</option>
@@ -401,33 +651,38 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager')
-                                <div class="col-md-4"> <label for="">Brands</label>
-                                    <select class="form form-control select2" id="choices-multiple555" name="created_by[]" multiple style="width: 95%;">
-                                        <option value="">Select Brand</option>
-                                        @if (FiltersBrands())
-                                            @foreach (FiltersBrands() as $key => $brand)
-                                               <option value="{{ $key }}" <?= isset($_GET['created_by']) && in_array($key, $_GET['created_by']) ? 'selected' : '' ?> class="">{{ $brand }}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
+
+
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Created at From</label>
+                                    <input type="date" class="form form-control" name="created_at_from"
+                                        value="<?= isset($_GET['created_at_from']) ? $_GET['created_at_from'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
                                 </div>
-                                @endif
-                                <style>
-                                    .form-control:focus {
-                                        border: 1px solid rgb(209, 209, 209) !important;
-                                    }
-                                </style>
-                                <div class="col-md-4 mt-2">
-                                    <label for="">Created at</label>
-                                    <input type="date" class="form form-control" name="created_at" value="<?= isset($_GET['created_at']) ? $_GET['created_at'] : '' ?>" style="width: 95%; border-color:#aaa">
+
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Created at To</label>
+                                    <input type="date" class="form form-control" name="created_at_to"
+                                        value="<?= isset($_GET['created_at_to']) ? $_GET['created_at_to'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
+                                </div>
+
+                                <div class="col-md-3"> <label for="">Tag</label>
+                                    <select class="form form-control select2" id="tags" name="tag" style="width: 95%;">
+                                        <option value="">Select Tag</option>
+                                        @foreach ($tags as $key => $tag)
+                                          @if ($key != '')
+                                             <option value="{{ $tag }}" <?= (isset($_GET['tag']) && $tag == $_GET['tag']) ? 'selected' : '' ?>>{{ $key }}</option>
+                                          @endif
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div class="col-md-4 mt-3">
                                     <br>
                                     <input type="submit" class="btn me-2 bg-dark" style=" color:white;">
-                                    <a type="button" id="save-filter-btn" onClick="saveFilter('deals',<?= sizeof($deals) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
                                     <a href="/deals/list" class="btn bg-dark" style="color:white;">Reset</a>
+                                    <a type="button" id="save-filter-btn" onClick="saveFilter('deals',<?= sizeof($deals) ?>)" class="btn me-2 bg-dark ml-2" style=" color:white;display:none;">Save Filter</a>
                                 </div>
                             </div>
 
@@ -462,108 +717,101 @@
                                     <th style="width: 50px !important;">
                                         <input type="checkbox" class="main-check">
                                     </th>
-                                    <th style="width: 100px !important;">{{ __('Admission Name') }}</th>
+                                    <th style="width: 100px !important;">{{ __('Name') }}</th>
                                     <th>{{ __('Passport') }}</th>
                                     <th>{{ __('Stage') }}</th>
 
-                                    <th>{{ __('Lead Source') }}</th>
+                                    <th>{{ __('Source') }}</th>
 
                                     <th>{{ __('Intake') }}</th>
 
 
                                     <th class="">{{ __('Assigned to') }}</th>
+                                    <th class="">{{ __('Tag') }}</th>
                                     <th width="300px" class="d-none">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody id="deals_tbody">
                                 @if (count($deals) > 0)
                                 @foreach ($deals as $deal)
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="deals[]" value="{{ $deal->id }}" class="sub-check">
+                                        </td>
 
-                                @php
-                                $client = \App\Models\User::join('client_deals', 'client_deals.client_id', 'users.id')->where('client_deals.deal_id', $deal->id)->first();
-                                $passport_number = isset($client->passport_number) ? $client->passport_number : '';
-                                @endphp
+                                        <td style="width: 100px !important; ">
+                                            <span style="cursor:pointer" class="deal-name hyper-link"
+                                                @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})" @endcan
+                                                data-deal-id="{{ $deal->id }}">
 
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="deals[]" value="{{$deal->id}}" class="sub-check">
-                                    </td>
-                                    <td style="width: 100px !important; ">
-                                        <span style="cursor:pointer" class="deal-name hyper-link" @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})" @endcan data-deal-id="{{ $deal->id }}">
+                                                @if (strlen($deal->name) > 40)
+                                                    {{ substr($deal->name, 0, 40) }}...
+                                                @else
+                                                    {{ $deal->name }}
+                                                @endif
+                                            </span>
+                                        </td>
+                                        <td> {{ $deal->passport }}</td>
+                                        <td>{{ $deal->stage->name }}</td>
+                                        <td>
+                                            {{ $deal->sources }}
+                                        </td>
 
-                                            @if (strlen($deal->name) > 40)
-                                            {{ substr($deal->name, 0, 40) }}...
-                                            @else
-                                            {{ $deal->name }}
-                                            @endif
-                                        </span>
-                                    </td>
-                                    <td> {{ $passport_number }}</td>
-                                    <td>{{ $deal->stage->name }}</td>
-                                    <td>
-                                        @php
-                                        $lead = \App\Models\Lead::join('client_deals', 'client_deals.client_id', 'leads.is_converted')->where('client_deals.deal_id', $deal->id)->first();
-                                        $source = isset($lead->sources) && isset($sources[$lead->sources]) ? $sources[$lead->sources] : '';
-                                        @endphp
-
-                                        {{ $source }}
-                                    </td>
-
-                                    <td>
-                                        @php
-                                        $month = !empty($deal->intake_month) ? $deal->intake_month : 'January';
-                                        $year = !empty($deal->intake_year) ? $deal->intake_year : '2023';
-                                        @endphp
-                                        {{ $month.' 1 ,'.$year }}
-                                    </td>
+                                        <td>
+                                            @php
+                                                $month = !empty($deal->intake_month) ? $deal->intake_month : 'January';
+                                                $year = !empty($deal->intake_year) ? $deal->intake_year : '2023';
+                                            @endphp
+                                            {{ $month . ' 1 ,' . $year }}
+                                        </td>
 
 
 
-                                    <td class="">
-                                        @php
-                                        $assigned_to = isset($deal->assigned_to) && isset($users[$deal->assigned_to]) ? $users[$deal->assigned_to] : 0;
-                                        @endphp
+                                        <td class="">
+                                            <span style="cursor:pointer" class="hyper-link"
+                                                onclick="openSidebar('/users/'+{{ $deal->assigned_to }}+'/user_detail')">
+                                                {{ $deal->assigName }}
+                                            </span>
+                                        </td>
+                                        <td class="lead-info-cell">
 
-                                        @if($assigned_to != 0)
-                                        <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{$deal->assigned_to}}+'/user_detail')">
-                                            {{$users[$deal->assigned_to] }}
-                                        </span>
+                                            @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $deal->tag_ids))->get() as $tag)
+                                                <span class="badge text-white tag-badge" data-tag-id="{{ $tag->id }}" data-lead-id="{{ $deal->lead_id }}" data-deal-id="{{ $deal->id }}" style="background-color:#cd9835;cursor:pointer;">{{ $tag->tag }}</span>
+                                            @endforeach
+                                        </td>
+
+                                        @if (\Auth::user()->type != 'Client')
+                                            <td class="Action d-none">
+                                                <div class="dropdown">
+                                                    <button class="btn bg-transparents" type="button" id="dropdownMenuButton1"
+                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
+                                                            <path
+                                                                d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z">
+                                                            </path>
+                                                        </svg>
+                                                    </button>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                                        <li><a class="dropdown-item" href="#">Change</a>
+                                                        </li>
+                                                        <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                        <li><a class="dropdown-item" href="#">Delete</a>
+                                                        </li>
+                                                    </ul>
+
+                                            </td>
                                         @endif
 
-                                    </td>
 
-
-                                    @if (\Auth::user()->type != 'Client')
-                                    <td class="Action d-none">
-                                        <div class="dropdown">
-                                            <button class="btn bg-transparents" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18">
-                                                    <path d="M12 3C11.175 3 10.5 3.675 10.5 4.5C10.5 5.325 11.175 6 12 6C12.825 6 13.5 5.325 13.5 4.5C13.5 3.675 12.825 3 12 3ZM12 18C11.175 18 10.5 18.675 10.5 19.5C10.5 20.325 11.175 21 12 21C12.825 21 13.5 20.325 13.5 19.5C13.5 18.675 12.825 18 12 18ZM12 10.5C11.175 10.5 10.5 11.175 10.5 12C10.5 12.825 11.175 13.5 12 13.5C12.825 13.5 13.5 12.825 13.5 12C13.5 11.175 12.825 10.5 12 10.5Z">
-                                                    </path>
-                                                </svg>
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                                <li><a class="dropdown-item" href="#">Change</a>
-                                                </li>
-                                                <li><a class="dropdown-item" href="#">Edit</a></li>
-                                                <li><a class="dropdown-item" href="#">Delete</a>
-                                                </li>
-                                            </ul>
-
-                                    </td>
-                                    @endif
-
-
-                                </tr>
+                                    </tr>
                                 @endforeach
-                                @else
+                            @else
                                 <tr class="font-style">
                                     <td colspan="6" class="text-center">
                                         {{ __('No data available in table') }}
                                     </td>
                                 </tr>
-                                @endif
-
+                            @endif
                             </tbody>
                         </table>
 
@@ -657,7 +905,62 @@
         </div>
     </div>
 </div>
+<div class="modal" id="UpdateTageModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tags Update</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+                <form action="{{ route('lead_tags') }}" method="POST" id="UpdateTagForm">
+                <div class="modal-body" id="TagModalBody">
 
+                </div>
+                <br>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-dark px-2 Update" value="Update">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="tagModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Tag</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('deal_tags') }}" method="POST" id="addTagForm">
+                <div class="modal-body">
+                    <input type="hidden" value="" name="selectedIds" id="selectedIds">
+
+                    <div class="form-group">
+                        <label for="">Tag</label>
+                        <select class="form form-control select2 selectTage" name="tagid" id="tagSelect" style="width: 95%;">
+                            <option value="">Select Tag</option>
+                            @foreach ($tags as $key => $tag)
+                            @if (!empty($tag))
+                            <option value="{{ $tag }}" <?= isset($_GET['tag']) && $key == $_GET['tag'] ? 'selected' : '' ?> class="">{{ $key }}</option>
+                            @endif
+                            @endforeach
+                            {{-- @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Project Director' || \Auth::user()->type == 'Project Manager') --}}
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-dark add-tags">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
     {{-- @endif --}}
     @endsection
 
@@ -675,30 +978,72 @@
             $("#filter-show").toggle();
         });
 
+        // $(document).on('change', '.main-check', function() {
+        //     $(".sub-check").prop('checked', $(this).prop('checked'));
+        // });
+
+        // $(document).on('change', '.sub-check', function() {
+        //     var selectedIds = $('.sub-check:checked').map(function() {
+        //         return this.value;
+        //     }).get();
+
+        //     console.log(selectedIds.length)
+
+        //     if(selectedIds.length > 0){
+        //         selectedArr = selectedIds;
+        //         $("#actions_div").css('display', 'block');
+        //     }else{
+        //         selectedArr = selectedIds;
+
+        //         $("#actions_div").css('display', 'none');
+        //     }
+        //     let commaSeperated = selectedArr.join(",");
+        //     console.log(commaSeperated)
+        //     $("#deal_ids").val(commaSeperated);
+
+        // });
+
         $(document).on('change', '.main-check', function() {
-            $(".sub-check").prop('checked', $(this).prop('checked'));
-        });
+        $(".sub-check").prop('checked', $(this).prop('checked'));
 
-        $(document).on('change', '.sub-check', function() {
-            var selectedIds = $('.sub-check:checked').map(function() {
-                return this.value;
-            }).get();
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
 
-            console.log(selectedIds.length)
+        // console.log(selectedIds.length)
 
-            if(selectedIds.length > 0){
-                selectedArr = selectedIds;
-                $("#actions_div").css('display', 'block');
-            }else{
-                selectedArr = selectedIds;
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#tagModalBtn").removeClass('d-none');
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+            $("#tagModalBtn").addClass('d-none');
+            $("#actions_div").addClass('d-none');
+        }
+    });
 
-                $("#actions_div").css('display', 'none');
-            }
-            let commaSeperated = selectedArr.join(",");
-            console.log(commaSeperated)
-            $("#deal_ids").val(commaSeperated);
+    $(document).on('change', '.sub-check', function() {
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
 
-        });
+        // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#tagModalBtn").removeClass('d-none');
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+            $("#tagModalBtn").addClass('d-none');
+            $("#actions_div").addClass('d-none');
+        }
+        let commaSeperated = selectedArr.join(",");
+        //console.log(commaSeperated)
+        //$("#region_ids").val(commaSeperated);
+
+    });
 
         function massUpdate(){
             if(selectedArr.length > 0){
@@ -707,6 +1052,28 @@
                 alert('Please choose Tasks!')
             }
         }
+
+
+        $(document).on("click", '.delete-bulk', function() {
+        var task_ids = $(".sub-check:checked");
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/delete-bulk-deals?ids=' + selectedIds.join(',');
+            }
+        });
+    })
 
         $('#bulk_field').on('change', function() {
 
@@ -754,7 +1121,7 @@
 
                 }else if(this.value == 'linked_contact'){
 
-                    var clients = <?= json_encode($clients) ?>;
+                    var clients = [''];
                     let options = '';
 
                     $.each(clients, function(keyName, keyValue) {
@@ -770,7 +1137,7 @@
 
                 }else if(this.value == 'user_res'){
 
-                    var users = <?= json_encode($users) ?>;
+                    var users = [''];
                     let options = '';
 
                     $.each(users, function(keyName, keyValue) {
@@ -837,7 +1204,7 @@
 
                 }else if(this.value == 'ofc_res'){
 
-                    var branches = <?= json_encode($branches) ?>;
+                    var branches = [''];
                     let options = '';
 
                     $.each(branches, function(keyName, keyValue) {
@@ -869,7 +1236,7 @@
 
                 }else if(this.value == 'stage'){
 
-                    var stages = <?= json_encode($stages) ?>;
+                    var stages = [''];
                     let options = '';
 
                     $.each(stages, function(keyName, keyValue) {
@@ -891,6 +1258,39 @@
             }
 
             });
+            
+
+    $(document).on("click", ".textareaClassedit", function() {
+        var dataId = $(this).data('note-id');
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        $.ajax({
+            url: "{{ url('update/from/DealsNoteForm') }}",
+            method: 'POST',
+            data: {
+                id: dataId
+            },
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+
+            success: function(data) {
+                data = JSON.parse(data);
+                if (data.status === 'success') {
+                    $("#leadsNoteForm").html('');
+                    $("#leadsNoteForm").html(data.html);
+                } else {
+                    console.error('Server returned an error:', data.message);
+                }
+
+
+            },
+
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+
+    });
 
         // new lead form submitting...
         $(document).on("submit", "#deal-creating-form", function(e) {
@@ -939,7 +1339,7 @@
                 data: formData,
                 success: function(data) {
                     data = JSON.parse(data);
-
+                    //alert(data.status);
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
                         $('#commonModal').modal('hide');
@@ -1148,9 +1548,11 @@
 
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
+                        $('.create-notes-btn').removeAttr('disabled');
                         $('#commonModal').modal('hide');
                         $('.note-body').html(data.html);
-                        $('textarea[name="description"]').val('');
+                        $('#description').val('');
+                        $('#description').summernote('code', '<p><br></p>');
                         $('#note_id').val('');
 
                         // openNav(data.lead.id);
@@ -1182,6 +1584,7 @@
 
                     if (data.status == 'success') {
                         show_toastr('Success', data.message, 'success');
+                        $('.update-notes-btn').removeAttr('disabled');
                         $('#commonModal').modal('hide');
                         $('.note-body').html(data.html);
                         $('textarea[name="description"]').val('');
@@ -1207,7 +1610,16 @@
             var id = $(this).attr('data-note-id');
             var deal_id = $('.deal-id').val();
             var currentBtn = '';
-
+            Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
             $.ajax({
                 type: "GET",
                 url: "/deals/" + id + "/notes-delete",
@@ -1231,6 +1643,8 @@
                     }
                 }
             });
+        }
+      });
 
         })
 
@@ -1323,5 +1737,95 @@
                 }
             });
         })
+
+         ////////////////////Filters Javascript
+         $("#filter_brand_id").on("change", function() {
+            var id = $(this).val();
+            var type = 'brand';
+            var filter = true;
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#region_filter_div').html('');
+                        $("#region_filter_div").html(data.regions);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+
+        $(document).on("change", "#filter_region_id, #region_id", function() {
+            var id = $(this).val();
+            var filter = true;
+            var type = 'region';
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#branch_filter_div').html('');
+                        $("#branch_filter_div").html(data.branches);
+                        getLeads();
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+        $(document).on("change", "#filter_branch_id, #branch_id", function() {
+
+            var id = $(this).val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('filter-branch-users') }}',
+                    data: {
+                        id: id
+                    },
+                    success: function(data){
+                        data = JSON.parse(data);
+
+                        if (data.status === 'success') {
+                            $('#assign_to_div').html('');
+                            $("#assign_to_div").html(data.html);
+                            select2();
+                        } else {
+                            console.error('Server returned an error:', data.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX request failed:', status, error);
+                    }
+                });
+        });
+
     </script>
     @endpush

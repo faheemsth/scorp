@@ -96,7 +96,9 @@
                                                 @if (
                                                     \Auth::user()->type == 'super admin' ||
                                                         \Auth::user()->type == 'Project Director' ||
-                                                        \Auth::user()->type == 'Project Manager')
+                                                        \Auth::user()->type == 'Project Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2'))
                                                             {!! Form::select('brand_id', $companies, 0, [
                                                                 'class' => 'form-control select2 brand_id',
                                                                 'id' => 'brands',
@@ -134,7 +136,10 @@
                                                         \Auth::user()->type == 'Project Director' ||
                                                         \Auth::user()->type == 'Project Manager' ||
                                                         \Auth::user()->type == 'company' ||
-                                                        \Auth::user()->type == 'Regional Manager')
+                                                        \Auth::user()->type == 'Region Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2' ||
+                                                        \Auth::user()->can('level 3')))
 
                                                             {!! Form::select('region_id', $regions, null, [
                                                                 'class' => 'form-control select2',
@@ -163,8 +168,12 @@
                                                         \Auth::user()->type == 'Project Director' ||
                                                         \Auth::user()->type == 'Project Manager' ||
                                                         \Auth::user()->type == 'company' ||
-                                                        \Auth::user()->type == 'Regional Manager' ||
-                                                        \Auth::user()->type == 'Branch Manager')
+                                                        \Auth::user()->type == 'Region Manager' ||
+                                                        \Auth::user()->type == 'Branch Manager' ||
+                                                        \Auth::user()->can('level 1') ||
+                                                        \Auth::user()->can('level 2') ||
+                                                        \Auth::user()->can('level 3') ||
+                                                        \Auth::user()->can('level 4'))
                                                             <select name="lead_branch" id="branch_id" class="form-control select2 branch_id"
                                                                 onchange="Change(this)">
                                                                     @foreach($branches as $key => $branch)
@@ -188,8 +197,8 @@
                                                 {{ __('User Responsible') }} <span
                                                 class="text-danger">*</span>
                                             </td>
-                                            <td class="" style="padding-left: 10px; font-size: 13px;" id="assign_to_div">
-                                                <select class="form-control select2" id="choice-2" name="lead_assgigned_user">
+                                            <td class="" style="padding-left: 10px; font-size: 13px;" id="assign_to_divs">
+                                                <select class="form-control select2" id="choice-222" name="lead_assigned_user">
                                                     @foreach($employees as $key => $employee)
                                                     <option value="{{$key}}">{{$employee}}</option>
                                                     @endforeach
@@ -197,13 +206,13 @@
                                             </td>
                                         </tr>
 
-                                        <tr>
+                                        <tr class="d-none">
                                             <td class="" style="width: 100px; font-size: 13px;">
-                                                {{ __('Agency') }}
+                                                {{ __('Organizations') }}
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
                                                 <select class="form-control select2" id="choice-7" name="lead_organization">
-                                                    <option value="">Select Agency</option>
+                                                    <option value="">Select Organizations</option>
                                                     @foreach($organizations as $key => $org)
                                                     <option value="{{$key}}">{{$org}}</option>
                                                     @endforeach
@@ -212,20 +221,20 @@
                                         </tr>
 
 
-                                        {{-- <tr>
-                                                    <td class=""
-                                                        style="width: 100px; font-size: 13px;">
-                                                        {{ __('Agency Link') }}
+                                        <tr>
+                                            <td class=""
+                                                style="width: 100px; font-size: 13px;">
+                                            {{ __('Agency') }}
                                         </td>
                                         <td class="" style="padding-left: 10px; font-size: 13px;">
-                                            <select class="form-select w-50" name="lead_organization_link">
-                                                <option>Select Agency Link</option>
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
+                                            <select class="form-select w-50 select2" id="choice-6" name="lead_organization_link">
+                                                <option>Select Agency</option>
+                                                @foreach($Agences as $key => $Agence)
+                                                    <option value="{{$key}}">{{$Agence}}</option>
+                                                @endforeach
                                             </select>
                                         </td>
-                                        </tr> --}}
+                                        </tr>
                                         <tr>
                                             <td class="" style="width: 100px; font-size: 13px;">
                                                 {{ __('Lead Source') }}
@@ -249,6 +258,19 @@
                                             </td>
                                         </tr>
 
+                                        <tr>
+                                            <td class="" style="width: 100px; font-size: 13px;">
+                                                {{ __('Tages') }}
+                                            </td>
+                                            <td class="" style="padding-left: 10px; font-size: 13px;">
+                                                <select class="form-control select2" multiple id="choice-4232" name="tag_ids[]">
+                                                    <option value="">Select tage</option>
+                                                    @foreach ($tags as $key => $tag)
+                                                      <option value="{{ $tag }}">{{ $key }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -291,7 +313,7 @@
                                                 {{ __('Mobile Phone') }} <span class="text-danger">*</span>
                                             </td>
                                             <td class="" style="padding-left: 10px; font-size: 13px;">
-                                                <input type="text" class="form-control" name="lead_phone" required>
+                                                <input type="number" class="form-control" id="phone" name="lead_phone" placeholder="00000000000" required>
                                             </td>
                                         </tr>
 
@@ -341,7 +363,6 @@
                                                 Address
                                             </td>
                                             <td class="" style="width: 350PX; font-size: 13px; bg-danger">
-
                                                 <div class="row">
                                                     <div class="col-12 col-form" style="text-align: left;">
                                                         <select class="form-control select2" id="choice-5" name="lead_country">
@@ -352,6 +373,10 @@
 
                                                         </select>
                                                     </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 7afbd5b8288669db36641332cfa81b590009005e
                                                     <div class="col-6 col-form">
                                                         <input type="text" class="form-control" id="formGroupExampleInput" placeholder="City" name="lead_city">
                                                     </div>
@@ -361,9 +386,12 @@
                                                     <div class="col-6 col-form">
                                                         <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Postel Code" name="lead_postal_code">
                                                     </div>
-                                                    <div class="col-6 col-form" style="text-align: left;">
-                                                            <input type="text" class="form-control" placeholder="Address" id="floatingTextarea" name="lead_street">
+
+                                                    <div class="col-6">
+                                                        <input type="text" class="form form-control" value="" name="lead_street" placeholder="Address...">
+                                                        <!-- <textarea class="form-control" placeholder="Street" id="floatingTextarea" name="lead_street"></textarea> -->
                                                     </div>
+
                                                 </div>
                                             </td>
                                         </tr>
@@ -400,7 +428,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="accordion-item">
+                <div class="accordion-item d-none">
                     <h2 class="accordion-header" id="panelsStayOpen-headingkeytag">
                         <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekeytag">
                             {{ __('TAG LIST') }}
@@ -418,8 +446,7 @@
                                             </td>
                                             <td class="" style="padding-left: 10px;">
                                                 <select name="lead_tags_list" id="choice-6" class="form form-control select2">
-                                                    <option value=""></option>
-                                                    <option value="Public">Public</option>
+                                                    <option value="Public" selected>Public</option>
                                                     <option value="Private">Private</option>
                                                 </select>
                                             </td>
@@ -444,34 +471,10 @@
 
 {{Form::close()}}
 
+
 <script>
 
     $(".brand_id").on("change", function(){
-        // var id = $(this).val();
-
-        // $.ajax({
-        //     type: 'GET',
-        //     url: '{{ route('lead_companyemployees') }}',
-        //     data: {
-        //         id: id  // Add a key for the id parameter
-        //     },
-        //     success: function(data){
-        //         data = JSON.parse(data);
-
-        //         if (data.status === 'success') {
-        //             $("#assign_to_div").html(data.employees);
-        //             select2();
-        //             $("#branch_div").html(data.branches);
-        //             select2(); // Assuming this is a function to initialize or update a select2 dropdown
-        //         } else {
-        //             console.error('Server returned an error:', data.message);
-        //         }
-        //     },
-        //     error: function(xhr, status, error) {
-        //         console.error('AJAX request failed:', status, error);
-        //     }
-        // });
-
 
         var id = $(this).val();
 
@@ -538,8 +541,8 @@
                 data = JSON.parse(data);
 
                 if (data.status === 'success') {
-                    $('#assign_to_div').html('');
-                    $("#assign_to_div").html(data.html);
+                    $('#assign_to_divs').html('');
+                    $("#assign_to_divs").html(data.html);
                     select2();
                 } else {
                     console.error('Server returned an error:', data.message);
@@ -552,8 +555,67 @@
     });
 
 
+    //////////////////Submitting Form
+    // new lead form submitting...
+    $("#lead-creating-form").on("submit", function(e) {
+
+        e.preventDefault();
+        var formData = $(this).serialize();
+
+        $(".new-lead-btn").val('Processing...');
+        // $('.new-lead-btn').attr('disabled', 'disabled');
+
+        $(".new-lead-btn").prop('disabled', true);
+
+            $.ajax({
+                type: "POST",
+                url: "{{ route('leads.store') }}",
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('success', data.message, 'success');
+                    $('#commonModal').modal('hide');
+                    $('.leads-list-tbody').prepend(data.html);
+                    openSidebar('/get-lead-detail?lead_id=' + data.lead_id);
+                    // openNav(data.lead.id);
+                    return false;
+                } else {
+                    if(data.htmlead !== ''){
+                        Swal.fire({
+                        title: data.message,
+                        html: data.htmlead,
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Yes, delete it!"
+                    })
+
+                    }else{
+                        show_toastr('error', data.message, 'error');
+                    }
+                    $(".new-lead-btn").val('Create');
+                    $('.new-lead-btn').removeAttr('disabled');
+                }
+            }
+        });
+    });
+    $(document).on("click", "#leadLink", function(){
+        Swal.close();
+        $('#commonModal').modal('hide');
+    });
+</script>
 
 
-
-
+<script>
+    // Use the input variable in the rest of your code
+    window.intlTelInput(document.getElementById('phone'), {
+        utilsScript: "{{ asset('js/intel_util.js') }}",
+        initialCountry: "pk",
+        separateDialCode: true,
+        formatOnDisplay: true,
+        hiddenInput: "full_number"
+    });
 </script>

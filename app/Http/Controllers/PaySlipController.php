@@ -23,11 +23,7 @@ class PaySlipController extends Controller
     {
         if(\Auth::user()->can('manage pay slip') || \Auth::user()->type != 'client' || \Auth::user()->type != 'company')
         {
-            $employees = Employee::where(
-                [
-                    'created_by' => \Auth::user()->creatorId(),
-                ]
-            )->first();
+            $employees = Employee::get();
 
             $month = [
                 '01' => 'JAN',
@@ -44,19 +40,13 @@ class PaySlipController extends Controller
                 '12' => 'DEC',
             ];
 
-            $year = [
-//                '2020' => '2020',
-//                '2021' => '2021',
-                '2022' => '2022',
-                '2023' => '2023',
-                '2024' => '2024',
-                '2025' => '2025',
-                '2026' => '2026',
-                '2027' => '2027',
-                '2028' => '2028',
-                '2029' => '2029',
-                '2030' => '2030',
-            ];
+            $year = [];
+            $currentYear = date('Y');
+
+            for ($i = 0; $i < 10; $i++) {
+                $yearValue = $currentYear - $i;
+                $year[$yearValue] = (string)$yearValue;
+            }
 
             return view('payslip.index', compact('employees', 'month', 'year'));
         }
@@ -80,7 +70,6 @@ class PaySlipController extends Controller
 
                            ]
         );
-
         if($validator->fails())
         {
             $messages = $validator->getMessageBag();
@@ -93,21 +82,43 @@ class PaySlipController extends Controller
 
 
         $formate_month_year = $year . '-' . $month;
-        $validatePaysilp    = PaySlip::where('salary_month', '=', $formate_month_year)->where('created_by', \Auth::user()->creatorId())->pluck('employee_id');
-        $payslip_employee   = Employee::where('created_by', \Auth::user()->creatorId())->where('company_doj', '<=', date($year . '-' . $month . '-t'))->count();
-        if($payslip_employee > count($validatePaysilp))
+        $validatePaysilp    = PaySlip::where('salary_month', '=', $formate_month_year)->where('created_by', \Auth::id())->pluck('employee_id');
+        $query = Employee::select('employees.*')
+        ->leftJoin('users', 'users.id', '=', 'users.brand_id')
+        ->leftJoin('branches', 'branches.id', '=', 'users.branch_id')
+        ->leftJoin('regions', 'regions.id', '=', 'users.region_id');
+        
+        $query2 = Employee::select('employees.*')
+        ->leftJoin('users', 'users.id', '=', 'users.brand_id')
+        ->leftJoin('branches', 'branches.id', '=', 'users.branch_id')
+        ->leftJoin('regions', 'regions.id', '=', 'users.region_id');
+        
+        $query3 = Employee::select('employees.*')
+        ->leftJoin('users', 'users.id', '=', 'users.brand_id')
+        ->leftJoin('branches', 'branches.id', '=', 'users.branch_id')
+        ->leftJoin('regions', 'regions.id', '=', 'users.region_id');
+        
+
+
+        $Employee = RoleBaseTableGet($query,'users.brand_id','users.region_id','users.branch_id','users.created_by');
+        $Employee2 = RoleBaseTableGet($query2,'users.brand_id','users.region_id','users.branch_id','users.created_by');
+        $Employee3 = RoleBaseTableGet($query3,'users.brand_id','users.region_id','users.branch_id','users.created_by');
+        $payslip_employee   = $Employee->where('company_doj', '<=', date($year . '-' . $month . '-t'))->count();
+        
+
+        if($payslip_employee >= count($validatePaysilp))
         {
-            $employees = Employee::where('created_by', \Auth::user()->creatorId())->where('company_doj', '<=', date($year . '-' . $month . '-t'))->whereNotIn('employee_id', $validatePaysilp)->get();
-
-            $employeesSalary = Employee::where('created_by', \Auth::user()->creatorId())->where('salary', '<=', 0)->first();
-
+            $employees = $Employee2->where('company_doj', '<=', date($year . '-' . $month . '-t'))->whereNotIn('employee_id', $validatePaysilp)->get();
+            $employees = $Employee3->whereNotNull('salary')->whereNotNull('salary_type')->get();
+            $employeesSalary = $Employee2->where('salary', '<=', 0)->first();
             if(!empty($employeesSalary))
             {
                 return redirect()->route('payslip.index')->with('error', __('Please set employee salary.'));
             }
-
             foreach($employees as $employee)
             {
+                $CheckPaysilp    = PaySlip::where('employee_id',$employee->id)->where('salary_month', '=', $formate_month_year)->where('created_by', \Auth::id())->first();
+               if(empty($CheckPaysilp)){
 
                 $payslipEmployee                       = new PaySlip();
                 $payslipEmployee->employee_id          = $employee->id;
@@ -121,18 +132,18 @@ class PaySlipController extends Controller
                 $payslipEmployee->saturation_deduction = Employee::saturation_deduction($employee->id);
                 $payslipEmployee->other_payment        = Employee::other_payment($employee->id);
                 $payslipEmployee->overtime             = Employee::overtime($employee->id);
-                $payslipEmployee->created_by           = \Auth::user()->creatorId();
+                $payslipEmployee->created_by           = \Auth::id();
                 $payslipEmployee->save();
-
+               }
                 //Slack Notification
-                $setting  = Utility::settings(\Auth::user()->creatorId());
+                $setting  = Utility::settings(\Auth::id());
                 if(isset($setting['payslip_notification']) && $setting['payslip_notification'] ==1){
                     $msg = __("Payslip generated of").' '.$formate_month_year.'.';
                     Utility::send_slack_msg($msg);
                 }
 
                 //Telegram Notification
-                $setting  = Utility::settings(\Auth::user()->creatorId());
+                $setting  = Utility::settings(\Auth::id());
                 if(isset($setting['telegram_payslip_notification']) && $setting['telegram_payslip_notification'] ==1){
                     $msg = __("Payslip generated of").' '.$formate_month_year.'.';
                     Utility::send_telegram_msg($msg);
@@ -168,7 +179,7 @@ class PaySlipController extends Controller
     {
 
         $formate_month_year = $request->datePicker;
-        $validatePaysilp    = PaySlip::where('salary_month', '=', $formate_month_year)->where('created_by', \Auth::user()->creatorId())->get()->toarray();
+        $validatePaysilp    = PaySlip::where('salary_month', '=', $formate_month_year)->where('created_by', \Auth::id())->get()->toarray();
 
         $data=[];
         if (empty($validatePaysilp))
@@ -195,7 +206,7 @@ class PaySlipController extends Controller
                     $join->on('pay_slips.salary_month', '=', \DB::raw("'" . $formate_month_year . "'"));
                     $join->leftjoin('payslip_types', 'payslip_types.id', '=', 'employees.salary_type');
                 }
-            )->where('employees.created_by', \Auth::user()->creatorId())->get();
+            )->where('employees.created_by', \Auth::id())->get();
 
 
             foreach ($paylip_employee as $employee) {
@@ -244,7 +255,7 @@ class PaySlipController extends Controller
 
     public function paysalary($id, $date)
     {
-        $employeePayslip = PaySlip::where('employee_id', '=', $id)->where('created_by', \Auth::user()->creatorId())->where('salary_month', '=', $date)->first();
+        $employeePayslip = PaySlip::where('employee_id', '=', $id)->where('created_by', \Auth::id())->where('salary_month', '=', $date)->first();
         if(!empty($employeePayslip))
         {
             $employeePayslip->status = 1;
@@ -261,15 +272,15 @@ class PaySlipController extends Controller
 
     public function bulk_pay_create($date)
     {
-        $Employees       = PaySlip::where('salary_month', $date)->where('created_by', \Auth::user()->creatorId())->get();
-        $unpaidEmployees = PaySlip::where('salary_month', $date)->where('created_by', \Auth::user()->creatorId())->where('status', '=', 0)->get();
+        $Employees       = PaySlip::where('salary_month', $date)->where('created_by', \Auth::id())->get();
+        $unpaidEmployees = PaySlip::where('salary_month', $date)->where('created_by', \Auth::id())->where('status', '=', 0)->get();
 
         return view('payslip.bulkcreate', compact('Employees', 'unpaidEmployees', 'date'));
     }
 
     public function bulkpayment(Request $request, $date)
     {
-        $unpaidEmployees = PaySlip::where('salary_month', $date)->where('created_by', \Auth::user()->creatorId())->where('status', '=', 0)->get();
+        $unpaidEmployees = PaySlip::where('salary_month', $date)->where('created_by', \Auth::id())->where('status', '=', 0)->get();
 
         foreach($unpaidEmployees as $employee)
         {
@@ -297,7 +308,7 @@ class PaySlipController extends Controller
     public function pdf($id, $month)
     {
 
-        $payslip  = PaySlip::where('employee_id', $id)->where('salary_month', $month)->where('created_by', \Auth::user()->creatorId())->first();
+        $payslip  = PaySlip::where('employee_id', $id)->where('salary_month', $month)->where('created_by', \Auth::id())->first();
         $employee = Employee::find($payslip->employee_id);
 
        // dd($employee);
@@ -314,7 +325,7 @@ class PaySlipController extends Controller
 //        dd($setings);
         if($setings['payslip_sent'] == 1)
         {
-            $payslip  = PaySlip::where('employee_id', $id)->where('salary_month', $month)->where('created_by', \Auth::user()->creatorId())->first();
+            $payslip  = PaySlip::where('employee_id', $id)->where('salary_month', $month)->where('created_by', \Auth::id())->first();
             $employee = Employee::find($payslip->employee_id);
 
             $payslip->name  = $employee->name;
@@ -348,7 +359,7 @@ class PaySlipController extends Controller
     {
         $payslipId = Crypt::decrypt($id);
 
-        $payslip  = PaySlip::where('id', $payslipId)->where('created_by', \Auth::user()->creatorId())->first();
+        $payslip  = PaySlip::where('id', $payslipId)->where('created_by', \Auth::id())->first();
         $employee = Employee::find($payslip->employee_id);
 
         $payslipDetail = Utility::employeePayslipDetail($payslip->employee_id);
@@ -459,5 +470,29 @@ class PaySlipController extends Controller
         $payslipEmployee->save();
 
         return redirect()->route('payslip.index')->with('success', __('Employee payroll successfully updated.'));
+    }
+
+
+    public function HrmPayslip()
+    {
+
+        $user = \Auth::user();
+
+        if ($user->type!='HR' && $user->type!='super admin' && $user->type!='Project Manager') {
+            echo 'access Denied';
+                exit();
+                die();
+    }
+    
+        if(isset($_GET['emp_id'])){
+           $userId = $_GET['emp_id'];
+        }else{
+            $userId = \Auth::id();
+        }
+        $id=optional(Employee::where('user_id',$userId)->first())->id;
+        
+        $payslips  = PaySlip::where('created_by', $userId)->get();
+        $payslipDetail = Utility::employeePayslipDetail($id);
+        return view('hrmhome.payslip', compact('payslips','payslipDetail'));
     }
 }

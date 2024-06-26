@@ -1,77 +1,35 @@
-{{-- @forelse($notes as $note)
-<tr>
-    <td>{{ $note->title }}
-    </td>
-    <td>{{ $note->description }}
-    </td>
-    <td>{{ $note->created_at }}
-    </td>
-    <td>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
-    </td>
-    <td class="d-flex">
 
-        <a data-url="{{ route('deals.notes.edit', $note->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Notes Edit') }}" class="btn btn-sm text-white mx-2" style="background-color: #b5282f;">
-            <i class="ti ti-pencil "></i>
-        </a>
-
-        <a href="javascript:void(0)" class="btn btn-sm text-white delete-notes" data-note-id="{{$note->id}}" style="background-color: #b5282f;">
-            <i class="ti ti-trash "></i>
-        </a>
-    </td>
-
-</tr>
-@empty
-
-
-@endforelse --}}
 
 <ul class="list-group list-group-flush mt-2">
 
     @foreach ($notes as $note)
-        <li class="list-group-item px-3"
-            id="lihover">
-            <div class="d-block d-sm-flex align-items-start">
-                <div class="w-100">
-                    <div
-                        class="d-flex align-items-center justify-content-between">
-                        <div class="mb-3 mb-sm-0">
-                            <h5 class="mb-0">
-                                {{ $note->description }}
-                            </h5>
-                            <span
-                                class="text-muted text-sm">{{ $note->created_at }}
-                            </span><br>
-                            <span
-                                class="text-muted text-sm"><i class="step__icon fa fa-user" aria-hidden="true"></i>{{ \App\Models\User::where('id', $note->created_by)->first()->name }}
-                            </span>
-                        </div>
+    <div style="border-top:1px solid black;border-bottom:1px solid black ">
+        <div class="row my-2 justify-content-between ps-4">
+            <div class="col-12 my-2">
+                <p class="text-dark" style="font-size: 18px;">{!! $note->description !!}</p>
+            </div>
+            <div class="col-8">
+                <div class="row align-items-center">
 
-                        <style>
-                            #editable {
-                                display: none;
-                            }
+                    <div class="col-8">
+                        <p class="mb-0 text-secondary">
+                            {{ \App\Models\User::where('id', $note->created_by)->first()->name }}</p>
+                        <p class="mb-0">{{ \App\Models\User::where('id', $note->created_by)->first()->type }}</p>
 
-                            #lihover:hover #editable {
-                                display: flex;
-                            }
-                        </style>
-                        <div class="d-flex gap-3"
-                            id="dellhover">
-                            <i class="ti ti-pencil textareaClassedit"
-                                data-note="{{ $note->description }}"
-                                data-note-id="{{ $note->id }}"
-                                id="editable"
-                                style="font-size: 20px;cursor:pointer;"></i>
-                            <script></script>
-                            <i class="ti ti-trash delete-notes"
-                                id="editable"
-                                data-note-id="{{ $note->id }}"
-                                style="font-size: 20px;cursor:pointer;"></i>
-                        </div>
                     </div>
                 </div>
             </div>
-        </li>
+            <div class="col-4 text-end px-1">
+                <p>{{ $note->created_at }}</p>
+            </div>
+
+        </div>
+        <div class="d-flex gap-1 justify-content-end pb-2 px-3" id="dellhover">
+            <div class="btn btn-outline-dark text-dark textareaClassedit" data-note="{{ $note->description }}" data-note-id="{{ $note->id }}" id="editable" style="font-size: ;">Edit</div>
+
+            <div class="delete-notes btn btn-dark  text-white" id="editable" style="font-size: ;" data-note-id="{{ $note->id }}">Delete</div>
+        </div>
+    </div>
     @endforeach
 
     </ul>

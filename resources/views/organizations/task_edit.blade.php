@@ -51,7 +51,9 @@
                         @if (
                             \Auth::user()->type == 'super admin' ||
                                 \Auth::user()->type == 'Project Director' ||
-                                \Auth::user()->type == 'Project Manager')
+                                \Auth::user()->type == 'Project Manager' ||
+                                \Auth::user()->can('level 1') ||
+                                \Auth::user()->can('level 2'))
                             <div class="form-group row ">
                                 <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                     class="text-danger">*</span></label>
@@ -67,26 +69,26 @@
                             <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                 class="text-danger">*</span></label>
                             <div class="form-group col-md-6" id="brand_div">
-                                <input type="hidden" name="brand_id" value="{{\Auth::user()->id}}">
-                                <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                {{-- <input type="hidden" name="brand_id" value="{{\Auth::user()->id}}"> --}}
+                                <select class='form-control select2 brand_id' id="brands" name="brand_id">
                                     @foreach($companies as $key => $comp)
-                                     <option value="{{$key}}" {{ $key == \Auth::user()->id ? 'selected' : ''}}>{{$comp}}</option>
+                                     <option value="{{$key}}" {{ $key == $task->brand_id ? 'selected' : ''}}>{{$comp}}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        @else 
+                        @else
                         <div class="form-group row ">
                             <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                 class="text-danger">*</span></label>
-                            <div class="form-group col-md-6" id="brand_div">
-                                <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}">
-                                <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
-                                    @foreach($companies as $key => $comp)
-                                     <option value="{{$key}}" {{ $key == \Auth::user()->brand_id ? 'selected' : ''}}>{{$comp}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+                                <div class="form-group col-md-6" id="brand_div">
+                                    {{-- <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}"> --}}
+                                    <select class='form-control select2 brand_id' id="brands" name="brand_id">
+                                        @foreach($companies as $key => $comp)
+                                         <option value="{{$key}}" {{ $key == $task->brand_id ? 'selected' : ''}}>{{$comp}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                         </div>
                         @endif
                         {{-- End Brand Filter --}}
@@ -97,8 +99,11 @@
                                     \Auth::user()->type == 'Project Director' ||
                                     \Auth::user()->type == 'Project Manager' ||
                                     \Auth::user()->type == 'company' ||
-                                    \Auth::user()->type == 'Regional Manager')
-                        
+                                    \Auth::user()->type == 'Region Manager' ||
+                                    \Auth::user()->can('level 1') ||
+                                    \Auth::user()->can('level 2') ||
+                                    \Auth::user()->can('level 3'))
+
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Region<span
                                         class="text-danger">*</span></label>
@@ -109,7 +114,7 @@
                                         ]) !!}
                                     </div>
                                 </div>
-                            @else 
+                            @else
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Region<span
                                         class="text-danger">*</span></label>
@@ -131,8 +136,12 @@
                         \Auth::user()->type == 'Project Director' ||
                         \Auth::user()->type == 'Project Manager' ||
                         \Auth::user()->type == 'company' ||
-                        \Auth::user()->type == 'Regional Manager' ||
-                        \Auth::user()->type == 'Branch Manager')
+                        \Auth::user()->type == 'Region Manager' ||
+                        \Auth::user()->type == 'Branch Manager' ||
+                        \Auth::user()->can('level 1') ||
+                        \Auth::user()->can('level 2') ||
+                        \Auth::user()->can('level 3') ||
+                        \Auth::user()->can('level 4'))
 
                             <div class="form-group row ">
                                 <label for="branches" class="col-sm-3 col-form-label">Branch<span
@@ -146,7 +155,7 @@
                                     </select>
                                 </div>
                             </div>
-                        @else 
+                        @else
                             <div class="form-group row ">
                                 <label for="branches" class="col-sm-3 col-form-label">Branch<span
                                     class="text-danger">*</span></label>
@@ -168,11 +177,26 @@
                         <div class="form-group row ">
                             <label for="organization" class="col-sm-3 col-form-label">Assigned to <span
                                     class="text-danger">*</span></label>
-                            <div class="col-sm-6 " id="assign_to_div">
+                            <div class="col-sm-6 " id="assign_to_divs">
                                 <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to" {{ !\Auth::user()->can('edit assign to task') ? 'disabled' : '' }}>
                                     @foreach($employees as $key => $employee)
                                     <option value="{{$key}}" {{ $key == $task->assigned_to ? 'selected' : '' }}>{{$employee}}</option>
                                     @endforeach
+                                </select>
+                                 @if(!\Auth::user()->can('edit assign to task'))
+                                    <input type="hidden" name="assigned_to" value="{{ $task->assigned_to }}">
+                                 @endif
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="type" class="col-sm-3 col-form-label">Task Status<span
+                                class="text-danger">*</span></label>
+                            <div class="col-sm-6">
+                                <select class="form form-control select2" id="choices-multiple5" name="status" {{ !\Auth::user()->can('edit assign to task') ? 'disabled' : '' }}>
+                                    <option value="">Select Status</option>
+                                    <option value="0" {{ $task->status == '0' ? 'selected':'' }}>On Going</option>
+                                    <option value="1" {{ $task->status == '1' ? 'selected':'' }}>Completed
+                                    </option>
                                 </select>
                             </div>
                         </div>
@@ -247,16 +271,19 @@
                             </label>
                             <div class="col-sm-6">
 
-                                <select class="form form-control select2 related_type" disabled readonly
+                                <select class="form form-control select2 related_type"
                                     id="choices-multiple6" name="related_type">
                                     <option value="">Select type</option>
-                                    <option value="organization"
-                                        {{ $task->related_type == 'organization' ? 'selected' : '' }}>Organization
-                                    </option>
-                                    <option value="lead" {{ $task->related_type == 'lead' ? 'selected' : '' }}>Lead
-                                    </option>
-                                    <option value="deal" {{ $task->related_type == 'deal' ? 'selected' : '' }}>Deal
-                                    </option>
+                                             <option value="organization"  {{ $task->related_type == 'organization' ? 'selected' : '' }} >
+                                                Organization</option>
+                                            <option value="lead" {{ $task->related_type == 'lead' ? 'selected' : '' }}>Lead
+                                            </option>
+                                            <option value="deal" {{ $task->related_type == 'deal' ? 'selected' : '' }}>Admission
+                                            </option>
+                                            <option value="application" {{ $task->related_type == 'application' ? 'selected' : '' }}>Application
+                                            </option>
+                                            <option value="toolkit" {{ $task->related_type == 'toolkit' ? 'selected' : '' }}>Toolkit
+                                            </option>
                                 </select>
                             </div>
                         </div>
@@ -264,9 +291,9 @@
                         <div class="form-group row">
                             <label for="website" class="col-sm-3 col-form-label">Related To <span
                                     class="text-danger">*</span></label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" id="related_to_div">
 
-                                <select class="form form-control related_to" disabled id="choices-multiple7"
+                                <select class="form form-control related_to" id="choices-multiple7"
                                     name="related_to">
                                     <option value="">Related To</option>
                                     @foreach ($related_to as $key => $related)
@@ -301,7 +328,7 @@
 
 
             {{-- Organizaiton Description --}}
-            <div class="accordion-item">
+            <div class="accordion-item d-none">
                 <h2 class="accordion-header" id="panelsStayOpen-headingThree">
                     <button class="accordion-button " type="button" data-bs-toggle="collapse"
                         data-bs-target="#panelsStayOpen-description" aria-expanded="ture"
@@ -368,26 +395,39 @@
         })
 
 
-        $(".related_type").on('change', function() {
-            var type = $(this).val();
+        $("#choices-multiple6").on("change", function() {
+        // var type = $(this).val();
+        // Id = BranchId
 
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('organization.task.related_to', 1) }}',
-                data: {
-                    type
-                },
-                success: function(data) {
-                    data = JSON.parse(data);
-                    if (data.status == 'success') {
-                        $(".related_to").html(data.html);
-                        $(".related_to").addClass('select2');
-                        select2();
+        var id = $("#branch_id").val();
+        var type = $(this).val();
+
+        $.ajax({
+            type: 'GET',
+            url: '{{ route('GetBranchByType') }}',
+            data: {
+                id: id,
+                type: type
+            },
+            success: function(data) {
+                data = JSON.parse(data);
+                    if (data.status === 'success') {
+                         $('#related_to_div').html('');
+                        if(data.University === 'success')
+                        {
+                           $("#related_to_div").html(data.Universites);
+                           select2();
+                        }else{
+                           $("#related_to_div").html(data.branches);
+                           select2();
+                        }
+
                     }
                 }
-            })
 
-        })
+        });
+    });
+
 
         $(document).on("submit", "#update-task", function(e) {
             e.preventDefault();
@@ -463,7 +503,7 @@ var type = {{ $task->related_to }};
                 data = JSON.parse(data);
 
                 if (data.status === 'success') {
-                    $("#assign_to_div").html(data.employees);
+                    $("#assign_to_divs").html(data.employees);
                     select2();
                 }
             }

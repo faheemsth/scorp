@@ -44,29 +44,41 @@ function daterange() {
 
 
 function show_toastr(type, message) {
+   
 
     var f = document.getElementById('liveToast');
-    var a = new bootstrap.Toast(f).show();
+    var toast = new bootstrap.Toast(f);
     if (type == 'success') {
         $('#liveToast').addClass('successmg');
     } else {
         $('#liveToast').addClass('bg-danger');
     }
+
     $('#liveToast .toast-body').html(message);
+
+    toast.show();
+    //$('#liveToast').addClass('show');
+
+    // Hide the toast after 5 seconds
+    setTimeout(function() {
+        toast.hide();
+    }, 5000); // 5000 milliseconds = 5 seconds
 }
 
+
 $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true"], div[data-ajax-popup="true"]', function () {
-
+    var $button = $(this); // Store a reference to $(this)
     var data = {};
-    var title1 = $(this).attr("title");
-
-    var title2 = $(this).attr("data-original-title");
-    var title3 = $(this).attr("original-title");
+    var title1 = $button.attr("title");
+    
+    var title2 = $button.attr("data-original-title");
+    var title3 = $button.attr("original-title");
     var title = (title1 != undefined && title1 != '') ? title1 : title2;
-    var title=(title != undefined) ? title : title3;
-    console.log(title)
-    var size = ($(this).data('size') == '') ? 'md' : $(this).data('size');
-    var url = $(this).data('url');
+    title = (title != undefined) ? title : title3; // Combine assignments into one line
+    console.log(title);
+    
+    var size = ($button.data('size') == '') ? 'md' : $button.data('size');
+    var url = $button.data('url');
 
     $("#commonModal .modal-title").html(title);
     $("#commonModal .modal-dialog").addClass('modal-' + size);
@@ -80,68 +92,66 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
     if ($('#discount_hidden').length > 0) {
         data['discount'] = $('#discount_hidden').val();
     }
-    var kids = $(this).children();
+    var kids = $button.children();
     var className = $(kids[0]).attr('class');
 
-    if($(kids[0]).hasClass('ti-pencil')){
+    if ($(kids[0]).hasClass('ti-pencil') || $(kids[0]).hasClass('ti-plus')) {
         $(kids[0]).css('display','none');
-        $(this).append('<span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>');
-    }else if($(kids[0]).hasClass('ti-plus')){
-        $(kids[0]).css('display','none');
-        $(this).append('<span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>');
+        $button.append('<span class="spinner-border spinner-border-sm spnier-updbtn d-none" role="status" aria-hidden="true"></span>');
     }
 
     $('.spnier-updbtn').removeClass('d-none');
-    // $('.ti-plus').css('display','none');
-    // $('.ti-pencil').css('display','none');
+    $button.prop('disabled', true);
 
     $.ajax({
         url: url,
         data: data,
         success: function (data) {
-
+            $button.prop('disabled', false); // Use the stored reference
             $('#commonModal .body').html(data);
             $("#commonModal").modal('show');
-            // $('.spnier-updbtn').addClass('d-none');
-            // $('.ti-plus').css('display','block');
-            // $('.ti-pencil').css('display','block');
-            if($(kids[0]).hasClass('ti-pencil')){
-                $(kids[0]).css('display','block');
-                $(".spnier-updbtn").remove();
-            }else if($(kids[0]).hasClass('ti-plus')){
+            if ($(kids[0]).hasClass('ti-pencil') || $(kids[0]).hasClass('ti-plus')) {
                 $(kids[0]).css('display','block');
                 $(".spnier-updbtn").remove();
             }
-            // daterange_set();
             taskCheckbox();
             common_bind("#commonModal");
             commonLoader();
-
-           // $(".select2").select2();
-           select2();
+            select2();
         },
         error: function (data) {
             data = data.responseJSON;
-            show_toastr('Error', data.error, 'error')
-            if($(kids[0]).hasClass('ti-pencil')){
-                $(kids[0]).css('display','block');
-                $(".spnier-updbtn").remove();
-            }else if($(kids[0]).hasClass('ti-plus')){
+            show_toastr('Error', data.error, 'error');
+            if ($(kids[0]).hasClass('ti-pencil') || $(kids[0]).hasClass('ti-plus')) {
                 $(kids[0]).css('display','block');
                 $(".spnier-updbtn").remove();
             }
         }
     });
-
 });
+
 
 function select2() {
     if ($("select.select2").length > 0) {
         $("select.select2").each(function (index, element) {
-            console.log(element);
+          //  console.log(element);
             // console.log(element);
             var id = $(element).attr('id');
-            console.log('Element ID:', id); // Add this line for debugging
+          //  console.log('Element ID:', id); // Add this line for debugging
+            var multipleCancelButton = new Choices(
+                '#' + id, {
+                    removeItemButton: true,
+                    shouldSort: false
+                }
+            );
+        });
+    }
+}
+
+function initSelect2() {
+    if ($("select.select2").length > 0) {
+        $("select.select2").each(function (index, element) {
+            var id = $(element).attr('id');
             var multipleCancelButton = new Choices(
                 '#' + id, {
                     removeItemButton: true,
@@ -150,6 +160,8 @@ function select2() {
         });
     }
 }
+
+
 
 function arrayToJson(form) {
     var data = $(form).serializeArray();
@@ -285,7 +297,8 @@ function summernote() {
 
 
 
-$(document).on("click", '.bs-pass-para', function () {
+$(document).on("click", '.bs-pass-para', function (e) {
+    e.preventDefault();
     var form = $(this).closest("form");
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -316,7 +329,6 @@ $(document).on("click", '.bs-pass-para', function () {
 
 //only pos system delete button
 $(document).on("click", '.bs-pass-para-pos', function () {
-
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
             confirmButton: 'btn btn-success',

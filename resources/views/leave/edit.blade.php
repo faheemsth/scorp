@@ -32,11 +32,12 @@
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="form-group">
                 {{Form::label('leave_reason',__('Leave Reason'),['class'=>'form-label'])}}
-                {{Form::textarea('leave_reason',null,array('class'=>'form-control','placeholder'=>__('Leave Reason')))}}
+                {{Form::textarea('leave_reason',null,array('class'=>'form-control','placeholder'=>__('Leave Reason'), 'rows' =>  '3'))}}
             </div>
         </div>
     </div>
@@ -44,10 +45,12 @@
         <div class="col-md-12">
             <div class="form-group">
                 {{Form::label('remark',__('Remark'),['class'=>'form-label'])}}
-                {{Form::textarea('remark',null,array('class'=>'form-control','placeholder'=>__('Leave Remark')))}}
+                {{Form::textarea('remark',null,array('class'=>'form-control','placeholder'=>__('Leave Remark'), 'rows' =>  '3'))}}
             </div>
         </div>
     </div>
+
+
     @role('Company')
     <div class="row">
         <div class="col-md-12">
@@ -69,5 +72,4 @@
     <input type="button" value="{{__('Cancel')}}" class="btn  btn-light" data-bs-dismiss="modal">
     <input type="submit" value="{{__('Update')}}" class="btn  btn-dark px-2">
 </div>
-    {{Form::close()}}
-
+{{Form::close()}}

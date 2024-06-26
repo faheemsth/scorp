@@ -26,9 +26,25 @@ class SourceController extends Controller
     {
         if(\Auth::user()->can('manage source'))
         {
-            $sources = Source::where('created_by', '=', \Auth::user()->ownerId())->get();
 
-            return view('sources.index')->with('sources', $sources);
+            $start = 0;
+            $num_results_on_page = env("RESULTS_ON_PAGE");
+            if (isset($_GET['page'])) {
+                $page = $_GET['page'];
+                $num_of_result_per_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+                $start = ($page - 1) * $num_results_on_page;
+            } else {
+                $num_results_on_page = isset($_GET['num_results_on_page']) ? $_GET['num_results_on_page'] : $num_results_on_page;
+            }
+
+            $Source_query = Source::query();
+            $total_records = $Source_query->count();
+
+            $Source_query->orderBy('name')->skip($start)->take($num_results_on_page);
+            $sources = $Source_query->get();
+
+
+            return view('sources.index', compact('sources','total_records'));
         }
         else
         {
@@ -114,14 +130,14 @@ class SourceController extends Controller
     {
         if(\Auth::user()->can('edit source'))
         {
-            if($source->created_by == \Auth::user()->ownerId())
-            {
+            // if($source->created_by == \Auth::user()->ownerId())
+            // {
                 return view('sources.edit', compact('source'));
-            }
-            else
-            {
-                return response()->json(['error' => __('Permission Denied.')], 401);
-            }
+            // }
+            // else
+            // {
+            //     return response()->json(['error' => __('Permission Denied.')], 401);
+            // }
         }
         else
         {
@@ -141,8 +157,8 @@ class SourceController extends Controller
     {
         if(\Auth::user()->can('edit source'))
         {
-            if($source->created_by == \Auth::user()->ownerId())
-            {
+            // if($source->created_by == \Auth::user()->ownerId())
+            // {
                 $validator = \Validator::make(
                     $request->all(), [
                                        'name' => 'required|max:20',
@@ -160,11 +176,11 @@ class SourceController extends Controller
                 $source->save();
 
                 return redirect()->route('sources.index')->with('success', __('Source successfully updated!'));
-            }
-            else
-            {
-                return redirect()->back()->with('error', __('Permission Denied.'));
-            }
+            // }
+            // else
+            // {
+            //     return redirect()->back()->with('error', __('Permission Denied.'));
+            // }
         }
         else
         {
@@ -183,16 +199,16 @@ class SourceController extends Controller
     {
         if(\Auth::user()->can('delete source'))
         {
-            if($source->created_by == \Auth::user()->ownerId())
-            {
+            // if($source->created_by == \Auth::user()->ownerId())
+            // {
                 $source->delete();
 
                 return redirect()->route('sources.index')->with('success', __('Source successfully deleted!'));
-            }
-            else
-            {
-                return redirect()->back()->with('error', __('Permission Denied.'));
-            }
+            // }
+            // else
+            // {
+            //     return redirect()->back()->with('error', __('Permission Denied.'));
+            // }
         }
         else
         {

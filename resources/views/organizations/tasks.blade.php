@@ -47,7 +47,9 @@
                             @if (
                                 \Auth::user()->type == 'super admin' ||
                                     \Auth::user()->type == 'Project Director' ||
-                                    \Auth::user()->type == 'Project Manager')
+                                    \Auth::user()->type == 'Project Manager' ||
+                                    \Auth::user()->can('level 1') ||
+                                    \Auth::user()->can('level 2'))
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                         class="text-danger">*</span></label>
@@ -63,21 +65,21 @@
                                 <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                     class="text-danger">*</span></label>
                                 <div class="form-group col-md-6" id="brand_div">
-                                    <input type="hidden" name="brand_id" value="{{\Auth::user()->id}}">
-                                    <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                    {{-- <input type="hidden" name="brand_id" value="{{\Auth::user()->id}}"> --}}
+                                    <select class='form-control select2 brand_id' id="brands" name="brand_id">
                                         @foreach($companies as $key => $comp)
                                          <option value="{{$key}}" {{ $key == \Auth::user()->id ? 'selected' : ''}}>{{$comp}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             </div>
-                            @else 
+                            @else
                             <div class="form-group row ">
                                 <label for="branches" class="col-sm-3 col-form-label">Brands<span
                                     class="text-danger">*</span></label>
                                 <div class="form-group col-md-6" id="brand_div">
-                                    <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}">
-                                    <select class='form-control select2 brand_id' disabled ="brands" id="brand_id">
+                                    {{-- <input type="hidden" name="brand_id" value="{{\Auth::user()->brand_id}}"> --}}
+                                    <select class='form-control select2 brand_id' id="brands" name="brand_id">
                                         @foreach($companies as $key => $comp)
                                          <option value="{{$key}}" {{ $key == \Auth::user()->brand_id ? 'selected' : ''}}>{{$comp}}</option>
                                         @endforeach
@@ -93,8 +95,11 @@
                                     \Auth::user()->type == 'Project Director' ||
                                     \Auth::user()->type == 'Project Manager' ||
                                     \Auth::user()->type == 'company' ||
-                                    \Auth::user()->type == 'Regional Manager')
-                        
+                                    \Auth::user()->type == 'Region Manager' ||
+                                    \Auth::user()->can('level 1') ||
+                                    \Auth::user()->can('level 2') ||
+                                    \Auth::user()->can('level 3'))
+
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Region<span
                                         class="text-danger">*</span></label>
@@ -106,7 +111,7 @@
                                     </div>
                                 </div>
 
-                            @else 
+                            @else
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Region<span
                                         class="text-danger">*</span></label>
@@ -125,8 +130,12 @@
                                     \Auth::user()->type == 'Project Director' ||
                                     \Auth::user()->type == 'Project Manager' ||
                                     \Auth::user()->type == 'company' ||
-                                    \Auth::user()->type == 'Regional Manager' ||
-                                    \Auth::user()->type == 'Branch Manager')
+                                    \Auth::user()->type == 'Region Manager' ||
+                                    \Auth::user()->type == 'Branch Manager' ||
+                                    \Auth::user()->can('level 1') ||
+                                    \Auth::user()->can('level 2') ||
+                                    \Auth::user()->can('level 3') ||
+                                    \Auth::user()->can('level 4'))
 
                                         <div class="form-group row ">
                                             <label for="branches" class="col-sm-3 col-form-label">Branch<span
@@ -140,7 +149,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                            @else 
+                            @else
                                 <div class="form-group row ">
                                     <label for="branches" class="col-sm-3 col-form-label">Branch<span
                                         class="text-danger">*</span></label>
@@ -155,7 +164,7 @@
                                     </div>
                                 </div>
                             @endif
-                            
+
 
                             <div class="form-group row d-none">
                                 <label for="type" class="col-sm-3 col-form-label">Assign Type <span
@@ -172,7 +181,7 @@
                             <div class="form-group row ">
                                 <label for="organization" class="col-sm-3 col-form-label">Assigned to <span
                                         class="text-danger">*</span></label>
-                                <div class="col-sm-6 " id="assign_to_div">
+                                <div class="col-sm-6 " id="assign_to_divs">
                                     <select class="form form-control assigned_to select2" id="choices-multiple4" name="assigned_to">
                                         @foreach($employees as $key => $employee)
                                         <option value="{{$key}}">{{$employee}}</option>
@@ -289,7 +298,7 @@
                                     </label>
                                 <div class="col-sm-6">
                                     @if (isset($type) && !empty($type))
-                                        <select class="form form-control select2 related_type" disabled 
+                                        <select class="form form-control select2 related_type" disabled
                                             id="choices-multiple6" name="related_type">
                                             <option value="">Select type</option>
                                             <option value="organization"
@@ -299,10 +308,14 @@
                                             </option>
                                             <option value="deal" {{ $type == 'deal' ? 'selected' : '' }}>Admission
                                             </option>
+                                            <option value="application" {{ $type == 'application' ? 'selected' : '' }}>Application
+                                            </option>
+                                            <option value="toolkit" {{ $type == 'toolkit' ? 'selected' : '' }}>Toolkit
+                                            </option>
                                         </select>
                                         <input type="hidden" value="{{ $type }}" name="related_type">
                                     @else
-                                        <select class="form form-control select2 related_type" id="choices-multiple6" 
+                                        <select class="form form-control select2 related_type" id="choices-multiple6"
                                             name="related_type">
                                             <option value="">Select type</option>
                                              <option value="organization"  {{ $type == 'organi' ? 'selected' : '' }} >
@@ -310,6 +323,10 @@
                                             <option value="lead" {{ $type == 'lead' ? 'selected' : '' }}>Lead
                                             </option>
                                             <option value="deal" {{ $type == 'deal' ? 'selected' : '' }}>Admission
+                                            </option>
+                                            <option value="application" {{ $type == 'application' ? 'selected' : '' }}>Application
+                                            </option>
+                                            <option value="toolkit" {{ $type == 'toolkit' ? 'selected' : '' }}>Toolkit
                                             </option>
                                         </select>
                                     @endif
@@ -333,6 +350,13 @@
 
                                             @if(!empty($deal))
                                                 <option value="{{$deal->id}}" selected>{{$deal->name}}</option>
+                                            @endif
+
+                                            @if(!empty($application))
+                                                <option value="{{$application->id}}" selected>{{$application->application_key}}</option>
+                                            @endif
+                                            @if(!empty($University))
+                                                <option value="{{$University->id}}" selected>{{$University->name}}</option>
                                             @endif
                                     </select>
                                 </div>
@@ -420,9 +444,16 @@ var BranchId = '';
             success: function(data) {
                 data = JSON.parse(data);
                     if (data.status === 'success') {
-                        $('#related_to_div').html('');
-                        $("#related_to_div").html(data.branches);
-                        select2();
+                         $('#related_to_div').html('');
+                        if(data.University === 'success')
+                        {
+                           $("#related_to_div").html(data.Universites);
+                           select2();
+                        }else{
+                           $("#related_to_div").html(data.branches);
+                           select2();
+                        }
+
                     }
                 }
 
@@ -445,14 +476,15 @@ var BranchId = '';
                 data = JSON.parse(data);
 
                 if (data.status === 'success') {
-                    $("#assign_to_div").html(data.employees);
+                    console.log(data.employees);
+                    $("#assign_to_divs").html(data.employees);
                     select2();
                 }
             }
         });
     }
 
-   
+
     // change brand for region
     $("#brands").on("change", function() {
         var id = $(this).val();
@@ -512,7 +544,7 @@ var BranchId = '';
     });
 
     // create task
-    $(document).on("submit", "#create-task", function(e) {
+    $("#create-task").on("submit", function(e) {
 
         e.preventDefault();
         var formData = $(this).serialize();
@@ -529,14 +561,14 @@ var BranchId = '';
                 data = JSON.parse(data);
 
                 if (data.status == 'success') {
-                    show_toastr('Success', data.message, 'success');
+                    show_toastr('success', data.message, 'success');
                     $('#commonModal').modal('hide');
                     $(".modal-backdrop").removeClass("modal-backdrop");
                     $(".block-screen").css('display', 'none');
                     openSidebar('/get-task-detail?task_id=' + data.task_id);
                     return false;
                 } else {
-                    show_toastr('Error', data.message, 'error');
+                    toastr.error(data.message);
                     $(".create-task-btn").val('Create');
                     $('.create-task-btn').removeAttr('disabled');
                 }
@@ -544,3 +576,6 @@ var BranchId = '';
         });
     });
 </script>
+<!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>

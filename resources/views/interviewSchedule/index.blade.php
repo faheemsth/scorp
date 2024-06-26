@@ -50,18 +50,6 @@
     <li class="breadcrumb-item">{{__('Interview Schedule')}}</li>
 @endsection
 
-
-@section('action-btn')
-    <div class="float-end">
-        @can('create interview schedule')
-            <a href="#" data-url="{{ route('interview-schedule.create') }}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-ajax-popup="true" data-title="{{__('Create New Interview Schedule')}}" class="btn btn-sm btn-primary">
-                <i class="ti ti-plus"></i>
-            </a>
-        @endcan
-    </div>
-@endsection
-
-
 @section('content')
 
     <div class="row">
@@ -78,6 +66,17 @@
         </div>
         <div class="col-lg-4">
             <div class="card">
+                <div class="card-header" style="display: flex; justify-content: space-between;">
+                    <h3>Schedule List</h3>
+                    <div class="float-end">
+                        @can('create interview schedule')
+                            <a href="#" data-url="{{ route('interview-schedule.create') }}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-ajax-popup="true" data-title="{{__('Create New Interview Schedule')}}" class="btn btn-sm btn-dark">
+                                <i class="ti ti-plus"></i>
+                            </a>
+                        @endcan
+                    </div>
+                </div>
+
                 <div class="card-body">
                     <h4 class="mb-4">{{__('Schedule List')}}</h4>
                     <ul class="event-cards list-group list-group-flush mt-3 w-100">
@@ -102,14 +101,14 @@
                                                             </div>
                                                             <div class="col-auto text-right">
                                                                 @can('edit interview schedule')
-                                                                    <div class="action-btn bg-primary ms-2">
-                                                                        <a href="#" data-url="{{ route('interview-schedule.edit',$schedule->id) }}" data-title="{{__('Edit Interview Schedule')}}" data-ajax-popup="true" class="mx-3 btn btn-sm  align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                                                    <div class="action-btn  ms-2">
+                                                                        <a href="#" data-url="{{ route('interview-schedule.edit',$schedule->id) }}" data-title="{{__('Edit Interview Schedule')}}" data-ajax-popup="true" class="btn btn-sm btn-dark" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
                                                                     </div>
                                                                 @endcan
                                                                 @can('delete interview schedule')
-                                                                        <div class="action-btn bg-danger ms-2">
+                                                                        <div class="action-btn  ms-2">
                                                                             {!! Form::open(['method' => 'DELETE', 'route' => ['interview-schedule.destroy', $schedule->id],'id'=>'delete-form-'.$schedule->id]) !!}
-                                                                            <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$schedule->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
+                                                                            <a href="#" class="btn btn-sm btn-danger bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('delete-form-{{$schedule->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
                                                                         {!! Form::close() !!}
                                                                         </div>
                                                                 @endcan

@@ -19,7 +19,7 @@ class CompanyPermissionController extends Controller
     {
         $employees = array();
         $user = \Auth::user();
-        if (\Auth::user()->type == 'super admin') {
+       // if (\Auth::user()->type == 'super admin') {
             if (isset($_GET['role']) && !empty($_GET['role'])) {
                 $employees = User::where('type', '=', $_GET['role'])->orderBy('name', 'ASC')->get();
             }else{
@@ -38,15 +38,20 @@ class CompanyPermissionController extends Controller
                 }
             }
             return view('company_permission.index')->with(['employees' => $employees, 'permission_arr' => $permission_arr, 'companies' => $companies]);
-        } else {
-            return redirect()->back();
-        }
+        // } else {
+        //     return redirect()->back();
+        // }
     }
 
     public function company_permission_updated(Request $request)
     {
+        //dd($request->input());
+
         //dd(\Auth::user()->id);
+        //Project Director or Manager
         $user_id = $request->company_for;
+
+        //Brand
         $permitted_company = $request->company_permission;
         $is_active = $_POST['active'];
 
@@ -64,8 +69,32 @@ class CompanyPermissionController extends Controller
             $company_per->permitted_company_id = $permitted_company;
             $company_per->active = $is_active;
             $company_per->created_by = \Auth::user()->id;
-            $company_per->save();
+            $company_per->save();   
         }
+
+
+        
+        
+        // Step 1: Check whether it is adding or removing
+        if ($is_active == 'true') {
+            $user = User::findOrFail($user_id);
+
+            if ($user->type == 'Project Director') {
+                User::where('id', $permitted_company)->update(['project_director_id' => $user_id]);
+            } else {
+                User::where('id', $permitted_company)->update(['project_manager_id' => $user_id]);
+            }
+        } else {
+            $user = User::findOrFail($user_id);
+
+            if ($user->type == 'Project Director') {
+                User::where('id', $permitted_company)->update(['project_director_id' => null]);
+            } else {
+                User::where('id', $permitted_company)->update(['project_manager_id' => null]);
+            }
+        }
+
+
 
         return json_encode([
             'status' => 'success'

@@ -21,7 +21,7 @@
                                 </div>
                                 @can('create set salary')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('employee.basic.salary',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Set Basic Sallary')}}" data-toggle="tooltip" data-original-title="{{__('Basic Salary')}}" class="btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('employee.basic.salary',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Set Basic Sallary')}}" data-toggle="tooltip" data-original-title="{{__('Basic Salary')}}" class="btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>
@@ -52,7 +52,7 @@
                                 </div>
                                 @can('create allowance')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('allowances.create',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Create Allowance')}}" data-bs-toggle="tooltip"  title="{{__('Create')}}" data-original-title="{{__('Create Allowance')}}" class="apply-btn btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('allowances.create',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Create Allowance')}}" data-bs-toggle="tooltip"  title="{{__('Create')}}" data-original-title="{{__('Create Allowance')}}" class="apply-btn btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>
@@ -87,20 +87,32 @@
                                                     <td>{{($allowance->amount) }}% (${{$allowance->tota_allow}})</td>
                                                 @endif
                                                 {{--                                        <td>{{  \Auth::user()->priceFormat($allowance->amount) }}</td>--}}
+
+
+
                                                 <td class="">
                                                     @can('edit allowance')
-                                                        <div class="action-btn bg-primary ms-2">
-                                                            <a href="#" data-url="{{ URL::to('allowance/'.$allowance->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Allowance')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip"  title="{{__('Edit')}}" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                                        <div class="action-btn  ms-2">
+                                                            <a href="#" data-url="{{ URL::to('allowance/'.$allowance->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Allowance')}}"
+                                                                class="btn btn-sm text-white px-2 btn-dark" data-bs-toggle="tooltip"  title="{{__('Edit')}}" data-original-title="{{__('Edit')}}">
+                                                                <i class="ti ti-pencil text-white"></i>
+                                                            </a>
                                                         </div>
                                                     @endcan
                                                     @can('delete allowance')
-                                                        <div class="action-btn bg-danger ms-2">
+                                                        <div class="action-btn  ms-2">
                                                             {!! Form::open(['method' => 'DELETE', 'route' => ['allowance.destroy', $allowance->id],'id'=>'allowance-delete-form-'.$allowance->id]) !!}
-                                                            <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('allowance-delete-form-{{$allowance->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
+                                                            <a href="#" class="btn btn-sm text-white px-2 btn-dark bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('allowance-delete-form-{{$allowance->id}}').submit();">
+                                                                <i class="ti ti-trash text-white"></i>
+                                                            </a>
                                                             {!! Form::close() !!}
                                                         </div>
                                                     @endcan
                                                 </td>
+
+
+
+
                                             </tr>
                                         @endforeach
                                         </tbody>
@@ -123,7 +135,7 @@
                                 </div>
                                 @can('create commission')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('commissions.create',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Create Commission')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-original-title="{{__('Create Commission')}}" class="apply-btn btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('commissions.create',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Create Commission')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-original-title="{{__('Create Commission')}}" class="apply-btn btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>
@@ -158,15 +170,16 @@
 
                                                 <td class="">
                                                     @can('edit commission')
-                                                        <div class="action-btn bg-primary ms-2">
-                                                            <a href="#" data-url="{{ URL::to('commission/'.$commission->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Commission')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip"  title="{{__('Edit')}}" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                                        <div class="action-btn  ms-2">
+                                                            <a href="#" data-url="{{ URL::to('commission/'.$commission->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Commission')}}"
+                                                                 class="btn btn-sm text-white px-2 btn-dark" data-bs-toggle="tooltip"  title="{{__('Edit')}}" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
                                                         </div>
                                                     @endcan
                                                     @can('delete commission')
-                                                        <div class="action-btn bg-danger ms-2">
+                                                        <div class="action-btn  ms-2">
                                                             {!! Form::open(['method' => 'DELETE', 'route' => ['commission.destroy', $commission->id],'id'=>'commission-delete-form-'.$commission->id]) !!}
 
-                                                            <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}"  data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('commission-delete-form-{{$commission->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
+                                                            <a href="#" class="btn btn-sm text-white px-2 btn-dark bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}"  data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('commission-delete-form-{{$commission->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
                                                             {!! Form::close() !!}
                                                         </div>
                                                     @endcan
@@ -193,7 +206,7 @@
                                 </div>
                                 @can('create loan')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('loans.create',$employee->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create Loan')}}" data-bs-toggle="tooltip"  title="{{__('Create')}}" data-original-title="{{__('Create Loan')}}" class="apply-btn btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('loans.create',$employee->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create Loan')}}" data-bs-toggle="tooltip"  title="{{__('Create')}}" data-original-title="{{__('Create Loan')}}" class="apply-btn btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>
@@ -233,15 +246,15 @@
                                                 <td>{{ \Auth::user()->dateFormat( $loan->end_date) }}</td>
                                                 <td class="">
                                                     @can('edit loan')
-                                                        <div class="action-btn bg-primary ms-2">
-                                                            <a href="#" data-url="{{ URL::to('loan/'.$loan->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Loan')}}" class="mx-3 btn btn-sm align-items-center" title="{{__('Edit')}}" data-bs-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                                        <div class="action-btn  ms-2">
+                                                            <a href="#" data-url="{{ URL::to('loan/'.$loan->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Loan')}}" class="btn btn-sm text-white px-2 btn-dark" title="{{__('Edit')}}" data-bs-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
                                                         </div>
                                                     @endcan
                                                     @can('delete loan')
-                                                        <div class="action-btn bg-danger ms-2">
+                                                        <div class="action-btn  ms-2">
                                                             {!! Form::open(['method' => 'DELETE', 'route' => ['loan.destroy', $loan->id],'id'=>'loan-delete-form-'.$loan->id]) !!}
 
-                                                            <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('loan-delete-form-{{$loan->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
+                                                            <a href="#" class="btn btn-sm text-white px-2 btn-dark bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('loan-delete-form-{{$loan->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
                                                             {!! Form::close() !!}
                                                         </div>
                                                     @endcan
@@ -268,7 +281,7 @@
                                 </div>
                                 @can('create saturation deduction')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('saturationdeductions.create',$employee->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create Saturation Deduction')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-original-title="{{__('Create Saturation Deduction')}}" class="apply-btn btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('saturationdeductions.create',$employee->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create Saturation Deduction')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-original-title="{{__('Create Saturation Deduction')}}" class="apply-btn btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>
@@ -305,15 +318,15 @@
                                                 {{--                                        <td>{{ \Auth::user()->priceFormat( $saturationdeduction->amount) }}</td>--}}
                                                 <td class="">
                                                     @can('edit saturation deduction')
-                                                        <div class="action-btn bg-primary ms-2">
-                                                            <a href="#" data-url="{{ URL::to('saturationdeduction/'.$saturationdeduction->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Saturation Deduction')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                                        <div class="action-btn  ms-2">
+                                                            <a href="#" data-url="{{ URL::to('saturationdeduction/'.$saturationdeduction->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit Saturation Deduction')}}" class="btn btn-sm text-white px-2 btn-dark" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
                                                         </div>
                                                     @endcan
                                                     @can('delete saturation deduction')
-                                                        <div class="action-btn bg-danger ms-2">
+                                                        <div class="action-btn  ms-2">
                                                             {!! Form::open(['method' => 'DELETE', 'route' => ['saturationdeduction.destroy', $saturationdeduction->id],'id'=>'deduction-delete-form-'.$saturationdeduction->id]) !!}
 
-                                                            <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip"  title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('deduction-delete-form-{{$saturationdeduction->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
+                                                            <a href="#" class="btn btn-sm text-white px-2 btn-dark bs-pass-para" data-bs-toggle="tooltip"  title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('deduction-delete-form-{{$saturationdeduction->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
                                                             {!! Form::close() !!}
                                                         </div>
                                                     @endcan
@@ -340,7 +353,7 @@
                                 </div>
                                 @can('create other payment')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('otherpayments.create',$employee->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create Other Payment')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-original-title="{{__('Create Other Payment')}}" class="apply-btn btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('otherpayments.create',$employee->id) }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Create Other Payment')}}" data-bs-toggle="tooltip" title="{{__('Create')}}" data-original-title="{{__('Create Other Payment')}}" class="apply-btn btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>
@@ -374,15 +387,15 @@
                                                 {{--                                        <td>{{  \Auth::user()->priceFormat($otherpayment->amount) }}</td>--}}
                                                 <td class="">
                                                     @can('edit other payment')
-                                                        <div class="action-btn bg-primary ms-2">
-                                                            <a href="#" data-url="{{ URL::to('otherpayment/'.$otherpayment->id.'/edit') }}" data-size="lg" data-ajax-popup="true" title="{{__('Edit')}}" data-title="{{__('Edit Other Payment')}}" class="mx-3 btn btn-sm  align-items-center" data-bs-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                                        <div class="action-btn  ms-2">
+                                                            <a href="#" data-url="{{ URL::to('otherpayment/'.$otherpayment->id.'/edit') }}" data-size="lg" data-ajax-popup="true" title="{{__('Edit')}}" data-title="{{__('Edit Other Payment')}}" class="btn btn-sm text-white px-2 btn-dark" data-bs-toggle="tooltip" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
                                                         </div>
                                                     @endcan
 
                                                     @can('delete other payment')
-                                                        <div class="action-btn bg-danger ms-2">
+                                                        <div class="action-btn  ms-2">
                                                             {!! Form::open(['method' => 'DELETE', 'route' => ['otherpayment.destroy', $otherpayment->id],'id'=>'payment-delete-form-'.$otherpayment->id]) !!}
-                                                            <a href="#" class="mx-3 btn btn-sm  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('payment-delete-form-{{$otherpayment->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
+                                                            <a href="#" class="btn btn-sm text-white px-2 btn-dark bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('payment-delete-form-{{$otherpayment->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
                                                             {!! Form::close() !!}
                                                         </div>
                                                     @endcan
@@ -409,7 +422,7 @@
                                 </div>
                                 @can('create overtime')
                                     <div class="col text-end">
-                                        <a href="#" data-url="{{ route('overtimes.create',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Create Overtime')}}" data-toggle="tooltip" data-original-title="{{__('Create Overtime')}}" class="apply-btn btn btn-sm btn-primary">
+                                        <a href="#" data-url="{{ route('overtimes.create',$employee->id) }}" data-size="md" data-ajax-popup="true" data-title="{{__('Create Overtime')}}" data-toggle="tooltip" data-original-title="{{__('Create Overtime')}}" class="apply-btn btn btn-sm btn-dark">
                                             <i class="ti ti-plus"></i>
                                         </a>
                                     </div>
@@ -440,16 +453,16 @@
                                                 <td>{{  \Auth::user()->priceFormat($overtime->rate) }}</td>
                                                 <td class="">
                                                     @can('edit overtime')
-                                                        <div class="action-btn bg-primary ms-2">
+                                                        <div class="action-btn  ms-2">
 
-                                                            <a href="#" data-url="{{ URL::to('overtime/'.$overtime->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit OverTime')}}" class="mx-3 btn btn-sm align-items-center" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
+                                                            <a href="#" data-url="{{ URL::to('overtime/'.$overtime->id.'/edit') }}" data-size="lg" data-ajax-popup="true" data-title="{{__('Edit OverTime')}}" class="btn btn-sm text-white px-2 btn-dark" data-bs-toggle="tooltip" title="{{__('Edit')}}" data-original-title="{{__('Edit')}}"><i class="ti ti-pencil text-white"></i></a>
                                                         </div>
                                                     @endcan
                                                     @can('delete overtime')
-                                                        <div class="action-btn bg-danger ms-2">
+                                                        <div class="action-btn  ms-2">
                                                             {!! Form::open(['method' => 'DELETE', 'route' => ['overtime.destroy', $overtime->id],'id'=>'overtime-delete-form-'.$overtime->id]) !!}
 
-                                                            <a href="#" class="mx-3 btn btn-sm align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('overtime-delete-form-{{$overtime->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
+                                                            <a href="#" class="btn btn-sm text-white px-2 btn-dark bs-pass-para" data-bs-toggle="tooltip" title="{{__('Delete')}}" data-original-title="{{__('Delete')}}" data-confirm="{{__('Are You Sure?').'|'.__('This action can not be undone. Do you want to continue?')}}" data-confirm-yes="document.getElementById('overtime-delete-form-{{$overtime->id}}').submit();"><i class="ti ti-trash text-white"></i></a>
                                                             {!! Form::close() !!}
                                                         </div>
                                                     @endcan

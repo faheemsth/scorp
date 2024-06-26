@@ -30,7 +30,7 @@
 <script src="{{ asset('assets/js/plugins/bootstrap-switch-button.min.js') }}"></script>
 
 <script src="{{ asset('assets/js/plugins/sweetalert2.all.min.js') }}"></script>
-<script src="{{ asset('assets/js/plugins/simple-datatables.js') }}"></script>
+{{-- <script src="{{ asset('assets/js/plugins/simple-datatables.js') }}"></script> --}}
 
 <!-- Apex Chart -->
 <script src="{{ asset('assets/js/plugins/apexcharts.min.js') }}"></script>
@@ -125,7 +125,7 @@
             success: function(data) {
                 data = JSON.parse(data);
                 if (data.status == 'success') {
-                    $("#mySidenav").html(data.html);
+                    $("#RightSidebar").html(data.html);
                     $(".block-screen").css('display', 'none');
                 }
             }
@@ -133,10 +133,10 @@
 
 
         if (ww < 500) {
-            $("#mySidenav").css('width', ww + 'px');
+            $("#RightSidebar").css('width', ww + 'px');
             $("#main").css('margin-right', ww + 'px');
         } else {
-            $("#mySidenav").css('width', '955px');
+            $("#RightSidebar").css('width', '955px');
             $("#main").css('margin-right', "955px");
         }
 
@@ -147,10 +147,12 @@
 
     /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
     function closeSidebar() {
-        $("#mySidenav").css("width", '0');
-        $("#main").css("margin-right", '0');
+        $("#RightSidebar").html('');
+        $("#RightSidebar").css("width", '0');
+        // $("#main").css("margin-right", '0');
         $(".block-screen").css('display', 'none');
-        $("#body").css('overflow', 'visible');
+        // $("#body").css('overflow', 'visible');
+
     }
 </script>
 

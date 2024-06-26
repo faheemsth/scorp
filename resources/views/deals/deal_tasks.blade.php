@@ -1,7 +1,6 @@
 @extends('layouts.admin')
 
 <?php
-$brands = FiltersBrands();
 $setting = \App\Models\Utility::colorset();
 
 ?>
@@ -35,112 +34,332 @@ $setting = \App\Models\Utility::colorset();
     .form-control:focus {
         border: 1px solid rgb(209, 209, 209) !important;
     }
+    #SaveDiscussion{
+    margin-bottom: 1px;
+    }
+    .note-toolbar > .btn-group {
+    position: absolute;
+    top: 105px;
+    z-index: 1000;
+    }
+
+    .note-toolbar > .btn-group > .note-btn > .note-icon-link {
+        font-size: 22px;
+        position: relative;
+        padding-right: 10px;
+        padding-bottom: 6px;
+    }
+
+    .note-toolbar > .btn-group > .note-btn > .note-icon-link::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 2px;
+        height: 50%;
+        background-color: darkgray;
+        transform: translateY(-50%);
+    }
+
+    .note-btn::after {
+        content: " Add a title";
+        font-size: 15px;
+        color: darkgray;
+        margin-left: 5px;
+    }
+</style>
+<style>
+    /* .red-cross {
+                position: absolute;
+                top: 5px;
+                right: 5px;
+                color: red;
+            } */
+    .boximg {
+        margin: auto;
+    }
+
+    .dropdown-togglefilter:hover .dropdown-menufil {
+        display: block;
+    }
+
+    .choices__inner {
+        border: 1px solid #ccc !important;
+        min-height: auto;
+        padding: 4px !important;
+    }
+
+    .fil:hover .submenu {
+        display: block;
+    }
+
+    .fil .submenu {
+        display: none;
+        position: absolute;
+        top: 3%;
+        left: 154px;
+        width: 100%;
+        background-color: #fafafa;
+        font-weight: 600;
+        list-style-type: none;
+
+    }
+
+    .dropdown-item:hover {
+        background-color: white !important;
+    }
+    .form-control:focus{
+                    border: none !important;
+                    outline:none !important;
+                }
+
+    .filbar .form-control:focus{
+                    border: 1px solid rgb(209, 209, 209) !important;
+                }
+
+    .search-bar-input{
+
+        width:30% !important;
+    }
+    @media only screen and (max-width: 768px){
+        .search-bar-input{
+        width:50% !important;
+    }
+    }
+    @media only screen and (max-width: 425px){
+        .search-bar-input{
+        width:100% !important;
+    }
+    }
 </style>
 <div class="row">
     <div class="col-12">
         <div class="card my-card">
-
-
             <div class="card-body">
+                <div class="row align-items-center ">
+                    <div class="col-12 col-md-4 pb-2 d-flex">
+                        <span>
+                            <p class="mb-0 pb-0 ps-1">Tasks</p>
+                            <div class="dropdown ">
+                                <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    ALL TASKS
+                                </button>
+                                @if(sizeof($saved_filters) > 0)
+                                <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton1">
 
-                <div class="row align-items-center ps-0 ms-0 pe-4 my-2">
-                    <div class="col-4">
-                        <p class="mb-0 pb-0 ps-1">Tasks</p>
-                        <div class="dropdown">
-                            <button class="dropdown-toggle All-leads" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                All Tasks
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                {{-- <li><a class="dropdown-item assigned_to" href="javascript:void(0)">Assigned to</a></li>
-                                <li><a class="dropdown-item update-status-modal" href="javascript:void(0)">Update Status</a></li>
-                                <li><a class="dropdown-item" href="#">Brand Change</a></li> --}}
-                                <li><a class="dropdown-item delete-bulk-tasks" href="javascript:void(0)">Delete</a></li>
-                                {{-- <li id="actions_div" style="display:none"><a class="dropdown-item assigned_to" onClick="massUpdate()">Mass Update</a></li> --}}
-                            </ul>
-                        </div>
+                                    @foreach($saved_filters as $filter)
+                                    <li class="d-flex align-items-center justify-content-between ps-2">
+                                        <div class="col-10">
+                                            <a href="{{$filter->url}}" class="text-capitalize fw-bold text-dark">{{$filter->filter_name}}</a>
+                                            <span class="text-dark"> ({{$filter->count}})</span>
+                                        </div>
+                                        <ul class="w-25" style="list-style: none;">
+                                            <li class="fil fw-bolder">
+                                                <i class=" fa-solid fa-ellipsis-vertical" style="color: #000000;"></i>
+                                                <ul class="submenu" style="border: 1px solid #e9e9e9;
+                                                box-shadow: 0px 0px 1px #e9e9e9;">
+                                                    <li><a class="dropdown-item" href="#" onClick="editFilter('<?= $filter->filter_name?>', <?= $filter->id ?>)">Rename</a></li>
+                                                    <li><a class="dropdown-item" onclick="deleteFilter('{{$filter->id}}')" href="#">Delete</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+
+                                    </li>
+                                    @endforeach
+
+                                </ul>
+                                @endif
+                            </div>
+                        </span>
+                        <span class="ml-3">
+                            <p class="mb-0 pb-0 ps-1">Limit</p>
+                            <form action="{{ url('deals/get-user-tasks') }}" method="GET" id="paginationForm">
+                                <input type="hidden" name="num_results_on_page" id="num_results_on_page" value="{{ $_GET['num_results_on_page'] ?? '' }}">
+                                {{-- <input type="hidden" name="page" id="page" value="{{ $_GET['page'] ?? 1 }}"> --}}
+                                <input type="hidden" name="page" id="page" value="">
+                                <select name="perPage" onchange="submitForm()" style="width: 100px; margin-right: 1rem;border: 1px solid lightgray;border-radius: 1px;padding: 2.5px 5px;">
+                                    <option value="50" {{ Request::get('perPage') == 50 || Request::get('num_results_on_page') == 50 ? 'selected' : '' }}>50</option>
+                                    <option value="100" {{ Request::get('perPage') == 100 || Request::get('num_results_on_page') == 100 ? 'selected' : '' }}>100</option>
+                                    <option value="150" {{ Request::get('perPage') == 150 || Request::get('num_results_on_page') == 150 ? 'selected' : '' }}>150</option>
+                                    <option value="200" {{ Request::get('perPage') == 200 || Request::get('num_results_on_page') == 200 ? 'selected' : '' }}>200</option>
+                                </select>
+                            </form>
+
+                            <script>
+                                function submitForm() {
+                                    var selectValue = document.querySelector('select[name="perPage"]').value;
+                                    document.getElementById("num_results_on_page").value = selectValue;
+                                    // document.getElementById("page").value = {{ $_GET['page'] ?? 1 }};
+                                    document.getElementById("page").value = 1;
+                                    document.getElementById("paginationForm").submit();
+                                }
+                            </script>
+
+                        </span>
                     </div>
 
 
-                    <div class="col-8 d-flex justify-content-end gap-2 pe-0">
-                        <div class="input-group w-25">
-                            <button class="btn btn-sm list-global-search-btn px-0">
-                                <span class="input-group-text bg-transparent border-0  px-2 py-1" id="basic-addon1">
+                    <div class="col-12 col-md-8 d-flex justify-content-end gap-2 pe-0 me-0 align-items-end">
+                        <div class="input-group  rounded search-bar-input " style="height: 36px;">
+                            <button class="btn btn-sm list-global-search-btn  px-0 ">
+                                <span class="input-group-text bg-transparent border-0  px-1 pt-0" id="basic-addon1">
                                     <i class="ti ti-search" style="font-size: 18px"></i>
                                 </span>
                             </button>
-                            <input type="Search" class="form-control border-0 bg-transparent ps-0 list-global-search" placeholder="Search..." aria-label="Username" aria-describedby="basic-addon1">
+                            <input type="Search" class="form-control border-0 bg-transparent p-0 pb-2 list-global-search text-truncate" placeholder="Search this list..." aria-label="Username" aria-describedby="basic-addon1">
                         </div>
 
-                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark" ><i class="ti ti-refresh" style="font-size: 18px"></i></button>
+                        <button data-bs-toggle="tooltip" title="{{__('Refresh')}}" class="btn px-2 pb-2 pt-2 refresh-list btn-dark d-none d-flex justify-content-center align-items-center">
+                            <i class="ti ti-refresh" style="font-size: 18px"></i>
+                        </button>
 
-                        <button class="btn filter-btn-show p-2 btn-dark"  type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}">
+                        <button class="btn filter-btn-show p-2 btn-dark d-flex justify-content-center align-items-center" type="button" data-bs-toggle="tooltip" title="{{__('Filter')}}" style="width:36px; height: 36px;">
                             <i class="ti ti-filter" style="font-size:18px"></i>
                         </button>
 
                         @can('create task')
-                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark">
+                        <button data-size="lg" data-url="{{ route('organiation.tasks.create', 1) }}" data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Create Task') }}" class="btn px-2 btn-dark d-flex justify-content-center align-items-center" style="width:36px; height: 36px;">
                             <i class="ti ti-plus" style="font-size:18px"></i>
                         </button>
                         @endcan
-                        <a class="btn p-2 btn-dark  text-white assigned_to" id="actions_div" style="display:none;font-weight: 500;" onClick="massUpdate()">Mass Update</a>
+
+                        @if(auth()->user()->type == 'super admin' || auth()->user()->type == 'Admin Team')
+                        <a href="{{ route('tasks.download') }}" class="btn p-2 btn-dark d-flex justify-content-center align-items-center" style="color:white; width:36px; height: 36px;" data-bs-toggle="tooltip" title="Download in Csv">
+                            <i class="ti ti-download" style="font-size:18px"></i>
+                        </a>
+                        @endif
+
+                        @if(auth()->user()->type == 'super admin' || auth()->user()->can('delete task'))
+                        <a href="javascript:void(0)" id="actions_div" data-bs-toggle="tooltip" title="{{ __('Delete Tasks') }}" class="btn delete-bulk text-white btn-dark justify-content-center align-items-center px-0 d-none" style="width:36px; height: 36px;">
+                            <i class="ti ti-trash"></i>
+                        </a>
+                        @endif
 
                     </div>
                 </div>
 
-                <div class="filter-data px-3" id="filter-show" <?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?><?= isset($_GET) && !empty($_GET) ? '' : 'style="display: none;"' ?>>
+                <div class="filter-data px-3" id="filter-show"
+                <?= isset($_GET) && !empty($_GET) && empty($_GET['perPage']) ? '' : 'style="display: none;"' ?>>
                     <form action="/deals/get-user-tasks" method="GET" class="">
+                        <input type="hidden" name="assigned_by_me" value="{{ $_GET['assigned_by_me'] ?? '' }}">
+                        @if (!empty($_GET['num_results_on_page']))
+                          <input type="hidden" name="num_results_on_page" id="num_results_on_page" value="{{ $_GET['num_results_on_page'] }}">
+                        @endif
+
+                        <input type="hidden" name="page" id="page" value="{{ $_GET['page'] ?? 1 }}">
+                        <div class="row my-3 ">
+
+                            @if(in_array($type, $access_levels['first']))
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Brand</label>
+                                    <select name="brand" class="form form-control select2" id="filter_brand_id">
+                                        @if (!empty($filters['brands']))
+                                            @foreach ($filters['brands'] as $key => $Brand)
+                                            <option value="{{ $key }}" {{ !empty($_GET['brand']) && $_GET['brand'] == $key ? 'selected' : '' }}>{{ $Brand }}</option>
+                                            @endforeach
+                                            @else
+                                            <option value="" disabled>No brands available</option>
+                                        @endif
+                                    </select>
+                                </div>
+                            @endif
 
 
-                        <div class="row my-3">
-                            <div class="col-md-4"> <label for="">Brands</label>
-                                <select class="form form-control select2" id="choices-multiple444" name="brands[]" multiple style="width: 95%;">
-                                    <option value="">Select Brand</option>
-                                    @if (FiltersBrands())
-                                        @foreach (FiltersBrands() as $key => $brand)
-                                          <option value="{{ $key }}" {{ isset($_GET['brands']) && in_array($key, $_GET['brands']) ? 'selected' : '' }}>{{ $brand }}</option>
-                                        @endforeach
+
+                                @if(in_array($type, $access_levels['first']) || in_array($type, $access_levels['second']))
+                                    <div class="col-md-3 mt-2" id="region_filter_div">
+                                        <label for="">Region</label>
+                                        <select name="region_id" class="form form-control select2" id="filter_region_id">
+                                            @if (!empty($filters['regions']))
+                                                @foreach ($filters['regions'] as $key => $region)
+                                                <option value="{{ $key }}" {{ !empty($_GET['region_id']) && $_GET['region_id'] == $key ? 'selected' : '' }}>{{ $region }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+
+                                @if(in_array($type, $access_levels['first']) || in_array($type, $access_levels['second']) || in_array($type, $access_levels['third']))
+                                    <div class="col-md-3 mt-2" id="branch_filter_div">
+                                        <label for="">Branch</label>
+                                        <select name="branch_id" class="form form-control select2" id="filter_branch_id">
+                                            @if (!empty($filters['branches']))
+                                                @foreach ($filters['branches'] as $key => $branch)
+                                                <option value="{{ $key }}" {{ !empty($_GET['branch_id']) && $_GET['branch_id'] == $key ? 'selected' : '' }}>{{ $branch }}</option>
+                                                @endforeach
+                                                @else
+                                                <option value="" disabled>No regions available</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                @endif
+
+
+                                <div class="col-md-3 mt-2"> <label for="">Assigned To</label>
+                                    <div class="" id="assign_to_div">
+                                        <select name="lead_assigned_user" id="choices-multiple333" class="form form-control select2" style="width: 95%;">
+                                            @foreach ($filters['employees'] as $key => $user)
+                                            <option value="{{ $key }}" <?= isset($_GET['assigned_to']) && in_array($key, $_GET['assigned_to']) ? 'selected' : '' ?> class="">{{ $user }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-3 d-none"> <label for="">Subject</label>
+                                    <div class="subject_data" id="filter-names">
+                                        <select class="form form-control select2" id="choices-multiple110" name="subjects[]" multiple style="width: 95%;">
+                                            <option value="">Select Subject</option>
+                                            @foreach ($tasks as $filter_task)
+                                            <option value="{{ $filter_task->id }}" <?= isset($_GET['subjects']) && in_array($filter_task->name, $_GET['subjects']) ? 'selected' : '' ?> class="">{{ $filter_task->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Status</label>
+                                    <select class="form form-control select2" id="status444" name="status[]" multiple style="width: 95%;">
+                                        <option value="">Select Status</option>
+                                        <option value="1" <?= isset($_GET['status']) &&  ( gettype($_GET['status']) == 'array' ? in_array(1, $_GET['status']) : ($_GET['status'] == 1)) ? 'selected' : '' ?>>Completed</option>
+                                        <option value="0" <?=isset($_GET['status']) && ( gettype($_GET['status']) == 'array' ? in_array(0, $_GET['status']) : ($_GET['status'] == 0)) ? 'selected' : '' ?>>On Going</option>
+                                        <option value="2" <?= isset($_GET['status']) && ( gettype($_GET['status']) == 'array' ? in_array(2, $_GET['status']) : ($_GET['status'] == 2))  ? 'selected' : '' ?>>Overdue</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Due Date</label>
+                                    <input type="date" class="form form-control" name="due_date" value="<?= isset($_GET['due_date']) ? $_GET['due_date'] : '' ?>" style="width: 95%; border-color:#aaa">
+                                </div>
+
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Created at From</label>
+                                    <input type="date" class="form form-control" name="created_at_from"
+                                        value="<?= isset($_GET['created_at_from']) ? $_GET['created_at_from'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
+                                </div>
+
+                                <div class="col-md-3 mt-2">
+                                    <label for="">Created at To</label>
+                                    <input type="date" class="form form-control" name="created_at_to"
+                                        value="<?= isset($_GET['created_at_to']) ? $_GET['created_at_to'] : '' ?>"
+                                        style="width: 95%; border-color:#aaa">
+                                </div>
+
+                                <div class="col-md-12 mt-4 pt-2 d-flex align-items-end">
+                                    @if (!empty($_GET['assigned_by_me']))
+                                    <a href="/deals/get-user-tasks?<?php echo isset($_GET['created_at_from']) ? 'created_at_from=' . $_GET['created_at_from'] : ''; ?><?php echo isset($_GET['brand']) ? '&brand=' . $_GET['brand'] : ''; ?><?php echo isset($_GET['region_id']) ? '&region_id=' . $_GET['region_id'] : ''; ?><?php echo isset($_GET['branch_id']) ? '&branch_id=' . $_GET['branch_id'] : ''; ?><?php echo isset($_GET['due_date']) ? '&due_date=' . $_GET['due_date'] : ''; ?><?php echo isset($_GET['created_at_to']) ? '&created_at_to=' . $_GET['created_at_to'] : ''; ?><?php echo isset($_GET['lead_assigned_user']) ? '&lead_assigned_user=' . $_GET['lead_assigned_user'] : ''; ?>" data-bs-toggle="tooltip" title="{{__('Assigned By Me')}}" class="btn form-btn mr-2 px-2 py-2 btn-danger" style="color:white;">Reset Assigned By Me</a>
+                                    @else
+                                    <a href="/deals/get-user-tasks?assigned_by_me=true<?php echo isset($_GET['created_at_from']) ? '&created_at_from=' . $_GET['created_at_from'] : ''; ?><?php echo isset($_GET['brand']) ? '&brand=' . $_GET['brand'] : ''; ?><?php echo isset($_GET['region_id']) ? '&region_id=' . $_GET['region_id'] : ''; ?><?php echo isset($_GET['branch_id']) ? '&branch_id=' . $_GET['branch_id'] : ''; ?><?php echo isset($_GET['due_date']) ? '&due_date=' . $_GET['due_date'] : ''; ?><?php echo isset($_GET['created_at_to']) ? '&created_at_to=' . $_GET['created_at_to'] : ''; ?><?php echo isset($_GET['lead_assigned_user']) ? '&lead_assigned_user=' . $_GET['lead_assigned_user'] : ''; ?>" data-bs-toggle="tooltip" title="{{__('Assigned By Me')}}" class="btn form-btn mr-2 px-2 py-2 btn-dark" style="color:white;">Assigned By Me</a>
                                     @endif
-                                </select>
-                            </div>
+                                    <input type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}" class="btn form-btn me-2 btn-dark px-2 py-2" >
+                                    <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn mr-2 px-2 py-2 btn-dark" style="color:white;">Reset</a>
+                                    <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn mr-2 px-2 py-2 btn-dark" style=" color:white;display:none;">Save Filter</a>
 
-                            <div class="col-md-4"> <label for="">Subject</label>
-                                <select class="form form-control select2" id="choices-multiple110" name="subjects[]" multiple style="width: 95%;">
-                                    <option value="">Select Subject</option>
-                                    @foreach ($tasks as $filter_task)
-                                    <option value="{{ $filter_task->name }}" <?= isset($_GET['subjects']) && in_array($filter_task->name, $_GET['subjects']) ? 'selected' : '' ?> class="">{{ $filter_task->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="col-md-4"> <label for="">Assigned To</label>
-                                <select name="assigned_to[]" id="choices-multiple333" class="form form-control select2" multiple style="width: 95%;">
-                                    <option value="">Select user</option>
-                                    @foreach ($assign_to as $key => $user)
-                                    <option value="{{ $key }}" <?= isset($_GET['assigned_to']) && in_array($key, $_GET['assigned_to']) ? 'selected' : '' ?> class="">{{ $user }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-
-                            <div class="col-md-4">
-                                <label for="">Status</label>
-                                <select class="form form-control select2" id="status444" name="status" multiple style="width: 95%;">
-                                    <option value="">Select Status</option>
-                                    <option value="1" <?= isset($_GET['status']) && $_GET['status'] == '1' ? 'selected' : '' ?>>Completed</option>
-                                    <option value="0" <?= isset($_GET['status']) && $_GET['status'] == '0' ? 'selected' : '' ?>>On Going</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-4 mt-2">
-                                <label for="">Due Date</label>
-                                <input type="date" class="form form-control" name="due_date" value="<?= isset($_GET['due_date']) ? $_GET['due_date'] : '' ?>" style="width: 95%; border-color:#aaa">
-                            </div>
-
-                            <div class="col-md-4 mt-4 pt-2">
-                                <input type="submit" data-bs-toggle="tooltip" title="{{__('Submit')}}" class="btn form-btn me-2 btn-dark px-2 py-2" >
-                                <a type="button" id="save-filter-btn" onClick="saveFilter('tasks',<?= sizeof($tasks) ?>)" class="btn form-btn me-2 bg-dark" style=" color:white;display:none;">Save Filter</a>
-                                <a href="/deals/get-user-tasks" data-bs-toggle="tooltip" title="{{__('Reset')}}" class="btn form-btn px-2 py-2" style="background-color: #b5282f;color:white;">Reset</a>
-                            </div>
+                                </div>
                         </div>
 
                         <div class="row my-4 d-none">
@@ -167,7 +386,7 @@ $setting = \App\Models\Utility::colorset();
                     </form>
                 </div>
 
-                <div class="table-responsive mt-3">
+                <div class="table-responsive mt-1">
                     <table class="table table-hover mb-0">
                         <thead>
                             <tr>
@@ -179,6 +398,7 @@ $setting = \App\Models\Utility::colorset();
                                 <th>{{ __('Assigned To') }}</th>
                                 <th>{{ __('Brand') }}</th>
                                 <th>{{ __('Status') }}</th>
+                                <th>{{ __('Update Status') }}</th>
                             </tr>
                         </thead>
                         <tbody class="tasks_tbody">
@@ -217,12 +437,14 @@ $setting = \App\Models\Utility::colorset();
                                     <td>
                                         <input type="checkbox" name="tasks[]" value="{{$task->id}}" class="sub-check">
                                     </td>
-                                    <td> <span class="badge text-white" style="background-color:{{$color_code }}">{{ $task->due_date  }}</span>
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                         <span class="badge text-white" style="background-color:{{$color_code }}">{{ $task->due_date  }}</span>
                                     </td>
-                                    <td>
-                                        <span style="cursor:pointer" class="task-name hyper-link" @can('view task') onclick="openNav(<?= $task->id ?>)" @endcan data-task-id="{{ $task->id }}">{{ $task->name }}</span>
+
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
+                                        <span style="cursor:pointer" class="task-name hyper-link" @can('view task') onclick="openSidebar('/get-task-detail?task_id=<?= $task->id ?>')" @endcan data-task-id="{{ $task->id }}">{{ $task->name }}</span>
                                     </td>
-                                    <td>
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         @if (!empty($task->assigned_to))
                                         <span style="cursor:pointer" class="hyper-link" @can('view task') onclick="openSidebar('/users/'+{{ $task->assigned_to }}+'/user_detail')" @endcan>
                                             {{ $users[$task->assigned_to] }}
@@ -230,7 +452,7 @@ $setting = \App\Models\Utility::colorset();
                                         @endif
                                     </td>
 
-                                    <td>
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
 
                                         @if (!empty($task->assigned_to))
                                         @if ($task->assigned_type == 'company')
@@ -238,37 +460,76 @@ $setting = \App\Models\Utility::colorset();
                                             {{ $users[$task->assigned_to] }}
                                         </span>
                                         @else
-                                        <?php
-                                        $assigned_user = \App\Models\User::findOrFail($task->assigned_to);
-                                        ?>
-
-                                        <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{ $assigned_user->created_by }}+'/user_detail')">
-                                            {{ isset($users[$assigned_user->created_by]) ? $users[$assigned_user->created_by] : '' }}
+                                        <span style="cursor:pointer" class="hyper-link" onclick="openSidebar('/users/'+{{ $task->brand_id }}+'/user_detail')">
+                                            {{ isset($users[$task->brand_id]) ? $users[$task->brand_id] : '' }}
                                         </span>
                                         @endif
                                         @endif
+
+
                                     </td>
 
-                                    <td>
+
+
+                                    <td style="max-width: 110px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
                                         @if ($task->status == 0)
-                                            <span class="badge  text-white" style="background-color:#B3CDE1">{{ __('On Going') }}</span>
+                                            <span class="badge  text-white" style="background-color:#cd9835">{{ __('On Going') }}</span>
                                         @else
                                             <span class="badge text-white" style="background: green; " >{{ __('Completed') }}</span>
                                         @endif
                                     </td>
+
+                                    <td class="d-flex">
+                                        @if ($task->status == 0)
+                                        <button class="btn btn-sm btn-dark position-relative mx-1" style="width:36px; height: 36px; margin-top:12px;"  @can('edit status task') onclick="ChangeTaskStatus({{ $task->id }})" @endcan data-bs-toggle="tooltip" data-bs-placement="top" title="Change Task Status">
+                                            <i class="fa-solid fa-check d-flex justify-content-center align-items-center" style="font-size: 18px;"></i>
+                                        </button>
+
+                                        @else
+                                        <span class="badge text-white mx-1" style="background: green; " >{{ __('Completed') }}</span>
+                                        @endif
+                                        @can('edit task')
+                                            <button href="#" data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}"
+                                                data-ajax-popup="true" data-bs-toggle="tooltip"
+                                                title="{{ __('Edit Task') }}"class="btn px-2 btn-dark text-white mx-1"
+                                                style="width:36px; height: 36px; margin-top:12px;">
+                                                <i class="ti ti-pencil"></i>
+                                            </button>
+                                        @endcan
+                                        @can('delete task')
+                                            {!! Form::open([
+                                                'method' => 'GET',
+                                                'route' => ['tasks.destroy', $task->id],
+                                                'id' => 'delete-form-' . $task->id,
+                                            ]) !!}
+
+                                            <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}"
+                                                class="btn px-2 py-2 text-white bs-pass-para bg-danger mx-1"style="width:36px; height: 36px; margin-top:12px;">
+                                                <i class="ti ti-trash"></i>
+                                            </a>
+                                            {!! Form::close() !!}
+                                        @endcan
+                                    </td>
+
+
                                 </tr>
                                 @empty
+                                <tr>
+                                    <td class="7">No Record Found!!!</td>
+                                </tr>
                                 @endforelse
                         </tbody>
                     </table>
                 </div>
 
+                <div class="pagination_div">
                 @if ($total_records > 0)
                 @include('layouts.pagination', [
                 'total_pages' => $total_records,
                 'num_results_on_page' => 50,
                 ])
                 @endif
+                </div>
 
 
                 <div id="mySidenav" style="z-index: 1065; padding-left:10px; box-shadow: -5px 0px 30px 0px #aaa;" class="sidenav <?= isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on' ? 'sidenav-dark' : 'sidenav-light' ?>" style="padding-left: 5px">
@@ -278,96 +539,21 @@ $setting = \App\Models\Utility::colorset();
         </div>
     </div>
 </div>
-
-<div class="modal" id="update-status-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Update Status</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ route('update-bulk-task-status') }}" method="POST">
-                @csrf
-                <div class="modal-body">
-                    <select name="status" id="bulk_status" class="form form-control">
-                        <option value="">Select Status</option>
-                        <option value="0">On Going</option>
-                        <option value="1">Completed</option>
-                    </select>
-
-                    <input type="hidden" class="task_ids" value="" name="task_ids">
-                </div>
-                <div class="modal-footer">
-                    <input type="submit" class="btn btn-primary" value="Update Status">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<div class="modal" id="mass-update-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg my-0" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Mass Update</h5>
-                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="{{ route('update-bulk-task') }}" method="POST">
-                @csrf
-                <div class="modal-body" style="min-height: 40vh;">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <select name="bulk_field" id="bulk_field" class="form form-control">
-                                <option value="">Select Field</option>
-                                <option value="tm">Task Name</option>
-                                <option value="ofc">Office</option>
-                                <!-- <option value="ast">Assign Type</option> -->
-                                <option value="asto">Assigned To</option>
-                                <option value="ts">Task Status</option>
-                                <option value="dd">Due Date</option>
-                                <option value="sd">Start Date</option>
-                                <option value="rd">Reminder Date</option>
-                                <!-- <option value="rt">Related Type</option>
-                                <option value="rto">Related To</option> -->
-                                <option value="des">Description</option>
-                                <option value="per">Permissions</option>
-                            </select>
-                        </div>
-                        <input name='tasks_ids' id="tasks_ids" hidden>
-                        <div class="col-md-6" id="field_to_update">
-
-                        </div>
-                    </div>
-
-                </div>
-                <br>
-
-                <div class="modal-footer">
-                    <input type="submit" class="btn btn-dark px-2" value="Update">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
 @endsection
-
-
-
-
-
-
-
 @push('script-page')
-{{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> --}}
-
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#taskDiscussionInput').summernote({
+            height: 150, // Set the height to 600 pixels
+            focus: true,
+            toolbar: [
+                ['link', ['link']],
+    ]
+        });
+    });
+</script>
 <script>
     let selectedArr = [];
     $(document).ready(function() {
@@ -400,7 +586,6 @@ $setting = \App\Models\Utility::colorset();
                 data = JSON.parse(data);
 
                 if (data.status == 'success') {
-                    console.log(data.html);
                     $(".tasks_tbody").html(data.html);
                 }
             }
@@ -492,29 +677,6 @@ $setting = \App\Models\Utility::colorset();
         $(".block-screen").css('display', 'block');
         $("#body").css('overflow', 'hidden');
 
-        // var csrf_token = $('meta[name="csrf-token"]').attr('content');
-
-        // $.ajax({
-        //     url: "/leads/getDiscussions",
-        //     data: {
-        //         lead_id,
-        //         _token: csrf_token,
-        //     },
-        //     type: "POST",
-        //     cache: false,
-        //     success: function(data) {
-        //         data = JSON.parse(data);
-        //         //console.log(data);
-
-        //         if (data.status) {
-        //             $(".discussion-list-group").html(data.content);
-        //             $(".lead_id").val(lead_id);
-
-
-        //         }
-        //     }
-        // });
-
     }
 
     /* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
@@ -580,7 +742,18 @@ $setting = \App\Models\Utility::colorset();
     });
 
     function DeleteComment(id, taskID) {
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
         $('#dellhover').show();
+        if (result.isConfirmed) {
         $.ajax({
             type: "GET",
             url: "{{ url('delete/task/comment') }}" + '/' + id + '/' + taskID,
@@ -590,11 +763,17 @@ $setting = \App\Models\Utility::colorset();
                 console.log(data);
 
                 if (data.status == 'success') {
+                   $('#taskDiscussionInput').val('');
+                   $('#id').val('');
                     show_toastr('Success', data.message, 'success');
                     $('#commonModal').modal('hide');
                     $('.list-group-flush').html(data.html);
-                    // openNav(data.lead.id);
-                    // return false;
+                    var content = $('#taskDiscussionInput').summernote('code');
+                    $('#taskDiscussionInput').val(encodeURIComponent(content));
+                    // Reset Summernote editor
+                    $('#taskDiscussionInput').summernote('code', ''); // Set empty content
+                    // Continue with form submission
+                    return true;
                 } else {
                     show_toastr('Error', data.message, 'error');
                     $(".create-discussion-btn").val('Create');
@@ -603,6 +782,9 @@ $setting = \App\Models\Utility::colorset();
             }
         });
     }
+        });
+    }
+
 
     $(document).on("submit", "#taskDiscussion", function(e) {
         e.preventDefault();
@@ -611,7 +793,6 @@ $setting = \App\Models\Utility::colorset();
 
         $(".create-discussion-btn").val('Processing...');
         $('.create-discussion-btn').attr('disabled', 'disabled');
-
         $.ajax({
             type: "POST",
             url: "/tasks/" + id + "/discussions",
@@ -620,15 +801,20 @@ $setting = \App\Models\Utility::colorset();
                 data = JSON.parse(data);
 
                 console.log(data);
-
+                $('#taskDiscussionInput').val('');
                 if (data.status == 'success') {
+                    $('#id').val('');
                     show_toastr('Success', data.message, 'success');
                     $('#commonModal').modal('hide');
                     $('.list-group-flush').html(data.html);
-                    // openNav(data.lead.id);
-                    // return false;
+                    var content = $('#taskDiscussionInput').summernote('code');
+                    $('#taskDiscussionInput').val(encodeURIComponent(content));
+                    // Reset Summernote editor
+                    $('#taskDiscussionInput').summernote('code', ''); // Set empty content
+                    // Continue with form submission
+                    return true;
                 } else {
-                    show_toastr('Error', data.message, 'error');
+                    show_toastr('error', data.message, 'error');
                     $(".create-discussion-btn").val('Create');
                     $('.create-discussion-btn').removeAttr('disabled');
                 }
@@ -649,117 +835,39 @@ $setting = \App\Models\Utility::colorset();
         }
     });
 
-    $('#bulk_field').on('change', function() {
-
-        if(this.value != ''){
-            $('#field_to_update').html('');
-
-            if(this.value == 'tm'){
-
-                let field = '<input type="text" class="form-control" id="task-name" value="" placeholder="Task Name" name="task_name" required>';
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'ofc'){
-
-                var branches = <?= json_encode($branches) ?>;
-                console.log(branches)
-                let options = '';
-                for(let i = 0; i < branches.length; i++){
-                    options += '<option value="'+branches[i].id+'">'+branches[i].name+'</option>';
-                }
-
-                let field = `<select class="form form-control select2" id="choices-multiple1" name="branch_id" required>
-                                <option value="">Select Office</option>
-                                `+options+`
-                            </select>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'ast'){
-
-            }else if(this.value == 'asto'){
-                var assign_users = <?= json_encode($assign_to) ?>;
-                // console.log(branches)
-                let options = '';
-                for(let i = 0; i < assign_users.length; i++){
-                    options += '<option value="'+assign_users[i].id+'">'+assign_users[i].name+'</option>';
-                }
-
-                let field = `<select class="form form-control select2" id="choices-multiple1" name="assigned_to" required>
-                                <option value="">Select person</option>
-                                `+options+`
-                            </select>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'ts'){
-
-                let field = `<select class="form form-control select2" id="choices-multiple5" name="status" required>
-                                <option value="">Select Status</option>
-                                <option value="0">On Going</option>
-                                <option value="1">Completed</option>
-                            </select>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'dd'){
-
-                let field = `<input type="date" class="form form-control"
-                                    name="due_date" required>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'sd'){
-
-                let field = `<input type="date" class="form form-control"
-                                    name="start_date" required>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'rd'){
-
-                let field = `<div class="col-sm-6 d-flex"><input type="date" class="form form-control"
-                                    name="remainder_date" required>
-                                <input type="time" class="form form-control"
-                                    name="remainder_time" required></div>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'des'){
-
-                let field =  `<textarea name="description" id="" cols="30" rows="3" class="form form-control" required></textarea>`;
-                $('#field_to_update').html(field);
-
-            }else if(this.value == 'per'){
-
-                let field = `<select class="form form-control select2" id="choices-multiple8" name="visibility" required>
-                                <option value="">Select Visibility</option>
-                                <option value="public" >public</option>
-                                <option value="private">private</option>
-                            </select>`;
-                $('#field_to_update').html(field);
-
-            }
-        }
-
-    });
-
     $(document).on('change', '.main-check', function() {
         $(".sub-check").prop('checked', $(this).prop('checked'));
+
+        var selectedIds = $('.sub-check:checked').map(function() {
+            return this.value;
+        }).get();
+
+        // console.log(selectedIds.length)
+
+        if (selectedIds.length > 0) {
+            selectedArr = selectedIds;
+            $("#actions_div").removeClass('d-none');
+        } else {
+            selectedArr = selectedIds;
+
+            $("#actions_div").addClass('d-none');
+        }
     });
+
+
     $(document).on('change', '.sub-check', function() {
         var selectedIds = $('.sub-check:checked').map(function() {
             return this.value;
         }).get();
 
-        console.log(selectedIds.length)
-
-        if(selectedIds.length > 0){
+        if (selectedIds.length > 0) {
             selectedArr = selectedIds;
-            $("#actions_div").css('display', 'block');
-        }else{
+            $("#actions_div").removeClass('d-none');
+        } else {
             selectedArr = selectedIds;
 
-            $("#actions_div").css('display', 'none');
+            $("#actions_div").addClass('d-none');
         }
-        let commaSeperated = selectedArr.join(",");
-        console.log(commaSeperated)
-        $("#tasks_ids").val(commaSeperated);
-
     });
 
     function massUpdate(){
@@ -784,7 +892,7 @@ $setting = \App\Models\Utility::colorset();
         $("#update-status-modal").modal('show');
     });
 
-    $(document).on("click", '.delete-bulk-tasks', function() {
+    $(document).on("click", '.delete-bulk', function() {
         var task_ids = $(".sub-check:checked");
         var selectedIds = $('.sub-check:checked').map(function() {
             return this.value;
@@ -804,5 +912,175 @@ $setting = \App\Models\Utility::colorset();
             }
         });
     })
+
+
+    ////////////////////Filters Javascript
+    $("#filter-show #filter_brand_id").on("change", function() {
+            var id = $(this).val();
+            var type = 'brand';
+            var filter = true;
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#region_filter_div').html('');
+                        $("#region_filter_div").html(data.regions);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+
+        $(document).on("change", "#filter-show #filter_region_id, #filter-show #region_id", function() {
+            var id = $(this).val();
+            var filter = true;
+            var type = 'region';
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('region_brands') }}',
+                data: {
+                    id: id, // Add a key for the id parameter
+                    filter,
+                    type: type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#branch_filter_div').html('');
+                        $("#branch_filter_div").html(data.branches);
+                        getTasks();
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        });
+
+        $(document).on("change", "#filter-show #filter_branch_id, #filter-show #branch_id", function() {
+           getTasks();
+
+            var id = $(this).val();
+
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('filter-branch-users') }}',
+                    data: {
+                        id: id
+                    },
+                    success: function(data){
+                        data = JSON.parse(data);
+
+                        if (data.status === 'success') {
+                            $('#assign_to_div').html('');
+                            $("#assign_to_div").html(data.html);
+                            select2();
+                        } else {
+                            console.error('Server returned an error:', data.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX request failed:', status, error);
+                    }
+                });
+        });
+
+        function getTasks(){
+            var brand_id = $("#filter_brand_id").val();
+            var region_id = $("#region_id").val();
+            var branch_id = $("#branch_id").val();
+
+            var type = 'tasks';
+
+            $.ajax({
+                type: 'GET',
+                url: '{{ route('filterData') }}',
+                data: {
+                   brand_id,
+                   region_id,
+                   branch_id,
+                   type
+                },
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status === 'success') {
+                        $('#filter-names').html('');
+                        $("#filter-names").html(data.html);
+                        select2();
+                    } else {
+                        console.error('Server returned an error:', data.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX request failed:', status, error);
+                }
+            });
+        }
+
+
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        function ChangeTaskStatus(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to update the task status.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, update it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('task.status.change') }}",
+                        method: 'POST',
+                        data: {
+                            id: id
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'The task status has been changed successfully.',
+                        }).then(function() {
+                            // Reload the page after the user closes the SweetAlert dialog
+                            window.location.href = window.location.href;
+                        });
+                        },
+
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
+                } else {
+                    console.log("Task status update canceled.");
+                }
+            });
+        }
+
 </script>
+
 @endpush

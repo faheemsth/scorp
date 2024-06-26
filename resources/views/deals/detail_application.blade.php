@@ -1,7 +1,117 @@
 <style>
+    .editable:hover {
+        border: 1px solid rgb(136, 136, 136);
+    }
+
+    /* table tr td {
+        padding-top: 3px !important;
+        padding-bottom: 3px !important;
+        font-size: 12px;
+    } */
+
+    table tr {
+        font-size: 14px;
+    }
+
+    .card-body {
+        padding: 25px 15px !important;
+    }
+
+    .edit-input-field-div {
+        background-color: #ffffff;
+        border: 0px solid rgb(224, 224, 224);
+        max-width: max-content;
+        max-height: 30px;
+    }
+
+
+    .edit-input-field-div .input-group {
+        min-width: 70px;
+        min-height: 30px;
+        border: none !important;
+    }
+
+    .edit-input-field-div .input-group input {
+
+        border: none !important;
+    }
+
+    .edit-input-field {
+        border: 0px;
+        box-shadow: none;
+        padding: 4px !important;
+
+    }
+
+    .edit-input-field-div .edit-btn-div {
+        display: none;
+    }
+
+    .edit-input-field-div:hover {
+        /* border: 1px solid rgb(224, 224, 224); */
+    }
+
+    .edit-input-field-div:hover .edit-btn-div {
+        display: block;
+    }
+
+    .edit-input {
+        padding: 7px;
+    }
+
+    .block-items {
+        overflow: auto;
+        padding-right: 7px;
+        padding-bottom: 5px;
+        padding-top: 1px;
+        padding-left: 1px;
+        width: 100%;
+        display: flex;
+    }
+
+
+    .block-item {
+        display: inline-block;
+        vertical-align: top;
+        padding: 10px;
+        text-align: left;
+        white-space: nowrap;
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .16), 0 0 0 1px rgba(0, 0, 0, .08);
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, .16), 0 0 0 1px rgba(0, 0, 0, .08);
+        border-radius: 2px;
+        margin-right: 10px;
+        line-height: initial;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    .top-label {
+        text-transform: uppercase;
+        white-space: nowrap;
+        width: 100%;
+        color: #757575;
+        font-size: 11px;
+        line-height: 12px;
+        font-weight: normal;
+        padding-bottom: 4px;
+        display: block;
+    }
+
+
+    .block-item-count-total {
+        font-weight: bold;
+        font-size: 14px;
+        text-align: left;
+    }
+
     .btn-sm {
-        width: 35px;
-        height: 35px;
+        width: 30px;
+        height: 30px;
     }
 </style>
 <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
@@ -10,7 +120,7 @@
         <div class="col-sm-12 pe-0">
 
             {{-- topbar --}}
-            <div class="lead-topbar d-flex flex-wrape justify-content-between align-items-center p-2">
+            <div class="lead-topbar d-flex flex-wrap justify-content-between align-items-center p-2">
                 <div class="d-flex align-items-center">
                     <div class="lead-avator">
                         <img src="{{ asset('assets/images/placeholder-lead.png') }}" alt="" class="">
@@ -22,36 +132,92 @@
                         <p class="pb-0 mb-0 fw-normal">{{ __('Application') }}</p>
                         <div class="d-flex align-items-baseline ">
                             @if (strlen($application->name) > 40)
-                            <h5 class="fw-bold">{{ substr($application->name, 0, 40) }}...</h5>
+                                <h5 class="fw-bold">{{ substr($application->name, 0, 40) }}...</h5>
                             @else
-                            <h5 class="fw-bold">{{ $application->name }}</h5>
+                                <h5 class="fw-bold">{{ $application->name }}</h5>
                             @endif
 
                         </div>
                     </div>
 
                 </div>
-
-                @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit application') || \Auth::user()->can('delete application'))
                 <div class="d-flex justify-content-end gap-1 me-3">
-                    @can('edit application')
-                    <a href="#" data-size="lg" data-url="{{ route('deals.application.edit', $application->id) }}" data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Application') }}" class="btn text-white px-2 btn-dark">
-                        <i class="ti ti-pencil"></i>
-                    </a>
-                    @endcan
+                    @if (\Auth::user()->type == 'super admin' || \Auth::user()->type == 'admin team')
+                        @php
+                            $client = \App\Models\User::join('client_deals', 'client_deals.client_id', 'users.id')
+                                ->where('client_deals.deal_id', $application->deal_id)
+                                ->first();
+                            $passport_number = isset($client->passport_number) ? $client->passport_number : '';
+                        @endphp
+                        @if (!empty($passport_number))
+                            <a href="#" data-size="lg"
+                                data-url="{{ url('deals/move-application') . '/' . $passport_number . '/' . $application->id }}"
+                                data-ajax-popup="true" data-bs-toggle="tooltip" data-ajax-popup="true"
+                                data-bs-toggle="tooltip" bs-original-title="{{ __('Move Application') }}"
+                                title="Move Application" data-original-title="{{ __('Move Application') }}"
+                                class="btn text-white px-2 btn-dark" style="width: 36px; height: 36px;">
+                                <i class="ti ti-exchange"></i>
+                            </a>
+                        @endif
 
-                    @can('delete application')
-                    {!! Form::open([
-                    'method' => 'DELETE',
-                    'route' => ['deals.application.destroy', $application->id],
-                    'id' => 'delete-form-' . $application->id,
-                    ]) !!}
-                    <a href="#" class="btn px-2 bg-danger  align-items-center bs-pass-para" data-bs-toggle="tooltip" title="{{ __('Delete') }}"><i class="ti ti-trash text-white"></i></a>
+                    @endif
 
-                    {!! Form::close() !!}
-                    @endcan
+                    @if (
+                        \Auth::user()->type == 'super admin' ||
+                            \Auth::user()->can('edit application') ||
+                            \Auth::user()->can('delete application'))
+                        @can('edit application')
+                            <a href="#" data-size="lg"
+                                data-url="{{ route('deals.application.edit', $application->id) }}" data-ajax-popup="true"
+                                data-bs-toggle="tooltip" data-bs-title="{{ __('Update Application') }}"
+                                class="btn text-white px-2 btn-dark" style="width: 36px; height: 36px;">
+                                <i class="ti ti-pencil"></i>
+                            </a>
+                        @endcan
+
+                        @can('delete application')
+                            {!! Form::open([
+                                'method' => 'DELETE',
+                                'route' => ['deals.application.destroy', $application->id],
+                                'id' => 'delete-form-' . $application->id,
+                            ]) !!}
+                            <a href="#" class="btn px-2 bg-danger  align-items-center bs-pass-para"
+                                data-bs-toggle="tooltip" title="{{ __('Delete') }}" style="width: 36px; height: 36px;"><i
+                                    class="ti ti-trash text-white"></i></a>
+
+                            {!! Form::close() !!}
+                        @endcan
+                    @endif
                 </div>
-                @endif
+
+                <!-- New row added here -->
+                <div class="row w-100 mt-3 border-top">
+                    @php $counter = 0; @endphp
+                    <div class="col-12 px-5 py-2 d-flex">
+                        @foreach(\App\Models\LeadTag::whereIn('id', explode(',', $application->tag_ids))->get() as $tag)
+                            @if ($tag->tag != '')
+                                @if ($counter % 5 == 0 && $counter != 0)
+                                    </div><div class="col-12 px-5 py-2 d-flex">
+                                @endif
+                                <div class="d-flex ml-1">
+                                    <span class="" style="font-size:13px;background-color: #419de4;color:white;padding: 5px 21px;border: none;border-radius: 0px 30px 30px 0px;font-size: 11.7px;">{{ limit_words($tag->tag, 1.5) }}</span>
+                                    <span class="d-flex mt-1">
+                                        <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-dark mx-1 tag-badge"
+                                        data-tag-id="{{ $tag->id }}"
+                                        {{-- data-lead-id="{{ $lead->id }}" --}}
+                                        data-deal-id="{{ $application->id }}"
+                                        ><i class="ti ti-pencil"></i></a>
+                                        <input type="hidden" value="{{ $application->id }}" name="lead_id" id="lead_id">
+                                        <input type="hidden" value="{{ $tag->id }}" name="old_tag_id" id="old_tag_id">
+                                        <a style="width: 31px;height: 27px;border-redius;border-radius: 8px;" class="btn px-2 py-1 p-auto btn-sm text-white bg-danger" onclick="deleteTage(this,{{ $application->id }},{{ $tag->id }})"><i class="ti ti-trash"></i></a>
+                                    </span>
+                                </div>
+                                @php $counter++; @endphp
+                            @endif
+                        @endforeach
+                    </div>
+                </div>
+                {{--  New row added end --}}
             </div>
 
 
@@ -65,7 +231,7 @@
                 <div class="">
                     <small>{{ __('Universtiy') }}</small>
                     <span>
-                        {{ isset($application->university_id) && isset($universities[$application->university_id]) ? $universities[$application->university_id] : ''}}
+                        {{ isset($application->university_id) && isset($universities[$application->university_id]) ? $universities[$application->university_id] : '' }}
                     </span>
                 </div>
                 <div class="">
@@ -84,38 +250,42 @@
 
             <div class="card content my-2 bg-white">
                 <div class="stages mt-2 bg-white">
-                    <h2 class="mb-3">Application STATUS: <span class="d-inline-block fw-light">{{ $stages[$application->stage_id] }}</span>
+                    <h2 class="mb-3">Application STATUS: <span
+                            class="d-inline-block fw-light">{{ $stages[$application->stage_id] }}</span>
                     </h2>
-                    <div class="wizard mb-2" style="    background: #EFF3F7;
-                    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-                };">
+                    <div class="wizard mb-2"
+                        style="background: #EFF3F7; box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);">
                         <?php $done = true; ?>
                         @forelse ($stages as $key => $stage)
-                        <?php
-                        if ($application->stage_id == $key) {
-                            $done = false;
-                        }
-
-                        $is_missed = false;
-
-                        if (!empty($stage_histories) && !in_array($key, $stage_histories) && $key <= max($stage_histories)) {
-                            $is_missed = true;
-                        }
-
-                        ?>
-                        <style>
-                            .missedup{
-                                background-color:#e0e0e0 !important;
-                                color:white !important;
+                            <?php
+                            if ($application->stage_id == $key) {
+                                $done = false;
                             }
-                            .missedup::after{
-                                border-left-color: #e0e0e0 !important;
-                            }
-                          </style>
 
-                        <a type="button" data-application-id="{{ $application->id }}" data-stage-id="{{ $key }}"
-                            class="@can('edit stage application') application_stage @endcan {{ $is_missed == true ? 'missedup' : ($application->stage_id == $key ? 'current' : ($done == true ? 'done' : '')) }} "
-                            style="font-size:13px">{{ $stage }} @if($is_missed == true)<i class="fa fa-close text-danger"></i>@endif </a>
+                            $is_missed = false;
+
+                            if (!empty($stage_histories) && !in_array($key, $stage_histories) && $key <= max($stage_histories)) {
+                                $is_missed = true;
+                            }
+
+                            ?>
+                            <style>
+                                .missedup {
+                                    background-color: #e0e0e0 !important;
+                                    color: white !important;
+                                }
+
+                                .missedup::after {
+                                    border-left-color: #e0e0e0 !important;
+                                }
+                            </style>
+
+                            <a type="button" data-application-id="{{ $application->id }}"
+                                data-stage-id="{{ $key }}"
+                                class="@can('edit stage application') application_stage @endcan {{ $is_missed == true ? 'missedup' : ($application->stage_id == $key ? 'current' : ($done == true ? 'done' : '')) }} "
+                                style="font-size:13px">{{ $stage }} @if ($is_missed == true)
+                                    <i class="fa fa-close text-danger"></i>
+                                @endif </a>
                         @empty
                         @endforelse
                     </div>
@@ -124,7 +294,15 @@
                     <div class="card-header p-1 bg-white">
                         <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link active" id="pills-details-tab" data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab" aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
+                                <button class="nav-link pills-link active" id="pills-details-tab" data-bs-toggle="pill"
+                                    data-bs-target="#pills-details" type="button" role="tab"
+                                    aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
+                            </li>
+
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link pills-link" id="pills-details-tab" data-bs-toggle="pill"
+                                    data-bs-target="#pills-related" type="button" role="tab"
+                                    aria-controls="pills-details" aria-selected="true">{{ __('Related') }}</button>
                             </li>
                         </ul>
                     </div>
@@ -133,17 +311,22 @@
 
                         <div class="tab-content" id="pills-tabContent">
                             {{-- Details Pill Start --}}
-                            <div class="tab-pane fade show active" id="pills-details" role="tabpanel" aria-labelledby="pills-details-tab">
-
+                            <div class="tab-pane fade show active" id="pills-details" role="tabpanel"
+                                aria-labelledby="pills-details-tab">
+                                {{-- details --}}
                                 <div class="accordion accordion-flush" id="accordionFlushExample">
                                     <div class="accordion-item">
-                                        <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
-                                            <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapsekeyone">
+                                        <h2 class="accordion-header" id="panelsStayOpen-headingkey-details">
+                                            <button class="accordion-button p-2" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#panelsStayOpen-collapsekey-details">
                                                 {{ __('Details') }}
                                             </button>
                                         </h2>
 
-                                        <div id="panelsStayOpen-collapsekeyone" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingkeyone">
+                                        <div id="panelsStayOpen-collapsekey-details"
+                                            class="accordion-collapse collapse show"
+                                            aria-labelledby="panelsStayOpen-headingkey-details">
                                             <div class="accordion-body">
 
                                                 <div class="table-responsive mt-1" style="margin-left: 10px;">
@@ -151,132 +334,126 @@
                                                     <table>
                                                         <tbody>
                                                             <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
                                                                     {{ __('Record ID') }}
                                                                 </td>
-                                                                <td class="" style="padding-left: 10px; font-size: 14px;">
+                                                                <td class=""
+                                                                    style="padding-left: 10px; font-size: 14px;">
                                                                     {{ $application->id }}
                                                                 </td>
                                                             </tr>
-
                                                             <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Application Name') }}
-                                                                </td>
-                                                                <td class="application_key-td" style="padding-left: 10px; font-size: 14px;">
-
-                                                                    {{$application->name}}
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Application Key') }}
-                                                                </td>
-                                                                <td class="application_key-td" style="padding-left: 10px; font-size: 14px;">
-
-                                                                    {{$application->application_key}}
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('University') }}
-                                                                </td>
-                                                                <td class="university_name-td" style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $universities[$application->university_id] ?? '' }}
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Course') }}
-                                                                </td>
-                                                                <td class="course-td" style="padding-left: 10px; font-size: 14px;">
-
-                                                                    {{ ($application->course) }}
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Intake') }}
-                                                                </td>
-                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
-
-                                                                    {{($application->intake) }}
-
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Student ID') }}
-                                                                </td>
-                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
-
-                                                                    {{ $application->deal_id}}
-
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Brand') }}
-                                                                </td>
-                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
-                                                                   {{  App\Models\User::find(App\Models\Deal::find($application->deal_id)->brand_id)->name ?? ''}}
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Branch') }}
-                                                                </td>
-                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
-                                                                   {{ App\Models\Branch::find(App\Models\Deal::find($application->deal_id)->branch_id)->name  ?? ''}}
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
-                                                                    {{ __('Assigned To') }}
-                                                                </td>
-                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
-                                                                    @if (App\Models\Deal::find($application->deal_id)->assigned_to)
-
-                                                                    {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->assigned_to)->name }}
-                                                                    @else
-                                                                    {{__(" ")}}
-                                                                    @endif
-
-                                                                </td>
-                                                            </tr>
-
-                                                            <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
                                                                     {{ __('Status') }}
                                                                 </td>
-                                                                <td class="status-td" style="padding-left: 10px; font-size: 14px;">
+                                                                <td class="status-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
 
                                                                     {{ isset($application->stage_id) && isset($stages[$application->stage_id]) ? $stages[$application->stage_id] : '' }}
 
 
                                                                 </td>
                                                             </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Application Name') }}
+                                                                </td>
+                                                                <td class="application_key-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                    {{ $application->name }}
+                                                                </td>
+                                                            </tr>
 
                                                             <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('University') }}
+                                                                </td>
+                                                                <td class="university_name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                    @if (isset($universities[$application->university_id]))
+                                                                        <span style="cursor:pointer"
+                                                                            class="hyper-link"
+                                                                            @can('show university') onclick="openSidebar('/university/{{ $application->university_id }}/university_detail')" @endcan>
+                                                                            {{ $universities[$application->university_id] }}
+                                                                        </span>
+                                                                    @else
+                                                                        {{ __(' ') }}
+                                                                    @endif
+
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Course') }}
+                                                                </td>
+                                                                <td class="course-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                    {{ $application->course }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Intake') }}
+                                                                </td>
+                                                                <td class="status-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                    {{ $application->intake }}
+
+                                                                </td>
+                                                            </tr>
+
+
+
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Drive Link') }}
+                                                                </td>
+                                                                <td class="status-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    @if (App\Models\Deal::find($application->deal_id)->drive_link)
+                                                                        {{ App\Models\Deal::find($application->deal_id)->drive_link }}
+                                                                    @else
+                                                                        {{ __(' ') }}
+                                                                    @endif
+
+                                                                </td>
+                                                            </tr>
+
+
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
                                                                     {{ __('Created at') }}
                                                                 </td>
-                                                                <td class="created_at-td" style="padding-left: 10px; font-size: 14px;">
+                                                                <td class="created_at-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
                                                                     {{ $application->created_at }}
                                                                 </td>
                                                             </tr>
 
 
                                                             <tr>
-                                                                <td class="" style="width: 150px; font-size: 14px;">
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
                                                                     {{ __('Updated at') }}
                                                                 </td>
-                                                                <td class="updated_at-td" style="padding-left: 10px; font-size: 14px;">
+                                                                <td class="updated_at-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
                                                                     {{ $application->updated_at }}
                                                                 </td>
                                                             </tr>
@@ -288,13 +465,886 @@
                                         </div>
                                     </div>
                                 </div>
+                                {{-- additional details --}}
+                                <div class="accordion accordion-flush" id="accordionFlushExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="panelsStayOpen-headingkey-additional">
+                                            <button class="accordion-button p-2" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#panelsStayOpen-collapsekey-additional">
+                                                {{ __('Additional Details') }}
+                                            </button>
+                                        </h2>
+
+                                        <div id="panelsStayOpen-collapsekey-additional"
+                                            class="accordion-collapse collapse show"
+                                            aria-labelledby="panelsStayOpen-headingkey-additional">
+                                            <div class="accordion-body">
+
+                                                <div class="table-responsive mt-1" style="margin-left: 10px;">
+
+                                                    <table>
+                                                        <tbody>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Brand') }}
+                                                                </td>
+                                                                <td class="status-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    @if (App\Models\User::find(App\Models\Deal::find($application->deal_id)->brand_id)->name)
+                                                                        <span style="cursor:pointer"
+                                                                            class="hyper-link"
+                                                                            onclick="openSidebar('/users/{{ App\Models\Deal::find($application->deal_id)->brand_id }}/user_detail')">
+                                                                            {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->brand_id)->name ?? '' }}
+                                                                        </span>
+                                                                    @else
+                                                                        {{ __(' ') }}
+                                                                    @endif
+
+
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Region') }}
+                                                                </td>
+                                                                <td class="status-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    @if (App\Models\Region::find(App\Models\Deal::find($application->deal_id)->region_id)->name)
+                                                                        <span style="cursor:pointer"
+                                                                            class="hyper-link"
+                                                                            @can('view region') onclick="openSidebar('/regions/{{ App\Models\Deal::find($application->deal_id)->region_id }}/show')" @endcan>
+                                                                            {{ App\Models\Region::find(App\Models\Deal::find($application->deal_id)->region_id)->name ?? '' }}
+                                                                        </span>
+                                                                    @else
+                                                                        {{ __(' ') }}
+                                                                    @endif
+
+
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Branch') }}
+                                                                </td>
+                                                                <td class="status-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    @php
+                                                                        $branch = App\Models\Branch::find(
+                                                                            optional(
+                                                                                App\Models\Deal::find(
+                                                                                    $application->deal_id,
+                                                                                ),
+                                                                            )->branch_id,
+                                                                        );
+                                                                    @endphp
+
+                                                                    @if ($branch)
+                                                                        <span style="cursor:pointer"
+                                                                            class="hyper-link"
+                                                                            onclick="openSidebar('/branch/{{ $branch->id }}/show')">
+                                                                            {{ $branch->name }}
+                                                                        </span>
+                                                                    @else
+                                                                        {{ __(' ') }}
+                                                                    @endif
+
+
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Assigned To') }}
+                                                                </td>
+                                                                <td class="status-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    @if (App\Models\Deal::find($application->deal_id)->assigned_to)
+                                                                        <span style="cursor:pointer"
+                                                                            class="hyper-link"
+                                                                            @can('view employee') onclick="openSidebar('/user/employee/{{ App\Models\Deal::find($application->deal_id)->assigned_to }}/show')" @endcan>
+                                                                            {{ App\Models\User::find(App\Models\Deal::find($application->deal_id)->assigned_to)->name ?? '' }}
+                                                                        </span>
+                                                                    @else
+                                                                        {{ __(' ') }}
+                                                                    @endif
+
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Aggency') }}
+                                                                </td>
+                                                                <td class="updated_at-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ App\Models\Source::find(App\Models\Deal::find($application->deal_id)->sources)->name ?? '' }}
+                                                                </td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Admission details --}}
+                                <div class="accordion accordion-flush" id="accordionFlushExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="panelsStayOpen-headingkey-Admission">
+                                            <button class="accordion-button p-2" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#panelsStayOpen-collapsekey-Admission">
+                                                {{ __('Admission Details') }}
+                                            </button>
+                                        </h2>
+
+                                        <div id="panelsStayOpen-collapsekey-Admission"
+                                            class="accordion-collapse collapse show"
+                                            aria-labelledby="panelsStayOpen-headingkey-Admission">
+                                            <div class="accordion-body">
+
+                                                <div class="table-responsive mt-1" style="margin-left: 10px;">
+
+                                                    <table>
+                                                        <tbody>
+
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Name') }}
+                                                                </td>
+                                                                <td class="status-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                    @if (App\Models\Deal::find($application->deal_id)->name)
+                                                                        <span style="cursor:pointer"
+                                                                            class="deal-name hyper-link"
+                                                                            @can('view deal') onclick="openSidebar('/get-deal-detail?deal_id='+{{ $application->deal_id }})" @endcan
+                                                                            data-deal-id="{{ $application->deal_id }}">
+
+                                                                            {{ App\Models\Deal::find($application->deal_id)->name ?? '' }}
+                                                                        </span>
+                                                                    @else
+                                                                        {{ __(' ') }}
+                                                                    @endif
+
+
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Passport') }}
+                                                                </td>
+                                                                <td class="status-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+
+                                                                    @php
+                                                                        $client = \App\Models\User::join(
+                                                                            'client_deals',
+                                                                            'client_deals.client_id',
+                                                                            'users.id',
+                                                                        )
+                                                                            ->where(
+                                                                                'client_deals.deal_id',
+                                                                                $application->deal_id,
+                                                                            )
+                                                                            ->first();
+                                                                        $passport_number = isset(
+                                                                            $client->passport_number,
+                                                                        )
+                                                                            ? $client->passport_number
+                                                                            : '';
+                                                                    @endphp
+                                                                    {{ $passport_number }}
+
+
+                                                                </td>
+                                                            </tr>
+
+
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Contact  details --}}
+
+                                <div class="accordion accordion-flush" id="accordionFlushExample">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="panelsStayOpen-headingkey-Contact">
+                                            <button class="accordion-button p-2" type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#panelsStayOpen-collapsekey-Contact">
+                                                {{ __('Contact  Details') }}
+                                            </button>
+                                        </h2>
+
+                                        <div id="panelsStayOpen-collapsekey-Contact"
+                                            class="accordion-collapse collapse show"
+                                            aria-labelledby="panelsStayOpen-headingkey-Contact">
+                                            <div class="accordion-body">
+
+                                                <div class="table-responsive mt-1" style="margin-left: 10px;">
+
+                                                    <table>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Name') }}
+                                                                </td>
+                                                                <td class="updated_at-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    @if ($client->name)
+                                                                        <span style="cursor:pointer"
+                                                                            class="hyper-link"
+                                                                            @can('view employee') onclick="openSidebar('/user/employee/{{ $client->client_id }}/show')" @endcan>
+                                                                            {{ $client->name }}
+                                                                        </span>
+                                                                    @else
+                                                                        {{ __(' ') }}
+                                                                    @endif
+
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Phone') }}
+                                                                </td>
+                                                                <td class="updated_at-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $client->phone }}
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 150px; font-size: 14px;">
+                                                                    {{ __('Email') }}
+                                                                </td>
+                                                                <td class="updated_at-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $client->email }}
+                                                                </td>
+                                                            </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                             </div>
+
+
+                            <div class="tab-pane fade" id="pills-related" role="tabpanel"
+                                aria-labelledby="pills-details-tab">
+
+
+                                <div class="row">
+
+
+
+
+                                    @can('manage notes')
+                                        <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="panelsStayOpen-headingnote">
+                                                    <button class="accordion-button p-2" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#panelsStayOpen-collapsenote">
+                                                        {{ __('Notes') }}
+                                                    </button>
+                                                </h2>
+                                                <div id="panelsStayOpen-collapsenote"
+                                                    class="accordion-collapse collapse show"
+                                                    aria-labelledby="panelsStayOpen-headingnote">
+                                                    <div class="accordion-body">
+
+
+                                                        <style>
+                                                            .indivbtn {
+                                                                position: absolute;
+                                                                bottom: 6px;
+                                                                right: 10px;
+                                                                z-index: 1000;
+                                                            }
+                                                        </style>
+
+                                                        <div class="card position-relative">
+                                                            {{ Form::model($application, ['route' => ['application.notes.store', $application->id], 'method' => 'POST', 'id' => 'create-notes', 'style' => 'z-index: 9999999 !important;']) }}
+                                                            <textarea class="form-control" style="height: 120px;" name="description" id="note_description"
+                                                                placeholder="Click here add your Notes Comments..."></textarea>
+                                                            <input type="hidden" id="application_id"
+                                                                value="{{ $application->id }}" name="id">
+                                                            <input type="hidden" id="note_id" name="note_id">
+                                                            <div class="row justify-content-end indivbtn">
+                                                                {{-- <div class="col-auto px-0">
+                                                                <button class="btn  btn-outline-dark text-dark"
+                                                                    id="cancelNote">Cancel</button>
+                                                            </div> --}}
+                                                                <div class="col-auto ">
+                                                                    <button
+                                                                        class="btn btn-dark text-white create-notes-btn">Save</button>
+                                                                </div>
+                                                            </div>
+                                                            {{ Form::close() }}
+                                                        </div>
+                                                        <div class="card-body px-0 py-0">
+                                                            <ul class="list-group list-group-flush mt-2 note-tbody">
+                                                                @php
+                                                                    $notesQuery = \App\Models\ApplicationNote::where(
+                                                                        'application_id',
+                                                                        $application->id,
+                                                                    );
+                                                                    if (
+                                                                        \Auth::user()->type != 'super admin' &&
+                                                                        \Auth::user()->type != 'Project Director' &&
+                                                                        \Auth::user()->type != 'Project Manager'
+                                                                    ) {
+                                                                        $notesQuery->where(
+                                                                            'created_by',
+                                                                            \Auth::user()->id,
+                                                                        );
+                                                                    }
+                                                                    $notes = $notesQuery
+                                                                        ->orderBy('created_at', 'DESC')
+                                                                        ->get();
+                                                                @endphp
+
+                                                                @foreach ($notes as $note)
+                                                                    <div
+                                                                        style="border-top:1px solid black;border-bottom:1px solid black ">
+                                                                        <div
+                                                                            class="row my-2 justify-content-between  ps-4">
+                                                                            <div class="col-12 my-2">
+                                                                                <p class="text-dark"
+                                                                                    style="font-size: 18px;">
+                                                                                    {{ $note->description }}</p>
+                                                                            </div>
+                                                                            <div class="col-8">
+                                                                                <div class="row align-items-center">
+
+                                                                                    <div class="col-8">
+                                                                                        <p class="mb-0 text-secondary">
+                                                                                            {{ \App\Models\User::where('id', $note->created_by)->first()->name }}
+                                                                                        </p>
+                                                                                        <p class="mb-0">
+                                                                                            {{ \App\Models\User::where('id', $note->created_by)->first()->type }}
+                                                                                        </p>
+
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-4 text-end px-1">
+                                                                                <p>{{ $note->created_at }}</p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="d-flex gap-1 justify-content-end pb-2 px-3"
+                                                                            id="dellhover">
+                                                                            <div class="btn btn-outline-dark text-dark textareaClassedit"
+                                                                                data-note="{{ $note->description }}"
+                                                                                data-note-id="{{ $note->id }}"
+                                                                                id="editable" style="font-size: ;">Edit
+                                                                            </div>
+
+                                                                            <div class="delete-notes btn btn-dark  text-white"
+                                                                                id="editable" style="font-size: ;"
+                                                                                data-note-id="{{ $note->id }}">Delete
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endcan
+
+
+
+                                @can('manage task')
+                                    <div class="accordion" id="accordionTasks">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="accordionTasks-heading">
+                                                <button class="accordion-button px-2 py-3" type="button"
+                                                    data-bs-toggle="collapse" data-bs-target="#accordionTasks-collapse">
+                                                    <span>{{ __('Tasks') }}</span>
+                                                    @can('create task')
+                                                        <a data-size="lg"
+                                                            data-url="/organiation/1/task?type=application&typeid={{ $application->id }}"
+                                                            data-ajax-popup="true" data-bs-toggle="tooltip"
+                                                            title="{{ __('Add Task') }}" class="btn p-2 text-white"
+                                                            style="background-color: #313949; color: #fff !important; position: absolute; right: 0;">
+                                                            <i class="ti ti-plus"></i>
+                                                        </a>
+                                                    @endcan
+                                                </button>
+                                            </h2>
+                                            @php
+                                                $tasks = App\Models\DealTask::where(['related_to' => $application->id, 'related_type' => 'application'])
+                                                    ->orderBy('status')
+                                                    ->get();
+                                            @endphp
+                                            <div id="accordionTasks-collapse" class="accordion-collapse collapse show"
+                                                aria-labelledby="accordionTasks-heading">
+                                                <div class="accordion-body">
+                                                    <div id="panelsStayOpen-collapsetasks"
+                                                        class="accordion-collapse collapse show"
+                                                        aria-labelledby="panelsStayOpen-headingnote">
+                                                        <div class="accordion-body">
+                                                            @if (!empty($tasks) && $tasks->count() > 0)
+                                                                @php
+                                                                    $section = 1;
+                                                                    $section2 = 1;
+                                                                @endphp
+                                                                @foreach ($tasks as $task1)
+                                                                    @if ($task1->status == 1)
+                                                                        <div class="accordion"
+                                                                            id="accordionPanelsStayOpenExample">
+                                                                            <div class="accordion-item">
+                                                                                @if ($section == 1)
+                                                                                    <h2 class="accordion-header"
+                                                                                        id="panelsStayOpen-headingOnedds">
+                                                                                        <button class="accordion-button"
+                                                                                            type="button"
+                                                                                            data-bs-toggle="collapse"
+                                                                                            data-bs-target="#panelsStayOpen-collapseOnedds"
+                                                                                            aria-expanded="true"
+                                                                                            aria-controls="panelsStayOpen-collapseOnedds">
+                                                                                            {{ $section == 1 ? 'Closed Activity' : '' }}
+                                                                                        </button>
+                                                                                    </h2>
+                                                                                    @foreach ($tasks as $task)
+                                                                                        @if ($task->status == 1)
+                                                                                            <div id="panelsStayOpen-collapseOnedds"
+                                                                                                class="accordion-collapse collapse"
+                                                                                                aria-labelledby="panelsStayOpen-headingOnedds">
+                                                                                                <div
+                                                                                                    class="accordion-body">
+                                                                                                    {{--  --}}
+                                                                                                    <div
+                                                                                                        style="border-top:1px solid black;border-bottom:1px solid black ">
+                                                                                                        <div
+                                                                                                            class="row my-2 justify-content-between  ps-4">
+                                                                                                            <div
+                                                                                                                class="col-12 my-2">
+                                                                                                                <p class="text-dark"
+                                                                                                                    style="font-size: 18px;">
+                                                                                                                    {{ $task->name }}
+                                                                                                                </p>
+                                                                                                            </div>
+                                                                                                            <div
+                                                                                                                class="col-8">
+                                                                                                                <div
+                                                                                                                    class="row align-items-center">
+
+                                                                                                                    <div
+                                                                                                                        class="col-8">
+                                                                                                                        <p
+                                                                                                                            class="mb-0 text-secondary">
+                                                                                                                        <p class="text-muted text-sm"
+                                                                                                                            style="font-size: 18px;">
+                                                                                                                            <i class="step__icon fa fa-user"
+                                                                                                                                aria-hidden="true"></i>
+                                                                                                                            {{ optional(\App\Models\User::where('id', $task->assigned_to)->first())->name }}
+                                                                                                                        </p>
+                                                                                                                    </div>
+                                                                                                                    <div
+                                                                                                                        class="col-8">
+                                                                                                                        <span
+                                                                                                                            class="d-flex mt-0">
+                                                                                                                            <p>Status
+                                                                                                                            </p>
+                                                                                                                            <p class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }} ml-2"
+                                                                                                                                style="font-size: 10px;">
+                                                                                                                                {{ $task->status == 1 ? 'Completed' : 'On Going' }}
+                                                                                                                            </p>
+                                                                                                                        </span>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div
+                                                                                                                class="col-4 text-end px-1">
+                                                                                                                <p>{{ $task->created_at }}
+                                                                                                                </p>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <div class="d-flex gap-1 justify-content-end pb-2 px-3"
+                                                                                                            id="dellhover">
+                                                                                                            <button
+                                                                                                                class="btn btn-outline-dark text-dark textareaClassedit spnier-updbtn"
+                                                                                                                data-size="lg"
+                                                                                                                data-url="{{ route('organiation.tasks.edit', $task->id) }}"
+                                                                                                                data-ajax-popup="true"
+                                                                                                                data-bs-toggle="tooltip"
+                                                                                                                title="{{ __('Update Task') }}"
+                                                                                                                id="editable"
+                                                                                                                style="font-size: ;">Edit</button>
+
+                                                                                                            <div class="btn btn-dark  text-white"
+                                                                                                                id="editable"
+                                                                                                                style="font-size: ;"
+                                                                                                                onclick="deleteTask({{ $task->id }}, {{ $application->id }}, 'application');">
+                                                                                                                Delete
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            {{--  --}}
+                                                                            </div>
+                                                                    @endif
+                                                                @endforeach
+                                                            @endif
+                                                        </div>
+                                                    </div>
+
+                                                    @php
+                                                        $section++;
+                                                    @endphp
+                                                @elseif ($task1->status == 0)
+                                                    <div class="accordion" id="accordionPanelsStayOpenExample">
+                                                        <div class="accordion-item">
+                                                            @if ($section2 == 1)
+                                                                <h2 class="accordion-header"
+                                                                    id="panelsStayOpen-headingOneddsd">
+                                                                    <button class="accordion-button" type="button"
+                                                                        data-bs-toggle="collapse"
+                                                                        data-bs-target="#panelsStayOpen-collapseOneddsd"
+                                                                        aria-expanded="true"
+                                                                        aria-controls="panelsStayOpen-collapseOneddsd">
+                                                                        {{ $section2 == 1 ? 'Open Activity' : '' }}
+                                                                    </button>
+                                                                </h2>
+
+                                                                @foreach ($tasks as $task)
+                                                                    @if ($task->status == 0)
+                                                                        <div id="panelsStayOpen-collapseOneddsd"
+                                                                            class="accordion-collapse collapse show"
+                                                                            aria-labelledby="panelsStayOpen-headingOneddsd">
+                                                                            <div class="accordion-body">
+                                                                                {{--  --}}
+                                                                                <div
+                                                                                    style="border-top:1px solid black;border-bottom:1px solid black ">
+                                                                                    <div
+                                                                                        class="row my-2 justify-content-between  ps-4">
+                                                                                        <div class="col-12 my-2">
+                                                                                            <p class="text-dark"
+                                                                                                style="font-size: 18px;">
+                                                                                                {{ $task->name }}
+                                                                                            </p>
+                                                                                        </div>
+                                                                                        <div class="col-8">
+                                                                                            <div
+                                                                                                class="row align-items-center">
+
+                                                                                                <div class="col-8">
+                                                                                                    <p
+                                                                                                        class="mb-0 text-secondary">
+                                                                                                    <p class="text-muted text-sm"
+                                                                                                        style="font-size: 18px;">
+                                                                                                        <i class="step__icon fa fa-user"
+                                                                                                            aria-hidden="true"></i>
+                                                                                                        {{ optional(\App\Models\User::where('id', $task->assigned_to)->first())->name }}
+                                                                                                    </p>
+                                                                                                </div>
+                                                                                                <div class="col-8">
+                                                                                                    <span
+                                                                                                        class="d-flex mb-0">
+                                                                                                        <p>Status
+                                                                                                        </p>
+                                                                                                        <p class="badge {{ $task->status == 1 ? 'bg-success-scorp' : 'bg-warning-scorp' }} ml-2"
+                                                                                                            style="font-size: 10px;">
+                                                                                                            {{ $task->status == 1 ? 'Completed' : 'On Going' }}
+                                                                                                        </p>
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="col-4 text-end px-1">
+                                                                                            <p>{{ $task->created_at }}
+                                                                                            </p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="d-flex gap-1 justify-content-end pb-2 px-3"
+                                                                                        id="dellhover">
+                                                                                        <button
+                                                                                            class="btn btn-outline-dark text-dark textareaClassedit spnier-updbtn"
+                                                                                            data-size="lg"
+                                                                                            data-url="{{ route('organiation.tasks.edit', $task->id) }}"
+                                                                                            data-ajax-popup="true"
+                                                                                            data-bs-toggle="tooltip"
+                                                                                            title="{{ __('Update Task') }}"
+                                                                                            id="editable"
+                                                                                            style="font-size: ;">Edit</button>
+
+                                                                                        <div class="btn btn-dark  text-white"
+                                                                                            id="editable"
+                                                                                            style="font-size: ;"
+                                                                                            onclick="deleteTask({{ $task->id }}, {{ $application->id }}, 'application');">
+                                                                                            Delete</div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                {{--  --}}
+                                                                            </div>
+                                                                        </div>
+                                                                    @endif
+                                                                @endforeach
+                                                            @endif
+
+                                                        </div>
+                                                    </div>
+
+                                                    @php
+                                                        $section2++;
+                                                    @endphp
+                                                    @endif
+                                                    @endforeach
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endcan
+
                         </div>
+
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+</div>
+<div class="modal" id="UpdateTageModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tags Update</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+                <form action="{{ route('application_single_tags') }}" method="POST" id="UpdateTagForm">
+                <div class="modal-body" id="TagModalBody">
 
+                </div>
+                <br>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-dark px-2 Update" value="Update">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function deleteTage(element,deal_id,old_tag_id) {
+    $(element).attr('disabled', 'disabled'); // Disable the anchor tag
+    $(element).css('pointer-events', 'none'); // Prevent further clicks
+    $(element).find('i').remove(); // Remove the <i> tag
+    $(element).append(`
+      <div class="spinner-border spinner-border-sm text-white" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    `);
+    // Add the <div> tag with spinner and loading text
+        $.ajax({
+            type: "GET",
+            url: '{{ url('delete_app_tage') }}',
+            data: {deal_id : deal_id,old_tag_id : old_tag_id},
+            success: function(response) {
+                data = JSON.parse(response);
+
+                if (data.status == 'success') {
+                    $("#UpdateTageModal").modal('hide');
+                    show_toastr('success', data.msg);
+                    openSidebar('/deals/'+deal_id+'/detail-application')
+                }
+            },
+        });
+    }
+    </script>
+<script>
+    $(document).ready(function() {
+
+        //Fall2201075
+        $('.textareaClassedit').click(function() {
+            var dataId = $(this).data('note-id');
+            var dataNote = $(this).data('note');
+            $('textarea[name="description"]').val(dataNote);
+            $('#note_id').val(dataId);
+        });
+
+
+        ////////////////////////////Form Submission
+        //saving notes
+        // Bind event handler directly to the button element
+        $(".create-notes-btn").on("click", function(e) {
+            e.preventDefault();
+
+            // Serialize form data
+            var formData = $("#create-notes").serialize();
+            var id = $('#application_id').val();
+
+            $(".create-notes-btn").val('Processing...');
+            $('.create-notes-btn').attr('disabled', 'disabled');
+
+            $.ajax({
+                type: "POST",
+                url: "/application/" + id + "/notes",
+                data: formData,
+                success: function(data) {
+                    data = JSON.parse(data);
+
+                    if (data.status == 'success') {
+                        show_toastr('success', data.message, 'success');
+                        $('#note_description').val('');
+                        $('.create-notes-btn').removeAttr('disabled');
+                        $('#commonModal').modal('hide');
+                        $('.note-tbody').html(data.html);
+                        $('#description').val('');
+                        $('#note_id').val('');
+                    } else {
+                        show_toastr('error', data.message, 'error');
+                        $(".create-notes-btn").val('Create');
+                        $('.create-notes-btn').removeAttr('disabled');
+                    }
+                }
+            });
+        });
+
+
+        //delete-notes
+        $(document).on("click", '.delete-notes', function(e) {
+            e.preventDefault();
+
+            var id = $(this).attr('data-note-id');
+            var application_id = $('#application_id').val();
+            var currentBtn = '';
+
+            // Show confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to delete this note. This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // User confirmed, proceed with deletion
+                    $.ajax({
+                        type: "GET",
+                        url: "/application/" + id + "/notes-delete",
+                        data: {
+                            id: id,
+                            application_id: application_id
+                        },
+                        success: function(data) {
+                            data = JSON.parse(data);
+
+                            if (data.status == 'success') {
+                                show_toastr('success', data.message, 'success');
+                                $('.note-tbody').html(data.html);
+                            } else {
+                                show_toastr('error', data.message, 'error');
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+
+
+
+
+        $('.tag-badge').click(function() {
+            $('#TagModalBody').html('');
+            var tagId = $(this).data('tag-id');
+            var leadId = $(this).data('lead-id');
+            var dealId = $(this).data('deal-id');
+            $('#UpdateTageModal').css('z-index', 99999);
+            var selectOptions = <?php echo json_encode($tags); ?>;
+            // Check if selectOptions is an object
+            if (typeof selectOptions === 'object' && selectOptions !== null) {
+                // Generate options HTML by iterating over object keys
+                var optionsHTML = '';
+                for (var key in selectOptions) {
+                    if (selectOptions.hasOwnProperty(key) && key.trim() !== '') {
+                        optionsHTML += `<option value="${selectOptions[key]}" ${tagId === selectOptions[key] ? 'selected' : ''}>${key}</option>`;
+                    }
+                }
+                // Append the options to the select element
+                $('#TagModalBody').append(`
+                    <input type="hidden" value="${tagId}" name="old_tag_id" id="old_tag_id">
+                    <div class="form-group">
+                        <label for="">Tag</label>
+                        <select class="form form-control select2 selectTage" name="new_tag_id" id="tagSelectupdate" style="width: 95%;">
+                            <option value="">Select Tag</option>
+                            ${optionsHTML}
+                        </select>
+                    </div>
+                    <input type="hidden" value="${leadId}" name="lead_id" id="lead_id">
+                    <input type="hidden" value="${dealId}" name="deal_id" id="dealer_id">
+                `);
+                select2();
+                $('#UpdateTageModal').modal('show');
+            }
+        });
+        // update tage post request
+    $(document).ready(function () {
+        $('#UpdateTagForm').submit(function (event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+            formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+            $.ajax({
+                url: '{{ route('application_single_tags') }}',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    data = JSON.parse(response);
+                    show_toastr('success', data.msg);
+                    $("#UpdateTageModal").modal('hide');
+                    openSidebar('/deals/'+$('#dealer_id').val()+'/detail-application')
+                },
+            });
+        });
+    });
+    });
+</script>
 

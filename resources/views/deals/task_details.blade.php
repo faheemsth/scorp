@@ -1,4 +1,11 @@
-
+<style>
+    .indivbtn {
+        position: absolute;
+        bottom: 12px;
+        right: 10px;
+        z-index: 1000;
+    }
+</style>
 <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
 <div class="container-fluid px-1 mx-0 task-details">
     <div class="row">
@@ -15,7 +22,7 @@
 
 
                     <div class="lead-basic-info">
-                        <p class="pb-0 mb-0 fw-normal">{{ __('Tasks') }}</p>
+                        <p class="pb-0 mb-0 fw-normal">{{ __('Task') }}</p>
                         <div class="d-flex align-items-baseline ">
                             <h5 class="fw-bold">{{ $task->name }}</h5>
                         </div>
@@ -26,79 +33,89 @@
                 {{-- @if (\Auth::user()->type == 'super admin') --}}
                 <div class="d-flex justify-content-end gap-1 me-3">
                     @if ($task->status == 0)
-                    @can('edit status task')
-                    <a href="javascript:void(0)" onclick="ChangeTaskStatus({{ $task->id }})"
-                        title="{{ __('Edit Status') }}" class="btn px-2 btn-dark text-white">
-                        <i class="fa-solid fa-check" style="color: #ffffff;"></i>
-                    </a>
-                    @endcan
+                        @can('edit status task')
+                            <a href="javascript:void(0)" onclick="ChangeTaskStatus({{ $task->id }})"
+                                title="{{ __('Edit Status') }}" class="btn px-2 btn-dark text-white"
+                                style="width:36px; height: 36px; margin-top:12px;">
+                                <i class="fa-solid fa-check" style="color: #ffffff;"></i>
+                            </a>
+                        @endcan
                     @endif
 
                     @can('edit task')
-                    <button href="#" data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}"
-                        data-ajax-popup="true" data-bs-toggle="tooltip" title="{{ __('Edit Task') }}"class="btn px-2 btn-dark text-white">
-                        <i class="ti ti-pencil"></i>
-                    </button>
+                        <button href="#" data-size="lg" data-url="{{ route('organiation.tasks.edit', $task->id) }}"
+                            data-ajax-popup="true" data-bs-toggle="tooltip"
+                            title="{{ __('Edit Task') }}"class="btn px-2 btn-dark text-white"
+                            style="width:36px; height: 36px; margin-top:12px;">
+                            <i class="ti ti-pencil"></i>
+                        </button>
+                    @endcan
+                    @can('delete task')
+                        {!! Form::open([
+                            'method' => 'GET',
+                            'route' => ['tasks.destroy', $task->id],
+                            'id' => 'delete-form-' . $task->id,
+                        ]) !!}
+
+                        <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}"
+                            class="btn px-2 py-2 text-white bs-pass-para bg-danger"style="width:36px; height: 36px; margin-top:12px;">
+                            <i class="ti ti-trash"></i>
+                        </a>
+                        {!! Form::close() !!}
                     @endcan
 
-                    @can('delete task')
-                    <a href="/organization/{{ $task->id }}/taskDeleted" class="btn px-2 btn-danger text-white"  title="{{ __('Delete') }}">
-                        <i class="ti ti-trash"></i>
-                    </a>
-                    @endcan
                 </div>
-                {{-- @endif --}}
             </div>
 
 
-            <div class="lead-info d-flex justify-content-between p-3 text-center">
-                <div class="">
-                    <small style="margin-bottom: 4px;">{{ __('Date Due') }}</small>
+            <div class=" lead-info d-flex justify-content-between py-3 text-center overflow-auto">
+                <div class="col-sm-2">
+                    <small class="mb-2">{{ __('Date Due') }}</small>
                     <!-- <span class="px-3 text-white " style="border-radius: 6px;
                     background: #22A9E3; padding-top: 2px; padding-bottom: 4px"> -->
                     @php
-                            $due_date = strtotime($task->due_date);
-                            $current_date = strtotime(date('Y-m-d'));
-                            $status = strtolower($task->status);
-                            $color_code = '';
+                        $due_date = strtotime($task->due_date);
+                        $current_date = strtotime(date('Y-m-d'));
+                        $status = strtolower($task->status);
+                        $color_code = '';
 
-                            if ($due_date > $current_date && $status === '0') {
-                                // Ongoing feture time
-                                $color_code = '#B3CDE1;';
-                            } elseif ($due_date === $current_date && $status === '0') {
-                                // Today date time
-                                $color_code = '#E89D25';
-                            } elseif ($due_date < $current_date && $status === '0') {
-                                // Past date time
-                                $color_code = 'red';
-                            } elseif ($status === '1') {
-                                // Completed task
-                                $color_code = 'green';
-                            }
-                            $message=Carbon\Carbon::parse($due_date)->diffForHumans();
+                        if ($due_date > $current_date && $status === '0') {
+                            // Ongoing feture time
+                            $color_code = '#B3CDE1;';
+                        } elseif ($due_date === $current_date && $status === '0') {
+                            // Today date time
+                            $color_code = '#E89D25';
+                        } elseif ($due_date < $current_date && $status === '0') {
+                            // Past date time
+                            $color_code = 'red';
+                        } elseif ($status === '1') {
+                            // Completed task
+                            $color_code = 'green';
+                        }
+                        $message = Carbon\Carbon::parse($due_date)->diffForHumans();
                     @endphp
-                    <span class="px-3 text-white" style="border-radius: 6px;background-color:{{ $color_code }};
+                    <span class="px-3 text-white"
+                        style="border-radius: 6px;background-color:{{ $color_code }};
                             padding-top: 4px; padding-bottom: 8px">
-                        <span
-                            class="">
+                        <span class="">
                             {{ $message }}
                         </span>
 
                     </span>
                 </div>
-                <div class="">
+                <div class="col-sm-2">
                     <small style="margin-bottom: 4px;">{{ __('Priority') }}</small>
                     <span>{{ __('Medium') }}</span>
                 </div>
-                <div class="">
+                <div class="col-sm-2">
                     <small style="margin-bottom: 4px;">{{ __('Status') }}</small>
                     <span>{{ $task->status == 1 ? 'Completed' : 'On Going' }}</span>
                 </div>
-                <div class="">
+                <div class="col-sm-2">
                     <small style="margin-bottom: 4px;">{{ __('Progress') }}</small>
                     <span>{{ strtolower($task->status) == '0' ? '0' : '100' }}</span>
                 </div>
-                <div class="">
+                <div class="col-sm-2">
                     <small style="margin-bottom: 4px;">{{ __('Assigned To') }}</small>
                     <span class="text-info">{{ \App\Models\User::findOrFail($task->assigned_to)->name }}</span>
                 </div>
@@ -115,11 +132,13 @@
                                     data-bs-toggle="pill" data-bs-target="#pills-details" type="button" role="tab"
                                     aria-controls="pills-details" aria-selected="true">{{ __('Details') }}</button>
                             </li>
-                             {{-- <li class="nav-item" role="presentation">
+                            {{-- <li class="nav-item" role="presentation">
                                 <button class="nav-link pills-link" id="text" id="pills-related-tab" data-bs-toggle="pill" data-bs-target="#pills-related" type="button" role="tab" aria-controls="pills-related" aria-selected="false">{{ __('Related') }}</button>
                             </li> --}}
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link pills-link fw-bold" id="text" id="pills-timeline-tab" data-bs-toggle="pill" data-bs-target="#pills-timeline" type="button" role="tab" aria-controls="pills-timeline" aria-selected="false">{{ __('Timeline') }}</button>
+                                <button class="nav-link pills-link fw-bold" id="text" id="pills-timeline-tab"
+                                    data-bs-toggle="pill" data-bs-target="#pills-timeline" type="button" role="tab"
+                                    aria-controls="pills-timeline" aria-selected="false">{{ __('Timeline') }}</button>
                             </li>
                         </ul>
                     </div>
@@ -141,7 +160,8 @@
                                             </button>
                                         </h2>
 
-                                        <div id="panelsStayOpen-collapsekeyone" class="accordion-collapse collapse show"
+                                        <div id="panelsStayOpen-collapsekeyone"
+                                            class="accordion-collapse collapse show"
                                             aria-labelledby="panelsStayOpen-headingkeyone">
                                             <div class="accordion-body">
 
@@ -243,6 +263,16 @@
                                                                     {{ $users[$task->assigned_to] }}
                                                                 </td>
                                                             </tr>
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px;  font-size: 14px;">
+                                                                    {{ __('Assigned By') }}
+                                                                </td>
+                                                                <td class="td"
+                                                                    style="padding-left: 20px; font-size: 14px;">
+                                                                    {{ $users[$task->created_by] }}
+                                                                </td>
+                                                            </tr>
 
                                                             {{-- <tr>
                                                                 <td class="" style="  font-size: 14px;">
@@ -321,7 +351,7 @@
                                                                 <td class="email-td"
                                                                     style="padding-left: 20px; font-size: 14px;">
 
-                                                                    {{ $task->remainder }}
+                                                                    {{ $task->remainder_date }}
                                                                 </td>
                                                             </tr>
 
@@ -392,16 +422,33 @@
                                                                 <td class="td"
                                                                     style="padding-left: 20px; font-size: 14px;">
 
-                                                                    @php
+                                                                    <span class="hyper-link"
 
-                                                                        if ($task->related_type == 'organization') {
-                                                                            echo optional(\App\Models\User::where('id', $task->related_to)->first())->name;
-                                                                        } elseif ($task->related_type == 'lead') {
-                                                                            echo optional(\App\Models\Lead::where('id', $task->related_to)->first())->name;
-                                                                        } elseif ($task->related_type == 'deal') {
-                                                                            echo \App\Models\Deal::findOrFail($task->related_to)->name;
-                                                                        }
-                                                                    @endphp
+                                                                        @if($task->related_type == 'organization')
+                                                                        style="cursor: pointer" onclick="openNav(<?= optional(\App\Models\Lead::where('id', $task->related_to)->first())->id ?>)"
+                                                                        @elseif ($task->related_type == 'lead')
+                                                                        style="cursor: pointer" onclick="openSidebar('/get-lead-detail?lead_id=<?= optional(\App\Models\Lead::where('id', $task->related_to)->first())->id ?>')"
+                                                                        @elseif ($task->related_type == 'deal')
+                                                                        style="cursor: pointer" onclick="openSidebar('/get-deal-detail?deal_id=<?= optional(\App\Models\Lead::where('id', $task->related_to)->first())->id ?>')"
+                                                                        @elseif ($task->related_type == 'application')
+                                                                        style="cursor: pointer" onclick="openSidebar('/deals/{{ $task->related_to }}/detail-application');"
+                                                                        @elseif ($task->related_type == 'toolkit')
+                                                                        style="cursor: pointer" onclick="openSidebar('/university/{{ $task->related_to }}/university_detail');"
+                                                                        @endif
+                                                                    >
+                                                                    @if ($task->related_type == 'organization')
+                                                                    {{ $organizations[$task->related_to] ?? ''  }}
+                                                                    @elseif ($task->related_type == 'lead')
+                                                                            {{ $leads[$task->related_to] ?? '' }}
+                                                                    @elseif ($task->related_type ==  'application')
+                                                                            {{ $applications[$task->related_to] ?? '' }}
+                                                                    @elseif ($task->related_type == 'deal')
+                                                                            {{ $deals[$task->related_to] ?? ''  }}
+                                                                    @elseif ($task->related_type == 'toolkit')
+                                                                            {{ $universites[$task->related_to] ?? ''  }}
+                                                                    @endif
+
+                                                                    </span>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -460,73 +507,64 @@
                                             <div class="accordion-body">
                                                 <div class="">
                                                     <div class="col-12">
-                                                        <div class="card">
-                                                            <textarea name="" id="" cols="95" class="form-control textareaClass" readonly
-                                                                style="cursor: pointer"></textarea>
-                                                            <span id="textareaID" style="display: none;">
-                                                                <div class="card-header px-0 pt-0"
-                                                                    style="padding-bottom: 18px;">
-                                                                    {{ Form::model($task, ['route' => ['tasks.discussion.store', $task->id], 'method' => 'POST', 'id' => 'taskDiscussion']) }}
-                                                                    {{ Form::textarea('comment', null, ['class' => 'form-control', 'style' => 'height: 120px', 'id' => 'taskDiscussionInput']) }}
-                                                                    <input type="hidden" id="id"
-                                                                        name="id">
-                                                                    <div class="d-flex justify-content-end mt-2">
+                                                        <div class="card position-relative" id="taskduscussedformdata">
+                                                            {{ Form::model($task, ['route' => ['tasks.discussion.store', $task->id], 'method' => 'POST', 'id' => 'taskDiscussion']) }}
+                                                            <textarea class="form-control" style="height: 220px; width: 300px;" id="taskDiscussionInput" placeholder="Click here to add your Tasks Comments..." name="comment"></textarea>
 
-                                                                        <button type="submit" class="btn btn-secondary btn-sm mx-1" id="cancelDiscussion">Cancel</button>
-                                                                        <button type="submit" class="btn btn-secondary btn-sm d-none" id="SaveDiscussion">Save</button>
-                                                                    </div>
-                                                                    {{ Form::close() }}
+                                                            <input type="hidden" id="id" name="id">
+                                                            <div class="row justify-content-end indivbtn">
+                                                                <div class="col-auto ">
+                                                                    <button class="btn btn-dark text-white"
+                                                                        id="SaveDiscussion">Save</button>
                                                                 </div>
-                                                            </span>
-                                                            <div class="card-body px-0">
-                                                                <ul class="list-group list-group-flush mt-2">
-                                                                    @if($discussions != null)
-                                                                        @foreach ($discussions as $discussion)
-                                                                            <li class="list-group-item px-3"
-                                                                                id="lihover">
-                                                                                <div
-                                                                                    class="d-block d-sm-flex align-items-start">
-                                                                                    <img src="{{ asset('assets/images/user/avatar.png') }}"
-                                                                                        class="img-fluid wid-40 me-3 mb-2 mb-sm-0"
-                                                                                        alt="image">
-                                                                                    <div class="w-100">
-                                                                                        <div
-                                                                                            class="d-flex align-items-center justify-content-between">
-                                                                                            <div class="mb-3 mb-sm-0">
-                                                                                                <h5 class="mb-0">
-                                                                                                    {{ $discussion['comment'] }}
-                                                                                                </h5>
-                                                                                                <span
-                                                                                                    class="text-muted text-sm">{{ $discussion['name'] }}</span>
-                                                                                            </div>
-                                                                                            <div
-                                                                                                class=" form-switch form-switch-right ">
-                                                                                                {{ $discussion['created_at'] }}
-                                                                                            </div>
-                                                                                            <div class="d-flex gap-3"
-                                                                                                id="dellhover">
-                                                                                                <i class="ti ti-pencil textareaClassedit"
-                                                                                                    data-comment="{{ $discussion['comment'] }}"
-                                                                                                    data-id="{{ $discussion['id'] }}"
-                                                                                                    id="editable"
-                                                                                                    style="font-size: 20px;"></i>
-                                                                                                <script></script>
-                                                                                                <i class="ti ti-trash"
-                                                                                                    id="editable"
-                                                                                                    style="font-size: 20px;"
-                                                                                                    onclick="DeleteComment('{{ $discussion['id'] }}','{{ $task->id }}')"></i>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </li>
-                                                                        @endforeach
-                                                                    @else
-                                                                        <li class="list-group-item px-3" style="text-align:center">No comments found!</li>
-                                                                    @endif
-                                                                </ul>
                                                             </div>
+                                                            {{ Form::close() }}
                                                         </div>
+                                                        <span class="list-group list-group-flush mt-2">
+                                                        @if ($discussions != null)
+                                                            @foreach ($discussions as $discussion)
+                                                                <div
+                                                                    style="border-top:1px solid black;border-bottom:1px solid black ">
+                                                                    <div class="row my-2 justify-content-between px-4">
+                                                                        <div class="col-8">
+                                                                            <div class="row align-items-center">
+                                                                                <div class="col-2 text-center">
+                                                                                    <img src="@if ($discussion['avatar'] && $discussion['avatar'] != '') {{ asset('/storage/uploads/avatar/' . $discussion['avatar']) }} @else {{ asset('/storage/uploads/avatar/avatar.png') }} @endif"
+                                                                                        style="width: 70px;height:70px;border-radius:50%;">
+                                                                                </div>
+                                                                                <div class="col-6">
+                                                                                    <h4 class="mb-0">
+                                                                                        {{ $discussion['name'] }}</h4>
+                                                                                    <p class="mb-0">{{ optional(App\models\User::find(optional(App\models\TaskDiscussion::find($discussion['id']))->created_by))->type }}</p>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4 text-end">
+                                                                            @php
+                                                                            $dateTime = new DateTime($discussion['created_at']);
+                                                                        @endphp
+                                                                        <p>{{ $dateTime->format('Y-m-d H:i:s') }}</p>
+                                                                        </div>
+                                                                        <div class="col-12 my-2">
+                                                                            <p>{!! $discussion['comment'] !!}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="d-flex gap-1 justify-content-end pb-2 px-3" id="dellhover">
+                                                                        <div class="btn btn-sm btn-outline-dark text-dark textareaClassedit"
+                                                                            data-id="{{ $discussion['id'] }}"
+                                                                            id="editable"
+                                                                            style="font-size: ;">Edit</div>
+
+                                                                        <div class="btn btn-dark btn-sm text-white" id="editable"
+                                                                            style="font-size: ;"
+                                                                            onclick="DeleteComment('{{ $discussion['id'] }}','{{ $task->id }}')">Delete</div>
+                                                                    </div>
+
+                                                                </div>
+                                                            @endforeach
+                                                        @endif
+                                                     </span>
                                                     </div>
 
                                                 </div>
@@ -535,7 +573,7 @@
                                     </div>
 
 
-                                    <div class="accordion-item">
+                                    {{-- <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeytag">
                                             <button class="accordion-button p-2" type="button"
                                                 data-bs-toggle="collapse"
@@ -565,7 +603,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 
@@ -659,14 +697,21 @@
                                                                 @endphp
 
                                                                 <li class="StepProgress-item is-done">
-                                                                    <div class="bold time">{{ $activity->created_at }}</div>
-                                                                    <div class="bold" style="text-align: left; margin-left: 80px;">
-                                                                            <p class="bold" style="margin-bottom: 0rem; color: #000000;">{{ $remark->title }}</p>
-                                                                            <p class="m-0">{{ $remark->message }}</p>
-                                                                            <span class="text-muted text-sm" style="cursor: pointer;" @can('show employee') onclick="openSidebar('/user/employee/{{ isset($activity->created_by) ? $activity->created_by : '' }}/show')"  @endcan ><i class="step__icon fa fa-user me-2" aria-hidden="true"></i>{{ isset($users[$activity->created_by]) ? $users[$activity->created_by] : '' }}</span>
+                                                                    <div class="bold time">{{ $activity->created_at }}
+                                                                    </div>
+                                                                    <div class="bold"
+                                                                        style="text-align: left; margin-left: 80px;">
+                                                                        <p class="bold"
+                                                                            style="margin-bottom: 0rem; color: #000000;">
+                                                                            {{ $remark->title }}</p>
+                                                                        <p class="m-0">{{ $remark->message }}</p>
+                                                                        <span class="text-muted text-sm"
+                                                                            style="cursor: pointer;"
+                                                                            @can('show employee') onclick="openSidebar('/user/employee/{{ isset($activity->created_by) ? $activity->created_by : '' }}/show')"  @endcan><i
+                                                                                class="step__icon fa fa-user me-2"
+                                                                                aria-hidden="true"></i>{{ isset($users[$activity->created_by]) ? $users[$activity->created_by] : '' }}</span>
                                                                     </div>
                                                                 </li>
-
                                                             @endforeach
 
                                                         </ul>
@@ -703,11 +748,32 @@
 
             $('.textareaClassedit').click(function() {
                 var dataId = $(this).data('id');
-                var dataComment = $(this).data('comment');
-                $('textarea[name="comment"]').val(dataComment);
-                $('#id').val(dataId);
-                $('#textareaID, #dellhover, .textareaClass').show();
-                $('.textareaClass').toggle("slide");
+                $.ajax({
+                        url: "{{ url('update/from/TaskDiscussion') }}",
+                        method: 'POST',
+                        data: {
+                            id: dataId
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+
+                        success: function(data) {
+                            data = JSON.parse(data);
+                            if (data.status === 'success') {
+                                $("#taskduscussedformdata").html('');
+                                $("#taskduscussedformdata").html(data.html);
+                            } else {
+                                console.error('Server returned an error:', data.message);
+                            }
+
+
+                        },
+
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log(textStatus, errorThrown);
+                        }
+                    });
 
             });
 
@@ -749,14 +815,14 @@
                             'X-CSRF-TOKEN': csrfToken
                         },
                         success: function(response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'The task status has been changed successfully.',
-                        }).then(function() {
-                            // Reload the page after the user closes the SweetAlert dialog
-                            window.location.href = window.location.href;
-                        });
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: 'The task status has been changed successfully.',
+                            }).then(function() {
+                                // Reload the page after the user closes the SweetAlert dialog
+                                window.location.href = window.location.href;
+                            });
                         },
 
                         error: function(jqXHR, textStatus, errorThrown) {
@@ -770,15 +836,29 @@
         }
     </script>
     <script>
-$(document).ready(function() {
-    $('#taskDiscussionInput').keyup(function(event) {
-        var commentText = $('textarea[name="comment"]').val();
-        if (commentText.length > 0) {
-            $('#SaveDiscussion').removeClass("d-none");
-        } else {
-            $('#SaveDiscussion').addClass("d-none");
-        }
-    });
-});
-
+        $(document).ready(function() {
+            $('#taskDiscussionInput').keyup(function(event) {
+                var commentText = $('textarea[name="comment"]').val();
+                if (commentText.length > 0) {
+                    $('#SaveDiscussion').removeClass("d-none");
+                } else {
+                    $('#SaveDiscussion').addClass("d-none");
+                }
+            });
+        });
     </script>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#taskDiscussionInput').summernote({
+            height: 150, // Set the height to 600 pixels
+            focus: true,
+            toolbar: [
+                ['link', ['link']],
+
+    ]
+        });
+    });
+</script>
+

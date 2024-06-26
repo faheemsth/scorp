@@ -10,6 +10,7 @@ use App\Models\Utility;
 use App\Models\JobApplication;
 use App\Models\JobApplicationNote;
 use App\Models\JobCategory;
+use App\Models\SavedFilter;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -21,24 +22,112 @@ class JobController extends Controller
     {
         if(\Auth::user()->can('manage job'))
         {
-            $jobs = Job::where('created_by', '=', \Auth::user()->creatorId())->get();
 
-            $data['total']     = Job::where('created_by', '=', \Auth::user()->creatorId())->count();
-            $data['active']    = Job::where('status', 'active')->where('created_by', '=', \Auth::user()->creatorId())->count();
-            $data['in_active'] = Job::where('status', 'in_active')->where('created_by', '=', \Auth::user()->creatorId())->count();
+            $user = \Auth::user();
+            $query = Job::select(
+                'jobs.*', // Corrected this line
+                'regions.name as region',
+                'branches.name as branch',
+                'users.name as brand',
+                'assigned_to.name as created_user'
+            )
+            ->leftJoin('users', 'users.id', '=', 'jobs.brand_id')
+            ->leftJoin('branches', 'branches.id', '=', 'jobs.branch')
+            ->leftJoin('regions', 'regions.id', '=', 'jobs.region_id')
+            ->leftJoin('users as assigned_to', 'assigned_to.id', '=', 'jobs.created_by');
 
-            return view('job.index', compact('jobs', 'data'));
+            $Appraisal_query = RoleBaseTableGet($query,'jobs.brand_id','jobs.region_id','jobs.branch','jobs.created_by');
+
+            $filters = $this->jobsFilters();
+            foreach ($filters as $column => $value) {
+                if ($column == 'created_at') {
+                    $Appraisal_query->whereDate('jobs.created_at', 'LIKE', '%' . substr($value, 0, 10) . '%');
+                }elseif ($column == 'brand') {
+                    $Appraisal_query->where('jobs.brand_id', $value);
+                }elseif ($column == 'region_id') {
+                    $Appraisal_query->where('jobs.region_id', $value);
+                }elseif ($column == 'branch_id') {
+                    $Appraisal_query->where('jobs.branch', $value);
+                }
+
+            }
+            $jobs = $Appraisal_query->get();
+
+            // for inactive
+            $data['total']     = CountJob(['active', 'in_active']);
+            $data['active']    = CountJob(['active']);
+            $data['in_active'] = CountJob(['in_active']);
+            $saved_filters = SavedFilter::where('created_by', \Auth::id())->where('module', 'job')->get();
+            $filters = BrandsRegionsBranches();
+
+            return view('job.index', compact('filters','saved_filters','jobs', 'data'));
         }
         else
         {
             return redirect()->back()->with('error', __('Permission denied.'));
         }
     }
+    private function jobsFilters()
+    {
+        $filters = [];
+        if (isset($_GET['name']) && !empty($_GET['name'])) {
+            $filters['name'] = $_GET['name'];
+        }
 
+        if (isset($_GET['brand']) && !empty($_GET['brand'])) {
+            $filters['brand'] = $_GET['brand'];
+        }
+
+        if (isset($_GET['region_id']) && !empty($_GET['region_id'])) {
+            $filters['region_id'] = $_GET['region_id'];
+        }
+
+        if (isset($_GET['branch_id']) && !empty($_GET['branch_id'])) {
+            $filters['branch_id'] = $_GET['branch_id'];
+        }
+
+        if (isset($_GET['lead_assigned_user']) && !empty($_GET['lead_assigned_user'])) {
+            $filters['deal_assigned_user'] = $_GET['lead_assigned_user'];
+        }
+
+
+        if (isset($_GET['stages']) && !empty($_GET['stages'])) {
+            $filters['stage_id'] = $_GET['stages'];
+        }
+
+        if (isset($_GET['users']) && !empty($_GET['users'])) {
+            $filters['users'] = $_GET['users'];
+        }
+
+        if (isset($_GET['created_at_from']) && !empty($_GET['created_at_from'])) {
+            $filters['created_at_from'] = $_GET['created_at_from'];
+        }
+
+        if (isset($_GET['created_at_to']) && !empty($_GET['created_at_to'])) {
+            $filters['created_at_to'] = $_GET['created_at_to'];
+        }
+        if (isset($_GET['tag']) && !empty($_GET['tag'])) {
+            $filters['tag'] = $_GET['tag'];
+        }
+
+        if (isset($_GET['price']) && !empty($_GET['price'])) {
+            $price = $_GET['price'];
+
+            if (preg_match('/^(<=|>=|<|>)/', $price, $matches)) {
+                $comparePrice = $matches[1]; // Get the comparison operator
+                $filters['price'] = (float) substr($price, strlen($comparePrice)); // Get the price value
+            } else {
+                $comparePrice = '=';
+                $filters['price'] = '=' . $price; // Default to '=' if no comparison operator is provided
+            }
+        }
+
+        return $filters;
+    }
     public function create()
     {
 
-        $categories = JobCategory::where('created_by', \Auth::user()->creatorId())->get()->pluck('title', 'id');
+        $categories = JobCategory::get()->pluck('title', 'id');
         $categories->prepend('--', '');
 
         $branches = Branch::where('created_by', \Auth::user()->creatorId())->get()->pluck('name', 'id');
@@ -46,9 +135,11 @@ class JobController extends Controller
 
         $status = Job::$status;
 
-        $customQuestion = CustomQuestion::where('created_by', \Auth::user()->creatorId())->get();
+        $customQuestion = CustomQuestion::get();
 
-        return view('job.create', compact('categories', 'status', 'branches', 'customQuestion'));
+        $filters = BrandsRegionsBranches();
+
+        return view('job.create', compact('categories', 'status', 'branches', 'customQuestion', 'filters'));
     }
 
     public function store(Request $request)
@@ -60,7 +151,9 @@ class JobController extends Controller
             $validator = \Validator::make(
                 $request->all(), [
                                    'title' => 'required',
-                                   'branch' => 'required',
+                                   'brand' => 'required|integer|min:1',
+                                   'region_id' => 'required|integer|min:1',
+                                   'branch_id' => 'required|integer|min:1',
                                    'category' => 'required',
                                    'skill' => 'required',
                                    'position' => 'required|integer',
@@ -71,16 +164,20 @@ class JobController extends Controller
                                ]
             );
 
-            if($validator->fails())
-            {
+            if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
-                return redirect()->back()->with('error', $messages->first());
+                return json_encode([
+                    'status' => 'error',
+                    'message' => $messages->first()
+                ]);
             }
 
             $job                  = new Job();
             $job->title           = $request->title;
-            $job->branch          = $request->branch;
+            $job->brand_id          = $request->brand;
+            $job->region_id          = $request->region_id;
+            $job->branch          = $request->branch_id;
             $job->category        = $request->category;
             $job->skill           = $request->skill;
             $job->position        = $request->position;
@@ -93,14 +190,19 @@ class JobController extends Controller
             $job->applicant       = !empty($request->applicant) ? implode(',', $request->applicant) : '';
             $job->visibility      = !empty($request->visibility) ? implode(',', $request->visibility) : '';
             $job->custom_question = !empty($request->custom_question) ? implode(',', $request->custom_question) : '';
-            $job->created_by      = \Auth::user()->creatorId();
+            $job->created_by      = \Auth::id();
             $job->save();
 
-            return redirect()->route('job.index')->with('success', __('Job  successfully created.'));
-        }
-        else
-        {
-            return redirect()->route('job.index')->with('error', __('Permission denied.'));
+            return json_encode([
+                'status' => 'success',
+                'message' => 'Job  successfully created.',
+                'url' => url('job'),
+            ]);
+        } else {
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Permission denied.'
+            ]);
         }
     }
 
@@ -110,10 +212,35 @@ class JobController extends Controller
         $job->applicant  = !empty($job->applicant) ? explode(',', $job->applicant) : '';
         $job->visibility = !empty($job->visibility) ? explode(',', $job->visibility) : '';
         $job->skill      = !empty($job->skill) ? explode(',', $job->skill) : '';
-
-        return view('job.show', compact('status', 'job'));
+        $filters = UserRegionBranch();
+        $html = view('job.show', compact('status', 'job', 'filters'))->render();
+        return json_encode([
+            'status' => 'success',
+            'html' => $html
+        ]);
+       // return view('job.show', compact('status', 'job'));
     }
 
+    public function Hrmshow(Job $jo)
+    {
+
+        $user = \Auth::user();
+
+        if ($user->type!='HR' && $user->type!='super admin' && $user->type!='Project Manager') {
+            echo 'access Denied';
+                exit();
+                die();
+    }
+    
+        if(isset($_GET['emp_id'])){
+            $userId = $_GET['emp_id'];
+         }else{
+             $userId = \Auth::id();
+         }
+        $jobs  = Job::where('created_by',$userId)->get();
+        $filters = UserRegionBranch();
+        return view('hrmhome.jobs', compact('jobs','filters'));
+    }
     public function edit(Job $job)
     {
 
@@ -130,8 +257,10 @@ class JobController extends Controller
         $job->custom_question = explode(',', $job->custom_question);
 
         $customQuestion = CustomQuestion::where('created_by', \Auth::user()->creatorId())->get();
+        $filters = BrandsRegionsBranchesForEdit($job->brand_id, $job->region_id, $job->branch);
 
-        return view('job.edit', compact('categories', 'status', 'branches', 'job', 'customQuestion'));
+
+        return view('job.edit', compact('categories', 'status', 'branches', 'job', 'customQuestion', 'filters'));
     }
 
     public function update(Request $request, Job $job)
@@ -142,7 +271,9 @@ class JobController extends Controller
             $validator = \Validator::make(
                 $request->all(), [
                                    'title' => 'required',
-                                   'branch' => 'required',
+                                   'brand' => 'required|integer|min:1',
+                                   'region_id' => 'required|integer|min:1',
+                                   'branch_id' => 'required|integer|min:1',
                                    'category' => 'required',
                                    'skill' => 'required',
                                    'position' => 'required|integer',
@@ -153,15 +284,19 @@ class JobController extends Controller
                                ]
             );
 
-            if($validator->fails())
-            {
+            if ($validator->fails()) {
                 $messages = $validator->getMessageBag();
 
-                return redirect()->back()->with('error', $messages->first());
+                return json_encode([
+                    'status' => 'error',
+                    'message' => $messages->first()
+                ]);
             }
 
             $job->title           = $request->title;
-            $job->branch          = $request->branch;
+            $job->brand_id          = $request->brand;
+            $job->region_id          = $request->region_id;
+            $job->branch          = $request->branch_id;
             $job->category        = $request->category;
             $job->skill           = $request->skill;
             $job->position        = $request->position;
@@ -175,11 +310,16 @@ class JobController extends Controller
             $job->custom_question = !empty($request->custom_question) ? implode(',', $request->custom_question) : '';
             $job->save();
 
-            return redirect()->route('job.index')->with('success', __('Job  successfully updated.'));
-        }
-        else
-        {
-            return redirect()->route('job.index')->with('error', __('Permission denied.'));
+            return json_encode([
+                'status' => 'success',
+                'message' => 'Job successfully updated.',
+                'url' => url('job'),
+            ]);
+        } else {
+            return json_encode([
+                'status' => 'error',
+                'message' => 'Permission denied.'
+            ]);
         }
     }
 

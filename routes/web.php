@@ -87,6 +87,7 @@ use App\Http\Controllers\PayslipTypeController;
 use App\Http\Controllers\PlanRequestController;
 use App\Http\Controllers\ProjectTaskController;
 use App\Http\Controllers\ResignationController;
+
 use App\Http\Controllers\SavedFilterController;
 use App\Http\Controllers\TerminationController;
 use App\Http\Controllers\TimeTrackerController;
@@ -137,6 +138,9 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\SaturationDeductionController;
 use App\Http\Controllers\ProductServiceCategoryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\EmailMarketingController;
+use App\Http\Controllers\AgencyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -151,6 +155,9 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
 // ChartGranted
+Route::get('/chartdashboard', function () {
+    return view('chartdashboard.chart');
+ });
 Route::get('/ChartGranted', [VisaChartController::class, 'TestChartGranted']);
 Route::get('/GrantedByCountry', [VisaChartController::class, 'GrantedByCountry']);
 Route::get('/GrantedByUniversty', [VisaChartController::class, 'GrantedByUniversty']);
@@ -214,6 +221,7 @@ Route::get('auth/google/callback', [AuthenticatedSessionController::class, 'hand
 Route::get('/', [DashboardController::class, 'crm_dashboard_index'])->name('c')->middleware(['XSS', 'revalidate',]);
 
 Route::get('/crm-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('crm.dashboard')->middleware(['XSS', 'revalidate',]);
+Route::get('/crm-dashboard-admin', [DashboardController::class, 'crm_dashboard_index_admin_reports'])->name('crm.dashboard.reports')->middleware(['XSS', 'revalidate',]);
 
 Route::get('/account-dashboard', [DashboardController::class, 'account_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
 Route::get('/account-dashboard', [DashboardController::class, 'crm_dashboard_index'])->name('dashboard')->middleware(['auth', 'XSS', 'revalidate']);
@@ -234,6 +242,15 @@ Route::get('/project-dashboard', [DashboardController::class, 'project_dashboard
 
 Route::get('/hrm-dashboard', [DashboardController::class, 'hrm_dashboard_index'])->name('hrm.dashboard')->middleware(['auth', 'XSS', 'revalidate']);
 
+Route::get('/hrm-home', [DashboardController::class, 'HrmHome'])->name('hrm.home')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/hrm-jobs', [JobController::class, 'Hrmshow'])->name('hrm.home')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/hrm-leaves', [LeaveController::class, 'Hrmleave'])->name('hrm.leave')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/hrm-payslip', [PaySlipController::class, 'HrmPayslip'])->name('hrm.payslip')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/hrm-appraisal', [AppraisalController::class, 'HrmAppraisal'])->name('hrm.appraisal')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/hrm-indicator', [IndicatorController::class, 'HrmIndicator'])->name('hrm.indicator')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/hrm-attendance', [AttendanceEmployeeController::class, 'HrmAttendance'])->name('hrm.indicator')->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/hrm-training', [TrainingController::class, 'HrmTraining'])->name('hrm.training')->middleware(['auth', 'XSS', 'revalidate']);
+
 Route::get('profile', [UserController::class, 'profile'])->name('profile')->middleware(['auth', 'XSS', 'revalidate']);
 
 Route::any('edit-profile', [UserController::class, 'editprofile'])->name('update.account')->middleware(['auth', 'XSS', 'revalidate']);
@@ -243,6 +260,9 @@ Route::any('update-bank-profile', [UserController::class, 'editbankinfo'])->name
 
 
 Route::resource('users', UserController::class)->middleware(['auth', 'XSS', 'revalidate']);
+Route::get('/user/show/edit/{id}', [UserController::class, 'showConvert'])->name('user.show.edit')->middleware(['auth', 'XSS', 'revalidate']);
+Route::post('/user/{id}/convert', [UserController::class, 'convertToUser'])->name('user.convert')->middleware(['auth', 'XSS']);
+
 Route::get('/user/employees', [UserController::class, 'employees'])->name('user.employees')->middleware(['auth', 'XSS', 'revalidate']);
 Route::get('/user/employee/create', [UserController::class, 'employeeCreate'])->name('user.employee.create')->middleware(['auth', 'XSS', 'revalidate']);
 Route::post('/user/employee/store', [UserController::class, 'employeeStore'])->name('user.employee.store')->middleware(['auth', 'XSS', 'revalidate']);
@@ -727,6 +747,8 @@ Route::get('/leads/get-field/{id}', 'LeadController@fetchLeadField');
 
 Route::get('/deals/get-field/{id}', 'DealController@fetchDealField');
 
+Route::get('/get-universities', [ApplicationsController::class, 'getUniversities'])->name('get_universities');
+
 // Deal Email
 Route::get('/deals/{id}/email', [DealController::class, 'emailCreate'])->name('deals.emails.create')->middleware(['auth', 'XSS']);
 Route::post('/deals/{id}/email', [DealController::class, 'emailStore'])->name('deals.emails.store')->middleware(['auth', 'XSS']);
@@ -751,9 +773,12 @@ Route::resource('labels', LabelController::class);
 Route::resource('sources', SourceController::class);
 Route::resource('payments', PaymentController::class);
 Route::resource('custom_fields', CustomFieldController::class);
+Route::resource('tages', TagController::class);
+Route::get('/tages/edit/{id}', [TagController::class, 'edit'])->name('tages.edit');
+Route::post('/tages/update', [TagController::class, 'update'])->name('tages.updated');
 
-
-
+// tages delete
+Route::get('tages/bulk/delete', [TagController::class, 'TagesBulkDelete'])->name('tages.bulk.delete.d');
 
 // Leads Module
 
@@ -792,6 +817,8 @@ Route::post('/leads/{id}/notes', [LeadController::class, 'notesStore'])->name('l
 Route::get('/leads/{id}/notes-edit', [LeadController::class, 'notesEdit'])->name('leads.notes.edit')->middleware(['auth', 'XSS']);
 Route::post('/leads/{id}/notes-update', [LeadController::class, 'notesUpdate'])->name('leads.notes.update')->middleware(['auth', 'XSS']);
 Route::get('/leads/{id}/notes-delete', [LeadController::class, 'notesDelete'])->name('leads.notes.delete')->middleware(['auth', 'XSS']);
+Route::post('/update/from/leadsNoteForm', [LeadController::class, 'UpdateFromLeadsNoteForm']);
+Route::post('/update/from/DealsNoteForm', [DealController::class, 'UpdateFromDealsNoteForm']);
 
 
 Route::get('/deals/{id}/notes', [DealController::class, 'notesCreate'])->name('deals.notes.create')->middleware(['auth', 'XSS']);
@@ -799,6 +826,7 @@ Route::post('/deals/{id}/notes', [DealController::class, 'notesStore'])->name('d
 Route::get('/deals/{id}/notes-edit', [DealController::class, 'notesEdit'])->name('deals.notes.edit')->middleware(['auth', 'XSS']);
 Route::post('/deals/{id}/notes-update', [DealController::class, 'notesUpdate'])->name('deals.notes.update')->middleware(['auth', 'XSS']);
 Route::get('/deals/{id}/notes-delete', [DealController::class, 'notesDelete'])->name('deals.notes.delete')->middleware(['auth', 'XSS']);
+Route::get('/MassUpdate', [LeadController::class, 'MassUpdate'])->name('MassUpdate')->middleware(['auth', 'XSS']);
 
 
 
@@ -851,8 +879,10 @@ Route::get('/update-deal-stage', [DealController::class, 'updateDealStage'])->na
 Route::get('user/{id}/plan', [UserController::class, 'upgradePlan'])->name('plan.upgrade')->middleware(['auth', 'XSS']);
 Route::get('user/{id}/plan/{pid}', [UserController::class, 'activePlan'])->name('plan.active')->middleware(['auth', 'XSS']);
 Route::get('/{uid}/notification/seen', [UserController::class, 'notificationSeen'])->name('notification.seen');
-
-
+Route::get('/notifications', [UserController::class, 'notifications'])->name('notifications');
+Route::get("/delete-bulk-notifications", [UserController::class, 'deleteBulkNotifications'])->name('deleteBulkNotifications');
+Route::post('notifications-status-change', [UserController::class, 'NotificationStatusChange'])->name('NotificationStatusChange');
+Route::get('/get-notifications-detail', [UserController::class, 'getnotificationsDetails'])->name('get-notifications-detail');
 
 // Route::get('/leads/{id}/notes', [LeadController::class, 'notesCreate'])->name('leads.notes.create')->middleware(['auth','XSS']);
 // Route::post('/leads/{id}/notes', [LeadController::class, 'notesStore'])->name('leads.notes.store')->middleware(['auth','XSS']);
@@ -867,6 +897,10 @@ Route::get('/{uid}/notification/seen', [UserController::class, 'notificationSeen
 // Organization
 
 Route::resource('organization', OrganizationController::class);
+Route::resource('agency', AgencyController::class);
+Route::get("/delete-bulk-agency", [AgencyController::class, 'deleteBulkAgency'])->name('delete-bulk-agency');
+Route::get('/get-agency-detail', [AgencyController::class, 'GetAgencyDetail'])->name('get-agency-detail');
+Route::get('/getCitiesOnCode', [AgencyController::class, 'getCitiesOnCode'])->name('getCitiesOnCode');
 Route::get('/organization/{id}/delete', [organizationController::class, 'destroy'])->name('organization.delete')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/notes', [organizationController::class, 'notesCreate'])->name('organization.notes.create')->middleware(['auth', 'XSS']);
 
@@ -879,7 +913,19 @@ Route::get('/organization/{id}/notes-edit', [OrganizationController::class, 'not
 Route::post('/organization/{id}/notes-update', [OrganizationController::class, 'notesUpdate'])->name('organization.notes.update')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/notes-delete', [OrganizationController::class, 'notesDelete'])->name('organization.notes.delete')->middleware(['auth', 'XSS']);
 Route::get('organization/{id}/drive-link', [OrganizationController::class, 'driveLink'])->name('organization.drive.link')->middleware(['auth', 'XSS']);
-Route::post('organization/{id}/drive-link-update', [OrganizationController::class, 'driveLinkUpdate'])->name('organization.drive.link-update')->middleware(['auth', 'XSS']);;
+Route::post('organization/{id}/drive-link-update', [OrganizationController::class, 'driveLinkUpdate'])->name('organization.drive.link-update')->middleware(['auth', 'XSS']);
+
+
+Route::get('email/marketing/list', [EmailMarketingController::class, 'list'])->name('email.marketing.list')->middleware(['auth', 'XSS']);
+Route::get('email/marketing/form', [EmailMarketingController::class, 'inset'])->name('email.marketing.inset')->middleware(['auth', 'XSS']);
+Route::post('email/marketing/form', [EmailMarketingController::class, 'save'])->name('email.marketing.save')->middleware(['auth', 'XSS']);
+Route::get('email/marketing/update', [EmailMarketingController::class, 'update'])->name('email.marketing.update')->middleware(['auth', 'XSS']);
+Route::post('email/marketing/updateSave', [EmailMarketingController::class, 'updateSave'])->name('email.marketing.updateSave')->middleware(['auth', 'XSS']);
+Route::get('email/marketing/delete', [EmailMarketingController::class, 'delete'])->name('email.marketing.delete')->middleware(['auth', 'XSS']);
+
+
+Route::get('email/marketing/show', [EmailMarketingController::class, 'show'])->name('email.marketing.show')->middleware(['auth', 'XSS']);
+
 
 
 Route::resource('organization-type', OrganizationTypeController::class)->middleware(['auth', 'XSS']);
@@ -889,7 +935,6 @@ Route::get('/tasks/{id}/update-data', [DealController::class, 'updateTaskData'])
 Route::get('/tasks/{id}/discussions', [DealController::class, 'taskDiscussionCreate'])->name('tasks.discussions.create')->middleware(['auth', 'XSS']);
 Route::post('/tasks/{id}/discussions', [DealController::class, 'taskDiscussionStore'])->name('tasks.discussion.store')->middleware(['auth', 'XSS']);
 Route::get('/delete/task/comment/{id}/{taskID}', [DealController::class, 'taskDiscussionDelete'])->name('tasks.discussion.delete')->middleware(['auth', 'XSS']);
-
 
 
 Route::get('/organization/get-address/{id}', 'OrganizationController@FetchAddress')->middleware(['auth', 'XSS']);
@@ -907,6 +952,27 @@ Route::get('email_template_lang/{id}/{lang?}', [EmailTemplateController::class, 
 Route::put('email_template_store/{id}', [EmailTemplateController::class, 'updateStatus'])->name('status.email.language')->middleware(['auth']);
 Route::put('email_template_store/{pid}', [EmailTemplateController::class, 'storeEmailLang'])->name('store.email.language')->middleware(['auth']);
 Route::resource('email_template', EmailTemplateController::class)->middleware(['auth', 'XSS']);
+
+Route::post('email_template_lang/{id}', [EmailTemplateController::class, 'updateEmailContent'])->name('update.email')->middleware(['auth', 'XSS']);
+
+
+Route::post('/leads/send_bulk_email', [LeadController::class, 'sendBulkEmail'])->name('send.bulk.email')->middleware(['auth', 'XSS']);
+
+
+Route::get('send_bulk_email_get', [LeadController::class, 'sendBulkEmailGet'])->name('send.bulk.email.get')->middleware(['auth', 'XSS']);
+
+
+//Route::get('/leads/send_bulk_email_get', [LeadController::class, 'sendBulkEmailGet'])->name('send.bulk.email.get')->middleware(['auth', 'XSS']);
+
+
+Route::get('email_template_type_list', [EmailTemplateController::class, 'email_template_type_list'])->name('email_template_type_list')->middleware(['auth', 'XSS']);
+Route::get('email_template_type_create', [EmailTemplateController::class, 'email_template_type_create'])->name('email_template_type_create')->middleware(['auth', 'XSS']);
+Route::post('email_template_type_save', [EmailTemplateController::class, 'email_template_type_save'])->name('email_template_type_save')->middleware(['auth', 'XSS']);
+Route::get('email_template_type_show', [EmailTemplateController::class, 'email_template_type_show'])->name('email_template_type_show')->middleware(['auth', 'XSS']);
+Route::get('email_template_type_update', [EmailTemplateController::class, 'email_template_type_update'])->name('email_template_type_update')->middleware(['auth', 'XSS']);
+Route::post('email_template_type_updateSave', [EmailTemplateController::class, 'email_template_type_updateSave'])->name('email_template_type_updateSave')->middleware(['auth', 'XSS']);
+Route::get('email_template_type_delete', [EmailTemplateController::class, 'email_template_type_delete'])->name('email_template_type_delete')->middleware(['auth', 'XSS']);
+Route::get('toggleEmailTemplateStatus', [EmailTemplateController::class, 'toggleEmailTemplateStatus'])->name('toggleEmailTemplateStatus')->middleware(['auth', 'XSS']);
 
 
 // End Email Templates
@@ -994,12 +1060,20 @@ Route::resource('payslip', PaySlipController::class)->middleware(['auth', 'XSS']
 
 Route::resource('company-policy', CompanyPolicyController::class)->middleware(['auth', 'XSS']);
 Route::resource('indicator', IndicatorController::class)->middleware(['auth', 'XSS']);
+Route::get('IndicatorShowing', [IndicatorController::class, 'IndicatorShowing'])->name('indicator.showing');
+
+
+
+
 Route::resource('appraisal', AppraisalController::class)->middleware(['auth', 'XSS']);
 
 Route::post('branch/employee/json', [EmployeeController::class, 'employeeJson'])->name('branch.employee.json')->middleware(['auth', 'XSS']);
 
 Route::resource('goaltype', GoalTypeController::class)->middleware(['auth', 'XSS']);
 Route::resource('goaltracking', GoalTrackingController::class)->middleware(['auth', 'XSS']);
+
+Route::get('GoalTrackingShow', [GoalTrackingController::class, 'GoalTrackingShow'])->middleware(['auth', 'XSS'])->name('GoalTrackingShow');
+
 Route::resource('account-assets', AssetController::class)->middleware(['auth', 'XSS']);
 
 
@@ -1016,8 +1090,10 @@ Route::post('meeting/getemployee', [MeetingController::class, 'getemployee'])->n
 Route::resource('meeting', MeetingController::class)->middleware(['auth', 'XSS']);
 Route::resource('trainingtype', TrainingTypeController::class)->middleware(['auth', 'XSS']);
 Route::resource('trainer', TrainerController::class)->middleware(['auth', 'XSS']);
+Route::get('show-trainer', [TrainerController::class, 'ShowTrainer'])->name('ShowTrainer')->middleware(['auth', 'XSS']);
 
 Route::post('training/status', [TrainingController::class, 'updateStatus'])->name('training.status')->middleware(['auth', 'XSS']);
+Route::get('/training/view', [TrainingController::class, 'TrainingShow'])->name('training.view')->middleware(['auth', 'XSS']);
 
 Route::resource('training', TrainingController::class)->middleware(['auth', 'XSS']);
 
@@ -1694,12 +1770,17 @@ Route::post('deal-settings', [SystemController::class, 'DealSettingStore'])->nam
 Route::post('/appraisals', [AppraisalController::class, 'empByStar'])->name('empByStar')->middleware(['auth', 'XSS']);
 Route::post('/appraisals1', [AppraisalController::class, 'empByStar1'])->name('empByStar1')->middleware(['auth', 'XSS']);
 Route::post('/getemployee', [AppraisalController::class, 'getemployee'])->name('getemployee');
+Route::get('/appraisalShow', [AppraisalController::class, 'appraisalShow'])->name('appraisalShow');
 
 
 //offer Letter
 
 Route::post('setting/offerlatter/{lang?}', [SystemController::class, 'offerletterupdate'])->name('offerlatter.update');
 Route::get('setting/offerlatter', [SystemController::class, 'companyIndex'])->name('get.offerlatter.language');
+Route::get('setting-offerlatter', [SystemController::class, 'SettingOfferlatter'])->name('setting.offerlatter');
+
+
+
 Route::get('job-onboard/pdf/{id}', [JobApplicationController::class, 'offerletterPdf'])->name('offerlatter.download.pdf');
 Route::get('job-onboard/doc/{id}', [JobApplicationController::class, 'offerletterDoc'])->name('offerlatter.download.doc');
 
@@ -1742,6 +1823,9 @@ Route::post('deals/{id}/store-application', [DealController::class, 'storeApplic
 Route::get('deals/{id}/edit-application', [DealController::class, 'editApplication'])->name('deals.application.edit');
 Route::post('deals/{id}/update-application', [DealController::class, 'updateApplication'])->name('deals.application.update');
 Route::delete('deals/{id}/delete-application', [DealController::class, 'destroyApplication'])->name('deals.application.destroy');
+//move application to other admission
+Route::get('deals/move-application/{passport_number}/{id}', [DealController::class, 'moveApplication'])->name('deals.application.move');
+Route::post('deals/move-application/{id}', [DealController::class, 'moveApplicationsave'])->name('deals.application.move.save');
 
 //////////Lead Detail
 Route::get('/get-lead-detail', [LeadController::class, 'getLeadDetails'])->name('get-lead-detail');
@@ -1753,6 +1837,7 @@ Route::get('university/{id}/university_detail', [UniversityController::class, 'u
 
 Route::get('/get-task-detail', [DealController::class, 'getTaskDetails'])->name('get-task-detail');
 Route::post('task-status-change', [DealController::class, 'TaskStatusChange'])->name('task.status.change');
+Route::post('update/from/TaskDiscussion', [DealController::class, 'UpdateFromTaskDiscussion']);
 
 Route::get('/get-organization-detail', [OrganizationController::class, 'getOrganizationDetails'])->name('get-organization-detail');
 
@@ -1764,16 +1849,29 @@ Route::get('/organiation/{id}/task-edit', [OrganizationController::class, 'taskE
 Route::post('/organization/{id}/task-update', [OrganizationController::class, 'taskUpdate'])->name('organization.tasks.update')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/task-delete', [OrganizationController::class, 'taskDelete'])->name('organization.task.delete')->middleware(['auth', 'XSS']);
 
+Route::post('/organization/update/{id}', [OrganizationController::class, 'update']);
+
+
 Route::get('/get_branch_by_type', [OrganizationController::class, 'GetBranchByType'])->name('GetBranchByType')->middleware(['auth', 'XSS']);
 
 
 
+Route::get('get_applicatrion_of_admission/', [ApplicationsController::class, 'get_applicatrion_of_admission'])->name('get_applicatrion_of_admission.index')->middleware(['auth', 'XSS']);
 Route::get('applications/', [ApplicationsController::class, 'index'])->name('applications.index')->middleware(['auth', 'XSS']);
 Route::get('application/', [ApplicationsController::class, 'application'])->name('application')->middleware(['auth', 'XSS']);
 Route::post('/application/order', [ApplicationsController::class, 'order'])->name('application.order')->middleware(['auth', 'XSS']);
 
 Route::get('/update-application-stage', [ApplicationsController::class, 'updateApplicationStage'])->name('update-application-stage')->middleware(['auth', 'XSS']);
-Route::get('/organization/{id}/taskDeleted', [OrganizationController::class, 'taskDeleted'])->middleware(['auth', 'XSS']);
+
+Route::get('/application/{id}/notes', [ApplicationsController::class, 'notesCreate'])->name('application.notes.create')->middleware(['auth', 'XSS']);
+Route::post('/application/{id}/notes', [ApplicationsController::class, 'notesStore'])->name('application.notes.store')->middleware(['auth', 'XSS']);
+Route::get('/application/{id}/notes-edit', [ApplicationsController::class, 'notesEdit'])->name('application.notes.edit')->middleware(['auth', 'XSS']);
+Route::post('/application/{id}/notes-update', [ApplicationsController::class, 'notesUpdate'])->name('application.notes.update')->middleware(['auth', 'XSS']);
+Route::get('/application/{id}/notes-delete', [ApplicationsController::class, 'notesDelete'])->name('application.notes.delete')->middleware(['auth', 'XSS']);
+
+
+Route::get('/organization/{id}/taskDeleted', [OrganizationController::class, 'taskDeleted'])->name('tasks.destroy')->middleware(['auth', 'XSS']);
+
 
 Route::get('/application_stages', [AppStageController::class, 'index'])->name('application_stages.index')->middleware(['auth', 'XSS']);
 Route::get('/application_stages/create', [AppStageController::class, 'create'])->middleware(['auth', 'XSS']);
@@ -1792,6 +1890,7 @@ Route::resource('/institute-category', InstituteCategoryController::class);
 Route::get("/delete-bulk-brands", [UserController::class, 'deleteBulkUsers'])->name('delete-bulk-brands');
 Route::get("/delete-bulk-regions", [RegionController::class, 'deleteBulkRegions'])->name('delete-bulk-regions');
 Route::get("/delete-bulk-branches", [BranchController::class, 'deleteBulkBranches'])->name('delete-bulk-branches');
+Route::get('/delete-bulk-employees', [UserController::class, 'deleteBulkEmployees'])->name('delete-bulk-employees');
 
 Route::post("/update-bulk-task-status", [DealController::class, 'updateBulkTaskStatus'])->name('update-bulk-task-status');
 Route::post("/update-bulk-task", [DealController::class, 'updateBulkTask'])->name('update-bulk-task');
@@ -1820,8 +1919,9 @@ Route::get('/region/regionBrands', [RegionController::class, 'getRegionBrands'])
 Route::get('/region/regionBrands/task', [RegionController::class, 'getRegionBrandsTask'])->name('region_brands_task');
 
 Route::post("/save-filter", [SavedFilterController::class, 'save'])->name('save-filter');
+Route::post("/edit-filter", [SavedFilterController::class, 'edit'])->name('edit-filter');
 Route::post("/delete-filter", [SavedFilterController::class, 'deleteFilter'])->name('delete-filter');
-
+Route::get('/region/filter-branch-users-permission', [RegionController::class, 'getFilterBranchUsersPermission'])->name('filter-branch-users-permission');
 /////////////////////////////////////////////////////////////////////////////////
 Route::get('/region/filter-regions', [RegionController::class, 'getFilterRegions'])->name('filter-regions');
 Route::get('/region/filter-branches', [RegionController::class, 'getFilterBranches'])->name('filter-branches');
@@ -1840,3 +1940,27 @@ Route::get('/university-download', [UniversityController::class, 'download'])->n
 Route::get('/brands-download', [UserController::class, 'download'])->name('users.download');
 Route::get('/regions-download', [RegionController::class, 'download'])->name('regions.download');
 Route::get('/branches-download', [BranchController::class, 'download'])->name('branches.download');
+Route::get('/employees-download', [UserController::class, 'downloadEmployees'])->name('employees.download');
+Route::get('/tasks-download', [DealController::class, 'downloadTasks'])->name('tasks.download');
+Route::get('/leads-download', [LeadController::class, 'download'])->name('leads.download');
+Route::get('/deals-download', [DealController::class, 'download'])->name('deals.download');
+
+
+
+
+////////////////////////////////////////////////Filters LEADS
+Route::get('/filter-data', [LeadController::class, 'filterData'])->name('filterData');
+
+Route::get('/filter-regions', [RegionController::class, 'filterRegions'])->name('my-filter-regions');
+Route::get('/filter-branches', [RegionController::class, 'filterBranches'])->name('my-filter-branches');
+
+//////////////////////////////////////////////////Add Tags to Leads
+Route::post('/leads/tag', [LeadController::class, 'addTags'])->name('lead_tags');
+Route::post('/deals/tag', [DealController::class, 'addTags'])->name('deal_tags');
+Route::post('/applications/tag', [ApplicationsController::class, 'addTags'])->name('applications_tags');
+Route::post('/application_single_tags', [ApplicationsController::class, 'application_single_tags'])->name('application_single_tags');
+Route::get('/delete_tage', [LeadController::class, 'delete_tage'])->name('delete_tage');
+Route::get('/delete_app_tage', [ApplicationsController::class, 'delete_app_tage'])->name('delete_app_tage');
+
+
+

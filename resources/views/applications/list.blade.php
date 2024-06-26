@@ -559,3 +559,25 @@
         $('#change-pipeline').submit();
     });
 </script>
+<script>
+    $(document).ready(function() {
+        // Add an event listener to the search input
+        $('#searchInput').on('input', function() {
+            // Get the search term
+            var searchTerm = $(this).val().toLowerCase();
+
+            // Loop through each card
+            $('.kanban-box .card').each(function() {
+                // Get the text content of the card
+                var cardText = $(this).text().toLowerCase();
+
+                // Show or hide the card based on the search term
+                if (cardText.includes(searchTerm)) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+</script>

@@ -50,6 +50,41 @@
         text-align: left;
     }
 </style>
+@php
+    $type = \Auth::user()->type;
+    $is_show = true;
+
+    if($type == 'super admin' || \Auth::user()->can('level 1')){
+
+    }else if($type == 'Project Director' || $type == 'Project Manager' || \Auth::user()->can('level 2')){
+            $per_brands = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('permitted_company_id', $deal->brand_id)->first();
+
+            if($per_brands){
+                $is_show = true;
+            }
+    }else if($type == 'Region Manager' || \Auth::user()->can('level 3')){
+            $is_show = ($lead->region_id == \Auth::user()->region_id);
+    }else if($type == 'Branch Manager' || $type == 'Admissions Manager' || $type == 'Admissions Officer' || $type == 'Marketing Officer' || \Auth::user()->can('level 4')){
+        $is_show = ($deal->branch_id == \Auth::user()->branch_id);
+    }else{
+        $is_show = false;
+    }
+
+
+
+    $branch_query = App\Models\Branch::select(['branches.*']);
+    if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'HR'){
+    }else if(\Auth::user()->type == 'company'){
+    $branch_query->where('brands', \Auth::user()->id);
+    }else{
+        $branch_query->whereIn('brands', array_keys(FiltersBrands()));
+    }
+    if(\Auth::user()->type == 'Region Manager'){
+        $branch_query->where('region_id', \Auth::user()->region_id);
+    }
+
+    $allbraches = $branch_query->pluck('id')->toArray()
+@endphp
 <a href="javascript:void(0)" class="closebtn" onclick="closeSidebar()">&times;</a>
 <div class="container-fluid px-1 mx-0">
     <div class="row">
@@ -79,16 +114,17 @@
                 </div>
 
                 <div class="d-flex justify-content-end gap-1 me-3">
-
-                <a href="https://wa.me/{{ !empty($client->phone) ? formatPhoneNumber($client->phone) : '' }}?text=Hello ! Dear {{ $client->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" data-bs-title="{{ __('Whatsapp') }}" class="btn p-2 btn-dark text-white">
-                    <i class=""></i>
+                @if($is_show)
+                <a href="https://wa.me/{{ !empty($client->phone) ? formatPhoneNumber($client->phone) : '' }}?text=Hello ! Dear {{ $client->name }}" target="_blank" data-size="lg" data-bs-toggle="tooltip" data-bs-title="{{ __('Whatsapp') }}" class="btn p-2 btn-dark text-white" style="color:white; width:36px; height: 36px; margin-top:10px;">
+                    <i class="fa-brands fa-whatsapp"></i>
                 </a>
+                @endif
 
-                @if (\Auth::user()->type == 'super admin' || \Auth::user()->can('edit client'))
+                @if (\Auth::user()->can('edit client'))
 
                         <a href="#" data-size="lg" data-url="{{ route('clients.edit', $client->id) }}"
                             data-ajax-popup="true" data-bs-toggle="tooltip" data-bs-title="{{ __('Update Client') }}"
-                            class="btn btn-dark text-white p-2">
+                            class="btn btn-dark text-white p-2"  style="color:white; width:36px; height: 36px; margin-top:10px;">
                             <i class="ti ti-pencil "></i>
                         </a>
 
@@ -101,7 +137,7 @@
                         <span> @if($client->delete_status!=0){{__('Delete')}} @else {{__('Restore')}}@endif</span>
                     </a> --}}
 
-                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn p-2 btn-danger text-white bs-pass-para" >
+                    <a href="#" data-bs-toggle="tooltip" title="{{ __('Delete') }}" class="btn p-2 btn-danger text-white bs-pass-para" style="color:white; width:36px; height: 36px; margin-top:10px;" >
                         <i class="ti ti-trash"></i>
                     </a>
                     {!! Form::close() !!}
@@ -109,30 +145,6 @@
 
                 </div>
             </div>
-
-
-            <div class="lead-info d-flex justify-content-between p-3 text-center">
-                <div class="">
-                    <small>{{ __('Organization') }}</small>
-                    <span class="font-weight-bolder">
-                        {{ isset($lead->organization_id) && isset($organizations[$lead->organization_id]) ? $organizations[$lead->organization_id] : '' }}
-                    </span>
-                </div>
-                <div class="">
-                    <small>{{ __('Phone') }}</small>
-                    <span>
-                        {{ isset($lead->phone) ? $lead->phone : '' }}
-                    </span>
-                </div>
-                <div class="">
-                    <small>{{ __('Contact Owner') }}</small>
-                    <span>
-
-                    </span>
-                </div>
-
-            </div>
-
 
 
             <div class="content my-2">
@@ -234,28 +246,8 @@
                                     </div>
 
 
-                                    @php 
-                                        $type = \Auth::user()->type;
-                                        $is_show = true;
 
-                                        if($type == 'super admin'){
-
-                                        }else if($type == 'Project Director' || $type == 'Project Manager'){
-                                                $per_brands = \App\Models\CompanyPermission::where('user_id', \Auth::user()->id)->where('permitted_company_id', $deal->brand_id)->first();
-                                                
-                                                if($per_brands){
-                                                    $is_show = true;
-                                                }
-                                        }else if($type == 'Regional Manager'){
-                                                $is_show = ($lead->region_id == \Auth::user()->region_id);
-                                        }else if($type == 'Branch Manager' || $type == 'Admissions Manager' || $type == 'Admissions Officer' || $type == 'Marketing Officer'){
-                                            $is_show = ($deal->branch_id == \Auth::user()->branch_id);
-                                        }
-
-                                    @endphp
-                                    
-                                    @if($is_show)
-
+                                    @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Product Coordinator')
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                             <button class="accordion-button p-2" type="button"
@@ -277,11 +269,44 @@
                                                             <tr>
                                                                 <td class=""
                                                                     style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Passport Number') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ $client->passport_number ?? '' }}
+                                                                </td>
+                                                            </tr>
+                                                           {{-- @if($client->brand_id == Auth::user()->brand_id) --}}
+                                                            {{-- <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
                                                                     {{ __('Email') }}
                                                                 </td>
                                                                 <td class=""
                                                                     style="padding-left: 10px; font-size: 14px;">
-                                                                    {{ $client->email }}
+                                                                   <a href="{{ $client->email }}" target="_blank" >{{ $client->email }}</a>
+                                                                </td>
+                                                            </tr>
+
+                                                            <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Phone') }}
+                                                                </td>
+                                                                <td class="name-td"
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                    {{ isset($lead->phone) ? $lead->phone : '' }}
+                                                                </td>
+                                                            </tr> --}}
+                                                            {{-- @elseif(\Auth::user()->type == 'super admin') --}}
+                                                             <tr>
+                                                                <td class=""
+                                                                    style="width: 100px; font-size: 14px;">
+                                                                    {{ __('Email') }}
+                                                                </td>
+                                                                <td class=""
+                                                                    style="padding-left: 10px; font-size: 14px;">
+                                                                   <a href="{{ $client->email }}" target="_blank" >{{ $client->email }}</a>
                                                                 </td>
                                                             </tr>
 
@@ -295,15 +320,137 @@
                                                                     {{ isset($lead->phone) ? $lead->phone : '' }}
                                                                 </td>
                                                             </tr>
+                                                            {{-- @endif --}}
                                                         </tbody>
                                                     </table>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    @elseif (\Auth::user()->type == 'Project Manager')
+                                                @if (in_array($client->brand_id, array_keys(FiltersBrands())))
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
+                                                        <button class="accordion-button p-2" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#panelsStayOpen-collapsekeytwo">
+                                                            {{ __('CONTACT DETAIL') }}
+                                                        </button>
+                                                    </h2>
+
+                                                    <div id="panelsStayOpen-collapsekeytwo"
+                                                        class="accordion-collapse collapse show"
+                                                        aria-labelledby="panelsStayOpen-headingkeyone">
+                                                        <div class="accordion-body">
+
+                                                            <div class="table-responsive mt-1" style="margin-left: 10px;">
+
+                                                                <table>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td class=""
+                                                                                style="width: 100px; font-size: 14px;">
+                                                                                {{ __('Passport Number') }}
+                                                                            </td>
+                                                                            <td class="name-td"
+                                                                                style="padding-left: 10px; font-size: 14px;">
+                                                                                {{ $client->passport_number ?? '' }}
+                                                                            </td>
+                                                                        </tr>
+
+                                                                         <tr>
+                                                                            <td class=""
+                                                                                style="width: 100px; font-size: 14px;">
+                                                                                {{ __('Email') }}
+                                                                            </td>
+                                                                            <td class=""
+                                                                                style="padding-left: 10px; font-size: 14px;">
+                                                                               <a href="{{ $client->email }}" target="_blank" >{{ $client->email }}</a>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td class=""
+                                                                                style="width: 100px; font-size: 14px;">
+                                                                                {{ __('Phone') }}
+                                                                            </td>
+                                                                            <td class="name-td"
+                                                                                style="padding-left: 10px; font-size: 14px;">
+                                                                                {{ isset($lead->phone) ? $lead->phone : '' }}
+                                                                            </td>
+                                                                        </tr>
+                                                                        {{-- @endif --}}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                    @endif
+                                    @elseif (\Auth::user()->type == 'Admissions Officer')
+                                        @if (in_array($client->branch_id, $allbraches))
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
+                                                        <button class="accordion-button p-2" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#panelsStayOpen-collapsekeytwo">
+                                                            {{ __('CONTACT DETAIL') }}
+                                                        </button>
+                                                    </h2>
+
+                                                    <div id="panelsStayOpen-collapsekeytwo"
+                                                        class="accordion-collapse collapse show"
+                                                        aria-labelledby="panelsStayOpen-headingkeyone">
+                                                        <div class="accordion-body">
+
+                                                            <div class="table-responsive mt-1" style="margin-left: 10px;">
+
+                                                                <table>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td class=""
+                                                                                style="width: 100px; font-size: 14px;">
+                                                                                {{ __('Passport Number') }}
+                                                                            </td>
+                                                                            <td class="name-td"
+                                                                                style="padding-left: 10px; font-size: 14px;">
+                                                                                {{ $client->passport_number ?? '' }}
+                                                                            </td>
+                                                                        </tr>
+
+                                                                         <tr>
+                                                                            <td class=""
+                                                                                style="width: 100px; font-size: 14px;">
+                                                                                {{ __('Email') }}
+                                                                            </td>
+                                                                            <td class=""
+                                                                                style="padding-left: 10px; font-size: 14px;">
+                                                                               <a href="{{ $client->email }}" target="_blank" >{{ $client->email }}</a>
+                                                                            </td>
+                                                                        </tr>
+
+                                                                        <tr>
+                                                                            <td class=""
+                                                                                style="width: 100px; font-size: 14px;">
+                                                                                {{ __('Phone') }}
+                                                                            </td>
+                                                                            <td class="name-td"
+                                                                                style="padding-left: 10px; font-size: 14px;">
+                                                                                {{ isset($lead->phone) ? $lead->phone : '' }}
+                                                                            </td>
+                                                                        </tr>
+                                                                        {{-- @endif --}}
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                    @endif
                                     @endif
 
-                                    
+
+
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                             <button class="accordion-button p-2" type="button"
@@ -340,7 +487,7 @@
                                     </div>
 
 
-                                    
+
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="panelsStayOpen-headingkeyone">
                                             <button class="accordion-button p-2" type="button"
@@ -481,19 +628,46 @@
                                                                                         @endphp
 
                                                                                         <tr>
-                                                                                            <td>@php
+                                                                                            <td>
+                                                                                             <span
+                                                                                                @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Product Coordinator')
+                                                                                                    onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})"
+                                                                                                    style="cursor:pointer"
+                                                                                                    id="hyper-link"
+                                                                                                    class="deal-name hyper-link"
+                                                                                                @elseif (\Auth::user()->type == 'Project Manager')
+                                                                                                    @if (in_array($deal->brand_id, array_keys(FiltersBrands())))
+                                                                                                        onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})"
+                                                                                                        style="cursor:pointer"
+                                                                                                        id="hyper-link"
+                                                                                                        class="deal-name hyper-link"
+                                                                                                    @endif
+                                                                                                @elseif (\Auth::user()->type == 'Admissions Officer')
+                                                                                                    @if (in_array($deal->branch_id, $allbraches))
+                                                                                                        onclick="openSidebar('/get-deal-detail?deal_id='+{{ $deal->id }})"
+                                                                                                        style="cursor:pointer"
+                                                                                                        id="hyper-link"
+                                                                                                        class="deal-name hyper-link"
+                                                                                                    @endif
+                                                                                                @else
+                                                                                                    class="deal-name"
+                                                                                                @endif
+                                                                                                 data-deal-id="{{ $deal->id }}">
+                                                                                                @php
                                                                                                 $name = $deal->name;
                                                                                                 if (strlen($name) > 15) {
                                                                                                     $name = substr($name, 0, 15) . '...';
                                                                                                 }
                                                                                                 echo $name;
-                                                                                            @endphp </td>
+                                                                                            @endphp
+                                                                                              </span>
+                                                                                            </td>
 
                                                                                             <td>{{ '1-' . (empty($deal->intake_month) ? 'Jan' : $deal->intake_month) . '-' . (empty($deal->intakeYear) ? date('Y') : $deal->intakeYear) }}</td>
                                                                                             <td>{{ !empty($deal->brand_id) ? (isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '') : '' }}</td>
                                                                                             <td>{{ isset($branch->name) ? $branch->name : '' }}</td>
                                                                                             <td>{{ isset($deal->assigned_to) && isset($organizations[$deal->assigned_to]) ? $organizations[$deal->assigned_to] : '' }}</td>
-                                                                                            <td>{{ $stages[$deal->stage_id] }}</td>
+                                                                                            <td><span class="badge bg-success-scorp"> {{ $stages[$deal->stage_id] }} </span></td>
                                                                                         </tr>
                                                                                     @empty
                                                                                     @endforelse
@@ -543,15 +717,41 @@
                                                                             $deal = \App\Models\Deal::where('id', $app->deal_id)->first();
                                                                             $users = \App\Models\User::pluck('name', 'id')->toArray();
                                                                             $branch = \App\Models\Branch::where('id', $deal->branch_id)->first();
+                                                                            $app_stage = \App\Models\ApplicationStage::pluck('name', 'id')->toArray();
                                                                         @endphp
                                                                         <tr>
-                                                                            <td>{{ $universities[$app->university_id] ?? '' }}</td>
+                                                                            <td>
+                                                                            <span
+                                                                            @if(\Auth::user()->type == 'super admin' || \Auth::user()->type == 'Admin Team' || \Auth::user()->type == 'Product Coordinator')
+                                                                              onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')"
+                                                                              style="cursor:pointer"
+                                                                              id="hyper-link"
+                                                                              class="hyper-link"
+                                                                            @elseif (\Auth::user()->type == 'Project Manager')
+                                                                                   @if (in_array($deal->brand_id, array_keys(FiltersBrands())))
+                                                                                        onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')"
+                                                                                        style="cursor:pointer"
+                                                                                        id="hyper-link"
+                                                                                        class="hyper-link"
+                                                                                   @endif
+                                                                            @elseif (\Auth::user()->type == 'Admissions Officer')
+                                                                                   @if (in_array($deal->branch_id, $allbraches))
+                                                                                        onclick="openSidebar('/deals/'+{{ $app->id }}+'/detail-application')"
+                                                                                        style="cursor:pointer"
+                                                                                        id="hyper-link"
+                                                                                        class="hyper-link"
+                                                                            @endif
+                                                                            @endif
+                                                                            >
+                                                                                {{ $universities[$app->university_id] ?? '' }}
+                                                                            </span>
+                                                                            </td>
                                                                             <td> {{ $app->intake }} </td>
                                                                             <td> {{ isset($users[$deal->brand_id]) ? $users[$deal->brand_id] : '' }}  </td>
                                                                             <td> {{ isset($branch->name) ? $branch->name : ''  }} </td>
                                                                             <td> {{ $users[$deal->assigned_to] ?? '
                                                                                 '}} </td>
-                                                                            <td><span class="badge {{ $app->status != 'Approved' ? 'bg-warning-scorp' : 'bg-success-scorp' }}"> {{ $app->status }}</span></td>
+                                                                            <td><span class="badge bg-success-scorp"> {{ $app_stage[$app->status] ?? '' }}</span></td>
                                                                         </tr>
                                                                     @empty
                                                                 @endforelse

@@ -23,6 +23,7 @@ class Lead extends Model
         'created_by',
         'is_active',
         'date',
+        'branch_id',
     ];
 
     public function labels()
