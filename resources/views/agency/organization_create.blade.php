@@ -44,6 +44,16 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group row ">
+                                    <label for="brand_id" class="col-sm-3 col-form-label"> Brand</label>
+                                    <div class="col-sm-6">
+                                        {!! Form::select('brand_id', $companies, 0, [
+                                            'class' => 'form-control select2 brand_id',
+                                            'id' => 'brand_id',
+                                        ]) !!}
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>

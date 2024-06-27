@@ -3587,8 +3587,16 @@ class DealController extends Controller
             ->get()
             ->toArray();
             $log_activities = getLogActivity($taskId, 'task');
+        $Agency = \App\Models\Agency::select(
+                'agencies.*',
+                'users.name as username',
+                'users.email as useremail',
+                'users.id as UserId',
+            )
+            ->leftJoin('users', 'users.id', '=', 'agencies.user_id')
+            ->where('agencies.id', $task->related_to)->first();
 
-        $html = view('deals.task_details', compact('applications','organizations','leads','deals','toolkits','universites','task', 'branches', 'users', 'deals', 'stages','log_activities', 'discussions'))->render();
+        $html = view('deals.task_details', compact('Agency','applications','organizations','leads','deals','toolkits','universites','task', 'branches', 'users', 'deals', 'stages','log_activities', 'discussions'))->render();
 
         return json_encode([
             'status' => 'success',

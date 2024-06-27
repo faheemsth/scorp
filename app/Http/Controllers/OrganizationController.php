@@ -52,7 +52,7 @@ class OrganizationController extends Controller
         return $countries_arr;
     }
 
-    // public function countries_list()
+    // public function countries_list()iuwhduewhdew weiuhdfewiuhdew
     // {
     //     $url = "https://restcountries.com/v3.1/all";  // URL of the API endpoint
 
@@ -928,6 +928,25 @@ class OrganizationController extends Controller
                 'University' => 'success',
                 'Universites' => $html,
             ]);
+        }else if ($type == 'agency') {
+            $Agency = \App\Models\Agency::select(
+                'agencies.id',
+                'agencies.user_id',
+                'users.name as name'
+            )->leftJoin('users', 'users.id', '=', 'agencies.user_id')->get()->pluck('name', 'id')->toArray();
+            
+            $html = '<select class="form form-control select2" id="branch_id" name="related_to"> <option value="">Related To</option>';
+            
+            foreach ($Agency as $id => $name) {
+                $html .= '<option value="' . $id . '">' . $name . '</option>';
+            }
+            
+            $html .= '</select>';            
+            return json_encode([
+                'status' => 'success',
+                'University' => 'success',
+                'Universites' => $html,
+            ]);
         } else {
             $branches = User::where('branch_id', $BranchId)->where('type', 'organization')->pluck('name', 'id')->toArray();
             $html = '<select class="form form-control select2" id="branch_id" name="related_to" > <option value="">Related To</option> ';
@@ -994,6 +1013,18 @@ class OrganizationController extends Controller
                 $University = University::where('id', $_GET['typeid'])->first();
             }
 
+            $Agency = null;
+            if (isset($_GET['typeid']) && $_GET['type'] == 'agency') {
+                $Agency = \App\Models\Agency::select(
+                    'agencies.*',
+                    'users.name as username',
+                    'users.email as useremail',
+                    'users.id as UserId',
+                )
+                ->leftJoin('users', 'users.id', '=', 'agencies.user_id')
+                ->where('agencies.id', $_GET['typeid'])->first();
+            }
+
 
 
             if (isset($_GET['type']) && isset($_GET['typeid'])) {
@@ -1008,6 +1039,14 @@ class OrganizationController extends Controller
                     $relateds = Deal::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
                 }else if ($type == 'application') {
                     $relateds = DealApplication::orderBy('name', 'ASC')->get()->pluck('application_key', 'id')->toArray();
+                }else if ($type == 'agency') {
+                    $relateds = \App\Models\Agency::select(
+                        'agencies.*',
+                        'users.name as username',
+                        'users.email as useremail',
+                        'users.id as UserId',
+                    )
+                    ->leftJoin('users', 'users.id', '=', 'agencies.user_id')->get()->pluck('users.name', 'agencies.id')->toArray();
                 }
             }
             // if(\Auth::user()->type == 'company'){
@@ -1028,7 +1067,7 @@ class OrganizationController extends Controller
             $Region = $filter['regions'];
             $branches = $filter['branches'];
             $employees = $filter['employees'];
-            return view('organizations.tasks', compact('University','Region', 'users', 'deals', 'organization', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds', 'lead', 'deal', 'branches', 'application'));
+            return view('organizations.tasks', compact('Agency','University','Region', 'users', 'deals', 'organization', 'orgs', 'priorities', 'status', 'branches', 'stages', 'employees', 'teams', 'companies', 'user_type', 'type', 'typeId', 'relateds', 'lead', 'deal', 'branches', 'application'));
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
         }
@@ -1108,22 +1147,33 @@ class OrganizationController extends Controller
             // );
 
 
-            //store Activity Log
+            // START    store Activity Log
+
+
+
             $remarks = [
                 'title' => 'Task Created',
                 'message' => 'Task Created successfully'
             ];
-
-            //store Log
+            
+            $related_id = '';
+            $related_type = '';
+    
+            if (isset($dealTask->deal_id) && in_array($dealTask->related_type, ['organization', 'lead', 'deal', 'application', 'toolkit', 'agency'])) {
+                $related_id = $dealTask->deal_id;
+                $related_type = $dealTask->related_type;
+            }
             $data = [
                 'type' => 'info',
                 'note' => json_encode($remarks),
-                'module_id' => $dealTask->id,
-                'module_type' => 'task',
+                'module_id' => $related_id,
+                'module_type' => $related_type,
                 'notification_type' => 'Task created'
             ];
-            addLogActivity($data);
+            addLogActivity($data);            
 
+
+            // END   store Activity Log
             return json_encode([
                 'status' => 'success',
                 'task_id' => $dealTask->id,
@@ -1181,8 +1231,14 @@ class OrganizationController extends Controller
                 $related_to = University::orderBy('name', 'ASC')->get()->pluck('name', 'id')->toArray();
             } else if ($task->related_type == 'application') {
                 $related_to = DealApplication::join('deals', 'deals.id', '=', 'deal_applications.deal_id')->where('deals.branch_id', $task->branch_id)->orderBy('deal_applications.name', 'ASC')->get()->pluck('name', 'id')->toArray();
+            } else if($task->related_type == 'agency'){
+                $related_to = \App\Models\Agency::select(
+                    'agencies.id',
+                    'agencies.user_id',
+                    'users.name as name'
+                )->leftJoin('users', 'users.id', '=', 'agencies.user_id')->get()->pluck('name', 'id')->toArray();
+                
             }
-
 
             // if(\Auth::user()->type == 'super admin'){
             //     $companies = User::where('type', 'company')->get()->pluck('name', 'id')->toArray();
@@ -1309,12 +1365,19 @@ class OrganizationController extends Controller
                 'message' => 'Task updated successfully'
             ];
 
+            $related_id = '';
+            $related_type = '';
+    
+            if (isset($dealTask->deal_id) && in_array($dealTask->related_type, ['organization', 'lead', 'deal', 'application', 'toolkit', 'agency'])) {
+                $related_id = $dealTask->deal_id;
+                $related_type = $dealTask->related_type;
+            }
             //store Log
             $data = [
                 'type' => 'info',
                 'note' => json_encode($remarks),
-                'module_id' => $dealTask->id,
-                'module_type' => 'task',
+                'module_id' => $related_id,
+                'module_type' => $related_type,
                 'notification_type' => 'Task Update'
             ];
             addLogActivity($data);
@@ -1365,7 +1428,13 @@ class OrganizationController extends Controller
 
             //store Activity Log
 
-
+            $related_id = '';
+            $related_type = '';
+    
+            if (isset($dealTask->deal_id) && in_array($dealTask->related_type, ['organization', 'lead', 'deal', 'application', 'toolkit', 'agency'])) {
+                $related_id = $dealTask->deal_id;
+                $related_type = $dealTask->related_type;
+            }
             //store Log
             $data = [
                 'type' => 'info',
@@ -1373,8 +1442,8 @@ class OrganizationController extends Controller
                     'title' => 'Task Deleted',
                     'message' => 'Task deleted successfully'
                 ]),
-                'module_id' => 1,
-                'module_type' => 'task',
+                'module_id' => $related_id,
+                'module_type' => $related_type,
                 'notification_type' => 'Task Deleted'
             ];
             addLogActivity($data);

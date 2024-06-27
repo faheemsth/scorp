@@ -897,6 +897,12 @@ Route::resource('agency', AgencyController::class);
 Route::get("/delete-bulk-agency", [AgencyController::class, 'deleteBulkAgency'])->name('delete-bulk-agency');
 Route::get('/get-agency-detail', [AgencyController::class, 'GetAgencyDetail'])->name('get-agency-detail');
 Route::get('/getCitiesOnCode', [AgencyController::class, 'getCitiesOnCode'])->name('getCitiesOnCode');
+// end
+Route::post('/agency/{id}/notes', [AgencyController::class, 'notesStore'])->name('agency.notes.store')->middleware(['auth', 'XSS']);
+Route::get('/agency/{id}/notes-delete', [AgencyController::class, 'notesDelete'])->name('agency.notes.delete')->middleware(['auth', 'XSS']);
+Route::post('/agency/{id}/notes-update', [AgencyController::class, 'notesUpdate'])->name('agency.notes.update')->middleware(['auth', 'XSS']);
+Route::post('/update/from/AgencyNoteForm', [AgencyController::class, 'UpdateFromAgencyNoteForm']);
+
 Route::get('/organization/{id}/delete', [organizationController::class, 'destroy'])->name('organization.delete')->middleware(['auth', 'XSS']);
 Route::get('/organization/{id}/notes', [organizationController::class, 'notesCreate'])->name('organization.notes.create')->middleware(['auth', 'XSS']);
 

@@ -434,6 +434,8 @@
                                                                         style="cursor: pointer" onclick="openSidebar('/deals/{{ $task->related_to }}/detail-application');"
                                                                         @elseif ($task->related_type == 'toolkit')
                                                                         style="cursor: pointer" onclick="openSidebar('/university/{{ $task->related_to }}/university_detail');"
+                                                                         @elseif ($task->related_type == 'agency')
+                                                                        style="cursor: pointer" onclick="openSidebar('/get-agency-detail?id=<?= $task->related_to ?>');"
                                                                         @endif
                                                                     >
                                                                     @if ($task->related_type == 'organization')
@@ -446,6 +448,8 @@
                                                                             {{ $deals[$task->related_to] ?? ''  }}
                                                                     @elseif ($task->related_type == 'toolkit')
                                                                             {{ $universites[$task->related_to] ?? ''  }}
+                                                                    @elseif ($task->related_type == 'agency')
+                                                                            {{ $Agency->username  }}
                                                                     @endif
 
                                                                     </span>

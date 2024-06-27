@@ -284,6 +284,8 @@
                                             </option>
                                             <option value="toolkit" {{ $task->related_type == 'toolkit' ? 'selected' : '' }}>Toolkit
                                             </option>
+                                            <option value="agency" {{ $task->related_type == 'agency' ? 'selected' : '' }}>Agency
+                                            </option>
                                 </select>
                             </div>
                         </div>

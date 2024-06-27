@@ -743,7 +743,7 @@
                                         <div class="row">
 
                                             <!-- Contacts related to organizations -->
-                                            <div class="accordion" id="accordionPanelsStayOpenExample">
+                                            {{-- <div class="accordion" id="accordionPanelsStayOpenExample">
                                                 <!-- Open Accordion Item -->
                                                 <div class="accordion-item">
                                                     <h2 class="accordion-header" id="panelsStayOpen-headingcontact">
@@ -794,7 +794,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> --}}
 
                                             <!-- Noted related to organization -->
                                             <div class="accordion" id="accordionPanelsStayOpenExample">

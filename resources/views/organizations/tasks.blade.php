@@ -312,6 +312,8 @@
                                             </option>
                                             <option value="toolkit" {{ $type == 'toolkit' ? 'selected' : '' }}>Toolkit
                                             </option>
+                                            <option value="agency" {{ $type == 'agency' ? 'selected' : '' }}>Agency
+                                            </option>
                                         </select>
                                         <input type="hidden" value="{{ $type }}" name="related_type">
                                     @else
@@ -327,6 +329,8 @@
                                             <option value="application" {{ $type == 'application' ? 'selected' : '' }}>Application
                                             </option>
                                             <option value="toolkit" {{ $type == 'toolkit' ? 'selected' : '' }}>Toolkit
+                                            </option>
+                                            <option value="agency" {{ $type == 'agency' ? 'selected' : '' }}>Agency
                                             </option>
                                         </select>
                                     @endif
@@ -357,6 +361,9 @@
                                             @endif
                                             @if(!empty($University))
                                                 <option value="{{$University->id}}" selected>{{$University->name}}</option>
+                                            @endif
+                                            @if(!empty($Agency))
+                                                <option value="{{$Agency->id}}" selected>{{$Agency->username}}</option>
                                             @endif
                                     </select>
                                 </div>

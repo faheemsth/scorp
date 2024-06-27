@@ -101,6 +101,8 @@
                                 openSidebar('/get-organization-detail?org_id=' + task_related_id);
                             } else if (task_related == 'deal') {
                                 openSidebar('/get-deal-detail?deal_id=' + task_related_id);
+                            } else if (task_related == 'agency') {
+                                openSidebar('/get-agency-detail?id=' + task_related_id);
                             }
 
                         }

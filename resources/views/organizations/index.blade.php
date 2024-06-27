@@ -310,9 +310,12 @@
                                 <td >
                                     <input type="checkbox" name="organizations[]" value="{{ $org->id }}" class="sub-check">
                                 </td>
+                                <td>
+                                <span style="cursor:pointer" class="lead-name hyper-link"
+                                        onclick="openSidebar('/get-organization-detail?org_id=<?= $org->id ?>')"
+                                        data-lead-id="{{ $org->id }}">{{ !empty($org->name) ? $org->name : '--' }}
+                                </span>
 
-                                <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">
-                                    <span style="cursor:pointer" class="org-name hyper-link" @can('show organization') onclick="openNav(<?= $org->id ?>)" @endcan data-org-id="{{ $org->id }}">{{ $org->name }}</span>
                                 </td>
                                 <td style="max-width: 120px; overflow: hidden; text-overflow: ellipsis;  white-space: nowrap;">{{ isset($org->email) ? $org->email : '' }}</td>
 

@@ -11,7 +11,6 @@ use App\Models\User;
 use App\Models\Stage;
 use App\Models\Branch;
 use App\Models\Region;
-use App\Models\DealTask;
 use App\Models\ActivityLog;
 use App\Models\Organization;
 use Illuminate\Http\Request;
@@ -24,6 +23,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\OrganizationDiscussion;
 use Illuminate\Support\Facades\Validator;
 use App\Models\City;
+use App\Models\AgencyNote;
 class AgencyController extends Controller
 {
     
@@ -76,6 +76,9 @@ class AgencyController extends Controller
         if (isset($_GET['city']) && !empty($_GET['city'])) {
             $filters['city'] = $_GET['city'];
         }
+        if (isset($_GET['brand_id']) && !empty($_GET['brand_id'])) {
+            $filters['brand_id'] = $_GET['brand_id'];
+        }
 
         return $filters;
     }
@@ -122,6 +125,8 @@ class AgencyController extends Controller
                     $org_query->where('agencies.billing_country', 'like', '%' . $value . '%');
                 } elseif ($column === 'city') {
                     $org_query->where('agencies.city', 'like', '%' . $value . '%');
+                }elseif ($column === 'brand_id') {
+                    $org_query->where('agencies.brand_id',$value);
                 }
             }
             
@@ -133,6 +138,7 @@ class AgencyController extends Controller
                 $org_query->orWhere('users.email', 'like', '%' . $g_search . '%');
                 $org_query->orWhere('agencies.billing_country', 'like', '%' . $g_search . '%');
                 $org_query->where('agencies.city', 'like', '%' . $g_search . '%');
+                $org_query->where('agencies.brand_id',$g_search);
             }
 
             $total_records  = $org_query->count();
@@ -161,7 +167,9 @@ class AgencyController extends Controller
                     'pagination_html' => $pagination_html
                 ]);
             } else {
-                return view('agency.index', compact('citiese','organizations', 'org_types', 'countries', 'user_type', 'total_records'));
+                $filter = BrandsRegionsBranches();
+                $companies = $filter['brands'];
+                return view('agency.index', compact('companies','citiese','organizations', 'org_types', 'countries', 'user_type', 'total_records'));
             }
         } else {
             return redirect()->back()->with('error', __('Permission Denied.'));
@@ -177,12 +185,15 @@ class AgencyController extends Controller
             $org_types = OrganizationType::get()->pluck('name', 'id');
             $countries = $this->countries_list();
             $user_type = User::get()->pluck('type', 'id')->toArray();
-
+            $filter = BrandsRegionsBranches();
+            $companies = $filter['brands'];
             $data = [
                 'org_types' => $org_types,
                 'countries' => $countries,
-                'user_type' => $user_type
+                'user_type' => $user_type,
+                'companies' => $companies,
             ];
+
             return view('agency.organization_create',  $data);
         } else {
 
@@ -251,6 +262,7 @@ class AgencyController extends Controller
 
             $org = new Agency;
             $org->type = $request->organization_type;
+            $org->brand_id = $request->brand_id;
             $org->phone =  $request->organization_phone;
             $org->website = $request->organization_website;
             $org->linkedin = $request->organization_linkedin;
@@ -277,7 +289,7 @@ class AgencyController extends Controller
                     'message' => 'Agency created successfully'
                 ]),
                 'module_id' => $user->id,
-                'module_type' => 'Agency',
+                'module_type' => 'agency',
                 'notification_type' => 'Agency Created'
             ];
             addLogActivity($data);
@@ -297,7 +309,7 @@ class AgencyController extends Controller
 
     public function GetAgencyDetail(Request $request)
     {
-        //
+        // sheraz
         $org_query = Agency::select(
             'agencies.*',
             'users.name as username',
@@ -306,8 +318,12 @@ class AgencyController extends Controller
         )
         ->leftJoin('users', 'users.id', '=', 'agencies.user_id')
         ->where('agencies.id', $request->id)->first();
-
-        $html = view('agency.AgencyDetail', compact('org_query'))->render();
+        $log_activities = getLogActivity($org_query->id, 'agency');
+        
+        $filter = BrandsRegionsBranches();
+        $companies = $filter['brands'];
+        $tasks = \App\Models\DealTask::where(['related_to' => $org_query->id, 'related_type' => 'agency'])->get();
+        $html = view('agency.AgencyDetail', compact('companies','org_query','log_activities','tasks'))->render();
         return json_encode([
             'status' => 'success',
             'html' => $html
@@ -333,7 +349,10 @@ class AgencyController extends Controller
             $country_parts = explode("-", $org_query->billing_country);
             $country_code = end($country_parts);
             $cities = City::where('country_code', $country_code)->pluck('name', 'id')->toArray();
-            return view('agency.organization_edit', ['cities' => $cities,'org_query' => $org_query , 'countries' => $countries]);
+
+            $filter = BrandsRegionsBranches();
+            $companies = $filter['brands'];
+            return view('agency.organization_edit', ['companies' => $companies,'cities' => $cities,'org_query' => $org_query , 'countries' => $countries]);
         } else {
             return response()->json(['error' => __('Permission Denied.')], 401);
         }
@@ -368,6 +387,7 @@ class AgencyController extends Controller
 
         $org = Agency::find($org_query->id);
         $org->type = $request->organization_type;
+        $org->brand_id = $request->brand_id;
         $org->phone =  $request->organization_phone;
         $org->website = $request->organization_website;
         $org->linkedin = $request->organization_linkedin;
@@ -392,7 +412,7 @@ class AgencyController extends Controller
                 'message' => 'Organization updated successfully'
             ]),
             'module_id' => $user->id,
-            'module_type' => 'organization',
+            'module_type' => 'agency',
             'notification_type' => 'Organization Updated'
         ];
         addLogActivity($data);
@@ -445,4 +465,207 @@ class AgencyController extends Controller
             return redirect()->route('agency.index')->with('error', 'Atleast select 1 organization.');
         }
     }
+
+
+    public function notesStore(Request $request)
+    {
+
+
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                // 'title' => 'required',
+                'description' => 'required'
+            ]
+        );
+
+        if ($validator->fails()) {
+            $messages = $validator->getMessageBag();
+            return json_encode([
+                'status' => 'error',
+                'message' =>  $messages->first()
+            ]);
+        }
+        $id = $request->id;
+
+        if ($request->note_id != null && $request->note_id != '') {
+            $note = AgencyNote::where('id', $request->note_id)->first();
+            // $note->title = $request->input('title');
+            $note->description = $request->input('description');
+            $note->update();
+
+            $data = [
+                'type' => 'info',
+                'note' => json_encode([
+                    'title' => 'Agency Notes Updated',
+                    'message' => 'Agency notes updated successfully'
+                ]),
+                'module_id' => $request->id,
+                'module_type' => 'agency',
+                'notification_type' => 'Agency Notes Updated'
+            ];
+            addLogActivity($data);
+
+
+            $notesQuery = AgencyNote::where('agency_id', $id);
+
+            if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+                    $notesQuery->where('created_by', \Auth::user()->id);
+            }
+            $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
+            $html = view('leads.getNotes', compact('notes'))->render();
+
+            return json_encode([
+                'status' => 'success',
+                'html' => $html,
+                'message' =>  __('Notes updated successfully')
+            ]);
+        }
+        $note = new AgencyNote;
+        // $note->title = $request->input('title');
+        $note->description = $request->input('description');
+        $session_id = Session::get('auth_type_id');
+        if ($session_id != null) {
+            $note->created_by  = $session_id;
+        } else {
+            $note->created_by  = \Auth::user()->id;
+        }
+        $note->agency_id = $id;
+        $note->save();
+
+
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                'title' => 'Notes created',
+                'message' => 'Noted created successfully'
+            ]),
+            'module_id' => $id,
+            'module_type' => 'agency',
+            'notification_type' => 'Notes created'
+        ];
+        addLogActivity($data);
+
+
+        $notesQuery = AgencyNote::where('agency_id', $id);
+
+        if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+                $notesQuery->where('created_by', \Auth::user()->id);
+        }
+        $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
+
+        $html = view('leads.getNotes', compact('notes'))->render();
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html,
+            'message' =>  __('Notes added successfully')
+        ]);
+
+        //return redirect()->back()->with('success', __('Notes added successfully'));
+    }
+
+    public function UpdateFromAgencyNoteForm(Request $request)
+    {
+        $note = AgencyNote::where('id', $request->id)->first();
+
+        $html = view('agency.getNotesForm', compact('note'))->render();
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html,
+            'message' =>  __('Notes added successfully')
+        ]);
+    }
+
+
+    public function notesEdit($id)
+    {
+        $note = AgencyNote::where('id', $id)->first();
+        return view('leads.notes_edit', compact('note'));
+    }
+
+    public function notesUpdate(Request $request, $id)
+    {
+
+
+        $validator = \Validator::make(
+            $request->all(),
+            [
+                // 'title' => 'required',
+                'description' => 'required'
+            ]
+        );
+
+        if ($validator->fails()) {
+            $messages = $validator->getMessageBag();
+            return json_encode([
+                'status' => 'error',
+                'message' =>  $messages->first()
+            ]);
+        }
+
+        $note = AgencyNote::where('id', $request->note_id)->first();
+        $note->title = $request->input('title');
+        $note->description = $request->input('description');
+        $note->update();
+
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                'title' => 'Agency Notes Updated',
+                'message' => 'Agency notes updated successfully'
+            ]),
+            'module_id' => $request->id,
+            'module_type' => 'agency',
+            'notification_type' => 'Agency Notes Updated'
+        ];
+        addLogActivity($data);
+
+
+        $notes = AgencyNote::where('agency_id', $id)->orderBy('created_at', 'DESC')->get();
+        $html = view('agency.getNotes', compact('notes'))->render();
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html,
+            'message' =>  __('Notes updated successfully')
+        ]);
+    }
+
+
+    public function notesDelete(Request $request, $id)
+    {
+
+        $note = AgencyNote::where('id', $id)->first();
+        $note->delete();
+
+        $notesQuery = AgencyNote::where('agency_id', $request->lead_id);
+        if(\Auth::user()->type != 'super admin' && \Auth::user()->type != 'Project Director' && \Auth::user()->type != 'Project Manager') {
+                $notesQuery->where('created_by', \Auth::user()->id);
+        }
+        $notes = $notesQuery->orderBy('created_at', 'DESC')->get();
+        $html = view('leads.getNotes', compact('notes'))->render();
+
+
+        $data = [
+            'type' => 'info',
+            'note' => json_encode([
+                'title' => 'Agency Notes Deleted',
+                'message' => 'Agency notes deleted successfully'
+            ]),
+            'module_id' => $request->lead_id,
+            'module_type' => 'agency',
+            'notification_type' => 'Agency Notes Deleted'
+        ];
+        addLogActivity($data);
+
+
+        return json_encode([
+            'status' => 'success',
+            'html' => $html,
+            'message' =>  __('Notes deleted successfully')
+        ]);
+    }
+
 }
