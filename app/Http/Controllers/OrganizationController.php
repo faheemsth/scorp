@@ -1422,18 +1422,13 @@ class OrganizationController extends Controller
         if (\Auth::user()->can('delete task')) {
 
             $task = DealTask::where('id', $id)->first();
-            $task->delete();
-            //$tasks = DealTask::where('organization_id', $request->organization_id)->get();
-            // $html = view('organizations.all_tasks', compact('tasks'))->render();
-
-            //store Activity Log
 
             $related_id = '';
             $related_type = '';
     
-            if (isset($dealTask->deal_id) && in_array($dealTask->related_type, ['organization', 'lead', 'deal', 'application', 'toolkit', 'agency'])) {
-                $related_id = $dealTask->deal_id;
-                $related_type = $dealTask->related_type;
+            if (isset($task->deal_id) && in_array($task->related_type, ['organization', 'lead', 'deal', 'application', 'toolkit', 'agency'])) {
+                $related_id = $task->deal_id;
+                $related_type = $task->related_type;
             }
             //store Log
             $data = [
@@ -1447,6 +1442,14 @@ class OrganizationController extends Controller
                 'notification_type' => 'Task Deleted'
             ];
             addLogActivity($data);
+            
+            $task->delete();
+            //$tasks = DealTask::where('organization_id', $request->organization_id)->get();
+            // $html = view('organizations.all_tasks', compact('tasks'))->render();
+
+            //store Activity Log
+
+            
 
             return json_encode([
                 'status' => 'success',
